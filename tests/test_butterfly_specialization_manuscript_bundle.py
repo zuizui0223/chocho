@@ -51,12 +51,19 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     # Structured GEB abstract should remain below 300 words.
     abstract_start = manuscript.index("## Abstract")
     abstract_end = manuscript.index("---", abstract_start)
-    assert _words(manuscript[abstract_start:abstract_end]) <= 300
+    abstract_words = _words(manuscript[abstract_start:abstract_end])
+    assert abstract_words <= 300
 
     # Approximate main-text budget remains under the GEB typical 5,000 words.
     intro_start = manuscript.index("## 1. Introduction")
     legend_start = manuscript.index("## Figure legends")
-    assert _words(manuscript[intro_start:legend_start]) <= 5000
+    main_text_words = _words(manuscript[intro_start:legend_start])
+    assert main_text_words <= 5000
+
+    # Readiness metadata must stay synchronized with the actual manuscript.
+    assert readiness["manuscript"]["approx_total_words"] == _words(manuscript)
+    assert readiness["manuscript"]["approx_abstract_words"] == abstract_words
+    assert readiness["manuscript"]["approx_main_text_words"] == main_text_words
 
     # GEB reference list is alphabetical by first author / corporate author.
     refs_start = manuscript.index("## References (working)")
