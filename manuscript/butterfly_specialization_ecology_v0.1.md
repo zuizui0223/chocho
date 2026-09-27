@@ -203,7 +203,7 @@ One-family butterflies in the low host-species-richness tertile (median richness
 
 The same qualitative associations between resolved host-species richness and portfolio architecture occurred within every host-family breadth stratum.
 
-### 3.5 Climate filters realized geography within host-resource opportunity
+### 3.5 Climate-associated filtering is widespread within host-resource opportunity
 
 After uniform technical completion of occurrence acquisition, 24 independent-panel species passed the frozen pre-climate gate, and all 24 were climate-informative.
 
@@ -211,7 +211,7 @@ Climate filtering was widespread. The median species filtering score was 0.801. 
 
 Median filtering scores were similar across family-breadth strata: 0.796 for one-family species, 0.748 for two-family species, 0.813 for three-to-five-family species, and 0.801 for six-plus-family species.
 
-### 3.6 Broader host-family diets do not independently weaken climate filtering
+### 3.6 Broader host-family diets did not detectably weaken climate filtering
 
 The prospectively frozen climate-release prediction was not supported.
 
@@ -219,7 +219,7 @@ After controlling for contemporary geographic resource breadth, the partial Spea
 
 The unadjusted association was also weak (Spearman rho = -0.083). Climate-filtering score was modestly positively associated with log contemporary resource breadth (rho = 0.263) and negatively associated with wing-size proxy (rho = -0.280), but these secondary associations were descriptive and not prospectively tested.
 
-The independent result therefore rejects the simple interpretation that taxonomic host generalism translates into release from climatic filtering.
+The independent result therefore does not support the simple interpretation that taxonomic host generalism translates into release from climatic filtering.
 
 ---
 
@@ -263,17 +263,17 @@ Thus "one-family specialist" is itself an ecologically heterogeneous category. F
 
 This finding suggests that comparative studies should avoid treating alternative diet-breadth metrics merely as interchangeable measurements of the same latent variable. They can represent different biological levels.
 
-### 4.5 Climate is a strong filter, but not a downstream consequence of taxonomic generalism
+### 4.5 Climate-associated filtering is widespread, but broader diets do not detectably weaken it
 
 The independent climate result provides the strongest separation among axes.
 
-Within reconstructed contemporary host-resource opportunity, most butterflies were observed in climatically closer regions than the host-available regions they left unobserved. The median filtering score of 0.801 and the consistency of the direction across species indicate that host presence alone does not approximate realized geographic distribution.
+Within reconstructed contemporary host-resource opportunity, most butterflies were observed in climatically closer regions than the host-available regions they left unobserved. The median filtering score of 0.801 and the consistency of the direction across species show that host-envelope membership alone was insufficient to reproduce observed butterfly geography in this design.
 
 This agrees with growing evidence for widespread climatic effects on butterfly distributions and range shifts, while complementing studies showing that host availability can also constrain thermal range margins (Rashid et al. 2026; Chowdhury et al. 2026).
 
 However, our prospectively tested mechanism did not survive independent evaluation. Broader host-family diets did not detectably weaken climate filtering after accounting for contemporary resource breadth.
 
-This negative result is biologically useful. It indicates that resource generalization and abiotic filtering are not successive positions along one specialist-generalist continuum. A butterfly can have many host families and remain strongly climatically filtered, or use few families while realizing a relatively large fraction of its host-resource climate space.
+This negative result is biologically useful. It does not support treating resource generalization as sufficient to predict the strength of abiotic filtering along a single specialist-generalist continuum. Species with many host families can still have high climate-filtering scores, while some species using few families show lower scores.
 
 Candidate explanations include physiology, adult dispersal, phenology, habitat affinity, regional biotic interactions, and species-level host portfolio structure. These possibilities should be treated as new hypotheses rather than retrofitted explanations of the current independent test.
 
@@ -303,7 +303,7 @@ species-level host portfolio
 
 The arrows do not imply that every link is causal or unidirectional. The purpose of the hierarchy is to distinguish ecological state variables that are often collapsed under the word specialization.
 
-Under this view, taxonomy determines one dimension of the interaction niche, host-species portfolios determine the composition and redundancy of resource opportunity, plant biogeography determines where that opportunity occurs, and climate and other filters determine which portions are realized.
+Under this view, taxonomy describes one dimension of the interaction niche, host-species portfolios describe the composition and redundancy of resource opportunity, plant biogeography describes where that opportunity occurs, and climate-associated and other filters help describe which portions are realized.
 
 ### 4.7 Implications for global change ecology
 
@@ -339,7 +339,7 @@ Butterfly specialization cannot be reduced to a single specialist-generalist axi
 
 Family-level diet breadth only partly captures where larval resources occur. Human redistribution of plants expands reconstructed resource opportunity across specialists and generalists alike, but specialists and generalists acquire that opportunity through different host architectures. Species-level host richness reveals substantial hierarchy even within identical family-breadth categories. Finally, climate-associated filtering is common within host-resource opportunity, but its strength is not detectably weakened by broader family-level diets.
 
-The resulting picture is hierarchical: **host taxonomy describes who can be used; host portfolios describe how resource opportunity is assembled; plant geography describes where that opportunity occurs; and climate helps determine which portions butterflies realize.**
+The resulting picture is hierarchical: **host taxonomy describes who can be used; host portfolios describe how resource opportunity is assembled; plant geography describes where that opportunity occurs; and climate-associated filtering helps describe which portions butterflies realize.**
 
 ---
 
