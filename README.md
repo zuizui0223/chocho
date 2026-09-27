@@ -91,12 +91,12 @@ The independent host-breadth climate-release prediction was not supported (`part
 
 ## Submission state
 
-The scientific story and double-anonymous manuscript package are complete. Remaining release tasks are administrative:
+The scientific story is frozen, and both review-package builders are complete: the privacy-scrubbed line-numbered DOCX and the de-identified reviewer code bundle are generated and CI-audited. Remaining release tasks are administrative/external:
 
 - choose and add the software license;
-- freeze the archival release;
-- mint the permanent archive DOI and insert it into citation/title-page metadata;
-- complete final author/affiliation/CRediT/funding/conflict metadata.
+- complete final author/affiliation/CRediT/funding/conflict metadata;
+- create/tag the final `v1.0.0-butterfly` release and mint the permanent archive DOI;
+- upload the anonymous reviewer bundle behind a non-identifying reviewer-access URL and insert that URL before the final DOCX rebuild.
 
 Until the archival release is minted, cite the eventual versioned release rather than a moving branch.
 
