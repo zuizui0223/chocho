@@ -76,7 +76,7 @@ pytest -q
 
 The GitHub Actions workflow `.github/workflows/paper-ci.yml` runs this suite without network-dependent tests. The ecology-only pruning state has passed this CI.
 
-The `analysis` optional dependency group additionally provides SciPy, Shapely, and rasterio for spatial analyses; `figure` provides Matplotlib.
+The `analysis` optional dependency group additionally provides Shapely and rasterio for spatial analyses; `figure` provides Matplotlib.
 
 ## Interpretation boundaries
 
