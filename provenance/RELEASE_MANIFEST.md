@@ -2,6 +2,8 @@
 
 This manifest defines the archival boundary for the butterfly-specialization ecology paper. It is a release checklist, not a new scientific analysis.
 
+Release identifiers are fixed as package/CFF version `1.0.0` and intended GitHub tag `v1.0.0-butterfly`. The DOI and release date remain unset until an actual archive/release exists.
+
 ## Scientific state
 
 - Claim map: `manuscript/butterfly_specialization_claim_map_v0.1.json`
