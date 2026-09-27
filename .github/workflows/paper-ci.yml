@@ -13,6 +13,8 @@ on:
       - "manuscript/**"
       - "docs/**"
       - "benchmarks/**"
+      - "data/**"
+      - "provenance/**"
       - "pyproject.toml"
       - ".github/workflows/paper-ci.yml"
   pull_request:
@@ -38,3 +40,26 @@ jobs:
       - name: Run offline paper test suite
         run: |
           pytest -q
+
+  render-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install figure environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[figure]"
+      - name: Render figures from vendored frozen sources
+        run: |
+          python scripts/render_butterfly_specialization_manuscript_figures.py \
+            --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+            --output-dir _ci_figures
+          test "$(find _ci_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 5
+          test "$(find _ci_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 5

@@ -62,6 +62,7 @@ The repository stores the frozen identities and reconstruction logic rather than
 - `src/ttf/` — the small dependency surface inherited from the precursor repository and still required by this paper.
 - `tests/` — offline paper-specific tests.
 - `data/external/leptraits_consensus_v1.0.csv` — the exact LepTraits snapshot used by the reconstruction.
+- `data/frozen/figure_sources/` — byte-exact, SHA-256-guarded inputs consumed by the audited manuscript-figure renderer.
 - `provenance/` — preserved workflow/provenance material needed to audit frozen executions.
 
 ## Reproducing the offline test suite
@@ -77,6 +78,8 @@ pytest -q
 The GitHub Actions workflow `.github/workflows/paper-ci.yml` runs this suite without network-dependent tests. The ecology-only pruning state has passed this CI.
 
 The `analysis` optional dependency group additionally provides Shapely and rasterio for spatial analyses; `figure` provides Matplotlib.
+
+For full reconstruction requirements, including the two base-R WCVP/HOSTS sidecar builders and pinned upstream commits, see `docs/REPRODUCIBILITY.md`. The R scripts have no external R-package dependencies; the historical frozen workflow used `r-lib/actions/setup-r@v2` with `r-version: "release"`.
 
 ## Interpretation boundaries
 

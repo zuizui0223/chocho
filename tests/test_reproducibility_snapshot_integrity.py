@@ -38,3 +38,44 @@ def test_data_code_availability_uses_ecology_repository_structure() -> None:
     ) in text
     assert "versioned in the TTF repository" not in text
     assert ".github/workflows/butterfly-specialization-manuscript-figures-v01.yml" not in text
+
+
+def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
+    scripts = [
+        ROOT / "scripts/build_wcvp_hosts_sidecar.R",
+        ROOT / "scripts/build_wcvp_hosts_contemporary_sidecar.R",
+    ]
+    for path in scripts:
+        text = path.read_text(encoding="utf-8")
+        lowered = text.lower()
+        assert "library(" not in lowered
+        assert "require(" not in lowered
+        assert "install.packages" not in lowered
+
+    doc = (ROOT / "docs/REPRODUCIBILITY.md").read_text(encoding="utf-8")
+    assert 'r-version: "release"' in doc
+    assert "base R only" in doc
+    assert "65bed76bae9d644ccb6ad200c05f9f5071d89e05" in doc
+    assert "808e0b869f9ec1adf8efff87cf6a395adda103e0" in doc
+
+
+def test_shapely_is_explicit_in_clean_test_environment() -> None:
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    assert 'test = ["pytest>=8", "shapely>=2,<3"]' in pyproject
+    workflow = (ROOT / ".github/workflows/paper-ci.yml").read_text(encoding="utf-8")
+    assert 'python -m pip install -e ".[test]"' in workflow
+
+
+FROZEN_FIGURE_SOURCE_SHA256 = {
+    "s1_resource_descriptors.csv": "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc",
+    "anthropogenic_species_metrics.csv": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+    "host_contribution_metrics.csv": "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa",
+    "independent_climate_primary_result.json": "a73dca6e8b669f721d8f2745f27198d9b47a5cbd05dde6146cc8d4f1ddfbf79b",
+}
+
+
+def test_frozen_figure_source_inputs_are_vendored_byte_exact() -> None:
+    root = ROOT / "data/frozen/figure_sources"
+    for name, expected in FROZEN_FIGURE_SOURCE_SHA256.items():
+        data = (root / name).read_bytes()
+        assert hashlib.sha256(data).hexdigest() == expected
