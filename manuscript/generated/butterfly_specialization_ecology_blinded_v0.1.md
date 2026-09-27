@@ -337,7 +337,7 @@ Finally, the resource and host-architecture analyses are exploratory. The host-b
 
 Butterfly specialization cannot be reduced to a single specialist-generalist axis.
 
-Family-level diet breadth only partly captures where larval resources occur. Human redistribution of plants expands reconstructed resource opportunity across specialists and generalists alike, but specialists and generalists acquire that opportunity through different host architectures. Species-level host richness reveals substantial hierarchy even within identical family-breadth categories. Finally, climate strongly filters realized distributions within host-resource opportunity, but that filtering is not detectably relaxed by broader family-level diets.
+Family-level diet breadth only partly captures where larval resources occur. Human redistribution of plants expands reconstructed resource opportunity across specialists and generalists alike, but specialists and generalists acquire that opportunity through different host architectures. Species-level host richness reveals substantial hierarchy even within identical family-breadth categories. Finally, climate-associated filtering is common within host-resource opportunity, but its strength is not detectably weakened by broader family-level diets.
 
 The resulting picture is hierarchical: **host taxonomy describes who can be used; host portfolios describe how resource opportunity is assembled; plant geography describes where that opportunity occurs; and climate helps determine which portions butterflies realize.**
 
