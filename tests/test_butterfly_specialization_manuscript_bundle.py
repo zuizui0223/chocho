@@ -58,6 +58,20 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     legend_start = manuscript.index("## Figure legends")
     assert _words(manuscript[intro_start:legend_start]) <= 5000
 
+    # GEB reference list is alphabetical by first author / corporate author.
+    refs_start = manuscript.index("## References (working)")
+    refs_end = manuscript.index("## Repository provenance", refs_start)
+    reference_lines = [
+        line[2:]
+        for line in manuscript[refs_start:refs_end].splitlines()
+        if line.startswith("- ")
+    ]
+    reference_keys = [
+        re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip()
+        for line in reference_lines
+    ]
+    assert reference_keys == sorted(reference_keys, key=str.casefold)
+
     # Submission sections expected in the working bundle.
     for heading in (
         "## 1. Introduction",
