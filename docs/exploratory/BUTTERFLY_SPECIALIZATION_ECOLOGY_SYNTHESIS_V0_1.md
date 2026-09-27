@@ -185,11 +185,11 @@ In particular:
 - Geographic resource breadth can be broad even in family specialists.
 - Human redistribution of hosts expands opportunity broadly across specialists and generalists.
 - Specialists and generalists reach similar aggregate expansion through different portfolio architectures.
-- Climate filtering is strong across many butterflies but is largely orthogonal to host-family breadth.
+- Climate-associated filtering is strong across many butterflies, but its strength is not detectably related to host-family breadth after controlling contemporary resource breadth.
 
 ## Paper-level thesis
 
-**Butterfly specialization is hierarchical and multidimensional: family-level diet breadth masks species-level host portfolios that structure anthropogenic resource opportunity, while climate independently filters the realized portion of that opportunity.**
+**Butterfly specialization is hierarchical and multidimensional: family-level diet breadth masks species-level host portfolios that structure anthropogenic resource opportunity, while climate-associated filtering of realized geography is not detectably weakened by broader host-family diets.**
 
 This framing converts the earlier negative results into ecological information rather than treating them as failed predictors.
 
@@ -209,7 +209,7 @@ The important result is not merely that host-family breadth sometimes performs p
 4. **Hierarchy within specialists**  
    One-family species: resolved host-species richness against effective contributor number / single-host dominance.
 
-5. **Climate as a separate filter**  
+5. **Climate-associated filtering beyond resource opportunity**  
    Independent climate-filtering score across family-breadth strata, with the frozen non-supported host-breadth test.
 
 ## Claim boundaries
