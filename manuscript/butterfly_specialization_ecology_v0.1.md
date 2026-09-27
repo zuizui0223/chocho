@@ -361,7 +361,7 @@ The resulting picture is hierarchical: **host taxonomy describes who can be used
 
 All analysis code, frozen scientific protocols, input identities, workflow definitions, and result receipts are versioned in the TTF repository. The manuscript figures are regenerated from hash-verified workflow artifacts using `scripts/render_butterfly_specialization_manuscript_figures.py` and `.github/workflows/butterfly-specialization-manuscript-figures-v01.yml`.
 
-The large external source datasets are not vendored into the repository. LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD data are reconstructed or retrieved from their original sources using pinned repository commits, file hashes, query rules and workflow-run provenance recorded in the repository. A permanent archival snapshot of the code and frozen receipts will be deposited before submission; the archive DOI should replace this sentence in the submitted version.
+The large external source datasets are not vendored into the repository. LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD data are reconstructed or retrieved from their original sources using pinned repository commits, file hashes, query rules and workflow-run provenance recorded in the repository. A permanent archival snapshot of the code and frozen receipts will be deposited before submission. Its public DOI should be provided on the separate title page and in the final public manuscript; the double-anonymous review manuscript should instead use an anonymized reviewer-access link whose landing page and metadata do not identify the authors.
 
 ## References (working)
 
