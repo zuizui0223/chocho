@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "butterfly-specialization-ecology"
+version = "0.1.0"
+description = "Reproducible analyses for the butterfly specialization ecology manuscript"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "numba>=0.65,<0.66"]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "scipy>=1.11", "shapely>=2,<3"]
+analysis = ["scipy>=1.11", "shapely>=2,<3", "rasterio>=1.4"]
+figure = ["matplotlib>=3.9,<4"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-ra"
