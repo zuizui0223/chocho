@@ -21,7 +21,7 @@
   "manuscript": {
     "file": "manuscript/butterfly_specialization_ecology_v0.1.md",
     "working_title": "Butterfly specialization is hierarchical: host portfolios structure resource opportunity while climate filters realized geography",
-    "approx_total_words": 5477,
+    "approx_total_words": 5508,
     "approx_main_text_words": 4150,
     "approx_abstract_words": 274,
     "structured_abstract": true,
@@ -54,7 +54,7 @@
   "figures": {
     "planned": 5,
     "renderer": "scripts/render_butterfly_specialization_manuscript_figures.py",
-    "workflow": ".github/workflows/butterfly-specialization-manuscript-figures-v01.yml",
+    "workflow": "provenance/workflows/butterfly-specialization-manuscript-figures-v01.yml",
     "source_artifacts_hash_verified": true,
     "render_status": "RENDERED_AND_VISUALLY_AUDITED",
     "planned_files": [
@@ -73,6 +73,7 @@
     "Insert final author list, affiliations, corresponding-author details, emails and ORCIDs in the separate title page.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
     "Create the permanent archival snapshot and replace DOI placeholders.",
+    "Archive the four hash-verified manuscript-figure source inputs in the permanent release/Zenodo deposit before the temporary GitHub Actions artifacts expire, and record their durable paths in the release manifest.",
     "Create an anonymized reviewer-access link for the frozen code/provenance package, verify that its landing page and metadata do not identify the authors, and insert it into the blinded Data and Code Availability statement.",
     "Export the blinded main manuscript to an editable review document with continuous line numbering and embedded figures.",
     "Remove author metadata from the review document file properties.",
