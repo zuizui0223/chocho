@@ -1,0 +1,104 @@
+name: build blinded GEB review DOCX
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - "manuscript/**"
+      - "scripts/build_blinded_review_docx.py"
+      - "scripts/render_butterfly_specialization_manuscript_figures.py"
+      - "data/frozen/figure_sources/**"
+      - "pyproject.toml"
+      - ".github/workflows/build-blinded-review-docx.yml"
+  workflow_dispatch:
+
+jobs:
+  build-review-docx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install review build environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[review]"
+
+      - name: Render five manuscript figures from frozen sources
+        run: |
+          python scripts/render_butterfly_specialization_manuscript_figures.py \
+            --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+            --output-dir _review_figures
+
+      - name: Build double-anonymous review DOCX
+        run: |
+          mkdir -p dist
+          python scripts/build_blinded_review_docx.py \
+            --input-md manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md \
+            --figures-dir _review_figures \
+            --output dist/butterfly_specialization_GEB_blinded_review.docx
+
+      - name: Verify line numbering, figures, and metadata scrub
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          from lxml import etree
+
+          path = Path("dist/butterfly_specialization_GEB_blinded_review.docx")
+          assert path.exists() and path.stat().st_size > 100_000
+
+          with zipfile.ZipFile(path) as z:
+              names = z.namelist()
+              document = z.read("word/document.xml")
+              core = z.read("docProps/core.xml")
+              media = [n for n in names if n.startswith("word/media/")]
+              assert len(media) >= 5
+
+              root = etree.fromstring(document)
+              ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+              line_nodes = root.xpath("//w:sectPr/w:lnNumType", namespaces=ns)
+              assert line_nodes
+              assert line_nodes[0].get("{%s}countBy" % ns["w"]) == "1"
+              assert line_nodes[0].get("{%s}start" % ns["w"]) == "0"
+              assert line_nodes[0].get("{%s}restart" % ns["w"]) == "continuous"
+
+              joined = b"\n".join(z.read(n) for n in names if n.endswith(".xml")).lower()
+              for token in (b"zuizui0223", b"ttf repository", b"original ttf program"):
+                  assert token not in joined
+
+              core_root = etree.fromstring(core)
+              ns_core = {
+                  "dc": "http://purl.org/dc/elements/1.1/",
+                  "cp": "http://schemas.openxmlformats.org/package/2006/metadata/core-properties",
+              }
+              creators = core_root.xpath("//dc:creator/text()", namespaces=ns_core)
+              modifiers = core_root.xpath("//cp:lastModifiedBy/text()", namespaces=ns_core)
+              assert not creators or not creators[0].strip()
+              assert not modifiers or not modifiers[0].strip()
+
+          print(path)
+          PY
+
+      - name: Record checksum
+        run: |
+          sha256sum dist/butterfly_specialization_GEB_blinded_review.docx > dist/SHA256SUMS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-blinded-review-docx
+          path: |
+            dist/butterfly_specialization_GEB_blinded_review.docx
+            dist/SHA256SUMS
+          retention-days: 30
