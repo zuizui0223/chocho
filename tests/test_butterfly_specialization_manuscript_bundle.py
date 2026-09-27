@@ -51,7 +51,8 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     # Structured GEB abstract should remain below 300 words.
     abstract_start = manuscript.index("## Abstract")
     abstract_end = manuscript.index("---", abstract_start)
-    abstract_words = _words(manuscript[abstract_start:abstract_end])
+    abstract = manuscript[abstract_start:abstract_end]
+    abstract_words = _words(abstract)
     assert abstract_words <= 300
 
     # Approximate main-text budget remains under the GEB typical 5,000 words.
@@ -104,6 +105,9 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     full = anthropogenic["full_resource_eligible_panel"]
     assert full["species"] == 239
     assert full["species_expanded_by_introduced_host_ranges"] == 206
+    assert full["total_native_species_units"] == 26530
+    assert full["total_contemporary_species_units"] == 41083
+    assert full["total_introduced_added_species_units"] == 14553
     assert (
         full["spearman"]["host_family_count_vs_log_resource_expansion"]
         == 0.00798541214928876
@@ -121,6 +125,18 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
             "host_family_count_vs_maximum_single_host_fractional_share"
         ]
         == -0.4861161332504768
+    )
+    assert (
+        adequate_mech["host_breadth_strata"]["1_family"][
+            "median_maximum_single_host_fractional_share"
+        ]
+        == 0.7465747904577693
+    )
+    assert (
+        adequate_mech["host_breadth_strata"]["6plus_families"][
+            "median_maximum_single_host_fractional_share"
+        ]
+        == 0.313289241622575
     )
 
     one_family = hierarchy["primary_focus"]
@@ -147,16 +163,23 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         == "PILOT_DERIVED_CLIMATE_RELEASE_HYPOTHESIS_NOT_SUPPORTED"
     )
 
-    # Headline numbers must actually appear in the submitted prose.
+    # Abstract should lead with biological magnitude and architecture, not only correlations.
     for literal in (
         "206/239",
+        "26,530",
+        "41,083",
+        "54.9% increase",
+        "74.7%",
+        "31.3%",
         "rho = 0.008",
-        "rho = 0.734",
-        "rho = -0.707",
-        "median filtering score = 0.801",
+        "median score = 0.801",
         "partial rho = -0.166",
         "p = 0.2237",
     ):
+        assert literal in abstract
+
+    # Detailed portfolio correlations remain available in the full manuscript.
+    for literal in ("rho = 0.734", "rho = -0.707"):
         assert literal in manuscript
 
     # A non-supported association must not be rewritten as statistical independence.
