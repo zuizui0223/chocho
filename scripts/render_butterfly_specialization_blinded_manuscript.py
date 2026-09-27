@@ -10,7 +10,11 @@ RUNNING_TITLE = "Dimensions of butterfly specialization"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
-For double-anonymous review, the analysis code, frozen scientific protocols, provenance receipts and figure-generation workflow will be supplied through an anonymized review repository. The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods.
+For double-anonymous review, the analysis code, frozen scientific protocols, provenance receipts and figure-generation workflow will be supplied through an anonymized reviewer-access link whose landing page and metadata do not identify the authors:
+
+**Reviewer link:** [ANONYMIZED REVIEW LINK]
+
+The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods.
 
 A permanent public archival snapshot and DOI will replace this anonymized review statement in the final public version.
 
