@@ -138,6 +138,15 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     ):
         assert literal in manuscript
 
+    # A non-supported association must not be rewritten as statistical independence.
+    lowered = manuscript.lower()
+    for overclaim in (
+        "independently of family-level diet breadth",
+        "largely separate filter",
+        "climate strongly filters realized distributions",
+    ):
+        assert overclaim not in lowered
+
 
 def test_manuscript_claim_map_preserves_inference_boundaries():
     claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.1.json")
