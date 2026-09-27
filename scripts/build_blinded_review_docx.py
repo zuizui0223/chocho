@@ -12,7 +12,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import Inches, Mm, Pt
+from docx.shared import Inches, Mm, Pt, RGBColor
 from lxml import etree
 
 
@@ -106,17 +106,43 @@ def configure_document(doc: Document):
     normal = styles["Normal"]
     normal.font.name = "Times New Roman"
     normal.font.size = Pt(11)
+    normal.font.color.rgb = RGBColor(0, 0, 0)
     normal.paragraph_format.line_spacing = 1.5
     normal.paragraph_format.space_after = Pt(6)
 
-    for name, size in [("Title", 14), ("Heading 1", 13), ("Heading 2", 12)]:
+    for name, size in [("Heading 1", 13), ("Heading 2", 12)]:
         style = styles[name]
         style.font.name = "Times New Roman"
         style.font.size = Pt(size)
         style.font.bold = True
+        style.font.color.rgb = RGBColor(0, 0, 0)
         style.paragraph_format.space_before = Pt(10)
         style.paragraph_format.space_after = Pt(6)
         style.paragraph_format.keep_with_next = True
+
+    if "ManuscriptTitle" not in styles:
+        title = styles.add_style("ManuscriptTitle", WD_STYLE_TYPE.PARAGRAPH)
+    else:
+        title = styles["ManuscriptTitle"]
+    title.font.name = "Times New Roman"
+    title.font.size = Pt(14)
+    title.font.bold = True
+    title.font.color.rgb = RGBColor(0, 0, 0)
+    title.paragraph_format.space_after = Pt(8)
+    title.paragraph_format.keep_with_next = True
+
+    if "BlockQuote" not in styles:
+        quote = styles.add_style("BlockQuote", WD_STYLE_TYPE.PARAGRAPH)
+    else:
+        quote = styles["BlockQuote"]
+    quote.font.name = "Times New Roman"
+    quote.font.size = Pt(11)
+    quote.font.italic = True
+    quote.font.color.rgb = RGBColor(0, 0, 0)
+    quote.paragraph_format.left_indent = Mm(8)
+    quote.paragraph_format.right_indent = Mm(4)
+    quote.paragraph_format.line_spacing = 1.5
+    quote.paragraph_format.space_after = Pt(6)
 
     if "CodeBlock" not in styles:
         code = styles.add_style("CodeBlock", WD_STYLE_TYPE.PARAGRAPH)
@@ -148,13 +174,18 @@ def add_body_paragraph(doc: Document, text: str, *, references: bool = False):
     if references:
         p.paragraph_format.left_indent = Mm(6)
         p.paragraph_format.first_line_indent = Mm(-6)
-        p.paragraph_format.space_after = Pt(3)
-    add_inline_markdown(p, text)
+        p.paragraph_format.line_spacing = 1.15
+        p.paragraph_format.space_after = Pt(2)
+        add_inline_markdown(p, text, size=10.5)
+    else:
+        add_inline_markdown(p, text)
     return p
 
 
-def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path):
+def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path, review_link: str | None = None):
     text = markdown_path.read_text(encoding="utf-8")
+    if review_link:
+        text = text.replace("[ANONYMIZED REVIEW LINK]", review_link)
     doc = Document()
     configure_document(doc)
 
@@ -188,7 +219,8 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path):
             continue
 
         if line.startswith("# "):
-            p = doc.add_paragraph(style="Title")
+            p = doc.paragraphs[0]
+            p.style = "ManuscriptTitle"
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             add_inline_markdown(p, line[2:].strip(), size=14)
             continue
@@ -197,7 +229,8 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path):
             heading = line[3:].strip()
             in_references = heading.startswith("References")
             in_figure_legends = heading == "Figure legends"
-            p = doc.add_paragraph(heading, style="Heading 1")
+            display_heading = "References" if in_references else heading
+            p = doc.add_paragraph(display_heading, style="Heading 1")
             continue
 
         if line.startswith("### "):
@@ -208,6 +241,11 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path):
             p = doc.add_paragraph()
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             add_inline_markdown(p, line)
+            continue
+
+        if line.startswith("> "):
+            p = doc.add_paragraph(style="BlockQuote")
+            add_inline_markdown(p, line[2:].strip())
             continue
 
         figure_match = re.match(r"^\*\*Figure\s+([1-5])\.", line)
@@ -280,8 +318,9 @@ def main() -> int:
     ap.add_argument("--input-md", type=Path, required=True)
     ap.add_argument("--figures-dir", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--review-link", default=None)
     args = ap.parse_args()
-    build_docx(args.input_md, args.figures_dir, args.output)
+    build_docx(args.input_md, args.figures_dir, args.output, args.review_link)
     print(args.output)
     return 0
 
