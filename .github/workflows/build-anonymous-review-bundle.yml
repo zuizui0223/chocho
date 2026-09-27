@@ -1,0 +1,107 @@
+name: build anonymous review bundle
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scripts/**"
+      - "tests/**"
+      - "docs/**"
+      - "benchmarks/**"
+      - "data/**"
+      - "manuscript/generated/**"
+      - "manuscript/butterfly_specialization_claim_map_v0.1.json"
+      - "pyproject.toml"
+      - ".github/workflows/build-anonymous-review-bundle.yml"
+  workflow_dispatch:
+
+jobs:
+  anonymous-review-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Build deterministic anonymous snapshot
+        run: |
+          mkdir -p dist
+          python scripts/build_anonymous_review_bundle.py \
+            --output dist/butterfly_specialization_anonymous_review_bundle.zip \
+            --keep-stage _anonymous_stage
+          sha256sum dist/butterfly_specialization_anonymous_review_bundle.zip \
+            > dist/ANONYMOUS_BUNDLE_SHA256
+
+      - name: Verify overt identity metadata is absent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path("_anonymous_stage")
+          for forbidden_path in (
+              "CITATION.cff",
+              "MIGRATION_PROVENANCE.md",
+              "SOURCE_SNAPSHOT.txt",
+              "manuscript/butterfly_specialization_geb_title_page_template_v0.1.md",
+              "manuscript/butterfly_specialization_geb_cover_letter_v0.1.md",
+              "provenance/RELEASE_MANIFEST.md",
+          ):
+              assert not (root / forbidden_path).exists(), forbidden_path
+
+          banned = ("zuizui0223", "ruiqi", "zhang.ruiqi")
+          hits = []
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              try:
+                  text = path.read_text(encoding="utf-8").lower()
+              except UnicodeDecodeError:
+                  continue
+              for token in banned:
+                  if token in text:
+                      hits.append((str(path.relative_to(root)), token))
+          assert not hits, hits
+          PY
+
+      - name: Verify frozen figure-source bytes
+        run: |
+          cd _anonymous_stage
+          echo "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc  data/frozen/figure_sources/s1_resource_descriptors.csv" | sha256sum -c -
+          echo "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30  data/frozen/figure_sources/anthropogenic_species_metrics.csv" | sha256sum -c -
+          echo "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa  data/frozen/figure_sources/host_contribution_metrics.csv" | sha256sum -c -
+          echo "a73dca6e8b669f721d8f2745f27198d9b47a5cbd05dde6146cc8d4f1ddfbf79b  data/frozen/figure_sources/independent_climate_primary_result.json" | sha256sum -c -
+
+      - name: Test anonymous snapshot
+        run: |
+          cd _anonymous_stage
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test,figure]"
+          pytest -q
+
+      - name: Regenerate manuscript figures inside anonymous snapshot
+        run: |
+          cd _anonymous_stage
+          python scripts/render_butterfly_specialization_manuscript_figures.py \
+            --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+            --output-dir _review_figures
+          test "$(find _review_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 5
+          test "$(find _review_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 5
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anonymous-review-bundle
+          path: |
+            dist/butterfly_specialization_anonymous_review_bundle.zip
+            dist/ANONYMOUS_BUNDLE_SHA256
+          retention-days: 30
