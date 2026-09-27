@@ -87,7 +87,9 @@ def add_continuous_line_numbering(section):
         sectpr.remove(old)
     ln = OxmlElement("w:lnNumType")
     ln.set(qn("w:countBy"), "1")
-    ln.set(qn("w:start"), "1")
+    # LibreOffice/Word count an invisible pre-content line in this generated document.
+    # Starting at zero makes the first visible manuscript line display as line 1.
+    ln.set(qn("w:start"), "0")
     ln.set(qn("w:restart"), "continuous")
     sectpr.append(ln)
 
