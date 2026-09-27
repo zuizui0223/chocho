@@ -71,6 +71,7 @@ jobs:
               line_nodes = root.xpath("//w:sectPr/w:lnNumType", namespaces=ns)
               assert line_nodes
               assert line_nodes[0].get("{%s}countBy" % ns["w"]) == "1"
+              assert line_nodes[0].get("{%s}start" % ns["w"]) == "0"
               assert line_nodes[0].get("{%s}restart" % ns["w"]) == "continuous"
 
               joined = b"\n".join(z.read(n) for n in names if n.endswith(".xml")).lower()
