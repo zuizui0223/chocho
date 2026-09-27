@@ -41,15 +41,23 @@ See `docs/REPRODUCIBILITY.md`.
 - Figure CI installs `.[figure]` and regenerates all five figures from the vendored source inputs.
 - WCVP/HOSTS sidecar scripts use base R only. Historical CI used `r-lib/actions/setup-r@v2` with `r-version: "release"`.
 
+## Review-package preparation completed
+
+- `scripts/build_blinded_review_docx.py` and `.github/workflows/build-blinded-review-docx.yml` reproducibly build the editable double-anonymous review DOCX from the blinded Markdown plus five regenerated figures.
+- The review DOCX has continuous visible line numbering from 1, page numbers, embedded figures/legends, scrubbed creator/lastModifiedBy metadata and removed Word revision-session identifiers.
+- A generated 20-page review DOCX was rendered page-by-page and visually audited end-to-end.
+- `scripts/build_anonymous_review_bundle.py` and `.github/workflows/build-anonymous-review-bundle.yml` build the de-identified reviewer code bundle.
+- The anonymous bundle passed overt identity scanning, preserved the four frozen figure-source raw hashes, passed 31 included scientific tests, regenerated five PDF plus five PNG figures, and carries an internal SHA256SUMS manifest.
+
 ## Required release actions still outside the frozen scientific package
 
 1. Choose the software license and add the corresponding `LICENSE` file.
 2. Confirm final authors, affiliations, corresponding author, ORCIDs, CRediT roles, acknowledgements, funding and conflicts.
 3. Create the final release commit and tag `v1.0.0-butterfly`.
 4. Archive that exact tag in Zenodo and mint the public DOI.
-5. Add the DOI/version to `CITATION.cff` and the identifying title-page/final-public metadata.
-6. Supply an anonymized reviewer-access link in the blinded review manuscript; do not expose the public author-identifying archive there during double-anonymous review.
-7. Export the editable review document with continuous line numbering and embedded figures, and remove author-identifying document properties.
+5. Add the real DOI to `CITATION.cff` and the identifying title-page/final-public metadata.
+6. Upload the already-built anonymous reviewer bundle to a non-identifying reviewer-access host and insert the resulting URL in the blinded manuscript.
+7. Rebuild the final blinded DOCX after the anonymous URL is inserted, rerun anonymity/metadata checks, and perform the final proofread.
 8. Run final CI on the exact release commit.
 
 ## Release invariant
