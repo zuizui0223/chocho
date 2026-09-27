@@ -78,6 +78,8 @@ The GitHub Actions workflow `.github/workflows/paper-ci.yml` runs this suite wit
 
 The `analysis` optional dependency group additionally provides Shapely and rasterio for spatial analyses; `figure` provides Matplotlib.
 
+For full reconstruction requirements, including the two base-R WCVP/HOSTS sidecar builders and pinned upstream commits, see `docs/REPRODUCIBILITY.md`. The R scripts have no external R-package dependencies; the historical frozen workflow used `r-lib/actions/setup-r@v2` with `r-version: "release"`.
+
 ## Interpretation boundaries
 
 The reconstructed host envelopes represent **potential regional larval-resource opportunity**, not confirmed butterfly occupancy.
