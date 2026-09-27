@@ -59,4 +59,18 @@ Because the historical workflow selected the moving R label `release` rather tha
 
 ## Figure-source inputs
 
-The exact four inputs consumed by the audited manuscript-figure workflow are recorded in `provenance/FIGURE_SOURCE_ARTIFACTS.md`. Their SHA-256 values are part of the release boundary.
+The exact four inputs consumed by the audited manuscript-figure workflow are vendored in `data/frozen/figure_sources/` and recorded in `provenance/FIGURE_SOURCE_ARTIFACTS.md`. Their raw-byte SHA-256 values are part of the release boundary.
+
+A figure rebuild no longer requires historical Actions artifacts:
+
+```bash
+python -m pip install -e ".[figure]"
+python scripts/render_butterfly_specialization_manuscript_figures.py \
+  --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+  --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+  --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+  --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+  --output-dir results/butterfly-specialization-manuscript-figures-v0.1
+```
+
+The active paper CI executes this rebuild and requires five PDF plus five PNG outputs.
