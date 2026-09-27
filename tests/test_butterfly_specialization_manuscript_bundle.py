@@ -51,12 +51,33 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     # Structured GEB abstract should remain below 300 words.
     abstract_start = manuscript.index("## Abstract")
     abstract_end = manuscript.index("---", abstract_start)
-    assert _words(manuscript[abstract_start:abstract_end]) <= 300
+    abstract_words = _words(manuscript[abstract_start:abstract_end])
+    assert abstract_words <= 300
 
     # Approximate main-text budget remains under the GEB typical 5,000 words.
     intro_start = manuscript.index("## 1. Introduction")
     legend_start = manuscript.index("## Figure legends")
-    assert _words(manuscript[intro_start:legend_start]) <= 5000
+    main_text_words = _words(manuscript[intro_start:legend_start])
+    assert main_text_words <= 5000
+
+    # Readiness metadata must stay synchronized with the actual manuscript.
+    assert readiness["manuscript"]["approx_total_words"] == _words(manuscript)
+    assert readiness["manuscript"]["approx_abstract_words"] == abstract_words
+    assert readiness["manuscript"]["approx_main_text_words"] == main_text_words
+
+    # GEB reference list is alphabetical by first author / corporate author.
+    refs_start = manuscript.index("## References (working)")
+    refs_end = manuscript.index("## Repository provenance", refs_start)
+    reference_lines = [
+        line[2:]
+        for line in manuscript[refs_start:refs_end].splitlines()
+        if line.startswith("- ")
+    ]
+    reference_keys = [
+        re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip()
+        for line in reference_lines
+    ]
+    assert reference_keys == sorted(reference_keys, key=str.casefold)
 
     # Submission sections expected in the working bundle.
     for heading in (
@@ -137,6 +158,22 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "p = 0.2237",
     ):
         assert literal in manuscript
+
+    # A non-supported association must not be rewritten as statistical independence.
+    lowered = manuscript.lower()
+    for overclaim in (
+        "independently of family-level diet breadth",
+        "largely separate filter",
+        "climate strongly filters realized distributions",
+        "climate is a strong filter",
+        "rejects the simple interpretation",
+        "climate helps determine which portions",
+    ):
+        assert overclaim not in lowered
+
+    # Portfolio-concentration results must expose their structural upper-bound caveat.
+    assert "host-contribution concentration metrics are structurally bounded by portfolio size" in lowered
+    assert "associations between host richness and these concentration metrics" in lowered
 
 
 def test_manuscript_claim_map_preserves_inference_boundaries():

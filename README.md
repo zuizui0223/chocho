@@ -8,7 +8,7 @@ Target journal: *Global Ecology and Biogeography*.
 
 ## Scientific result
 
-The paper treats butterfly specialization as a hierarchy of partly independent ecological dimensions rather than a single specialist–generalist axis.
+The paper treats butterfly specialization as a hierarchy of partially coupled, non-interchangeable ecological dimensions rather than a single specialist–generalist axis.
 
 The frozen manuscript claim map currently supports six claims:
 
@@ -76,7 +76,7 @@ pytest -q
 
 The GitHub Actions workflow `.github/workflows/paper-ci.yml` runs this suite without network-dependent tests. The ecology-only pruning state has passed this CI.
 
-The `analysis` optional dependency group additionally provides SciPy, Shapely, and rasterio for spatial analyses; `figure` provides Matplotlib.
+The `analysis` optional dependency group additionally provides Shapely and rasterio for spatial analyses; `figure` provides Matplotlib.
 
 ## Interpretation boundaries
 
