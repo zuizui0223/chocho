@@ -219,8 +219,7 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path, review
             continue
 
         if line.startswith("# "):
-            p = doc.paragraphs[0]
-            p.style = "ManuscriptTitle"
+            p = doc.add_paragraph(style="ManuscriptTitle")
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             add_inline_markdown(p, line[2:].strip(), size=14)
             continue
