@@ -32,9 +32,37 @@ jobs:
               cp "$f" "$rel"
             done < <(find "_ttf/$root" -type f \( -iname '*butterfly*' -o -iname '*lepidoptera*' \) -print0)
           done
-          for f in pyproject.toml pytest.ini requirements.txt requirements-dev.txt .gitignore; do
+          # Generic climate module test is part of the butterfly GEB dependency closure.
+          cp _ttf/tests/test_resource_envelope_climate.py tests/test_resource_envelope_climate.py
+          for f in pytest.ini requirements.txt requirements-dev.txt .gitignore; do
             [ -f "_ttf/$f" ] && cp "_ttf/$f" "$f"
           done
+          cat > pyproject.toml <<'EOF'
+          [build-system]
+          requires = ["setuptools>=69"]
+          build-backend = "setuptools.build_meta"
+
+          [project]
+          name = "butterfly-specialization-ecology"
+          version = "0.1.0"
+          description = "Reproducible analyses for the butterfly specialization ecology manuscript"
+          readme = "README.md"
+          requires-python = ">=3.11"
+          dependencies = ["numpy>=1.26", "numba>=0.65,<0.66"]
+
+          [project.optional-dependencies]
+          test = ["pytest>=8", "scipy>=1.11", "shapely>=2,<3"]
+          analysis = ["scipy>=1.11", "shapely>=2,<3", "rasterio>=1.4"]
+          figure = ["matplotlib>=3.9,<4"]
+
+          [tool.setuptools.packages.find]
+          where = ["src"]
+
+          [tool.pytest.ini_options]
+          pythonpath = ["src"]
+          testpaths = ["tests"]
+          addopts = "-ra"
+          EOF
           rm -rf _ttf
       - name: Record source boundary
         run: |
