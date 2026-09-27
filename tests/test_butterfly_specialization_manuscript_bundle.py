@@ -150,6 +150,10 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     ):
         assert overclaim not in lowered
 
+    # Portfolio-concentration results must expose their structural upper-bound caveat.
+    assert "host-contribution concentration metrics are structurally bounded by portfolio size" in lowered
+    assert "associations between host richness and these concentration metrics" in lowered
+
 
 def test_manuscript_claim_map_preserves_inference_boundaries():
     claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.1.json")
