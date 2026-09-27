@@ -20,6 +20,10 @@ on:
       - ".github/workflows/build-anonymous-review-bundle.yml"
   workflow_dispatch:
 
+concurrency:
+  group: anonymous-review-bundle-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   anonymous-review-bundle:
     runs-on: ubuntu-latest
