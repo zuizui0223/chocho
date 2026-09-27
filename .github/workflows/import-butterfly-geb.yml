@@ -24,7 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           rsync -a _ttf/src/ src/
-          for root in manuscript scripts tests docs benchmarks results .github/workflows; do
+          for root in manuscript scripts tests docs benchmarks results; do
             [ -d "_ttf/$root" ] || continue
             while IFS= read -r -d '' f; do
               rel="${f#_ttf/}"
