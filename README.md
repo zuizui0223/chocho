@@ -62,6 +62,7 @@ The repository stores the frozen identities and reconstruction logic rather than
 - `src/ttf/` — the small dependency surface inherited from the precursor repository and still required by this paper.
 - `tests/` — offline paper-specific tests.
 - `data/external/leptraits_consensus_v1.0.csv` — the exact LepTraits snapshot used by the reconstruction.
+- `data/frozen/figure_sources/` — byte-exact, SHA-256-guarded inputs consumed by the audited manuscript-figure renderer.
 - `provenance/` — preserved workflow/provenance material needed to audit frozen executions.
 
 ## Reproducing the offline test suite
