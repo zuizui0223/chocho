@@ -118,7 +118,7 @@ Two butterflies can both be called "one-family specialists" while having very di
 
 Source: `benchmarks/exploratory/butterfly_host_specialization_hierarchy_result_v0.1.json`.
 
-## Evidence 5: climate strongly filters realized geography, but not according to host-family breadth
+## Evidence 5: climate-associated filtering is common, but not detectably weakened by broader host-family breadth
 
 Independent test:
 
