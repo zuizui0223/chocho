@@ -1,0 +1,49 @@
+name: Import butterfly GEB bundle
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/import-butterfly-geb.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch frozen TTF source
+        run: |
+          git clone --filter=blob:none https://github.com/zuizui0223/TTF.git _ttf
+          cd _ttf
+          git checkout 1a112334cca2f2ef5e234c3ae1fc1a80b8266956
+      - name: Copy butterfly/Lepidoptera paper bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          rsync -a _ttf/src/ src/
+          for root in manuscript scripts tests docs benchmarks results .github/workflows; do
+            [ -d "_ttf/$root" ] || continue
+            while IFS= read -r -d '' f; do
+              rel="${f#_ttf/}"
+              mkdir -p "$(dirname "$rel")"
+              cp "$f" "$rel"
+            done < <(find "_ttf/$root" -type f \( -iname '*butterfly*' -o -iname '*lepidoptera*' \) -print0)
+          done
+          for f in pyproject.toml pytest.ini requirements.txt requirements-dev.txt .gitignore; do
+            [ -f "_ttf/$f" ] && cp "_ttf/$f" "$f"
+          done
+          rm -rf _ttf
+      - name: Record source boundary
+        run: |
+          printf '%s\n' 'TTF_SOURCE_SHA=1a112334cca2f2ef5e234c3ae1fc1a80b8266956' > SOURCE_SNAPSHOT.txt
+      - name: Commit imported snapshot
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add .
+          git diff --cached --quiet && exit 0
+          git commit -m "Import butterfly GEB bundle from TTF"
+          git push
