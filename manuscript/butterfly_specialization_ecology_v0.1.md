@@ -14,7 +14,7 @@
 
 **Methods:** We linked LepTraits host breadth, HOSTS interaction records and WCVP plant distributions to reconstruct larval resource geography for 239 butterflies. We quantified native and contemporary host-resource breadth, decomposed introduced-host opportunity among contributing host species, and analysed species-level portfolios within fixed family-breadth strata. A pilot-derived prediction that broader host diets weaken climatic filtering was then tested on an independent butterfly panel using frozen quality gates and cross-fitted CHELSA mismatch.
 
-**Results:** Host-family breadth only weakly tracked native resource geography (Spearman rho = 0.276). Introduced host ranges expanded reconstructed opportunity for 206/239 species (86.2%), but proportional expansion was nearly unrelated to family breadth (rho = 0.008). Instead, broader diets had more distributed host-contribution portfolios; among 82 one-family butterflies, host-species richness strongly predicted effective contributor number (rho = 0.734). In the independent test, climatic filtering was common (median filtering score = 0.801; 23/24 species >0.5), but broader family-level diets did not significantly weaken filtering after controlling resource breadth (partial rho = -0.166, one-sided p = 0.2237).
+**Results:** Host-family breadth only weakly tracked native resource geography (Spearman rho = 0.276). Introduced host ranges expanded reconstructed opportunity for 206/239 species (86.2%), but proportional expansion was nearly unrelated to family breadth (rho = 0.008). Instead, broader diets had more distributed host-contribution portfolios; among 82 one-family butterflies, host-species richness was strongly associated with effective contributor number (rho = 0.734). In the independent test, climatic filtering was common (median filtering score = 0.801; 23/24 species >0.5), but broader family-level diets did not significantly weaken filtering after controlling resource breadth (partial rho = -0.166, one-sided p = 0.2237).
 
 **Main conclusions:** Butterfly specialization is hierarchical and multidimensional. Family-level diet breadth masks species-level host portfolios that structure geographic and anthropogenic resource opportunity, while climate-associated filtering of realized geography is common but is not detectably weakened by broader host-family diets.
 
@@ -191,13 +191,13 @@ In the 191 host-taxonomy-adequate expanded species, host-family breadth was posi
 
 Median effective contributor number rose from 1.67 in one-family butterflies to 2.04, 3.30, and 5.23 across the 2, 3-5, and 6+ family strata. Conversely, median maximum single-host share fell from 0.747 to 0.566, 0.439, and 0.313.
 
-Thus specialists and generalists often reached similar proportional resource expansion through different mechanisms: concentrated redistribution of one or two dominant hosts versus accumulation across a broader host portfolio.
+Thus specialists and generalists often reached similar proportional resource expansion through different host-contribution architectures: concentrated redistribution of one or two dominant hosts versus accumulation across a broader host portfolio.
 
 ### 3.4 Species-level portfolio richness reveals hierarchy within the same family breadth
 
 Family-level categories concealed substantial internal variation.
 
-Among 82 expanded one-family butterflies, resolved host-species richness ranged from 1 to 37 and strongly predicted a more distributed opportunity architecture. Spearman correlation with effective contributor number was rho = 0.734, whereas the correlation with maximum single-host share was rho = -0.707. By contrast, the association with the total number of introduced-added units was much weaker (rho = 0.269).
+Among 82 expanded one-family butterflies, resolved host-species richness ranged from 1 to 37 and was strongly associated with a more distributed opportunity architecture. Spearman correlation with effective contributor number was rho = 0.734, whereas the correlation with maximum single-host share was rho = -0.707. By contrast, the association with the total number of introduced-added units was much weaker (rho = 0.269).
 
 One-family butterflies in the low host-species-richness tertile (median richness 2) had a median effective contributor number of 1.00 and median maximum single-host share of 1.00. Corresponding values were 1.74 and 0.692 in the middle tertile (median richness 4), and 2.87 and 0.506 in the high tertile (median richness 12.5).
 
@@ -245,7 +245,7 @@ The absence of a meaningful relationship between host-family breadth and proport
 
 The decomposition explains why.
 
-### 4.3 Specialists and generalists gain similar opportunity through different mechanisms
+### 4.3 Specialists and generalists gain similar opportunity through different host-contribution architectures
 
 Taxonomic specialists commonly acquired added opportunity through highly concentrated host redistribution. A single host or pair of hosts could account for most newly available regions. Generalists, in contrast, accumulated added opportunity across larger portfolios of contributing hosts.
 
@@ -257,7 +257,7 @@ This architecture may be more ecologically informative than aggregate diet bread
 
 The one-family analysis makes this hierarchy explicit.
 
-Even with family breadth held exactly at one, butterflies ranged from one to 37 resolved host species. Host-species richness strongly predicted whether anthropogenic opportunity was dominated by one host or distributed among several contributors.
+Even with family breadth held exactly at one, butterflies ranged from one to 37 resolved host species. Host-species richness was strongly associated with whether anthropogenic opportunity was dominated by one host or distributed among several contributors.
 
 Thus "one-family specialist" is itself an ecologically heterogeneous category. Family-level and species-level specialization answer different questions: one describes taxonomic breadth across deep host lineages, whereas the other describes portfolio richness within those lineages.
 
@@ -328,6 +328,8 @@ Third, WGSRPD3 is coarse. Resource availability within a region can be spatially
 Fourth, GBIF non-observation is not confirmed absence. The independent climate analysis used a frozen sampling-effort proxy based on other panel butterflies to reduce the most obvious observation bias, but it remains a macroecological filtering analysis rather than an occupancy model from standardized surveys.
 
 Fifth, the post-gate transport recovery was performed after the first pre-climate gate had been observed. This recovery was not fully response-blind. To constrain discretion, recovery was applied uniformly to all and only the 14 species with partial transport, with no species replacement, no threshold changes, and no changes to the frozen climate or primary analysis.
+
+Sixth, the host-contribution concentration metrics are structurally bounded by portfolio size. Effective contributor number cannot exceed the number of contributing hosts, which in turn cannot exceed resolved host-species richness; likewise, the minimum possible dominance of the largest contributor declines as more hosts contribute. Associations between host richness and these concentration metrics therefore should not be interpreted as independent effects of richness. Their ecological content here is the observed contrast between similar aggregate resource expansion and different concentration architectures.
 
 Finally, the resource and host-architecture analyses are exploratory. The host-breadth/climate test is the independently evaluated component. Any new proposed predictor of climate-filtering strength, including host-portfolio architecture, requires a fresh panel for confirmatory testing.
 
