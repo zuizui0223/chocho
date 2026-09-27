@@ -1,6 +1,6 @@
 {
   "schema": "ttf_butterfly_specialization_submission_readiness_v0.1",
-  "status": "SCIENTIFICALLY_READY_DOUBLE_ANONYMOUS_PACKAGE_READY_PENDING_AUTHOR_METADATA_AND_ARCHIVE",
+  "status": "SCIENTIFICALLY_READY_REVIEW_PACKAGES_BUILT_PENDING_EXTERNAL_METADATA_AND_ARCHIVE",
   "created_on": "2026-09-27",
   "target_journal": {
     "primary": "Global Ecology and Biogeography",
@@ -70,14 +70,14 @@
     "vector_pdf_available_for_all_five_figures": true
   },
   "remaining_before_submission": [
+    "Choose and add the software license.",
     "Insert final author list, affiliations, corresponding-author details, emails and ORCIDs in the separate title page.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
-    "Create the permanent archival snapshot and replace DOI placeholders.",
-    "Ensure the permanent archival snapshot includes the four vendored, SHA-256-guarded manuscript-figure source inputs under `data/frozen/figure_sources/`.",
-    "Create an anonymized reviewer-access link for the frozen code/provenance package, verify that its landing page and metadata do not identify the authors, and insert it into the blinded Data and Code Availability statement.",
-    "Export the blinded main manuscript to an editable review document with continuous line numbering and embedded figures.",
-    "Remove author metadata from the review document file properties.",
-    "Perform final proofread after metadata and archive DOI are inserted."
+    "Create the final release/tag `v1.0.0-butterfly`, archive that exact release, and mint the public DOI.",
+    "Insert the real public DOI into CITATION.cff, the separate title page, and the final public Data and Code Availability statement.",
+    "Upload the already-built de-identified reviewer bundle to an anonymous reviewer-access host whose landing page and metadata do not identify the authors, then insert that real URL into the blinded Data and Code Availability statement.",
+    "Rebuild the final blinded review DOCX after the anonymous reviewer URL is inserted; rerun metadata/anonymity checks and perform the final proofread.",
+    "Run the final paper/review-package CI on the exact release commit."
   ],
   "not_required": [
     "Additional response-driven predictor searches.",
@@ -85,5 +85,14 @@
     "Replacing species that failed original technical acquisition.",
     "Turning exploratory resource analyses into confirmatory claims."
   ],
-  "submission_checklist": "manuscript/butterfly_specialization_geb_submission_checklist_v0.1.json"
+  "submission_checklist": "manuscript/butterfly_specialization_geb_submission_checklist_v0.1.json",
+  "review_package_state": {
+    "blinded_docx_builder": "scripts/build_blinded_review_docx.py",
+    "blinded_docx_ci": ".github/workflows/build-blinded-review-docx.yml",
+    "blinded_docx_status": "BUILT_METADATA_SCRUBBED_AND_20_PAGE_VISUALLY_AUDITED_WITH_REVIEW_LINK_PLACEHOLDER",
+    "anonymous_bundle_builder": "scripts/build_anonymous_review_bundle.py",
+    "anonymous_bundle_ci": ".github/workflows/build-anonymous-review-bundle.yml",
+    "anonymous_bundle_status": "BUILT_DEIDENTIFIED_HASH_VERIFIED_TESTED_AND_FIGURE_REBUILD_VERIFIED",
+    "anonymous_hosting_status": "PENDING_EXTERNAL_ANONYMOUS_REVIEW_URL"
+  }
 }

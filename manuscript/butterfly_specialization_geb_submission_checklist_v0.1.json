@@ -1,6 +1,6 @@
 {
   "schema": "ttf_butterfly_specialization_geb_submission_checklist_v0.1",
-  "status": "READY_PENDING_AUTHOR_METADATA_AND_PERMANENT_ARCHIVE",
+  "status": "READY_PENDING_EXTERNAL_AUTHOR_LICENSE_ARCHIVE_AND_ANONYMOUS_URL",
   "checked_on": "2026-09-27",
   "journal": "Global Ecology and Biogeography",
   "article_type": "Research Article",
@@ -74,14 +74,14 @@
     "new_confirmatory_analysis_required": false
   },
   "remaining_before_submission": [
+    "Choose and add the software license.",
     "Fill final authors, affiliations, emails and ORCIDs in the separate title page.",
-    "Fill CRediT author contributions.",
-    "Insert acknowledgements, funding and final conflict-of-interest disclosure.",
-    "Create the permanent archival snapshot and insert the public DOI in the title page and final public Data and Code Availability statement.",
-    "Create an anonymized reviewer-access link for the frozen code/provenance package, verify that its landing page and metadata do not identify the authors, and insert it into the blinded Data and Code Availability statement.",
-    "Export the blinded main manuscript to an editable review document with continuous line numbering and embed the five figures with their legends.",
-    "Remove document-property author metadata from the review file before upload.",
-    "Perform one final proofread of the exported review document."
+    "Fill CRediT author contributions, acknowledgements, funding and final conflict-of-interest disclosure.",
+    "Create/tag the final `v1.0.0-butterfly` release, archive it, and mint the real public DOI.",
+    "Insert the real public DOI in CITATION.cff, the title page and final public Data and Code Availability statement.",
+    "Upload the completed de-identified reviewer bundle to an anonymous host and insert its non-identifying reviewer URL into the blinded manuscript.",
+    "Rebuild and recheck the final blinded DOCX after URL insertion, then perform the final proofread.",
+    "Run final CI on the exact release commit."
   ],
   "complete_now": [
     "Scientific analyses and claim boundaries.",
@@ -93,6 +93,9 @@
     "Five visually audited figures with vector PDFs.",
     "Cover-letter draft.",
     "Four byte-exact manuscript-figure source inputs vendored and SHA-256 guarded.",
+    "Reproducible blinded DOCX builder with continuous line numbering, five embedded figures, page numbering and metadata scrubbing.",
+    "Current blinded review DOCX rendered to 20 pages and visually audited end-to-end; visible line numbering starts at 1.",
+    "De-identified anonymous reviewer code bundle built with identity scan, internal checksums, 31 scientific tests and five-figure regeneration.",
     "Full test suite and manuscript claim checks."
   ]
 }
