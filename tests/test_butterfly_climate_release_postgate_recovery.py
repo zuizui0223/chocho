@@ -76,7 +76,7 @@ def test_postgate_transport_completion_contract_is_uniform_and_nonselective():
 def test_postgate_recovery_workflow_uses_exact_authoritative_state_and_gate():
     workflow = (
         ROOT
-        / ".github/workflows/butterfly-climate-release-postgate-recovery-v01.yml"
+        / "provenance/workflows/butterfly-climate-release-postgate-recovery-v01.yml"
     ).read_text()
 
     assert "run-id: 36241187187" in workflow
