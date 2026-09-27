@@ -1,0 +1,37 @@
+name: paper CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scripts/**"
+      - "tests/**"
+      - "manuscript/**"
+      - "docs/**"
+      - "benchmarks/**"
+      - "pyproject.toml"
+      - ".github/workflows/paper-ci.yml"
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: paper-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install paper test environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+      - name: Run offline paper test suite
+        run: |
+          pytest -q
