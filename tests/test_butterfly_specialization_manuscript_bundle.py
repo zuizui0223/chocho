@@ -144,6 +144,9 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "independently of family-level diet breadth",
         "largely separate filter",
         "climate strongly filters realized distributions",
+        "climate is a strong filter",
+        "rejects the simple interpretation",
+        "climate helps determine which portions",
     ):
         assert overclaim not in lowered
 
