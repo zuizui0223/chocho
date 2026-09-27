@@ -81,6 +81,9 @@ def test_blinded_manuscript_removes_internal_identity_tokens():
     ):
         assert token not in text
 
+    assert "**reviewer link:** [anonymized review link]" in text
+    assert "landing page and metadata do not identify the authors" in text
+
 
 def test_separate_title_page_template_contains_submission_metadata_slots():
     text = (
