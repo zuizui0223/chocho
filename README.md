@@ -8,7 +8,7 @@ Target journal: *Global Ecology and Biogeography*.
 
 ## Scientific result
 
-The paper treats butterfly specialization as a hierarchy of partly independent ecological dimensions rather than a single specialist–generalist axis.
+The paper treats butterfly specialization as a hierarchy of partially coupled, non-interchangeable ecological dimensions rather than a single specialist–generalist axis.
 
 The frozen manuscript claim map currently supports six claims:
 
