@@ -51,14 +51,17 @@ See `docs/REPRODUCIBILITY.md`.
 
 ## Required release actions still outside the frozen scientific package
 
+Follow `docs/RELEASE_PROCEDURE.md`.
+
 1. Choose the software license and add the corresponding `LICENSE` file.
 2. Confirm final authors, affiliations, corresponding author, ORCIDs, CRediT roles, acknowledgements, funding and conflicts.
-3. Create the final release commit and tag `v1.0.0-butterfly`.
-4. Archive that exact tag in Zenodo and mint the public DOI.
-5. Add the real DOI to `CITATION.cff` and the identifying title-page/final-public metadata.
-6. Upload the already-built anonymous reviewer bundle to a non-identifying reviewer-access host and insert the resulting URL in the blinded manuscript.
-7. Rebuild the final blinded DOCX after the anonymous URL is inserted, rerun anonymity/metadata checks, and perform the final proofread.
-8. Run final CI on the exact release commit.
+3. Create a **manual Zenodo draft** and reserve its DOI before publication.
+4. Add that reserved DOI to `CITATION.cff` and the identifying title-page/final-public metadata.
+5. Upload the already-built anonymous reviewer bundle to a non-identifying reviewer-access host and insert the resulting URL in the blinded manuscript.
+6. Rebuild the final blinded DOCX after the anonymous URL is inserted, rerun anonymity/metadata checks, and perform the final proofread.
+7. Run final paper/review-package CI on the exact release commit and require `scripts/release_preflight.py` to report READY.
+8. Tag that exact green commit as `v1.0.0-butterfly`.
+9. Upload the exact tag archive to the existing Zenodo draft and publish it, activating the reserved DOI.
 
 ## Release invariant
 

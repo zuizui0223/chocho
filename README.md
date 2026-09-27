@@ -107,3 +107,5 @@ python scripts/release_preflight.py
 ```
 
 This preflight deliberately fails until the software license, final author/CRediT metadata, public archive DOI, and anonymized reviewer-access URL are supplied. It does not request or authorize additional ecological analyses.
+
+For the exact DOI-first release order, use `docs/RELEASE_PROCEDURE.md`. The v1 archive should use a manual Zenodo draft so the DOI can be reserved and written into the exact green release commit before `v1.0.0-butterfly` is tagged.
