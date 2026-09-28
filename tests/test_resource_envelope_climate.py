@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from ttf.resource_envelope_climate import (
+from butterfly_specialization_ecology.resource_envelope_climate import (
     climate_mismatch,
     deterministic_interior_points,
     observed_unit_split,
