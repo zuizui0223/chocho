@@ -6,7 +6,8 @@ import re
 from pathlib import Path
 
 
-RUNNING_TITLE = "Host-plant prominence and resource expansion"
+LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
+V02_RUNNING_TITLE = "Host-plant prominence and resource expansion"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
@@ -34,7 +35,13 @@ def render_blinded(text: str) -> str:
     if not lines or not lines[0].startswith("# "):
         raise ValueError("expected manuscript title as first Markdown heading")
     if len(lines) < 2 or not lines[1].startswith("**Running title:**"):
-        lines.insert(1, f"**Running title:** {RUNNING_TITLE}")
+        title = lines[0][2:].strip()
+        running_title = (
+            V02_RUNNING_TITLE
+            if "network-prominent host plants" in title
+            else LEGACY_RUNNING_TITLE
+        )
+        lines.insert(1, f"**Running title:** {running_title}")
         lines.insert(2, "")
     text = "\n".join(lines).rstrip() + "\n"
 
