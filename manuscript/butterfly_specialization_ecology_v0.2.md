@@ -190,7 +190,9 @@ Human redistribution of host plants has substantially expanded reconstructed but
 
 The secondary occurrence analysis shows that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of contemporary butterfly species × region observations that lay outside native host-resource envelopes, significantly more than expected after preserving both envelope size and broad regional placement. Yet resource availability alone did not reproduce realized geography: climate-associated filtering persisted after regional and distance controls.
 
-The resulting picture is layered rather than one-dimensional: **host taxonomy describes interaction breadth; plant biogeography determines where resource opportunity exists; human redistribution changes that opportunity; and climate-associated plus other filters shape how much is realized.**\n\n## References (working)
+The resulting picture is layered rather than one-dimensional: **host taxonomy describes interaction breadth; plant biogeography determines where resource opportunity exists; human redistribution changes that opportunity; and climate-associated plus other filters shape how much is realized.**
+
+## References (working)
 
 - Braga, M. P., Guimarães, P. R., Wheat, C. W., Nylin, S. & Janz, N. 2018. Unifying host-associated diversification processes using butterfly–plant networks. *Nature Communications* 9: 5155. https://doi.org/10.1038/s41467-018-07677-x
 - Brummitt, R. K., Pando, F., Hollis, S. & Brummitt, N. A. 2001. *World Geographical Scheme for Recording Plant Distributions*, 2nd edn. Hunt Institute for Botanical Documentation, Carnegie Mellon University.
@@ -210,9 +212,13 @@ The resulting picture is layered rather than one-dimensional: **host taxonomy de
 - Rashid, S., Wessely, J., Hausharter, J., Moser, D., Gattringer, A., Fiedler, K., Hülber, K. & Dullinger, S. 2026. Food Plant Availability Constrains Climatic Niches of Host-Specialized Europe-Centred Butterflies. *Diversity and Distributions* 32: e70245. https://doi.org/10.1111/ddi.70245
 - Robinson, G. S., Ackery, P. R., Kitching, I., Beccaloni, G. W. & Hernández, L. M. 2023. HOSTS - a Database of the World's Lepidopteran Hostplants [Data set]. Natural History Museum. https://doi.org/10.5519/havt50xw
 - Shirey, V., Larsen, E., Doherty, A. et al. 2022. LepTraits 1.0: A globally comprehensive dataset of butterfly traits. *Scientific Data* 9: 382. https://doi.org/10.1038/s41597-022-01473-5
-- Slove, J. & Janz, N. 2011. The relationship between diet breadth and geographic range size in the butterfly subfamily Nymphalinae: a study of global scale. *PLoS ONE* 6: e16057. https://doi.org/10.1371/journal.pone.0016057\n\n## Data and Code Availability
+- Slove, J. & Janz, N. 2011. The relationship between diet breadth and geographic range size in the butterfly subfamily Nymphalinae: a study of global scale. *PLoS ONE* 6: e16057. https://doi.org/10.1371/journal.pone.0016057
 
-Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A permanent archival snapshot and DOI will be supplied with the final submission.\n\n## Figure legends
+## Data and Code Availability
+
+Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A permanent archival snapshot and DOI will be supplied with the final submission.
+
+## Figure legends
 
 **Figure 1. Anthropogenic resource expansion is widespread and concentrated in network-prominent host plants.** **a**, Native versus contemporary host-resource breadth across 239 butterflies; 206 species expanded and aggregate coverage increased by 54.9%. **b**, Observed total introduced-added resource units in the 207-species strict-null subset compared with native-range-matched, other-Lepidoptera-use-weighted, and combined native-range-plus-use null expectations. The observed total exceeded the native-range null but not the combined null (12,853 observed vs median 12,971; p = 0.584). **c**, Across 8,909 host plants, Lepidoptera consumer degree was positively associated with plant geographic expansion; the association persisted after native-breadth adjustment and within plant-family × native-breadth strata (r = 0.295; 0/4,999 permuted correlations as extreme; Monte Carlo p < 0.001). Network degree is treated as a joint proxy for ecological host prominence and recording intensity.
 
@@ -220,4 +226,4 @@ Analysis code and the inputs required to reproduce the reported results and figu
 
 **Figure 3. The absence of a broad-generalist advantage is robust to finite geographic support and regional composition.** **a**, Host-family breadth versus proportional expansion after progressively excluding broad native resource envelopes. **b**, Within-region associations for species grouped by dominant native host-resource region.
 
-**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.** **a**, Filtering scores under the original analysis, within-region restriction and three distance-matching calipers. **b**, Primary partial host-family-breadth effect with bootstrap 95% interval and approximate 80%-power detectable-effect threshold.\n
+**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.** **a**, Filtering scores under the original analysis, within-region restriction and three distance-matching calipers. **b**, Primary partial host-family-breadth effect with bootstrap 95% interval and approximate 80%-power detectable-effect threshold.
