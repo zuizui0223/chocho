@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ttf.butterfly_resource_envelope import (
+from butterfly_specialization_ecology.butterfly_resource_envelope import (
     ResourceEnvelopeDescriptor,
     descriptor_from_sources,
     select_resource_space_pilot,
