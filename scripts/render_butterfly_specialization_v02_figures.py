@@ -31,7 +31,7 @@ def jitter(label: str, width: float = 0.12):
 def fig1_resource_and_null(anth, matched, hostbias, outdir):
     fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.5))
     for label, ax in zip(("a", "b", "c"), axes):
-        ax.text(-0.12, 1.04, label, transform=ax.transAxes, fontweight="bold", fontsize=12)
+        ax.text(-0.08, 1.10, label, transform=ax.transAxes, fontweight="bold", fontsize=12, va="bottom")
 
     native = np.asarray([int(r["native_resource_units"]) for r in anth], float)
     contemporary = np.asarray([int(r["contemporary_resource_units"]) for r in anth], float)
@@ -62,7 +62,7 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[1].axhline(observed_total, linestyle="--", linewidth=1.3)
     axes[1].set_xticks(x, model_labels)
     axes[1].set_ylabel("Introduced-added species × units")
-    axes[1].set_title("Host prominence absorbs the total-unit excess")
+    axes[1].set_title("Host prominence absorbs the excess")
     axes[1].text(
         0.03,0.96,
         f"Observed = {observed_total:,}\n"
@@ -82,7 +82,7 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[2].scatter(xx,observed,marker="D",s=48,label="Observed")
     axes[2].set_xticks(xx,["Mean log\nexpansion","Median log\nexpansion"])
     axes[2].set_ylabel("Log resource expansion")
-    axes[2].set_title("Strict null removes the formal expansion excess")
+    axes[2].set_title("Strict null removes formal excess")
     axes[2].text(
         0.03,0.04,
         "p = 0.073 (mean)\np = 0.079 (median)",
