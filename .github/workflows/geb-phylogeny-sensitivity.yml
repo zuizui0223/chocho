@@ -7,6 +7,7 @@ on:
       - review/geb-null-validation-v02
     paths:
       - "scripts/analyze_butterfly_pgls_kawahara.R"
+      - "scripts/analyze_butterfly_pgls_match_bias.R"
       - ".github/workflows/geb-phylogeny-sensitivity.yml"
 
 jobs:
@@ -40,6 +41,12 @@ jobs:
             data/external/leptraits_consensus_v1.0.csv \
             inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv \
             results/geb-phylogeny/kawahara_pgls.json
+
+      - name: Run PGLS coverage-bias diagnostic
+        run: |
+          Rscript scripts/analyze_butterfly_pgls_match_bias.R \
+            inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv \
+            results/geb-phylogeny/kawahara_match_bias.json
 
       - uses: actions/upload-artifact@v4
         if: always()
