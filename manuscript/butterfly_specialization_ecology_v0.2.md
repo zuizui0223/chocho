@@ -1,4 +1,4 @@
-# Anthropogenic host redistribution expands butterfly resource geography, but climate-associated filtering persists
+# Anthropogenic host redistribution expands butterfly resource geography beyond native-host distributions
 
 **Working manuscript v0.2 — 2026-09-28**
 
@@ -12,11 +12,11 @@
 
 **Major taxa studied:** Butterflies and their larval host plants.
 
-**Methods:** For 239 butterflies, we reconstructed native and contemporary larval-resource geography from LepTraits, HOSTS and WCVP and quantified the resource opportunity added by introduced host distributions. We diagnosed finite-geography, host-richness and butterfly-family structure in these comparisons. Using a separately assembled 32-species occurrence panel, we then asked whether introduced hosts recover butterfly occurrences lying outside native host-resource envelopes. Finally, 24 quality-qualified species entered a prospectively frozen climate cross-fit, with post-hoc within-region and distance-matched sensitivities addressing geographic accessibility.
+**Methods:** For 239 butterflies, we reconstructed native and contemporary larval-resource geography from LepTraits, HOSTS and WCVP and quantified opportunity added by introduced host distributions. We tested robustness to finite geographic support, butterfly-Family structure and regional composition. In a separately assembled 32-species occurrence panel, we asked whether introduced hosts recover butterfly occurrences lying outside native host-resource envelopes and compared observed recovery with null models preserving envelope size and broad regional placement. Finally, 24 quality-qualified species entered a pre-specified climate cross-fit, with within-region and distance-matched sensitivities addressing geographic accessibility.
 
-**Results:** Introduced host distributions expanded reconstructed opportunity for 206/239 species (86.2%) and increased aggregate resource geography from 26,530 to 41,083 species × region units (+54.9%). Proportional expansion was nearly unrelated to host-family breadth (Spearman rho = 0.008; butterfly-family-adjusted rank correlation = 0.021) and remained near zero after excluding the broadest native resource envelopes. In the independent occurrence panel, 115 species × region observations lay outside native host-resource envelopes; introduced host ranges recovered 66 (57.4%) of them, affecting 18 of the 23 species with such observations. Climate-associated filtering remained strong within contemporary resource opportunity (median score = 0.801; 23/24 species >0.5) and persisted under 250–1000 km distance matching (median 0.714–0.750). The prospectively predicted weakening of climate filtering with broader host-family diets was not supported (partial rho = -0.166, one-sided permutation p = 0.2237).
+**Results:** Introduced host distributions expanded reconstructed opportunity for 206/239 species (86.2%) and increased aggregate resource geography from 26,530 to 41,083 species × region units (+54.9%). Proportional expansion was nearly unrelated to host-family breadth (Spearman rho = 0.008; butterfly-Family-adjusted rank correlation = 0.021) and remained near zero in most major geographic strata. In the independent occurrence panel, introduced hosts recovered 66 of 115 species × region observations outside native host-resource envelopes (57.4%). This exceeded a null preserving the broad regional allocation of added resource units (mean 49.3, 95% interval 43–56; p = 5 × 10^-6). Climate-associated filtering remained strong within contemporary resource opportunity (median score = 0.801; 23/24 species >0.5) and persisted under 250–1000 km distance matching (median 0.714–0.750). The pre-specified prediction that broader diets weaken filtering was unsupported (partial rho = -0.166, one-sided p = 0.2237; bootstrap 95% interval -0.583 to 0.261).
 
-**Main conclusions:** Human redistribution of host plants has substantially enlarged butterfly resource opportunity across the taxonomic specialization spectrum, and independent occurrences show that this added geography is ecologically relevant for contemporary distributions. Yet expanded resource opportunity is not equivalent to realized butterfly geography: climate-associated filtering persists even after coarse accessibility controls. Family-level diet breadth is therefore a poor stand-alone predictor of either proportional anthropogenic opportunity gain or release from abiotic filtering.
+**Main conclusions:** Human redistribution of host plants has substantially enlarged butterfly resource opportunity across the taxonomic specialization spectrum. Independent occurrences align with the added resource geography more strongly than expected from envelope enlargement or broad regional placement alone. Yet expanded resource opportunity is not equivalent to realized butterfly geography: climate-associated filtering persists after geographic-distance controls. Family-level diet breadth is therefore a poor stand-alone predictor of either proportional anthropogenic opportunity gain or release from abiotic filtering.
 
 **Keywords:** butterflies; climate filtering; ecological specialization; global change; host breadth; introduced plants; resource geography 
 
@@ -69,7 +69,7 @@ Geographic units followed level 3 of the World Geographical Scheme for Recording
 
 For each butterfly we calculated native resource units, contemporary resource units, introduced-added units, contemporary/native ratio, log resource expansion = log(1 + contemporary) - log(1 + native), and the introduced share of contemporary geography. We summarized these metrics across four host-family strata and calculated descriptive rank associations with host-family breadth.
 
-Three post-hoc structural sensitivities were added after manuscript review. First, because WGSRPD3 contains a finite 369-unit global support, we repeated the family-breadth association after progressively excluding species with the broadest native resource envelopes and calculated rank-adjusted associations controlling native resource breadth. Second, we residualized rank variables by butterfly Family using the Family field in the exact frozen LepTraits table as a coarse correction for taxonomic non-independence. Third, we separated absolute added units from proportional expansion so that large starting resource envelopes could not masquerade as a specialization effect.
+Four post-hoc structural sensitivities were added after manuscript review. First, because WGSRPD3 contains a finite 369-unit global support, we repeated the family-breadth association after progressively excluding species with the broadest native resource envelopes and calculated rank-adjusted associations controlling native resource breadth. Second, we residualized rank variables by butterfly Family using the LepTraits Family field as a coarse correction for taxonomic non-independence. Third, we separated absolute added units from proportional expansion so that large starting resource envelopes could not masquerade as a specialization effect. Fourth, we assigned each butterfly to the WGSRPD level-1 region containing the largest share of its native host-resource units and repeated the host-breadth association within regional strata.
 
 These analyses quantify potential geographic resource opportunity generated by host redistribution. They do not establish that butterflies use every introduced host population or that host introduction caused butterfly range expansion.
 
@@ -77,7 +77,9 @@ These analyses quantify potential geographic resource opportunity generated by h
 
 We used the separately assembled 32-species independent panel to ask whether introduced host ranges improve agreement between resource envelopes and contemporary butterfly occurrences. For each species, GBIF records were mapped to WGSRPD3 units. We counted observed units falling outside the native host-resource envelope and then asked how many of those units entered the resource envelope when introduced, extant, non-doubtful WCVP host distributions were added.
 
-The validation endpoint was the fraction of native-envelope-external butterfly species × WGSRPD3 observations recovered by introduced host ranges. We also summarized the number of species for which at least one such unit was recovered and the species-level recovery fraction. This is presence-side validation: it tests whether contemporary host geography can account for observations missed by native host geography, but does not verify larval use at each observed locality.
+The validation endpoint was the fraction of native-envelope-external butterfly species × WGSRPD3 observations recovered by introduced host ranges. We also summarized the number of species for which at least one such unit was recovered and the species-level recovery fraction.
+
+To separate biological alignment from mechanical envelope enlargement, we compared aggregate recovery with two post-hoc null models. The first preserved, for every species, native-envelope size, the number of introduced-added units and the number of outside-native occurrence units, but placed added units uniformly among non-native WGSRPD3 units. The stricter null additionally preserved the number of introduced-added units within each WGSRPD level-1 region. Aggregate null distributions were generated from 199,999 hypergeometric draws. This is presence-side validation: it tests whether contemporary host geography accounts for observations missed by native host geography more often than structural overlap predicts, but does not verify larval use at each observed locality.
 
 ### 2.6 Host-contribution architecture as a structural diagnostic
 
@@ -158,13 +160,17 @@ Proportional resource expansion was almost unrelated to host-family breadth (Spe
 
 This near-zero relationship was not explained by the finite WGSRPD3 ceiling. The maximum native resource breadth was 305 of 369 units; after restricting the analysis to species below native-breadth thresholds of 250, 200, 168, 150 and 100 units, rho remained between 0.028 and 0.067. Rank-adjustment for native breadth gave a host-family association of 0.012 with log proportional expansion. Although host-family breadth was weakly associated with the absolute number of added units (rho = 0.127), that relationship fell to 0.017 after controlling native breadth. A coarse butterfly-Family correction likewise left the proportional result essentially unchanged (family-adjusted rank correlation = 0.021).
 
+The same conclusion was not confined to Northern America, the largest regional component of the panel. Within dominant native-resource strata, host-family breadth versus proportional expansion was rho = -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
+
 ### 3.2 Introduced host ranges recover contemporary butterfly occurrences missed by native host geography
 
 The independent occurrence panel provided direct presence-side validation of the resource reconstruction. Thirty-one of 32 species yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of those units (57.4%).
 
 Twenty-three species had at least one observed unit outside their native host envelope, and introduced hosts recovered at least one such unit in 18 species. The median species-level recovery fraction among those 23 species was 0.60; eight species had all native-envelope-external observed units recovered. For example, all 22 outside-native observed units of *Pyrgus communis* and all four of *Pieris brassicae* entered the contemporary resource envelope after introduced hosts were included.
 
-Thus the anthropogenic expansion is not only a change in reconstructed plant geography: for a substantial fraction of independent contemporary butterfly observations, introduced host distributions convert a native-host mismatch into host-available geography.
+Recovery exceeded structural overlap expectations. A null preserving native-envelope size, added-envelope size and outside-native occurrence count expected 38.0 recovered units (95% interval 30–46), compared with 66 observed (p = 5 × 10^-6). After additionally preserving the number of introduced-added units in each WGSRPD level-1 region, expected overlap rose to 49.3 units (95% interval 43–56) but remained below the observed 66 (p = 5 × 10^-6).
+
+Thus the anthropogenic expansion is not only a change in reconstructed plant geography: introduced host distributions align with independent contemporary butterfly occurrences more strongly than expected from simply making resource envelopes larger or placing added opportunity in the same broad regions.
 
 ### 3.3 Family-level host breadth only partly tracks native resource geography
 
@@ -194,7 +200,7 @@ The prospectively frozen prediction that broader host-family diets weaken climat
 
 The post-hoc spatial sensitivities did not rescue the predicted negative direction. Partial associations controlling resource breadth were +0.281 within occupied WGSRPD level-1 regions and +0.319, +0.347 and +0.123 under 250, 500 and 1000 km distance matching, respectively.
 
-The independent panel was nevertheless modest in size. A Fisher-z approximation gives an approximate 95% interval of -0.54 to +0.26 around the observed partial correlation, and an effect of roughly |partial rho| = 0.50 would be required for about 80% power at one-sided alpha = 0.05. The result therefore rejects neither all negative effects nor all biologically moderate effects; it specifically fails to support the preregistered directional prediction at the observed precision. 
+The independent panel was nevertheless modest in size. A 30,000-replicate species bootstrap gave a 95% interval of -0.583 to +0.261 around the observed partial correlation, and a Fisher-z approximation indicated that an absolute partial correlation of about 0.505 would be required for 80% power at one-sided alpha = 0.05. The result therefore rejects neither all negative effects nor all biologically moderate effects; it specifically fails to support the pre-specified directional prediction at the observed precision. 
 
 ## 4. Discussion
 
@@ -212,7 +218,7 @@ The near-zero relationship between family breadth and proportional expansion is 
 
 A resource-envelope analysis can otherwise remain purely potential. The independent occurrence comparison provides a stronger bridge to realized biogeography.
 
-More than half of species × region observations lying outside native host-resource envelopes were brought inside the envelope by adding introduced host ranges. This does not prove that the recorded butterfly used the introduced host at that locality, nor that host introduction caused colonization. But it demonstrates that a native-only view of larval resources systematically misses contemporary geographic opportunities that coincide with butterfly presence.
+More than half of species × region observations lying outside native host-resource envelopes were brought inside the envelope by adding introduced host ranges. Crucially, the aggregate overlap exceeded both an envelope-size null and a stricter null preserving the broad regional distribution of added resource units. The validation therefore cannot be reduced to the fact that contemporary envelopes are larger. This does not prove that the recorded butterfly used the introduced host at that locality, nor that host introduction caused colonization, but it demonstrates that a native-only view of larval resources systematically misses contemporary geographic opportunities that coincide with butterfly presence.
 
 That distinction matters for macroecological analyses that combine consumer distributions with resource distributions. When resources themselves have been redistributed, native resource maps can create apparent consumer–resource mismatches that are partly artifacts of treating present-day interaction opportunity as if plant geography were still native.
 
@@ -250,7 +256,7 @@ A useful next step is to replace coarse opportunity envelopes with local realize
 
 ## 5. Limitations
 
-First, HOSTS is incomplete and geographically uneven, with strong representation from Europe and North America. The conservative lower-bound filter removes obvious host-count inconsistencies but does not make interaction sampling globally uniform. The butterfly-Family sensitivity addresses taxonomic non-independence only coarsely; it is not a substitute for a dated species-level phylogeny or PGLS.
+First, HOSTS is incomplete and geographically uneven, with strong representation from Europe and North America. The conservative lower-bound filter removes obvious host-count inconsistencies but does not make interaction sampling globally uniform. Regional stratification indicates that the near-zero breadth–expansion result is not generated solely by the Northern American component, but several tropical strata remain small. The butterfly-Family sensitivity addresses taxonomic non-independence only coarsely; it is not a substitute for a dated species-level phylogeny or PGLS.
 
 Second, WCVP introduced status describes distribution status rather than the date, pathway or local abundance of introduction. We therefore infer changed **resource opportunity**, not a historical causal effect of plant introduction on butterfly range expansion.
 
@@ -260,7 +266,7 @@ Fourth, WGSRPD3 is coarse. Availability can be heterogeneous within regions, and
 
 Fifth, GBIF non-observation is not confirmed absence. The climate analysis used an effort proxy based on other panel butterflies, cross-fitting, within-region restriction and distance matching, but remains a macroecological filtering analysis rather than a standardized occupancy model.
 
-Sixth, the independent climate test contains only 24 informative species. The approximate 95% interval around the observed partial association is broad (-0.54 to +0.26), so moderate effects remain plausible even though the prospectively predicted negative association was not supported.
+Sixth, the independent climate test contains only 24 informative species. The bootstrap 95% interval around the observed partial association is broad (-0.583 to +0.261), so moderate effects remain plausible even though the pre-specified negative association was not supported.
 
 Seventh, several robustness analyses—including ceiling diagnostics, exact host-count adjustment, butterfly-Family adjustment and spatial matching—were motivated after inspection of the manuscript and should be treated as post-hoc sensitivities. They strengthen or delimit existing claims but are not independent confirmatory tests.
 
@@ -270,7 +276,7 @@ Finally, host-contribution concentration metrics are structurally bounded by por
 
 Human redistribution of host plants has substantially expanded reconstructed butterfly resource geography: more than 86% of resource-eligible species gained opportunity and aggregate species × region coverage increased by 54.9%. This proportional gain was essentially unrelated to family-level diet breadth and remained so after ceiling and butterfly-Family sensitivities.
 
-Independent occurrences show that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of contemporary butterfly species × region observations that lay outside native host-resource envelopes. Yet resource availability alone did not reproduce realized geography: climate-associated filtering persisted after regional and distance controls.
+Independent occurrences show that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of contemporary butterfly species × region observations that lay outside native host-resource envelopes, significantly more than expected after preserving both envelope size and broad regional placement. Yet resource availability alone did not reproduce realized geography: climate-associated filtering persisted after regional and distance controls.
 
 The resulting picture is layered rather than one-dimensional: **host taxonomy describes interaction breadth; plant biogeography determines where resource opportunity exists; human redistribution changes that opportunity; and climate-associated plus other filters shape how much is realized.** 
 
@@ -278,13 +284,13 @@ The resulting picture is layered rather than one-dimensional: **host taxonomy de
 
 **Figure 1. Introduced host distributions broadly expand reconstructed butterfly resource opportunity.** **a**, Native versus contemporary host-resource breadth for 239 resource-eligible butterflies. Overall, 206/239 species expanded and aggregate species × WGSRPD3 units increased from 26,530 to 41,083 (+54.9%). **b**, Log proportional resource expansion by host-family breadth class. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008), and this result was stable to native-breadth and butterfly-Family sensitivities.
 
-**Figure 2. Introduced host geography recovers independent butterfly occurrences missed by native host envelopes.** For the 23 independent-panel species with at least one observed WGSRPD3 unit outside the native host envelope, bars show the fraction of those units recovered when introduced host ranges are retained. Across species, 66/115 native-envelope-external species × region observations (57.4%) were recovered; 18/23 species recovered at least one unit and the median species-level recovery fraction was 0.60.
+**Figure 2. Introduced host geography recovers independent butterfly occurrences beyond structural overlap expectations.** **a**, For the 23 independent-panel species with at least one observed WGSRPD3 unit outside the native host envelope, bars show the fraction recovered when introduced host ranges are retained. Across species, 66/115 native-envelope-external species × region observations (57.4%) were recovered. **b**, Aggregate recovered units compared with structural null distributions. The global-size null expected 38.0 units (95% interval 30–46), and the WGSRPD level-1-composition-matched null expected 49.3 (43–56); both were below the observed 66 (p = 5 × 10^-6).
 
 **Figure 3. Taxonomic host breadth only partly predicts geographic resource breadth.** Host-family count is plotted against native host-resource WGSRPD3 breadth for the 215 species meeting the conservative host-taxonomy lower-bound criterion. Eighteen one-family butterflies fall in the upper quartile of geographic resource breadth. Spearman rho = 0.398.
 
 **Figure 4. Climate-associated filtering persists after geographic accessibility controls.** Species filtering scores for the 24 climate-informative butterflies are shown under the original cross-fit, same-WGSRPD-level-1 restriction and distance matching at 250, 500 and 1000 km. Median scores were 0.801, 0.846, 0.714, 0.750 and 0.750, respectively; the neutral expectation is 0.5.
 
-**Figure 5. The preregistered prediction that broader diets weaken climate filtering was not supported.** Climate-filtering score is plotted against host-family count, with contemporary resource breadth represented separately. The frozen primary test gave partial Spearman rho = -0.166 (one-sided permutation p = 0.2237; n = 24). Post-hoc spatial sensitivities did not recover the predicted negative direction, and the approximate 95% interval for the primary effect was -0.54 to +0.26. 
+**Figure 5. The pre-specified prediction that broader diets weaken climate filtering was not supported.** Climate-filtering score is plotted against host-family count, with contemporary resource breadth represented separately. The primary test gave partial Spearman rho = -0.166 (one-sided permutation p = 0.2237; n = 24). Post-hoc spatial sensitivities did not recover the predicted negative direction; a 30,000-replicate species bootstrap gave a 95% interval of -0.583 to +0.261. 
 
 ## Data and Code Availability
 
@@ -319,6 +325,13 @@ Primary result receipts:
 - `benchmarks/exploratory/butterfly_resource_expansion_mechanism_result_v0.1.json`
 - `benchmarks/exploratory/butterfly_host_specialization_hierarchy_result_v0.1.json`
 - `benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json`
+- `benchmarks/exploratory/butterfly_occurrence_resource_validation_v0.1.json`
+- `benchmarks/exploratory/butterfly_occurrence_overlap_null_v0.1.json`
+- `benchmarks/exploratory/butterfly_expansion_ceiling_sensitivity_v0.1.json`
+- `benchmarks/exploratory/butterfly_family_adjusted_sensitivity_v0.1.json`
+- `benchmarks/exploratory/butterfly_regional_robustness_v0.1.json`
+- `benchmarks/exploratory/butterfly_climate_distance_sensitivity_v0.1.json`
+- `benchmarks/exploratory/butterfly_climate_effect_size_v0.1.json`
 
 Integrated synthesis:
 
