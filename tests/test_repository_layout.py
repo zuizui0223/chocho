@@ -40,10 +40,44 @@ def test_frozen_s1_manifest_is_a_data_input() -> None:
 
 def test_navigation_indexes_exist() -> None:
     for rel in (
+        "manuscript/README.md",
         "scripts/README.md",
+        "docs/README.md",
         "docs/exploratory/README.md",
+        "benchmarks/README.md",
         "benchmarks/exploratory/README.md",
+        "tests/README.md",
         "data/README.md",
         "provenance/README.md",
+        "provenance/archive/climate/README.md",
     ):
         assert (ROOT / rel).is_file()
+
+
+def test_superseded_climate_contracts_are_archived_not_active() -> None:
+    active_protocols = ROOT / "docs" / "exploratory"
+    active_receipts = ROOT / "benchmarks" / "exploratory"
+    archive = ROOT / "provenance" / "archive" / "climate"
+
+    for name in (
+        "butterfly_climate_release_independent_test_v0.1.json",
+        "butterfly_climate_release_independent_test_v0.2.json",
+    ):
+        assert not (active_protocols / name).exists()
+        assert (archive / "protocols" / name).is_file()
+
+    for name in (
+        "butterfly_climate_release_execution_binding_v0.1.json",
+        "butterfly_climate_release_execution_binding_v0.2.json",
+    ):
+        assert not (active_receipts / name).exists()
+        assert (archive / "bindings" / name).is_file()
+
+    assert (
+        active_protocols
+        / "butterfly_climate_release_independent_test_v0.2.1.json"
+    ).is_file()
+    assert (
+        active_receipts
+        / "butterfly_climate_release_execution_binding_v0.2.1.json"
+    ).is_file()
