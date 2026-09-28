@@ -163,6 +163,49 @@ data("tree_butterfly", package = "megatrees")
 base_tree <- tree_butterfly
 base_species <- normalize_species(base_tree$tip.label)
 direct_species <- intersect(dat$species, base_species)
+match_group <- ifelse(dat$species %in% direct_species, "matched", "unmatched")
+matched_dat <- dat[match_group == "matched", , drop = FALSE]
+unmatched_dat <- dat[match_group == "unmatched", , drop = FALSE]
+
+rank_biserial <- function(x, y) {
+  # Probability-of-superiority effect rescaled to [-1, 1].
+  n1 <- length(x); n2 <- length(y)
+  ranks <- rank(c(x, y), ties.method = "average")
+  U <- sum(ranks[seq_len(n1)]) - n1 * (n1 + 1) / 2
+  2 * U / (n1 * n2) - 1
+}
+
+match_diagnostics <- list(
+  matched_species = nrow(matched_dat),
+  unmatched_species = nrow(unmatched_dat),
+  host_family_count = list(
+    matched_median = median(matched_dat$host_family_count),
+    unmatched_median = median(unmatched_dat$host_family_count),
+    wilcoxon_p = wilcox.test(
+      matched_dat$host_family_count,
+      unmatched_dat$host_family_count,
+      exact = FALSE
+    )$p.value,
+    rank_biserial = rank_biserial(
+      matched_dat$host_family_count,
+      unmatched_dat$host_family_count
+    )
+  ),
+  log_resource_expansion = list(
+    matched_median = median(matched_dat$log_resource_expansion),
+    unmatched_median = median(unmatched_dat$log_resource_expansion),
+    wilcoxon_p = wilcox.test(
+      matched_dat$log_resource_expansion,
+      unmatched_dat$log_resource_expansion,
+      exact = FALSE
+    )$p.value,
+    rank_biserial = rank_biserial(
+      matched_dat$log_resource_expansion,
+      unmatched_dat$log_resource_expansion
+    )
+  )
+)
+
 direct_tree <- drop.tip(
   base_tree,
   base_tree$tip.label[!base_species %in% direct_species]
@@ -181,6 +224,7 @@ payload <- list(
   resource_panel_species = nrow(dat),
   exact_tree_match_species = length(direct_species),
   coverage_fraction = length(direct_species) / nrow(dat),
+  tree_match_diagnostics = match_diagnostics,
   exact_species_result = direct_result,
   interpretation_rule = paste(
     "The near-zero host-breadth association is phylogenetically robust if both",
