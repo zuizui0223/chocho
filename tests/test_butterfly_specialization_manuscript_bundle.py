@@ -281,7 +281,7 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         assert literal in manuscript
 
     renderer = (
-        ROOT / "scripts" / "render_butterfly_specialization_manuscript_figures.py"
+        ROOT / "scripts" / "paper" / "render_butterfly_specialization_manuscript_figures.py"
     ).read_text(encoding="utf-8")
     for literal in (
         "Aggregate species × region units",
