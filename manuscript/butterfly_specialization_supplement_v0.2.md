@@ -26,7 +26,7 @@ Observed values in the 207-species strict-null panel:
 | 0.4 | 1.0 | 22.41 | 13,349 | 0.810 | 0.373 | 0.270 |
 | 0.4 | 2.0 | 42.08 | 18,153 | 1.000 | 1.000 | 1.000 |
 
-Each cell used 299 deterministic randomizations. The sensitivity is strongly governed by how closely the null reproduces observed host-network prominence: exponent 0.5 under-matches prominence and retains an apparent host-identity excess, whereas exponent 2 over-matches prominence and generates null portfolios more expansion-prone than observed. A separate prominence-calibrated null therefore selects the degree-weight exponent using only the observed host-degree target, not expansion outcomes.
+Each cell used 299 deterministic randomizations. The sensitivity is strongly governed by how closely the null reproduces observed host-network prominence: exponent 0.5 under-matches prominence and retains an apparent host-identity excess, whereas exponent 2 over-matches prominence and generates null portfolios more expansion-prone than observed.
 
 ## Supplementary Table S2. Exploratory plant network prominence and anthropogenic geographic expansion
 
