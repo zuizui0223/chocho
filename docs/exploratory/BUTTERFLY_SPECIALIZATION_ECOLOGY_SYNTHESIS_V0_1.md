@@ -189,7 +189,7 @@ In particular:
 
 ## Paper-level thesis
 
-**Butterfly specialization is hierarchical and multidimensional: family-level diet breadth masks species-level host portfolios that structure anthropogenic resource opportunity, while climate-associated filtering of realized geography is not detectably weakened by broader host-family diets.**
+**Anthropogenic host redistribution expands butterfly resource geography broadly across specialization classes, but similar aggregate gains are assembled through concentrated host contributions in family specialists and distributed portfolios in generalists. This decoupling reveals butterfly specialization as hierarchical rather than one-dimensional, while climate-associated filtering is not detectably weakened by broader host-family diets.**
 
 This framing converts the earlier negative results into ecological information rather than treating them as failed predictors.
 

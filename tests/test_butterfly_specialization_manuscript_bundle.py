@@ -177,6 +177,40 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "p = 0.2237",
     ):
         assert literal in abstract
+    assert abstract.index("206/239") < abstract.index("rho = 0.276")
+
+    # Novelty framing should foreground the anthropogenic resource-portfolio result.
+    title_line = manuscript.splitlines()[0]
+    assert title_line == (
+        "# Anthropogenic host redistribution expands butterfly resource geography "
+        "through contrasting host portfolios in specialists and generalists"
+    )
+    assert "climate" not in title_line.lower()
+    assert (
+        "**Aim:** To determine how anthropogenic host redistribution reshapes "
+        "butterfly resource geography"
+    ) in abstract
+    assert (
+        "**Main conclusions:** Anthropogenic host redistribution expands butterfly "
+        "resource geography without a proportional advantage"
+    ) in abstract
+    assert "A complementary resource-side problem remains unresolved" in manuscript
+
+    discussion_start = manuscript.index("## 4. Discussion")
+    discussion_end = manuscript.index("### 4.1", discussion_start)
+    discussion_lead = manuscript[discussion_start:discussion_end]
+    for literal in ("206/239", "54.9%", "74.7%", "31.3%"):
+        assert literal in discussion_lead
+    assert (
+        "The key result is therefore not simply that introduced hosts can add opportunity"
+        in discussion_lead
+    )
+
+    cover_letter = (
+        ROOT / "manuscript/butterfly_specialization_geb_cover_letter_v0.1.md"
+    ).read_text(encoding="utf-8")
+    assert title_line[2:] in cover_letter
+    assert "Our contribution is the complementary resource-side reconstruction" in cover_letter
 
     # Detailed portfolio correlations remain available in the full manuscript.
     for literal in ("rho = 0.734", "rho = -0.707"):

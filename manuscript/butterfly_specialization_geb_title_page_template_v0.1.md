@@ -1,10 +1,10 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Butterfly specialization is hierarchical: host portfolios structure resource opportunity while climate filters realized geography
+**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists
 
 **Article type:** Research Article
 
-**Running title:** Dimensions of butterfly specialization
+**Running title:** Host redistribution and specialization
 
 ## Authors
 
