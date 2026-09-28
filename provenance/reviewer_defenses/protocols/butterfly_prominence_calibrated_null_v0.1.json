@@ -1,0 +1,36 @@
+{
+  "schema": "chocho_butterfly_prominence_calibrated_null_protocol_v0.1",
+  "status": "POSTHOC_REVIEWER_DEFENSE_FIXED_BEFORE_CALIBRATED_EXPANSION_RESULT",
+  "created_on": "2026-09-28",
+  "question": "After matching plant family and native range, does any butterfly-specific host-identity expansion excess remain when null host prominence is calibrated to reproduce the observed mean number of other Lepidoptera consumers per host?",
+  "focal_panel": "Same 207-species strict host-bias panel with adequate host taxonomy and sufficient alternative same-family HOSTS-WCVP candidate hosts.",
+  "exact_constraints": [
+    "resolved host-species count",
+    "number of hosts in each WCVP plant family",
+    "observed focal hosts excluded from alternatives",
+    "sampling without replacement within each focal portfolio"
+  ],
+  "native_log_bandwidths": [
+    0.1,
+    0.2,
+    0.4
+  ],
+  "prominence_target": "Mean number of other Lepidoptera species recorded using observed hosts in the strict-null focal panel.",
+  "calibration": "For each native-range bandwidth, choose the degree-weight exponent by deterministic bisection so the median null mean other-Lepidoptera degree matches the observed target. Calibration uses only host-network degree, not plant expansion outcomes.",
+  "exponent_bracket": [
+    0,
+    3
+  ],
+  "bisection_iterations": 8,
+  "calibration_replicates": 79,
+  "final_permutations": 499,
+  "seed_tag": "chocho-geb-prominence-calibrated-null-v01",
+  "primary_endpoints": [
+    "total introduced-added species x WGSRPD3 units",
+    "mean log resource expansion",
+    "median log resource expansion"
+  ],
+  "secondary_endpoint": "Spearman host-family breadth vs log resource expansion",
+  "interpretation_rule": "If observed expansion is not above the prominence-calibrated null across all three native-range bandwidths, the simple same-family host-identity excess is not identifiable beyond starting geography and network prominence.",
+  "claim_boundary": "This is post-hoc and calibrates to HOSTS consumer degree, which remains a joint proxy for ecological host prominence/commonness and study/recording intensity. It cannot partition those components or establish a causal role of prominence in plant introduction."
+}
