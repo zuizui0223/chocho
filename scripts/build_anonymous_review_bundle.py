@@ -22,6 +22,9 @@ COPY_PATHS = (
     "docs/exploratory",
     "docs/REPRODUCIBILITY.md",
     "benchmarks/exploratory",
+    "provenance/climate",
+    "provenance/archive/climate/operations",
+    "provenance/archive/climate/pilot",
     "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
     "manuscript/butterfly_specialization_claim_map_v0.2.json",
 )
