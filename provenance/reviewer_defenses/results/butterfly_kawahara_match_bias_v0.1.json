@@ -1,0 +1,36 @@
+{
+  "schema": "chocho_butterfly_kawahara_match_bias_v0.1",
+  "status": "SUCCESS_POSTHOC_PGLS_COVERAGE_DIAGNOSTIC",
+  "workflow": {
+    "run_id": 36442026506,
+    "artifact_id": 10978697871,
+    "artifact_name": "geb-kawahara-pgls-v01",
+    "artifact_sha256": "3106acd4814da26f8aee65f22c6127adab7e5507ca71aab2cb3d9ba3d75d65a2"
+  },
+  "panel_species": 239,
+  "exact_tree_matches": 124,
+  "unmatched_species": 115,
+  "matched": {
+    "median_host_family_count": 2,
+    "mean_host_family_count": 2.967741935483871,
+    "median_log_resource_expansion": 0.3761638794020734,
+    "mean_log_resource_expansion": 0.5362793571860245,
+    "expanded_fraction": 0.9516129032258065,
+    "rho_host_family_vs_log_expansion": -0.05535612790708306
+  },
+  "unmatched": {
+    "median_host_family_count": 2,
+    "mean_host_family_count": 2.965217391304348,
+    "median_log_resource_expansion": 0.2848371203195503,
+    "mean_log_resource_expansion": 0.3608043803086314,
+    "expanded_fraction": 0.7652173913043478,
+    "rho_host_family_vs_log_expansion": 0.05284236789842173
+  },
+  "tests": {
+    "wilcoxon_host_family_count_p": 0.6769388629035653,
+    "wilcoxon_log_resource_expansion_p": 0.001191494486576961,
+    "fisher_expanded_fraction_p": 0.00002557051342493741
+  },
+  "interpretation": "Kawahara-tree matches are not fully representative of the resource panel because matched species have greater resource expansion and a higher expansion frequency. However, host-family breadth is similar between matched and unmatched taxa, and the breadth–expansion correlation is near zero with opposite small signs in both groups (-0.055 versus +0.053). The phylogenetic subset therefore supports the near-zero slope but should not be treated as representative of the panel's expansion magnitude.",
+  "claim_boundary": "Species-level PGLS covers 124/239 taxa and is selective with respect to expansion magnitude. It is used only as a sensitivity for the host-breadth slope, not for estimating the panel-wide amount of anthropogenic resource expansion."
+}
