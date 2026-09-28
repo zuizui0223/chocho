@@ -9,8 +9,8 @@ on:
     branches: [main]
     paths:
       - "manuscript/**"
-      - "scripts/build_blinded_review_docx.py"
-      - "scripts/render_butterfly_specialization_manuscript_figures.py"
+      - "scripts/paper/build_blinded_review_docx.py"
+      - "scripts/paper/render_butterfly_specialization_manuscript_figures.py"
       - "data/frozen/figure_sources/**"
       - "pyproject.toml"
       - ".github/workflows/build-blinded-review-docx.yml"
@@ -34,7 +34,7 @@ jobs:
 
       - name: Render five manuscript figures from frozen sources
         run: |
-          python scripts/render_butterfly_specialization_manuscript_figures.py \
+          python scripts/paper/render_butterfly_specialization_manuscript_figures.py \
             --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
@@ -44,7 +44,7 @@ jobs:
       - name: Build double-anonymous review DOCX
         run: |
           mkdir -p dist
-          python scripts/build_blinded_review_docx.py \
+          python scripts/paper/build_blinded_review_docx.py \
             --input-md manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md \
             --figures-dir _review_figures \
             --output dist/butterfly_specialization_GEB_blinded_review.docx
