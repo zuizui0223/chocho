@@ -50,8 +50,8 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     assert figures["workflow"]["artifact_id"] == readiness["figures"]["artifact_id"]
     assert len(figures["figures"]) == 5
     assert figures["visual_audit"]["data_scale_annotations_present_in_all_five_figures"] is True
-    assert figures["visual_audit"]["figure_2_aggregate_species_region_magnitude_present"] is True
-    assert figures["visual_audit"]["figure_3_key_portfolio_medians_present"] is True
+    assert figures["visual_audit"]["figure_1_aggregate_species_region_magnitude_present"] is True
+    assert figures["visual_audit"]["figure_2_key_portfolio_medians_present"] is True
     assert figures["visual_audit"]["figure_5_resource_breadth_size_legend_present"] is True
 
     # Structured GEB abstract should remain below 300 words.
