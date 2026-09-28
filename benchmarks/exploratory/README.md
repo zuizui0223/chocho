@@ -4,6 +4,8 @@ This directory is the **active evidence surface** for the manuscript. It contain
 
 ## Primary manuscript evidence
 
+- `butterfly_reviewer_defense_result_v0.1.json` — post-v0.1 matched-host null, structural concentration audit, finite-headroom diagnostic, occurrence validation, family-blocked sensitivity and same-WGSRPD-level-1 climate sensitivity. This is the primary evidence added for manuscript v0.2.
+
 Read these first:
 
 1. `butterfly_anthropogenic_resource_expansion_result_v0.1.json`
