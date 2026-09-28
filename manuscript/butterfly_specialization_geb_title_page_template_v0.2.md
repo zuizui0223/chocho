@@ -4,7 +4,7 @@
 
 **Article type:** Research Article
 
-**Running title:** Host redistribution and resource geography
+**Running title:** Host redistribution and resource gain
 
 ## Authors
 
