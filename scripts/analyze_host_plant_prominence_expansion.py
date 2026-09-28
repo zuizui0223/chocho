@@ -146,20 +146,28 @@ def main():
     permutable=[np.asarray(v,dtype=int) for v in buckets.values() if len(v)>1]
     rng=np.random.default_rng(20260928)
     null=np.empty(args.permutations,float)
+    # Because permutation is within strata, each stratum mean is invariant.
+    # Permuting the already residualized degree ranks is exactly equivalent
+    # and avoids rebuilding group means on every replicate.
     for k in range(args.permutations):
-        rp=rd.copy()
+        rp=xd.copy()
         for idx in permutable:
-            rp[idx]=rng.permutation(rp[idx])
-        null[k]=corr(group_residualize(rp,strata),yy)
+            rp[idx]=rng.permutation(xd[idx])
+        null[k]=corr(rp,yy)
 
-    # Descriptive degree quartiles.
-    q=np.quantile(degree,[0.25,0.5,0.75])
-    quart=np.searchsorted(q,degree,side="right")
-    quartiles=[]
-    for k in range(4):
-        idx=np.where(quart==k)[0]
-        quartiles.append({
-            "quartile":k+1,
+    # Descriptive degree classes avoid empty quantile bins caused by the large
+    # mass of plants with degree == 1.
+    degree_classes=[]
+    masks=[
+        ("1 consumer", degree == 1),
+        ("2 consumers", degree == 2),
+        ("3–5 consumers", (degree >= 3) & (degree <= 5)),
+        ("6+ consumers", degree >= 6),
+    ]
+    for label,mask in masks:
+        idx=np.where(mask)[0]
+        degree_classes.append({
+            "class":label,
             "plants":int(len(idx)),
             "median_degree":float(np.median(degree[idx])),
             "expanded_fraction":float(np.mean(added[idx]>0)),
@@ -184,7 +192,7 @@ def main():
             "stratified_null_median":float(np.median(null)),
             "stratified_null_q975":float(np.quantile(null,0.975)),
         },
-        "degree_quartiles":quartiles,
+        "degree_classes":degree_classes,
         "interpretation_rule":"A positive within-family/native-breadth association would show that plant species prominent across the Lepidoptera-host network are disproportionately anthropogenically redistributed, providing a plant-level explanation for why usage-weighted host nulls absorb the apparent butterfly host-identity excess.",
         "claim_boundary":"HOSTS consumer degree conflates ecological host breadth/commonness with study and recording intensity. This analysis cannot partition those components.",
     }
