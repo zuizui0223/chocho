@@ -22,8 +22,6 @@
 
 ---
 
----
-
 ## 1. Introduction
 
 Specialization is one of the most familiar axes used to compare herbivorous insects. Butterflies are routinely described as specialists or generalists according to the number or phylogenetic breadth of larval host plants they use, and diet breadth has been linked to geographic range size, range dynamics, diversification and environmental gradients (Slove & Janz 2011; Lancaster 2020; Gross et al. 2026). Yet taxonomic diet breadth and the geography of those resources are not the same ecological quantity.
@@ -124,8 +122,6 @@ The effect estimate was imprecise: a 30,000-replicate species bootstrap gave a 9
 
 ## 4. Discussion
 
-## 4. Discussion
-
 Human redistribution of larval host plants has altered butterfly resource geography at a scale that is visible across hundreds of species. Introduced host distributions increased aggregate reconstructed resource opportunity by 54.9% and expanded the envelope of more than 86% of resource-eligible butterflies. This expansion was not concentrated in family-level generalists, survived finite-geography and butterfly-Family sensitivities, and—most importantly—was reflected in independent butterfly occurrences: introduced hosts recovered 57.4% of contemporary species × region observations that fell outside native host-resource envelopes.
 
 The central ecological result is therefore not a specialist–generalist contrast in portfolio concentration. It is a separation between **taxonomic diet breadth, resource geography and realized distribution** under global change.
@@ -194,8 +190,6 @@ Finally, the matched-host null, occurrence-overlap nulls, ceiling, Family and sp
 
 ## 6. Conclusions
 
-## 6. Conclusions
-
 Human redistribution of host plants has substantially expanded reconstructed butterfly resource geography: more than 86% of resource-eligible species gained opportunity and aggregate species × region coverage increased by 54.9%. In the conservative panel, actual known host identities generated substantially more expansion than random host sets with the same host-species count and plant-family composition. That excess was not preferentially concentrated in broad family-level generalists.
 
 Independent occurrences show that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of contemporary butterfly species × region observations that lay outside native host-resource envelopes, significantly more than expected after preserving both envelope size and broad regional placement. Yet resource availability alone did not reproduce realized geography: climate-associated filtering persisted after regional and distance controls.
@@ -215,8 +209,6 @@ The resulting picture is layered rather than one-dimensional: **host taxonomy de
 ## Data and Code Availability
 
 Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A permanent archival snapshot and DOI will be supplied with the final submission.
-
-## References (working)
 
 ## References (working)
 
