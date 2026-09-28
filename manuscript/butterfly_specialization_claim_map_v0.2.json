@@ -28,10 +28,11 @@
       "claim": "Introduced host ranges recover contemporary butterfly occurrence units lying beyond native-host geography more often than expected from structural overlap.",
       "status": "independent-panel occurrence validation with post-hoc null models",
       "evidence": "32-species independent panel; 23 species with outside-native occurrence units.",
-      "key_statistic": "66/115 outside-native species×WGSRPD3 units recovered (57.4%); level-1-composition-matched null mean=49.3, 95% interval 43–56, p=5e-6",
+      "key_statistic": "66/115 outside-native species×WGSRPD3 units recovered (57.4%); species-level mean recovery=0.583 vs region-matched null median=0.385 with 0/99,999 exceedances; excluding Pyrgus communis leaves 44/93=47.3% vs null median 30 units with 0/99,999 exceedances",
       "sources": [
         "benchmarks/exploratory/butterfly_occurrence_resource_validation_v0.1.json",
-        "benchmarks/exploratory/butterfly_occurrence_overlap_null_v0.1.json"
+        "benchmarks/exploratory/butterfly_occurrence_overlap_null_v0.1.json",
+        "benchmarks/exploratory/butterfly_occurrence_species_robustness_v0.1.json"
       ]
     },
     {
@@ -81,11 +82,12 @@
     "Host-family breadth has exactly zero effect on proportional expansion or climate filtering.",
     "Climate alone determines realized butterfly distributions.",
     "The raw specialist-generalist portfolio-concentration gradient is an independent biological mechanism.",
-    "The matched-host null proves that butterflies evolved to use globally redistributed plants."
+    "The matched-host null proves that butterflies evolved to use globally redistributed plants.",
+    "The 32-species panel was prospectively designed as an occurrence-validation panel."
   ],
   "required_language": {
     "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
-    "occurrence_validation": "Use recovery/alignment/overlap language; do not infer local host use or causal colonization.",
+    "occurrence_validation": "State that the 32-species panel was originally stratified for the climate test; treat occurrence validation as an independent secondary use. Report species-cluster and leave-one-out robustness, including Pyrgus communis.",
     "anthropogenic": "Attribute resource-envelope expansion to introduced host distributions, not causal butterfly expansion.",
     "architecture": "Describe raw concentration patterns as structurally constrained and secondary.",
     "climate": "Use climate-associated filtering language, not proof of physiological causation.",
@@ -102,10 +104,11 @@
     "Figure_3": [
       "C1"
     ],
-    "Figure_4": [
-      "C4"
-    ],
     "Figure_5": [
+      "C5"
+    ],
+    "Supplementary_Figure_S1": [
+      "C4",
       "C5"
     ]
   },
@@ -118,6 +121,10 @@
     "family_composition_matched_host_identity_null": "complete; 215 species; magnitude endpoints p=0.0005; specialization-gradient p=0.7865",
     "species_level_phylogenetic_model": "not_done; butterfly-Family sensitivity only",
     "figures_need_v0_2_rerender": true,
-    "cover_letter_v0_2_needed": true
+    "cover_letter_v0_2_needed": true,
+    "occurrence_species_cluster_robustness": "complete; mean species recovery 0.583 vs null 0.385; Pyrgus-excluded 44/93 remains above null",
+    "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
+    "kawahara_species_level_pgls": "running",
+    "host_commonness_native_range_null": "running"
   }
 }
