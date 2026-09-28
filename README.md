@@ -23,15 +23,9 @@ See `manuscript/butterfly_specialization_claim_map_v0.1.json` for the exact clai
 
 ## Repository boundary
 
-This is the ecology-paper repository. It is intentionally separate from `zuizui0223/TTF`, which contains the transferability/qualification methodology.
+This repository is self-contained for the butterfly ecology paper. Method-development history and unrelated response domains are not part of the scientific argument presented here.
 
-The split is pinned to TTF commit:
-
-`1a112334cca2f2ef5e234c3ae1fc1a80b8266956`
-
-Migration provenance is recorded in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt`.
-
-Genetic-response, phylogatR, and generic transferability-development code have been removed from this repository after the paper-specific test suite demonstrated that they are not required by the GEB analysis.
+Migration provenance is retained separately in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt` so the origin of code and frozen artifacts remains auditable without entering the manuscript narrative.
 
 ## Main evidence path
 
