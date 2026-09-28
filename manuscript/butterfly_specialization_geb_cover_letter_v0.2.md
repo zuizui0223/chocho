@@ -4,7 +4,7 @@
 
 Dear Editors,
 
-Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth,”** for publication in *Global Ecology and Biogeography*.
+Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth”** for publication in *Global Ecology and Biogeography*.
 
 Global change redistributes interacting species as well as climate, yet consumer biogeography is often interpreted against static or native-only resource templates. We ask how human redistribution of larval host plants changes butterfly resource opportunity, whether broad taxonomic generalists benefit disproportionately, which plant-level properties account for the apparent expansion signal, and whether contemporary introduced-host geography aligns with butterfly occurrence.
 
