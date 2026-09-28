@@ -28,15 +28,15 @@ The strict-null panel contained 207 butterflies.
 
 ### Decision
 **The original “actual butterfly host identities are unusually globalized” claim is not allowed.**  
-The simple same-family host-identity excess is absorbed by plant native range plus network-wide host prominence/recording intensity.
+The simple same-family host-identity excess is sensitive to how plant prominence is represented. Across the 3 × 3 bandwidth-by-degree-weight grid, weak prominence weighting retained an excess, proportional weighting largely attenuated it, and strong weighting generated null portfolios more expansion-prone than observed. The null therefore identifies plant prominence as a confounding axis but does not uniquely decompose butterfly host choice from plant prominence.
 
-### Positive ecological replacement
+### Exploratory plant-level result
 Across **8,909 host plants in 278 families**, plant network degree was positively associated with anthropogenic geographic expansion:
 - Spearman log degree vs log expansion: **0.313**;
 - partial rank association controlling native breadth: **0.267**;
 - within plant-family × native-breadth-quintile strata: **r = 0.295**; **0/4,999** permuted correlations were as extreme (Monte Carlo **p < 0.001**).
 
-Allowed interpretation: **network-prominent host plants are disproportionately redistributed**, but HOSTS degree is a joint measure of ecological prominence/commonness and study/recording intensity.
+This result is **not a headline mechanism**. HOSTS degree includes moths as well as butterflies, can reflect study/recording intensity, and may increase after plant introduction through newly acquired consumer records.
 
 ## 2. Occurrence validation was potentially dominated by one species
 
@@ -82,7 +82,7 @@ Kawahara et al. (2023) time-calibrated global butterfly tree:
 - Pagel rank-PGLS beta **-0.051**, 95% CI **-0.234 to 0.131**, **p = 0.581**.
 
 ### Decision
-There is no supported broad-generalist advantage after species-level phylogenetic correction. Unmatched taxa are not phylogenetically imputed.
+There is no supported broad-generalist advantage after species-level phylogenetic correction. Unmatched taxa are not phylogenetically imputed. Tree coverage is response-selective: matched species have greater expansion than unmatched species, although host-family breadth is similar and the breadth–expansion correlation remains near zero in both subsets (-0.055 vs +0.053). PGLS is therefore used only as a slope sensitivity, not to estimate panel-wide expansion magnitude.
 
 ## 5. Finite geographic ceiling and regional bias
 
@@ -126,11 +126,11 @@ The original specialist-versus-generalist portfolio mechanism is not an allowed 
 
 The defensible positive result is now:
 
-> Anthropogenic redistribution has substantially expanded butterfly larval-resource geography, and this expansion is concentrated in plants that are prominent across the Lepidoptera–host network. Broad butterfly taxonomic diet breadth does not predict proportional gain. Contemporary introduced-host geography also aligns with butterfly occurrences beyond structural-overlap expectations, although that validation is secondary and non-causal.
+> Human redistribution of host plants has substantially expanded butterfly larval-resource geography, while broad family-level diet breadth does not predict proportional gain. Contemporary introduced-host geography also aligns with butterfly occurrences beyond structural-overlap expectations, although that validation is secondary and non-causal.
 
 ## Current main display logic
 
-1. **Figure 1:** resource expansion + strict host-bias nulls + direct plant network-prominence association.
+1. **Figure 1:** resource expansion across diet-breadth classes and the near-zero specialization gradient.
 2. **Figure 2:** secondary occurrence recovery + species-cluster/leave-one-out robustness.
 3. **Figure 3:** ceiling and regional robustness of the absent generalist advantage.
 4. **Supplementary Figure S1:** climate filtering, distance sensitivity and imprecise negative test.
