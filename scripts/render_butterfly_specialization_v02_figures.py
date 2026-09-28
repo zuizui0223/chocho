@@ -73,35 +73,31 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     )
 
     assoc=prominence["associations"]
-    xx=np.arange(3)
-    vals=[
-        assoc["spearman_log_degree_vs_log_expansion"],
-        assoc["partial_rank_controlling_log_native_breadth"],
-        assoc["family_and_native_breadth_quintile_stratified_rank_correlation"],
-    ]
-    axes[2].scatter(xx,vals,marker="D",s=48,label="Observed association")
-    # Show the stratified permutation-null interval only at the fully adjusted endpoint.
-    axes[2].errorbar(
-        [2],[assoc["stratified_null_median"]],
-        yerr=[[
-            assoc["stratified_null_median"]-assoc["stratified_null_q025"]
-        ],[
-            assoc["stratified_null_q975"]-assoc["stratified_null_median"]
-        ]],
-        fmt="o",capsize=5,label="Stratified null 95%"
+    classes=prominence["degree_classes"]
+    xx=np.arange(len(classes))
+    fractions=np.asarray([row["expanded_fraction"] for row in classes],float)
+    axes[2].bar(xx,fractions)
+    axes[2].set_xticks(
+        xx,
+        [f"{row['class']}\n(n={row['plants']:,})" for row in classes],
+        fontsize=8
     )
-    axes[2].axhline(0,linewidth=0.8)
-    axes[2].set_xticks(xx,["Raw","Native-breadth\npartial","Family + native\nstratified"])
-    axes[2].set_ylabel("Rank association with plant log expansion")
-    axes[2].set_ylim(-0.08,0.42)
-    axes[2].set_title("Network-prominent plants expand more")
+    axes[2].set_ylabel("Fraction with introduced-range expansion")
+    axes[2].set_ylim(0,0.76)
+    axes[2].set_title("Network-prominent host plants expand more")
+    for xpos,value in zip(xx,fractions):
+        axes[2].text(
+            xpos,value+0.018,f"{100*value:.1f}%",
+            ha="center",va="bottom",fontsize=8
+        )
     axes[2].text(
-        0.03,0.04,
+        0.03,0.96,
         f"{prominence['plants']:,} plants / {prominence['plant_families']} families\n"
-        "stratified: 0/4,999 as extreme",
-        transform=axes[2].transAxes,fontsize=8.5
+        f"adjusted rank r = {assoc['family_and_native_breadth_quintile_stratified_rank_correlation']:.3f}\n"
+        "0/4,999 permutations as extreme",
+        transform=axes[2].transAxes,fontsize=8.5,va="top",
+        bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
     )
-    axes[2].legend(frameon=False,fontsize=8,loc="upper left")
 
     fig.suptitle(
         "Host redistribution expands resource geography; plant network prominence structures the gain",
