@@ -1,22 +1,23 @@
 {
   "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
-  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_GEB_DEFENSE",
+  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_MATCHED_HOST_NULL",
   "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
-  "title": "Anthropogenic host redistribution expands butterfly resource geography beyond native-host distributions",
+  "title": "Anthropogenic host redistribution expands butterfly resource geography beyond matched-host expectations",
   "central_claim": {
-    "text": "Introduced host distributions substantially expand reconstructed butterfly resource geography across taxonomic specialization, and this added geography recovers contemporary butterfly occurrences beyond native-host envelopes more often than expected from envelope size or broad regional placement alone; nevertheless, realized butterfly geography remains climatically filtered.",
-    "support_type": "resource reconstruction + independent occurrence validation + structural nulls + independent climate cross-fit",
+    "text": "Known butterfly host identities generate substantially more anthropogenic geographic resource expansion than expected from host-species richness and plant-family composition alone; this excess is shared across taxonomic specialization classes, aligns with independent contemporary butterfly occurrences beyond structural-overlap expectations, and remains only partly realized because climate-associated filtering persists.",
+    "support_type": "global resource reconstruction + exact-count/family matched-host null + independent occurrence validation + occurrence-overlap null + independent climate cross-fit",
     "allowed": true
   },
   "claims": [
     {
       "id": "C1",
-      "claim": "Introduced host distributions broadly expand reconstructed butterfly resource opportunity without a proportional advantage for broad family-level generalists.",
-      "status": "exploratory macroecological reconstruction with post-hoc robustness",
-      "evidence": "239 resource-eligible species; 206 expand; aggregate 26,530→41,083 species×WGSRPD3 units.",
-      "key_statistic": "86.2% expanded; rho(host-family breadth, log proportional expansion)=0.008; butterfly-Family-adjusted rank correlation=0.021",
+      "claim": "Known butterfly host identities generate substantially more anthropogenic resource expansion than matched alternative hosts with the same host-species richness and plant-family composition, without a disproportionate advantage for broad family-level generalists.",
+      "status": "exploratory macroecological reconstruction with post-hoc matched-host null",
+      "evidence": "215 host-taxonomy-lower-bound-adequate species in matched-null analysis; 239 species in full reconstruction.",
+      "key_statistic": "observed total added units=13,529 vs null median=8,046; mean log expansion=0.444 vs 0.291; median=0.329 vs 0.195; all p=0.0005; observed rho(host-family breadth, log expansion)=0.015 vs null median=0.004, p=0.7865",
       "sources": [
         "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
+        "benchmarks/exploratory/butterfly_resource_expansion_matched_null_v0.2.json",
         "benchmarks/exploratory/butterfly_expansion_ceiling_sensitivity_v0.1.json",
         "benchmarks/exploratory/butterfly_family_adjusted_sensitivity_v0.1.json",
         "benchmarks/exploratory/butterfly_regional_robustness_v0.1.json"
@@ -79,7 +80,8 @@
     "Butterfly Family adjustment is equivalent to PGLS.",
     "Host-family breadth has exactly zero effect on proportional expansion or climate filtering.",
     "Climate alone determines realized butterfly distributions.",
-    "The raw specialist-generalist portfolio-concentration gradient is an independent biological mechanism."
+    "The raw specialist-generalist portfolio-concentration gradient is an independent biological mechanism.",
+    "The matched-host null proves that butterflies evolved to use globally redistributed plants."
   ],
   "required_language": {
     "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
@@ -87,7 +89,8 @@
     "anthropogenic": "Attribute resource-envelope expansion to introduced host distributions, not causal butterfly expansion.",
     "architecture": "Describe raw concentration patterns as structurally constrained and secondary.",
     "climate": "Use climate-associated filtering language, not proof of physiological causation.",
-    "negative_primary": "State that the directional climate-release prediction was not supported and was imprecisely estimated, not that the effect is zero."
+    "negative_primary": "State that the directional climate-release prediction was not supported and was imprecisely estimated, not that the effect is zero.",
+    "matched_host_null": "Describe excess expansion as an association of actual host identity with introduced geography beyond matched host count/family expectations; do not infer evolutionary adaptation or causal selection for globalized hosts."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -112,9 +115,9 @@
     "occurrence_validation_with_structural_null_complete": true,
     "ceiling_family_regional_sensitivities_complete": true,
     "climate_distance_and_precision_sensitivities_complete": true,
-    "family_composition_matched_host_identity_null": "pending_result",
+    "family_composition_matched_host_identity_null": "complete; 215 species; magnitude endpoints p=0.0005; specialization-gradient p=0.7865",
     "species_level_phylogenetic_model": "not_done; butterfly-Family sensitivity only",
     "figures_need_v0_2_rerender": true,
-    "cover_letter_v0_2_needed": false
+    "cover_letter_v0_2_needed": true
   }
 }
