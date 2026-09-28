@@ -27,6 +27,8 @@ This repository is self-contained for the butterfly ecology paper. Method-develo
 
 Migration provenance is retained separately in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt` so the origin of code and frozen artifacts remains auditable without entering the manuscript narrative.
 
+The scientific question/hypothesis lineage is documented separately in `provenance/SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md`. It distinguishes discovery chronology from manuscript presentation order and is not part of the manuscript argument.
+
 ## Main evidence path
 
 ```text
