@@ -10,11 +10,11 @@ Target journal: *Global Ecology and Biogeography*.
 
 The paper treats butterfly specialization as a hierarchy of partially coupled, non-interchangeable ecological dimensions rather than a single specialist–generalist axis.
 
-The frozen manuscript claim map currently supports six claims:
+The frozen manuscript claim map supports six claims, presented here in manuscript order:
 
-1. Family-level host breadth only partly tracks geographic larval-resource breadth.
-2. Introduced host ranges expand reconstructed resource opportunity for most butterflies, but proportional expansion is not concentrated in broad family-level generalists.
-3. Similar aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
+1. Introduced host ranges expand reconstructed resource opportunity for most butterflies, but proportional expansion is not concentrated in broad family-level generalists.
+2. Similar aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
+3. Family-level host breadth only partly tracks geographic larval-resource breadth.
 4. Species-level host richness reveals strong specialization structure even within a fixed host-family breadth category.
 5. Climate commonly filters realized butterfly geography within reconstructed contemporary larval-resource opportunity.
 6. The independent prediction that broader host-family diets weaken climate filtering after controlling contemporary resource breadth was **not supported** and is retained without retuning.
