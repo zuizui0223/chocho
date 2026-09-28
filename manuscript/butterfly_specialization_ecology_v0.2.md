@@ -208,7 +208,7 @@ The resulting picture is layered rather than one-dimensional: **host taxonomy de
 
 **Figure 3. The absence of a broad-generalist advantage is robust to finite geographic support and regional composition.** **a**, Host-family breadth versus proportional expansion after progressively excluding broad native resource envelopes. **b**, Within-region associations for species grouped by dominant native host-resource region.
 
-**Figure 4. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.** **a**, Filtering scores under the original analysis, within-region restriction and three distance-matching calipers. **b**, Primary partial host-family-breadth effect with bootstrap 95% interval and approximate 80%-power detectable-effect threshold.
+**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.** **a**, Filtering scores under the original analysis, within-region restriction and three distance-matching calipers. **b**, Primary partial host-family-breadth effect with bootstrap 95% interval and approximate 80%-power detectable-effect threshold.
 
 ## Data and Code Availability
 
