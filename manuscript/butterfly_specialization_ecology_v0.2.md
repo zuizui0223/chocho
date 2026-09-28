@@ -62,7 +62,7 @@ We also tested whether the specialization–expansion relationship was sensitive
 
 Host-contribution concentration was retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number.
 
-### 2.4 Independent occurrence validation
+### 2.4 Secondary occurrence validation
 
 Butterfly occurrences for 2010–2026 were obtained from GBIF for the separately assembled 32-species panel and mapped to WGSRPD3 units. We counted occurrence units outside each species' native host-resource envelope and asked how many entered the contemporary envelope after introduced host ranges were retained.
 
@@ -100,7 +100,7 @@ The near-zero relationship persisted after accounting for finite map support and
 
 Regional stratification likewise showed that the global result was not solely driven by Northern America. Within dominant native-resource regions, rho was -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24), 0.051 in Tropical Asia (n = 9) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
 
-### 3.3 Introduced host geography aligns with independent butterfly occurrence
+### 3.3 Introduced host geography aligns with separate-panel butterfly occurrence
 
 Thirty-one of 32 independent-panel species yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of these units (57.4%).
 
@@ -140,7 +140,7 @@ This does not show that network prominence itself causes plant redistribution. W
 
 At the same time, broad taxonomic diets do not translate into disproportionate benefit from host globalization. The near-zero family-breadth association survived ceiling, regional, random-effect and species-level phylogenetic sensitivities. Anthropogenic opportunity is therefore better understood through the identities and biogeography of resource species than through a one-dimensional specialist–generalist axis.
 
-### 4.2 Independent occurrences show that added resource geography is ecologically relevant
+### 4.2 Secondary occurrence validation shows that added resource geography is ecologically relevant
 
 A resource-envelope analysis can otherwise remain purely potential. The independent occurrence comparison provides a stronger bridge to realized biogeography.
 
