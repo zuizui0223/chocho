@@ -7,6 +7,7 @@ on:
       - review/geb-null-validation-v02
     paths:
       - "scripts/analyze_butterfly_occurrence_overlap_null.py"
+      - "scripts/analyze_butterfly_occurrence_species_robustness.py"
       - "scripts/analyze_butterfly_regional_robustness.py"
       - "scripts/analyze_butterfly_climate_effect_size.py"
       - "scripts/analyze_butterfly_family_random_intercept.py"
@@ -85,6 +86,15 @@ jobs:
         run: |
           mkdir -p results/geb-fast-sensitivities
           python scripts/analyze_butterfly_occurrence_overlap_null.py             --native-footprints-json inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json             --contemporary-footprints-json inputs/resource/contemporary_footprints.json             --unit-table-csv inputs/summary/wgsrpd3_unit_table.csv             --level3-geojson _wgsrpd/geojson/level3.geojson             --output-json results/geb-fast-sensitivities/occurrence_overlap_null.json
+
+      - name: Run species-cluster occurrence robustness
+        run: |
+          python scripts/analyze_butterfly_occurrence_species_robustness.py \
+            --native-footprints-json inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json \
+            --contemporary-footprints-json inputs/resource/contemporary_footprints.json \
+            --unit-table-csv inputs/summary/wgsrpd3_unit_table.csv \
+            --level3-geojson _wgsrpd/geojson/level3.geojson \
+            --output-json results/geb-fast-sensitivities/occurrence_species_robustness.json
 
       - name: Run regional robustness
         run: |
