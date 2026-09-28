@@ -22,7 +22,7 @@ from butterfly_specialization_ecology.checkpointed_gbif_occurrence import (
 
 
 GBIF = "https://api.gbif.org/v1"
-USER_AGENT = "ttf-butterfly-resource-envelope/0.1 (https://github.com/zuizui0223/TTF)"
+USER_AGENT = "chocho-butterfly-resource-envelope/1.0 (https://github.com/zuizui0223/chocho)"
 RETRYABLE_HTTP = {429, 500, 502, 503, 504}
 
 

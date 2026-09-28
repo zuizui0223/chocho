@@ -81,3 +81,38 @@ def test_superseded_climate_contracts_are_archived_not_active() -> None:
         active_receipts
         / "butterfly_climate_release_execution_binding_v0.2.1.json"
     ).is_file()
+
+
+def test_audit_and_resource_history_are_archived_outside_active_benchmarks() -> None:
+    active = ROOT / "benchmarks" / "exploratory"
+    climate_archive = ROOT / "provenance" / "archive" / "climate" / "audits"
+    resource_archive = ROOT / "provenance" / "archive" / "resource"
+
+    climate_audits = (
+        "butterfly_climate_release_panel_balance_audit_v0.1.json",
+        "butterfly_climate_release_contemporary_resource_balance_v0.1.json",
+        "butterfly_climate_release_effect_score_audit_v0.1.json",
+        "butterfly_climate_release_transport_blocker_audit_v0.1.json",
+    )
+    for name in climate_audits:
+        assert not (active / name).exists()
+        assert (climate_archive / name).is_file()
+
+    resource_history = (
+        "butterfly_resource_envelope_pilot_reconstruction_v0.1.json",
+        "butterfly_host_breadth_geography_result_v0.1.json",
+    )
+    for name in resource_history:
+        assert not (active / name).exists()
+        assert (resource_archive / name).is_file()
+
+    assert (resource_archive / "README.md").is_file()
+
+
+def test_active_gbif_acquisition_uses_current_repository_identity() -> None:
+    text = (
+        ROOT / "scripts" / "acquire_butterfly_resource_envelope_occurrences.py"
+    ).read_text(encoding="utf-8")
+    assert "chocho-butterfly-resource-envelope/1.0" in text
+    assert "github.com/zuizui0223/chocho" in text
+    assert "github.com/zuizui0223/TTF" not in text

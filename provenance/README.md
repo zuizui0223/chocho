@@ -7,6 +7,7 @@ This directory holds execution and migration history that is necessary for audit
 - `RELEASE_MANIFEST.md` — archival boundary for the v1 release.
 - `migration/` — repository-split provenance and source commit snapshot.
 - `workflows/` — historical workflow definitions needed to reproduce or audit frozen executions.
-- `archive/climate/` — superseded response-blind climate protocols and execution bindings retained only for audit history.
+- `archive/climate/` — superseded climate contracts plus response-blind design/execution audits retained only for history.
+- `archive/resource/` — early resource-reconstruction and host-breadth descriptive receipts superseded by the manuscript-facing synthesis.
 
 Submission-facing files should not require readers to understand this history.
