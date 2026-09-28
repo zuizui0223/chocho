@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ttf.butterfly_climate_release import (
+from butterfly_specialization_ecology.butterfly_climate_release import (
     ExpansionDescriptor,
     deterministic_residual_donor_indices,
     freedman_lane_partial_spearman_permutation,

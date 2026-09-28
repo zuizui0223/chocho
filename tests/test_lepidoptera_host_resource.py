@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ttf.lepidoptera_host_resource import (
+from butterfly_specialization_ecology.lepidoptera_host_resource import (
     build_insect_host_footprints,
     jaccard_units,
     select_and_split_species,

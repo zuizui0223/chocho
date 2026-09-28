@@ -9,7 +9,7 @@ from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
-from ttf.butterfly_climate_release import (
+from butterfly_specialization_ecology.butterfly_climate_release import (
     ExpansionDescriptor,
     host_breadth_stratum,
     select_independent_panel,

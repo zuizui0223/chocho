@@ -9,12 +9,12 @@ from collections import defaultdict
 from dataclasses import asdict
 from pathlib import Path
 
-from ttf.butterfly_resource_envelope import (
+from butterfly_specialization_ecology.butterfly_resource_envelope import (
     descriptor_from_sources,
     select_resource_space_pilot,
     species_digest,
 )
-from ttf.lepidoptera_host_resource import build_insect_host_footprints
+from butterfly_specialization_ecology.lepidoptera_host_resource import build_insect_host_footprints
 
 
 EXPECTED_S1_SCHEMA = "ttf_relational_prior_S1_species_exclusion_v0.1"

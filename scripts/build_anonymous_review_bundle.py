@@ -35,6 +35,7 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_butterfly_specialization_manuscript_bundle.py"),
     Path("tests/test_butterfly_climate_release_postgate_recovery.py"),
     Path("tests/test_butterfly_climate_release_execution_binding.py"),
+    Path("tests/test_repository_layout.py"),
 }
 
 IDENTITY_REPLACEMENTS = {

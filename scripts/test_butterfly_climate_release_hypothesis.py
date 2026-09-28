@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ttf.butterfly_climate_release import (
+from butterfly_specialization_ecology.butterfly_climate_release import (
     average_ranks,
     freedman_lane_partial_spearman_permutation,
     one_sided_partial_spearman_permutation,

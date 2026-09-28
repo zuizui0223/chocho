@@ -12,7 +12,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from ttf.checkpointed_gbif_occurrence import (
+from butterfly_specialization_ecology.checkpointed_gbif_occurrence import (
     deterministic_page_offsets,
     missing_page_offsets,
     occurrence_window_chunks,

@@ -11,7 +11,7 @@ import numpy as np
 from shapely.geometry import Point, shape
 from shapely.strtree import STRtree
 
-from ttf.resource_envelope_climate import (
+from butterfly_specialization_ecology.resource_envelope_climate import (
     climate_mismatch,
     deterministic_interior_points,
     observed_unit_split,
