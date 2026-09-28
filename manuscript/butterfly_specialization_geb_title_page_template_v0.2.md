@@ -1,10 +1,10 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Anthropogenic expansion of butterfly resource geography is concentrated in network-prominent host plants
+**Manuscript:** Human redistribution of host plants expands butterfly resource geography independently of diet breadth
 
 **Article type:** Research Article
 
-**Running title:** Host prominence and resource expansion
+**Running title:** Host redistribution and resource geography
 
 ## Authors
 
