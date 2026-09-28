@@ -1,10 +1,10 @@
-# Butterfly specialization is hierarchical: host portfolios structure resource opportunity while climate filters realized geography
+# Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists
 
 **Working manuscript v0.1 — 2026-09-27**
 
 ## Abstract
 
-**Aim:** To test whether butterfly ecological specialization can be represented by family-level larval host breadth, or instead decomposes into distinct taxonomic, portfolio, geographic, anthropogenic and climatic dimensions.
+**Aim:** To determine how anthropogenic redistribution of larval host plants reshapes butterfly resource geography, whether specialists and generalists gain comparable opportunity through different host portfolios, and how these changes relate to taxonomic and climatic dimensions of specialization.
 
 **Location:** Global.
 
@@ -12,13 +12,13 @@
 
 **Major taxa studied:** Butterflies and their larval host plants.
 
-**Methods:** We linked LepTraits host breadth, HOSTS interaction records and WCVP plant distributions to reconstruct larval resource geography for 239 butterflies. We quantified native and contemporary host-resource breadth, decomposed introduced-host opportunity among contributing host species, and analysed species-level portfolios within fixed family-breadth strata. A pilot-derived prediction that broader host diets weaken climatic filtering was then tested on an independent butterfly panel using frozen quality gates and cross-fitted CHELSA mismatch.
+**Methods:** We reconstructed native and contemporary larval-resource geography for 239 butterflies by linking LepTraits host breadth, HOSTS interaction records and WCVP plant distributions. We quantified the magnitude of introduced-host expansion, decomposed added opportunity among contributing host species, and analysed species-level portfolios within fixed family-breadth strata. A pilot-derived prediction that broader host diets weaken climatic filtering was then tested on an independent butterfly panel using frozen quality gates and cross-fitted CHELSA mismatch.
 
 **Results:** Host-family breadth only weakly tracked native resource geography (Spearman rho = 0.276). Introduced host distributions expanded reconstructed opportunity for 206/239 species (86.2%) and increased aggregate resource geography from 26,530 to 41,083 species × region units, a 54.9% increase. Proportional expansion was nearly unrelated to family breadth (rho = 0.008), but its architecture differed sharply: among host-taxonomy-adequate expanded species, the median largest-host contribution was 74.7% for one-family butterflies versus 31.3% for butterflies using six or more families. In the independent test, climatic filtering was common (median score = 0.801; 23/24 species >0.5), but broader family-level diets did not detectably weaken filtering after controlling resource breadth (partial rho = -0.166, one-sided p = 0.2237).
 
-**Main conclusions:** Butterfly specialization is hierarchical and multidimensional. Family-level diet breadth masks species-level host portfolios that structure geographic and anthropogenic resource opportunity, while climate-associated filtering of realized geography is common but is not detectably weakened by broader host-family diets.
+**Main conclusions:** Anthropogenic host redistribution substantially expands butterfly resource geography without producing a proportional expansion advantage for broad family-level generalists. Similar aggregate gains instead arise through concentrated host contributions in family specialists and distributed portfolios in generalists. This decoupling reveals specialization as hierarchical rather than one-dimensional; climate-associated filtering is common but is not detectably weakened by broader host-family diets.
 
-**Keywords:** butterflies; climate filtering; ecological specialization; host breadth; introduced plants; niche breadth; resource geography
+**Keywords:** butterflies; climate filtering; ecological specialization; global change; host breadth; introduced plants; resource geography
 
 ---
 
@@ -26,9 +26,9 @@
 
 Specialization is one of the most familiar axes used to compare herbivorous insects. Butterflies are routinely described as specialists or generalists according to the number or phylogenetic breadth of larval host plants they use, and diet breadth has been linked to geographic range size, range dynamics, diversification, and environmental gradients (Slove & Janz 2011; Lancaster 2020; Gross et al. 2026). Yet a single taxonomic measure of diet breadth conflates several ecological quantities that need not vary together.
 
-A butterfly that feeds on a single plant family may use one host species or dozens. Those host species may themselves be geographically restricted or nearly cosmopolitan. Consequently, taxonomic host breadth need not equal the geographic breadth of larval resources. This distinction becomes especially important under global change, because host plants are themselves redistributed. Contemporary plant distributions include large introduced ranges generated by cultivation, horticulture, transport, and naturalization. Such redistribution can alter the geographic opportunity available to herbivores even when the herbivore's taxonomic diet breadth is unchanged. Regional work has long shown that introduced hosts can support butterfly range expansion, persistence, or phenological change (Graves & Shapiro 2003). Here we ask a different cross-species question: whether introduced host distributions alter reconstructed resource opportunity similarly across host-breadth classes, and whether comparable aggregate expansion is assembled from different host portfolios.
+A butterfly that feeds on a single plant family may use one host species or dozens. Those host species may themselves be geographically restricted or nearly cosmopolitan. Consequently, taxonomic host breadth need not equal the geographic breadth of larval resources. Under global change, this distinction becomes dynamic because host plants themselves are redistributed. Regional work has long shown that introduced hosts can support butterfly range expansion, persistence, or phenological change (Graves & Shapiro 2003), while recent global work documents extensive human-mediated redistribution of Lepidoptera themselves (Couto et al. 2026). A complementary resource-side problem remains unresolved: across butterfly species, how much does anthropogenic host redistribution expand potential larval-resource geography, does that proportional gain favor broad generalists, and can similar aggregate gains be assembled through different host portfolios?
 
-The same total increase in resource geography can also arise through very different mechanisms. One butterfly may gain most of its new opportunity from a single widely introduced host, whereas another may accumulate many smaller contributions across a diverse host portfolio. These cases are indistinguishable if specialization is summarized only by the number of host families or if anthropogenic change is summarized only by total area gained.
+Distinguishing the amount of resource expansion from its architecture is critical. The same total increase in resource geography can arise through very different mechanisms. One butterfly may gain most of its new opportunity from a single widely introduced host, whereas another may accumulate many smaller contributions across a diverse host portfolio. These cases are indistinguishable if specialization is summarized only by the number of host families or if anthropogenic change is summarized only by total area gained.
 
 A further ecological layer separates potential resource opportunity from realized species geography. Even when suitable larval hosts are present, butterflies may fail to occupy parts of that opportunity because of climate, dispersal, phenology, habitat structure, biotic interactions, or incomplete colonization. Recent work shows both extensive climate-associated butterfly range shifts and important host constraints on thermal niche margins, while global analyses increasingly separate climate effects from functional traits and resource specialization (Rashid et al. 2026; Chowdhury et al. 2026). These findings motivate an explicit decomposition: hosts define one component of geographic opportunity, whereas climate and other processes filter which portions become realized butterfly distributions.
 
@@ -225,9 +225,11 @@ The independent result therefore does not support the simple interpretation that
 
 ## 4. Discussion
 
-### 4.1 The specialist-generalist continuum collapses distinct ecological dimensions
+Anthropogenic host redistribution produced the clearest empirical decoupling among the specialization dimensions we measured. Retaining introduced host ranges expanded reconstructed opportunity in 206/239 species and increased aggregate resource geography by 54.9%, yet host-family breadth was almost unrelated to proportional expansion. The same aggregate gain was assembled differently: in the conservative expanded subset, the largest host contributed a median 74.7% of added opportunity in one-family butterflies but 31.3% in butterflies using six or more families. The key result is therefore not simply that introduced hosts can add opportunity—a phenomenon established in regional systems—but that aggregate opportunity and the host-portfolio architecture producing it separate across the specialist-generalist spectrum.
 
-Our results support a hierarchical rather than one-dimensional view of butterfly specialization.
+That separation provides the empirical basis for a hierarchical rather than one-dimensional view of butterfly specialization.
+
+### 4.1 The specialist-generalist continuum collapses distinct ecological dimensions
 
 Family-level host breadth, species-level host richness, geographic resource breadth, anthropogenic opportunity architecture, and climatic filtering were related, but none was interchangeable with the others. The familiar label "specialist" can therefore refer to very different ecological states.
 
@@ -337,9 +339,9 @@ Finally, the resource and host-architecture analyses are exploratory. The host-b
 
 ## 6. Conclusions
 
-Butterfly specialization cannot be reduced to a single specialist-generalist axis.
+Human redistribution of host plants expands reconstructed resource geography across the butterfly specialization spectrum, but broad family-level generalists do not receive greater proportional expansion. Instead, similar aggregate gains are assembled through concentrated host contributions in family specialists and increasingly distributed portfolios in generalists.
 
-Family-level diet breadth only partly captures where larval resources occur. Human redistribution of plants expands reconstructed resource opportunity across specialists and generalists alike, but specialists and generalists acquire that opportunity through different host architectures. Species-level host richness reveals substantial hierarchy even within identical family-breadth categories. Finally, climate-associated filtering is common within host-resource opportunity, but its strength is not detectably weakened by broader family-level diets.
+That result exposes why butterfly specialization cannot be reduced to a single specialist-generalist axis. Family-level diet breadth only partly captures where larval resources occur or how anthropogenic opportunity is assembled. Species-level host richness reveals substantial hierarchy even within identical family-breadth categories. Finally, climate-associated filtering is common within host-resource opportunity, but its strength is not detectably weakened by broader family-level diets.
 
 The resulting picture is hierarchical: **host taxonomy describes who can be used; host portfolios describe how resource opportunity is assembled; plant geography describes where that opportunity occurs; and climate-associated filtering helps describe which portions butterflies realize.**
 
@@ -367,6 +369,7 @@ The frozen LepTraits input used by the reconstruction is vendored in the reposit
 
 - Brummitt, R. K., Pando, F., Hollis, S. & Brummitt, N. A. 2001. *World Geographical Scheme for Recording Plant Distributions*, 2nd edn. Hunt Institute for Botanical Documentation, Carnegie Mellon University.
 - Chowdhury, S. et al. 2026. Extensive climate-induced range shifts in butterflies across the globe. *Nature Ecology & Evolution*. https://doi.org/10.1038/s41559-026-03117-y
+- Couto, H. et al. 2026. The Lepidopteran Hitchhiker's Guide to the Globe: The Spread and Dispersal of Non-Native Moths and Butterflies. *Global Ecology and Biogeography*. https://doi.org/10.1111/geb.70292
 - GBIF.org. 2026. GBIF Occurrence API, version 1. Global Biodiversity Information Facility. Occurrence queries accessed September 2026.
 - Govaerts, R., Nic Lughadha, E., Black, N., Turner, R. & Paton, A. 2021. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. *Scientific Data* 8: 215. https://doi.org/10.1038/s41597-021-00997-6
 - Graves, S. D. & Shapiro, A. M. 2003. Exotics as host plants of the California butterfly fauna. *Biological Conservation* 110: 413–433. https://doi.org/10.1016/S0006-3207(02)00233-1
