@@ -1,16 +1,17 @@
 # Documentation map
 
-This directory separates **current release/reproducibility instructions** from **frozen ecological protocols and hypothesis-development history**.
+This directory separates current release/reproducibility instructions from the active ecological protocols.
 
 ## Start here
 
-- `REPRODUCIBILITY.md` — how to rebuild the paper analyses and figures from the pinned inputs.
+- `REPRODUCIBILITY.md` — rebuild requirements and pinned upstream identities.
 - `RELEASE_PROCEDURE.md` — DOI-first release order for `v1.0.0-butterfly`.
+- `exploratory/README.md` — active ecological protocol map.
 
-## Frozen ecological protocols
+## Protocol versus provenance
 
-See `exploratory/README.md`.
+`docs/exploratory/` contains only the current claim-relevant scientific protocols plus the integrated synthesis.
 
-That directory contains the exact protocol lineage behind the ecological analyses. The authoritative current independent climate contract is `butterfly_climate_release_independent_test_v0.2.1.json`; older versions are retained as audit history, not selectable alternatives.
+Execution state, pilots, technical recovery rules and superseded specifications are kept under `provenance/` so they remain auditable without crowding the active protocol surface.
 
-The manuscript itself is the authoritative source for presentation order and wording.
+The manuscript itself is authoritative for presentation order and wording.

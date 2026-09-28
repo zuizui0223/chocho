@@ -1,13 +1,15 @@
 # Provenance
 
-This directory holds execution and migration history that is necessary for auditability but is not part of the paper's ecological narrative.
+This directory holds execution and migration history needed for auditability but not for the paper's ecological narrative.
 
 - `SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md` — discovery chronology, Q1–Q5 and inference-status lineage.
-- `FIGURE_SOURCE_ARTIFACTS.md` — exact source artifacts and hashes for the five manuscript figures.
+- `FIGURE_SOURCE_ARTIFACTS.md` — exact source artifacts and hashes for the manuscript figures.
 - `RELEASE_MANIFEST.md` — archival boundary for the v1 release.
+- `PATH_RELOCATIONS.md` — current locations for files whose frozen/historical contents still record earlier repository-relative paths.
+- `climate/` — current independent-climate execution provenance: frozen panel, authoritative binding and pre-climate state.
+- `archive/climate/` — pilot, transport/recovery, superseded climate contracts and audit history.
+- `archive/resource/` — early resource-reconstruction and superseded host-breadth receipts.
 - `migration/` — repository-split provenance and source commit snapshot.
-- `workflows/` — historical workflow definitions needed to reproduce or audit frozen executions.
-- `archive/climate/` — superseded climate contracts plus response-blind design/execution audits retained only for history.
-- `archive/resource/` — early resource-reconstruction and host-breadth descriptive receipts superseded by the manuscript-facing synthesis.
+- `workflows/` — historical workflow definitions retained for execution audit.
 
 Submission-facing files should not require readers to understand this history.
