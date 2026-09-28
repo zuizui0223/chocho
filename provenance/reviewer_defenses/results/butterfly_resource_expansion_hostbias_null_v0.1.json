@@ -1,0 +1,54 @@
+{
+  "schema": "chocho_butterfly_hostbias_null_receipt_v0.1",
+  "status": "SUCCESS_POSTHOC_RECORDING_AND_HOST_COMMONNESS_SENSITIVITY",
+  "workflow": {
+    "run_id": 36421133432,
+    "artifact_id": 10969299074,
+    "artifact_name": "geb-family-composition-matched-null-v01"
+  },
+  "species": 207,
+  "excluded_species": 8,
+  "observed": {
+    "total_introduced_added_units": 12853,
+    "mean_log_expansion": 0.43903441165398327,
+    "median_log_expansion": 0.33301002889274134,
+    "rho_host_family_vs_log_expansion": 0.02688741723540486,
+    "mean_other_lepidoptera_users_per_observed_host": 25.279529213955442,
+    "median_other_lepidoptera_users_per_observed_host": 5
+  },
+  "native_range_null": {
+    "total_added_median": 7347,
+    "total_added_q025": 6556.2,
+    "total_added_q975": 8150.2,
+    "p_high": 0.001,
+    "mean_log_expansion_median": 0.234868585312915,
+    "mean_log_expansion_p_high": 0.001,
+    "median_log_expansion_median": 0.15790302944580858,
+    "median_log_expansion_p_high": 0.001
+  },
+  "usage_weighted_null": {
+    "total_added_median": 15236,
+    "total_added_q025": 14097.85,
+    "total_added_q975": 16335.05,
+    "p_high": 1,
+    "mean_log_expansion_median": 0.5573003969720628,
+    "mean_log_expansion_p_high": 1,
+    "median_log_expansion_median": 0.3757893399620471,
+    "median_log_expansion_p_high": 0.95
+  },
+  "native_range_plus_usage_null": {
+    "total_added_median": 12971,
+    "total_added_q025": 12083.9,
+    "total_added_q975": 13843.45,
+    "p_high": 0.584,
+    "mean_log_expansion_median": 0.408643084634062,
+    "mean_log_expansion_p_high": 0.073,
+    "median_log_expansion_median": 0.30894756323112293,
+    "median_log_expansion_p_high": 0.079,
+    "median_absolute_log1p_native_breadth_difference": 0.13657553500575048,
+    "mean_other_lepidoptera_users_per_sampled_host_median": 21.027322404371585
+  },
+  "interpretation": "The apparent host-identity excess is robust to native-range matching alone but is not robust when alternative hosts are simultaneously matched on native range and weighted by use by other Lepidoptera. The original same-family null therefore conflated butterfly host identity with plant-level host prominence/commonness or recording intensity.",
+  "claim_boundary": "Other-Lepidoptera consumer count is a joint proxy for ecological host prominence and HOSTS recording intensity. These analyses do not identify how much of the attenuation is biological commonness versus data bias.",
+  "conclusion_for_manuscript": "Do not claim that butterfly host choice itself preferentially targets unusually globalized plants. Instead state that anthropogenic resource expansion is concentrated in plant species that are broadly prominent across the Lepidoptera-host network, and that this plant-level axis explains the apparent host-identity excess."
+}
