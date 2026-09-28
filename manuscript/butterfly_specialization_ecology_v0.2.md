@@ -102,7 +102,7 @@ Regional stratification likewise showed that the global result was not solely dr
 
 ### 3.3 Introduced host geography aligns with separate-panel butterfly occurrence
 
-Thirty-one of 32 independent-panel species yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of these units (57.4%).
+Thirty-one of 32 species in the separately assembled climate-stratified panel yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of these units (57.4%).
 
 Twenty-three species had at least one outside-native occurrence, and 18 recovered at least one unit after introduced hosts were added. The median species-level recovery fraction was 0.60; eight species recovered all outside-native observed units. Seven of those eight complete-recovery cases involved only 1–4 outside-native units; the exception was *Pyrgus communis*, with 22/22 units recovered.
 
@@ -126,7 +126,7 @@ The pre-specified prediction that broader host-family diets weaken filtering was
 
 ## 4. Discussion
 
-Human redistribution of larval host plants has altered butterfly resource geography at a scale that is visible across hundreds of species. Introduced host distributions increased aggregate reconstructed resource opportunity by 54.9% and expanded the envelope of more than 86% of resource-eligible butterflies. This expansion was not concentrated in family-level generalists, survived finite-geography and butterfly-Family sensitivities, and—most importantly—was reflected in independent butterfly occurrences: introduced hosts recovered 57.4% of contemporary species × region observations that fell outside native host-resource envelopes.
+Human redistribution of larval host plants has altered butterfly resource geography at a scale that is visible across hundreds of species. Introduced host distributions increased aggregate reconstructed resource opportunity by 54.9% and expanded the envelope of more than 86% of resource-eligible butterflies. This expansion was not concentrated in family-level generalists, survived finite-geography and butterfly-Family sensitivities, and—most importantly—was reflected in the secondary occurrence analysis: introduced hosts recovered 57.4% of contemporary species × region observations that fell outside native host-resource envelopes.
 
 The central ecological result is therefore not a specialist–generalist contrast in portfolio concentration. It is a separation between **taxonomic diet breadth, resource geography and realized distribution** under global change.
 
