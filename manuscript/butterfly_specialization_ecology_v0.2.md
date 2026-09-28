@@ -184,7 +184,7 @@ WGSRPD3 is coarse and imposes a finite geographic ceiling. Sensitivity analyses 
 
 The climate test contains only 24 informative species. Its broad bootstrap interval means moderate effects remain plausible despite the unsupported directional prediction.
 
-Finally, the matched-host nulls, occurrence-overlap nulls, ceiling, phylogenetic and spatial sensitivities were added after manuscript review and are therefore post-hoc robustness analyses. Other-Lepidoptera consumer count is an imperfect joint proxy for ecological host prominence and HOSTS recording intensity. Moreover, the 3 × 3 parameter grid showed that attenuation of the simple host-identity excess depends on the strength of degree weighting. We therefore use these nulls to identify prominence as a confounding axis, not to claim that it fully mediates or quantitatively explains the host-identity pattern.
+Finally, the matched-host nulls, occurrence-overlap nulls, ceiling, phylogenetic and spatial sensitivities were added after manuscript review and are therefore post-hoc robustness analyses. Other-Lepidoptera consumer count is an imperfect joint proxy for ecological host prominence and HOSTS recording intensity. The fixed HOSTS reconstruction also does not identify whether a consumer record predates plant introduction or occurred within the plant's native range, so a pre-introduction/native-area network degree cannot be reconstructed here. Moreover, the 3 × 3 parameter grid showed that attenuation of the simple host-identity excess depends on the strength of degree weighting. We therefore use these nulls to identify prominence as a confounding axis, not to claim that it fully mediates or quantitatively explains the host-identity pattern.
 
 ## 6. Conclusions
 
@@ -193,8 +193,6 @@ Human redistribution of host plants has substantially expanded reconstructed but
 The secondary occurrence analysis shows that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of butterfly species × region observations that lay outside native host-resource envelopes, more than expected under species-level region-matched nulls and after removal of the largest contributor.
 
 The defensible picture is therefore layered: **taxonomic diet breadth does not determine anthropogenic resource gain; human redistribution changes where larval resources occur; and only part of that expanded opportunity is reflected in realized butterfly geography.** Plant network prominence may help explain which hosts are redistributed, but current data cannot separate ecological prominence, recording bias and reverse causation.
-
-## References (working)
 
 ## References (working)
 
