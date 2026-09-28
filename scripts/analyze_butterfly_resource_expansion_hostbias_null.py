@@ -246,6 +246,16 @@ def main():
         if not observed_host_map:
             excluded[species] = "no_resolved_hosts"
             continue
+        missing_native_hosts = [
+            host for host in observed_host_map
+            if not native.get(host, frozenset())
+        ]
+        if missing_native_hosts:
+            excluded[species] = (
+                "observed_hosts_without_native_footprint:"
+                + str(len(missing_native_hosts))
+            )
+            continue
         composition = Counter(observed_host_map.values())
         bad = [
             family
