@@ -77,8 +77,14 @@ def test_superseded_climate_contracts_are_archived_not_active() -> None:
         active_protocols
         / "butterfly_climate_release_independent_test_v0.2.1.json"
     ).is_file()
-    assert (
+    assert not (
         active_receipts
+        / "butterfly_climate_release_execution_binding_v0.2.1.json"
+    ).exists()
+    assert (
+        ROOT
+        / "provenance"
+        / "climate"
         / "butterfly_climate_release_execution_binding_v0.2.1.json"
     ).is_file()
 
@@ -116,3 +122,67 @@ def test_active_gbif_acquisition_uses_current_repository_identity() -> None:
     assert "chocho-butterfly-resource-envelope/1.0" in text
     assert "github.com/zuizui0223/chocho" in text
     assert "github.com/zuizui0223/TTF" not in text
+
+
+def test_climate_execution_history_is_outside_active_protocols_and_results() -> None:
+    active_protocols = ROOT / "docs" / "exploratory"
+    active_results = ROOT / "benchmarks" / "exploratory"
+    operations = ROOT / "provenance" / "archive" / "climate" / "operations"
+    pilot = ROOT / "provenance" / "archive" / "climate" / "pilot"
+    current = ROOT / "provenance" / "climate"
+
+    for name in (
+        "butterfly_climate_release_postgate_transport_completion_v0.1.json",
+        "butterfly_climate_release_transport_completion_rule_v0.1.json",
+        "butterfly_climate_release_transport_recovery_v0.1.json",
+    ):
+        assert not (active_protocols / name).exists()
+        assert (operations / name).is_file()
+
+    pilot_gate = "butterfly_resource_envelope_climate_pilot_gate_v0.1.json"
+    assert not (active_protocols / pilot_gate).exists()
+    assert (pilot / pilot_gate).is_file()
+
+    for name in (
+        "butterfly_climate_release_independent_panel_v0.1.json",
+        "butterfly_climate_release_execution_binding_v0.2.1.json",
+        "butterfly_climate_release_preclimate_result_v0.2.1.json",
+    ):
+        assert not (active_results / name).exists()
+        assert (current / name).is_file()
+
+    pilot_result = "butterfly_resource_envelope_climate_pilot_result_v0.1.json"
+    assert not (active_results / pilot_result).exists()
+    assert (pilot / pilot_result).is_file()
+
+
+def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
+    protocol_names = {
+        p.name
+        for p in (ROOT / "docs" / "exploratory").iterdir()
+        if p.is_file()
+    }
+    assert protocol_names == {
+        "README.md",
+        "BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md",
+        "butterfly_anthropogenic_resource_expansion_protocol_v0.1.json",
+        "butterfly_climate_release_independent_test_v0.2.1.json",
+        "butterfly_host_specialization_hierarchy_protocol_v0.1.json",
+        "butterfly_resource_envelope_protocol_v0.1.json",
+        "butterfly_resource_expansion_mechanism_protocol_v0.1.json",
+    }
+
+    result_names = {
+        p.name
+        for p in (ROOT / "benchmarks" / "exploratory").iterdir()
+        if p.is_file()
+    }
+    assert result_names == {
+        "README.md",
+        "butterfly_anthropogenic_resource_expansion_result_v0.1.json",
+        "butterfly_climate_release_postgate_independent_result_v0.1.json",
+        "butterfly_host_specialization_hierarchy_result_v0.1.json",
+        "butterfly_resource_expansion_mechanism_result_v0.1.json",
+        "butterfly_specialization_dimensionality_result_v0.1.json",
+        "butterfly_specialization_ecology_synthesis_v0.1.json",
+    }
