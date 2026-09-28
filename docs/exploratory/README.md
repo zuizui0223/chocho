@@ -1,8 +1,8 @@
 # Ecological analysis protocols
 
-This directory contains active or claim-relevant ecological protocols behind the manuscript.
+This directory is the **active protocol surface** for the manuscript.
 
-## Protocols supporting current manuscript claims
+## Current claim-relevant protocols
 
 - `butterfly_anthropogenic_resource_expansion_protocol_v0.1.json` — anthropogenic resource expansion.
 - `butterfly_resource_expansion_mechanism_protocol_v0.1.json` — host-contribution architecture.
@@ -10,12 +10,17 @@ This directory contains active or claim-relevant ecological protocols behind the
 - `butterfly_resource_envelope_protocol_v0.1.json` — resource-envelope reconstruction.
 - `butterfly_climate_release_independent_test_v0.2.1.json` — authoritative independent climate-test contract.
 
-## Climate execution support
-
-The pilot gate and transport recovery/completion rules remain here because they document the route used by the final independent climate analysis. They are not alternative primary specifications.
-
-Superseded primary climate-test contracts `v0.1` and `v0.2` are preserved under `provenance/archive/climate/protocols/`.
-
 ## Integrated synthesis
 
-`BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md` records the ecological synthesis and claim boundaries used to build the paper. The submission manuscript is authoritative for presentation order; frozen protocol files are authoritative for when questions and hypotheses were defined.
+`BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md` records the ecological synthesis and claim boundaries used to build the paper.
+
+## What is intentionally not here
+
+Execution history is separated from active scientific specifications:
+
+- current independent-climate panel, execution binding and pre-climate gate receipt → `provenance/climate/`;
+- climate pilot materials → `provenance/archive/climate/pilot/`;
+- post-gate transport recovery/completion contracts → `provenance/archive/climate/operations/`;
+- superseded climate protocols → `provenance/archive/climate/protocols/`.
+
+The submission manuscript is authoritative for presentation order. Frozen protocols are authoritative for when questions and hypotheses were defined.
