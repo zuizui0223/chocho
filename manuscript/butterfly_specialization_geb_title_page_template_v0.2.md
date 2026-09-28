@@ -1,6 +1,6 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography beyond matched-host expectations
+**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth
 
 **Article type:** Research Article
 
