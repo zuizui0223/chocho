@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 
-RUNNING_TITLE = "Host redistribution and specialization"
+RUNNING_TITLE = "Host-plant prominence and resource expansion"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
