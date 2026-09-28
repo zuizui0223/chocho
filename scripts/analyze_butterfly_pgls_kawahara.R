@@ -47,7 +47,7 @@ fit_pgls <- function(tree, dat, label) {
     correlation = corPagel(
       value = 0.5,
       phy = sub_tree,
-      form = ~1 | tree_tip,
+      form = ~tree_tip,
       fixed = FALSE
     ),
     method = "ML",
@@ -59,7 +59,7 @@ fit_pgls <- function(tree, dat, label) {
     correlation = corPagel(
       value = 0.5,
       phy = sub_tree,
-      form = ~1 | tree_tip,
+      form = ~tree_tip,
       fixed = FALSE
     ),
     method = "ML",
