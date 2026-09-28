@@ -79,13 +79,13 @@ We used the separately assembled 32-species independent panel to ask whether int
 
 The validation endpoint was the fraction of native-envelope-external butterfly species × WGSRPD3 observations recovered by introduced host ranges. We also summarized the number of species for which at least one such unit was recovered and the species-level recovery fraction. This is presence-side validation: it tests whether contemporary host geography can account for observations missed by native host geography, but does not verify larval use at each observed locality.
 
-### 2.7 Host-contribution architecture as a structural diagnostic
+### 2.6 Host-contribution architecture as a structural diagnostic
 
 For butterflies whose resource envelopes expanded, introduced-added units were fractionally assigned among contributing host species. We calculated maximum single-host fractional share, top-two-host share, effective contributor number and the fraction of added units supported by multiple hosts.
 
 The original descriptive analysis related these quantities to host-family breadth. Because portfolio-concentration statistics are bounded by host number, we then performed two post-hoc diagnostics. We first removed exact resolved host-species-count group means from rank-transformed host-family breadth and architecture metrics. We then repeated the adjustment within joint strata of exact resolved host-species count and butterfly Family. These analyses ask whether family-level diet breadth contains architecture information beyond the finer-scale number of resolved hosts; they do not turn the exploratory decomposition into a causal test.
 
-### 2.6 Taxonomic versus geographic specialization
+### 2.7 Taxonomic versus geographic specialization
 
 For each of the 239 resource-eligible butterflies, we compared LepTraits host-family count with native host-resource WGSRPD3 breadth. We calculated Spearman rank correlations for the full panel and the 215-species host-taxonomy lower-bound subset. Both variables were also converted to percentile ranks to identify strong taxonomic–geographic discordance. 
 
