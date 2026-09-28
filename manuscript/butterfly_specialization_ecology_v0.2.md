@@ -142,7 +142,7 @@ At the same time, broad taxonomic diets do not translate into disproportionate b
 
 ### 4.2 Secondary occurrence validation shows that added resource geography is ecologically relevant
 
-A resource-envelope analysis can otherwise remain purely potential. The independent occurrence comparison provides a stronger bridge to realized biogeography.
+A resource-envelope analysis can otherwise remain purely potential. This secondary occurrence comparison provides a bridge to realized biogeography.
 
 More than half of species × region observations lying outside native host-resource envelopes were brought inside the envelope by adding introduced host ranges. Crucially, the result persisted when butterfly species were treated as the replication unit and when the largest-contributing species was removed. The validation therefore cannot be reduced to the fact that contemporary envelopes are larger or to a single high-leverage butterfly. This does not prove that the recorded butterfly used the introduced host at that locality, nor that host introduction caused colonization, but it demonstrates that a native-only view of larval resources systematically misses contemporary geographic opportunities that coincide with butterfly presence.
 
