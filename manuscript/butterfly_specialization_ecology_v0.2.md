@@ -54,7 +54,7 @@ We calculated native and contemporary resource breadth, introduced-added units, 
 
 ### 2.3 Robustness analyses for host identity, specialization and taxonomic structure
 
-We used matched-host nulls to test whether apparent host-identity effects could arise from host richness, plant-family composition, starting native range and the prominence of candidate plants in HOSTS. Because conclusions about host-identity excess were sensitive to how strongly network prominence was weighted, we do not interpret these nulls as identifying a butterfly-specific host-choice mechanism; the full parameter grid and an outcome-blind prominence-calibrated sensitivity are reported in Supplementary Information.
+We used matched-host nulls to test whether apparent host-identity effects could arise from host richness, plant-family composition, starting native range and the prominence of candidate plants in HOSTS. Because conclusions about host-identity excess were sensitive to how strongly network prominence was weighted, we do not interpret these nulls as identifying a butterfly-specific host-choice mechanism; the full parameter grid is reported in Supplementary Information.
 
 We tested whether the host-family-breadth association with proportional expansion was sensitive to the finite 369-unit WGSRPD3 support, geographic composition and taxonomic non-independence. Post-hoc analyses progressively excluded broad native resource envelopes, repeated associations within dominant WGSRPD level-1 regions, fitted butterfly Family as a random intercept, and used the Kawahara et al. (2023) time-calibrated butterfly phylogeny for exact species matches.
 
