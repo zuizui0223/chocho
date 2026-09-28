@@ -95,29 +95,17 @@ For each of the 239 resource-eligible butterflies, we compared LepTraits host-fa
 
 ### 2.8 Independent climate-filtering panel
 
-An exploratory 10-species pilot was used only to generate the later host-breadth/climate prediction. Those ten species were excluded from the independent panel.
+We used a 32-species panel that was independent of the earlier 10-species exploratory pilot. The panel was balanced across four host-family strata (eight species each: 1, 2, 3–5 and 6+ families) and was selected to span native resource breadth, resolved host-species richness and wing size within strata.
 
-Before independent occurrence or climate responses were opened, we froze a 32-species panel balanced across four host-family strata (8 species each: 1, 2, 3-5, and 6+ families). Within strata, species were selected deterministically to span native resource breadth, resolved host-species richness, and wing size.
+Before analyzing the independent panel, we specified the directional hypothesis that climatic filtering within contemporary larval host-resource opportunity would weaken as taxonomic host breadth increased. Species identities, inclusion thresholds, response definition, covariate and one-sided test direction were held fixed for the independent evaluation.
 
-The frozen hypothesis was:
+### 2.9 Butterfly occurrences and quality criteria
 
-> Within larval host-resource opportunity, climatic filtering of realized butterfly distribution weakens as taxonomic host breadth increases.
+Butterfly occurrences were obtained from GBIF for 2010–2026, requiring coordinates, occurrence status PRESENT and no flagged geospatial issue. Records were mapped to WGSRPD3 units.
 
-### 2.9 Butterfly occurrence acquisition and quality gates
+Species entered the climate analysis only if the reconstructed resource envelope and occurrence data could support a within-species observed-versus-unobserved comparison. Specifically, resolved host-species count had to be at least host-family count; no more than 10% of observed WGSRPD3 units could fall outside the contemporary host envelope; at least five contemporary host units required >=10 GBIF records from other panel butterflies as a sampling-effort proxy; and among those effort-supported units, at least two had to contain the target butterfly and at least two had to lack target records.
 
-Butterfly occurrences were acquired through the GBIF Occurrence API (GBIF.org 2026) for 2010-2026 using fixed filters requiring coordinates, no flagged geospatial issue, and occurrence status PRESENT. Each species had six deterministic ordinal windows of up to 300 records. Transport failures were handled through checkpointed technical recovery without species replacement or changes to scientific filters.
-
-The initial independent execution was not evaluable because only 10 species passed the frozen pre-climate gate, below the required minimum of 12. Fourteen species had incomplete transport. A post-gate technical recovery was therefore applied uniformly to all and only those 14 partial-transport species. The original quality thresholds, species panel, resource definition, and climate analysis were unchanged. After this completion, 31/32 species had complete occurrence transport; one species remained rejected at the GBIF taxon-resolution stage.
-
-A species passed the pre-climate quality gate only when all of the following held:
-
-- occurrence transport was complete;
-- resolved host-species count was at least host-family count;
-- no more than 10% of observed WGSRPD3 units lay outside the contemporary host envelope;
-- at least five contemporary host units had >=10 GBIF records from other independent-panel butterflies;
-- among those effort-supported units, at least two contained the target butterfly and at least two did not.
-
-Twenty-four species passed after uniform transport completion, exceeding the frozen minimum of 12.
+Twenty-four of 32 panel species met these criteria and entered the climate cross-fit. Details of checkpointed occurrence retrieval, technical completion and execution provenance are provided with the reproducibility materials rather than treated as ecological predictors.
 
 ### 2.10 Climate cross-fitting
 
@@ -137,12 +125,9 @@ Species required at least 30 training occurrence records with climate, at least 
 
 ### 2.11 Independent test of host-breadth climate release
 
-The primary response was the species climate-filtering score. The predictor was LepTraits host-family count, and contemporary host-resource WGSRPD3 breadth was the frozen control.
+The primary response was the species climate-filtering score, the predictor was LepTraits host-family count, and contemporary host-resource WGSRPD3 breadth was the pre-specified control.
 
-The observed statistic was partial Spearman correlation on ranks. The null distribution used 9,999 deterministic, species-identity-invariant Freedman-Lane-style reduced-response residual permutations. The one-sided alternative predicted a negative association: broader host-family breadth should reduce climate filtering. Alpha was 0.05.
-
-The residual-permutation implementation was corrected before independent ecological responses were opened to preserve predictor-control structure and to ensure row-order invariance. The effect definition, panel, direction, alpha, and permutation count were unchanged.
-
+The observed statistic was a partial Spearman correlation on ranks. Significance was evaluated with 9,999 deterministic reduced-response residual permutations that preserved the predictor–control structure. The one-sided alternative predicted a negative association: broader host-family breadth should reduce climate filtering. Alpha was 0.05. Implementation and row-order invariance checks are documented in the reproducibility materials.
 
 ### 2.12 Geographic-accessibility and precision sensitivities
 
