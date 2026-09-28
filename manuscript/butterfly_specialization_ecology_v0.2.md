@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, what accounts for that expansion, and whether the added geography aligns with contemporary butterfly occurrences.
+**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, what structures that expansion, and whether added geography aligns with butterfly occurrences.
 
 **Location:** Global.
 
@@ -12,13 +12,13 @@
 
 **Major taxa studied:** Butterflies and larval host plants.
 
-**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. Matched null models preserved butterfly host richness and plant-family composition; stricter sensitivities additionally matched host native-range breadth and weighted candidate plants by use by other Lepidoptera in HOSTS. A 32-species panel originally stratified for the climate test was reused to test whether introduced-host geography recovers butterfly occurrences outside native host envelopes beyond structural overlap expectations.
+**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. Null models preserved host richness and plant-family composition; stricter models also matched native range and weighted candidate plants by use by other Lepidoptera. A climate-stratified 32-species panel was reused for occurrence validation.
 
-**Results:** Introduced hosts expanded resource geography for 206/239 species and increased aggregate species × region coverage by 54.9%. A simple same-family null suggested excess expansion, but the excess disappeared after matching native range and weighting other-Lepidoptera use (12,853 observed added units vs null median 12,971; p = 0.584). Across 8,909 host plants, network degree remained positively associated with geographic expansion within plant-family and native-breadth strata (rank r = 0.295; 0/4,999 permuted correlations as extreme; Monte Carlo p < 0.001). Host-family breadth remained nearly unrelated to butterfly proportional expansion after phylogenetic correction. Introduced hosts recovered 66/115 butterfly observations outside native host envelopes; species-level recovery remained above region-matched expectation after resampling and removal of the largest contributor.
+**Results:** Introduced hosts expanded resource geography for 206/239 species and increased aggregate species × region coverage by 54.9%. A same-family null suggested excess expansion, but it disappeared after native-range matching plus other-Lepidoptera-use weighting (12,853 observed added units vs null median 12,971; p = 0.584). Across 8,909 host plants, network degree remained positively associated with expansion within plant-family and native-breadth strata (rank r = 0.295; 0/4,999 permuted correlations as extreme; Monte Carlo p < 0.001). Host-family breadth remained nearly unrelated after phylogenetic correction. Introduced hosts recovered 66/115 outside-native butterfly observations; species-level recovery remained above region-matched expectation after resampling and removal of the largest contributor.
 
 **Main conclusions:** Human redistribution of host plants has greatly expanded butterfly resource geography. Network-prominent host plants are disproportionately redistributed, whereas broad butterfly diets do not predict proportional gain. Taxonomic diet breadth is therefore a poor proxy for anthropogenic resource gain.
 
-**Keywords:** biotic redistribution; butterflies; host plants; introduced species; resource geography; specialization
+**Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
 
 ---
 
