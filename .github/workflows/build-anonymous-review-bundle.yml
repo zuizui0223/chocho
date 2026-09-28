@@ -35,6 +35,12 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Render current blinded v0.2 manuscript
+        run: |
+          python scripts/render_butterfly_specialization_blinded_manuscript.py \
+            --input manuscript/butterfly_specialization_ecology_v0.2.md \
+            --output manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md
+
       - name: Build deterministic anonymous snapshot
         run: |
           mkdir -p dist
