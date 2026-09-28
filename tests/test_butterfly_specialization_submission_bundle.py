@@ -36,6 +36,7 @@ def test_blinded_manuscript_has_geb_required_front_matter():
 
     running = re.search(r"^\*\*Running title:\*\*\s*(.+)$", text, re.MULTILINE)
     assert running is not None
+    assert running.group(1).strip() == "Host redistribution and specialization"
     assert len(running.group(1).strip()) < 40
 
     abstract_start = text.index("## Abstract")
