@@ -1,0 +1,66 @@
+{
+  "schema": "chocho_butterfly_specialization_claim_map_v0.2",
+  "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
+  "updated_on": "2026-09-28",
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "Introduced host distributions broadly expand reconstructed butterfly larval-resource geography, and observed host identities produce more expansion than same-plant-family, same-host-count alternatives.",
+      "status": "descriptive reconstruction plus post-hoc matched-host randomization",
+      "evidence": "206/239 species expand; aggregate +54.9%. In conservative n=215, median observed-minus-null log expansion=0.140 and 156/215 exceed the null median.",
+      "key_statistics": {
+        "expanded_species": "206/239",
+        "aggregate_change": "26530 to 41083 species x WGSRPD3 units (+54.9%)",
+        "matched_null_species": 215,
+        "median_log_residual": 0.1403573576949224,
+        "above_null_median": "156/215",
+        "host_family_vs_null_adjusted_expansion_rho": 0.04144645527701588
+      },
+      "source": "benchmarks/exploratory/butterfly_reviewer_defense_result_v0.1.json"
+    },
+    {
+      "id": "C2",
+      "claim": "Introduced-added host geography is enriched for independent contemporary butterfly occurrences that lie outside native host envelopes.",
+      "status": "independent geographic validation with post-hoc exact overlap null",
+      "evidence": "Full panel: 66/115 outside-native species x region observations recovered versus 38.0 expected; qualified panel: 49/61 versus 30.6 expected.",
+      "key_statistics": {
+        "full_panel_p": 1.1161781033117206e-11,
+        "quality_qualified_p": 5.463932592445996e-9
+      },
+      "source": "benchmarks/exploratory/butterfly_reviewer_defense_result_v0.1.json"
+    },
+    {
+      "id": "C3",
+      "claim": "Family-level taxonomic host breadth only partly tracks geographic larval-resource breadth.",
+      "status": "exploratory descriptive result",
+      "evidence": "rho=0.276 in n=239 and rho=0.398 in conservative n=215; 18 one-family butterflies occur in the upper quartile of geographic resource breadth.",
+      "source": "benchmarks/exploratory/butterfly_specialization_dimensionality_result_v0.1.json"
+    },
+    {
+      "id": "C4",
+      "claim": "The raw specialist-generalist gradient in host-contribution concentration is largely structural and is not interpreted as an independent mechanism.",
+      "status": "reviewer-defense structural correction",
+      "evidence": "In n=191, raw rho family breadth vs effective contributors=0.492 and vs maximum share=-0.486; after controlling contributing-host count, rho=0.071 and -0.093.",
+      "source": "benchmarks/exploratory/butterfly_reviewer_defense_result_v0.1.json"
+    },
+    {
+      "id": "C5",
+      "claim": "Climate-associated filtering persists within contemporary host-resource opportunity even when comparisons are restricted within broad WGSRPD level-1 regions.",
+      "status": "independent cross-fit descriptive result plus post-hoc accessibility sensitivity",
+      "evidence": "Original n=24 median score=0.801; same-level1 n=23 median=0.798 and 21/23 >0.5.",
+      "source": "benchmarks/exploratory/butterfly_reviewer_defense_result_v0.1.json"
+    },
+    {
+      "id": "C6",
+      "claim": "The independent data do not support the pre-specified prediction that broader family-level diets weaken climate-associated filtering.",
+      "status": "independent hypothesis test",
+      "evidence": "partial rho=-0.166, one-sided p=0.2237, n=24; approximate 95% interval -0.54 to +0.26. Same-level1 sensitivity rho=+0.207, p=0.8232.",
+      "source": "benchmarks/exploratory/butterfly_reviewer_defense_result_v0.1.json"
+    }
+  ],
+  "deprecated_v0_1_interpretation": {
+    "claim": "Family-level generalists independently assemble anthropogenic opportunity through more distributed host portfolios than specialists.",
+    "reason": "Concentration metrics are structurally bounded by contributing-host richness; conditional associations are weak after contributor count is controlled.",
+    "status": "DEMOTED_TO_DESCRIPTIVE"
+  }
+}
