@@ -4,7 +4,7 @@
 
 **Article type:** Research Article
 
-**Running title:** Host-plant prominence and resource expansion
+**Running title:** Host prominence and resource expansion
 
 ## Authors
 
