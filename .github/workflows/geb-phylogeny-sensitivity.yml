@@ -28,7 +28,7 @@ jobs:
 
       - name: Install phylogenetic environment
         run: |
-          Rscript -e 'install.packages(c("ape","nlme","jsonlite","megatrees","rtrees"), repos="https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("ape","nlme","jsonlite","megatrees"), repos="https://cloud.r-project.org")'
 
       - name: Restore anthropogenic resource result
         uses: actions/download-artifact@v4
