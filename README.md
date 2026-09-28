@@ -2,7 +2,7 @@
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
-> **Butterfly specialization is hierarchical: host portfolios structure resource opportunity while climate filters realized geography**
+> **Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists**
 
 Target journal: *Global Ecology and Biogeography*.
 
