@@ -34,7 +34,7 @@ The simple same-family host-identity excess is absorbed by plant native range pl
 Across **8,909 host plants in 278 families**, plant network degree was positively associated with anthropogenic geographic expansion:
 - Spearman log degree vs log expansion: **0.313**;
 - partial rank association controlling native breadth: **0.267**;
-- within plant-family × native-breadth-quintile strata: **r = 0.295**, permutation **p = 0.0002**.
+- within plant-family × native-breadth-quintile strata: **r = 0.295**; **0/4,999** permuted correlations were as extreme (Monte Carlo **p < 0.001**).
 
 Allowed interpretation: **network-prominent host plants are disproportionately redistributed**, but HOSTS degree is a joint measure of ecological prominence/commonness and study/recording intensity.
 
@@ -130,7 +130,7 @@ The defensible positive result is now:
 
 ## Current main display logic
 
-1. **Figure 1:** resource expansion + strict host-bias null + plant network prominence.
+1. **Figure 1:** resource expansion + strict host-bias nulls + direct plant network-prominence association.
 2. **Figure 2:** secondary occurrence recovery + species-cluster/leave-one-out robustness.
 3. **Figure 3:** ceiling and regional robustness of the absent generalist advantage.
 4. **Supplementary Figure S1:** climate filtering, distance sensitivity and imprecise negative test.
