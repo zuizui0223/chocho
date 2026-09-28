@@ -102,7 +102,7 @@ Regional stratification likewise showed that the global result was not solely dr
 
 Thirty-one of 32 independent-panel species yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of these units (57.4%).
 
-Twenty-three species had at least one outside-native occurrence, and 18 recovered at least one unit after introduced hosts were added. The median species-level recovery fraction was 0.60; eight species recovered all outside-native observed units.
+Twenty-three species had at least one outside-native occurrence, and 18 recovered at least one unit after introduced hosts were added. The median species-level recovery fraction was 0.60; eight species recovered all outside-native observed units. Seven of those eight complete-recovery cases involved only 1–4 outside-native units; the exception was *Pyrgus communis*, with 22/22 units recovered.
 
 Recovery exceeded geometric expectation at both pooled and species levels. A uniform envelope-enlargement null had median recovery of 38 units (95% interval 30–46), while a null preserving each species' broad regional distribution of added host geography had median 49 (43–56); none of 199,999 draws reached the observed 66.
 
