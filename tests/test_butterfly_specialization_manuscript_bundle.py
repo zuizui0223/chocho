@@ -177,6 +177,7 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "p = 0.2237",
     ):
         assert literal in abstract
+    assert abstract.index("206/239") < abstract.index("rho = 0.276")
 
     # Novelty framing should foreground the anthropogenic resource-portfolio result.
     title_line = manuscript.splitlines()[0]
