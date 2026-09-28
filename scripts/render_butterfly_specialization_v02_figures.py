@@ -29,83 +29,106 @@ def jitter(label: str, width: float = 0.12):
 
 
 def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.5))
-    for label, ax in zip(("a", "b", "c"), axes):
-        ax.text(-0.08, 1.10, label, transform=ax.transAxes, fontweight="bold", fontsize=12, va="bottom")
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.6))
+    for label, ax in zip(("a", "b"), axes):
+        ax.text(
+            -0.10, 1.06, label,
+            transform=ax.transAxes,
+            fontweight="bold",
+            fontsize=12,
+            va="bottom",
+        )
 
     native = np.asarray([int(r["native_resource_units"]) for r in anth], float)
-    contemporary = np.asarray([int(r["contemporary_resource_units"]) for r in anth], float)
+    contemporary = np.asarray(
+        [int(r["contemporary_resource_units"]) for r in anth], float
+    )
     axes[0].scatter(native, contemporary, s=16, alpha=0.5)
-    lo=max(1,float(min(native.min(),contemporary.min())))
-    hi=float(max(native.max(),contemporary.max()))
-    axes[0].plot([lo,hi],[lo,hi],linestyle="--",linewidth=1)
-    axes[0].set_xscale("log"); axes[0].set_yscale("log")
+    lo = max(1, float(min(native.min(), contemporary.min())))
+    hi = float(max(native.max(), contemporary.max()))
+    axes[0].plot([lo, hi], [lo, hi], linestyle="--", linewidth=1)
+    axes[0].set_xscale("log")
+    axes[0].set_yscale("log")
     axes[0].set_xlabel("Native resource units")
     axes[0].set_ylabel("Contemporary resource units")
-    expanded=sum(int(r["introduced_added_units"])>0 for r in anth)
+    expanded = sum(int(r["introduced_added_units"]) > 0 for r in anth)
     axes[0].set_title(f"{expanded}/{len(anth)} species expanded")
-    axes[0].text(0.04,0.95,"26,530 → 41,083\n+54.9%",transform=axes[0].transAxes,va="top",fontsize=10)
-
-    observed_total = hostbias["observed"]["total_introduced_added_units"]
-    model_keys = ["native_range_null", "usage_weighted_null", "native_range_plus_usage_null"]
-    model_labels = ["Native-range\nmatched", "Host-use weighted\n(α=1)", "Range + use\n(α=1)"]
-    x = np.arange(len(model_keys))
-    med=[]; lo=[]; hi=[]
-    for key in model_keys:
-        q=hostbias[key]
-        med.append(q["total_added_median"]); lo.append(q["total_added_q025"]); hi.append(q["total_added_q975"])
-    axes[1].errorbar(
-        x, med,
-        yerr=[np.asarray(med)-np.asarray(lo), np.asarray(hi)-np.asarray(med)],
-        fmt="o", capsize=5
-    )
-    axes[1].axhline(observed_total, linestyle="--", linewidth=1.3)
-    axes[1].set_xticks(x, model_labels)
-    axes[1].set_ylabel("Introduced-added species × units")
-    axes[1].set_title("Host-identity excess is prominence-sensitive")
-    axes[1].text(
-        0.03,0.96,
-        f"Observed = {observed_total:,}\n"
-        "Native-range null: 0/999 exceed.\n"
-        "Combined (α=1): p = 0.584\nα=0.5–2 sensitivity in text",
-        transform=axes[1].transAxes, fontsize=8.5, va="top",
-        bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
+    axes[0].text(
+        0.04, 0.95,
+        "26,530 → 41,083\n+54.9%",
+        transform=axes[0].transAxes,
+        va="top",
+        fontsize=10,
     )
 
-    assoc=prominence["associations"]
-    classes=prominence["degree_classes"]
-    xx=np.arange(len(classes))
-    fractions=np.asarray([row["expanded_fraction"] for row in classes],float)
-    axes[2].bar(xx,fractions)
-    axes[2].set_xticks(
-        xx,
-        [f"{row['class']}\n(n={row['plants']:,})" for row in classes],
-        fontsize=8
-    )
-    axes[2].set_ylabel("Fraction with introduced-range expansion")
-    axes[2].set_ylim(0,0.76)
-    axes[2].set_title("Network-prominent host plants expand more")
-    for xpos,value in zip(xx,fractions):
-        axes[2].text(
-            xpos,value+0.018,f"{100*value:.1f}%",
-            ha="center",va="bottom",fontsize=8
+    order = [
+        ("1_family", "1 family"),
+        ("2_families", "2 families"),
+        ("3_to_5_families", "3–5 families"),
+        ("6plus_families", "6+ families"),
+    ]
+    groups = []
+    labels = []
+    ns = []
+    for key, label in order:
+        vals = np.asarray(
+            [
+                float(r["log_resource_expansion"])
+                for r in anth
+                if r["host_breadth_stratum"] == key
+            ],
+            dtype=float,
         )
-    axes[2].text(
-        0.03,0.96,
-        f"{prominence['plants']:,} plants / {prominence['plant_families']} families\n"
-        f"adjusted rank r = {assoc['family_and_native_breadth_quintile_stratified_rank_correlation']:.3f}\n"
-        "0/4,999 permutations as extreme",
-        transform=axes[2].transAxes,fontsize=8.5,va="top",
-        bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
+        groups.append(vals)
+        labels.append(label)
+        ns.append(len(vals))
+
+    positions = np.arange(1, len(groups) + 1)
+    axes[1].boxplot(
+        groups,
+        positions=positions,
+        widths=0.55,
+        showfliers=False,
+    )
+    for pos, vals in zip(positions, groups):
+        offsets = np.asarray(
+            [jitter(f"fig1|{pos}|{i}", 0.13) for i in range(len(vals))],
+            dtype=float,
+        )
+        axes[1].scatter(
+            np.full(len(vals), pos, dtype=float) + offsets,
+            vals,
+            s=12,
+            alpha=0.45,
+        )
+    axes[1].axhline(0, linewidth=0.8)
+    axes[1].set_xticks(
+        positions,
+        [f"{lab}\n(n={n})" for lab, n in zip(labels, ns)],
+        fontsize=8,
+    )
+    axes[1].set_ylabel("Log proportional resource expansion")
+    axes[1].set_title("Proportional gain is unrelated to diet breadth")
+    axes[1].text(
+        0.03, 0.96,
+        "Spearman ρ = 0.008\n"
+        "PGLS sensitivities: no supported positive effect",
+        transform=axes[1].transAxes,
+        va="top",
+        fontsize=9,
+        bbox={
+            "boxstyle": "round,pad=0.25",
+            "facecolor": "white",
+            "alpha": 0.85,
+        },
     )
 
     fig.suptitle(
-        "Host redistribution expands resource geography; plant network prominence structures the gain",
-        fontsize=13
+        "Human redistribution expands butterfly resource geography across diet-breadth classes",
+        fontsize=13,
     )
-    fig.tight_layout(rect=(0,0,1,0.94))
-    save(fig,outdir,"Figure1_resource_expansion_matched_null")
-
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    save(fig, outdir, "Figure1_resource_expansion_matched_null")
 
 def fig2_occurrence(occ, overlap, species_robustness, outdir):
     rows=[r for r in occ if int(r["observed_outside_native"])>0]
