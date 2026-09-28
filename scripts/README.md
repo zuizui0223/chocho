@@ -1,17 +1,18 @@
 # Script map
 
-The repository keeps executable history, but only a small set of scripts are normal entry points for the current paper.
+Scripts are grouped by role so the repository root of `scripts/` stays navigable.
 
-## Submission and release
+## `paper/` — manuscript, review and release
 
 - `render_butterfly_specialization_manuscript_figures.py` — regenerate the five manuscript figures from frozen figure-source inputs.
+- `render_butterfly_specialization_blinded_manuscript.py` — render the blinded Markdown source.
 - `build_blinded_review_docx.py` — build the editable double-anonymous review DOCX.
 - `build_anonymous_review_bundle.py` — build the de-identified reviewer code bundle.
-- `release_preflight.py` — report the remaining administrative blockers for the v1 release.
+- `release_preflight.py` — report remaining administrative blockers for v1.
 
-## Resource reconstruction and ecological analyses
+## `resource/` — host-resource reconstruction and ecological analyses
 
-- `build_butterfly_resource_envelope_pilot.py` — reconstruct the frozen S1 butterfly resource descriptors.
+- `build_butterfly_resource_envelope_pilot.py` — reconstruct the frozen S1 resource descriptors.
 - `build_butterfly_contemporary_resource_envelope.py` — reconstruct contemporary host-resource geography.
 - `analyze_butterfly_anthropogenic_resource_expansion.py` — native-to-contemporary resource expansion.
 - `analyze_butterfly_resource_expansion_mechanism.py` — host-contribution decomposition.
@@ -19,7 +20,7 @@ The repository keeps executable history, but only a small set of scripts are nor
 - `analyze_butterfly_host_specialization_hierarchy.py` — within-family portfolio hierarchy.
 - `build_wcvp_hosts_sidecar.R` and `build_wcvp_hosts_contemporary_sidecar.R` — base-R WCVP/HOSTS sidecar builders.
 
-## Independent climate route
+## `climate/` — independent climate route
 
 - `freeze_butterfly_climate_release_panel.py`
 - `acquire_butterfly_resource_envelope_occurrences.py`
@@ -27,10 +28,15 @@ The repository keeps executable history, but only a small set of scripts are nor
 - `analyze_butterfly_resource_envelope_climate.py`
 - `test_butterfly_climate_release_hypothesis.py`
 
-The climate route preserves the frozen panel, quality gates and independent-test boundary.
+These preserve the frozen independent panel, quality gates, cross-fit and primary-test boundary.
 
-## Diagnostics and historical execution helpers
+## `diagnostics/` — mapping and historical diagnostics
 
-The remaining mapping, overlap, sampling-effort and pilot-gate scripts are retained because they document the route to the frozen result. They are not additional manuscript analyses and should not be used for response-driven model search.
+- `map_butterfly_resource_envelope_wgsrpd3.py`
+- `compare_butterfly_native_contemporary_occurrence_overlap.py`
+- `diagnose_butterfly_resource_sampling_effort.py`
+- `apply_butterfly_resource_envelope_climate_gate.py`
 
-For the exact manuscript claim boundaries, use `manuscript/butterfly_specialization_claim_map_v0.1.json`.
+Diagnostics are retained for auditability. They are not additional manuscript analyses and must not be used for response-driven model search.
+
+For claim boundaries use `manuscript/butterfly_specialization_claim_map_v0.1.json`.
