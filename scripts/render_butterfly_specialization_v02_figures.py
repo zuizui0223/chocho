@@ -80,7 +80,7 @@ def fig1_resource_and_null(anth, matched, outdir):
     save(fig,outdir,"Figure1_resource_expansion_matched_null")
 
 
-def fig2_occurrence(occ, overlap, outdir):
+def fig2_occurrence(occ, overlap, species_robustness, outdir):
     rows=[r for r in occ if int(r["observed_outside_native"])>0]
     rows.sort(key=lambda r:(float(r["fraction_outside_native_explained_by_introduced"] or 0),int(r["observed_outside_native"])))
     fig,axes=plt.subplots(1,2,figsize=(12.2,7.2),gridspec_kw={"width_ratios":[1.6,1]})
@@ -97,17 +97,33 @@ def fig2_occurrence(occ, overlap, outdir):
         axes[0].text(min(v+0.02,0.95),yi,f"{k}/{n}",va="center",fontsize=7)
     axes[0].set_title("Recovery across 23 independent-panel species")
 
-    labels=["Uniform\nglobal","Region-\nmatched"]
-    nulls=[overlap["uniform_global_null"],overlap["level1_composition_matched_null"]]
-    x=np.arange(2)
+    loo = species_robustness["leave_one_out"]
+    pyrgus = loo["pyrgus_communis_excluded"]
+    pieris = loo["pieris_brassicae_excluded"]
+    labels=["All 23","− Pyrgus\ncommunis","− Pieris\nbrassicae"]
+    observed=[
+        overlap["observed_recovered_species_x_units"],
+        pyrgus["recovered_units"],
+        pieris["recovered_units"],
+    ]
+    nulls=[
+        overlap["level1_composition_matched_null"],
+        {"median":pyrgus["null_median"],"q025":pyrgus["null_q025"],"q975":pyrgus["null_q975"]},
+        {"median":pieris["null_median"],"q025":pieris["null_q025"],"q975":pieris["null_q975"]},
+    ]
+    x=np.arange(3)
     med=[z["median"] for z in nulls]; lo=[z["q025"] for z in nulls]; hi=[z["q975"] for z in nulls]
-    axes[1].errorbar(x,med,yerr=[np.asarray(med)-np.asarray(lo),np.asarray(hi)-np.asarray(med)],fmt="o",capsize=5,label="Null 95% interval")
-    axes[1].axhline(overlap["observed_recovered_species_x_units"],linestyle="--",linewidth=1.3,label="Observed = 66")
+    axes[1].errorbar(x,med,yerr=[np.asarray(med)-np.asarray(lo),np.asarray(hi)-np.asarray(med)],fmt="o",capsize=5,label="Region-matched null 95%")
+    axes[1].scatter(x,observed,marker="D",s=42,label="Observed")
     axes[1].set_xticks(x,labels)
     axes[1].set_ylabel("Recovered species × WGSRPD3 units")
-    axes[1].set_title("Recovery exceeds structural overlap")
+    axes[1].set_title("Recovery survives high-leverage species removal")
     axes[1].legend(frameon=False,fontsize=8)
-    axes[1].text(0.04,0.06,"66/115 recovered (57.4%)\nboth nulls p = 5×10⁻⁶",transform=axes[1].transAxes,fontsize=9)
+    axes[1].text(
+        0.03,0.04,
+        "Species-level mean recovery: 0.583\nnull median: 0.385; 0/99,999 exceedances",
+        transform=axes[1].transAxes,fontsize=8.5
+    )
 
     fig.suptitle("Introduced host geography aligns with contemporary butterfly occurrence beyond null expectation",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.95))
@@ -182,7 +198,7 @@ def fig4_climate(climate_rows,effect,outdir):
     axes[1].text(0.04,0.04,f"ρ = {r:.3f}\n95% bootstrap: {ci[0]:.3f} to {ci[1]:.3f}\none-sided p = 0.2237\napprox. 80% power at |ρ|≈{mde:.3f}",transform=axes[1].transAxes,fontsize=8.5)
     fig.suptitle("Climate-associated filtering persists, but host-family breadth does not explain its strength",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.94))
-    save(fig,outdir,"Figure4_climate_filtering_and_precision")
+    save(fig,outdir,"FigureS1_climate_filtering_and_precision")
 
 
 def main():
@@ -191,6 +207,7 @@ def main():
     ap.add_argument("--matched-null-json",type=Path,required=True)
     ap.add_argument("--occurrence-csv",type=Path,required=True)
     ap.add_argument("--occurrence-null-json",type=Path,required=True)
+    ap.add_argument("--occurrence-species-robustness-json",type=Path,required=True)
     ap.add_argument("--ceiling-json",type=Path,required=True)
     ap.add_argument("--regional-json",type=Path,required=True)
     ap.add_argument("--climate-csv",type=Path,required=True)
@@ -198,7 +215,7 @@ def main():
     ap.add_argument("--output-dir",type=Path,required=True)
     a=ap.parse_args()
     fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),a.output_dir)
-    fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),a.output_dir)
+    fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),json.loads(a.occurrence_species_robustness_json.read_text()),a.output_dir)
     fig3_robustness(json.loads(a.ceiling_json.read_text()),json.loads(a.regional_json.read_text()),a.output_dir)
     fig4_climate(read_csv(a.climate_csv),json.loads(a.climate_effect_json.read_text()),a.output_dir)
     print(json.dumps({"figures":4,"output_dir":str(a.output_dir)},indent=2))
