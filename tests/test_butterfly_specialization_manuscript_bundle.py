@@ -212,6 +212,30 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     assert title_line[2:] in cover_letter
     assert "Our contribution is the complementary resource-side reconstruction" in cover_letter
 
+    # Figure legends should expose sample size and ecological magnitude without requiring the text.
+    for literal in (
+        "aggregate species × region units increased from 26,530 to 41,083",
+        "191 host-taxonomy-adequate butterflies",
+        "74.7% to 31.3%",
+        "82 host-taxonomy-adequate butterflies",
+        "resolved host-species richness spans 1–37 species",
+        "median filtering score was 0.801 and 23/24 species exceeded 0.5",
+    ):
+        assert literal in manuscript
+
+    renderer = (
+        ROOT / "scripts" / "render_butterfly_specialization_manuscript_figures.py"
+    ).read_text(encoding="utf-8")
+    for literal in (
+        "Aggregate species × region units",
+        "median effective contributors:",
+        "median share:",
+        "resolved host species =",
+        "species > 0.5",
+        "Contemporary resource breadth",
+    ):
+        assert literal in renderer
+
     # Detailed portfolio correlations remain available in the full manuscript.
     for literal in ("rho = 0.734", "rho = -0.707"):
         assert literal in manuscript
