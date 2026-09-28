@@ -20,8 +20,10 @@
         "benchmarks/exploratory/butterfly_resource_expansion_matched_null_v0.2.json",
         "benchmarks/exploratory/butterfly_expansion_ceiling_sensitivity_v0.1.json",
         "benchmarks/exploratory/butterfly_family_adjusted_sensitivity_v0.1.json",
-        "benchmarks/exploratory/butterfly_regional_robustness_v0.1.json"
-      ]
+        "benchmarks/exploratory/butterfly_regional_robustness_v0.1.json",
+        "benchmarks/exploratory/butterfly_kawahara_pgls_v0.2.json"
+      ],
+      "phylogenetic_sensitivity": "Kawahara exact-species subset n=124: Brownian rank-PGLS beta=0.140, p=0.119; Pagel lambda=0.033, beta=-0.051, p=0.581."
     },
     {
       "id": "C2",
@@ -119,12 +121,12 @@
     "ceiling_family_regional_sensitivities_complete": true,
     "climate_distance_and_precision_sensitivities_complete": true,
     "family_composition_matched_host_identity_null": "complete; 215 species; magnitude endpoints p=0.0005; specialization-gradient p=0.7865",
-    "species_level_phylogenetic_model": "not_done; butterfly-Family sensitivity only",
+    "species_level_phylogenetic_model": "complete on 124/239 exact Kawahara-tree matches; Brownian p=0.119; Pagel-lambda p=0.581",
     "figures_need_v0_2_rerender": true,
     "cover_letter_v0_2_needed": true,
     "occurrence_species_cluster_robustness": "complete; mean species recovery 0.583 vs null 0.385; Pyrgus-excluded 44/93 remains above null",
     "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
-    "kawahara_species_level_pgls": "running",
+    "kawahara_species_level_pgls": "complete; exact matches=124/239; no supported host-breadth effect",
     "host_commonness_native_range_null": "running"
   }
 }
