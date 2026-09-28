@@ -84,7 +84,7 @@ def main():
     ap=argparse.ArgumentParser()
     for x in ["protocol_json","descriptors_csv","insect_host_csv","native_distribution_csv","contemporary_distribution_csv","output_json","output_csv"]:
         ap.add_argument("--"+x.replace("_","-"),type=Path,required=True)
-    a=ap.parse_args(); prot=json.loads(a.protocol_json.read_text()); B=int(prot["permutations"]); tag=prot["seed_tag"]
+    a=ap.parse_args(); prot=json.loads(a.protocol_json.read_text()); null=prot["null"]; B=int(null["permutations"]); tag=str(null["seed_tag"])
     desc=load_desc(a.descriptors_csv); pairs,pools=load_pairs(a.insect_host_csv); native=load_units(a.native_distribution_csv); contemp=load_units(a.contemporary_distribution_csv)
     pools={fam:tuple(h for h in hs if native.get(h) and native[h] <= contemp.get(h,set())) for fam,hs in pools.items()}
     focal=[]
