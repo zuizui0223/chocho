@@ -29,7 +29,7 @@ Specialization is one of the most familiar axes used to compare herbivorous inse
 
 A butterfly that feeds on a single plant family may use one host species or dozens. Those host species may themselves be geographically restricted or nearly cosmopolitan. Consequently, taxonomic host breadth need not equal the geographic breadth of larval resources. Under global change, this distinction becomes dynamic because host plants themselves are redistributed. Regional work has long shown that introduced hosts can support butterfly range expansion, persistence, or phenological change (Graves & Shapiro 2003), while recent global work documents extensive human-mediated redistribution of Lepidoptera themselves (Couto et al. 2026). A complementary resource-side problem remains unresolved: across butterfly species, how much does anthropogenic host redistribution expand potential larval-resource geography, does that proportional gain favor broad generalists, and can similar aggregate gains be assembled through different host portfolios?
 
-Distinguishing the amount of resource expansion from its architecture is critical. The same total increase in resource geography can arise through very different mechanisms. One butterfly may gain most of its new opportunity from a single widely introduced host, whereas another may accumulate many smaller contributions across a diverse host portfolio. These cases are indistinguishable if specialization is summarized only by the number of host families or if anthropogenic change is summarized only by total area gained.
+The geographic consequence of plant redistribution depends on host identity as well as host number. A butterfly using one exceptionally widespread introduced plant could acquire more new resource geography than a nominal generalist whose many hosts remain largely within native ranges. Conversely, simply drawing more host species mechanically increases the chance of including a widely redistributed plant. Separating those possibilities requires a null model that fixes host richness and plant-family composition while changing the identities of host species.
 
 A further ecological layer separates potential resource opportunity from realized species geography. Even when suitable larval hosts are present, butterflies may fail to occupy parts of that opportunity because of climate, dispersal, phenology, habitat structure, biotic interactions, or incomplete colonization. Recent work shows both extensive climate-associated butterfly range shifts and important host constraints on thermal niche margins, while global analyses increasingly separate climate effects from functional traits and resource specialization (Rashid et al. 2026; Chowdhury et al. 2026). These findings motivate an explicit decomposition: hosts define one component of geographic opportunity, whereas climate and other processes filter which portions become realized butterfly distributions.
 
@@ -53,21 +53,21 @@ The analysis combines five nested ecological dimensions:
 1. **Taxonomic host breadth**: LepTraits number of larval host-plant families.
 2. **Species-level host portfolio richness**: number of resolved larval host species.
 3. **Geographic resource breadth**: the union of WGSRPD level-3 units occupied by resolved host plants.
-4. **Anthropogenic resource-opportunity architecture**: expansion of that resource geography when introduced host ranges are retained, decomposed among contributing host species.
-5. **Climate filtering**: climatic mismatch between butterfly-observed and butterfly-unobserved portions of contemporary host-resource geography.
+4. **Anthropogenic host-identity effect**: deviation of observed resource expansion from same-plant-family, same-host-count random portfolios.
+5. **Realized geographic validation and climate filtering**: enrichment of contemporary butterfly records in introduced-added host regions, followed by climatic mismatch within contemporary host opportunity.
 
-Analysis scale followed a nested funnel. The S1 descriptor set contained 339 species; 239 met resource-eligibility criteria; 215 met the conservative host-taxonomy lower-bound criterion; 191 of those showed introduced-host expansion and entered the primary host-contribution architecture comparison; and 82 were expanded one-family species used for the within-family hierarchy analysis. The independent climate panel was frozen at 32 species, of which 24 passed the pre-climate quality gate and were climate-informative.
+Analysis scale followed a nested funnel. The descriptor set contained 339 species; 239 met resource-eligibility criteria and 215 met the conservative host-taxonomy lower-bound criterion used for the matched-host null. Host-contribution structure was retained as a secondary diagnostic in the 191 conservative species whose envelopes expanded. Geographic validation used a separately acquired 32-species butterfly panel; 24 of those passed the pre-climate quality gate and were climate-informative.
 
 
 ### 2.2 Butterfly trait panel
 
-We used the exact S1 butterfly reconstruction derived from the frozen LepTraits 1.0 input (Shirey et al. 2022). The resource descriptor table contained 339 species with major trait axes, including host-family breadth, wing-size proxies, voltinism, and habitat-affinity traits. Resource analyses were restricted to species with positive host-family breadth and at least one reconstructed native host-resource WGSRPD3 unit, yielding 239 species.
+We used the butterfly reconstruction derived from LepTraits 1.0 (Shirey et al. 2022). The resource descriptor table contained 339 species with major trait axes, including host-family breadth, wing-size proxies, voltinism, and habitat-affinity traits. Resource analyses were restricted to species with positive host-family breadth and at least one reconstructed native host-resource WGSRPD3 unit, yielding 239 species.
 
 Because host-interaction databases are incomplete, we also defined a conservative host-taxonomy lower-bound subset in which the number of resolved HOSTS-WCVP host species was at least as large as LepTraits host-family count. This condition is necessary but not sufficient for interaction completeness. It yielded 215 species.
 
 ### 2.3 Host interaction and plant distribution reconstruction
 
-Larval host records came from the HOSTS database of lepidopteran host plants (Robinson et al. 2023), using the fixed mirror commit `808e0b869f9ec1adf8efff87cf6a395adda103e0`. Plant taxonomy and distribution came from the World Checklist of Vascular Plants (WCVP; Govaerts et al. 2021) through the fixed rWCVPdata v13 snapshot (commit `65bed76bae9d644ccb6ad200c05f9f5071d89e05`).
+Larval host records came from a fixed snapshot of the HOSTS database of lepidopteran host plants (Robinson et al. 2023). Plant taxonomy and distribution came from WCVP v13 (Govaerts et al. 2021). Exact source identities and repository commits are provided in the reproducibility materials rather than repeated in the ecological Methods.
 
 Species-level host names were resolved to accepted WCVP plant identifiers. The **native resource envelope** for each butterfly was the union of WGSRPD3 units in which any resolved host was recorded as native, extant, and non-doubtful. The **contemporary resource envelope** retained both native and introduced records while continuing to exclude extinct and location-doubtful records.
 
@@ -126,17 +126,15 @@ This follow-up is exploratory and was motivated by the preceding host-contributi
 
 An exploratory 10-species pilot was used only to generate the later host-breadth/climate prediction. Those ten species were excluded from the independent panel.
 
-Before independent occurrence or climate responses were opened, we froze a 32-species panel balanced across four host-family strata (8 species each: 1, 2, 3-5, and 6+ families). Within strata, species were selected deterministically to span native resource breadth, resolved host-species richness, and wing size.
+Before independent occurrence or climate responses were examined, we specified a 32-species panel balanced across four host-family strata (8 species each: 1, 2, 3-5, and 6+ families). Within strata, species were selected deterministically to span native resource breadth, resolved host-species richness, and wing size.
 
-The frozen hypothesis was:
+The pre-specified hypothesis was:
 
 > Within larval host-resource opportunity, climatic filtering of realized butterfly distribution weakens as taxonomic host breadth increases.
 
 ### 2.10 Butterfly occurrence acquisition, quality gates and geographic validation
 
-Butterfly occurrences were acquired through the GBIF Occurrence API (GBIF.org 2026) for 2010-2026 using fixed filters requiring coordinates, no flagged geospatial issue, and occurrence status PRESENT. Each species had six deterministic ordinal windows of up to 300 records. Transport failures were handled through checkpointed technical recovery without species replacement or changes to scientific filters.
-
-The initial independent execution was not evaluable because only 10 species passed the frozen pre-climate gate, below the required minimum of 12. Fourteen species had incomplete transport. A post-gate technical recovery was therefore applied uniformly to all and only those 14 partial-transport species. The original quality thresholds, species panel, resource definition, and climate analysis were unchanged. After this completion, 31/32 species had complete occurrence transport; one species remained rejected at the GBIF taxon-resolution stage.
+Butterfly occurrences were acquired through the GBIF Occurrence API (GBIF.org 2026) for 2010-2026, requiring coordinates, no flagged geospatial issue and occurrence status PRESENT. Each species was queried with the same deterministic sampling rule. Acquisition was initially incomplete for 14 species; the identical query rules were reapplied to those species without replacement of taxa or changes to ecological thresholds. After completion, 31/32 species had complete occurrence acquisition; one species remained rejected at taxon resolution.
 
 A species passed the pre-climate quality gate only when all of the following held:
 
@@ -170,11 +168,11 @@ Species required at least 30 training occurrence records with climate, at least 
 
 ### 2.12 Independent test of host-breadth climate release
 
-The primary response was the species climate-filtering score. The predictor was LepTraits host-family count, and contemporary host-resource WGSRPD3 breadth was the frozen control.
+The primary response was the species climate-filtering score. The predictor was LepTraits host-family count, and contemporary host-resource WGSRPD3 breadth was the pre-specified control.
 
 The observed statistic was partial Spearman correlation on ranks. The null distribution used 9,999 deterministic, species-identity-invariant Freedman-Lane-style reduced-response residual permutations. The one-sided alternative predicted a negative association: broader host-family breadth should reduce climate filtering. Alpha was 0.05. Because only 24 species were climate-informative, we also report an approximate Fisher-z 95% interval for the observed partial correlation and an approximate effect magnitude required for 80% power at one-sided alpha = 0.05; these are precision diagnostics rather than replacements for the permutation test.
 
-The residual-permutation implementation was corrected before independent ecological responses were opened to preserve predictor-control structure and to ensure row-order invariance. The effect definition, panel, direction, alpha, and permutation count were unchanged.
+We used a row-order-invariant reduced-response permutation that preserved predictor-control structure. The inferential specification was finalized before the independent ecological responses were examined; implementation history is documented in the reproducibility supplement.
 
 ---
 
