@@ -47,13 +47,13 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[0].text(0.04,0.95,"26,530 → 41,083\n+54.9%",transform=axes[0].transAxes,va="top",fontsize=10)
 
     observed_total = hostbias["observed"]["total_introduced_added_units"]
-    model_keys = ["native_range", "usage", "native_range_usage"]
+    model_keys = ["native_range_null", "usage_weighted_null", "native_range_plus_usage_null"]
     model_labels = ["Native-range\nmatched", "Host-use\nweighted", "Range + use\ncombined"]
     x = np.arange(len(model_keys))
     med=[]; lo=[]; hi=[]
     for key in model_keys:
-        q=hostbias["models"][key]["total_introduced_added_units"]
-        med.append(q["median"]); lo.append(q["q025"]); hi.append(q["q975"])
+        q=hostbias[key]
+        med.append(q["total_added_median"]); lo.append(q["total_added_q025"]); hi.append(q["total_added_q975"])
     axes[1].errorbar(
         x, med,
         yerr=[np.asarray(med)-np.asarray(lo), np.asarray(hi)-np.asarray(med)],
@@ -73,17 +73,11 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
 
     obs_mean=hostbias["observed"]["mean_log_expansion"]
     obs_median=hostbias["observed"]["median_log_expansion"]
-    combined=hostbias["models"]["native_range_usage"]
+    combined=hostbias["native_range_plus_usage_null"]
     observed=[obs_mean,obs_median]
-    nullmed=[combined["mean_log_expansion"]["median"],combined["median_log_expansion"]["median"]]
-    qlo=[combined["mean_log_expansion"]["q025"],combined["median_log_expansion"]["q025"]]
-    qhi=[combined["mean_log_expansion"]["q975"],combined["median_log_expansion"]["q975"]]
+    nullmed=[combined["mean_log_expansion_median"],combined["median_log_expansion_median"]]
     xx=np.arange(2)
-    axes[2].errorbar(
-        xx,nullmed,
-        yerr=[np.asarray(nullmed)-np.asarray(qlo),np.asarray(qhi)-np.asarray(nullmed)],
-        fmt="o",capsize=5,label="Combined null"
-    )
+    axes[2].scatter(xx,nullmed,marker="o",s=42,label="Combined null median")
     axes[2].scatter(xx,observed,marker="D",s=48,label="Observed")
     axes[2].set_xticks(xx,["Mean log\nexpansion","Median log\nexpansion"])
     axes[2].set_ylabel("Log resource expansion")
