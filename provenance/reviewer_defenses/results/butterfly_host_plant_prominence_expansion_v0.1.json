@@ -1,0 +1,26 @@
+{
+  "schema": "chocho_host_plant_prominence_expansion_receipt_v0.1",
+  "status": "SUCCESS_POSTHOC_PLANT_LEVEL_NETWORK_PROMINENCE_ANALYSIS",
+  "workflow": {
+    "run_id": 36429669080,
+    "artifact_id": 10974165298,
+    "artifact_name": "geb-family-composition-matched-null-v01",
+    "artifact_sha256": "f6a9b1eda30cbea200912877126ad251376ef2dfb84a9d095f1c0ab45f1d717f"
+  },
+  "plants": 8909,
+  "plant_families": 278,
+  "degree_definition": "Number of distinct Lepidoptera species in the fixed HOSTS-WCVP reconstruction recorded using the plant.",
+  "associations": {
+    "spearman_log_degree_vs_log_expansion": 0.31282667429829425,
+    "partial_rank_controlling_log_native_breadth": 0.2668211212974541,
+    "family_adjusted_rank_correlation": 0.3408606584137231,
+    "partial_rank_degree_vs_absolute_added_controlling_log_native_breadth": 0.2721487022717705,
+    "family_and_native_breadth_quintile_stratified_rank_correlation": 0.2945777468144387,
+    "stratified_permutation_p_two_sided": 0.0002,
+    "stratified_null_q025": -0.02217153099823486,
+    "stratified_null_median": -0.00009388381359276886,
+    "stratified_null_q975": 0.02205864490155009
+  },
+  "interpretation": "Plants prominent across the Lepidoptera-host network are disproportionately anthropogenically redistributed even after accounting for native geographic breadth and plant-family structure. This provides a plant-level explanation for why other-Lepidoptera-use weighting absorbs the simple butterfly host-identity excess.",
+  "claim_boundary": "HOSTS consumer degree conflates ecological host commonness/breadth with study and recording intensity. The association identifies a network-prominence axis but cannot partition biological commonness from database visibility."
+}
