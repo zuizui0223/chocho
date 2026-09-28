@@ -108,83 +108,108 @@ def stable_seed(tag, model, replicate, species):
     return int.from_bytes(hashlib.sha256(raw).digest()[:8], "big")
 
 
-def weighted_choice(rng, candidates, weights):
-    w = np.asarray(weights, dtype=float)
-    if len(candidates) == 0:
-        raise RuntimeError("empty candidate set")
-    if not np.all(np.isfinite(w)) or np.sum(w) <= 0:
-        raise RuntimeError("invalid candidate weights")
-    w /= np.sum(w)
-    return candidates[int(rng.choice(len(candidates), p=w))]
-
-
-def sample_portfolio(
+def build_sampling_plan(
     species,
     observed_host_map,
     family_pool,
     native,
     consumers,
-    rng,
-    model,
     bandwidth,
     usage_exponent,
 ):
     observed_hosts = set(observed_host_map)
-    selected = set()
-    sampled = []
-    native_differences = []
-    sampled_usage = []
-
     by_family = defaultdict(list)
     for host, family in observed_host_map.items():
         by_family[family].append(host)
 
+    plan = []
     for family, observed in sorted(by_family.items()):
-        alternatives = [
+        alternatives = tuple(
             host
             for host in family_pool.get(family, ())
             if host not in observed_hosts
             and host in native
             and len(native[host]) > 0
-        ]
+        )
         if len(alternatives) < len(observed):
             raise ValueError(f"insufficient alternatives in {family}")
 
-        # Match the most range-extreme hosts first so they cannot be stranded
-        # after more central hosts consume nearby alternatives.
-        family_native = np.asarray(
-            [math.log1p(len(native[h])) for h in alternatives], dtype=float
+        alternative_logs = np.asarray(
+            [math.log1p(len(native[h])) for h in alternatives],
+            dtype=float,
         )
-        center = float(np.median(family_native))
+        alternative_usage = np.asarray(
+            [
+                len(consumers.get(h, frozenset()) - {species})
+                for h in alternatives
+            ],
+            dtype=float,
+        )
+        center = float(np.median(alternative_logs))
         observed_order = sorted(
             observed,
             key=lambda h: abs(math.log1p(len(native[h])) - center),
             reverse=True,
         )
 
+        targets = []
         for observed_host in observed_order:
-            candidates = [h for h in alternatives if h not in selected]
-            target = math.log1p(len(native[observed_host]))
-            weights = []
-            for candidate in candidates:
-                native_distance = abs(math.log1p(len(native[candidate])) - target)
-                weight = 1.0
-                if model in {"native_range", "native_range_usage"}:
-                    weight *= math.exp(-native_distance / bandwidth)
-                if model in {"usage", "native_range_usage"}:
-                    other_users = len(consumers.get(candidate, frozenset()) - {species})
-                    weight *= (1.0 + other_users) ** usage_exponent
-                weights.append(weight)
+            target_log = math.log1p(len(native[observed_host]))
+            native_distance = np.abs(alternative_logs - target_log)
+            native_weight = np.exp(-native_distance / bandwidth)
+            usage_weight = np.power(
+                1.0 + alternative_usage,
+                usage_exponent,
+            )
+            targets.append(
+                {
+                    "target_log": target_log,
+                    "native_distance": native_distance,
+                    "weights": {
+                        "native_range": native_weight,
+                        "usage": usage_weight,
+                        "native_range_usage": native_weight * usage_weight,
+                    },
+                }
+            )
 
-            chosen = weighted_choice(rng, candidates, weights)
-            selected.add(chosen)
-            sampled.append(chosen)
+        plan.append(
+            {
+                "family": family,
+                "alternatives": alternatives,
+                "alternative_logs": alternative_logs,
+                "alternative_usage": alternative_usage,
+                "targets": targets,
+            }
+        )
+    return plan
+
+
+def sample_from_plan(plan, rng, model):
+    sampled = []
+    native_differences = []
+    sampled_usage = []
+
+    for family_plan in plan:
+        alternatives = family_plan["alternatives"]
+        usage = family_plan["alternative_usage"]
+        selected = np.zeros(len(alternatives), dtype=bool)
+
+        for target in family_plan["targets"]:
+            weights = np.asarray(target["weights"][model], dtype=float).copy()
+            weights[selected] = 0.0
+            total = float(np.sum(weights))
+            if not math.isfinite(total) or total <= 0:
+                raise RuntimeError(
+                    f"invalid candidate weights in {family_plan['family']}"
+                )
+            index = int(rng.choice(len(alternatives), p=weights / total))
+            selected[index] = True
+            sampled.append(alternatives[index])
             native_differences.append(
-                abs(math.log1p(len(native[chosen])) - target)
+                float(target["native_distance"][index])
             )
-            sampled_usage.append(
-                len(consumers.get(chosen, frozenset()) - {species})
-            )
+            sampled_usage.append(float(usage[index]))
 
     return tuple(sampled), native_differences, sampled_usage
 
@@ -280,6 +305,15 @@ def main():
                 "descriptor": descriptor,
                 "host_map": observed_host_map,
                 "observed": observed,
+                "sampling_plan": build_sampling_plan(
+                    species,
+                    observed_host_map,
+                    family_pool,
+                    native,
+                    consumers,
+                    bandwidth,
+                    usage_exponent,
+                ),
             }
         )
 
@@ -314,16 +348,10 @@ def main():
                 rng = np.random.default_rng(
                     stable_seed(seed_tag, model, replicate, row["species"])
                 )
-                sampled, native_diff, sampled_usage = sample_portfolio(
-                    row["species"],
-                    row["host_map"],
-                    family_pool,
-                    native,
-                    consumers,
+                sampled, native_diff, sampled_usage = sample_from_plan(
+                    row["sampling_plan"],
                     rng,
                     model,
-                    bandwidth,
-                    usage_exponent,
                 )
                 metrics = portfolio_metrics(sampled, native, contemporary)
                 rep_metrics.append(metrics)
