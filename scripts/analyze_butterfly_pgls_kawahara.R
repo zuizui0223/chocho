@@ -11,7 +11,6 @@ suppressPackageStartupMessages({
   library(nlme)
   library(jsonlite)
   library(megatrees)
-  library(rtrees)
 })
 
 normalize_species <- function(x) {
@@ -118,28 +117,6 @@ direct_tree <- drop.tip(
 )
 direct_result <- fit_pgls(direct_tree, dat, "Kawahara_2023_exact_species")
 
-# Graft species absent from the published tree at the same-genus/family basal node.
-sp_df <- data.frame(
-  species = gsub(" ", "_", dat$species),
-  genus = gsub(" ", "_", dat$genus),
-  family = dat$butterfly_family,
-  stringsAsFactors = FALSE
-)
-grafted_tree <- rtrees::get_tree(
-  sp_list = sp_df,
-  tree = base_tree,
-  scenario = "at_basal_node",
-  show_grafted = TRUE,
-  tree_by_user = FALSE
-)
-graft_labels <- grafted_tree$tip.label
-graft_status <- c(
-  direct = sum(!grepl("\\*$", graft_labels)),
-  genus_grafted = sum(grepl("[^*]\\*$", graft_labels)),
-  family_grafted = sum(grepl("\\*\\*$", graft_labels))
-)
-grafted_result <- fit_pgls(grafted_tree, dat, "Kawahara_2023_genus_family_grafted")
-
 payload <- list(
   schema = "chocho_butterfly_kawahara_pgls_v0.1",
   status = "POSTHOC_SPECIES_LEVEL_PHYLOGENETIC_SENSITIVITY",
@@ -152,17 +129,15 @@ payload <- list(
   resource_panel_species = nrow(dat),
   exact_tree_match_species = length(direct_species),
   exact_species_result = direct_result,
-  grafted_tree_status = as.list(graft_status),
-  grafted_result = grafted_result,
+  coverage_fraction = length(direct_species) / nrow(dat),
   interpretation_rule = paste(
-    "The near-zero host-breadth association is phylogenetically robust if both the",
-    "exact-species PGLS and the genus/family-grafted sensitivity remain small and",
-    "statistically unsupported."
+    "The near-zero host-breadth association is phylogenetically robust if the",
+    "exact-species PGLS on taxa directly present in Kawahara et al. (2023)",
+    "remains small and statistically unsupported."
   ),
   claim_boundary = paste(
-    "The exact-species analysis uses only taxa present in Kawahara et al. (2023).",
-    "The expanded analysis places missing species at genus or family basal nodes",
-    "and therefore treats uncertain within-clade placement conservatively."
+    "This analysis deliberately excludes panel species absent from the published",
+    "Kawahara et al. (2023) tree rather than imputing their phylogenetic placement."
   )
 )
 
