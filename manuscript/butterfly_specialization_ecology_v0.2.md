@@ -146,7 +146,7 @@ The residual-permutation implementation was corrected before independent ecologi
 
 Because climatically mismatched resource units may also be geographically remote, we performed two post-hoc accessibility sensitivities. First, comparisons were restricted to WGSRPD level-1 regions containing a training or held-out observed unit for the focal species. Second, held-out observed and never-observed resource units were greedily matched by distance to the species' nearest training-observed WGSRPD3 region using calipers of 250, 500 and 1000 km. Filtering scores were recomputed on these matched pairs.
 
-We also quantified the precision of the n = 24 host-breadth test. A Fisher-z approximation for a partial correlation with one control was used only as an interpretable precision diagnostic alongside the preregistered permutation p-value.
+We also quantified the precision of the n = 24 host-breadth test. A 30,000-replicate species bootstrap provided a post-hoc percentile interval for the partial Spearman coefficient, and a Fisher-z approximation with one control was used to express the approximate effect size required for 80% power. These diagnostics supplement rather than replace the preregistered permutation decision rule.
 
 ---
 
@@ -160,6 +160,8 @@ Proportional resource expansion was almost unrelated to host-family breadth (Spe
 
 This near-zero relationship was not explained by the finite WGSRPD3 ceiling. The maximum native resource breadth was 305 of 369 units; after restricting the analysis to species below native-breadth thresholds of 250, 200, 168, 150 and 100 units, rho remained between 0.028 and 0.067. Rank-adjustment for native breadth gave a host-family association of 0.012 with log proportional expansion. Although host-family breadth was weakly associated with the absolute number of added units (rho = 0.127), that relationship fell to 0.017 after controlling native breadth. A coarse butterfly-Family correction likewise left the proportional result essentially unchanged (family-adjusted rank correlation = 0.021).
 
+The result was also not solely a consequence of the strong Northern American representation in the dataset. When species were grouped by the dominant WGSRPD level-1 region of their native resource envelope, the host-family-breadth correlation with proportional expansion was -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24), 0.051 in Tropical Asia (n = 9) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
+
 The same conclusion was not confined to Northern America, the largest regional component of the panel. Within dominant native-resource strata, host-family breadth versus proportional expansion was rho = -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
 
 ### 3.2 Introduced host ranges recover contemporary butterfly occurrences missed by native host geography
@@ -167,6 +169,8 @@ The same conclusion was not confined to Northern America, the largest regional c
 The independent occurrence panel provided direct presence-side validation of the resource reconstruction. Thirty-one of 32 species yielded contemporary GBIF records. Across the panel, 115 butterfly species × WGSRPD3 observations occurred outside native host-resource envelopes. Adding introduced host distributions recovered 66 of those units (57.4%).
 
 Twenty-three species had at least one observed unit outside their native host envelope, and introduced hosts recovered at least one such unit in 18 species. The median species-level recovery fraction among those 23 species was 0.60; eight species had all native-envelope-external observed units recovered. For example, all 22 outside-native observed units of *Pyrgus communis* and all four of *Pieris brassicae* entered the contemporary resource envelope after introduced hosts were included.
+
+The 66 recovered species × region units were substantially more than expected from envelope enlargement alone. The uniform global null had a median of 38 recovered units (95% interval 30–46), while the null preserving each species' level-1 regional composition of added resource geography had a median of 49 (43–56). In 199,999 randomizations, neither null generated a value as large as observed often enough to exceed p = 5 × 10^-6.
 
 Recovery exceeded structural overlap expectations. A null preserving native-envelope size, added-envelope size and outside-native occurrence count expected 38.0 recovered units (95% interval 30–46), compared with 66 observed (p = 5 × 10^-6). After additionally preserving the number of introduced-added units in each WGSRPD level-1 region, expected overlap rose to 49.3 units (95% interval 43–56) but remained below the observed 66 (p = 5 × 10^-6).
 
