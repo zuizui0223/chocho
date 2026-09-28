@@ -230,7 +230,7 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "Aggregate species × region units",
         "median effective contributors:",
         "median share:",
-        "resolved host species =",
+        "resolved host species)",
         "species > 0.5",
         "Contemporary resource breadth",
     ):
