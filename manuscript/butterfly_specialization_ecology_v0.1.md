@@ -32,11 +32,11 @@ Distinguishing the amount of resource expansion from its architecture is critica
 
 A further ecological layer separates potential resource opportunity from realized species geography. Even when suitable larval hosts are present, butterflies may fail to occupy parts of that opportunity because of climate, dispersal, phenology, habitat structure, biotic interactions, or incomplete colonization. Recent work shows both extensive climate-associated butterfly range shifts and important host constraints on thermal niche margins, while global analyses increasingly separate climate effects from functional traits and resource specialization (Rashid et al. 2026; Chowdhury et al. 2026). These findings motivate an explicit decomposition: hosts define one component of geographic opportunity, whereas climate and other processes filter which portions become realized butterfly distributions.
 
-Here we reconstruct these layers within a single butterfly ecology framework. We ask five linked questions. First, how closely does family-level diet breadth correspond to geographic resource breadth? Second, does anthropogenic redistribution of host plants preferentially expand resource opportunity for taxonomic generalists? Third, when aggregate expansion is similar, does its host-contribution architecture differ between specialists and generalists? Fourth, does species-level host richness reveal hierarchical specialization even among butterflies assigned to the same family-breadth category? Finally, does broader host-family breadth weaken climatic filtering within host-resource opportunity?
+Here we reconstruct these layers within a single butterfly ecology framework. We ask five linked questions. First, how strongly does anthropogenic redistribution of host plants expand butterfly resource geography, and is proportional expansion greater in taxonomic generalists? Second, when aggregate expansion is similar, does its host-contribution architecture differ between specialists and generalists? Third, how closely does family-level diet breadth correspond to geographic resource breadth? Fourth, does species-level host richness reveal hierarchical specialization even among butterflies assigned to the same family-breadth category? Finally, does broader host-family breadth weaken climatic filtering within host-resource opportunity?
 
 Our analyses intentionally separate exploratory resource reconstruction from a later independent climate test. The first four questions use exact reconstructions from fixed LepTraits, HOSTS, and WCVP inputs and are interpreted descriptively. The final host-breadth/climate prediction was generated from an exploratory pilot and then tested on a separately frozen butterfly panel with prospectively fixed quality gates and a response-blind statistical correction before independent ecological responses were opened.
 
-We expected that a one-dimensional specialist-generalist continuum would be insufficient. Specifically, we predicted that family breadth would only partially track geographic resource breadth, that introduced host ranges could expand opportunity across the specialization spectrum, and that total expansion could conceal contrasting host-portfolio architectures. For the independent climate test, we prospectively predicted that broader taxonomic diets would weaken climatic filtering within contemporary host-resource opportunity. This final prediction provides a direct test of whether family-level generalism propagates upward from resource use into realized biogeography.
+We expected that a one-dimensional specialist-generalist continuum would be insufficient. Specifically, we predicted that introduced host ranges could expand opportunity across the specialization spectrum, that total expansion could conceal contrasting host-portfolio architectures, and that family breadth would only partially track geographic resource breadth. For the independent climate test, we prospectively predicted that broader taxonomic diets would weaken climatic filtering within contemporary host-resource opportunity. This final prediction provides a direct test of whether family-level generalism propagates upward from resource use into realized biogeography.
 
 ---
 
@@ -165,15 +165,7 @@ The residual-permutation implementation was corrected before independent ecologi
 
 ## 3. Results
 
-### 3.1 Taxonomic specialization only partly tracks geographic resource specialization
-
-Across 239 resource-eligible species, host-family breadth and native geographic resource breadth were positively but weakly associated (Spearman rho = 0.276). In the 215-species host-taxonomy lower-bound subset, the association increased to rho = 0.398 but remained far from one-to-one.
-
-Within the conservative subset, 33 species (15.3%) differed by at least 0.5 between their percentile ranks for taxonomic and geographic specialization. Eighteen one-family specialists nevertheless occupied the upper quartile of geographic resource breadth. Examples included *Hylephila phyleus* (305 native resource units), *Atalopedes campestris* (303), *Pararge aegeria* (241), *Lerodea eufala* (233), *Ypthima baldus* (226), and *Colias eurytheme* (215).
-
-Thus low family-level diet breadth did not imply a geographically narrow larval-resource base.
-
-### 3.2 Introduced host ranges expand resource opportunity across the specialization spectrum
+### 3.1 Introduced host ranges expand resource opportunity across the specialization spectrum
 
 When introduced host distributions were retained, 206 of 239 species (86.2%) gained reconstructed geographic resource opportunity. Total species-units increased from 26,530 under native-only host distributions to 41,083 under contemporary distributions, an addition of 14,553 species-units.
 
@@ -183,7 +175,7 @@ Median contemporary/native ratios were 1.390 for one-family species, 1.442 for t
 
 Broader diets therefore had larger absolute resource geographies on average but did not receive greater proportional anthropogenic expansion.
 
-### 3.3 Similar aggregate expansion conceals contrasting host architectures
+### 3.2 Similar aggregate expansion conceals contrasting host architectures
 
 The architecture of introduced-host opportunity differed much more strongly among specialization categories than did proportional expansion.
 
@@ -192,6 +184,14 @@ In the 191 host-taxonomy-adequate expanded species, host-family breadth was posi
 Median effective contributor number rose from 1.67 in one-family butterflies to 2.04, 3.30, and 5.23 across the 2, 3-5, and 6+ family strata. Conversely, median maximum single-host share fell from 0.747 to 0.566, 0.439, and 0.313.
 
 Thus specialists and generalists often reached similar proportional resource expansion through different host-contribution architectures: concentrated redistribution of one or two dominant hosts versus accumulation across a broader host portfolio.
+
+### 3.3 Taxonomic specialization only partly tracks geographic resource specialization
+
+Across 239 resource-eligible species, host-family breadth and native geographic resource breadth were positively but weakly associated (Spearman rho = 0.276). In the 215-species host-taxonomy lower-bound subset, the association increased to rho = 0.398 but remained far from one-to-one.
+
+Within the conservative subset, 33 species (15.3%) differed by at least 0.5 between their percentile ranks for taxonomic and geographic specialization. Eighteen one-family specialists nevertheless occupied the upper quartile of geographic resource breadth. Examples included *Hylephila phyleus* (305 native resource units), *Atalopedes campestris* (303), *Pararge aegeria* (241), *Lerodea eufala* (233), *Ypthima baldus* (226), and *Colias eurytheme* (215).
+
+Thus low family-level diet breadth did not imply a geographically narrow larval-resource base.
 
 ### 3.4 Species-level portfolio richness reveals hierarchy within the same family breadth
 
@@ -349,11 +349,11 @@ The resulting picture is hierarchical: **host taxonomy describes who can be used
 
 ## Figure legends
 
-**Figure 1. Taxonomic host breadth only partly predicts geographic resource breadth.** Host-family count is plotted against the number of native, extant, non-doubtful WGSRPD level-3 units in the union of resolved larval host distributions for the 215 species meeting the conservative host-taxonomy lower-bound criterion. The y-axis is logarithmic. Eighteen one-family butterflies fall in the upper quartile of geographic resource breadth; highlighted and named examples illustrate taxonomic specialists with broad resource geography. Spearman rho = 0.398.
+**Figure 1. Introduced host distributions expand reconstructed resource opportunity across the specialization spectrum.** **a**, Native versus contemporary host-resource breadth for 239 resource-eligible butterflies. The dashed line is the 1:1 expectation; points above it gain WGSRPD3 resource units when introduced host distributions are retained. Overall, 206/239 species expanded, and aggregate species × region units increased from 26,530 to 41,083 (+14,553; +54.9%). **b**, Log proportional resource expansion by host-family breadth class; class-specific sample sizes are printed below the x-axis labels. Points are species, boxes show the interquartile range and median, and the dashed line marks zero expansion. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008; n = 239).
 
-**Figure 2. Introduced host distributions expand reconstructed resource opportunity across the specialization spectrum.** **a**, Native versus contemporary host-resource breadth for 239 resource-eligible butterflies. The dashed line is the 1:1 expectation; points above it gain WGSRPD3 resource units when introduced host distributions are retained. Overall, 206/239 species expanded, and aggregate species × region units increased from 26,530 to 41,083 (+14,553; +54.9%). **b**, Log proportional resource expansion by host-family breadth class; class-specific sample sizes are printed below the x-axis labels. Points are species, boxes show the interquartile range and median, and the dashed line marks zero expansion. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008; n = 239).
+**Figure 2. Similar aggregate expansion is assembled through different host-contribution architectures.** The analysis includes 191 host-taxonomy-adequate butterflies whose resource envelopes expanded; class-specific sample sizes are printed below the x-axis labels. **a**, Effective number of host species contributing to introduced-added resource units, increasing in median from 1.67 in one-family butterflies to 5.23 in butterflies using six or more families. **b**, Fraction of introduced-added units attributable to the single largest contributing host, declining in median from 74.7% to 31.3% across the same contrast. Points are species; boxes show the interquartile range and median. Thus comparable aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
 
-**Figure 3. Similar aggregate expansion is assembled through different host-contribution architectures.** The analysis includes 191 host-taxonomy-adequate butterflies whose resource envelopes expanded; class-specific sample sizes are printed below the x-axis labels. **a**, Effective number of host species contributing to introduced-added resource units, increasing in median from 1.67 in one-family butterflies to 5.23 in butterflies using six or more families. **b**, Fraction of introduced-added units attributable to the single largest contributing host, declining in median from 74.7% to 31.3% across the same contrast. Points are species; boxes show the interquartile range and median. Thus comparable aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
+**Figure 3. Taxonomic host breadth only partly predicts geographic resource breadth.** Host-family count is plotted against the number of native, extant, non-doubtful WGSRPD level-3 units in the union of resolved larval host distributions for the 215 species meeting the conservative host-taxonomy lower-bound criterion. The y-axis is logarithmic. Eighteen one-family butterflies fall in the upper quartile of geographic resource breadth; highlighted and named examples illustrate taxonomic specialists with broad resource geography. Spearman rho = 0.398.
 
 **Figure 4. Species-level host portfolios reveal hierarchical specialization within one-family butterflies.** Analyses include 82 host-taxonomy-adequate butterflies whose known larval hosts all belong to exactly one plant family and whose resource envelope expanded; resolved host-species richness spans 1–37 species. **a**, Resolved host-species richness versus effective contributor number (Spearman rho = 0.734). **b**, Resolved host-species richness versus maximum single-host fractional share (rho = -0.707). The x-axis is logarithmic. Family-level specialists therefore span a wide gradient from effectively one-host to multi-host anthropogenic opportunity architectures.
 

@@ -197,14 +197,14 @@ The important result is not merely that host-family breadth sometimes performs p
 
 ## Suggested figure sequence
 
-1. **Taxonomic vs geographic specialization**  
-   Host-family breadth against native resource geography; highlight specialist-wide discordant species.
+1. **Anthropogenic expansion without proportional generalist advantage**  
+   Native vs contemporary resource opportunity, aggregate species × region expansion and proportional expansion across host-family strata.
 
-2. **Anthropogenic expansion without generalist advantage**  
-   Native vs contemporary resource opportunity and proportional expansion across host-family strata.
-
-3. **Different architectures produce similar expansion**  
+2. **Different architectures produce similar expansion**  
    Effective contributor number and maximum one-host share across host-family breadth.
+
+3. **Taxonomic vs geographic specialization**  
+   Host-family breadth against native resource geography; highlight specialist-wide discordant species.
 
 4. **Hierarchy within specialists**  
    One-family species: resolved host-species richness against effective contributor number / single-host dominance.

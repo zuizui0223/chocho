@@ -17,9 +17,9 @@ from lxml import etree
 
 
 FIGURES = {
-    1: "Figure1_taxonomic_vs_geographic_specialization.png",
-    2: "Figure2_anthropogenic_resource_expansion.png",
-    3: "Figure3_host_contribution_architecture.png",
+    1: "Figure1_anthropogenic_resource_expansion.png",
+    2: "Figure2_host_contribution_architecture.png",
+    3: "Figure3_taxonomic_vs_geographic_specialization.png",
     4: "Figure4_within_family_specialization_hierarchy.png",
     5: "Figure5_independent_climate_filtering.png",
 }

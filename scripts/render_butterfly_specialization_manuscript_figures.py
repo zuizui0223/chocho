@@ -134,7 +134,7 @@ def figure1(descriptors: list[dict[str, str]], outdir: Path) -> None:
         f"{len(highlights)} one-family species in the upper quartile"
     )
     ax.legend(frameon=False, loc="upper right", fontsize=8)
-    save(fig, outdir / "Figure1_taxonomic_vs_geographic_specialization")
+    save(fig, outdir / "Figure3_taxonomic_vs_geographic_specialization")
 
 
 def boxplot_by_stratum(ax, rows, field, ylabel, zero_line=False):
@@ -228,7 +228,7 @@ def figure2(anth: list[dict[str, str]], outdir: Path) -> None:
     )
 
     fig.tight_layout(rect=(0, 0, 1, 0.93))
-    save(fig, outdir / "Figure2_anthropogenic_resource_expansion")
+    save(fig, outdir / "Figure1_anthropogenic_resource_expansion")
 
 
 def figure3(mech: list[dict[str, str]], outdir: Path) -> None:
@@ -293,7 +293,7 @@ def figure3(mech: list[dict[str, str]], outdir: Path) -> None:
     )
 
     fig.tight_layout(rect=(0, 0, 1, 0.94))
-    save(fig, outdir / "Figure3_host_contribution_architecture")
+    save(fig, outdir / "Figure2_host_contribution_architecture")
 
 
 def figure4(mech: list[dict[str, str]], outdir: Path) -> None:
@@ -445,9 +445,9 @@ def main() -> int:
     if primary.get("status") != "INDEPENDENT_TEST_COMPLETE":
         raise RuntimeError("climate primary result is not complete")
 
-    figure1(descriptors, args.output_dir)
     figure2(anth, args.output_dir)
     figure3(mech, args.output_dir)
+    figure1(descriptors, args.output_dir)
     figure4(mech, args.output_dir)
     figure5(primary, args.output_dir)
 
