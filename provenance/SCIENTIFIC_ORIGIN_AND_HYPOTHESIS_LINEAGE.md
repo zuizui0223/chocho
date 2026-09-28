@@ -10,7 +10,7 @@ The analysis assets originated from earlier cross-species method-development wor
 
 The scientific transition occurred when the host-resource reconstruction itself was inspected as an ecological object. It revealed structure that was biologically interesting independently of its original use: taxonomic host breadth, resource geography and host-species portfolio structure were not interchangeable.
 
-Exact migration/source provenance is retained separately in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt`.
+Exact migration/source provenance is retained separately in `provenance/migration/MIGRATION_PROVENANCE.md` and `provenance/migration/SOURCE_SNAPSHOT.txt`.
 
 ## Discovery chronology
 
