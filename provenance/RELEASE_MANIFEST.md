@@ -43,10 +43,10 @@ See `docs/REPRODUCIBILITY.md`.
 
 ## Review-package preparation completed
 
-- `scripts/build_blinded_review_docx.py` and `.github/workflows/build-blinded-review-docx.yml` reproducibly build the editable double-anonymous review DOCX from the blinded Markdown plus five regenerated figures.
+- `scripts/paper/build_blinded_review_docx.py` and `.github/workflows/build-blinded-review-docx.yml` reproducibly build the editable double-anonymous review DOCX from the blinded Markdown plus five regenerated figures.
 - The review DOCX has continuous visible line numbering from 1, page numbers, embedded figures/legends, scrubbed creator/lastModifiedBy metadata and removed Word revision-session identifiers.
 - A generated 20-page review DOCX was rendered page-by-page and visually audited end-to-end.
-- `scripts/build_anonymous_review_bundle.py` and `.github/workflows/build-anonymous-review-bundle.yml` build the de-identified reviewer code bundle.
+- `scripts/paper/build_anonymous_review_bundle.py` and `.github/workflows/build-anonymous-review-bundle.yml` build the de-identified reviewer code bundle.
 - The anonymous bundle passed overt identity scanning, preserved the four frozen figure-source raw hashes, passed 31 included scientific tests, regenerated five PDF plus five PNG figures, and carries an internal SHA256SUMS manifest.
 
 ## Required release actions still outside the frozen scientific package
@@ -59,7 +59,7 @@ Follow `docs/RELEASE_PROCEDURE.md`.
 4. Add that reserved DOI to `CITATION.cff` and the identifying title-page/final-public metadata.
 5. Upload the already-built anonymous reviewer bundle to a non-identifying reviewer-access host and insert the resulting URL in the blinded manuscript.
 6. Rebuild the final blinded DOCX after the anonymous URL is inserted, rerun anonymity/metadata checks, and perform the final proofread.
-7. Run final paper/review-package CI on the exact release commit and require `scripts/release_preflight.py` to report READY.
+7. Run final paper/review-package CI on the exact release commit and require `scripts/paper/release_preflight.py` to report READY.
 8. Tag that exact green commit as `v1.0.0-butterfly`.
 9. Upload the exact tag archive to the existing Zenodo draft and publish it, activating the reserved DOI.
 
