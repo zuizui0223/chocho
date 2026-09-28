@@ -49,7 +49,10 @@ def test_navigation_indexes_exist() -> None:
         "tests/README.md",
         "data/README.md",
         "provenance/README.md",
+        "provenance/climate/README.md",
         "provenance/archive/climate/README.md",
+        "provenance/archive/climate/operations/README.md",
+        "provenance/archive/climate/pilot/README.md",
     ):
         assert (ROOT / rel).is_file()
 
