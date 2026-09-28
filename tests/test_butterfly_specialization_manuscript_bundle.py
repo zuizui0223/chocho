@@ -245,6 +245,30 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
         "Figure3_taxonomic_vs_geographic_specialization",
     ]
 
+    # Submission surfaces should stand alone as an ecology paper.
+    submission_paths = [
+        "manuscript/butterfly_specialization_ecology_v0.1.md",
+        "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md",
+        "manuscript/butterfly_specialization_geb_cover_letter_v0.1.md",
+        "manuscript/butterfly_specialization_geb_title_page_template_v0.1.md",
+    ]
+    for rel in submission_paths:
+        surface = (ROOT / rel).read_text(encoding="utf-8").lower()
+        assert "ttf" not in surface
+        assert "transferability" not in surface
+
+    assert claim_map["figure_claim_mapping"] == {
+        "Figure_1": ["C2"],
+        "Figure_2": ["C3"],
+        "Figure_3": ["C1"],
+        "Figure_4": ["C4"],
+        "Figure_5": ["C5", "C6"],
+    }
+    lineage = claim_map["hypothesis_lineage"]
+    assert lineage["paper_is_independent_ecology_study"] is True
+    assert lineage["submission_surface_should_not_require_precursor_context"] is True
+    assert lineage["provenance"] == "provenance/SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md"
+
     # Figure legends should expose sample size and ecological magnitude without requiring the text.
     for literal in (
         "aggregate species × region units increased from 26,530 to 41,083",

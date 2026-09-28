@@ -10,11 +10,11 @@ Target journal: *Global Ecology and Biogeography*.
 
 The paper treats butterfly specialization as a hierarchy of partially coupled, non-interchangeable ecological dimensions rather than a single specialist–generalist axis.
 
-The frozen manuscript claim map currently supports six claims:
+The frozen manuscript claim map supports six claims, presented here in manuscript order:
 
-1. Family-level host breadth only partly tracks geographic larval-resource breadth.
-2. Introduced host ranges expand reconstructed resource opportunity for most butterflies, but proportional expansion is not concentrated in broad family-level generalists.
-3. Similar aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
+1. Introduced host ranges expand reconstructed resource opportunity for most butterflies, but proportional expansion is not concentrated in broad family-level generalists.
+2. Similar aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
+3. Family-level host breadth only partly tracks geographic larval-resource breadth.
 4. Species-level host richness reveals strong specialization structure even within a fixed host-family breadth category.
 5. Climate commonly filters realized butterfly geography within reconstructed contemporary larval-resource opportunity.
 6. The independent prediction that broader host-family diets weaken climate filtering after controlling contemporary resource breadth was **not supported** and is retained without retuning.
@@ -23,15 +23,11 @@ See `manuscript/butterfly_specialization_claim_map_v0.1.json` for the exact clai
 
 ## Repository boundary
 
-This is the ecology-paper repository. It is intentionally separate from `zuizui0223/TTF`, which contains the transferability/qualification methodology.
+This repository is self-contained for the butterfly ecology paper. Method-development history and unrelated response domains are not part of the scientific argument presented here.
 
-The split is pinned to TTF commit:
+Migration provenance is retained separately in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt` so the origin of code and frozen artifacts remains auditable without entering the manuscript narrative.
 
-`1a112334cca2f2ef5e234c3ae1fc1a80b8266956`
-
-Migration provenance is recorded in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt`.
-
-Genetic-response, phylogatR, and generic transferability-development code have been removed from this repository after the paper-specific test suite demonstrated that they are not required by the GEB analysis.
+The scientific question/hypothesis lineage is documented separately in `provenance/SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md`. It distinguishes discovery chronology from manuscript presentation order and is not part of the manuscript argument.
 
 ## Main evidence path
 

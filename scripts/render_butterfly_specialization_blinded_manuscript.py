@@ -38,11 +38,6 @@ def render_blinded(text: str) -> str:
         lines.insert(2, "")
     text = "\n".join(lines).rstrip() + "\n"
 
-    text = text.replace(
-        "Genetic responses from the original TTF program were not used in these analyses.",
-        "Genetic responses from the precursor transferability program were not used in these analyses.",
-    )
-
     data_start = text.find("## Data and Code Availability")
     refs_start = text.find("## References", data_start)
     if data_start < 0 or refs_start < 0:

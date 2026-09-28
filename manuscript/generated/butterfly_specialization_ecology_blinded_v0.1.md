@@ -54,7 +54,6 @@ The analysis combines five nested ecological dimensions:
 
 Analysis scale followed a nested funnel. The S1 descriptor set contained 339 species; 239 met resource-eligibility criteria; 215 met the conservative host-taxonomy lower-bound criterion; 191 of those showed introduced-host expansion and entered the primary host-contribution architecture comparison; and 82 were expanded one-family species used for the within-family hierarchy analysis. The independent climate panel was frozen at 32 species, of which 24 passed the pre-climate quality gate and were climate-informative.
 
-Genetic responses from the precursor transferability program were not used in these analyses.
 
 ### 2.2 Butterfly trait panel
 

@@ -54,7 +54,6 @@ The analysis combines five nested ecological dimensions:
 
 Analysis scale followed a nested funnel. The S1 descriptor set contained 339 species; 239 met resource-eligibility criteria; 215 met the conservative host-taxonomy lower-bound criterion; 191 of those showed introduced-host expansion and entered the primary host-contribution architecture comparison; and 82 were expanded one-family species used for the within-family hierarchy analysis. The independent climate panel was frozen at 32 species, of which 24 passed the pre-climate quality gate and were climate-informative.
 
-Genetic responses from the original TTF program were not used in these analyses.
 
 ### 2.2 Butterfly trait panel
 
@@ -363,7 +362,7 @@ The resulting picture is hierarchical: **host taxonomy describes who can be used
 
 ## Data and Code Availability
 
-All analysis code, frozen scientific protocols, input identities, archived workflow definitions, and result receipts supporting this manuscript are versioned in the `chocho` ecology repository. The manuscript figures are rendered with `scripts/render_butterfly_specialization_manuscript_figures.py`; the historical workflow definition used for the audited figure run is preserved at `provenance/workflows/butterfly-specialization-manuscript-figures-v01.yml` (original TTF commit `a5b51777615836b6cd86d489d33dbdc6653ec1c6`, run `36292128188`).
+All analysis code, frozen scientific protocols, input identities, archived workflow definitions, and result receipts supporting this manuscript are versioned in the `chocho` ecology repository. The manuscript figures are rendered with `scripts/render_butterfly_specialization_manuscript_figures.py`; the historical workflow definition used for the audited figure run is preserved at `provenance/workflows/butterfly-specialization-manuscript-figures-v01.yml`, with exact execution provenance retained in the repository.
 
 The frozen LepTraits input used by the reconstruction is vendored in the repository and hash-pinned. Larger external sources (HOSTS, WCVP, GBIF, CHELSA and WGSRPD) are reconstructed or retrieved from their original providers using pinned repository commits, file hashes, query rules and workflow-run provenance recorded in the repository. A permanent archival snapshot of the code, frozen inputs required for reproducibility, source-artifact receipts and result receipts will be deposited before submission. Its public DOI should be provided on the separate title page and in the final public manuscript; the double-anonymous review manuscript should instead use an anonymized reviewer-access link whose landing page and metadata do not identify the authors.
 
