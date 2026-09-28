@@ -63,3 +63,11 @@ jobs:
             --output-dir _ci_figures
           test "$(find _ci_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 5
           test "$(find _ci_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 5
+      - name: Upload rendered figures for visual audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-manuscript-figures
+          path: |
+            _ci_figures/*.pdf
+            _ci_figures/*.png
+          retention-days: 30
