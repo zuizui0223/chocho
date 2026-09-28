@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, which plant-level properties account for that expansion, and whether the added geography aligns with contemporary butterfly occurrences.
+**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, what accounts for that expansion, and whether the added geography aligns with contemporary butterfly occurrences.
 
 **Location:** Global.
 
@@ -12,7 +12,7 @@
 
 **Major taxa studied:** Butterflies and larval host plants.
 
-**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. Matched null models preserved butterfly host richness and plant-family composition; stricter sensitivities additionally matched host native-range breadth and weighted candidate plants by use by other Lepidoptera in HOSTS. A 32-species panel originally stratified for the climate test was reused secondarily to ask whether introduced-host geography recovers butterfly occurrences outside native host envelopes beyond structural overlap expectations.
+**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. Matched null models preserved butterfly host richness and plant-family composition; stricter sensitivities additionally matched host native-range breadth and weighted candidate plants by use by other Lepidoptera in HOSTS. A 32-species panel originally stratified for the climate test was reused to test whether introduced-host geography recovers butterfly occurrences outside native host envelopes beyond structural overlap expectations.
 
 **Results:** Introduced hosts expanded resource geography for 206/239 species and increased aggregate species × region coverage by 54.9%. A simple same-family null suggested unusually large expansion, but that excess disappeared when candidate hosts were simultaneously matched on native range and weighted by other-Lepidoptera use: observed total added units were 12,853 versus a null median of 12,971 (p = 0.584), and observed mean log expansion was 0.439 versus 0.409 (p = 0.073). Host-family breadth remained nearly unrelated to proportional expansion, including after species-level phylogenetic correction. Introduced hosts recovered 66/115 butterfly observations outside native host envelopes; species-level recovery remained above region-matched expectation after species resampling and removal of the largest contributor.
 
