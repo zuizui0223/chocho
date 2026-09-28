@@ -23,9 +23,11 @@
         "provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_kawahara_pgls_v0.2.json",
         "provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json",
-        "provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json"
+        "provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json",
+        "provenance/reviewer_defenses/results/butterfly_hostbias_parameter_grid_v0.1.json"
       ],
-      "phylogenetic_sensitivity": "Kawahara exact-species subset n=124: Brownian rank-PGLS beta=0.140, p=0.119; Pagel lambda=0.033, beta=-0.051, p=0.581."
+      "phylogenetic_sensitivity": "Kawahara exact-species subset n=124: Brownian rank-PGLS beta=0.140, p=0.119; Pagel lambda=0.033, beta=-0.051, p=0.581.",
+      "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null."
     },
     {
       "id": "C2",
@@ -100,7 +102,8 @@
     "negative_primary": "State that the directional climate-release prediction was not supported and was imprecisely estimated, not that the effect is zero.",
     "matched_host_null": "Treat the simple same-family matched-host excess as an intermediate result only. Always follow it with the stricter host-bias null showing that the excess disappears after joint native-range and other-Lepidoptera-use adjustment.",
     "host_bias_null": "State that the simple same-family host-identity excess disappears under the combined native-range plus other-Lepidoptera-use null. Describe other-Lepidoptera consumer count as a joint proxy for host prominence and recording intensity, not pure ecological commonness.",
-    "host_prominence": "Network degree is a joint proxy for ecological host prominence/commonness and HOSTS recording intensity. State the positive plant-level association, but do not interpret degree as pure ecological commonness or causal driver of introduction."
+    "host_prominence": "Network degree is a joint proxy for ecological host prominence/commonness and HOSTS recording intensity. State the positive plant-level association, but do not interpret degree as pure ecological commonness or causal driver of introduction.",
+    "host_bias_parameter_sensitivity": "Do not say a single strict null proves that plant prominence explains the host-identity excess. State that attenuation varies with prominence-weight strength and that the stable positive result is the direct plant-level prominence–redistribution association."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -164,6 +167,7 @@
       },
       "paper_ci": "success"
     },
-    "host_plant_prominence_analysis": "complete; 8,909 plants / 278 families; within family × native-breadth strata r=0.295, 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001)"
+    "host_plant_prominence_analysis": "complete; 8,909 plants / 278 families; within family × native-breadth strata r=0.295, 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001)",
+    "hostbias_parameter_grid": "complete; 9 cells; attenuation depends strongly on degree-weight exponent; prominence-calibrated null running"
   }
 }
