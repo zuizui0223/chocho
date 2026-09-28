@@ -243,10 +243,9 @@ def figure3(mech: list[dict[str, str]], outdir: Path) -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.8))
     fig.suptitle(
-        "Comparable resource expansion is assembled through contrasting host portfolios\n"
-        f"n = {len(rows)} host-taxonomy-adequate expanded species",
+        f"Contrasting host-portfolio architecture across {len(rows)} expanded species",
         fontsize=14,
-        y=1.04,
+        y=0.99,
     )
     for label, ax in zip(("a", "b"), axes):
         ax.text(-0.08, 1.04, label, transform=ax.transAxes, fontweight="bold", fontsize=12)
@@ -293,7 +292,7 @@ def figure3(mech: list[dict[str, str]], outdir: Path) -> None:
         f"median share: {100 * median_share_1:.1f}% → {100 * median_share_6:.1f}%"
     )
 
-    fig.tight_layout(rect=(0, 0, 1, 0.90))
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
     save(fig, outdir / "Figure3_host_contribution_architecture")
 
 
@@ -313,10 +312,10 @@ def figure4(mech: list[dict[str, str]], outdir: Path) -> None:
 
     fig, axes = plt.subplots(1, 2, figsize=(11.2, 4.8))
     fig.suptitle(
-        "Hierarchy within one-family specialists\n"
-        f"n = {len(rows)}; resolved host species = {int(host_species.min())}–{int(host_species.max())}",
+        "Hierarchy within one-family specialists "
+        f"(n={len(rows)}; {int(host_species.min())}–{int(host_species.max())} resolved host species)",
         fontsize=14,
-        y=1.04,
+        y=0.99,
     )
     for label, ax in zip(("a", "b"), axes):
         ax.text(-0.08, 1.04, label, transform=ax.transAxes, fontweight="bold", fontsize=12)
@@ -339,7 +338,7 @@ def figure4(mech: list[dict[str, str]], outdir: Path) -> None:
         f"Spearman ρ = {spearman(host_species, dominance):.3f}"
     )
 
-    fig.tight_layout(rect=(0, 0, 1, 0.90))
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
     save(fig, outdir / "Figure4_within_family_specialization_hierarchy")
 
 
