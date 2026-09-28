@@ -12,9 +12,9 @@ This directory contains the submission-facing paper package and its scientific-c
 
 ## v0.2 evidence order
 
-1. actual host identities generate more anthropogenic resource expansion than matched alternative hosts with the same host-species richness and plant-family composition;
-2. the excess expansion is not preferentially concentrated in broad family-level generalists;
-3. introduced host geography recovers independent butterfly occurrences beyond structural-overlap expectations;
+1. introduced host distributions broadly expand butterfly resource geography, but the simple host-identity excess disappears once plant native-range breadth and network-wide host prominence are jointly controlled;
+2. proportional expansion is not preferentially concentrated in broad family-level generalists, including under species-level phylogenetic correction;
+3. introduced host geography recovers butterfly occurrences beyond structural-overlap expectations and survives species-cluster and leave-one-out tests;
 4. the original specialist–generalist portfolio-concentration gradient is largely structural and is retained only as a diagnostic;
 5. climate-associated filtering persists after geographic matching, while the pre-specified host-breadth release prediction is unsupported and imprecisely estimated.
 
