@@ -10,7 +10,7 @@ import zipfile
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 COPY_PATHS = (
     "pyproject.toml",
@@ -30,8 +30,8 @@ COPY_PATHS = (
 )
 
 EXCLUDE_RELATIVE = {
-    Path("scripts/build_anonymous_review_bundle.py"),
-    Path("scripts/release_preflight.py"),
+    Path("scripts/paper/build_anonymous_review_bundle.py"),
+    Path("scripts/paper/release_preflight.py"),
     Path("tests/test_release_metadata.py"),
     Path("tests/test_reproducibility_snapshot_integrity.py"),
     Path("tests/test_butterfly_specialization_submission_bundle.py"),
@@ -93,7 +93,7 @@ docs/REPRODUCIBILITY.md.
 
 ## Regenerate the manuscript figures
 
-    python scripts/render_butterfly_specialization_manuscript_figures.py \
+    python scripts/paper/render_butterfly_specialization_manuscript_figures.py \
       --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
       --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
       --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
