@@ -53,7 +53,7 @@
   },
   "figures": {
     "planned": 5,
-    "renderer": "scripts/render_butterfly_specialization_manuscript_figures.py",
+    "renderer": "scripts/paper/render_butterfly_specialization_manuscript_figures.py",
     "workflow": "provenance/workflows/butterfly-specialization-manuscript-figures-v01.yml",
     "source_artifacts_hash_verified": true,
     "render_status": "RENDERED_AND_VISUALLY_AUDITED_SCALE_RICH",
@@ -87,10 +87,10 @@
   ],
   "submission_checklist": "manuscript/butterfly_specialization_geb_submission_checklist_v0.1.json",
   "review_package_state": {
-    "blinded_docx_builder": "scripts/build_blinded_review_docx.py",
+    "blinded_docx_builder": "scripts/paper/build_blinded_review_docx.py",
     "blinded_docx_ci": ".github/workflows/build-blinded-review-docx.yml",
     "blinded_docx_status": "BUILT_METADATA_SCRUBBED_AND_20_PAGE_VISUALLY_AUDITED_WITH_REVIEW_LINK_PLACEHOLDER",
-    "anonymous_bundle_builder": "scripts/build_anonymous_review_bundle.py",
+    "anonymous_bundle_builder": "scripts/paper/build_anonymous_review_bundle.py",
     "anonymous_bundle_ci": ".github/workflows/build-anonymous-review-bundle.yml",
     "anonymous_bundle_status": "BUILT_DEIDENTIFIED_HASH_VERIFIED_TESTED_AND_FIGURE_REBUILD_VERIFIED",
     "anonymous_hosting_status": "PENDING_EXTERNAL_ANONYMOUS_REVIEW_URL"
