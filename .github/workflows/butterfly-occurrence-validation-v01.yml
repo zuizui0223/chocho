@@ -1,0 +1,45 @@
+name: butterfly occurrence validation v01
+
+on:
+  push:
+    branches:
+      - analysis/reviewer-defense-v01
+    paths:
+      - "scripts/analyze_butterfly_occurrence_validation.py"
+      - ".github/workflows/butterfly-occurrence-validation-v01.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore post-gate occurrence summary
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: inputs/postgate
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Run exact overlap enrichment diagnostic
+        run: |
+          mkdir -p results
+          python scripts/analyze_butterfly_occurrence_validation.py \
+            --overlap-json inputs/postgate/native_contemporary_overlap.json \
+            --quality-gate-json inputs/postgate/preclimate_quality_gate.json \
+            --output-json results/butterfly_occurrence_validation_v0.1.json
+          sha256sum results/butterfly_occurrence_validation_v0.1.json > results/SHA256SUMS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-occurrence-validation-v01
+          path: results/
+          retention-days: 30
