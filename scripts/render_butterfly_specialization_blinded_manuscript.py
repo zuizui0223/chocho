@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
-V02_RUNNING_TITLE = "Host redistribution and resource geography"
+V02_RUNNING_TITLE = "Host redistribution and resource gain"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
