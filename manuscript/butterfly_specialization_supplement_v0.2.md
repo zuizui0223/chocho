@@ -1,6 +1,6 @@
 # Supplementary Information — butterfly resource geography v0.2
 
-**Associated manuscript:** *Anthropogenic expansion of butterfly resource geography is concentrated in network-prominent host plants*
+**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography independently of diet breadth*
 
 This file collects post-hoc robustness analyses that define the manuscript's inference boundaries. The main text reports the ecological results; this supplement provides the parameter and sensitivity details.
 
@@ -28,7 +28,7 @@ Observed values in the 207-species strict-null panel:
 
 Each cell used 299 deterministic randomizations. The sensitivity is strongly governed by how closely the null reproduces observed host-network prominence: exponent 0.5 under-matches prominence and retains an apparent host-identity excess, whereas exponent 2 over-matches prominence and generates null portfolios more expansion-prone than observed. A separate prominence-calibrated null therefore selects the degree-weight exponent using only the observed host-degree target, not expansion outcomes.
 
-## Supplementary Table S2. Plant network prominence and anthropogenic geographic expansion
+## Supplementary Table S2. Exploratory plant network prominence and anthropogenic geographic expansion
 
 Across **8,909 host plants in 278 plant families**, plant network degree is the number of distinct Lepidoptera species in the fixed HOSTS-WCVP reconstruction recorded using the plant.
 
