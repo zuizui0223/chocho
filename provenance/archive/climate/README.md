@@ -1,23 +1,19 @@
 # Archived climate materials
 
-This directory contains climate-analysis history retained for auditability but excluded from the active manuscript-evidence surface.
+This directory contains climate-analysis history retained for auditability but excluded from the active protocol/result surfaces.
 
-## Authoritative current files
+## Authoritative current locations
 
-- Protocol: `docs/exploratory/butterfly_climate_release_independent_test_v0.2.1.json`
-- Execution binding: `benchmarks/exploratory/butterfly_climate_release_execution_binding_v0.2.1.json`
-- Final independent result: `benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json`
+- protocol → `docs/exploratory/butterfly_climate_release_independent_test_v0.2.1.json`
+- panel / authoritative execution binding / pre-climate state → `provenance/climate/`
+- final independent ecological result → `benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json`
 
-## Superseded contracts
+## Archived history
 
-- `protocols/` — v0.1 and v0.2 climate-test protocols.
-- `bindings/` — v0.1 and v0.2 execution bindings.
+- `protocols/` — superseded v0.1 and v0.2 climate-test protocols.
+- `bindings/` — superseded v0.1 and v0.2 execution bindings.
+- `audits/` — response-blind design and execution audits.
+- `pilot/` — pilot gate and pilot result used only for hypothesis generation.
+- `operations/` — transport recovery and post-gate technical completion contracts.
 
-## Design and execution audits
-
-- `audits/butterfly_climate_release_panel_balance_audit_v0.1.json`
-- `audits/butterfly_climate_release_contemporary_resource_balance_v0.1.json`
-- `audits/butterfly_climate_release_effect_score_audit_v0.1.json`
-- `audits/butterfly_climate_release_transport_blocker_audit_v0.1.json`
-
-These files document response-blind design checks and the technical path to evaluability. They are not alternative primary results or post-result specifications.
+Frozen files can contain their original repository-relative paths. Those strings document the historical execution and are not rewritten after relocation.
