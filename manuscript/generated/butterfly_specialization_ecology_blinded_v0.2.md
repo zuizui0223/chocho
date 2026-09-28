@@ -1,5 +1,5 @@
 # Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth
-**Running title:** Host redistribution and butterfly resource geography
+**Running title:** Host redistribution and specialization
 
 
 ## Abstract
@@ -30,11 +30,11 @@ A butterfly feeding within one plant family may use one host species or dozens, 
 
 A resource-side reconstruction is biologically useful only if the added geography bears some relationship to contemporary butterfly distributions. A native-only resource envelope may classify an observed butterfly region as host-unavailable even when a known host has been introduced there. Conversely, the presence of a known host does not guarantee butterfly occurrence because climate, dispersal, habitat, phenology and biotic interactions can filter otherwise available resource geography. These processes motivate a layered view in which plant distributions define resource opportunity and additional filters shape its realization.
 
-Here we ask four linked questions. First, how strongly do introduced host distributions expand butterfly resource geography, and is proportional expansion greater in taxonomic generalists? Second, does adding introduced host geography recover contemporary butterfly occurrences that fall outside native host-resource envelopes? Third, how closely does family-level diet breadth correspond to geographic resource breadth, and do apparent specialist–generalist differences in host-contribution architecture persist after the mechanically relevant number of resolved host species is held fixed? Fourth, within contemporary host-resource opportunity, is butterfly geography climatically filtered, and does broader host-family breadth weaken that filtering?
+Here we ask three primary questions. First, how strongly do introduced host distributions expand butterfly resource geography, and does any apparent host-identity excess remain after accounting for plant native-range breadth and network-wide host prominence? Second, is proportional expansion greater in butterflies with broader family-level diets? Third, does contemporary introduced-host geography recover butterfly occurrences that fall outside native host-resource envelopes more often than structural overlap predicts? We retain a smaller climate analysis as a secondary test of whether available resource geography is fully realized.
 
 The resource reconstruction is descriptive and uses fixed LepTraits, HOSTS and WCVP inputs. The 32-species panel was assembled separately for the climate test, using eligibility and analysis rules fixed before its ecological responses were evaluated; the occurrence analysis is a secondary use of that panel. All later null-model, ceiling, phylogenetic and geographic sensitivities are identified as post-hoc robustness analyses.
 
-We expected anthropogenic host redistribution to enlarge resource opportunity across much of the specialization spectrum, but did not assume that a larger number of host families must produce a larger proportional gain. We further expected the contemporary envelope to recover at least some butterfly occurrences that a native-only envelope misses. For the independent climate test, we prospectively predicted that broader taxonomic diets would weaken climatic filtering within contemporary host-resource opportunity. 
+We expected anthropogenic host redistribution to enlarge resource opportunity across much of the specialization spectrum, but did not assume that broader taxonomic diets must receive a larger proportional gain. We also expected the contemporary resource envelope to recover at least some butterfly occurrences missed by a native-only envelope. 
 
 ## 2. Methods
 
