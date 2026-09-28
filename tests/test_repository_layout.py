@@ -120,7 +120,7 @@ def test_audit_and_resource_history_are_archived_outside_active_benchmarks() -> 
 
 def test_active_gbif_acquisition_uses_current_repository_identity() -> None:
     text = (
-        ROOT / "scripts" / "acquire_butterfly_resource_envelope_occurrences.py"
+        ROOT / "scripts" / "climate" / "acquire_butterfly_resource_envelope_occurrences.py"
     ).read_text(encoding="utf-8")
     assert "chocho-butterfly-resource-envelope/1.0" in text
     assert "github.com/zuizui0223/chocho" in text
