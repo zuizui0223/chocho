@@ -223,7 +223,7 @@ def figure2(anth: list[dict[str, str]], outdir: Path) -> None:
         [float(r["log_resource_expansion"]) for r in anth],
     )
     axes[1].set_title(
-        "No proportional generalist advantage\n"
+        "Proportional expansion is not concentrated in generalists\n"
         f"Spearman ρ = {rho:.3f}, n = {len(anth)}"
     )
 
