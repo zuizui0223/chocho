@@ -7,7 +7,7 @@ import json
 from collections import defaultdict
 from pathlib import Path
 
-from ttf.lepidoptera_host_resource import build_insect_host_footprints
+from butterfly_specialization_ecology.lepidoptera_host_resource import build_insect_host_footprints
 
 
 def load_sidecars(interactions: Path, distributions: Path):
