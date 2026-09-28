@@ -116,7 +116,7 @@ def test_v021_execution_binding_matches_row_order_invariant_protocol():
     panel = json.loads(
         (
             ROOT
-            / "benchmarks/exploratory/butterfly_climate_release_independent_panel_v0.1.json"
+            / "provenance/climate/butterfly_climate_release_independent_panel_v0.1.json"
         ).read_text()
     )
 
