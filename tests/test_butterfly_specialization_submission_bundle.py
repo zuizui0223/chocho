@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts" / "render_butterfly_specialization_blinded_manuscript.py"
+SCRIPT = ROOT / "scripts" / "paper" / "render_butterfly_specialization_blinded_manuscript.py"
 SPEC = importlib.util.spec_from_file_location("render_blinded_butterfly_manuscript", SCRIPT)
 assert SPEC is not None and SPEC.loader is not None
 mod = importlib.util.module_from_spec(SPEC)
