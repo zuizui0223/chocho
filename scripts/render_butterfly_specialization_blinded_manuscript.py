@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 
-RUNNING_TITLE = "Dimensions of butterfly specialization"
+RUNNING_TITLE = "Host redistribution and specialization"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
