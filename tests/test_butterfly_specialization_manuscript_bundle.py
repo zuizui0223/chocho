@@ -218,6 +218,33 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     assert title_line[2:] in cover_letter
     assert "Our contribution is the complementary resource-side reconstruction" in cover_letter
 
+    # Results and display order must follow the novelty-first story.
+    result_headings = [
+        "### 3.1 Introduced host ranges expand resource opportunity across the specialization spectrum",
+        "### 3.2 Similar aggregate expansion conceals contrasting host architectures",
+        "### 3.3 Taxonomic specialization only partly tracks geographic resource specialization",
+        "### 3.4 Species-level portfolio richness reveals hierarchy within the same family breadth",
+        "### 3.5 Climate-associated filtering is widespread within host-resource opportunity",
+        "### 3.6 Broader host-family diets did not detectably weaken climate filtering",
+    ]
+    result_positions = [manuscript.index(h) for h in result_headings]
+    assert result_positions == sorted(result_positions)
+
+    figure_titles = [
+        "**Figure 1. Introduced host distributions expand reconstructed resource opportunity across the specialization spectrum.**",
+        "**Figure 2. Similar aggregate expansion is assembled through different host-contribution architectures.**",
+        "**Figure 3. Taxonomic host breadth only partly predicts geographic resource breadth.**",
+        "**Figure 4. Species-level host portfolios reveal hierarchical specialization within one-family butterflies.**",
+        "**Figure 5. Climate-associated filtering is common, but its strength is not detectably weakened by broader family-level diet breadth.**",
+    ]
+    figure_positions = [manuscript.index(h) for h in figure_titles]
+    assert figure_positions == sorted(figure_positions)
+    assert readiness["figures"]["planned_files"][:3] == [
+        "Figure1_anthropogenic_resource_expansion",
+        "Figure2_host_contribution_architecture",
+        "Figure3_taxonomic_vs_geographic_specialization",
+    ]
+
     # Figure legends should expose sample size and ecological magnitude without requiring the text.
     for literal in (
         "aggregate species × region units increased from 26,530 to 41,083",
