@@ -23,13 +23,13 @@ def test_independent_climate_release_execution_binding_matches_frozen_contract()
     recovery = json.loads(
         (
             ROOT
-            / "docs/exploratory/butterfly_climate_release_transport_recovery_v0.1.json"
+            / "provenance/archive/climate/operations/butterfly_climate_release_transport_recovery_v0.1.json"
         ).read_text()
     )
     panel = json.loads(
         (
             ROOT
-            / "benchmarks/exploratory/butterfly_climate_release_independent_panel_v0.1.json"
+            / "provenance/climate/butterfly_climate_release_independent_panel_v0.1.json"
         ).read_text()
     )
 
@@ -104,7 +104,7 @@ def test_v021_execution_binding_matches_row_order_invariant_protocol():
     binding = json.loads(
         (
             ROOT
-            / "benchmarks/exploratory/butterfly_climate_release_execution_binding_v0.2.1.json"
+            / "provenance/climate/butterfly_climate_release_execution_binding_v0.2.1.json"
         ).read_text()
     )
     protocol = json.loads(
