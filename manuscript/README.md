@@ -9,6 +9,7 @@ This directory contains the submission-facing paper package and its scientific-c
 - `butterfly_specialization_geb_cover_letter_v0.2.md` — current cover letter.
 - `butterfly_specialization_geb_title_page_template_v0.2.md` — current identifying title-page template.
 - `butterfly_specialization_claim_map_v0.2.json` — allowed claims and inference boundaries.
+- `butterfly_specialization_supplement_v0.2.md` — robustness tables and supplementary inference boundaries.
 
 ## v0.2 evidence order
 
