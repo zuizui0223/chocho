@@ -28,6 +28,7 @@ COPY_PATHS = (
     "provenance/archive/climate/pilot",
     "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
     "manuscript/butterfly_specialization_claim_map_v0.2.json",
+    "manuscript/butterfly_specialization_supplement_v0.2.md",
 )
 
 EXCLUDE_RELATIVE = {
@@ -75,7 +76,7 @@ ANON_README = """# Butterfly specialization ecology — anonymous review snapsho
 This archive is a double-anonymous review snapshot of the analysis package for a
 global butterfly-specialization manuscript.
 
-It contains the scientific code, frozen protocols, de-identified result receipts,
+It contains the scientific code, frozen protocols, de-identified result receipts, the v0.2 supplementary robustness tables,
 the exact LepTraits input used by the reconstruction, and byte-exact source inputs
 needed to regenerate the three main manuscript figures and the climate supplementary figure. Identifying repository metadata,
 Git history, author metadata, cover letters, title pages, release metadata, and
