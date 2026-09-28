@@ -61,15 +61,14 @@ jobs:
           base64 -d provenance/tmp/reviewer_sensitivities.py.gz.b64 | gunzip > work/bin/reviewer_sensitivities.py
           python -m py_compile work/bin/same_family_null.py work/bin/reviewer_sensitivities.py
 
-      - name: Rebuild fixed HOSTS-WCVP sidecars
+      - name: Rebuild fixed HOSTS-WCVP sidecars in one pass
         run: |
-          Rscript scripts/build_wcvp_hosts_sidecar.R _WCVP _HOSTS work/native
-          Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R _WCVP _HOSTS work/contemporary
-          cmp work/native/insect_host_accepted.csv work/contemporary/insect_host_accepted.csv
+          mkdir -p work/dual
+          Rscript scripts/build_wcvp_hosts_dual_sidecar.R _WCVP _HOSTS work/dual
 
       - name: Run same-family same-host-count null
         run: |
-          python work/bin/same_family_null.py             --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv             --insect-host-csv work/native/insect_host_accepted.csv             --native-distribution-csv work/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv work/contemporary/extant_nondoubtful_wgsrpd3.csv             --iterations 999             --output-json work/results/same_family_host_null_v0.1.json             --output-csv work/results/same_family_host_null_species_v0.1.csv
+          python work/bin/same_family_null.py             --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv             --insect-host-csv work/dual/insect_host_accepted.csv             --native-distribution-csv work/dual/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv work/dual/extant_nondoubtful_wgsrpd3.csv             --iterations 999             --output-json work/results/same_family_host_null_v0.1.json             --output-csv work/results/same_family_host_null_species_v0.1.csv
 
       - name: Restore post-gate occurrence summary
         uses: actions/download-artifact@v4
@@ -105,6 +104,7 @@ jobs:
           PY
 
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: butterfly-reviewer-defense-v01
           path: work/results/
