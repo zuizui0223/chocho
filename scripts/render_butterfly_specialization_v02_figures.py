@@ -57,18 +57,19 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[1].errorbar(
         x, med,
         yerr=[np.asarray(med)-np.asarray(lo), np.asarray(hi)-np.asarray(med)],
-        fmt="o", capsize=5, label="Null median and 95% interval"
+        fmt="o", capsize=5
     )
-    axes[1].axhline(observed_total, linestyle="--", linewidth=1.3, label=f"Observed = {observed_total:,}")
+    axes[1].axhline(observed_total, linestyle="--", linewidth=1.3)
     axes[1].set_xticks(x, model_labels)
     axes[1].set_ylabel("Introduced-added species × units")
-    axes[1].set_title("Host prominence absorbs the simple identity excess")
-    axes[1].legend(frameon=False, fontsize=8)
+    axes[1].set_title("Host prominence absorbs the total-unit excess")
     axes[1].text(
-        0.03,0.04,
+        0.03,0.96,
+        f"Observed = {observed_total:,}\n"
         "Native-range null: p = 0.001\n"
         "Combined null: p = 0.584",
-        transform=axes[1].transAxes, fontsize=8.5
+        transform=axes[1].transAxes, fontsize=8.5, va="top",
+        bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
     )
 
     obs_mean=hostbias["observed"]["mean_log_expansion"]
@@ -81,7 +82,7 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[2].scatter(xx,observed,marker="D",s=48,label="Observed")
     axes[2].set_xticks(xx,["Mean log\nexpansion","Median log\nexpansion"])
     axes[2].set_ylabel("Log resource expansion")
-    axes[2].set_title("Observed expansion falls within the strict null")
+    axes[2].set_title("Strict null removes the formal expansion excess")
     axes[2].text(
         0.03,0.04,
         "p = 0.073 (mean)\np = 0.079 (median)",
@@ -90,7 +91,7 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
     axes[2].legend(frameon=False,fontsize=8)
 
     fig.suptitle(
-        "Host-plant redistribution expands butterfly resource geography, but host prominence explains the identity excess",
+        "Host redistribution expands resource geography; host prominence explains the apparent identity excess",
         fontsize=13
     )
     fig.tight_layout(rect=(0,0,1,0.94))
@@ -150,7 +151,7 @@ def fig2_occurrence(occ, overlap, species_robustness, outdir):
 def fig3_robustness(ceiling,regional,outdir):
     fig,axes=plt.subplots(1,2,figsize=(11.5,4.6))
     for label,ax in zip(("a","b"),axes):
-        ax.text(-0.1,1.04,label,transform=ax.transAxes,fontweight="bold",fontsize=12)
+        ax.text(0.0,1.06,label,transform=ax.transAxes,fontweight="bold",fontsize=12,va="bottom")
 
     thresh=ceiling["restricted_native_breadth_thresholds"]
     xs=[100,150,168,200,250]
