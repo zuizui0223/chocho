@@ -100,7 +100,7 @@ Until the archival release is minted, cite the eventual versioned release rather
 The v1 release identifiers are fixed as package/CITATION version `1.0.0` and intended GitHub tag `v1.0.0-butterfly`. To show only the remaining administrative blockers, run:
 
 ```bash
-python scripts/release_preflight.py
+python scripts/paper/release_preflight.py
 ```
 
 This preflight deliberately fails until the software license, final author/CRediT metadata, public archive DOI, and anonymized reviewer-access URL are supplied. It does not request or authorize additional ecological analyses.
