@@ -88,6 +88,8 @@ Kawahara et al. (2023) species-level phylogenetic GLS:
 
 Unmatched panel species were excluded rather than phylogenetically imputed.
 
+Tree coverage was not fully representative of expansion magnitude. Exact tree matches and unmatched species had the same median host-family breadth (2 vs 2; Wilcoxon p = 0.677), but matched species had greater median log resource expansion (0.376 vs 0.285; p = 0.0012) and a higher fraction with any expansion (0.952 vs 0.765; Fisher p < 0.001). Importantly for the focal slope, host-family breadth versus log expansion was near zero in both groups (rho = -0.055 among matched species and +0.053 among unmatched species). We therefore use PGLS only as a sensitivity for the breadth–expansion association, not as an estimator of panel-wide expansion magnitude.
+
 ## Supplementary Table S5. Climate-distance sensitivity and effect-size precision
 
 Twenty-four species were climate-informative.
