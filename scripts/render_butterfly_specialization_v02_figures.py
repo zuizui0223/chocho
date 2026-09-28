@@ -28,7 +28,7 @@ def jitter(label: str, width: float = 0.12):
     return (x - 0.5) * 2 * width
 
 
-def fig1_resource_and_null(anth, matched, outdir):
+def fig1_resource_and_null(anth, matched, hostbias, outdir):
     fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.5))
     for label, ax in zip(("a", "b", "c"), axes):
         ax.text(-0.12, 1.04, label, transform=ax.transAxes, fontweight="bold", fontsize=12)
@@ -46,36 +46,59 @@ def fig1_resource_and_null(anth, matched, outdir):
     axes[0].set_title(f"{expanded}/{len(anth)} species expanded")
     axes[0].text(0.04,0.95,"26,530 → 41,083\n+54.9%",transform=axes[0].transAxes,va="top",fontsize=10)
 
-    obs=matched["observed_global"]; nul=matched["global_null"]
-    names=["Mean log\nexpansion","Median log\nexpansion"]
-    observed=[obs["mean_log_expansion"],obs["median_log_expansion"]]
-    nullmed=[nul["mean_log_expansion"]["median"],nul["median_log_expansion"]["median"]]
-    qlo=[nul["mean_log_expansion"]["q025"],nul["median_log_expansion"]["q025"]]
-    qhi=[nul["mean_log_expansion"]["q975"],nul["median_log_expansion"]["q975"]]
-    x=np.arange(2)
-    axes[1].errorbar(x,nullmed,yerr=[np.asarray(nullmed)-np.asarray(qlo),np.asarray(qhi)-np.asarray(nullmed)],fmt="o",capsize=4,label="Matched-host null")
-    axes[1].scatter(x,observed,marker="D",s=46,label="Observed")
-    axes[1].set_xticks(x,names)
-    axes[1].set_ylabel("Log resource expansion")
-    axes[1].set_title("Expansion magnitude exceeds matched hosts")
-    axes[1].legend(frameon=False,fontsize=8)
-    axes[1].text(0.03,0.05,"Both p = 0.0005",transform=axes[1].transAxes,fontsize=9)
+    observed_total = hostbias["observed"]["total_introduced_added_units"]
+    model_keys = ["native_range", "usage", "native_range_usage"]
+    model_labels = ["Native-range\nmatched", "Host-use\nweighted", "Range + use\ncombined"]
+    x = np.arange(len(model_keys))
+    med=[]; lo=[]; hi=[]
+    for key in model_keys:
+        q=hostbias["models"][key]["total_introduced_added_units"]
+        med.append(q["median"]); lo.append(q["q025"]); hi.append(q["q975"])
+    axes[1].errorbar(
+        x, med,
+        yerr=[np.asarray(med)-np.asarray(lo), np.asarray(hi)-np.asarray(med)],
+        fmt="o", capsize=5, label="Null median and 95% interval"
+    )
+    axes[1].axhline(observed_total, linestyle="--", linewidth=1.3, label=f"Observed = {observed_total:,}")
+    axes[1].set_xticks(x, model_labels)
+    axes[1].set_ylabel("Introduced-added species × units")
+    axes[1].set_title("Host prominence absorbs the simple identity excess")
+    axes[1].legend(frameon=False, fontsize=8)
+    axes[1].text(
+        0.03,0.04,
+        "Native-range null: p = 0.001\n"
+        "Combined null: p = 0.584",
+        transform=axes[1].transAxes, fontsize=8.5
+    )
 
-    total=obs["total_introduced_added_units"]
-    q=nul["total_introduced_added_units"]
-    axes[2].errorbar([0],[q["median"]],yerr=[[q["median"]-q["q025"]],[q["q975"]-q["median"]]],fmt="o",capsize=5,label="Matched-host null")
-    axes[2].scatter([0],[total],marker="D",s=55,label="Observed")
-    axes[2].set_xlim(-0.65,0.65); axes[2].set_xticks([0],["Total added\nspecies × units"])
-    axes[2].set_ylabel("Introduced-added units")
-    axes[2].set_title("Actual host identities add excess geography")
-    axes[2].text(0.03,0.05,
-        f"13,529 vs null median 8,046\np = 0.0005\n"
-        f"breadth–expansion ρ: {obs['rho_host_family_vs_log_expansion']:.3f}\n"
-        f"null median ρ: {nul['rho_host_family_vs_log_expansion']['median']:.3f}; p = {nul['rho_host_family_vs_log_expansion']['p_two_sided']:.4f}",
-        transform=axes[2].transAxes,fontsize=8.5)
-    axes[2].legend(frameon=False,fontsize=8,loc="upper left")
+    obs_mean=hostbias["observed"]["mean_log_expansion"]
+    obs_median=hostbias["observed"]["median_log_expansion"]
+    combined=hostbias["models"]["native_range_usage"]
+    observed=[obs_mean,obs_median]
+    nullmed=[combined["mean_log_expansion"]["median"],combined["median_log_expansion"]["median"]]
+    qlo=[combined["mean_log_expansion"]["q025"],combined["median_log_expansion"]["q025"]]
+    qhi=[combined["mean_log_expansion"]["q975"],combined["median_log_expansion"]["q975"]]
+    xx=np.arange(2)
+    axes[2].errorbar(
+        xx,nullmed,
+        yerr=[np.asarray(nullmed)-np.asarray(qlo),np.asarray(qhi)-np.asarray(nullmed)],
+        fmt="o",capsize=5,label="Combined null"
+    )
+    axes[2].scatter(xx,observed,marker="D",s=48,label="Observed")
+    axes[2].set_xticks(xx,["Mean log\nexpansion","Median log\nexpansion"])
+    axes[2].set_ylabel("Log resource expansion")
+    axes[2].set_title("Observed expansion falls within the strict null")
+    axes[2].text(
+        0.03,0.04,
+        "p = 0.073 (mean)\np = 0.079 (median)",
+        transform=axes[2].transAxes,fontsize=8.5
+    )
+    axes[2].legend(frameon=False,fontsize=8)
 
-    fig.suptitle("Introduced host distributions expand butterfly resource geography beyond matched-host expectations",fontsize=13)
+    fig.suptitle(
+        "Host-plant redistribution expands butterfly resource geography, but host prominence explains the identity excess",
+        fontsize=13
+    )
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig,outdir,"Figure1_resource_expansion_matched_null")
 
@@ -205,6 +228,7 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--anthropogenic-csv",type=Path,required=True)
     ap.add_argument("--matched-null-json",type=Path,required=True)
+    ap.add_argument("--hostbias-null-json",type=Path,required=True)
     ap.add_argument("--occurrence-csv",type=Path,required=True)
     ap.add_argument("--occurrence-null-json",type=Path,required=True)
     ap.add_argument("--occurrence-species-robustness-json",type=Path,required=True)
@@ -214,7 +238,7 @@ def main():
     ap.add_argument("--climate-effect-json",type=Path,required=True)
     ap.add_argument("--output-dir",type=Path,required=True)
     a=ap.parse_args()
-    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),a.output_dir)
+    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),a.output_dir)
     fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),json.loads(a.occurrence_species_robustness_json.read_text()),a.output_dir)
     fig3_robustness(json.loads(a.ceiling_json.read_text()),json.loads(a.regional_json.read_text()),a.output_dir)
     fig4_climate(read_csv(a.climate_csv),json.loads(a.climate_effect_json.read_text()),a.output_dir)
