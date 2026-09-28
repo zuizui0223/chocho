@@ -118,13 +118,11 @@ Before structural adjustment, host-family breadth correlated with effective cont
 
 Thus the striking marginal specialist–generalist architecture contrast largely reflects finer-scale host-species portfolio richness and is not treated as an independent mechanism.
 
-### 3.5 Climate-associated filtering persists, but the host-breadth prediction was unsupported
+### 3.5 Secondary climate analysis
 
-The 24 climate-informative species had a median filtering score of 0.801, and 23/24 exceeded the neutral value of 0.5. Restricting comparisons to occupied WGSRPD level-1 regions gave a median score of 0.846. Distance matching reduced the median to 0.714, 0.750 and 0.750 at 250, 500 and 1,000 km, respectively; 21/24, 23/24 and 22/24 species remained above 0.5.
+Climate-associated filtering remained evident in the 24 climate-informative species. Median filtering scores were 0.801 in the original analysis and 0.714–0.750 after 250–1,000-km distance matching; 21/24, 23/24 and 22/24 species remained above the neutral score of 0.5 at the three matching scales.
 
-The pre-specified prediction that broader host-family diets weaken climate filtering was not supported. The primary partial Spearman correlation was -0.166 (one-sided permutation p = 0.2237). Spatial sensitivities did not recover the predicted negative direction.
-
-The effect estimate was imprecise: a 30,000-replicate species bootstrap gave a 95% interval of -0.583 to +0.261. An approximate effect of |partial rho| ~= 0.50 would be required for 80% power under the current design.
+The pre-specified prediction that broader host-family diets weaken filtering was not supported (partial Spearman rho = -0.166, one-sided p = 0.2237) and was imprecisely estimated (bootstrap 95% interval -0.583 to +0.261). Full diagnostics are shown in Supplementary Figure S1.
 
 ## 4. Discussion
 
@@ -160,21 +158,11 @@ This is still biologically informative because it shows that "host breadth" cont
 
 ### 4.4 Resource opportunity is not realized geography
 
-The contemporary host envelope was much broader than observed butterfly geography for most species. Climate-associated mismatch separated held-out observed from never-observed resource units in 23 of 24 species, and this pattern persisted after coarse regional restriction and explicit distance matching.
+The occurrence validation shows that contemporary host geography matters, but it does not imply that all available resource geography is realized. In the smaller climate panel, climatically mismatched resource units were less often observed even after geographic matching. At the same time, broader host-family diets did not detectably weaken this filtering, and the effect estimate was too imprecise to exclude moderate associations.
 
-The accessibility sensitivity is important because climate and distance are correlated in global data. Restricting comparisons geographically reduced the median filtering score under strict distance matching, but did not erase it. The result therefore supports climate as one informative axis of unrealized resource opportunity without claiming that climate is the only filter or that the score is causal.
+We therefore treat climate as a secondary boundary on resource realization rather than a co-equal mechanism in this paper. Dispersal history, habitat, phenology, adult resources, biotic interactions and imperfect detection can also generate unrealized resource opportunity.
 
-Dispersal history, habitat, phenology, adult resources, biotic interactions and imperfect detection can all generate residual non-realization. The appropriate interpretation is layered: introduced plants alter where larval resources can occur, while additional ecological filters help determine where butterflies are actually observed.
-
-### 4.5 Taxonomic generalism does not provide a universal shortcut
-
-The prospectively frozen climate prediction was not supported. Broad host-family diets did not detectably weaken climate filtering after resource breadth was controlled, and spatial sensitivities did not reveal the predicted negative relationship.
-
-This negative result is useful but should not be overread. With 24 informative species, the test has limited precision for moderate effects. What the data reject is the idea that family-level generalism supplies an obvious, strong and portable predictor of release from climate-associated filtering in this panel.
-
-Taken together with the resource analysis, the broader message is that family-level diet breadth is not a sufficient proxy for either the geography of resource opportunity or the filters acting on that opportunity.
-
-### 4.6 Implications for global change biogeography
+### 4.5 Implications for global change biogeography
 
 Global change redistributes interacting species as well as climate. Consumer biogeography therefore cannot always be interpreted against static or native-only resource templates.
 
