@@ -4,12 +4,11 @@
   "workflow": {
     "run_id": 36436638484,
     "artifact_id": 10977262671,
-    "artifact_name": "geb-family-composition-matched-null-v01",
-    "artifact_sha256": "4d06fff793cc9f6eac5f78940739a790c2246df94a96f148e66dd3e1ec30e284"
+    "artifact_name": "geb-family-composition-matched-null-v01"
   },
-  "species": 207,
+  "panel_species": 207,
   "permutations_per_cell": 299,
-  "bandwidths": [
+  "native_log_bandwidths": [
     0.1,
     0.2,
     0.4
@@ -20,94 +19,100 @@
     2
   ],
   "observed": {
-    "total_added_units": 12853,
+    "total_introduced_added_units": 12853,
     "mean_log_expansion": 0.43903441165398327,
-    "median_log_expansion": 0.33301002889274134,
-    "mean_other_lepidoptera_users_per_observed_host": 25.279529213955442
+    "median_log_expansion": 0.33301002889274134
   },
-  "cells": [
+  "grid": [
     {
       "bandwidth": 0.1,
       "exponent": 0.5,
-      "mean_sampled_users": 11.519966372425388,
       "null_total_median": 9809,
       "p_total_high": 0.0033333333333333335,
       "p_mean_high": 0.0033333333333333335,
-      "p_median_high": 0.0033333333333333335
+      "p_median_high": 0.0033333333333333335,
+      "mean_sampled_other_users": 11.519966372425388
     },
     {
       "bandwidth": 0.1,
       "exponent": 1,
-      "mean_sampled_users": 19.369482976040352,
       "null_total_median": 12783,
       "p_total_high": 0.43333333333333335,
       "p_mean_high": 0.023333333333333334,
-      "p_median_high": 0.023333333333333334
+      "p_median_high": 0.023333333333333334,
+      "mean_sampled_other_users": 19.369482976040352
     },
     {
       "bandwidth": 0.1,
       "exponent": 2,
-      "mean_sampled_users": 33.00042034468264,
       "null_total_median": 16911,
       "p_total_high": 1,
       "p_mean_high": 1,
-      "p_median_high": 1
+      "p_median_high": 1,
+      "mean_sampled_other_users": 33.00042034468264
     },
     {
       "bandwidth": 0.2,
       "exponent": 0.5,
-      "mean_sampled_users": 11.686843211433375,
       "null_total_median": 9765,
       "p_total_high": 0.0033333333333333335,
       "p_mean_high": 0.0033333333333333335,
-      "p_median_high": 0.0033333333333333335
+      "p_median_high": 0.0033333333333333335,
+      "mean_sampled_other_users": 11.686843211433375
     },
     {
       "bandwidth": 0.2,
       "exponent": 1,
-      "mean_sampled_users": 21.099621689785625,
       "null_total_median": 13038,
       "p_total_high": 0.6533333333333333,
       "p_mean_high": 0.08666666666666667,
-      "p_median_high": 0.08333333333333333
+      "p_median_high": 0.08333333333333333,
+      "mean_sampled_other_users": 21.099621689785625
     },
     {
       "bandwidth": 0.2,
       "exponent": 2,
-      "mean_sampled_users": 37.58638083228247,
       "null_total_median": 17631,
       "p_total_high": 1,
       "p_mean_high": 1,
-      "p_median_high": 1
+      "p_median_high": 1,
+      "mean_sampled_other_users": 37.58638083228247
     },
     {
       "bandwidth": 0.4,
       "exponent": 0.5,
-      "mean_sampled_users": 11.7166876839008,
       "null_total_median": 9777,
       "p_total_high": 0.0033333333333333335,
       "p_mean_high": 0.0033333333333333335,
-      "p_median_high": 0.0033333333333333335
+      "p_median_high": 0.0033333333333333335,
+      "mean_sampled_other_users": 11.7166876839008
     },
     {
       "bandwidth": 0.4,
       "exponent": 1,
-      "mean_sampled_users": 22.405212274064734,
       "null_total_median": 13349,
       "p_total_high": 0.81,
       "p_mean_high": 0.37333333333333335,
-      "p_median_high": 0.27
+      "p_median_high": 0.27,
+      "mean_sampled_other_users": 22.405212274064734
     },
     {
       "bandwidth": 0.4,
       "exponent": 2,
-      "mean_sampled_users": 42.079865489701554,
       "null_total_median": 18153,
       "p_total_high": 1,
       "p_mean_high": 1,
-      "p_median_high": 1
+      "p_median_high": 1,
+      "mean_sampled_other_users": 42.079865489701554
     }
   ],
-  "interpretation": "Attenuation of the simple same-family host-identity excess is not invariant to the arbitrary strength of other-Lepidoptera-use weighting. Exponent 0.5 under-matches the observed host prominence and retains excess expansion; exponent 2 over-matches prominence and produces excessive null expansion. Exponent 1 approaches but does not exactly reproduce observed network prominence. A prominence-calibrated, outcome-blind null is therefore required for the cleanest interpretation.",
-  "claim_boundary": "Do not state that host prominence definitively explains the same-family excess solely from a single weighting exponent. State that the attribution is sensitive to how strongly network prominence is matched until a prominence-calibrated null is evaluated."
+  "summary": {
+    "cells": 9,
+    "weak_usage_weight_exponent_0_5": "Observed total, mean and median expansion exceeded all 299 null draws at every native-range bandwidth.",
+    "proportional_usage_weight_exponent_1": "Total expansion was inside the null at every bandwidth; mean/median expansion ranged from p=0.023 at bandwidth 0.1 to p>=0.083 at bandwidth 0.2 and p>=0.270 at bandwidth 0.4.",
+    "strong_usage_weight_exponent_2": "All three observed expansion endpoints were below the null center at every bandwidth (upper-tail p=1).",
+    "inference": "Attenuation of the simple same-family host-identity excess is sensitive to the strength of host-prominence weighting, much more than to the native-range bandwidth."
+  },
+  "interpretation": "The strict null establishes network-wide host prominence as a major confounding axis but does not uniquely partition the simple host-identity excess into butterfly-specific host choice versus plant prominence. The direct plant-level association between network degree and redistribution should therefore carry the positive ecological claim.",
+  "claim_boundary": "Do not state that host prominence fully explains the host-identity excess. State that the host-identity excess is not identifiable independently of how plant prominence/recording intensity is represented in the null."
 }
