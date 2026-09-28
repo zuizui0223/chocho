@@ -203,7 +203,7 @@ def fig4_climate(climate_rows,effect,outdir):
     values=[np.asarray([float(r[k]) for r in climate_rows if r[k]!=""],float) for k,_ in cols]
     fig,axes=plt.subplots(1,2,figsize=(11.2,4.7),gridspec_kw={"width_ratios":[1.5,1]})
     for label,ax in zip(("a","b"),axes):
-        ax.text(-0.1,1.04,label,transform=ax.transAxes,fontweight="bold",fontsize=12)
+        ax.text(-0.08,1.14,label,transform=ax.transAxes,fontweight="bold",fontsize=12,va="bottom")
     pos=np.arange(1,len(cols)+1)
     axes[0].boxplot(values,positions=pos,widths=0.55,showfliers=False)
     for p,vals in zip(pos,values):
