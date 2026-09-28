@@ -44,9 +44,15 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     assert claim_map["status"] == "WORKING_SUBMISSION_CLAIM_MAP"
     assert readiness["target_journal"]["primary"] == "Global Ecology and Biogeography"
     assert readiness["target_journal"]["article_type"] == "Research Article"
+    assert readiness["figures"]["render_status"] == "RENDERED_AND_VISUALLY_AUDITED_SCALE_RICH"
     assert figures["status"] == "RENDERED_AND_VISUALLY_AUDITED"
-    assert figures["workflow"]["run_id"] == 36292128188
+    assert figures["workflow"]["run_id"] == readiness["figures"]["render_workflow_run_id"]
+    assert figures["workflow"]["artifact_id"] == readiness["figures"]["artifact_id"]
     assert len(figures["figures"]) == 5
+    assert figures["visual_audit"]["data_scale_annotations_present_in_all_five_figures"] is True
+    assert figures["visual_audit"]["figure_2_aggregate_species_region_magnitude_present"] is True
+    assert figures["visual_audit"]["figure_3_key_portfolio_medians_present"] is True
+    assert figures["visual_audit"]["figure_5_resource_breadth_size_legend_present"] is True
 
     # Structured GEB abstract should remain below 300 words.
     abstract_start = manuscript.index("## Abstract")
