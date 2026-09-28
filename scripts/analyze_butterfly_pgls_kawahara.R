@@ -8,7 +8,6 @@ output_path <- args[[3]]
 
 suppressPackageStartupMessages({
   library(ape)
-  library(nlme)
   library(jsonlite)
   library(megatrees)
 })
@@ -17,103 +16,127 @@ normalize_species <- function(x) {
   trimws(gsub("_", " ", gsub("\\*+$", "", as.character(x))))
 }
 
+gls_from_covariance <- function(y, x, V, lambda = 1.0) {
+  n <- length(y)
+  X <- cbind(Intercept = 1, predictor = x)
+  p <- ncol(X)
+
+  # Pagel lambda rescales off-diagonal shared-history covariance while
+  # preserving each tip's marginal variance.
+  D <- diag(diag(V))
+  C <- V - D
+  Vl <- D + lambda * C
+
+  # Numerical nugget is tiny relative to tree depth and only stabilizes
+  # matrix factorization for near-identical covariance rows.
+  nugget <- max(diag(Vl)) * 1e-10
+  Vl <- Vl + diag(nugget, n)
+
+  cholV <- chol(Vl)
+  VinvX <- backsolve(cholV, forwardsolve(t(cholV), X))
+  Vinvy <- backsolve(cholV, forwardsolve(t(cholV), y))
+  XtVinvX <- crossprod(X, VinvX)
+  beta <- solve(XtVinvX, crossprod(X, Vinvy))
+
+  resid <- as.numeric(y - X %*% beta)
+  Vinvr <- backsolve(cholV, forwardsolve(t(cholV), resid))
+  rss <- sum(resid * Vinvr)
+  sigma2_reml <- rss / (n - p)
+  covariance_beta <- sigma2_reml * solve(XtVinvX)
+  se <- sqrt(diag(covariance_beta))
+  t_value <- beta / se
+  p_value <- 2 * pt(abs(t_value), df = n - p, lower.tail = FALSE)
+  crit <- qt(0.975, df = n - p)
+
+  logdet <- 2 * sum(log(diag(cholV)))
+  sigma2_ml <- rss / n
+  loglik_ml <- -0.5 * (
+    n * (log(2 * pi) + 1 + log(sigma2_ml)) + logdet
+  )
+
+  list(
+    coefficient = unname(beta["predictor"]),
+    standard_error = unname(se["predictor"]),
+    t_value = unname(t_value["predictor"]),
+    p_value = unname(p_value["predictor"]),
+    ci95_lower = unname(beta["predictor"] - crit * se["predictor"]),
+    ci95_upper = unname(beta["predictor"] + crit * se["predictor"]),
+    sigma2_reml = unname(sigma2_reml),
+    loglik_ml = unname(loglik_ml),
+    lambda = lambda,
+    nugget = nugget
+  )
+}
+
+optimize_lambda <- function(y, x, V) {
+  objective <- function(lambda) {
+    out <- tryCatch(
+      gls_from_covariance(y, x, V, lambda = lambda),
+      error = function(e) NULL
+    )
+    if (is.null(out) || !is.finite(out$loglik_ml)) return(1e30)
+    -out$loglik_ml
+  }
+  opt <- optimize(objective, interval = c(0, 1), tol = 1e-7)
+  fit <- gls_from_covariance(y, x, V, lambda = opt$minimum)
+  fit$optimization_objective <- opt$objective
+  fit
+}
+
 fit_pgls <- function(tree, dat, label) {
   tip_species <- normalize_species(tree$tip.label)
   if (anyDuplicated(tip_species)) {
     stop(paste("duplicated normalized tips in", label))
   }
-  rownames(dat) <- dat$species
-  keep <- tip_species[tip_species %in% dat$species]
-  if (length(keep) < 30) {
-    stop(paste("too few matched species in", label, length(keep)))
+
+  matched <- intersect(dat$species, tip_species)
+  if (length(matched) < 30) {
+    stop(paste("too few matched species in", label, length(matched)))
   }
 
-  tip_lookup <- setNames(tree$tip.label, tip_species)
-  keep_tip <- unname(tip_lookup[keep])
-  sub_tree <- drop.tip(tree, setdiff(tree$tip.label, keep_tip))
-  ordered_species <- normalize_species(sub_tree$tip.label)
+  keep_original <- tree$tip.label[tip_species %in% matched]
+  sub_tree <- drop.tip(tree, setdiff(tree$tip.label, keep_original))
+
+  # Normalize tip labels after pruning so tree and data use identical names.
+  sub_tree$tip.label <- normalize_species(sub_tree$tip.label)
+  if (anyDuplicated(sub_tree$tip.label)) stop("normalized pruned tips duplicated")
+
+  if (is.null(sub_tree$edge.length)) stop("tree has no branch lengths")
+  if (any(!is.finite(sub_tree$edge.length))) stop("non-finite tree branch lengths")
+  positive <- sub_tree$edge.length[sub_tree$edge.length > 0]
+  if (!length(positive)) stop("tree has no positive branch lengths")
+  epsilon <- min(positive) * 1e-6
+  sub_tree$edge.length[sub_tree$edge.length <= 0] <- epsilon
+
+  rownames(dat) <- dat$species
+  ordered_species <- sub_tree$tip.label
   d <- dat[ordered_species, , drop = FALSE]
-  d$tree_tip <- sub_tree$tip.label
+  if (any(is.na(d$species))) stop("tree/data ordering failed")
+
+  V <- vcv.phylo(sub_tree, corr = FALSE)
+  V <- V[ordered_species, ordered_species, drop = FALSE]
+  if (any(!is.finite(V))) stop("non-finite phylogenetic covariance")
 
   rank_x <- rank(d$host_family_count, ties.method = "average")
   rank_y <- rank(d$log_resource_expansion, ties.method = "average")
-  d$x_rank_z <- as.numeric(scale(rank_x))
-  d$y_rank_z <- as.numeric(scale(rank_y))
-  d$x_log <- log1p(d$host_family_count)
+  x_rank_z <- as.numeric(scale(rank_x))
+  y_rank_z <- as.numeric(scale(rank_y))
+  x_log <- log1p(d$host_family_count)
+  y_raw <- d$log_resource_expansion
 
-  # Some dated-tree branches are zero or effectively zero. Replace only
-  # non-positive lengths by a negligible positive value to keep the published
-  # topology while avoiding singular covariance matrices in GLS.
-  positive_lengths <- sub_tree$edge.length[sub_tree$edge.length > 0]
-  if (!length(positive_lengths)) stop("tree has no positive branch lengths")
-  epsilon <- min(positive_lengths) * 1e-6
-  sub_tree$edge.length[sub_tree$edge.length <= 0] <- epsilon
-
-  fit_brownian_rank <- gls(
-    y_rank_z ~ x_rank_z,
-    data = d,
-    correlation = corBrownian(
-      value = 1,
-      phy = sub_tree,
-      form = ~tree_tip
-    ),
-    method = "ML",
-    control = glsControl(opt = "optim", maxIter = 1000)
-  )
-  fit_brownian_raw <- gls(
-    log_resource_expansion ~ x_log,
-    data = d,
-    correlation = corBrownian(
-      value = 1,
-      phy = sub_tree,
-      form = ~tree_tip
-    ),
-    method = "ML",
-    control = glsControl(opt = "optim", maxIter = 1000)
-  )
-
-  extract <- function(fit, term) {
-    tt <- summary(fit)$tTable
-    ci <- intervals(fit, which = "coef")$coef
-    list(
-      coefficient = unname(tt[term, "Value"]),
-      standard_error = unname(tt[term, "Std.Error"]),
-      t_value = unname(tt[term, "t-value"]),
-      p_value = unname(tt[term, "p-value"]),
-      ci95_lower = unname(ci[term, "lower"]),
-      ci95_upper = unname(ci[term, "upper"])
-    )
-  }
-
-  pagel_result <- tryCatch({
-    fit_pagel <- gls(
-      y_rank_z ~ x_rank_z,
-      data = d,
-      correlation = corPagel(
-        value = 0.5,
-        phy = sub_tree,
-        form = ~tree_tip,
-        fixed = FALSE
-      ),
-      method = "ML",
-      control = glsControl(opt = "optim", maxIter = 1000)
-    )
-    list(
-      fit = extract(fit_pagel, "x_rank_z"),
-      lambda = unname(coef(fit_pagel$modelStruct$corStruct, unconstrained = FALSE)),
-      success = TRUE
-    )
-  }, error = function(e) {
-    list(success = FALSE, error = conditionMessage(e))
-  })
+  brownian_rank <- gls_from_covariance(y_rank_z, x_rank_z, V, lambda = 1)
+  brownian_raw <- gls_from_covariance(y_raw, x_log, V, lambda = 1)
+  pagel_rank <- optimize_lambda(y_rank_z, x_rank_z, V)
 
   list(
     label = label,
     species = nrow(d),
-    brownian_rank_pgls = extract(fit_brownian_rank, "x_rank_z"),
-    brownian_raw_pgls = extract(fit_brownian_raw, "x_log"),
-    pagel_rank_pgls = pagel_result,
-    branch_length_epsilon = epsilon
+    matched_species = ordered_species,
+    brownian_rank_pgls = brownian_rank,
+    brownian_raw_pgls = brownian_raw,
+    pagel_rank_pgls = pagel_rank,
+    branch_length_epsilon = epsilon,
+    tree_height_range = range(node.depth.edgelength(sub_tree)[seq_len(Ntip(sub_tree))])
   )
 }
 
@@ -147,29 +170,32 @@ direct_tree <- drop.tip(
 direct_result <- fit_pgls(direct_tree, dat, "Kawahara_2023_exact_species")
 
 payload <- list(
-  schema = "chocho_butterfly_kawahara_pgls_v0.1",
+  schema = "chocho_butterfly_kawahara_pgls_v0.2",
   status = "POSTHOC_SPECIES_LEVEL_PHYLOGENETIC_SENSITIVITY",
   source = list(
     reference = "Kawahara et al. 2023 Nature Ecology & Evolution",
     doi = "10.1038/s41559-023-02041-9",
-    tree_species = 2244,
+    published_tree_species = 2244,
     tree_source = "megatrees::tree_butterfly"
   ),
   resource_panel_species = nrow(dat),
   exact_tree_match_species = length(direct_species),
-  exact_species_result = direct_result,
   coverage_fraction = length(direct_species) / nrow(dat),
+  exact_species_result = direct_result,
   interpretation_rule = paste(
-    "The near-zero host-breadth association is phylogenetically robust if the",
-    "exact-species PGLS on taxa directly present in Kawahara et al. (2023)",
-    "remains small and statistically unsupported."
+    "The near-zero host-breadth association is phylogenetically robust if both",
+    "Brownian and estimated-Pagel-lambda species-level GLS estimates remain small",
+    "and statistically unsupported on exact species matches."
   ),
   claim_boundary = paste(
-    "This analysis deliberately excludes panel species absent from the published",
-    "Kawahara et al. (2023) tree rather than imputing their phylogenetic placement."
+    "Panel species absent from the published tree are excluded rather than",
+    "phylogenetically imputed."
   )
 )
 
 dir.create(dirname(output_path), recursive = TRUE, showWarnings = FALSE)
-writeLines(toJSON(payload, pretty = TRUE, auto_unbox = TRUE, digits = 15), output_path)
+writeLines(
+  toJSON(payload, pretty = TRUE, auto_unbox = TRUE, digits = 15),
+  output_path
+)
 cat(toJSON(payload, pretty = TRUE, auto_unbox = TRUE, digits = 15), "\n")
