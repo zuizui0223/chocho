@@ -176,7 +176,7 @@ A useful next step is to replace coarse opportunity envelopes with local realize
 
 ## 5. Limitations
 
-HOSTS is incomplete and geographically uneven, and the conservative filter cannot make host-interaction sampling globally uniform. Regional stratification reduces concern that the main breadth–expansion result is solely a North American artifact, but tropical strata remain small. Species-level PGLS was possible for only 124/239 butterflies directly represented in the Kawahara et al. (2023) tree; unmatched species were excluded rather than phylogenetically imputed.
+HOSTS is incomplete and geographically uneven, and the conservative filter cannot make host-interaction sampling globally uniform. Regional stratification reduces concern that the main breadth–expansion result is solely a North American artifact, but tropical strata remain small. Species-level PGLS was possible for only 124/239 butterflies directly represented in the Kawahara et al. (2023) tree. Tree-matched species had greater expansion than unmatched species, although host-family breadth was similar and the breadth–expansion correlation was near zero in both subsets; PGLS is therefore used only as a slope sensitivity, not to estimate panel-wide expansion magnitude.
 
 WCVP introduced status identifies contemporary distribution status rather than the timing or pathway of introduction. We therefore infer changed **resource opportunity**, not a causal historical effect of host introduction on butterfly range expansion.
 
