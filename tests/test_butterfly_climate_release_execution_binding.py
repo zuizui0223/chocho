@@ -11,13 +11,13 @@ def test_independent_climate_release_execution_binding_matches_frozen_contract()
     binding = json.loads(
         (
             ROOT
-            / "benchmarks/exploratory/butterfly_climate_release_execution_binding_v0.1.json"
+            / "provenance/archive/climate/bindings/butterfly_climate_release_execution_binding_v0.1.json"
         ).read_text()
     )
     protocol = json.loads(
         (
             ROOT
-            / "docs/exploratory/butterfly_climate_release_independent_test_v0.1.json"
+            / "provenance/archive/climate/protocols/butterfly_climate_release_independent_test_v0.1.json"
         ).read_text()
     )
     recovery = json.loads(
@@ -87,7 +87,7 @@ def test_v01_execution_was_superseded_without_opening_ecological_response():
     binding = json.loads(
         (
             ROOT
-            / "benchmarks/exploratory/butterfly_climate_release_execution_binding_v0.1.json"
+            / "provenance/archive/climate/bindings/butterfly_climate_release_execution_binding_v0.1.json"
         ).read_text()
     )
     supersession = binding["supersession"]
