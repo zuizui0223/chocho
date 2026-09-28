@@ -22,8 +22,8 @@ COPY_PATHS = (
     "docs/exploratory",
     "docs/REPRODUCIBILITY.md",
     "benchmarks/exploratory",
-    "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md",
-    "manuscript/butterfly_specialization_claim_map_v0.1.json",
+    "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
+    "manuscript/butterfly_specialization_claim_map_v0.2.json",
 )
 
 EXCLUDE_RELATIVE = {
@@ -73,7 +73,7 @@ global butterfly-specialization manuscript.
 
 It contains the scientific code, frozen protocols, de-identified result receipts,
 the exact LepTraits input used by the reconstruction, and byte-exact source inputs
-needed to regenerate the five manuscript figures. Identifying repository metadata,
+needed to regenerate the three main manuscript figures and the climate supplementary figure. Identifying repository metadata,
 Git history, author metadata, cover letters, title pages, release metadata, and
 internal hosting/run identifiers are intentionally omitted or redacted for review.
 
@@ -90,11 +90,16 @@ docs/REPRODUCIBILITY.md.
 
 ## Regenerate the manuscript figures
 
-    python scripts/render_butterfly_specialization_manuscript_figures.py \
-      --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+    python scripts/render_butterfly_specialization_v02_figures.py \
       --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
-      --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
-      --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+      --matched-null-json benchmarks/exploratory/butterfly_resource_expansion_matched_null_v0.2.json \
+      --occurrence-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+      --occurrence-null-json benchmarks/exploratory/butterfly_occurrence_overlap_null_v0.1.json \
+      --occurrence-species-robustness-json benchmarks/exploratory/butterfly_occurrence_species_robustness_v0.1.json \
+      --ceiling-json benchmarks/exploratory/butterfly_expansion_ceiling_sensitivity_v0.1.json \
+      --regional-json benchmarks/exploratory/butterfly_regional_robustness_v0.1.json \
+      --climate-csv data/frozen/figure_sources/climate_distance_sensitivity_species.csv \
+      --climate-effect-json benchmarks/exploratory/butterfly_climate_effect_size_v0.1.json \
       --output-dir results/manuscript-figures
 
 The review snapshot intentionally does not contain author names or a public
