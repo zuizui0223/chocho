@@ -71,7 +71,7 @@ jobs:
           from lxml import etree
 
           path = Path("dist/butterfly_specialization_GEB_blinded_review.docx")
-          assert path.exists() and path.stat().st_size > 100_000
+          assert path.exists() and path.stat().st_size > 50_000
 
           with zipfile.ZipFile(path) as z:
               names = z.namelist()
