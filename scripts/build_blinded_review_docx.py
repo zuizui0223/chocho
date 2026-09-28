@@ -22,7 +22,7 @@ FIGURES = {
     3: "Figure3_expansion_robustness.png",
 }
 SUPPLEMENTARY_FIGURES = {
-    "S1": "Figure4_climate_filtering_and_precision.png",
+    "S1": "FigureS1_climate_filtering_and_precision.png",
 }
 
 
