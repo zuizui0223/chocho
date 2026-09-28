@@ -1,6 +1,6 @@
 # Ecological result receipts
 
-These JSON files are immutable or frozen result receipts used to audit the manuscript.
+This directory is the **active evidence surface** for the manuscript. It contains the primary ecological receipts plus the current independent-climate execution state. Historical/pilot-only audits are kept under `provenance/archive/`.
 
 ## Primary manuscript evidence
 
@@ -15,14 +15,20 @@ Read these first:
 
 These are the receipts mapped to the manuscript claim map.
 
-## Independent climate audit receipts
+## Current independent-climate execution evidence
 
-The authoritative execution binding is `butterfly_climate_release_execution_binding_v0.2.1.json`.
+The active climate execution files are:
 
-Panel balance, transport blockers, pre-climate gates, resource-balance checks and effect-score audits document the independent climate route. Superseded bindings `v0.1` and `v0.2` are preserved under `provenance/archive/climate/bindings/`.
+- `butterfly_climate_release_independent_panel_v0.1.json` — frozen 32-species panel.
+- `butterfly_climate_release_execution_binding_v0.2.1.json` — authoritative execution binding.
+- `butterfly_climate_release_preclimate_result_v0.2.1.json` — frozen gate outcome preceding the final climate result.
+- `butterfly_resource_envelope_climate_pilot_result_v0.1.json` — pilot used only to generate the later independent hypothesis.
 
-## Pilot and reconstruction history
+## Archived history
 
-The resource-envelope pilot and climate-pilot receipts document hypothesis generation and feasibility work. They are not substituted for the independent climate result.
+Not part of the active evidence surface:
+
+- superseded climate protocols/bindings and response-blind design audits: `provenance/archive/climate/`;
+- early resource-reconstruction and host-breadth descriptive receipts: `provenance/archive/resource/`.
 
 Do not select among historical receipts after seeing outcomes. The authoritative claim mapping is `manuscript/butterfly_specialization_claim_map_v0.1.json`.
