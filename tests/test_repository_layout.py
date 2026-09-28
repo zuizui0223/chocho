@@ -40,9 +40,13 @@ def test_frozen_s1_manifest_is_a_data_input() -> None:
 
 def test_navigation_indexes_exist() -> None:
     for rel in (
-        "scripts/README.md",
-        "docs/exploratory/README.md",
+        "manuscript/README.md",
+        "benchmarks/README.md",
         "benchmarks/exploratory/README.md",
+        "docs/README.md",
+        "docs/exploratory/README.md",
+        "scripts/README.md",
+        "tests/README.md",
         "data/README.md",
         "provenance/README.md",
     ):

@@ -51,15 +51,16 @@ The repository stores the frozen identities and reconstruction logic rather than
 
 ## Repository map
 
-- `manuscript/` — main, blinded, title-page, claim-map, and submission files.
-- `benchmarks/exploratory/` — frozen ecological result receipts supporting the manuscript.
-- `docs/exploratory/` — frozen protocols and analysis rules.
-- `scripts/` — acquisition, reconstruction, analysis, gate, test, and rendering entry points.
+Each major directory has its own short navigation index.
+
+- `manuscript/README.md` — submission-facing manuscript, blinded source, title page, cover letter, claim map and readiness metadata.
+- `benchmarks/README.md` — frozen result receipts and which ones support the manuscript.
+- `docs/README.md` — reproducibility/release instructions and frozen ecological protocols.
+- `scripts/README.md` — normal paper entry points versus diagnostics/history.
 - `src/butterfly_specialization_ecology/` — reusable analysis modules used by the paper scripts and tests.
-- `tests/` — offline paper-specific tests.
-- `data/external/leptraits_consensus_v1.0.csv` — the exact LepTraits snapshot used by the reconstruction.
-- `data/frozen/figure_sources/` — byte-exact, SHA-256-guarded inputs consumed by the audited manuscript-figure renderer.
-- `provenance/` — preserved workflow/provenance material needed to audit frozen executions.
+- `tests/README.md` — scientific, manuscript, release and layout test map.
+- `data/README.md` — vendored external input, frozen S1 manifest and byte-exact figure sources.
+- `provenance/README.md` — migration, workflow, figure-source and hypothesis-lineage audit history.
 
 ## Reproducing the offline test suite
 
