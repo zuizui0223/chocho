@@ -269,6 +269,23 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     ):
         assert literal in renderer
 
+    # Methods should expose the nested analysis scale in one place.
+    scale_funnel = (
+        "The S1 descriptor set contained 339 species; 239 met resource-eligibility criteria; "
+        "215 met the conservative host-taxonomy lower-bound criterion; 191 of those showed "
+        "introduced-host expansion"
+    )
+    assert scale_funnel in manuscript
+    assert (
+        "82 were expanded one-family species used for the within-family hierarchy analysis"
+        in manuscript
+    )
+    assert (
+        "The independent climate panel was frozen at 32 species, of which 24 passed "
+        "the pre-climate quality gate and were climate-informative."
+        in manuscript
+    )
+
     # Detailed portfolio correlations remain available in the full manuscript.
     for literal in ("rho = 0.734", "rho = -0.707"):
         assert literal in manuscript
