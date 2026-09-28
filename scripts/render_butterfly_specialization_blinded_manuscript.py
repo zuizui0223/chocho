@@ -48,15 +48,9 @@ def render_blinded(text: str) -> str:
     data_start = text.find("## Data and Code Availability")
     if data_start < 0:
         raise ValueError("could not locate Data and Code Availability section")
-    if "network-prominent host plants" in lines[0]:
-        next_heading = text.find("\n## ", data_start + len("## Data and Code Availability"))
-        data_end = len(text) if next_heading < 0 else next_heading + 1
-        text = text[:data_start] + ANON_DATA_CODE + text[data_end:]
-    else:
-        refs_start = text.find("## References", data_start)
-        if refs_start < 0:
-            raise ValueError("could not locate References section")
-        text = text[:data_start] + ANON_DATA_CODE + text[refs_start:]
+    next_heading = text.find("\n## ", data_start + len("## Data and Code Availability"))
+    data_end = len(text) if next_heading < 0 else next_heading + 1
+    text = text[:data_start] + ANON_DATA_CODE + text[data_end:]
 
     provenance_start = text.find("## Repository provenance")
     if provenance_start >= 0:
