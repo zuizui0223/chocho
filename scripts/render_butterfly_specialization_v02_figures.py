@@ -113,7 +113,7 @@ def fig2_occurrence(occ, overlap, species_robustness, outdir):
     for yi,row,v in zip(y,rows,frac):
         k=int(row["outside_native_units_explained_by_introduced_host_ranges"]); n=int(row["observed_outside_native"])
         axes[0].text(min(v+0.02,0.95),yi,f"{k}/{n}",va="center",fontsize=7)
-    axes[0].set_title("Recovery across 23 independent-panel species")
+    axes[0].set_title("Recovery across 23 climate-stratified-panel species")
 
     loo = species_robustness["leave_one_out"]
     pyrgus = loo["pyrgus_communis_excluded"]
@@ -143,7 +143,7 @@ def fig2_occurrence(occ, overlap, species_robustness, outdir):
         transform=axes[1].transAxes,fontsize=8.5
     )
 
-    fig.suptitle("Introduced host geography aligns with contemporary butterfly occurrence beyond null expectation",fontsize=13)
+    fig.suptitle("Introduced host geography aligns with butterfly occurrence beyond structural null expectation",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.95))
     save(fig,outdir,"Figure2_occurrence_validation")
 
