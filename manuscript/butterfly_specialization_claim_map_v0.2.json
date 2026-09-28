@@ -1,0 +1,120 @@
+{
+  "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
+  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_GEB_DEFENSE",
+  "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
+  "title": "Anthropogenic host redistribution expands butterfly resource geography beyond native-host distributions",
+  "central_claim": {
+    "text": "Introduced host distributions substantially expand reconstructed butterfly resource geography across taxonomic specialization, and this added geography recovers contemporary butterfly occurrences beyond native-host envelopes more often than expected from envelope size or broad regional placement alone; nevertheless, realized butterfly geography remains climatically filtered.",
+    "support_type": "resource reconstruction + independent occurrence validation + structural nulls + independent climate cross-fit",
+    "allowed": true
+  },
+  "claims": [
+    {
+      "id": "C1",
+      "claim": "Introduced host distributions broadly expand reconstructed butterfly resource opportunity without a proportional advantage for broad family-level generalists.",
+      "status": "exploratory macroecological reconstruction with post-hoc robustness",
+      "evidence": "239 resource-eligible species; 206 expand; aggregate 26,530→41,083 species×WGSRPD3 units.",
+      "key_statistic": "86.2% expanded; rho(host-family breadth, log proportional expansion)=0.008; butterfly-Family-adjusted rank correlation=0.021",
+      "sources": [
+        "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
+        "benchmarks/exploratory/butterfly_expansion_ceiling_sensitivity_v0.1.json",
+        "benchmarks/exploratory/butterfly_family_adjusted_sensitivity_v0.1.json",
+        "benchmarks/exploratory/butterfly_regional_robustness_v0.1.json"
+      ]
+    },
+    {
+      "id": "C2",
+      "claim": "Introduced host ranges recover contemporary butterfly occurrence units lying beyond native-host geography more often than expected from structural overlap.",
+      "status": "independent-panel occurrence validation with post-hoc null models",
+      "evidence": "32-species independent panel; 23 species with outside-native occurrence units.",
+      "key_statistic": "66/115 outside-native species×WGSRPD3 units recovered (57.4%); level-1-composition-matched null mean=49.3, 95% interval 43–56, p=5e-6",
+      "sources": [
+        "benchmarks/exploratory/butterfly_occurrence_resource_validation_v0.1.json",
+        "benchmarks/exploratory/butterfly_occurrence_overlap_null_v0.1.json"
+      ]
+    },
+    {
+      "id": "C3",
+      "claim": "The apparent specialist-generalist gradient in host-contribution concentration is largely explained by structural constraints imposed by resolved host-species richness.",
+      "status": "post-hoc structural diagnostic",
+      "evidence": "191 host-taxonomy-adequate expanded species.",
+      "key_statistic": "raw rho=0.492/-0.486; exact-host-count-adjusted r=0.059/-0.071 with p=0.502/0.415; joint host-count+butterfly-Family r=-0.039/+0.015",
+      "sources": [
+        "benchmarks/exploratory/butterfly_architecture_hostcount_adjusted_v0.1.json",
+        "benchmarks/exploratory/butterfly_family_adjusted_sensitivity_v0.1.json"
+      ],
+      "allowed_use": "diagnostic/caution only; not headline mechanism"
+    },
+    {
+      "id": "C4",
+      "claim": "Climate-associated filtering is common within contemporary host-resource opportunity and persists after geographic-distance controls.",
+      "status": "independent cross-fit descriptive result with post-hoc spatial sensitivities",
+      "evidence": "24 climate-informative species.",
+      "key_statistic": "original median=0.801, 23/24>0.5; distance-matched medians=0.714–0.750, 21–23/24>0.5",
+      "sources": [
+        "benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json",
+        "benchmarks/exploratory/butterfly_climate_same_level1_sensitivity_v0.1.json",
+        "benchmarks/exploratory/butterfly_climate_distance_sensitivity_v0.1.json"
+      ]
+    },
+    {
+      "id": "C5",
+      "claim": "The pre-specified prediction that broader host-family diets weaken climate filtering was not supported and remains imprecisely estimated.",
+      "status": "independent directional hypothesis test + post-hoc precision diagnostic",
+      "evidence": "24 climate-informative species.",
+      "key_statistic": "partial rho=-0.166; one-sided p=0.2237; bootstrap 95% interval -0.583 to 0.261; approximate 80%-power MDE |rho|≈0.505",
+      "decision": "PILOT_DERIVED_CLIMATE_RELEASE_HYPOTHESIS_NOT_SUPPORTED",
+      "sources": [
+        "benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json",
+        "benchmarks/exploratory/butterfly_climate_effect_size_v0.1.json"
+      ]
+    }
+  ],
+  "forbidden_overclaims": [
+    "Introduced host distributions caused butterfly range expansion.",
+    "A recovered butterfly occurrence proves local larval use of an introduced host.",
+    "Every reconstructed introduced-host region is currently used by the butterfly.",
+    "GBIF non-observation is true absence.",
+    "The occurrence overlap null establishes causality.",
+    "Butterfly Family adjustment is equivalent to PGLS.",
+    "Host-family breadth has exactly zero effect on proportional expansion or climate filtering.",
+    "Climate alone determines realized butterfly distributions.",
+    "The raw specialist-generalist portfolio-concentration gradient is an independent biological mechanism."
+  ],
+  "required_language": {
+    "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
+    "occurrence_validation": "Use recovery/alignment/overlap language; do not infer local host use or causal colonization.",
+    "anthropogenic": "Attribute resource-envelope expansion to introduced host distributions, not causal butterfly expansion.",
+    "architecture": "Describe raw concentration patterns as structurally constrained and secondary.",
+    "climate": "Use climate-associated filtering language, not proof of physiological causation.",
+    "negative_primary": "State that the directional climate-release prediction was not supported and was imprecisely estimated, not that the effect is zero."
+  },
+  "figure_claim_mapping": {
+    "Figure_1": [
+      "C1"
+    ],
+    "Figure_2": [
+      "C2"
+    ],
+    "Figure_3": [
+      "C1"
+    ],
+    "Figure_4": [
+      "C4"
+    ],
+    "Figure_5": [
+      "C5"
+    ]
+  },
+  "submission_readiness": {
+    "scientific_story_reframed": true,
+    "architecture_removed_from_headline": true,
+    "occurrence_validation_with_structural_null_complete": true,
+    "ceiling_family_regional_sensitivities_complete": true,
+    "climate_distance_and_precision_sensitivities_complete": true,
+    "family_composition_matched_host_identity_null": "pending_result",
+    "species_level_phylogenetic_model": "not_done; butterfly-Family sensitivity only",
+    "figures_need_v0_2_rerender": true,
+    "cover_letter_v0_2_needed": false
+  }
+}
