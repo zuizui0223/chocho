@@ -11,7 +11,7 @@ def test_postgate_transport_completion_contract_is_uniform_and_nonselective():
     contract = json.loads(
         (
             ROOT
-            / "docs/exploratory/butterfly_climate_release_postgate_transport_completion_v0.1.json"
+            / "provenance/archive/climate/operations/butterfly_climate_release_postgate_transport_completion_v0.1.json"
         ).read_text()
     )
     assert contract["status"] == (
