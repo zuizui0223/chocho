@@ -12,8 +12,8 @@ on:
       - "scripts/analyze_butterfly_resource_expansion_hostbias_null.py"
       - "scripts/analyze_butterfly_climate_distance_sensitivity.py"
       - "scripts/summarize_butterfly_occurrence_resource_validation.py"
-      - "docs/exploratory/butterfly_resource_expansion_matched_null_v0.2.json"
-      - "docs/exploratory/butterfly_resource_expansion_hostbias_null_v0.1.json"
+      - "provenance/reviewer_defenses/protocols/butterfly_resource_expansion_matched_null_v0.2.json"
+      - "provenance/reviewer_defenses/protocols/butterfly_resource_expansion_hostbias_null_v0.1.json"
       - ".github/workflows/geb-reviewer-defenses.yml"
 
 jobs:
@@ -67,12 +67,12 @@ jobs:
       - name: Run family-composition matched null
         run: |
           mkdir -p results/geb-reviewer-defense
-          python scripts/analyze_butterfly_resource_expansion_matched_null.py             --protocol-json docs/exploratory/butterfly_resource_expansion_matched_null_v0.2.json             --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv             --insect-host-csv results/native/insect_host_accepted.csv             --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv             --output-json results/geb-reviewer-defense/family_composition_matched_null.json             --output-csv results/geb-reviewer-defense/family_composition_matched_null_species.csv
+          python scripts/analyze_butterfly_resource_expansion_matched_null.py             --protocol-json provenance/reviewer_defenses/protocols/butterfly_resource_expansion_matched_null_v0.2.json             --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv             --insect-host-csv results/native/insect_host_accepted.csv             --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv             --output-json results/geb-reviewer-defense/family_composition_matched_null.json             --output-csv results/geb-reviewer-defense/family_composition_matched_null_species.csv
 
       - name: Run host-bias matched nulls
         run: |
           python scripts/analyze_butterfly_resource_expansion_hostbias_null.py \
-            --protocol-json docs/exploratory/butterfly_resource_expansion_hostbias_null_v0.1.json \
+            --protocol-json provenance/reviewer_defenses/protocols/butterfly_resource_expansion_hostbias_null_v0.1.json \
             --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
             --insect-host-csv results/native/insect_host_accepted.csv \
             --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
@@ -130,7 +130,7 @@ jobs:
         run: |
           mkdir -p results/geb-reviewer-defense
           python scripts/summarize_butterfly_occurrence_resource_validation.py             --overlap-json inputs/summary/native_contemporary_overlap.json             --output-json results/geb-reviewer-defense/occurrence_resource_validation.json
-          diff -u             benchmarks/exploratory/butterfly_occurrence_resource_validation_v0.1.json             results/geb-reviewer-defense/occurrence_resource_validation.json || true
+          diff -u             provenance/reviewer_defenses/results/butterfly_occurrence_resource_validation_v0.1.json             results/geb-reviewer-defense/occurrence_resource_validation.json || true
 
       - name: Run spatial sensitivity
         run: |
