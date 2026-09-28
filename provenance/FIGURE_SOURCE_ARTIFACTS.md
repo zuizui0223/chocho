@@ -15,4 +15,4 @@ The hashes above are the identities consumed by the audited figure run recorded 
 
 The CSV sources retain their original CRLF byte representation; this matters because the release gate verifies SHA-256 on raw bytes, not merely parsed table equality.
 
-The figure renderer itself is active source code in `scripts/render_butterfly_specialization_manuscript_figures.py`. The historical workflow file is stored only as provenance because the ecology repository was intentionally separated from the broader TTF execution surface.
+The figure renderer itself is active source code in `scripts/paper/render_butterfly_specialization_manuscript_figures.py`. The historical workflow file is stored only as provenance because the ecology repository was intentionally separated from the broader TTF execution surface.

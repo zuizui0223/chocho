@@ -42,8 +42,8 @@ def test_data_code_availability_uses_ecology_repository_structure() -> None:
 
 def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
     scripts = [
-        ROOT / "scripts/build_wcvp_hosts_sidecar.R",
-        ROOT / "scripts/build_wcvp_hosts_contemporary_sidecar.R",
+        ROOT / "scripts/resource/build_wcvp_hosts_sidecar.R",
+        ROOT / "scripts/resource/build_wcvp_hosts_contemporary_sidecar.R",
     ]
     for path in scripts:
         text = path.read_text(encoding="utf-8")

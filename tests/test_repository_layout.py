@@ -120,7 +120,7 @@ def test_audit_and_resource_history_are_archived_outside_active_benchmarks() -> 
 
 def test_active_gbif_acquisition_uses_current_repository_identity() -> None:
     text = (
-        ROOT / "scripts" / "acquire_butterfly_resource_envelope_occurrences.py"
+        ROOT / "scripts" / "climate" / "acquire_butterfly_resource_envelope_occurrences.py"
     ).read_text(encoding="utf-8")
     assert "chocho-butterfly-resource-envelope/1.0" in text
     assert "github.com/zuizui0223/chocho" in text
@@ -189,3 +189,47 @@ def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
         "butterfly_specialization_dimensionality_result_v0.1.json",
         "butterfly_specialization_ecology_synthesis_v0.1.json",
     }
+
+
+def test_scripts_are_grouped_by_role() -> None:
+    scripts = ROOT / "scripts"
+    root_files = {p.name for p in scripts.iterdir() if p.is_file()}
+    assert root_files == {"README.md"}
+
+    expected = {
+        "paper": {
+            "build_anonymous_review_bundle.py",
+            "build_blinded_review_docx.py",
+            "release_preflight.py",
+            "render_butterfly_specialization_blinded_manuscript.py",
+            "render_butterfly_specialization_manuscript_figures.py",
+        },
+        "resource": {
+            "analyze_butterfly_anthropogenic_resource_expansion.py",
+            "analyze_butterfly_host_breadth_geography.py",
+            "analyze_butterfly_host_specialization_hierarchy.py",
+            "analyze_butterfly_resource_expansion_mechanism.py",
+            "build_butterfly_contemporary_resource_envelope.py",
+            "build_butterfly_resource_envelope_pilot.py",
+            "build_wcvp_hosts_contemporary_sidecar.R",
+            "build_wcvp_hosts_sidecar.R",
+        },
+        "climate": {
+            "acquire_butterfly_resource_envelope_occurrences.py",
+            "analyze_butterfly_resource_envelope_climate.py",
+            "apply_butterfly_climate_release_quality_gate.py",
+            "freeze_butterfly_climate_release_panel.py",
+            "test_butterfly_climate_release_hypothesis.py",
+        },
+        "diagnostics": {
+            "apply_butterfly_resource_envelope_climate_gate.py",
+            "compare_butterfly_native_contemporary_occurrence_overlap.py",
+            "diagnose_butterfly_resource_sampling_effort.py",
+            "map_butterfly_resource_envelope_wgsrpd3.py",
+        },
+    }
+    assert {p.name for p in scripts.iterdir() if p.is_dir()} == set(expected)
+    for folder, names in expected.items():
+        assert {
+            p.name for p in (scripts / folder).iterdir() if p.is_file()
+        } == names

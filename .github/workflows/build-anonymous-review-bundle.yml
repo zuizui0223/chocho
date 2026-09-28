@@ -38,7 +38,7 @@ jobs:
       - name: Build deterministic anonymous snapshot
         run: |
           mkdir -p dist
-          python scripts/build_anonymous_review_bundle.py \
+          python scripts/paper/build_anonymous_review_bundle.py \
             --output dist/butterfly_specialization_anonymous_review_bundle.zip \
             --keep-stage _anonymous_stage
           sha256sum dist/butterfly_specialization_anonymous_review_bundle.zip \
@@ -93,7 +93,7 @@ jobs:
       - name: Regenerate manuscript figures inside anonymous snapshot
         run: |
           cd _anonymous_stage
-          python scripts/render_butterfly_specialization_manuscript_figures.py \
+          python scripts/paper/render_butterfly_specialization_manuscript_figures.py \
             --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \

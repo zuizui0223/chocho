@@ -15,7 +15,7 @@ Therefore, use a **manual Zenodo draft deposit** for v1.0.0-butterfly.
 - Byte-exact frozen figure inputs: `data/frozen/figure_sources/`
 - Blinded review DOCX builder and anonymity checks
 - De-identified anonymous reviewer code bundle builder and identity scan
-- Release preflight: `python scripts/release_preflight.py`
+- Release preflight: `python scripts/paper/release_preflight.py`
 
 ## Final sequence
 
@@ -51,7 +51,7 @@ Therefore, use a **manual Zenodo draft deposit** for v1.0.0-butterfly.
    - Rebuild the final blinded DOCX and rerun anonymity/metadata checks.
 
 6. **Run release preflight**
-   - `python scripts/release_preflight.py`
+   - `python scripts/paper/release_preflight.py`
    - It must report `READY`.
 
 7. **Run final CI on the exact release commit**

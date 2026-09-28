@@ -25,8 +25,8 @@ The active GitHub Actions paper CI installs the test extra, so Shapely-dependent
 
 Two reconstruction scripts use R:
 
-- `scripts/build_wcvp_hosts_sidecar.R`
-- `scripts/build_wcvp_hosts_contemporary_sidecar.R`
+- `scripts/resource/build_wcvp_hosts_sidecar.R`
+- `scripts/resource/build_wcvp_hosts_contemporary_sidecar.R`
 
 They use **base R only**. There are no CRAN/Bioconductor package dependencies and no `library()` or `require()` calls.
 
@@ -44,12 +44,12 @@ The scripts read the pinned upstream files directly:
 Example rebuild:
 
 ```bash
-Rscript scripts/build_wcvp_hosts_sidecar.R \
+Rscript scripts/resource/build_wcvp_hosts_sidecar.R \
   /path/to/rWCVPdata \
   /path/to/HOSTS \
   results/wcvp_native_sidecar
 
-Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R \
+Rscript scripts/resource/build_wcvp_hosts_contemporary_sidecar.R \
   /path/to/rWCVPdata \
   /path/to/HOSTS \
   results/wcvp_contemporary_sidecar
@@ -65,7 +65,7 @@ A figure rebuild no longer requires historical Actions artifacts:
 
 ```bash
 python -m pip install -e ".[figure]"
-python scripts/render_butterfly_specialization_manuscript_figures.py \
+python scripts/paper/render_butterfly_specialization_manuscript_figures.py \
   --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
   --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
   --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
