@@ -251,7 +251,7 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path, review
             continue
 
         figure_match = re.match(r"^\*\*Figure\s+([1-3])\.", line)
-        supplementary_match = re.match(r"^\*\*Supplementary Figure\s+(S\\d+)\.", line)
+        supplementary_match = re.match(r"^\*\*Supplementary Figure\s+(S\d+)\.", line)
         if in_figure_legends and (figure_match or supplementary_match):
             if figure_match:
                 key = int(figure_match.group(1))
