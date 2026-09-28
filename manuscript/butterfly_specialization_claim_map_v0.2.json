@@ -2,19 +2,19 @@
   "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
   "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_STRICT_HOST_BIAS_NULL",
   "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
-  "title": "Anthropogenic expansion of butterfly resource geography is concentrated in network-prominent host plants",
+  "title": "Human redistribution of host plants expands butterfly resource geography independently of diet breadth",
   "central_claim": {
-    "text": "Human redistribution of larval host plants substantially expands butterfly resource geography, and this expansion is concentrated in plants prominent across the Lepidoptera–host network. The simple excess of actual butterfly host identities disappears once plant native-range breadth and network-wide host prominence/recording intensity are accounted for; broad butterfly diet breadth does not predict proportional gain.",
-    "support_type": "global resource reconstruction + strict host-bias matched nulls + species-level phylogenetic sensitivity + secondary occurrence validation on a climate-stratified panel",
+    "text": "Human redistribution of larval host plants substantially expands butterfly resource geography, but proportional anthropogenic gain is not greater in butterflies with broader family-level diets. A secondary occurrence analysis shows that introduced-host geography recovers contemporary butterfly observations missed by native-only host envelopes beyond region-matched expectation.",
+    "support_type": "global resource reconstruction + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation",
     "allowed": true
   },
   "claims": [
     {
       "id": "C1",
-      "claim": "Anthropogenic host redistribution broadly expands butterfly resource geography, and network-prominent host plants are disproportionately redistributed, whereas broad butterfly generalism does not predict proportional gain.",
-      "status": "exploratory macroecological reconstruction with post-hoc host-bias matched nulls and phylogenetic sensitivity",
+      "claim": "Human redistribution of host plants broadly expands butterfly resource geography without a disproportionate proportional gain for broad family-level generalists.",
+      "status": "primary macroecological result with finite-area, regional, random-effect and species-level phylogenetic sensitivities",
       "evidence": "239 butterflies in the full reconstruction; 207 species in the strict host-bias null; 8,909 host plants in 278 families in the plant-level analysis; 124 exact Kawahara-tree butterfly species in PGLS.",
-      "key_statistic": "206/239 butterflies expanded; +54.9% aggregate species×WGSRPD3 units. Strict combined null: 12,853 observed added units vs median 12,971 (p=0.584). Plant-level log network degree vs log expansion rho=0.313; partial rank controlling native breadth=0.267; within plant-family × native-breadth strata r=0.295; 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001). Host-family breadth remained unsupported in Brownian and Pagel PGLS.",
+      "key_statistic": "206/239 butterflies expanded; aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho(host-family breadth, log expansion)=0.008; Family random-effect beta=0.021, p=0.752; Kawahara exact-match Brownian PGLS p=0.119 and Pagel-lambda PGLS p=0.581.",
       "sources": [
         "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json",
@@ -28,7 +28,7 @@
       ],
       "phylogenetic_sensitivity": "Kawahara exact-species subset n=124: Brownian rank-PGLS beta=0.140, p=0.119; Pagel lambda=0.033, beta=-0.051, p=0.581.",
       "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null.",
-      "plant_prominence_gradient": "Expanded fraction by Lepidoptera consumer degree: 26.2% (degree 1; n=4,060), 35.7% (degree 2; n=1,565), 43.0% (degree 3–5; n=1,647), 65.9% (degree 6+; n=1,637)."
+      "plant_prominence_gradient": "Exploratory SI result only: plant HOSTS degree covaries positively with redistribution but may reflect ecological prominence, recording intensity, and reverse causation."
     },
     {
       "id": "C2",
@@ -103,8 +103,8 @@
     "negative_primary": "State that the directional climate-release prediction was not supported and was imprecisely estimated, not that the effect is zero.",
     "matched_host_null": "Treat the simple same-family matched-host excess as an intermediate result only. Always follow it with the stricter host-bias null showing that the excess disappears after joint native-range and other-Lepidoptera-use adjustment.",
     "host_bias_null": "State that the simple same-family host-identity excess disappears under the combined native-range plus other-Lepidoptera-use null. Describe other-Lepidoptera consumer count as a joint proxy for host prominence and recording intensity, not pure ecological commonness.",
-    "host_prominence": "Network degree is a joint proxy for ecological host prominence/commonness and HOSTS recording intensity. State the positive plant-level association, but do not interpret degree as pure ecological commonness or causal driver of introduction.",
-    "host_bias_parameter_sensitivity": "Do not say a single strict null proves that plant prominence explains the host-identity excess. State that attenuation varies with prominence-weight strength and that the stable positive result is the direct plant-level prominence–redistribution association."
+    "host_prominence": "Treat network prominence only as an exploratory explanatory hypothesis in Discussion/SI. Do not put it in the title, abstract main conclusion, or causal interpretation; HOSTS degree is Lepidoptera-wide and may be affected by recording intensity and reverse causation.",
+    "host_bias_parameter_sensitivity": "Keep the 3×3 weighting grid in SI. In the main text, state only that host-identity excess is sensitive to how network prominence is represented and therefore is not interpreted as a butterfly-specific mechanism."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -135,7 +135,7 @@
     "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
     "kawahara_species_level_pgls": "complete; exact matches=124/239; no supported host-breadth effect",
     "host_commonness_native_range_null": "complete; combined strict null absorbs observed total expansion (p=0.584) and mean/median log expansion are not below 0.05 (p=0.073/0.079)",
-    "current_submission_surface": "v0.2 strict-host-bias interpretation; three main figures plus climate Supplementary Figure S1",
+    "current_submission_surface": "v0.2 robust headline: +54.9% resource expansion, no broad-generalist proportional advantage, species-robust secondary occurrence recovery",
     "main_figures": "3 main figures + Supplementary Figure S1",
     "figure_render_artifact": {
       "workflow_run_id": 36424509172,
