@@ -1,24 +1,24 @@
-# Anthropogenic host redistribution expands butterfly resource geography beyond matched-host expectations
+# Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth
 
 **Working manuscript v0.2 — 2026-09-28**
 
 ## Abstract
 
-**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, whether the added geography aligns with contemporary butterfly occurrences, and whether climate-associated filtering persists within that opportunity.
+**Aim:** To test how human redistribution of larval host plants changes butterfly resource geography, which plant-level properties account for that expansion, and whether the added geography aligns with contemporary butterfly occurrences.
 
 **Location:** Global.
 
-**Time period:** Contemporary distributions; butterfly occurrences 2010–2026; CHELSA climatology 1981–2010.
+**Time period:** Contemporary distributions; butterfly occurrences 2010–2026.
 
 **Major taxa studied:** Butterflies and larval host plants.
 
-**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. For 215 conservative-panel species, matched null portfolios preserved exact host-species richness and plant-family composition while randomizing host identity. A separate 32-species panel tested whether introduced hosts recover butterfly observations outside native host envelopes beyond structural overlap expectations. This panel had originally been stratified for the climate test rather than designed as an occurrence-validation sample. Twenty-four quality-qualified species entered the independently specified climate cross-fit.
+**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. Matched null models preserved butterfly host richness and plant-family composition; stricter sensitivities additionally matched host native-range breadth and weighted candidate plants by use by other Lepidoptera in HOSTS. A separate 32-species panel tested whether introduced-host geography recovers butterfly occurrences outside native host envelopes beyond structural overlap expectations.
 
-**Results:** Introduced hosts expanded resource geography for 206/239 species and increased aggregate species × region coverage by 54.9%. Actual host identities generated 13,529 added units versus a matched-null median of 8,046; mean and median proportional expansion also exceeded null expectations (all Monte Carlo p < 0.001; none of 1,999 randomized values was as large as observed). This excess was not concentrated in broad family-level generalists (observed rho = 0.015; matched-null p = 0.7865). Introduced hosts recovered 66/115 butterfly observations outside native host envelopes. Species-level recovery remained above region-matched expectation after resampling species and after removing the largest contributor, *Pyrgus communis*. Climate-associated filtering persisted after geographic matching, whereas the predicted weakening of filtering with broader diets was unsupported.
+**Results:** Introduced hosts expanded resource geography for 206/239 species and increased aggregate species × region coverage by 54.9%. A simple same-family null suggested unusually large expansion, but that excess disappeared when candidate hosts were simultaneously matched on native range and weighted by other-Lepidoptera use: observed total added units were 12,853 versus a null median of 12,971 (p = 0.584), and observed mean log expansion was 0.439 versus 0.409 (p = 0.073). Host-family breadth remained nearly unrelated to proportional expansion, including after species-level phylogenetic correction. Introduced hosts recovered 66/115 butterfly observations outside native host envelopes; species-level recovery remained above region-matched expectation after species resampling and removal of the largest contributor.
 
-**Main conclusions:** Human redistribution of particular host species has created butterfly resource opportunity beyond that expected from host richness or plant-family breadth alone. Taxonomic diet breadth, resource geography and realized butterfly distributions are distinct dimensions of global-change response.
+**Main conclusions:** Human redistribution of host plants has greatly expanded butterfly resource geography, but the magnitude of this expansion is better explained by plant-level host prominence and biogeography than by broad butterfly diets or a butterfly-specific preference for unusually globalized plants. Taxonomic diet breadth is therefore a poor proxy for anthropogenic resource gain.
 
-**Keywords:** butterflies; biotic redistribution; climate filtering; host plants; introduced species; resource geography
+**Keywords:** butterflies; biotic redistribution; host plants; introduced species; resource geography; specialization
 
 ---
 
@@ -52,15 +52,15 @@ For each butterfly, the **native resource envelope** was the union of WGSRPD lev
 
 We calculated native and contemporary resource breadth, introduced-added units, the contemporary/native ratio, log resource expansion, and the introduced share of contemporary geography.
 
-### 2.3 Matched-host null and structural sensitivities
+### 2.3 Matched-host nulls and structural sensitivities
 
-To test whether observed expansion followed automatically from host richness or plant-family composition, we randomized host identity within the 215-species conservative subset. Each null portfolio preserved the focal butterfly's exact number of resolved host species and exact number of hosts in each WCVP plant family. Alternative HOSTS-WCVP species were sampled without replacement within those families, and native and contemporary resource envelopes were reconstructed. We used 1,999 deterministic randomizations.
+We first tested whether observed expansion followed automatically from host richness and plant-family composition. In the conservative panel, null portfolios preserved each butterfly's exact number of resolved host species and exact number of hosts in each WCVP plant family while replacing host identities with alternative HOSTS-WCVP species from the same families.
 
-Primary null endpoints were the number of expanding butterflies, mean and median log expansion, total introduced-added species × WGSRPD3 units, and the association between host-family breadth and log expansion.
+Because HOSTS is not an exchangeable plant pool, we then added stricter post-hoc nulls addressing two plant-level biases. Candidate hosts were either (1) matched probabilistically to each observed host's native WGSRPD3 breadth, (2) weighted by the number of other Lepidoptera species recorded using that plant in HOSTS, or (3) subjected to both constraints simultaneously. Observed hosts themselves were excluded from candidate pools. The combined null therefore asks whether actual butterfly hosts retain excess anthropogenic expansion after accounting for both starting geographic breadth and network-wide host prominence/recording intensity. This analysis retained 207 species with sufficient alternative same-family host pools and used 999 randomizations.
 
-We also tested whether the near-zero specialization–expansion relationship was sensitive to the finite 369-unit WGSRPD3 support, taxonomic non-independence, or geographic composition. Post-hoc analyses progressively excluded species with broad native resource envelopes, fitted butterfly Family as a random intercept, and repeated associations within dominant WGSRPD level-1 resource regions. For species-level phylogenetic control, we pruned the time-calibrated Kawahara et al. (2023) global butterfly tree to exact species matches with the resource panel and fitted Brownian and estimated-Pagel-lambda phylogenetic GLS models to proportional expansion.
+We also tested whether the specialization–expansion relationship was sensitive to the finite 369-unit WGSRPD3 support, geographic composition, and taxonomic non-independence. Post-hoc analyses progressively excluded broad native resource envelopes, repeated associations within dominant WGSRPD level-1 regions, fitted butterfly Family as a random intercept, and used the Kawahara et al. (2023) time-calibrated butterfly phylogeny for exact species matches.
 
-Host-contribution concentration was retained only as a secondary structural diagnostic. Because effective contributor number and maximum single-host share are bounded by host number, their family-breadth associations were recalculated after holding exact resolved host-species richness fixed.
+Host-contribution concentration was retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number.
 
 ### 2.4 Independent occurrence validation
 
@@ -82,19 +82,21 @@ To assess geographic confounding, post-hoc sensitivities restricted comparisons 
 
 ## 3. Results
 
-### 3.1 Actual host identities produce excess anthropogenic resource expansion
+### 3.1 Anthropogenic resource expansion is widespread, but the simple host-identity excess is explained by host prominence
 
 Introduced host distributions expanded reconstructed resource opportunity for 206 of 239 species (86.2%). Aggregate species × WGSRPD3 coverage increased from 26,530 under native-only host distributions to 41,083 under contemporary distributions, an addition of 14,553 units (+54.9%).
 
-In the conservative 215-species subset, this magnitude was substantially greater than expected from host richness and plant-family composition alone. Observed host portfolios produced 13,529 introduced-added species × region units, compared with a matched-null median of 8,046 (95% interval 7,153–8,944). Mean log expansion was 0.444 versus a null median of 0.291, and median log expansion was 0.329 versus 0.195. For all three magnitude endpoints, none of 1,999 randomized values was as large as observed (Monte Carlo p < 0.001). Forty-eight species individually exceeded their matched null at p <= 0.05.
+A simple same-family matched null initially suggested that actual host identities were unusually expansion-prone. In the 215-species conservative panel, observed host portfolios produced 13,529 introduced-added species × region units versus a null median of 8,046, and no value among 1,999 randomizations was as large as observed for total, mean, or median expansion.
 
-The number of species with any expansion was less exceptional: 191 species expanded versus a null median of 185 (177–192; p = 0.0705). The strongest non-random signal was therefore the **magnitude** of expansion.
+That inference did not survive the stricter plant-level bias test. Among 207 species with sufficient alternative host pools, observed total added units were 12,853. Matching candidate hosts on native-range breadth alone still produced a much smaller null median of 7,347 (0/999 randomizations as large as observed). However, weighting candidates by use by other Lepidoptera produced a null median of 15,236, exceeding the observed total. When native-range matching and other-Lepidoptera-use weighting were combined, the null median was 12,971 (95% interval 12,084–13,843; p = 0.584). Mean log expansion was 0.439 versus a combined-null median of 0.409 (p = 0.073), and median log expansion was 0.333 versus 0.309 (p = 0.079).
 
-### 3.2 Excess expansion is not a broad-generalist effect
+Thus actual butterfly host identities are associated with greater anthropogenic expansion than arbitrary same-family plants, but this excess is largely captured by plants that are already geographically broad and prominent across the Lepidoptera–host network. Because HOSTS usage also reflects recording intensity, the present data cannot separate ecological host commonness from database visibility.
 
-Host-family breadth was nearly unrelated to proportional expansion in the full panel (Spearman rho = 0.008) and conservative subset (rho = 0.015). Under the matched-host null, the observed conservative-panel correlation was also unexceptional: null median rho = 0.004, 95% interval -0.102 to 0.110, two-sided p = 0.7865.
+### 3.2 Expansion is not preferentially greater in broad family-level generalists
 
-The near-zero relationship persisted after accounting for finite map support and taxonomic structure. Controlling native resource breadth gave a rank association of 0.012. A butterfly-Family random-intercept model estimated a standardized rank effect of 0.021 (95% CI -0.111 to 0.154; p = 0.752). The Kawahara et al. (2023) tree contained exact matches for 124/239 panel species: Brownian rank-PGLS gave beta = 0.140 (95% CI -0.036 to 0.317; p = 0.119), while estimated Pagel lambda was 0.033 and the corresponding rank-PGLS effect was -0.051 (-0.234 to 0.131; p = 0.581). Restricting analyses to species with progressively narrower native envelopes produced correlations of 0.028–0.067.
+Host-family breadth was nearly unrelated to proportional expansion in the full panel (Spearman rho = 0.008) and conservative subset (rho = 0.015). The stricter host-bias nulls did not reveal a hidden positive specialization gradient.
+
+The near-zero relationship persisted after accounting for finite map support and taxonomic structure. Controlling native resource breadth gave a rank association of 0.012. A butterfly-Family random-intercept model estimated a standardized rank effect of 0.021 (95% CI -0.111 to 0.154; p = 0.752). The Kawahara et al. (2023) tree contained exact matches for 124/239 panel species: Brownian rank-PGLS gave beta = 0.140 (95% CI -0.036 to 0.317; p = 0.119), while estimated Pagel lambda was 0.033 and the corresponding rank-PGLS effect was -0.051 (-0.234 to 0.131; p = 0.581). Restricting analyses to progressively narrower native envelopes produced correlations of 0.028–0.067.
 
 Regional stratification likewise showed that the global result was not solely driven by Northern America. Within dominant native-resource regions, rho was -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24), 0.051 in Tropical Asia (n = 9) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
 
@@ -130,13 +132,15 @@ Human redistribution of larval host plants has altered butterfly resource geogra
 
 The central ecological result is therefore not a specialist–generalist contrast in portfolio concentration. It is a separation between **taxonomic diet breadth, resource geography and realized distribution** under global change.
 
-### 4.1 Plant redistribution changes the geographic meaning of specialization
+### 4.1 Plant-level host prominence, not broad butterfly diets, structures resource globalization
 
-A species can be taxonomically specialized yet geographically resource-rich when its few host lineages are widespread. Human transport amplifies this possibility by moving known host plants far beyond their native biogeographic ranges. Consequently, the number of host families does not specify how much geographic opportunity a butterfly gains when plants are redistributed.
+A species can be taxonomically specialized yet geographically resource-rich when its few host lineages are widespread. Human transport amplifies this decoupling by moving host plants beyond their native biogeographic ranges.
 
-The matched-host null reveals the more interesting non-random pattern. Butterflies do not use arbitrary plants drawn from the same host families: their actual host identities are disproportionately associated with species whose introduced distributions enlarge geographic resource opportunity. Matching exact host-species richness and exact plant-family composition reduced expected total added opportunity from the observed 13,529 units to a median of 8,046. Yet the near-zero host-family-breadth gradient was ordinary under the same null. The biologically informative signal is therefore **which host species butterflies use**, not whether butterflies cross many plant-family boundaries.
+The null-model sequence identifies an important boundary around the apparent host-identity signal. Actual butterfly hosts generated much more anthropogenic expansion than uniformly sampled same-family alternatives, and the difference remained after native-range matching alone. But the excess disappeared once alternatives were also weighted by use by other Lepidoptera. In other words, butterflies disproportionately use plants that occupy prominent positions in the broader Lepidoptera–host network, and those plants are also the plants that generate large contemporary geographic opportunities.
 
-The near-zero relationship between family breadth and proportional expansion is robust to the obvious finite-area objection. Species with large native envelopes have less room to expand on a 369-unit map, but excluding progressively broader native envelopes did not reveal a hidden generalist advantage. Likewise, the small positive association with absolute added units disappeared after starting resource breadth was controlled. The result is best read as a property of **relative opportunity gain**: broad taxonomic diets do not automatically translate into disproportionate benefit from host globalization.
+This does not show that network prominence itself causes plant redistribution. Widely used hosts may be common, weedy or cultivated, but they may also simply be better documented in HOSTS. The defensible result is therefore that **plant-level host prominence and starting biogeography account for the apparent butterfly-specific host-identity excess**. The data do not support the stronger claim that butterfly host choice independently targets unusually globalized plants.
+
+At the same time, broad taxonomic diets do not translate into disproportionate benefit from host globalization. The near-zero family-breadth association survived ceiling, regional, random-effect and species-level phylogenetic sensitivities. Anthropogenic opportunity is therefore better understood through the identities and biogeography of resource species than through a one-dimensional specialist–generalist axis.
 
 ### 4.2 Independent occurrences show that added resource geography is ecologically relevant
 
@@ -190,11 +194,11 @@ WGSRPD3 is coarse and imposes a finite geographic ceiling. Sensitivity analyses 
 
 The climate test contains only 24 informative species. Its broad bootstrap interval means moderate effects remain plausible despite the unsupported directional prediction.
 
-Finally, the matched-host null, occurrence-overlap nulls, ceiling, Family and spatial sensitivities were added after manuscript review and are therefore post-hoc robustness analyses. They delimit the supported claims but do not convert the study into a fully prospective test of host redistribution.
+Finally, the matched-host nulls, occurrence-overlap nulls, ceiling, phylogenetic and spatial sensitivities were added after manuscript review and are therefore post-hoc robustness analyses. Other-Lepidoptera consumer count is an imperfect joint proxy for ecological host prominence and HOSTS recording intensity, so the stricter null can show that this axis explains the simple host-identity excess but cannot distinguish biological commonness from database bias.
 
 ## 6. Conclusions
 
-Human redistribution of host plants has substantially expanded reconstructed butterfly resource geography: more than 86% of resource-eligible species gained opportunity and aggregate species × region coverage increased by 54.9%. In the conservative panel, actual known host identities generated substantially more expansion than random host sets with the same host-species count and plant-family composition. That excess was not preferentially concentrated in broad family-level generalists.
+Human redistribution of host plants has substantially expanded reconstructed butterfly resource geography: more than 86% of resource-eligible species gained opportunity and aggregate species × region coverage increased by 54.9%. However, the apparent excess expansion of actual host identities relative to a simple same-family null disappeared after accounting jointly for host native-range breadth and network-wide Lepidoptera use. The expansion is therefore better attributed to plant-level host prominence and biogeography than to a butterfly-specific preference for unusually globalized hosts. It was also not preferentially concentrated in broad family-level generalists.
 
 Independent occurrences show that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of contemporary butterfly species × region observations that lay outside native host-resource envelopes, significantly more than expected after preserving both envelope size and broad regional placement. Yet resource availability alone did not reproduce realized geography: climate-associated filtering persisted after regional and distance controls.
 
@@ -202,7 +206,7 @@ The resulting picture is layered rather than one-dimensional: **host taxonomy de
 
 ## Figure legends
 
-**Figure 1. Introduced host distributions expand butterfly resource geography beyond matched-host expectations.** **a**, Aggregate native-only and contemporary resource geography across 239 butterflies; 206 species expanded and aggregate coverage increased by 54.9%. **b**, Observed mean and median log expansion in the conservative 215-species subset compared with 1,999 null portfolios preserving exact host-species richness and plant-family composition; no null value was as large as observed for either endpoint (Monte Carlo p < 0.001). **c**, Observed total introduced-added units (13,529) versus matched-null expectation (median 8,046; no exceedance in 1,999 randomizations); the host-family-breadth gradient itself was not different from null expectation (p = 0.7865).
+**Figure 1. Anthropogenic resource expansion is widespread, but the simple host-identity excess is explained by host prominence.** **a**, Native versus contemporary host-resource breadth across 239 butterflies; 206 species expanded and aggregate coverage increased by 54.9%. **b**, Observed total introduced-added resource units in the 207-species strict-null subset compared with same-family, native-range-matched, other-Lepidoptera-use-weighted, and combined native-range-plus-use null expectations. The observed total exceeded the native-range null but not the combined null (12,853 observed vs median 12,971; p = 0.584). **c**, Mean and median log expansion likewise fell within the combined null (p = 0.073 and 0.079). Other-Lepidoptera use is treated as a joint proxy for host prominence and recording intensity.
 
 **Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.** **a**, Fraction of outside-native occurrence units recovered for each of 23 informative species. **b**, Observed aggregate and species-level recovery versus structural nulls, with leave-one-species-out sensitivity. Removing *Pyrgus communis* left 44/93 units recovered versus a region-matched null median of 30; no region-matched null draw equalled or exceeded the observed value in 99,999 replicates.
 
