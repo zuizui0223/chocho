@@ -1,0 +1,111 @@
+name: butterfly reviewer defense v01
+
+on:
+  push:
+    branches:
+      - analysis/reviewer-defense-v01
+    paths:
+      - ".github/workflows/butterfly-reviewer-defense-v01.yml"
+      - "provenance/tmp/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Install Python package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Restore fixed HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _HOSTS
+
+      - name: Restore fixed WCVP snapshot
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _WCVP
+
+      - name: Restore fixed WGSRPD geometry
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _WGSRPD
+
+      - name: Decode temporary analysis runners
+        run: |
+          mkdir -p work/bin work/native work/contemporary work/results
+          base64 -d provenance/tmp/same_family_null.py.gz.b64 | gunzip > work/bin/same_family_null.py
+          base64 -d provenance/tmp/reviewer_sensitivities.py.gz.b64 | gunzip > work/bin/reviewer_sensitivities.py
+          python -m py_compile work/bin/same_family_null.py work/bin/reviewer_sensitivities.py
+
+      - name: Rebuild fixed HOSTS-WCVP sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_sidecar.R _WCVP _HOSTS work/native
+          Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R _WCVP _HOSTS work/contemporary
+          cmp work/native/insect_host_accepted.csv work/contemporary/insect_host_accepted.csv
+
+      - name: Run same-family same-host-count null
+        run: |
+          python work/bin/same_family_null.py             --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv             --insect-host-csv work/native/insect_host_accepted.csv             --native-distribution-csv work/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv work/contemporary/extant_nondoubtful_wgsrpd3.csv             --iterations 999             --output-json work/results/same_family_host_null_v0.1.json             --output-csv work/results/same_family_host_null_species_v0.1.csv
+
+      - name: Restore post-gate occurrence summary
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: work/postgate
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Restore independent climate result
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: work/climate
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Run ceiling, structural, occurrence and same-continent sensitivities
+        run: |
+          python work/bin/reviewer_sensitivities.py             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv             --leptraits-csv data/external/leptraits_consensus_v1.0.csv             --overlap-json work/postgate/native_contemporary_overlap.json             --quality-gate-json work/postgate/preclimate_quality_gate.json             --unit-climate-csv work/climate/unit_climate_crossfit.csv             --primary-result-json work/climate/primary_result.json             --level3-geojson _WGSRPD/geojson/level3.geojson             --output-json work/results/reviewer_sensitivities_v0.1.json             --output-climate-csv work/results/same_level1_climate_species_v0.1.csv
+
+      - name: Record hashes
+        run: |
+          (cd work/results && sha256sum * > SHA256SUMS)
+          cat work/results/reviewer_sensitivities_v0.1.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("work/results/same_family_host_null_v0.1.json").read_text())
+          print(json.dumps({"panel":p["panel"],"aggregate":p["aggregate"]},indent=2,sort_keys=True))
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-reviewer-defense-v01
+          path: work/results/
+          retention-days: 30
