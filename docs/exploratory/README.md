@@ -1,6 +1,6 @@
 # Ecological analysis protocols
 
-This directory contains the frozen or historically relevant protocols behind the manuscript.
+This directory contains active or claim-relevant ecological protocols behind the manuscript.
 
 ## Protocols supporting current manuscript claims
 
@@ -10,10 +10,12 @@ This directory contains the frozen or historically relevant protocols behind the
 - `butterfly_resource_envelope_protocol_v0.1.json` — resource-envelope reconstruction.
 - `butterfly_climate_release_independent_test_v0.2.1.json` — authoritative independent climate-test contract.
 
-## Climate development and audit history
+## Climate execution support
 
-The v0.1 and v0.2 climate-test contracts, pilot gate and transport recovery/completion rules are retained as audit history. They are superseded where the v0.2.1 protocol explicitly says so and must not be treated as alternative specifications available for selection.
+The pilot gate and transport recovery/completion rules remain here because they document the route used by the final independent climate analysis. They are not alternative primary specifications.
+
+Superseded primary climate-test contracts `v0.1` and `v0.2` are preserved under `provenance/archive/climate/protocols/`.
 
 ## Integrated synthesis
 
-`BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md` records the ecological synthesis and claim boundaries used to build the paper. The submission manuscript is authoritative for presentation order; the frozen protocol files remain authoritative for when questions and hypotheses were defined.
+`BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md` records the ecological synthesis and claim boundaries used to build the paper. The submission manuscript is authoritative for presentation order; frozen protocol files are authoritative for when questions and hypotheses were defined.
