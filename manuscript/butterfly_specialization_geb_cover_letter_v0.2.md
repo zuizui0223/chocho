@@ -4,7 +4,7 @@
 
 Dear Editors,
 
-Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography independently of taxonomic diet breadth”** for publication in *Global Ecology and Biogeography*.
+Please consider our Research Article, **“Anthropogenic expansion of butterfly resource geography is concentrated in network-prominent host plants”** for publication in *Global Ecology and Biogeography*.
 
 Global change redistributes interacting species as well as climate, yet consumer biogeography is often interpreted against static or native-only resource templates. We ask how human redistribution of larval host plants changes butterfly resource opportunity, whether broad taxonomic generalists benefit disproportionately, which plant-level properties account for the apparent expansion signal, and whether contemporary introduced-host geography aligns with butterfly occurrence.
 
@@ -16,7 +16,7 @@ As a secondary analysis, we reused the 32-species panel originally stratified fo
 
 A smaller independently specified climate analysis is retained as a secondary result. Climate-associated filtering remained evident after geographic matching, whereas the pre-specified prediction that broad host-family diets weaken filtering was not supported and was imprecisely estimated.
 
-We believe the manuscript fits *Global Ecology and Biogeography* because it separates three levels that are often conflated in macroecology: consumer diet breadth, the global redistribution of resource species, and realized consumer geography. The results show that human movement of host plants has greatly expanded potential butterfly resource geography, but that the magnitude of this change is better explained by plant-level host prominence and biogeography than by broad butterfly diets. Independent occurrence validation further shows that contemporary host redistribution matters for where butterflies are observed, while additional filters limit realization.
+We believe the manuscript fits *Global Ecology and Biogeography* because it links two macroecological structures that are usually studied separately: the topology of consumer–resource networks and the anthropogenic redistribution of resource species. Previous work has identified plant lineages that support disproportionate Lepidoptera diversity; here we show that plant-level network prominence also tracks the geographic expansion of host resources under human redistribution. The results show that human movement of host plants has greatly expanded potential butterfly resource geography, but that the magnitude of this change is better explained by plant-level host prominence and biogeography than by broad butterfly diets. Independent occurrence validation further shows that contemporary host redistribution matters for where butterflies are observed, while additional filters limit realization.
 
 The manuscript also reports an important robustness correction. An initially striking specialist–generalist contrast in host-contribution concentration largely disappears after exact host-species richness is held constant, and the initial host-identity excess disappears under the stricter host-prominence null. We retain both corrections explicitly because they define the defensible ecological interpretation.
 
