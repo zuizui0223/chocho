@@ -1,0 +1,115 @@
+{
+  "schema": "chocho_butterfly_reviewer_defense_receipt_v0.1",
+  "status": "COMPLETE",
+  "executed_on": "2026-09-28",
+  "workflow": {
+    "repository": "zuizui0223/chocho",
+    "run_id": 36410180904,
+    "head_sha": "7cdfe4ed1a6a601fd6ad7832488caf90d8ab5346",
+    "artifact_id": 10964646982,
+    "artifact_name": "butterfly-reviewer-defense-v01",
+    "files": {
+      "reviewer_sensitivities_v0_1_json": "70d3962aa52199b0bd1879bda2ba7ed4c1ecb23fb05d1b9490fdb2f7fe9d4f47",
+      "same_family_host_null_species_v0_1_csv": "b04ae32e3264380970b4a39df5538e0d69bb522bc403708eb1a2cd03bbe916f8",
+      "same_family_host_null_v0_1_json": "588482fb9315d398e893244da76078aa33524792ae2a6d55254ba5cebdade092",
+      "same_level1_climate_species_v0_1_csv": "aff0119ba7817962cdcd24c1ddc38290f550377c371e0db982db35d95dae6bfe"
+    }
+  },
+  "same_family_same_host_count_null": {
+    "iterations_per_species": 999,
+    "candidate_host_species": 8914,
+    "candidate_plant_families": 278,
+    "conservative_species": 215,
+    "conservative_log_expansion_observed_minus_null_median": {
+      "median": 0.1403573576949224,
+      "median_ratio_on_exp_scale": 1.1506849315068493,
+      "species_above_null_median": 156,
+      "species_above_null_q975": 33,
+      "species_below_null_q025": 2
+    },
+    "one_family_species": {
+      "n": 97,
+      "median_log_expansion_observed_minus_null_median": 0.1108448877905496,
+      "median_ratio_on_exp_scale": 1.11722159870308,
+      "species_above_null_median": 63,
+      "species_above_null_q975": 9,
+      "species_below_null_q025": 1
+    },
+    "null_adjusted_host_family_association": {
+      "spearman_host_family_vs_log_expansion_residual": 0.04144645527701588
+    },
+    "architecture": {
+      "adequate_expanded_species": 191,
+      "effective_contributors_above_null_q975": 46,
+      "effective_contributors_below_null_q025": 1,
+      "maximum_share_below_null_q025": 26,
+      "maximum_share_above_null_q975": 1,
+      "spearman_host_family_vs_effective_contributor_null_residual": 0.3887514101691854,
+      "spearman_host_family_vs_max_share_null_residual": -0.17216259287981803
+    },
+    "interpretation": "Observed documented butterfly host portfolios generate more anthropogenic geographic expansion than alternative documented HOSTS plants drawn from the same plant families at the same family-specific host counts. The excess expansion itself remains almost unrelated to butterfly host-family breadth."
+  },
+  "structural_architecture_diagnostic": {
+    "species": 191,
+    "spearman_host_family_vs_contributing_host_species": 0.5008257093803884,
+    "raw_spearman_host_family_vs_effective_contributor_number": 0.4919670615030713,
+    "partial_spearman_host_family_vs_effective_controlling_contributor_count": 0.07066624369290021,
+    "raw_spearman_host_family_vs_maximum_single_host_share": -0.4861161332504768,
+    "partial_spearman_host_family_vs_max_share_controlling_contributor_count": -0.09276390833438351,
+    "family_blocked_partial_effective": 0.13236782740174258,
+    "family_blocked_partial_max_share": -0.1592193177708338,
+    "interpretation": "The previous specialist-versus-generalist concentration contrast is largely structural and should not remain a title-level independent ecological claim."
+  },
+  "ceiling_diagnostic": {
+    "species": 239,
+    "wgsrpd3_total_units": 369,
+    "spearman_host_family_vs_log_resource_expansion": 0.00798541214928876,
+    "partial_spearman_controlling_native_resource_breadth": 0.012324765052923679,
+    "family_blocked_partial_controlling_native_resource_breadth": 0.022402421581066635,
+    "spearman_host_family_vs_absolute_added_units": 0.12681890935720583,
+    "spearman_host_family_vs_fraction_global_headroom_realized": 0.22517243303152382
+  },
+  "occurrence_validation": {
+    "workflow_run_id": 36412074530,
+    "artifact_id": 10964986052,
+    "result_sha256": "bc144841dc3050347dd8cee16ded28faf33f1325cc3aa10b6013d06f4f17cd8f",
+    "full_independent_panel": {
+      "species": 32,
+      "outside_native_species_x_units": 115,
+      "recovered_by_introduced_host_ranges": 66,
+      "fraction_recovered": 0.5739130434782609,
+      "random_geographic_expectation": 38.014846524649286,
+      "exact_combined_upper_tail_p": 1.1161781033117206e-11
+    },
+    "quality_qualified_panel": {
+      "species": 24,
+      "outside_native_species_x_units": 61,
+      "recovered_by_introduced_host_ranges": 49,
+      "fraction_recovered": 0.8032786885245902,
+      "random_geographic_expectation": 30.620758536521084,
+      "exact_combined_upper_tail_p": 5.463932592445996e-9
+    }
+  },
+  "climate_accessibility_sensitivity": {
+    "species": 23,
+    "median_same_level1_filtering_score": 0.7976190476190477,
+    "species_above_neutral": 21,
+    "primary_host_breadth_partial_spearman": 0.20701649553041873,
+    "one_sided_p": 0.8232,
+    "original_primary_partial_spearman": -0.166,
+    "original_primary_one_sided_p": 0.2237,
+    "approximate_original_95pct_interval": [
+      -0.5415,
+      0.2639
+    ],
+    "approximate_abs_partial_correlation_for_80pct_power_one_sided_alpha_0_05": 0.505
+  },
+  "claim_boundary": {
+    "posthoc_reviewer_defense": true,
+    "same_family_null_pool_is_recorded_HOSTS_plants_not_all_plants": true,
+    "occurrence_enrichment_null_is_geographic_not_dispersal_model": true,
+    "occurrence_overlap_does_not_confirm_local_host_use": true,
+    "family_blocking_is_not_phylogenetic_gls": true,
+    "same_level1_is_not_dispersal_model": true
+  }
+}
