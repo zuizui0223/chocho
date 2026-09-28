@@ -66,7 +66,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     axes[1].text(
         0.03,0.96,
         f"Observed = {observed_total:,}\n"
-        "Native-range null: p = 0.001\n"
+        "Native-range null: 0/999 exceed.\n"
         "Combined null: p = 0.584",
         transform=axes[1].transAxes, fontsize=8.5, va="top",
         bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
@@ -98,7 +98,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     axes[2].text(
         0.03,0.04,
         f"{prominence['plants']:,} plants / {prominence['plant_families']} families\n"
-        f"stratified p = {assoc['stratified_permutation_p_two_sided']:.4f}",
+        "stratified: 0/4,999 as extreme",
         transform=axes[2].transAxes,fontsize=8.5
     )
     axes[2].legend(frameon=False,fontsize=8,loc="upper left")
