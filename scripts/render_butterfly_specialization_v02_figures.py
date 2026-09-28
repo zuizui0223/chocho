@@ -48,7 +48,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
 
     observed_total = hostbias["observed"]["total_introduced_added_units"]
     model_keys = ["native_range_null", "usage_weighted_null", "native_range_plus_usage_null"]
-    model_labels = ["Native-range\nmatched", "Host-use\nweighted", "Range + use\ncombined"]
+    model_labels = ["Native-range\nmatched", "Host-use weighted\n(α=1)", "Range + use\n(α=1)"]
     x = np.arange(len(model_keys))
     med=[]; lo=[]; hi=[]
     for key in model_keys:
@@ -62,12 +62,12 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     axes[1].axhline(observed_total, linestyle="--", linewidth=1.3)
     axes[1].set_xticks(x, model_labels)
     axes[1].set_ylabel("Introduced-added species × units")
-    axes[1].set_title("Host prominence absorbs the excess")
+    axes[1].set_title("Host-identity excess is prominence-sensitive")
     axes[1].text(
         0.03,0.96,
         f"Observed = {observed_total:,}\n"
         "Native-range null: 0/999 exceed.\n"
-        "Combined null: p = 0.584",
+        "Combined (α=1): p = 0.584\nα=0.5–2 sensitivity in text",
         transform=axes[1].transAxes, fontsize=8.5, va="top",
         bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
     )
