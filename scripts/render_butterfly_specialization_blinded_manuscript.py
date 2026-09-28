@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
-V02_RUNNING_TITLE = "Host prominence and resource expansion"
+V02_RUNNING_TITLE = "Host redistribution and resource geography"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
@@ -38,7 +38,7 @@ def render_blinded(text: str) -> str:
         title = lines[0][2:].strip()
         running_title = (
             V02_RUNNING_TITLE
-            if "network-prominent host plants" in title
+            if "Human redistribution of host plants expands butterfly resource geography" in title
             else LEGACY_RUNNING_TITLE
         )
         lines.insert(1, f"**Running title:** {running_title}")
