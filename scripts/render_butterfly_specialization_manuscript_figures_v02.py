@@ -203,12 +203,21 @@ def figure3(ceiling, regional, outdir):
     values = []
     ns = []
     for region, item in regional["dominant_native_resource_region"].items():
-        d=item["dominant_region"]
-        if d["species"] < 8:
+        if "dominant_region" in item:
+            d = item["dominant_region"]
+            name = item.get("name", region)
+            rho = d["rho_host_family_vs_log_expansion"]
+            n = d["species"]
+        else:
+            d = item
+            name = region
+            rho = d.get("rho", d.get("rho_host_family_vs_log_expansion"))
+            n = d["species"]
+        if n < 8 or rho is None:
             continue
-        regions.append(item["name"])
-        values.append(float(d["rho_host_family_vs_log_expansion"]))
-        ns.append(int(d["species"]))
+        regions.append(name)
+        values.append(float(rho))
+        ns.append(int(n))
     y=np.arange(len(regions))
     axes[1].barh(y, values)
     axes[1].axvline(0, linestyle="--", linewidth=1)
