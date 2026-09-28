@@ -28,7 +28,7 @@ def jitter(label: str, width: float = 0.12):
     return (x - 0.5) * 2 * width
 
 
-def fig1_resource_and_null(anth, matched, hostbias, outdir):
+def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.5))
     for label, ax in zip(("a", "b", "c"), axes):
         ax.text(-0.08, 1.10, label, transform=ax.transAxes, fontweight="bold", fontsize=12, va="bottom")
@@ -72,26 +72,39 @@ def fig1_resource_and_null(anth, matched, hostbias, outdir):
         bbox={"boxstyle":"round,pad=0.25","facecolor":"white","alpha":0.85}
     )
 
-    obs_mean=hostbias["observed"]["mean_log_expansion"]
-    obs_median=hostbias["observed"]["median_log_expansion"]
-    combined=hostbias["native_range_plus_usage_null"]
-    observed=[obs_mean,obs_median]
-    nullmed=[combined["mean_log_expansion_median"],combined["median_log_expansion_median"]]
-    xx=np.arange(2)
-    axes[2].scatter(xx,nullmed,marker="o",s=42,label="Combined null median")
-    axes[2].scatter(xx,observed,marker="D",s=48,label="Observed")
-    axes[2].set_xticks(xx,["Mean log\nexpansion","Median log\nexpansion"])
-    axes[2].set_ylabel("Log resource expansion")
-    axes[2].set_title("Strict null removes formal excess")
+    assoc=prominence["associations"]
+    xx=np.arange(3)
+    vals=[
+        assoc["spearman_log_degree_vs_log_expansion"],
+        assoc["partial_rank_controlling_log_native_breadth"],
+        assoc["family_and_native_breadth_quintile_stratified_rank_correlation"],
+    ]
+    axes[2].scatter(xx,vals,marker="D",s=48,label="Observed association")
+    # Show the stratified permutation-null interval only at the fully adjusted endpoint.
+    axes[2].errorbar(
+        [2],[assoc["stratified_null_median"]],
+        yerr=[[
+            assoc["stratified_null_median"]-assoc["stratified_null_q025"]
+        ],[
+            assoc["stratified_null_q975"]-assoc["stratified_null_median"]
+        ]],
+        fmt="o",capsize=5,label="Stratified null 95%"
+    )
+    axes[2].axhline(0,linewidth=0.8)
+    axes[2].set_xticks(xx,["Raw","Native-breadth\npartial","Family + native\nstratified"])
+    axes[2].set_ylabel("Rank association with plant log expansion")
+    axes[2].set_ylim(-0.08,0.42)
+    axes[2].set_title("Network-prominent plants expand more")
     axes[2].text(
         0.03,0.04,
-        "p = 0.073 (mean)\np = 0.079 (median)",
+        f"{prominence['plants']:,} plants / {prominence['plant_families']} families\n"
+        f"stratified p = {assoc['stratified_permutation_p_two_sided']:.4f}",
         transform=axes[2].transAxes,fontsize=8.5
     )
-    axes[2].legend(frameon=False,fontsize=8)
+    axes[2].legend(frameon=False,fontsize=8,loc="upper left")
 
     fig.suptitle(
-        "Host redistribution expands resource geography; host prominence explains the apparent identity excess",
+        "Host redistribution expands resource geography; plant network prominence structures the gain",
         fontsize=13
     )
     fig.tight_layout(rect=(0,0,1,0.94))
@@ -224,7 +237,7 @@ def main():
     ap.add_argument("--anthropogenic-csv",type=Path,required=True)
     ap.add_argument("--matched-null-json",type=Path,required=True)
     ap.add_argument("--hostbias-null-json",type=Path,required=True)
-    ap.add_argument("--occurrence-csv",type=Path,required=True)
+    ap.add_argument("--plant-prominence-json",type=Path,required=True)\n    ap.add_argument("--occurrence-csv",type=Path,required=True)
     ap.add_argument("--occurrence-null-json",type=Path,required=True)
     ap.add_argument("--occurrence-species-robustness-json",type=Path,required=True)
     ap.add_argument("--ceiling-json",type=Path,required=True)
@@ -233,7 +246,7 @@ def main():
     ap.add_argument("--climate-effect-json",type=Path,required=True)
     ap.add_argument("--output-dir",type=Path,required=True)
     a=ap.parse_args()
-    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),a.output_dir)
+    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),json.loads(a.plant_prominence_json.read_text()),a.output_dir)
     fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),json.loads(a.occurrence_species_robustness_json.read_text()),a.output_dir)
     fig3_robustness(json.loads(a.ceiling_json.read_text()),json.loads(a.regional_json.read_text()),a.output_dir)
     fig4_climate(read_csv(a.climate_csv),json.loads(a.climate_effect_json.read_text()),a.output_dir)
