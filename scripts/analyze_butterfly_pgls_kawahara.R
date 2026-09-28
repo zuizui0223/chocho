@@ -55,12 +55,12 @@ gls_from_covariance <- function(y, x, V, lambda = 1.0) {
   )
 
   list(
-    coefficient = unname(beta["predictor"]),
-    standard_error = unname(se["predictor"]),
-    t_value = unname(t_value["predictor"]),
-    p_value = unname(p_value["predictor"]),
-    ci95_lower = unname(beta["predictor"] - crit * se["predictor"]),
-    ci95_upper = unname(beta["predictor"] + crit * se["predictor"]),
+    coefficient = unname(beta[2, 1]),
+    standard_error = unname(se[2]),
+    t_value = unname(t_value[2, 1]),
+    p_value = unname(p_value[2, 1]),
+    ci95_lower = unname(beta[2, 1] - crit * se[2]),
+    ci95_upper = unname(beta[2, 1] + crit * se[2]),
     sigma2_reml = unname(sigma2_reml),
     loglik_ml = unname(loglik_ml),
     lambda = lambda,
