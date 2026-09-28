@@ -58,7 +58,7 @@ To test whether observed expansion followed automatically from host richness or 
 
 Primary null endpoints were the number of expanding butterflies, mean and median log expansion, total introduced-added species × WGSRPD3 units, and the association between host-family breadth and log expansion.
 
-We also tested whether the near-zero specialization–expansion relationship was sensitive to the finite 369-unit WGSRPD3 support, butterfly Family, or geographic composition. These post-hoc analyses progressively excluded species with broad native resource envelopes, adjusted rank associations by butterfly Family, and repeated associations within dominant WGSRPD level-1 resource regions.
+We also tested whether the near-zero specialization–expansion relationship was sensitive to the finite 369-unit WGSRPD3 support, taxonomic non-independence, or geographic composition. Post-hoc analyses progressively excluded species with broad native resource envelopes, fitted butterfly Family as a random intercept, and repeated associations within dominant WGSRPD level-1 resource regions. For species-level phylogenetic control, we pruned the time-calibrated Kawahara et al. (2023) global butterfly tree to exact species matches with the resource panel and fitted Brownian and estimated-Pagel-lambda phylogenetic GLS models to proportional expansion.
 
 Host-contribution concentration was retained only as a secondary structural diagnostic. Because effective contributor number and maximum single-host share are bounded by host number, their family-breadth associations were recalculated after holding exact resolved host-species richness fixed.
 
@@ -94,7 +94,7 @@ The number of species with any expansion was less exceptional: 191 species expan
 
 Host-family breadth was nearly unrelated to proportional expansion in the full panel (Spearman rho = 0.008) and conservative subset (rho = 0.015). Under the matched-host null, the observed conservative-panel correlation was also unexceptional: null median rho = 0.004, 95% interval -0.102 to 0.110, two-sided p = 0.7865.
 
-The near-zero relationship persisted after accounting for finite map support and taxonomic structure. Controlling native resource breadth gave a rank association of 0.012; adjusting by butterfly Family gave 0.021. Restricting analyses to species with progressively narrower native envelopes produced correlations of 0.028–0.067.
+The near-zero relationship persisted after accounting for finite map support and taxonomic structure. Controlling native resource breadth gave a rank association of 0.012. A butterfly-Family random-intercept model estimated a standardized rank effect of 0.021 (95% CI -0.111 to 0.154; p = 0.752). The Kawahara et al. (2023) tree contained exact matches for 124/239 panel species: Brownian rank-PGLS gave beta = 0.140 (95% CI -0.036 to 0.317; p = 0.119), while estimated Pagel lambda was 0.033 and the corresponding rank-PGLS effect was -0.051 (-0.234 to 0.131; p = 0.581). Restricting analyses to species with progressively narrower native envelopes produced correlations of 0.028–0.067.
 
 Regional stratification likewise showed that the global result was not solely driven by Northern America. Within dominant native-resource regions, rho was -0.005 in Northern America (n = 102), 0.013 in Africa (n = 38), 0.029 in Temperate Asia (n = 24), 0.051 in Tropical Asia (n = 9) and 0.089 in Southern America (n = 32). Europe showed a modest positive association (rho = 0.233; n = 34).
 
@@ -180,7 +180,7 @@ A useful next step is to replace coarse opportunity envelopes with local realize
 
 ## 5. Limitations
 
-HOSTS is incomplete and geographically uneven, and the conservative filter cannot make host-interaction sampling globally uniform. Regional stratification reduces concern that the main breadth–expansion result is solely a North American artifact, but tropical strata remain small. Butterfly Family is only a coarse correction for phylogenetic non-independence and is not equivalent to species-level PGLS.
+HOSTS is incomplete and geographically uneven, and the conservative filter cannot make host-interaction sampling globally uniform. Regional stratification reduces concern that the main breadth–expansion result is solely a North American artifact, but tropical strata remain small. Species-level PGLS was possible for only 124/239 butterflies directly represented in the Kawahara et al. (2023) tree; unmatched species were excluded rather than phylogenetically imputed.
 
 WCVP introduced status identifies contemporary distribution status rather than the timing or pathway of introduction. We therefore infer changed **resource opportunity**, not a causal historical effect of host introduction on butterfly range expansion.
 
