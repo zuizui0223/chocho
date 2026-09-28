@@ -41,26 +41,32 @@ fit_pgls <- function(tree, dat, label) {
   d$y_rank_z <- as.numeric(scale(rank_y))
   d$x_log <- log1p(d$host_family_count)
 
-  fit_rank <- gls(
+  # Some dated-tree branches are zero or effectively zero. Replace only
+  # non-positive lengths by a negligible positive value to keep the published
+  # topology while avoiding singular covariance matrices in GLS.
+  positive_lengths <- sub_tree$edge.length[sub_tree$edge.length > 0]
+  if (!length(positive_lengths)) stop("tree has no positive branch lengths")
+  epsilon <- min(positive_lengths) * 1e-6
+  sub_tree$edge.length[sub_tree$edge.length <= 0] <- epsilon
+
+  fit_brownian_rank <- gls(
     y_rank_z ~ x_rank_z,
     data = d,
-    correlation = corPagel(
-      value = 0.5,
+    correlation = corBrownian(
+      value = 1,
       phy = sub_tree,
-      form = ~tree_tip,
-      fixed = FALSE
+      form = ~tree_tip
     ),
     method = "ML",
     control = glsControl(opt = "optim", maxIter = 1000)
   )
-  fit_raw <- gls(
+  fit_brownian_raw <- gls(
     log_resource_expansion ~ x_log,
     data = d,
-    correlation = corPagel(
-      value = 0.5,
+    correlation = corBrownian(
+      value = 1,
       phy = sub_tree,
-      form = ~tree_tip,
-      fixed = FALSE
+      form = ~tree_tip
     ),
     method = "ML",
     control = glsControl(opt = "optim", maxIter = 1000)
@@ -75,16 +81,39 @@ fit_pgls <- function(tree, dat, label) {
       t_value = unname(tt[term, "t-value"]),
       p_value = unname(tt[term, "p-value"]),
       ci95_lower = unname(ci[term, "lower"]),
-      ci95_upper = unname(ci[term, "upper"]),
-      pagel_lambda = unname(coef(fit$modelStruct$corStruct, unconstrained = FALSE))
+      ci95_upper = unname(ci[term, "upper"])
     )
   }
+
+  pagel_result <- tryCatch({
+    fit_pagel <- gls(
+      y_rank_z ~ x_rank_z,
+      data = d,
+      correlation = corPagel(
+        value = 0.5,
+        phy = sub_tree,
+        form = ~tree_tip,
+        fixed = FALSE
+      ),
+      method = "ML",
+      control = glsControl(opt = "optim", maxIter = 1000)
+    )
+    list(
+      fit = extract(fit_pagel, "x_rank_z"),
+      lambda = unname(coef(fit_pagel$modelStruct$corStruct, unconstrained = FALSE)),
+      success = TRUE
+    )
+  }, error = function(e) {
+    list(success = FALSE, error = conditionMessage(e))
+  })
 
   list(
     label = label,
     species = nrow(d),
-    rank_pgls = extract(fit_rank, "x_rank_z"),
-    raw_pgls = extract(fit_raw, "x_log")
+    brownian_rank_pgls = extract(fit_brownian_rank, "x_rank_z"),
+    brownian_raw_pgls = extract(fit_brownian_raw, "x_log"),
+    pagel_rank_pgls = pagel_result,
+    branch_length_epsilon = epsilon
   )
 }
 
