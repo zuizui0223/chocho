@@ -25,7 +25,7 @@ See `manuscript/butterfly_specialization_claim_map_v0.1.json` for the exact clai
 
 This repository is self-contained for the butterfly ecology paper. Method-development history and unrelated response domains are not part of the scientific argument presented here.
 
-Migration provenance is retained separately in `MIGRATION_PROVENANCE.md` and `SOURCE_SNAPSHOT.txt` so the origin of code and frozen artifacts remains auditable without entering the manuscript narrative.
+Migration provenance is retained separately in `provenance/migration/MIGRATION_PROVENANCE.md` and `provenance/migration/SOURCE_SNAPSHOT.txt` so the origin of code and frozen artifacts remains auditable without entering the manuscript narrative.
 
 The scientific question/hypothesis lineage is documented separately in `provenance/SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md`. It distinguishes discovery chronology from manuscript presentation order and is not part of the manuscript argument.
 
@@ -55,7 +55,7 @@ The repository stores the frozen identities and reconstruction logic rather than
 - `benchmarks/exploratory/` — frozen ecological result receipts supporting the manuscript.
 - `docs/exploratory/` — frozen protocols and analysis rules.
 - `scripts/` — acquisition, reconstruction, analysis, gate, test, and rendering entry points.
-- `src/ttf/` — the small dependency surface inherited from the precursor repository and still required by this paper.
+- `src/butterfly_specialization_ecology/` — reusable analysis modules used by the paper scripts and tests.
 - `tests/` — offline paper-specific tests.
 - `data/external/leptraits_consensus_v1.0.csv` — the exact LepTraits snapshot used by the reconstruction.
 - `data/frozen/figure_sources/` — byte-exact, SHA-256-guarded inputs consumed by the audited manuscript-figure renderer.
