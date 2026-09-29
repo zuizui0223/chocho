@@ -151,20 +151,14 @@
     "climate_distance_and_precision_sensitivities_complete": true,
     "family_composition_matched_host_identity_null": "superseded as primary interpretation by stricter host-bias null",
     "species_level_phylogenetic_model": "complete on 124/239 exact Kawahara-tree matches; fitted lambda=0.033, beta=-0.051 p=0.581; fixed Brownian beta=0.140 p=0.119 retained as boundary sensitivity",
-    "figures_need_v0_2_rerender": true,
+    "figures_need_v0_2_rerender": false,
     "cover_letter_v0_2_needed": false,
     "occurrence_species_cluster_robustness": "complete; mean species recovery 0.583 vs null 0.385; Pyrgus-excluded 44/93 remains above null",
     "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
     "kawahara_species_level_pgls": "complete; exact matches=124/239; fitted lambda nearly zero; Brownian boundary model retains moderate-effect uncertainty",
     "host_commonness_native_range_null": "complete; strict-null attribution is parameter-sensitive and is retained only as an SI/Discussion boundary",
     "current_submission_surface": "v0.2 headline: +54.9% resource expansion across 239 butterflies; concentrated plant-side contribution; little proportional diet-breadth gradient without exact-null overclaim; species-robust secondary occurrence recovery; network prominence remains SI/Discussion only",
-    "main_figures": "3 main figures + Supplementary Figure S1",
-    "figure_render_artifact": {
-      "workflow_run_id": 36424509172,
-      "artifact_id": 10971021324,
-      "sha256": "cb9784cc8fb41419cad184de1e920dca2c0ff4f90a4e3c1e56056a3fa58bdad4",
-      "visual_audit": "passed"
-    },
+    "main_figures": "3 main figures + Supplementary Figure S1; Figure 1 includes expansion magnitude, diet-breadth precision and species/genus contribution concentration",
     "strict_host_bias_interpretation": "complete; simple identity excess attenuated by combined native-range + other-Lepidoptera-use null",
     "species_cluster_occurrence": "complete; Pyrgus and Pieris leave-one-out conclusions retained",
     "kawahara_pgls": "complete; exact matches 124/239; Pagel lambda=0.033 beta=-0.051 p=0.581; fixed Brownian beta=0.140 p=0.119",
@@ -179,30 +173,13 @@
         "build blinded GEB review DOCX",
         "build anonymous review bundle"
       ],
-      "last_verified_head": "459bec058c312f8b4ce5c4ded53fba2e468a3408",
-      "last_verified_status": "all four workflows green on 2026-09-29",
-      "last_verified_artifacts": {
-        "figures": {
-          "run_id": 36505618180,
-          "artifact_id": 11006229998,
-          "sha256": "f3e047bfeb9595c8f6707e9396891b58990ddba58405271e2e2a0a5a22c8841f"
-        },
-        "blinded_docx": {
-          "run_id": 36505618202,
-          "artifact_id": 11007142320,
-          "sha256": "055ee4f4d274a5bafbdf3703762482540408d860b952958e09598e7c2b10e232"
-        },
-        "anonymous_bundle": {
-          "run_id": 36505618231,
-          "artifact_id": 11007292746,
-          "sha256": "b1e0663a0ebd6e8840da53164c325de1b33af4e1784fa7c13e90e7e2f055002d"
-        }
-      }
+      "verification": "Do not pin a moving PR head or artifact IDs here. Submission readiness is determined by all four required workflows being green on the current PR head."
     },
     "host_plant_prominence_analysis": "complete; 8,909 plants / 278 families; within family × native-breadth strata r=0.295, 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001)",
     "hostbias_parameter_grid": "complete; 9 cells; degree exponent 0.5 retains excess, 1.0 gives boundary/attenuation, 2.0 reverses it; weighted null is not used for causal decomposition",
     "kawahara_match_bias": "complete; matches have greater expansion magnitude but similar diet breadth; within-group breadth–expansion rho remains near zero in both matched and unmatched subsets",
     "host_contribution_concentration": "complete; 14,553 added units decompose to 670 host species (top10 25.1%, top50 57.0%, 38 species reach half, Gini 0.777) and 431 genera (top10 28.7%, top50 67.0%, 25 genera reach half, Gini 0.774)",
-    "diet_breadth_equivalence": "complete; rho=0.008, bootstrap 95% CI -0.111 to 0.128; ±0.10 TOST p=0.078, so exact equivalence is not claimed"
+    "diet_breadth_equivalence": "complete; rho=0.008, bootstrap 95% CI -0.111 to 0.128; ±0.10 TOST p=0.078, so exact equivalence is not claimed",
+    "figure_visual_audit": "Figure 1 three-panel redesign and Figure 3 regional-heterogeneity wording manually inspected; final Supplementary Figure S1 uses 'Primary' rather than version-history wording."
   }
 }
