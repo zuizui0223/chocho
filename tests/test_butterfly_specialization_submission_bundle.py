@@ -92,7 +92,7 @@ def test_blinded_v02_manuscript_removes_identity_and_internal_history():
 def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
     expected_title = (
         "Human redistribution of host plants expands butterfly resource geography "
-        "largely independently of diet breadth"
+        "across the specialization spectrum"
     )
     title_page = (
         ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
