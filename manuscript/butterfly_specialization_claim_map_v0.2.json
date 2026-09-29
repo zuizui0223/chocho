@@ -1,20 +1,20 @@
 {
   "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
-  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_STRICT_HOST_BIAS_NULL",
+  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_HOST_CONCENTRATION_AND_EQUIVALENCE_AUDIT",
   "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
-  "title": "Human redistribution of host plants expands butterfly resource geography independently of diet breadth",
+  "title": "Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth",
   "central_claim": {
-    "text": "Human redistribution of larval host plants substantially expands butterfly resource geography, but proportional anthropogenic gain is not greater in butterflies with broader family-level diets. A secondary occurrence analysis shows that introduced-host geography recovers contemporary butterfly observations missed by native-only host envelopes beyond region-matched expectation.",
-    "support_type": "global resource reconstruction + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation",
+    "text": "Human redistribution of larval host plants substantially expands butterfly resource geography across the specialization spectrum. Host-family breadth has little relationship to proportional gain, while the added opportunity is strongly concentrated among a minority of contributing host plants. A secondary occurrence analysis shows that introduced-host geography recovers contemporary butterfly observations missed by native-only host envelopes beyond region-matched expectation.",
+    "support_type": "global resource reconstruction + unit-preserving host-contribution decomposition + diet-breadth precision/equivalence diagnostic + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation",
     "allowed": true
   },
   "claims": [
     {
       "id": "C1",
-      "claim": "Human redistribution of host plants broadly expands butterfly resource geography without a disproportionate proportional gain for broad family-level generalists.",
-      "status": "primary macroecological result with finite-area, regional, random-effect and species-level phylogenetic sensitivities",
+      "claim": "Human redistribution of host plants broadly expands butterfly resource geography, while family-level diet breadth has little relationship to proportional gain.",
+      "status": "primary macroecological result with post-hoc precision/equivalence, finite-area, regional, random-effect and species-level phylogenetic sensitivities",
       "evidence": "239 butterflies in the full reconstruction; 207 species in the strict host-bias null; 8,909 host plants in 278 families in the plant-level analysis; 124 exact Kawahara-tree butterfly species in PGLS.",
-      "key_statistic": "206/239 butterflies expanded; aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho(host-family breadth, log expansion)=0.008; Family random-effect beta=0.021, p=0.752; Kawahara exact-match Brownian PGLS p=0.119 and Pagel-lambda PGLS p=0.581.",
+      "key_statistic": "206/239 butterflies expanded; aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho=0.008, 49,999-bootstrap 95% CI -0.111 to 0.128; ±0.10 Fisher-z TOST p=0.078 (equivalence not established); Family random-effect beta=0.021, p=0.752; estimated Pagel lambda=0.033 with rank-PGLS beta=-0.051, p=0.581; fixed Brownian beta=0.140, p=0.119.",
       "sources": [
         "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json",
@@ -25,12 +25,25 @@
         "provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_hostbias_parameter_grid_v0.1.json",
-        "provenance/reviewer_defenses/results/butterfly_kawahara_match_bias_v0.1.json"
+        "provenance/reviewer_defenses/results/butterfly_kawahara_match_bias_v0.1.json",
+        "provenance/reviewer_defenses/results/butterfly_expansion_equivalence_v0.1.json"
       ],
-      "phylogenetic_sensitivity": "Kawahara exact-species subset n=124: Brownian rank-PGLS beta=0.140, p=0.119; Pagel lambda=0.033, beta=-0.051, p=0.581.",
+      "phylogenetic_sensitivity": "Kawahara exact-species subset n=124 is selective for higher expansion magnitude. Estimated Pagel lambda=0.033 and rank-PGLS beta=-0.051 (95% CI -0.234 to 0.131, p=0.581). Fixed Brownian lambda=1 gives beta=0.140 (95% CI -0.036 to 0.317, p=0.119), so moderate positive effects remain unresolved under that boundary model.",
       "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null.",
       "plant_prominence_gradient": "Exploratory SI result only: plant HOSTS degree covaries positively with redistribution but may reflect ecological prominence, recording intensity, and reverse causation.",
-      "pgls_coverage_bias": "Tree-matched species have higher expansion magnitude (median log expansion 0.376 vs 0.285; p=0.0012) but similar host-family breadth (median 2 vs 2; p=0.677). Breadth–expansion rho is near zero in both matched (-0.055) and unmatched (+0.053) groups. PGLS is used only for the slope sensitivity."
+      "pgls_coverage_bias": "Tree-matched species have higher expansion magnitude (median log expansion 0.376 vs 0.285; p=0.0012) but similar host-family breadth (median 2 vs 2; p=0.677). Breadth–expansion rho is near zero in both matched (-0.055) and unmatched (+0.053) groups. PGLS is used only for the slope sensitivity.",
+      "equivalence_precision": "Full-panel bootstrap 90% CI -0.092 to 0.108 and 95% CI -0.111 to 0.128. A post-hoc ±0.10 Fisher-z TOST is narrowly inconclusive (p=0.078). Do not claim exact zero or demonstrated ±0.10 equivalence."
+    },
+    {
+      "id": "C1b",
+      "claim": "The aggregate geographic opportunity added by introduced host distributions is strongly uneven across contributing host plants, and this concentration persists after host species are collapsed to genera.",
+      "status": "post-hoc descriptive decomposition elevated as a main ecological result; unit-preserving and non-causal",
+      "evidence": "14,553 added butterfly×WGSRPD3 units across 206 expanded butterflies; 670 contributing host species and 431 contributing genera.",
+      "key_statistic": "Species level: top 10=25.1%, top 50=57.0%, 38/670 species reach 50%, Gini=0.777, effective contributors=92.5. Genus level: top 10=28.7%, top 50=67.0%, 25/431 genera reach 50%, Gini=0.774, effective contributors=69.9. Seven of the top ten species-level contributors are Poaceae.",
+      "sources": [
+        "provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json"
+      ],
+      "allowed_use": "Describe which resources generate reconstructed added opportunity. Do not infer causal plant traits, independent plant-level effects, realized larval use, or introduction pathways."
     },
     {
       "id": "C2",
@@ -47,21 +60,21 @@
     {
       "id": "C3",
       "claim": "The apparent specialist-generalist gradient in host-contribution concentration is largely explained by structural constraints imposed by resolved host-species richness.",
-      "status": "post-hoc structural diagnostic",
+      "status": "post-hoc structural diagnostic retained in Supplementary Information",
       "evidence": "191 host-taxonomy-adequate expanded species.",
       "key_statistic": "raw rho=0.492/-0.486; exact-host-count-adjusted r=0.059/-0.071 with p=0.502/0.415; joint host-count+butterfly-Family r=-0.039/+0.015",
       "sources": [
         "provenance/reviewer_defenses/results/butterfly_architecture_hostcount_adjusted_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_family_adjusted_sensitivity_v0.1.json"
       ],
-      "allowed_use": "diagnostic/caution only; not headline mechanism"
+      "allowed_use": "Supplementary structural diagnostic/caution only; not a headline mechanism or main-text results section."
     },
     {
       "id": "C4",
       "claim": "Climate-associated filtering is common within contemporary host-resource opportunity and persists after geographic-distance controls.",
       "status": "independent cross-fit descriptive result with post-hoc spatial sensitivities",
       "evidence": "24 climate-informative species.",
-      "key_statistic": "original median=0.801, 23/24>0.5; distance-matched medians=0.714–0.750, 21–23/24>0.5",
+      "key_statistic": "primary cross-fit median=0.801, 23/24>0.5; distance-matched medians=0.714–0.750, 21–23/24>0.5",
       "sources": [
         "benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_climate_same_level1_sensitivity_v0.1.json",
@@ -94,7 +107,10 @@
     "The matched-host null proves that butterflies evolved to use globally redistributed plants.",
     "The 32-species panel was prospectively designed as an occurrence-validation panel.",
     "Actual butterfly host identities produce excess anthropogenic expansion after controlling plant native-range breadth and network-wide host prominence.",
-    "Network-wide host use proves ecological commonness rather than HOSTS recording intensity."
+    "Network-wide host use proves ecological commonness rather than HOSTS recording intensity.",
+    "Host-family breadth has been demonstrated equivalent to a zero effect within ±0.10.",
+    "The host-contribution concentration analysis identifies causal plant traits or independent plant-level effects.",
+    "Poaceae membership explains why the leading host plants were redistributed."
   ],
   "required_language": {
     "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
@@ -107,11 +123,14 @@
     "host_bias_null": "Describe other-Lepidoptera consumer count as a joint proxy for host prominence and recording intensity. Do not say that one strict null proves the host-identity excess disappears; the 3×3 grid shows that inference varies with prominence-weight strength.",
     "host_prominence": "Treat network prominence only as an exploratory explanatory hypothesis in Discussion/SI. Do not put it in the title, abstract main conclusion, or causal interpretation; HOSTS degree is Lepidoptera-wide and may be affected by recording intensity and reverse causation.",
     "host_bias_parameter_sensitivity": "Keep the 3×3 weighting grid in SI. In the main text, state only that host-identity excess is sensitive to how network prominence is represented and therefore is not interpreted as a butterfly-specific mechanism.",
-    "phylogeny": "State that the Kawahara exact-match subset is selective for higher expansion magnitude; use PGLS only to support the near-zero host-breadth slope, not the panel-wide amount of expansion."
+    "phylogeny": "State that the Kawahara exact-match subset is selective for higher expansion magnitude. Because fitted Pagel lambda is 0.033, present the estimated-lambda model as the data-adaptive phylogenetic correction and fixed Brownian lambda=1 as a boundary sensitivity; do not imply that Brownian beta=0.140 excludes a moderate positive effect.",
+    "diet_breadth_equivalence": "Use 'little relationship', 'near-zero point estimate', or 'largely independently'. State that the 49,999-bootstrap 95% CI is -0.111 to 0.128 and that a post-hoc ±0.10 TOST is narrowly inconclusive (p=0.078). Do not claim an exact zero effect or demonstrated ±0.10 equivalence.",
+    "host_contribution_concentration": "Describe the decomposition as contribution-weighted and unit-preserving: 14,553 added butterfly×WGSRPD3 units are divided among contributing hosts. Species-level and genus-level concentration are descriptive main results; they identify which resources generate reconstructed opportunity, not why those plants were redistributed."
   },
   "figure_claim_mapping": {
     "Figure_1": [
-      "C1"
+      "C1",
+      "C1b"
     ],
     "Figure_2": [
       "C2"
@@ -131,14 +150,14 @@
     "ceiling_family_regional_sensitivities_complete": true,
     "climate_distance_and_precision_sensitivities_complete": true,
     "family_composition_matched_host_identity_null": "superseded as primary interpretation by stricter host-bias null",
-    "species_level_phylogenetic_model": "complete on 124/239 exact Kawahara-tree matches; Brownian p=0.119; Pagel-lambda p=0.581",
-    "figures_need_v0_2_rerender": false,
+    "species_level_phylogenetic_model": "complete on 124/239 exact Kawahara-tree matches; fitted lambda=0.033, beta=-0.051 p=0.581; fixed Brownian beta=0.140 p=0.119 retained as boundary sensitivity",
+    "figures_need_v0_2_rerender": true,
     "cover_letter_v0_2_needed": false,
     "occurrence_species_cluster_robustness": "complete; mean species recovery 0.583 vs null 0.385; Pyrgus-excluded 44/93 remains above null",
     "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
-    "kawahara_species_level_pgls": "complete; exact matches=124/239; no supported host-breadth effect",
+    "kawahara_species_level_pgls": "complete; exact matches=124/239; fitted lambda nearly zero; Brownian boundary model retains moderate-effect uncertainty",
     "host_commonness_native_range_null": "complete; strict-null attribution is parameter-sensitive and is retained only as an SI/Discussion boundary",
-    "current_submission_surface": "v0.2 robust headline: +54.9% resource expansion, no broad-generalist proportional advantage, species-robust secondary occurrence recovery; host-prominence attribution remains SI/Discussion only",
+    "current_submission_surface": "v0.2 headline: +54.9% resource expansion across 239 butterflies; concentrated plant-side contribution; little proportional diet-breadth gradient without exact-null overclaim; species-robust secondary occurrence recovery; network prominence remains SI/Discussion only",
     "main_figures": "3 main figures + Supplementary Figure S1",
     "figure_render_artifact": {
       "workflow_run_id": 36424509172,
@@ -148,7 +167,7 @@
     },
     "strict_host_bias_interpretation": "complete; simple identity excess attenuated by combined native-range + other-Lepidoptera-use null",
     "species_cluster_occurrence": "complete; Pyrgus and Pieris leave-one-out conclusions retained",
-    "kawahara_pgls": "complete; exact matches 124/239; Brownian p=0.119; Pagel-lambda p=0.581",
+    "kawahara_pgls": "complete; exact matches 124/239; Pagel lambda=0.033 beta=-0.051 p=0.581; fixed Brownian beta=0.140 p=0.119",
     "active_protocol_surface_clean": true,
     "active_result_surface_clean": true,
     "reviewer_defense_provenance": "provenance/reviewer_defenses/",
@@ -182,6 +201,8 @@
     },
     "host_plant_prominence_analysis": "complete; 8,909 plants / 278 families; within family × native-breadth strata r=0.295, 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001)",
     "hostbias_parameter_grid": "complete; 9 cells; degree exponent 0.5 retains excess, 1.0 gives boundary/attenuation, 2.0 reverses it; weighted null is not used for causal decomposition",
-    "kawahara_match_bias": "complete; matches have greater expansion magnitude but similar diet breadth; within-group breadth–expansion rho remains near zero in both matched and unmatched subsets"
+    "kawahara_match_bias": "complete; matches have greater expansion magnitude but similar diet breadth; within-group breadth–expansion rho remains near zero in both matched and unmatched subsets",
+    "host_contribution_concentration": "complete; 14,553 added units decompose to 670 host species (top10 25.1%, top50 57.0%, 38 species reach half, Gini 0.777) and 431 genera (top10 28.7%, top50 67.0%, 25 genera reach half, Gini 0.774)",
+    "diet_breadth_equivalence": "complete; rho=0.008, bootstrap 95% CI -0.111 to 0.128; ±0.10 TOST p=0.078, so exact equivalence is not claimed"
   }
 }
