@@ -20,6 +20,6 @@ These are deliberately outside the active result surface:
 - current independent-climate panel/binding/pre-climate state → `provenance/climate/`;
 - climate pilot and post-gate technical recovery → `provenance/archive/climate/`;
 - superseded resource-side receipts → `provenance/archive/resource/`;
-- post-hoc null models, occurrence robustness, phylogenetic checks and other reviewer-defense results → `provenance/reviewer_defenses/results/`.
+- post-hoc null models, host-contribution/equivalence diagnostics, occurrence robustness and phylogenetic checks → `provenance/reviewer_defenses/results/`.
 
 Do not select among historical receipts after seeing outcomes.
