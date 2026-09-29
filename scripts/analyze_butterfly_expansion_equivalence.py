@@ -46,6 +46,26 @@ def fisher_ci(rho: float, n: int, level: float) -> tuple[float, float]:
     return math.tanh(z - zcrit * se), math.tanh(z + zcrit * se)
 
 
+def bootstrap_ci(
+    x: np.ndarray,
+    y: np.ndarray,
+    *,
+    replicates: int = 49_999,
+    seed: int = 20_260_929,
+) -> dict[str, object]:
+    rng = np.random.default_rng(seed)
+    values = np.empty(replicates, dtype=float)
+    for b in range(replicates):
+        idx = rng.integers(0, len(x), size=len(x))
+        values[b] = spearman(x[idx], y[idx])
+    return {
+        "replicates": replicates,
+        "seed": seed,
+        "ci90": np.quantile(values, [0.05, 0.95]).tolist(),
+        "ci95": np.quantile(values, [0.025, 0.975]).tolist(),
+    }
+
+
 def fisher_tost(
     rho: float,
     n: int,
@@ -96,6 +116,7 @@ def main() -> int:
     ci90 = fisher_ci(rho, len(x), 0.90)
     ci95 = fisher_ci(rho, len(x), 0.95)
     tost = fisher_tost(rho, len(x), 0.10)
+    bootstrap = bootstrap_ci(x, y)
 
     payload = {
         "schema": "chocho_butterfly_expansion_equivalence_v0.1",
@@ -105,6 +126,7 @@ def main() -> int:
         "rho": rho,
         "fisher_z_approx_ci90": list(ci90),
         "fisher_z_approx_ci95": list(ci95),
+        "bootstrap": bootstrap,
         "tost_fisher_z_approx": tost,
         "interpretation": (
             "The point estimate is near zero, but equivalence within ±0.10 is not "
@@ -113,9 +135,9 @@ def main() -> int:
             "of diet breadth' rather than an exact-null claim."
         ),
         "claim_boundary": (
-            "Fisher-z confidence intervals and TOST are approximate for Spearman rho; "
-            "they quantify the precision of the near-zero rank association rather than "
-            "prove an exact zero effect."
+            "The deterministic bootstrap directly quantifies uncertainty in Spearman rho. "
+            "Fisher-z TOST is reported as an approximate equivalence diagnostic; neither "
+            "analysis proves an exact zero effect."
         ),
     }
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
