@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To quantify a resource-side pathway of global change: how redistribution of known larval hosts alters butterfly geographic opportunity without requiring host switching, whether that gain is concentrated among particular hosts or predicted by taxonomic diet breadth, and whether the added geography aligns with contemporary butterfly occurrence.
+**Aim:** To quantify how redistribution of known larval hosts changes butterfly geographic resource opportunity without host switching, whether added opportunity is concentrated among hosts or predicted by taxonomic diet breadth, and whether it aligns with contemporary butterfly occurrence.
 
 **Location:** Global.
 
@@ -16,7 +16,7 @@
 
 **Results:** Introduced hosts expanded reconstructed resource geography for 206/239 butterflies (86.2%) and increased aggregate species × region coverage by 54.9%. Contributions were strongly uneven: among 670 host species, the top 10 accounted for 25.1% of added units and 38 species accounted for half; genus-level aggregation retained this concentration. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008; bootstrap 95% CI -0.111 to 0.128), although a strict post-hoc ±0.10 equivalence test was narrowly inconclusive (p = 0.078). Introduced hosts recovered 66/115 outside-native species × region observations (57.4%), exceeding region-matched structural expectation.
 
-**Main conclusions:** Human redistribution of known host plants has expanded butterfly resource opportunity across the specialization spectrum, with much of the gain carried by a minority of hosts and poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without requiring host switching or diet expansion. Secondary occurrence evidence shows that native-only resource maps miss part of this contemporary opportunity.
+**Main conclusions:** Human redistribution of known host plants expands butterfly resource opportunity across the specialization spectrum. Much of the gain is carried by a minority of hosts and is poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without host switching or diet expansion; native-only maps therefore miss part of contemporary opportunity.
 
 **Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
 ---
