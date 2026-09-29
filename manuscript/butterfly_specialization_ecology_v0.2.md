@@ -1,4 +1,4 @@
-# Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth
+# Human redistribution of host plants expands butterfly resource geography across the specialization spectrum
 
 **Working manuscript v0.2 — 2026-09-28**
 
