@@ -85,6 +85,13 @@ jobs:
             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
             --output-json results/geb-reviewer-defense/expansion_equivalence.json
 
+      - name: Test Poaceae host-guild sensitivity
+        run: |
+          python scripts/analyze_butterfly_poaceae_sensitivity.py \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --output-json results/geb-reviewer-defense/poaceae_sensitivity.json
+
       - name: Upload concentration and equivalence receipts
         uses: actions/upload-artifact@v4
         with:
@@ -94,6 +101,7 @@ jobs:
             results/geb-reviewer-defense/host_contribution_concentration_plants.csv
             results/geb-reviewer-defense/host_contribution_concentration_genera.csv
             results/geb-reviewer-defense/expansion_equivalence.json
+            results/geb-reviewer-defense/poaceae_sensitivity.json
           retention-days: 30
 
       - name: Run family-composition matched null
