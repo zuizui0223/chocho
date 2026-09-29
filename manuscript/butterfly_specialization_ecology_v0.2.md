@@ -59,7 +59,7 @@ We tested whether the host-family-breadth association with proportional expansio
 
 An exploratory plant-level analysis related HOSTS consumer degree to plant geographic expansion across 8,909 HOSTS-WCVP plants. Because HOSTS includes moths as well as butterflies, this is a Lepidoptera-wide network measure rather than a butterfly-specific trait. We treat it only as a possible explanatory axis because degree may reflect ecological host prominence, study intensity, and reverse causation if introduced plants acquire additional consumer records after redistribution.
 
-Host-contribution concentration was retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number.
+Within-butterfly portfolio-concentration metrics were retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number. This diagnostic is distinct from the across-plant concentration of total added opportunity described above.
 
 ### 2.4 Secondary occurrence validation
 
@@ -91,7 +91,7 @@ A simple same-family matched null suggested that actual host identities were unu
 
 An exploratory Lepidoptera-wide plant analysis suggested that network-prominent plants are more often anthropogenically redistributed, but consumer degree can reflect both ecological prominence and database visibility, and redistribution itself may generate additional host-use records. We therefore treat network prominence as a possible explanation for the matched-null behavior rather than as the paper's primary result.
 
-### 3.2 Expansion is not preferentially greater in broad family-level generalists
+### 3.2 Expansion shows little relationship to broad family-level diet breadth
 
 Host-family breadth was nearly unrelated to proportional expansion in the full panel (Spearman rho = 0.008; 49,999-bootstrap 95% CI -0.111 to 0.128) and conservative subset (rho = 0.015). A deliberately strict post-hoc equivalence diagnostic using |rho| < 0.10 as the equivalence region was narrowly inconclusive: the bootstrap 90% interval was -0.092 to 0.108 and the approximate Fisher-z TOST gave p = 0.078. We therefore interpret the full-panel association as small and imprecisely bounded rather than as proof of an exact zero effect. The stricter host-bias nulls did not reveal a hidden positive specialization gradient.
 
@@ -207,6 +207,6 @@ Analysis code and the inputs required to reproduce the reported results and figu
 
 **Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.** **a**, Fraction of outside-native occurrence units recovered for each of 23 informative species. **b**, Observed aggregate and species-level recovery versus structural nulls, with leave-one-species-out sensitivity. Removing *Pyrgus communis* left 44/93 units recovered versus a region-matched null median of 30; no region-matched null draw equalled or exceeded the observed value in 99,999 replicates.
 
-**Figure 3. No consistent broad-generalist advantage emerges across finite-support and regional sensitivities.** **a**, Host-family breadth versus proportional expansion after progressively excluding broad native resource envelopes. **b**, Within-region associations for species grouped by dominant native host-resource region.
+**Figure 3. Diet-breadth associations remain small across finite-support and regional sensitivities.** **a**, Host-family breadth versus proportional expansion after progressively excluding broad native resource envelopes. **b**, Within-region associations for species grouped by dominant native host-resource region.
 
 **Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.** **a**, Filtering scores under the original analysis, within-region restriction and three distance-matching calipers. **b**, Primary partial host-family-breadth effect with bootstrap 95% interval and approximate 80%-power detectable-effect threshold.
