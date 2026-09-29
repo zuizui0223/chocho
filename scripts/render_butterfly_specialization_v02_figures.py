@@ -112,7 +112,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
     axes[1].text(
         0.03, 0.96,
         "Spearman ρ = 0.008\n"
-        "PGLS sensitivities: no supported positive effect",
+        "bootstrap 95% CI: -0.111 to 0.128",
         transform=axes[1].transAxes,
         va="top",
         fontsize=9,
