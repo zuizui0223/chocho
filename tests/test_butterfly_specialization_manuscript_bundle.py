@@ -44,7 +44,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
 
     expected_title = (
         "Human redistribution of host plants expands butterfly resource geography "
-        "largely independently of diet breadth"
+        "across the specialization spectrum"
     )
     assert manuscript.splitlines()[0] == f"# {expected_title}"
     assert claim_map["title"] == expected_title
@@ -120,8 +120,8 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     # Current Results order: expansion/concentration -> diet breadth -> occurrence -> climate.
     result_headings = [
         "### 3.1 Human redistribution broadly expands butterfly resource geography",
-        "### 3.2 Expansion shows little relationship to broad family-level diet breadth",
-        "### 3.3 Introduced host geography aligns with separate-panel butterfly occurrence",
+        "### 3.2 Taxonomic diet breadth poorly predicts proportional resource gain",
+        "### 3.3 Added resource geography aligns with contemporary butterfly occurrence",
         "### 3.4 Secondary climate analysis",
     ]
     positions = [manuscript.index(h) for h in result_headings]
