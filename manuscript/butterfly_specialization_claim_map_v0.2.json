@@ -138,7 +138,7 @@
     "butterfly_family_random_intercept": "complete; beta=0.0214, p=0.752",
     "kawahara_species_level_pgls": "complete; exact matches=124/239; no supported host-breadth effect",
     "host_commonness_native_range_null": "complete; strict-null attribution is parameter-sensitive and is retained only as an SI/Discussion boundary",
-    "current_submission_surface": "v0.2 robust headline: +54.9% resource expansion, no broad-generalist proportional advantage, species-robust secondary occurrence recovery",
+    "current_submission_surface": "v0.2 robust headline: +54.9% resource expansion, no broad-generalist proportional advantage, species-robust secondary occurrence recovery; host-prominence attribution remains SI/Discussion only",
     "main_figures": "3 main figures + Supplementary Figure S1",
     "figure_render_artifact": {
       "workflow_run_id": 36424509172,
@@ -153,26 +153,35 @@
     "active_result_surface_clean": true,
     "reviewer_defense_provenance": "provenance/reviewer_defenses/",
     "submission_artifacts": {
-      "head_sha": "80891a9b7a2a5b9c6d6621a5c1b61c1d1f5886f7",
-      "figures": {
-        "workflow_run_id": 36430357768,
-        "artifact_id": 10973301320,
-        "sha256": "6e4716d7803d8da36937f37cdebed17141f1251678e272945f1c67f506025b68"
-      },
-      "blinded_docx": {
-        "workflow_run_id": 36430358060,
-        "artifact_id": 10971974949,
-        "sha256": "4ffccda038f17449025382aad2c2b8cc7f987b5dfa8194e612f93deb586b4022"
-      },
-      "anonymous_bundle": {
-        "workflow_run_id": 36430357766,
-        "artifact_id": 10973520746,
-        "sha256": "b0e0cffcf7268f6c2c84de350e39af7e5e4dd657d8a8b4edbb9aaaaca8cc4895"
-      },
-      "paper_ci": "success"
+      "policy": "Do not pin artifact IDs in the claim map because updating submission metadata creates a new head. Submission readiness requires all four current-head workflows to be green.",
+      "required_workflows": [
+        "paper CI",
+        "render butterfly manuscript v0.2 figures",
+        "build blinded GEB review DOCX",
+        "build anonymous review bundle"
+      ],
+      "last_verified_head": "459bec058c312f8b4ce5c4ded53fba2e468a3408",
+      "last_verified_status": "all four workflows green on 2026-09-29",
+      "last_verified_artifacts": {
+        "figures": {
+          "run_id": 36505618180,
+          "artifact_id": 11006229998,
+          "sha256": "f3e047bfeb9595c8f6707e9396891b58990ddba58405271e2e2a0a5a22c8841f"
+        },
+        "blinded_docx": {
+          "run_id": 36505618202,
+          "artifact_id": 11007142320,
+          "sha256": "055ee4f4d274a5bafbdf3703762482540408d860b952958e09598e7c2b10e232"
+        },
+        "anonymous_bundle": {
+          "run_id": 36505618231,
+          "artifact_id": 11007292746,
+          "sha256": "b1e0663a0ebd6e8840da53164c325de1b33af4e1784fa7c13e90e7e2f055002d"
+        }
+      }
     },
     "host_plant_prominence_analysis": "complete; 8,909 plants / 278 families; within family × native-breadth strata r=0.295, 0/4,999 permuted correlations as extreme (Monte Carlo p<0.001)",
-    "hostbias_parameter_grid": "complete; 9 cells; attenuation depends strongly on degree-weight exponent; no unique host-choice versus prominence decomposition is claimed",
+    "hostbias_parameter_grid": "complete; 9 cells; degree exponent 0.5 retains excess, 1.0 gives boundary/attenuation, 2.0 reverses it; weighted null is not used for causal decomposition",
     "kawahara_match_bias": "complete; matches have greater expansion magnitude but similar diet breadth; within-group breadth–expansion rho remains near zero in both matched and unmatched subsets"
   }
 }
