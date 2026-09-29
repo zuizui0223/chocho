@@ -64,7 +64,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
 
     assert readiness["manuscript"]["approximate_abstract_words"] == abstract_words
     assert readiness["manuscript"]["approximate_main_text_words"] == main_text_words
-    assert readiness["manuscript"]["keyword_count"] == 6
+    assert readiness["manuscript"]["keyword_count"] == 7
 
     # Current manuscript references remain alphabetical by first/corporate author.
     refs_start = manuscript.index("## References (working)")
