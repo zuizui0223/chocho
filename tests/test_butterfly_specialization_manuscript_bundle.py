@@ -161,7 +161,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
 
     # Three main figures plus one supplementary figure, with Figure 1 carrying C1 + C1b.
     for literal in (
-        "**Figure 1. Human redistribution of host plants broadly expands butterfly resource geography, with uneven host contributions and little proportional gradient across family-level diet breadth.**",
+        "**Figure 1. Human redistribution of host plants expands butterfly resource geography across specialization classes and through concentrated host contributions.**",
         "**Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.**",
         "**Figure 3. Finite-support diet-breadth associations remain weak while regional associations are heterogeneous.**",
         "**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.**",
