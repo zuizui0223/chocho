@@ -8,13 +8,15 @@ Target journal: *Global Ecology and Biogeography*.
 
 ## Scientific result
 
-The paper asks how human redistribution of larval host plants changes butterfly resource geography, whether proportional gain depends on broad taxonomic diet breadth, which host plants generate the added opportunity, and whether that reconstructed geography aligns with contemporary butterfly occurrence.
+The paper's conceptual advance is to separate **taxonomic interaction breadth** from **consumer-specific resource geography**. Previous work has linked butterfly diet breadth to consumer ranges, host distributions to consumer constraints, introduced plants to regional responses, and species introductions to biotic or interaction-network homogenization. This study asks the missing resource-side question: how much does moving already-known host plants change where a butterfly has access to resources?
+
+The design holds host identities fixed and contrasts a native-host resource envelope with the envelope obtained after introduced host ranges are retained. The difference therefore represents redistribution of known resources rather than host switching or expansion of recorded diet breadth.
 
 The current v0.2 claim map supports the following manuscript-order results:
 
 1. Introduced host ranges expand reconstructed resource opportunity for **206/239 butterflies**, increasing aggregate butterfly × WGSRPD3 coverage by **54.9%**.
 2. The **14,553 added butterfly × region units are strongly uneven across host plants**: 670 host species contribute, the top 10 account for 25.1%, the top 50 for 57.0%, and 38 species account for half.
-3. Host-family breadth has **little relationship to proportional expansion** (Spearman rho = 0.008; 49,999-bootstrap 95% CI -0.111 to 0.128). A strict post-hoc ±0.10 equivalence diagnostic is narrowly inconclusive, so the paper does not claim an exact zero effect.
+3. Host-family breadth has **little relationship to proportional expansion** (Spearman rho = 0.008; 49,999-bootstrap 95% CI -0.111 to 0.128). Removing all 58 butterflies with any Poaceae host leaves rho = 0.026 (n = 181), so redistributed grasses do not generate the weak diet-breadth slope. A strict post-hoc ±0.10 equivalence diagnostic remains narrowly inconclusive, so the paper does not claim an exact zero effect.
 4. In a secondary climate-stratified panel, introduced-host geography recovers **66/115 outside-native butterfly × region observations**, exceeding region-matched structural expectations and surviving species-level sensitivity checks.
 5. Within-butterfly portfolio-concentration gradients are largely explained by resolved host-species richness and are retained only as Supplementary structural diagnostics.
 6. Climate-associated filtering remains visible within contemporary resource opportunity, while the pre-specified prediction that broader diets weaken that filtering is **not supported** and remains imprecisely estimated.
