@@ -14,10 +14,10 @@ This directory contains the submission-facing paper package and its scientific-c
 ## v0.2 evidence order
 
 1. introduced host distributions broadly expand butterfly resource geography (+54.9% aggregate species × region coverage);
-2. proportional expansion is not preferentially concentrated in broad family-level generalists, including under regional, random-effect and species-level phylogenetic correction;
-3. introduced host geography recovers butterfly occurrences beyond structural-overlap expectations and survives species-cluster and leave-one-out tests;
-4. within-butterfly specialist–generalist portfolio-concentration gradients are largely structural and are retained only as Supplementary diagnostics;
-5. climate-associated filtering persists after geographic matching, while the pre-specified host-breadth release prediction is unsupported and imprecisely estimated.
+2. added opportunity is strongly uneven across host plants: 38/670 species or 25/431 genera account for half of the 14,553 added butterfly × region units;
+3. proportional expansion has little relationship to family-level diet breadth (rho = 0.008; bootstrap 95% CI -0.111 to 0.128), while strict ±0.10 equivalence remains narrowly inconclusive;
+4. introduced host geography recovers butterfly occurrences beyond structural-overlap expectations and survives species-cluster and leave-one-out tests;
+5. within-butterfly portfolio-concentration gradients are retained only as Supplementary structural diagnostics; climate-associated filtering remains secondary and the pre-specified host-breadth release prediction is unsupported and imprecise.
 
 ## Figures
 
