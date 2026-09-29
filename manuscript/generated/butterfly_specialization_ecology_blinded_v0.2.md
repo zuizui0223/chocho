@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To quantify how human redistribution of larval host plants changes butterfly resource geography, test whether proportional gains depend on taxonomic diet breadth, and evaluate whether introduced-host geography aligns with contemporary butterfly occurrence.
+**Aim:** To quantify how human redistribution of larval host plants changes butterfly resource geography, whether proportional gains depend on taxonomic diet breadth, and whether introduced-host geography aligns with contemporary butterfly occurrence.
 
 **Location:** Global.
 
@@ -12,14 +12,13 @@
 
 **Major taxa studied:** Butterflies and larval host plants.
 
-**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies from LepTraits, HOSTS and WCVP. We tested the relationship between host-family breadth and proportional resource expansion using finite-area, regional, taxonomic-random-effect and species-level phylogenetic sensitivities. A 32-species panel originally stratified for a climate analysis was reused secondarily to test whether introduced hosts recover butterfly occurrences outside native host-resource envelopes beyond structural-overlap expectations.
+**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. We tested host-family breadth against proportional resource expansion using finite-area, regional, butterfly-Family and species-level phylogenetic sensitivities. A 32-species panel originally stratified for climate analysis was reused secondarily to test whether introduced hosts recover occurrences outside native host-resource envelopes beyond structural-overlap expectations.
 
-**Results:** Introduced host distributions expanded reconstructed resource geography for 206/239 species (86.2%) and increased aggregate species × region coverage from 26,530 to 41,083 units (+54.9%). Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008), and no positive generalist effect emerged under butterfly-Family random effects or species-level PGLS. In the secondary occurrence analysis, introduced hosts recovered 66/115 outside-native species × region observations (57.4%). Mean species-level recovery was 0.583 versus a region-matched null median of 0.385, with no exceedance in 99,999 draws; excluding the largest contributor, *Pyrgus communis*, still left 44/93 units recovered versus a null median of 30.
+**Results:** Introduced hosts expanded reconstructed resource geography for 206/239 species (86.2%) and increased aggregate species × region coverage by 54.9%. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008), with no positive generalist effect under Family random effects or species-level PGLS. Introduced hosts recovered 66/115 outside-native species × region observations (57.4%). Mean species-level recovery was 0.583 versus a region-matched null median of 0.385, with no exceedance in 99,999 draws. Excluding *Pyrgus communis*, the largest contributor, still left 44/93 units recovered versus a null median of 30.
 
-**Main conclusions:** Human redistribution of host plants has substantially expanded butterfly resource opportunity across the specialization spectrum. Taxonomic diet breadth is a poor predictor of proportional anthropogenic resource gain. Secondary occurrence evidence shows that contemporary introduced-host geography captures butterfly distributions missed by native-only resource maps, although it does not establish local host use or causal range expansion.
+**Main conclusions:** Human redistribution of host plants has substantially expanded butterfly resource opportunity across the specialization spectrum, but taxonomic diet breadth poorly predicts proportional gain. Secondary occurrence evidence shows that contemporary introduced-host geography captures distributions missed by native-only resource maps without establishing local host use or causal range expansion.
 
 **Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
-
 ---
 
 ## 1. Introduction
@@ -64,8 +63,6 @@ Host-contribution concentration was retained only as a secondary structural diag
 
 ### 2.4 Secondary occurrence validation
 
-### 2.4 Secondary occurrence validation
-
 Butterfly occurrences for 2010–2026 were obtained from GBIF for the separately assembled 32-species panel and mapped to WGSRPD3 units. We counted occurrence units outside each species' native host-resource envelope and asked how many entered the contemporary envelope after introduced host ranges were retained.
 
 Two post-hoc nulls tested whether recovery exceeded geometric overlap expected from larger envelopes. The first preserved native-envelope size, the number of introduced-added units and the number of outside-native occurrence units, but placed added units uniformly among non-native WGSRPD3 units. The second additionally preserved the number of added units within each WGSRPD level-1 region. Aggregate null distributions used 199,999 hypergeometric draws. We then treated butterfly species as the replication unit: 99,999 region-matched null draws were used for the mean and median species-level recovery fractions, 50,000 species-cluster bootstrap resamples quantified uncertainty, and every informative species was removed in turn to assess leave-one-species-out sensitivity.
@@ -91,8 +88,6 @@ Introduced host distributions expanded reconstructed resource opportunity for 20
 A simple same-family matched null suggested that actual host identities were unusually expansion-prone, but this interpretation weakened once candidate plants were matched on native range and weighted by their use by other Lepidoptera. Under proportional degree weighting, observed total expansion lay inside the combined null; weaker weighting retained an excess. Because this attribution depended on the prominence-weighting strength, we do not infer an independent butterfly host-choice mechanism. The full 3 × 3 parameter grid and prominence-calibrated null are reported in Supplementary Information.
 
 An exploratory Lepidoptera-wide plant analysis suggested that network-prominent plants are more often anthropogenically redistributed, but consumer degree can reflect both ecological prominence and database visibility, and redistribution itself may generate additional host-use records. We therefore treat network prominence as a possible explanation for the matched-null behavior rather than as the paper's primary result.
-
-### 3.2 Expansion is not preferentially greater in broad family-level generalists
 
 ### 3.2 Expansion is not preferentially greater in broad family-level generalists
 
@@ -139,8 +134,6 @@ The most stable result is that human redistribution of host plants has enlarged 
 The matched-host analyses help delimit, rather than establish, a mechanism. Actual host portfolios looked unusually expansion-prone under a simple same-family null, but the excess changed substantially when candidate plants were weighted by their prominence in the wider HOSTS network. That sensitivity means the host-choice component cannot be cleanly separated from plant-level commonness, human association and database visibility.
 
 Network prominence remains a plausible explanatory hypothesis, not a causal conclusion. In Supplementary analyses, plants recorded with more Lepidoptera consumers were more likely to have introduced-range expansion even after native-breadth and plant-family adjustment. However, HOSTS includes moths as well as butterflies, and the direction of causation is unresolved: common, cultivated or weedy plants may both attract study and be moved by humans, while introduced plants may also acquire new Lepidoptera associations after arrival. The main ecological conclusion therefore does not depend on this association.
-
-### 4.2 Secondary occurrence validation shows that added resource geography is ecologically relevant
 
 ### 4.2 Secondary occurrence validation shows that added resource geography is ecologically relevant
 
