@@ -113,7 +113,7 @@ Treating species rather than species × region units as the replication level ga
 
 ### 3.4 Secondary climate analysis
 
-Climate-associated filtering remained evident in the 24 climate-informative species. Median filtering scores were 0.801 in the original analysis and 0.714–0.750 after 250–1,000-km distance matching; 21/24, 23/24 and 22/24 species remained above the neutral score of 0.5 at the three matching scales.
+Climate-associated filtering remained evident in the 24 climate-informative species. Median filtering scores were 0.801 in the primary cross-fit analysis and 0.714–0.750 after 250–1,000-km distance matching; 21/24, 23/24 and 22/24 species remained above the neutral score of 0.5 at the three matching scales.
 
 The pre-specified prediction that broader host-family diets weaken filtering was not supported (partial Spearman rho = -0.166, one-sided p = 0.2237) and was imprecisely estimated (bootstrap 95% interval -0.583 to +0.261). Full diagnostics are shown in Supplementary Figure S1.
 
