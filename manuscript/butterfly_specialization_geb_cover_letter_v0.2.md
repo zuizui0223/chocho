@@ -33,4 +33,3 @@ Sincerely,
 
 - Insert the final author list and corresponding-author details.
 - Add the archival repository DOI to public/title-page metadata and the anonymized reviewer-access link to the blinded manuscript.
-- Confirm the final title after the figure audit.
