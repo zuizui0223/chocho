@@ -53,16 +53,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[figure]"
-      - name: Render figures from vendored frozen sources
+      - name: Render current v0.2 figures from frozen sources and receipts
         run: |
-          python scripts/render_butterfly_specialization_manuscript_figures.py \
-            --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+          python scripts/render_butterfly_specialization_v02_figures.py \
             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
-            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
-            --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+            --matched-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json \
+            --hostbias-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json \
+            --plant-prominence-json provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json \
+            --host-concentration-json provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json \
+            --occurrence-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+            --occurrence-null-json provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json \
+            --occurrence-species-robustness-json provenance/reviewer_defenses/results/butterfly_occurrence_species_robustness_v0.1.json \
+            --ceiling-json provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json \
+            --regional-json provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json \
+            --climate-csv data/frozen/figure_sources/climate_distance_sensitivity_species.csv \
+            --climate-effect-json provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json \
             --output-dir _ci_figures
-          test "$(find _ci_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 5
-          test "$(find _ci_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 5
+          test "$(find _ci_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 4
+          test "$(find _ci_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 4
+
       - name: Upload rendered figures for visual audit
         uses: actions/upload-artifact@v4
         with:
