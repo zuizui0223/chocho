@@ -1,6 +1,6 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Human redistribution of host plants expands butterfly resource geography independently of diet breadth
+**Manuscript:** Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth
 
 **Article type:** Research Article
 
