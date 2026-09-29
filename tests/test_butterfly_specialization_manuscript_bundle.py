@@ -38,6 +38,9 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     pgls = _json(
         "provenance/reviewer_defenses/results/butterfly_kawahara_pgls_v0.2.json"
     )
+    poaceae = _json(
+        "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json"
+    )
 
     expected_title = (
         "Human redistribution of host plants expands butterfly resource geography "
@@ -96,6 +99,16 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert pgls["pagel_rank_pgls"]["coefficient"] == -0.05108744710537585
     assert pgls["brownian_rank_pgls"]["coefficient"] == 0.1401214490702778
     assert pgls["brownian_rank_pgls"]["ci95"][1] > 0.3
+
+    # Grass-feeding guilds do not generate the near-zero diet-breadth slope.
+    assert poaceae["poaceae_users"]["species"] == 58
+    assert poaceae["excluding_any_poaceae_user"]["species"] == 181
+    assert poaceae["excluding_any_poaceae_user"]["rho"] == 0.025860902287550575
+    assert poaceae["family_level_poaceae_specialists"]["species"] == 34
+    assert (
+        poaceae["excluding_family_level_poaceae_specialists"]["rho"]
+        == 0.01324328000717657
+    )
 
     # Secondary occurrence validation remains species-robust.
     assert occurrence["species"] == 23
