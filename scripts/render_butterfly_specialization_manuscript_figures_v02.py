@@ -121,7 +121,7 @@ def figure1(anth, outdir):
         [float(r["log_resource_expansion"]) for r in anth],
     )
     axes[1].set_ylabel("Log proportional resource expansion")
-    axes[1].set_title(f"No proportional advantage for broad generalists\nSpearman ρ = {rho:.3f}")
+    axes[1].set_title(f"Little proportional gradient across diet breadth\nSpearman ρ = {rho:.3f}")
     axes[1].tick_params(axis="x", rotation=18)
     fig.suptitle("Anthropogenic host redistribution expands butterfly resource geography", fontsize=14)
     fig.tight_layout(rect=(0,0,1,0.94))
