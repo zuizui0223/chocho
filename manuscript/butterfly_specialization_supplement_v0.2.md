@@ -107,6 +107,16 @@ Poaceae users did contribute more absolute added geography (median **69.5** adde
 
 Tree coverage was not fully representative of expansion magnitude. Exact tree matches and unmatched species had the same median host-family breadth (2 vs 2; Wilcoxon p = 0.677), but matched species had greater median log resource expansion (0.376 vs 0.285; p = 0.0012) and a higher fraction with any expansion (0.952 vs 0.765; Fisher p < 0.001). Importantly for the focal slope, host-family breadth versus log expansion was near zero in both groups (rho = -0.055 among matched species and +0.053 among unmatched species). We therefore use PGLS only as a sensitivity for the breadth–expansion association, not as an estimator of panel-wide expansion magnitude.
 
+## Supplementary Methods S1. Climate filtering within contemporary resource opportunity
+
+This secondary analysis tested the pre-specified prediction that broader host-family diets weaken climatic filtering within contemporary host-resource opportunity. Species entered only when occurrence coverage, host-taxonomy consistency and within-envelope sampling met fixed quality criteria; **24 species** qualified.
+
+Climate was represented by CHELSA BIO1, BIO7, BIO12 and BIO15. Within each species, observed resource units were split deterministically into training and evaluation sets. Climate centre and scale were estimated from training occurrences. Held-out observed resource units were then compared with effort-supported contemporary host units in which the butterfly was not observed.
+
+The climate-filtering score was the probability that a never-observed resource unit had greater climatic mismatch from the training niche than a held-out observed unit, with ties receiving half weight. A score of 0.5 is neutral. The primary host-breadth test used partial Spearman correlation between host-family breadth and filtering score while controlling contemporary resource breadth, with 9,999 residual permutations and a one-sided negative alternative.
+
+To assess geographic confounding, sensitivities restricted comparisons to occupied WGSRPD level-1 regions and matched held-out observed and never-observed resource units by distance to the nearest training-observed region using 250-, 500- and 1,000-km calipers. A species bootstrap summarized effect-size precision. Because this analysis concerns realization of reconstructed opportunity rather than the primary resource-redistribution question, it is reported entirely in Supplementary Information.
+
 ## Supplementary Table S5. Climate-distance sensitivity and effect-size precision
 
 Twenty-four species were climate-informative.
