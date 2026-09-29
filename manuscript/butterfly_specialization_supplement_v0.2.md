@@ -107,7 +107,7 @@ Twenty-four species were climate-informative.
 
 | Comparison | Median filtering score | Species > 0.5 |
 |---|---:|---:|
-| Original cross-fit | 0.801 | 23/24 |
+| Primary cross-fit | 0.801 | 23/24 |
 | Same WGSRPD level-1 region | 0.846 | 23/24 |
 | Distance matched, 250 km | 0.714 | 21/24 |
 | Distance matched, 500 km | 0.750 | 23/24 |
