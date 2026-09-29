@@ -1,42 +1,45 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import re
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "render_butterfly_specialization_blinded_manuscript.py"
-SPEC = importlib.util.spec_from_file_location("render_blinded_butterfly_manuscript", SCRIPT)
+SPEC = importlib.util.spec_from_file_location(
+    "render_blinded_butterfly_manuscript", SCRIPT
+)
 assert SPEC is not None and SPEC.loader is not None
 mod = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(mod)
 
 
-def test_generated_blinded_manuscript_matches_renderer():
+def test_generated_blinded_v02_manuscript_matches_renderer():
     source = (
-        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.1.md"
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
     ).read_text(encoding="utf-8")
     generated = (
         ROOT
         / "manuscript"
         / "generated"
-        / "butterfly_specialization_ecology_blinded_v0.1.md"
+        / "butterfly_specialization_ecology_blinded_v0.2.md"
     ).read_text(encoding="utf-8")
     assert generated == mod.render_blinded(source)
 
 
-def test_blinded_manuscript_has_geb_required_front_matter():
+def test_blinded_v02_manuscript_has_geb_front_matter_and_limits():
     text = (
         ROOT
         / "manuscript"
         / "generated"
-        / "butterfly_specialization_ecology_blinded_v0.1.md"
+        / "butterfly_specialization_ecology_blinded_v0.2.md"
     ).read_text(encoding="utf-8")
 
     running = re.search(r"^\*\*Running title:\*\*\s*(.+)$", text, re.MULTILINE)
     assert running is not None
-    assert running.group(1).strip() == "Host redistribution and specialization"
+    assert running.group(1).strip() == "Host redistribution and resource gain"
     assert len(running.group(1).strip()) < 40
 
     abstract_start = text.index("## Abstract")
@@ -53,25 +56,22 @@ def test_blinded_manuscript_has_geb_required_front_matter():
     ):
         assert f"**{heading}:**" in abstract
 
-    keywords = re.search(
-        r"^\*\*Keywords:\*\*\s*(.+)$",
-        abstract,
-        re.MULTILINE,
-    )
+    abstract_words = len(re.findall(r"\b[\w–'-]+\b", abstract.split("---")[0]))
+    assert abstract_words <= 300
+
+    keywords = re.search(r"^\*\*Keywords:\*\*\s*(.+)$", abstract, re.MULTILINE)
     assert keywords is not None
-    items = [item.strip() for item in keywords.group(1).split(";") if item.strip()]
-    if len(items) == 1:
-        items = [item.strip() for item in keywords.group(1).split(",") if item.strip()]
+    items = [item.strip() for item in keywords.group(1).split(",") if item.strip()]
     assert 6 <= len(items) <= 10
     assert items == sorted(items, key=str.casefold)
 
 
-def test_blinded_manuscript_removes_internal_identity_tokens():
+def test_blinded_v02_manuscript_removes_identity_and_internal_history():
     text = (
         ROOT
         / "manuscript"
         / "generated"
-        / "butterfly_specialization_ecology_blinded_v0.1.md"
+        / "butterfly_specialization_ecology_blinded_v0.2.md"
     ).read_text(encoding="utf-8").lower()
     for token in (
         "ttf repository",
@@ -79,6 +79,9 @@ def test_blinded_manuscript_removes_internal_identity_tokens():
         "repository provenance",
         "zuizui0223",
         "original ttf program",
+        "added after manuscript review",
+        "review_response_map",
+        "geb_v02_decision_memo",
     ):
         assert token not in text
 
@@ -86,12 +89,27 @@ def test_blinded_manuscript_removes_internal_identity_tokens():
     assert "landing page and metadata do not identify the authors" in text
 
 
-def test_separate_title_page_template_contains_submission_metadata_slots():
-    text = (
-        ROOT
-        / "manuscript"
-        / "butterfly_specialization_geb_title_page_template_v0.1.md"
+def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
+    expected_title = (
+        "Human redistribution of host plants expands butterfly resource geography "
+        "largely independently of diet breadth"
+    )
+    title_page = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
     ).read_text(encoding="utf-8")
+    cover = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_cover_letter_v0.2.md"
+    ).read_text(encoding="utf-8")
+    checklist = json.loads(
+        (
+            ROOT
+            / "manuscript"
+            / "butterfly_specialization_geb_submission_checklist_v0.2.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert expected_title in title_page
+    assert expected_title in cover
     for required in (
         "Authors",
         "Affiliations",
@@ -103,21 +121,20 @@ def test_separate_title_page_template_contains_submission_metadata_slots():
         "Data and code availability",
         "Double-anonymous review note",
     ):
-        assert required in text
+        assert required in title_page
+
+    assert checklist["journal"] == "Global Ecology and Biogeography"
+    assert checklist["author_guideline_snapshot"]["double_anonymous_review"] is True
+    assert checklist["author_guideline_snapshot"]["separate_title_page_required"] is True
+    assert checklist["manuscript"]["keyword_count"] == 6
+    assert checklist["figures"]["main_count"] == 3
+    assert checklist["figures"]["supplementary_count"] == 1
+    assert checklist["figures"]["total_count"] == 4
 
 
-def test_submission_checklist_points_to_double_anonymous_bundle():
-    import json
-
-    payload = json.loads(
-        (
-            ROOT
-            / "manuscript"
-            / "butterfly_specialization_geb_submission_checklist_v0.1.json"
-        ).read_text(encoding="utf-8")
+def test_anonymous_bundle_excludes_internal_response_memos():
+    source = (ROOT / "scripts" / "build_anonymous_review_bundle.py").read_text(
+        encoding="utf-8"
     )
-    assert payload["journal"] == "Global Ecology and Biogeography"
-    assert payload["author_guideline_snapshot"]["double_anonymous_review"] is True
-    assert payload["author_guideline_snapshot"]["separate_title_page_required"] is True
-    assert payload["manuscript"]["keyword_count"] == 7
-    assert payload["figures"]["vector_pdf_available_for_all_five_figures"] is True
+    assert 'Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md")' in source
+    assert 'Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md")' in source
