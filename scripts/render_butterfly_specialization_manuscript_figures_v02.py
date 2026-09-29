@@ -172,7 +172,7 @@ def figure2(validation, null_result, outdir):
         "Null intervals: 95%",
         transform=axes[1].transAxes, va="top", fontsize=8
     )
-    fig.suptitle("Introduced host geography aligns with independent butterfly occurrences", fontsize=14)
+    fig.suptitle("Introduced host geography aligns with secondary-panel butterfly occurrences", fontsize=14)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig, outdir / "Figure2_occurrence_validation_null_v02")
 
@@ -197,7 +197,7 @@ def figure3(ceiling, regional, outdir):
     axes[0].set_ylim(-0.12, 0.15)
     axes[0].set_xlabel("Maximum native resource breadth retained")
     axes[0].set_ylabel("Spearman ρ: host-family breadth vs expansion")
-    axes[0].set_title("Near-zero association persists below ceiling")
+    axes[0].set_title("Association remains small below the geographic ceiling")
 
     regions = []
     values = []
@@ -225,7 +225,7 @@ def figure3(ceiling, regional, outdir):
     axes[1].set_xlim(-0.30,0.30)
     axes[1].set_xlabel("Within-region Spearman ρ")
     axes[1].set_title("Most major geographic strata remain near zero")
-    fig.suptitle("The absence of a broad-generalist advantage is robust to map support and geography", fontsize=14)
+    fig.suptitle("Diet-breadth associations remain small across map-support and geographic sensitivities", fontsize=14)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig, outdir / "Figure3_resource_expansion_robustness_v02")
 
@@ -241,7 +241,7 @@ def figure4(primary, same_region, distance, effect, outdir):
     axes[0].axhline(0.5,linestyle="--",linewidth=1)
     axes[0].set_xlabel("Larval host-plant families")
     axes[0].set_ylabel("Climate-filtering score")
-    axes[0].set_title("Original independent cross-fit\nmedian 0.801; 23/24 > 0.5")
+    axes[0].set_title("Primary cross-fit\nmedian 0.801; 23/24 > 0.5")
 
     labels=["Original","Same\nregion","250 km","500 km","1000 km"]
     medians=[
