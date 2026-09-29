@@ -239,8 +239,8 @@ def fig3_robustness(ceiling,regional,outdir):
     axes[1].axhline(0,linewidth=0.8)
     axes[1].set_xticks(xx,[f"{name}\n(n={n})" for name,n in zip(order,ns)],rotation=28,ha="right")
     axes[1].set_ylabel("Within-region Spearman ρ")
-    axes[1].set_title("Weak global association spans geographic strata")
-    fig.suptitle("Diet-breadth associations remain small across ceiling and regional sensitivities",fontsize=13)
+    axes[1].set_title("Regional diet-breadth associations are heterogeneous")
+    fig.suptitle("Ceiling sensitivities remain weak; regional diet-breadth associations are heterogeneous",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig,outdir,"Figure3_expansion_robustness")
 
