@@ -27,17 +27,17 @@ def test_historical_figure_workflow_is_preserved_in_provenance() -> None:
         assert f"run-id: {run_id}" in text
 
 
-def test_data_code_availability_uses_ecology_repository_structure() -> None:
+def test_data_code_availability_uses_current_v02_submission_surface() -> None:
     text = (
-        ROOT / "manuscript/butterfly_specialization_ecology_v0.1.md"
+        ROOT / "manuscript/butterfly_specialization_ecology_v0.2.md"
     ).read_text(encoding="utf-8")
-    assert "versioned in the `chocho` ecology repository" in text
-    assert (
-        "provenance/workflows/"
-        "butterfly-specialization-manuscript-figures-v01.yml"
-    ) in text
-    assert "versioned in the TTF repository" not in text
-    assert ".github/workflows/butterfly-specialization-manuscript-figures-v01.yml" not in text
+    data_start = text.index("## Data and Code Availability")
+    figure_start = text.index("## Figure legends")
+    data_section = text[data_start:figure_start]
+    assert "Analysis code and the inputs required to reproduce" in data_section
+    assert "versioned in the study repository" in data_section
+    assert "TTF repository" not in data_section
+    assert ".github/workflows/" not in data_section
 
 
 def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
