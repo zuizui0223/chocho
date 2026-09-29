@@ -66,6 +66,31 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert readiness["manuscript"]["approximate_main_text_words"] == main_text_words
     assert readiness["manuscript"]["keyword_count"] == 6
 
+    # The conceptual contribution must remain explicit in the current manuscript.
+    for literal in (
+        "consumer-specific resource envelope",
+        "Taxonomic interaction breadth",
+        "Resource geography",
+        "Realized consumer geography",
+        "Host identities were held fixed between the two envelopes",
+        "resource-side biogeography of globalization",
+    ):
+        assert literal in manuscript
+
+    # References remain alphabetized by first-author/corporate-author key.
+    refs_start = manuscript.index("## References (working)")
+    refs_end = manuscript.index("## Data and Code Availability", refs_start)
+    ref_lines = [
+        line[2:]
+        for line in manuscript[refs_start:refs_end].splitlines()
+        if line.startswith("- ")
+    ]
+    ref_keys = [
+        re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip()
+        for line in ref_lines
+    ]
+    assert ref_keys == sorted(ref_keys, key=str.casefold)
+
     # Core ecological magnitudes and the new positive plant-side result.
     assert concentration["reconstruction"]["expanded_butterflies"] == 206
     assert concentration["reconstruction"]["added_butterfly_x_wgsrpd3_units"] == 14553
