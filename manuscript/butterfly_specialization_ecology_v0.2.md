@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To quantify how human redistribution of larval host plants changes butterfly resource geography, test whether proportional gains depend on taxonomic diet breadth, and evaluate whether introduced-host geography aligns with contemporary butterfly occurrence.
+**Aim:** To quantify how human redistribution of larval host plants changes butterfly resource geography, whether proportional gains depend on taxonomic diet breadth, and whether introduced-host geography aligns with contemporary butterfly occurrence.
 
 **Location:** Global.
 
@@ -12,14 +12,13 @@
 
 **Major taxa studied:** Butterflies and larval host plants.
 
-**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies from LepTraits, HOSTS and WCVP. We tested the relationship between host-family breadth and proportional resource expansion using finite-area, regional, taxonomic-random-effect and species-level phylogenetic sensitivities. A 32-species panel originally stratified for a climate analysis was reused secondarily to test whether introduced hosts recover butterfly occurrences outside native host-resource envelopes beyond structural-overlap expectations.
+**Methods:** We reconstructed native and contemporary host-resource geography for 239 butterflies. We tested host-family breadth against proportional resource expansion using finite-area, regional, butterfly-Family and species-level phylogenetic sensitivities. A 32-species panel originally stratified for climate analysis was reused secondarily to test whether introduced hosts recover occurrences outside native host-resource envelopes beyond structural-overlap expectations.
 
-**Results:** Introduced host distributions expanded reconstructed resource geography for 206/239 species (86.2%) and increased aggregate species × region coverage from 26,530 to 41,083 units (+54.9%). Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008), and no positive generalist effect emerged under butterfly-Family random effects or species-level PGLS. In the secondary occurrence analysis, introduced hosts recovered 66/115 outside-native species × region observations (57.4%). Mean species-level recovery was 0.583 versus a region-matched null median of 0.385, with no exceedance in 99,999 draws; excluding the largest contributor, *Pyrgus communis*, still left 44/93 units recovered versus a null median of 30.
+**Results:** Introduced hosts expanded reconstructed resource geography for 206/239 species (86.2%) and increased aggregate species × region coverage by 54.9%. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008), with no positive generalist effect under Family random effects or species-level PGLS. Introduced hosts recovered 66/115 outside-native species × region observations (57.4%). Mean species-level recovery was 0.583 versus a region-matched null median of 0.385, with no exceedance in 99,999 draws. Excluding *Pyrgus communis*, the largest contributor, still left 44/93 units recovered versus a null median of 30.
 
-**Main conclusions:** Human redistribution of host plants has substantially expanded butterfly resource opportunity across the specialization spectrum. Taxonomic diet breadth is a poor predictor of proportional anthropogenic resource gain. Secondary occurrence evidence shows that contemporary introduced-host geography captures butterfly distributions missed by native-only resource maps, although it does not establish local host use or causal range expansion.
+**Main conclusions:** Human redistribution of host plants has substantially expanded butterfly resource opportunity across the specialization spectrum, but taxonomic diet breadth poorly predicts proportional gain. Secondary occurrence evidence shows that contemporary introduced-host geography captures distributions missed by native-only resource maps without establishing local host use or causal range expansion.
 
 **Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
-
 ---
 
 ## 1. Introduction
