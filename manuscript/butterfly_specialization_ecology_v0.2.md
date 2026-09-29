@@ -4,7 +4,7 @@
 
 ## Abstract
 
-**Aim:** To test whether human redistribution of larval host plants can decouple taxonomic diet breadth from geographic resource opportunity, quantify which hosts generate that added geography, and ask whether introduced-host geography aligns with contemporary butterfly occurrence.
+**Aim:** To quantify a resource-side pathway of global change: how redistribution of known larval hosts alters butterfly geographic opportunity without requiring host switching, whether that gain is concentrated among particular hosts or predicted by taxonomic diet breadth, and whether the added geography aligns with contemporary butterfly occurrence.
 
 **Location:** Global.
 
@@ -16,7 +16,7 @@
 
 **Results:** Introduced hosts expanded reconstructed resource geography for 206/239 butterflies (86.2%) and increased aggregate species × region coverage by 54.9%. Contributions were strongly uneven: among 670 host species, the top 10 accounted for 25.1% of added units and 38 species accounted for half; genus-level aggregation retained this concentration. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008; bootstrap 95% CI -0.111 to 0.128), although a strict post-hoc ±0.10 equivalence test was narrowly inconclusive (p = 0.078). Introduced hosts recovered 66/115 outside-native species × region observations (57.4%), exceeding region-matched structural expectation.
 
-**Main conclusions:** Globalization can reorganize consumer resource geography without a corresponding change in taxonomic diet breadth. Human redistribution of host plants has expanded butterfly resource opportunity across the specialization spectrum, with much of the gain carried by a minority of hosts. Secondary occurrence evidence shows that native-only resource maps miss part of this contemporary opportunity.
+**Main conclusions:** Human redistribution of known host plants has expanded butterfly resource opportunity across the specialization spectrum, with much of the gain carried by a minority of hosts and poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without requiring host switching or diet expansion. Secondary occurrence evidence shows that native-only resource maps miss part of this contemporary opportunity.
 
 **Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
 ---
@@ -189,9 +189,9 @@ The defensible picture is therefore layered: **taxonomic diet breadth provides l
 - Graves, S. D. & Shapiro, A. M. 2003. Exotics as host plants of the California butterfly fauna. *Biological Conservation* 110: 413–433. https://doi.org/10.1016/S0006-3207(02)00233-1
 - Gross, C., Kawahara, A. & Daru, B. 2026. Climate and regional plant richness drive diet specialization in butterfly caterpillars. *Nature Communications*. https://doi.org/10.1038/s41467-026-73236-4
 - Guo, F., McKirdy, S. J., Gao, L. & Gao, G. 2026. Climate and traits are differentially associated with range extent and range geometry in global butterflies. *Ecological Indicators* 189: 115231. https://doi.org/10.1016/j.ecolind.2026.115231
-- Kawahara, A. Y., Storer, C., Carvalho, A. P. S. et al. 2023. A global phylogeny of butterflies reveals their evolutionary history, ancestral hosts and biogeographic origins. *Nature Ecology & Evolution* 7: 903–913. https://doi.org/10.1038/s41559-023-02041-9
 - Karger, D. N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R. W., Zimmermann, N. E., Linder, H. P. & Kessler, M. 2017. Climatologies at high resolution for the earth's land surface areas. *Scientific Data* 4: 170122. https://doi.org/10.1038/sdata.2017.122
 - Karger, D. N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R. W., Zimmermann, N. E., Linder, H. P. & Kessler, M. 2021. Climatologies at high resolution for the earth's land surface areas. EnviDat. https://doi.org/10.16904/envidat.228
+- Kawahara, A. Y., Storer, C., Carvalho, A. P. S. et al. 2023. A global phylogeny of butterflies reveals their evolutionary history, ancestral hosts and biogeographic origins. *Nature Ecology & Evolution* 7: 903–913. https://doi.org/10.1038/s41559-023-02041-9
 - Lancaster, L. T. 2020. Host use diversification during range shifts shapes global variation in Lepidopteran dietary breadth. *Nature Ecology & Evolution* 4: 963–969. https://doi.org/10.1038/s41559-020-1199-1
 - Phillips, C. B., Brown, K., Green, C., Toft, R., Walker, G. & Broome, K. 2020. Eradicating the large white butterfly from New Zealand eliminates a threat to endemic Brassicaceae. *PLoS ONE* 15: e0236791. https://doi.org/10.1371/journal.pone.0236791
 - Rashid, S., Wessely, J., Hausharter, J., Moser, D., Gattringer, A., Fiedler, K., Hülber, K. & Dullinger, S. 2026. Food Plant Availability Constrains Climatic Niches of Host-Specialized Europe-Centred Butterflies. *Diversity and Distributions* 32: e70245. https://doi.org/10.1111/ddi.70245
