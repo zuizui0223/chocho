@@ -26,13 +26,15 @@
         "provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_hostbias_parameter_grid_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_kawahara_match_bias_v0.1.json",
-        "provenance/reviewer_defenses/results/butterfly_expansion_equivalence_v0.1.json"
+        "provenance/reviewer_defenses/results/butterfly_expansion_equivalence_v0.1.json",
+        "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json"
       ],
       "phylogenetic_sensitivity": "Kawahara exact-species subset n=124 is selective for higher expansion magnitude. Estimated Pagel lambda=0.033 and rank-PGLS beta=-0.051 (95% CI -0.234 to 0.131, p=0.581). Fixed Brownian lambda=1 gives beta=0.140 (95% CI -0.036 to 0.317, p=0.119), so moderate positive effects remain unresolved under that boundary model.",
       "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null.",
       "plant_prominence_gradient": "Exploratory SI result only: plant HOSTS degree covaries positively with redistribution but may reflect ecological prominence, recording intensity, and reverse causation.",
       "pgls_coverage_bias": "Tree-matched species have higher expansion magnitude (median log expansion 0.376 vs 0.285; p=0.0012) but similar host-family breadth (median 2 vs 2; p=0.677). Breadth–expansion rho is near zero in both matched (-0.055) and unmatched (+0.053) groups. PGLS is used only for the slope sensitivity.",
-      "equivalence_precision": "Full-panel bootstrap 90% CI -0.092 to 0.108 and 95% CI -0.111 to 0.128. A post-hoc ±0.10 Fisher-z TOST is narrowly inconclusive (p=0.078). Do not claim exact zero or demonstrated ±0.10 equivalence."
+      "equivalence_precision": "Full-panel bootstrap 90% CI -0.092 to 0.108 and 95% CI -0.111 to 0.128. A post-hoc ±0.10 Fisher-z TOST is narrowly inconclusive (p=0.078). Do not claim exact zero or demonstrated ±0.10 equivalence.",
+      "poaceae_sensitivity": "58/239 butterflies had at least one resolved Poaceae host. Excluding all 58 left rho=0.026 (n=181; bootstrap 95% CI -0.116 to 0.168). Excluding only 34 one-family Poaceae specialists left rho=0.013 (n=205; 95% CI -0.122 to 0.147)."
     },
     {
       "id": "C1b",
@@ -112,7 +114,8 @@
     "Host-family breadth has been demonstrated equivalent to a zero effect within ±0.10.",
     "The host-contribution concentration analysis identifies causal plant traits or independent plant-level effects.",
     "Poaceae membership explains why the leading host plants were redistributed.",
-    "Agricultural or managed-grassland use has been shown to cause the host-contribution concentration pattern."
+    "Agricultural or managed-grassland use has been shown to cause the host-contribution concentration pattern.",
+    "The near-zero diet-breadth slope is an artifact of Poaceae-feeding butterflies."
   ],
   "required_language": {
     "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
@@ -127,7 +130,8 @@
     "host_bias_parameter_sensitivity": "Keep the 3×3 weighting grid in SI. In the main text, state only that host-identity excess is sensitive to how network prominence is represented and therefore is not interpreted as a butterfly-specific mechanism.",
     "phylogeny": "State that the Kawahara exact-match subset is selective for higher expansion magnitude. Because fitted Pagel lambda is 0.033, present the estimated-lambda model as the data-adaptive phylogenetic correction and fixed Brownian lambda=1 as a boundary sensitivity; do not imply that Brownian beta=0.140 excludes a moderate positive effect.",
     "diet_breadth_equivalence": "Use 'little relationship', 'near-zero point estimate', or 'largely independently'. State that the 49,999-bootstrap 95% CI is -0.111 to 0.128 and that a post-hoc ±0.10 TOST is narrowly inconclusive (p=0.078). Do not claim an exact zero effect or demonstrated ±0.10 equivalence.",
-    "host_contribution_concentration": "Describe the decomposition as contribution-weighted and unit-preserving: 14,553 added butterfly×WGSRPD3 units are divided among contributing hosts. Species-level and genus-level concentration are descriptive main results; they identify which resources generate reconstructed opportunity, not why those plants were redistributed. Human-use categories of leading hosts may be mentioned only as an illustrative hypothesis; do not claim that agricultural use causes the concentration."
+    "host_contribution_concentration": "Describe the decomposition as contribution-weighted and unit-preserving: 14,553 added butterfly×WGSRPD3 units are divided among contributing hosts. Species-level and genus-level concentration are descriptive main results; they identify which resources generate reconstructed opportunity, not why those plants were redistributed. Human-use categories of leading hosts may be mentioned only as an illustrative hypothesis; do not claim that agricultural use causes the concentration.",
+    "poaceae_sensitivity": "Poaceae users may be described as contributing substantial absolute added geography, but the sensitivity shows they do not generate the near-zero diet-breadth slope. Do not infer that Poaceae redistribution caused butterfly range expansion."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -182,6 +186,7 @@
     "kawahara_match_bias": "complete; matches have greater expansion magnitude but similar diet breadth; within-group breadth–expansion rho remains near zero in both matched and unmatched subsets",
     "host_contribution_concentration": "complete; 14,553 added units decompose to 670 host species (top10 25.1%, top50 57.0%, 38 species reach half, Gini 0.777) and 431 genera (top10 28.7%, top50 67.0%, 25 genera reach half, Gini 0.774)",
     "diet_breadth_equivalence": "complete; rho=0.008, bootstrap 95% CI -0.111 to 0.128; ±0.10 TOST p=0.078, so exact equivalence is not claimed",
-    "figure_visual_audit": "Figure 1 three-panel redesign and Figure 3 regional-heterogeneity wording manually inspected; final Supplementary Figure S1 uses 'Primary' rather than version-history wording."
+    "figure_visual_audit": "Figure 1 three-panel redesign and Figure 3 regional-heterogeneity wording manually inspected; final Supplementary Figure S1 uses 'Primary' rather than version-history wording.",
+    "poaceae_host_guild_sensitivity": "complete; excluding all 58 Poaceae users leaves rho=0.026 (n=181), and excluding 34 one-family Poaceae specialists leaves rho=0.013 (n=205)"
   }
 }
