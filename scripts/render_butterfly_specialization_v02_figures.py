@@ -227,7 +227,7 @@ def fig3_robustness(ceiling,regional,outdir):
     axes[0].axhline(0,linewidth=0.8)
     axes[0].set_xlabel("Maximum native resource breadth retained")
     axes[0].set_ylabel("Spearman ρ: host families vs log expansion")
-    axes[0].set_title("Finite geographic support does not hide a gradient")
+    axes[0].set_title("Associations remain small under narrower map support")
     axes[0].legend(frameon=False,fontsize=8)
 
     region=regional["dominant_native_resource_region"]
@@ -239,8 +239,8 @@ def fig3_robustness(ceiling,regional,outdir):
     axes[1].axhline(0,linewidth=0.8)
     axes[1].set_xticks(xx,[f"{name}\n(n={n})" for name,n in zip(order,ns)],rotation=28,ha="right")
     axes[1].set_ylabel("Within-region Spearman ρ")
-    axes[1].set_title("Near-zero result is not solely North American")
-    fig.suptitle("No consistent broad-generalist advantage across ceiling and regional sensitivities",fontsize=13)
+    axes[1].set_title("Weak global association spans geographic strata")
+    fig.suptitle("Diet-breadth associations remain small across ceiling and regional sensitivities",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig,outdir,"Figure3_expansion_robustness")
 
