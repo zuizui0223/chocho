@@ -55,7 +55,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, concentration, o
     axes[0].set_title(f"{expanded}/{len(anth)} species expanded")
     axes[0].text(
         0.04, 0.95,
-        "26,530 → 41,083\n+54.9%",
+        "26,530 → 41,083\n+54.9%\nknown host links fixed",
         transform=axes[0].transAxes,
         va="top",
         fontsize=10,
@@ -108,7 +108,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, concentration, o
         fontsize=8,
     )
     axes[1].set_ylabel("Log proportional resource expansion")
-    axes[1].set_title("Little proportional gradient across diet breadth")
+    axes[1].set_title("Diet breadth poorly predicts proportional gain")
     axes[1].text(
         0.03, 0.96,
         "Spearman ρ = 0.008\n"
@@ -158,7 +158,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, concentration, o
     )
 
     fig.suptitle(
-        "Human redistribution expands butterfly resource geography across diet-breadth classes",
+        "Human redistribution expands butterfly resource geography across the specialization spectrum",
         fontsize=13,
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))
