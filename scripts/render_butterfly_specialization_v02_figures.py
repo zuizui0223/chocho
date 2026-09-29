@@ -206,7 +206,7 @@ def fig3_robustness(ceiling,regional,outdir):
     axes[1].set_xticks(xx,[f"{name}\n(n={n})" for name,n in zip(order,ns)],rotation=28,ha="right")
     axes[1].set_ylabel("Within-region Spearman ρ")
     axes[1].set_title("Near-zero result is not solely North American")
-    fig.suptitle("The absence of a broad-generalist advantage is robust to ceiling and regional composition",fontsize=13)
+    fig.suptitle("No consistent broad-generalist advantage across ceiling and regional sensitivities",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig,outdir,"Figure3_expansion_robustness")
 
@@ -246,7 +246,7 @@ def fig4_climate(climate_rows,effect,outdir):
     axes[1].set_ylim(-0.75,0.75)
     axes[1].set_title("Predicted negative effect is unsupported and imprecise")
     axes[1].text(0.04,0.04,f"ρ = {r:.3f}\n95% bootstrap: {ci[0]:.3f} to {ci[1]:.3f}\none-sided p = 0.2237\napprox. 80% power at |ρ|≈{mde:.3f}",transform=axes[1].transAxes,fontsize=8.5)
-    fig.suptitle("Climate-associated filtering persists, but host-family breadth does not explain its strength",fontsize=13)
+    fig.suptitle("Climate-associated filtering persists; host-family breadth did not detectably explain its strength",fontsize=13)
     fig.tight_layout(rect=(0,0,1,0.94))
     save(fig,outdir,"FigureS1_climate_filtering_and_precision")
 
