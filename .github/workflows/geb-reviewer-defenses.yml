@@ -112,6 +112,23 @@ jobs:
             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --output-json results/geb-reviewer-defense/host_plant_prominence_expansion.json
 
+      - name: Decompose added geography across host plants and genera
+        run: |
+          python scripts/analyze_butterfly_host_contribution_concentration.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --output-json results/geb-reviewer-defense/host_contribution_concentration.json \
+            --output-plant-csv results/geb-reviewer-defense/host_contribution_concentration_plants.csv \
+            --output-genus-csv results/geb-reviewer-defense/host_contribution_concentration_genera.csv
+
+      - name: Quantify near-zero diet-breadth association
+        run: |
+          python scripts/analyze_butterfly_expansion_equivalence.py \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --output-json results/geb-reviewer-defense/expansion_equivalence.json
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
