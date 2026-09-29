@@ -33,8 +33,6 @@ Butterflies provide an unusually tractable system for addressing this gap becaus
 
 Here we ask three questions. First, how strongly do introduced host distributions expand butterfly resource geography, and is that added geography spread across many host plants or concentrated in a small subset? Second, does proportional resource gain increase with family-level diet breadth, or can narrow-diet species gain comparable geographic opportunity when their hosts are widely redistributed? Third, does contemporary introduced-host geography recover butterfly occurrences that fall outside native host-resource envelopes more often than structural overlap predicts? Matched-host and plant-prominence analyses are used only as post-hoc diagnostics of possible host-identity and data-structure effects, while a smaller climate analysis tests whether available resource geography is fully realized.
 
-The resource reconstruction is descriptive and uses fixed LepTraits, HOSTS and WCVP inputs. The 32-species panel was assembled separately for the climate test, using eligibility and analysis rules fixed before its ecological responses were evaluated; the occurrence analysis is a secondary use of that panel. The host-contribution decomposition, equivalence diagnostic and later null-model, ceiling, phylogenetic and geographic sensitivities are identified as post-hoc analyses.
-
 We expected anthropogenic host redistribution to enlarge resource opportunity across much of the specialization spectrum. The key alternative was whether this gain would scale with taxonomic diet breadth or instead reveal a decoupling between the number of host lineages a butterfly uses and the geographic opportunity created when those hosts are moved by people. We also expected contemporary host geography to recover at least some butterfly occurrences missed by a native-only resource envelope.
 
 ## 2. Methods
@@ -44,6 +42,8 @@ We expected anthropogenic host redistribution to enlarge resource opportunity ac
 We separated four layers of butterfly specialization and biogeography: taxonomic host breadth, geographic host-resource breadth, anthropogenic expansion of that resource geography, and realization of contemporary resource opportunity by butterflies.
 
 The LepTraits-derived descriptor panel contained 339 species. Resource analyses used 239 species with positive host-family breadth and at least one reconstructed native host-resource WGSRPD3 unit. A conservative subset of 215 species also required the number of resolved host species to equal or exceed LepTraits host-family count. A separate 32-species panel was used for occurrence validation and climate analysis; it had been selected to balance the subsequent climate test, not optimized for validation. Twenty-four species passed the climate quality criteria.
+
+The resource reconstruction is descriptive and uses fixed LepTraits, HOSTS and WCVP inputs. The 32-species panel was assembled separately for the climate test, using eligibility and analysis rules fixed before its ecological responses were evaluated; the occurrence analysis is a secondary use of that panel. The host-contribution decomposition, equivalence diagnostic and later null-model, ceiling, phylogenetic and geographic sensitivities are identified as post-hoc analyses.
 
 ### 2.2 Host-resource reconstruction
 
