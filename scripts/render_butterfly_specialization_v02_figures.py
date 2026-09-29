@@ -108,7 +108,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
         fontsize=8,
     )
     axes[1].set_ylabel("Log proportional resource expansion")
-    axes[1].set_title("Proportional gain is unrelated to diet breadth")
+    axes[1].set_title("Little proportional gradient across diet breadth")
     axes[1].text(
         0.03, 0.96,
         "Spearman ρ = 0.008\n"
