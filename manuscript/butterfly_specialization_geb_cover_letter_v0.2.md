@@ -4,7 +4,7 @@
 
 Dear Editors,
 
-Please consider our Research Article, **“Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth”** for publication in *Global Ecology and Biogeography*.
+Please consider our Research Article, **“Human redistribution of host plants expands butterfly resource geography across the specialization spectrum”** for publication in *Global Ecology and Biogeography*.
 
 Global change redistributes interaction partners as well as consumers, yet macroecology usually measures specialization as a consumer trait and treats resource geography as static background or constraint. Our manuscript addresses the missing resource-side question: how much human redistribution of known larval hosts has already rewritten butterfly geographic opportunity, whether conventional diet-breadth categories predict that gain, and which host plants carry it.
 
