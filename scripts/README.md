@@ -15,6 +15,7 @@ The repository keeps executable history, but only a small set of scripts are nor
 - `build_butterfly_contemporary_resource_envelope.py` — reconstruct contemporary host-resource geography.
 - `analyze_butterfly_anthropogenic_resource_expansion.py` — native-to-contemporary resource expansion.
 - `analyze_butterfly_resource_expansion_mechanism.py` — historical within-butterfly host-contribution decomposition.\n- `analyze_butterfly_host_contribution_concentration.py` — current unit-preserving across-plant species/genus contribution concentration.\n- `analyze_butterfly_expansion_equivalence.py` — current bootstrap precision and strict post-hoc diet-breadth equivalence diagnostic.
+- `analyze_butterfly_poaceae_sensitivity.py` — exclude all Poaceae users or one-family Poaceae specialists to test whether redistributed grasses create the diet-breadth result.
 - `analyze_butterfly_host_breadth_geography.py` — taxonomic versus geographic specialization.
 - `analyze_butterfly_host_specialization_hierarchy.py` — within-family portfolio hierarchy.
 - `build_wcvp_hosts_sidecar.R` and `build_wcvp_hosts_contemporary_sidecar.R` — base-R WCVP/HOSTS sidecar builders.
