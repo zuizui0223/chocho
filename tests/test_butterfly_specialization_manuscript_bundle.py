@@ -142,16 +142,22 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["recovered_units"] == 44
     assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["outside_units"] == 93
 
-    # Current Results order: expansion/concentration -> diet breadth -> occurrence -> climate.
+    # Current main Results order: expansion/concentration -> diet breadth -> occurrence.
     result_headings = [
         "### 3.1 Human redistribution broadly expands butterfly resource geography",
         "### 3.2 Taxonomic diet breadth poorly predicts proportional resource gain",
         "### 3.3 Added resource geography aligns with contemporary butterfly occurrence",
-        "### 3.4 Secondary climate analysis",
     ]
     positions = [manuscript.index(h) for h in result_headings]
     assert positions == sorted(positions)
-    assert "### 3.4 The original portfolio-concentration gradient" not in manuscript
+    assert "### 3.4 Secondary climate analysis" not in manuscript
+    assert "### 4.3 Resource opportunity is filtered before realization" not in manuscript
+
+    supplement = (
+        ROOT / "manuscript/butterfly_specialization_supplement_v0.2.md"
+    ).read_text(encoding="utf-8")
+    assert "## Supplementary Methods S1. Climate filtering within contemporary resource opportunity" in supplement
+    assert "## Supplementary Table S5. Climate-distance sensitivity and effect-size precision" in supplement
 
     # Three main figures plus one supplementary figure, with Figure 1 carrying C1 + C1b.
     for literal in (
