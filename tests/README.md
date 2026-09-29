@@ -12,8 +12,8 @@ The offline test suite protects both the scientific results and the submission/r
 
 ## Manuscript and release tests
 
-- `test_butterfly_specialization_manuscript_bundle.py` — frozen values, claim boundaries, evidence order, data-scale communication and independent-paper wording.
-- `test_butterfly_specialization_submission_bundle.py` — blinded/submission package checks.
+- `test_butterfly_specialization_manuscript_bundle.py` — current v0.2 title/abstract limits, plant-contribution concentration, diet-breadth precision/equivalence boundary, phylogenetic uncertainty, occurrence robustness, evidence order and claim boundaries.
+- `test_butterfly_specialization_submission_bundle.py` — current v0.2 blinded manuscript, title-page/cover-letter/checklist synchronization and anonymous-bundle exclusions.
 - `test_reproducibility_snapshot_integrity.py` — pinned frozen inputs and exact hashes.
 - `test_release_metadata.py` — v1 version/tag consistency.
 - `test_repository_layout.py` — independent package namespace and repository organization.
