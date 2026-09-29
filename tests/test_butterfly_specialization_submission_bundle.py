@@ -126,7 +126,7 @@ def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
     assert checklist["journal"] == "Global Ecology and Biogeography"
     assert checklist["author_guideline_snapshot"]["double_anonymous_review"] is True
     assert checklist["author_guideline_snapshot"]["separate_title_page_required"] is True
-    assert checklist["manuscript"]["keyword_count"] == 6
+    assert checklist["manuscript"]["keyword_count"] == 7
     assert checklist["figures"]["main_count"] == 3
     assert checklist["figures"]["supplementary_count"] == 1
     assert checklist["figures"]["total_count"] == 4
