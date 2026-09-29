@@ -66,6 +66,22 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert readiness["manuscript"]["approximate_main_text_words"] == main_text_words
     assert readiness["manuscript"]["keyword_count"] == 6
 
+    # Current manuscript references remain alphabetical by first/corporate author.
+    refs_start = manuscript.index("## References (working)")
+    refs_end = manuscript.index("## Data and Code Availability", refs_start)
+    reference_lines = [
+        line[2:]
+        for line in manuscript[refs_start:refs_end].splitlines()
+        if line.startswith("- ")
+    ]
+    reference_keys = [
+        ("van Kleunen" if line.startswith("van Kleunen") else
+         "GBIF" if line.startswith("GBIF.org") else
+         re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip())
+        for line in reference_lines
+    ]
+    assert reference_keys == sorted(reference_keys, key=str.casefold)
+
     # The conceptual contribution must remain explicit in the current manuscript.
     for literal in (
         "consumer-specific resource envelope",
