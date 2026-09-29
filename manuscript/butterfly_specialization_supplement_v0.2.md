@@ -1,6 +1,6 @@
 # Supplementary Information — butterfly resource geography v0.2
 
-**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography independently of diet breadth*
+**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth*
 
 This file collects post-hoc robustness analyses that define the manuscript's inference boundaries. The main text reports the ecological results; this supplement provides the parameter and sensitivity details.
 
@@ -71,7 +71,16 @@ Examples of incomplete or failed recovery:
 - *Erynnis tristis*: **0/11**
 - *Historis acheronta*: **5/13**
 
-## Supplementary Table S4. Taxonomic and phylogenetic non-independence
+## Supplementary Table S4. Diet-breadth precision, taxonomic and phylogenetic non-independence
+
+Full-panel host-family breadth versus log resource expansion, n = 239:
+- Spearman **rho = 0.008**
+- 49,999-bootstrap 90% interval = **-0.092 to 0.108**
+- 49,999-bootstrap 95% interval = **-0.111 to 0.128**
+- post-hoc equivalence margin = **|rho| < 0.10**
+- approximate Fisher-z TOST = **p = 0.078**
+
+The equivalence diagnostic is deliberately strict and post hoc. It does not establish that the effect is exactly zero; instead, it shows why the title and conclusions use "largely independently" and "little relationship" rather than an exact-null claim.
 
 Butterfly-Family random intercept, n = 239:
 - standardized rank host-breadth coefficient = **0.021**
@@ -81,10 +90,12 @@ Butterfly-Family random intercept, n = 239:
 
 Kawahara et al. (2023) species-level phylogenetic GLS:
 - exact tree matches = **124/239 (51.9%)**
-- Brownian rank-PGLS beta = **0.140**, 95% CI **-0.036 to 0.317**, p = **0.119**
-- Brownian raw-log PGLS beta = **-0.0024**, p = **0.976**
 - estimated Pagel lambda = **0.033**
-- Pagel rank-PGLS beta = **-0.051**, 95% CI **-0.234 to 0.131**, p = **0.581**
+- estimated-lambda rank-PGLS beta = **-0.051**, 95% CI **-0.234 to 0.131**, p = **0.581**
+- fixed Brownian lambda = 1 rank-PGLS beta = **0.140**, 95% CI **-0.036 to 0.317**, p = **0.119**
+- fixed Brownian raw-log PGLS beta = **-0.0024**, p = **0.976**
+
+Because the fitted Pagel lambda is close to zero, the estimated-lambda model is treated as the data-adaptive phylogenetic correction; the fixed Brownian model is retained as a boundary sensitivity and demonstrates that the selective 124-species subset cannot exclude a moderate positive rank effect under lambda = 1.
 
 Unmatched panel species were excluded rather than phylogenetically imputed.
 
@@ -110,6 +121,33 @@ Primary host-breadth release test:
 
 This analysis is secondary in v0.2 and is shown as Supplementary Figure S1.
 
+## Supplementary Table S6. Concentration of added opportunity across host plants and structural portfolio diagnostics
+
+### Across-plant contribution concentration
+
+For every butterfly × WGSRPD3 unit that entered the contemporary resource envelope only after introduced host distributions were included, one unit of credit was divided equally among all host species that contributed that unit. This preserves the aggregate total exactly: plant credits sum to **14,553 added butterfly × WGSRPD3 units**.
+
+Across **670 contributing host species**:
+
+| Ranked contributors | Cumulative share of all added units |
+|---:|---:|
+| Top 1 | **4.55%** |
+| Top 5 | **15.70%** |
+| Top 10 | **25.10%** |
+| Top 20 | **37.27%** |
+| Top 50 | **57.00%** |
+| Top 100 | **73.64%** |
+
+The smallest prefix reaching 50% contained **38 host species**. The plant-level Gini coefficient was **0.777**, HHI was **0.0108**, and the inverse-Herfindahl effective contributor number was **92.5 species**. Thus the distribution is strongly right-skewed but not reducible to only one or two dominant plants.
+
+This is a contribution decomposition, not an independent plant-level effect analysis. A plant accumulates credit through the combination of being used by focal butterflies and adding introduced geographic units. It therefore answers **which resources generate the reconstructed opportunity**, not why those plants were redistributed.
+
+### Within-butterfly portfolio architecture is structurally constrained
+
+Among 191 expanded butterflies in the host-taxonomy-adequate subset, the unadjusted association between host-family breadth and effective contributor number was **rho = 0.492**, while the association with maximum single-host share was **rho = -0.486**. After conditioning on exact resolved host-species richness, these fell to **0.059** and **-0.071**, with conditional permutation p-values of **0.502** and **0.415**. Joint adjustment for resolved host richness and butterfly Family gave **-0.039** and **0.015**.
+
+These within-butterfly architecture metrics are therefore retained only as structural diagnostics. They are distinct from the across-plant concentration result above: the former asks how each butterfly's added units are partitioned among its hosts, whereas the latter asks which host plants account for the aggregate 14,553-unit expansion across the whole panel.
+
 ## Supplementary inference boundaries
 
 1. Resource envelopes are reconstructed geographic opportunities, not realized local host use.
@@ -117,4 +155,4 @@ This analysis is secondary in v0.2 and is shown as Supplementary Figure S1.
 3. Network degree cannot separate ecological host commonness from HOSTS recording intensity.
 4. Occurrence recovery does not establish local larval use or host-caused colonization.
 5. The occurrence panel was climate-stratified rather than designed as a validation sample.
-6. Null-model, ceiling, phylogenetic and geographic sensitivity analyses were added post hoc after manuscript review.
+6. Null-model, equivalence, host-contribution, ceiling, phylogenetic and geographic sensitivity analyses are post-hoc analyses and are interpreted as such.
