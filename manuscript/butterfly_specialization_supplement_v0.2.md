@@ -99,6 +99,12 @@ Because the fitted Pagel lambda is close to zero, the estimated-lambda model is 
 
 Unmatched panel species were excluded rather than phylogenetically imputed.
 
+### Poaceae host-guild sensitivity
+
+Because seven of the ten largest plant contributors were Poaceae, we tested whether grass-feeding butterflies—especially one-family Poaceae specialists—were creating the near-zero diet-breadth slope. **Fifty-eight** of the 239 butterflies had at least one resolved Poaceae host. Removing all 58 left **rho = 0.026** (n = 181; 49,999-bootstrap 95% interval **-0.116 to 0.168**). Removing only the **34 one-family Poaceae specialists** left **rho = 0.013** (n = 205; 95% interval **-0.122 to 0.147**).
+
+Poaceae users did contribute more absolute added geography (median **69.5** added WGSRPD3 units versus **54.0** among non-Poaceae users), but their median log proportional expansion was slightly lower (**0.310** versus **0.329**). Thus the redistributed-grass guild contributes substantially to absolute resource geography without explaining the near-zero relationship between family-level diet breadth and proportional gain.
+
 Tree coverage was not fully representative of expansion magnitude. Exact tree matches and unmatched species had the same median host-family breadth (2 vs 2; Wilcoxon p = 0.677), but matched species had greater median log resource expansion (0.376 vs 0.285; p = 0.0012) and a higher fraction with any expansion (0.952 vs 0.765; Fisher p < 0.001). Importantly for the focal slope, host-family breadth versus log expansion was near zero in both groups (rho = -0.055 among matched species and +0.053 among unmatched species). We therefore use PGLS only as a sensitivity for the breadth–expansion association, not as an estimator of panel-wide expansion magnitude.
 
 ## Supplementary Table S5. Climate-distance sensitivity and effect-size precision
