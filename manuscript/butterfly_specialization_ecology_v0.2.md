@@ -18,7 +18,7 @@
 
 **Main conclusions:** Human redistribution of known host plants expands butterfly resource opportunity across the specialization spectrum. Much of the gain is carried by a minority of hosts and is poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without invoking host switching or diet expansion; native-only maps therefore miss part of contemporary opportunity.
 
-**Keywords:** biotic redistribution, butterflies, host plants, introduced species, resource geography, specialization
+**Keywords:** biotic redistribution, butterflies, ecological specialization, global change, host plants, introduced species, resource geography
 ---
 
 ## 1. Introduction
