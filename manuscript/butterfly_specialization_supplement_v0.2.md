@@ -1,6 +1,6 @@
 # Supplementary Information — butterfly resource geography v0.2
 
-**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography largely independently of diet breadth*
+**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography across the specialization spectrum*
 
 This file collects post-hoc robustness analyses that define the manuscript's inference boundaries. The main text reports the ecological results; this supplement provides the parameter and sensitivity details.
 
