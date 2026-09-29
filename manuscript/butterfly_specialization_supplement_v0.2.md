@@ -111,7 +111,7 @@ Tree coverage was not fully representative of expansion magnitude. Exact tree ma
 
 This secondary analysis tested the pre-specified prediction that broader host-family diets weaken climatic filtering within contemporary host-resource opportunity. Species entered only when occurrence coverage, host-taxonomy consistency and within-envelope sampling met fixed quality criteria; **24 species** qualified.
 
-Climate was represented by CHELSA BIO1, BIO7, BIO12 and BIO15. Within each species, observed resource units were split deterministically into training and evaluation sets. Climate centre and scale were estimated from training occurrences. Held-out observed resource units were then compared with effort-supported contemporary host units in which the butterfly was not observed.
+Climate was represented by CHELSA BIO1, BIO7, BIO12 and BIO15 (Karger et al. 2017, 2021). Within each species, observed resource units were split deterministically into training and evaluation sets. Climate centre and scale were estimated from training occurrences. Held-out observed resource units were then compared with effort-supported contemporary host units in which the butterfly was not observed.
 
 The climate-filtering score was the probability that a never-observed resource unit had greater climatic mismatch from the training niche than a held-out observed unit, with ties receiving half weight. A score of 0.5 is neutral. The primary host-breadth test used partial Spearman correlation between host-family breadth and filtering score while controlling contemporary resource breadth, with 9,999 residual permutations and a one-sided negative alternative.
 
