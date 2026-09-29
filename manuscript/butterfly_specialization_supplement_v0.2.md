@@ -142,6 +142,42 @@ The smallest prefix reaching 50% contained **38 host species**. The plant-level 
 
 This is a contribution decomposition, not an independent plant-level effect analysis. A plant accumulates credit through the combination of being used by focal butterflies and adding introduced geographic units. It therefore answers **which resources generate the reconstructed opportunity**, not why those plants were redistributed.
 
+The ten largest species-level contributors were:
+
+| Host species | Family | Share of all added butterfly × region units |
+|---|---|---:|
+| *Medicago sativa* | Fabaceae | **4.55%** |
+| *Poa pratensis* | Poaceae | **3.29%** |
+| *Oxalis corniculata* | Oxalidaceae | **3.01%** |
+| *Cynodon dactylon* | Poaceae | **2.60%** |
+| *Dactylis glomerata* | Poaceae | **2.25%** |
+| *Zea mays* | Poaceae | **2.03%** |
+| *Avena sativa* | Poaceae | **2.03%** |
+| *Urtica urens* | Urticaceae | **1.82%** |
+| *Oryza sativa* | Poaceae | **1.80%** |
+| *Digitaria sanguinalis* | Poaceae | **1.72%** |
+
+Seven of the ten largest species-level contributors were Poaceae. This taxonomic composition is descriptive and is not used as a test of grass-associated redistribution.
+
+### Genus-level sensitivity
+
+To test whether species-level concentration could be an artifact of taxonomic splitting, contributing host species were collapsed to unique genera separately within every butterfly × WGSRPD3 added unit before fractional credit was assigned. The total again summed exactly to **14,553 units**.
+
+Across **431 contributing genera**, the top 10 accounted for **28.69%**, the top 20 for **45.17%**, and the top 50 for **67.04%**. Only **25 genera** were required to reach half of all added opportunity. The genus-level Gini coefficient was **0.774**, HHI was **0.0143**, and the inverse-Herfindahl effective contributor number was **69.9 genera**. Taxonomic aggregation therefore retained, rather than erased, the strongly uneven contribution pattern.
+
+| Genus | Family | Share of all added butterfly × region units |
+|---|---|---:|
+| *Medicago* | Fabaceae | **5.02%** |
+| *Poa* | Poaceae | **3.57%** |
+| *Senna* | Fabaceae | **3.46%** |
+| *Oxalis* | Oxalidaceae | **3.01%** |
+| *Cynodon* | Poaceae | **2.60%** |
+| *Passiflora* | Passifloraceae | **2.49%** |
+| *Avena* | Poaceae | **2.27%** |
+| *Dactylis* | Poaceae | **2.26%** |
+| *Zea* | Poaceae | **2.04%** |
+| *Plantago* | Plantaginaceae | **1.99%** |
+
 ### Within-butterfly portfolio architecture is structurally constrained
 
 Among 191 expanded butterflies in the host-taxonomy-adequate subset, the unadjusted association between host-family breadth and effective contributor number was **rho = 0.492**, while the association with maximum single-host share was **rho = -0.486**. After conditioning on exact resolved host-species richness, these fell to **0.059** and **-0.071**, with conditional permutation p-values of **0.502** and **0.415**. Joint adjustment for resolved host richness and butterfly Family gave **-0.039** and **0.015**.
