@@ -28,9 +28,9 @@ def jitter(label: str, width: float = 0.12):
     return (x - 0.5) * 2 * width
 
 
-def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
-    fig, axes = plt.subplots(1, 2, figsize=(10.4, 4.6))
-    for label, ax in zip(("a", "b"), axes):
+def fig1_resource_and_null(anth, matched, hostbias, prominence, concentration, outdir):
+    fig, axes = plt.subplots(1, 3, figsize=(15.2, 4.7))
+    for label, ax in zip(("a", "b", "c"), axes):
         ax.text(
             -0.10, 1.06, label,
             transform=ax.transAxes,
@@ -116,6 +116,40 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, outdir):
         transform=axes[1].transAxes,
         va="top",
         fontsize=9,
+        bbox={
+            "boxstyle": "round,pad=0.25",
+            "facecolor": "white",
+            "alpha": 0.85,
+        },
+    )
+
+    ranks = np.asarray([1, 5, 10, 20, 50, 100], dtype=float)
+    plant = concentration["plant_species"]
+    genera = concentration["genera"]
+    plant_cum = np.asarray(
+        [100.0 * float(plant["top_k_share"][str(int(k))]) for k in ranks],
+        dtype=float,
+    )
+    genus_cum = np.asarray(
+        [100.0 * float(genera["top_k_share"][str(int(k))]) for k in ranks],
+        dtype=float,
+    )
+    axes[2].plot(ranks, plant_cum, marker="o", label="Host species")
+    axes[2].plot(ranks, genus_cum, marker="s", linestyle="--", label="Host genera")
+    axes[2].axhline(50, linestyle=":", linewidth=1)
+    axes[2].set_xscale("log")
+    axes[2].set_xticks(ranks, [str(int(k)) for k in ranks])
+    axes[2].set_ylim(0, 90)
+    axes[2].set_xlabel("Top-ranked contributors")
+    axes[2].set_ylabel("Cumulative share of added units (%)")
+    axes[2].set_title("Added opportunity is concentrated among hosts")
+    axes[2].legend(frameon=False, fontsize=8)
+    axes[2].text(
+        0.04, 0.95,
+        "50% reached by\n38/670 species\n25/431 genera",
+        transform=axes[2].transAxes,
+        va="top",
+        fontsize=8.5,
         bbox={
             "boxstyle": "round,pad=0.25",
             "facecolor": "white",
@@ -257,6 +291,7 @@ def main():
     ap.add_argument("--matched-null-json",type=Path,required=True)
     ap.add_argument("--hostbias-null-json",type=Path,required=True)
     ap.add_argument("--plant-prominence-json",type=Path,required=True)
+    ap.add_argument("--host-concentration-json",type=Path,required=True)
     ap.add_argument("--occurrence-csv",type=Path,required=True)
     ap.add_argument("--occurrence-null-json",type=Path,required=True)
     ap.add_argument("--occurrence-species-robustness-json",type=Path,required=True)
@@ -266,7 +301,7 @@ def main():
     ap.add_argument("--climate-effect-json",type=Path,required=True)
     ap.add_argument("--output-dir",type=Path,required=True)
     a=ap.parse_args()
-    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),json.loads(a.plant_prominence_json.read_text()),a.output_dir)
+    fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),json.loads(a.plant_prominence_json.read_text()),json.loads(a.host_concentration_json.read_text()),a.output_dir)
     fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),json.loads(a.occurrence_species_robustness_json.read_text()),a.output_dir)
     fig3_robustness(json.loads(a.ceiling_json.read_text()),json.loads(a.regional_json.read_text()),a.output_dir)
     fig4_climate(read_csv(a.climate_csv),json.loads(a.climate_effect_json.read_text()),a.output_dir)
