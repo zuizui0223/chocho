@@ -12,4 +12,4 @@ Use `exploratory/README.md` as the index. The active directory contains only the
 - climate pilot, technical recovery, superseded contracts and audits → `provenance/archive/climate/`;
 - early/superseded resource-side receipts → `provenance/archive/resource/`.
 
-The manuscript claim map in `manuscript/butterfly_specialization_claim_map_v0.1.json` is authoritative for which result receipt supports each claim.
+The current manuscript claim map in `manuscript/butterfly_specialization_claim_map_v0.2.json` is authoritative for which result receipt supports each claim. Current post-hoc concentration, equivalence, occurrence and phylogenetic receipts are stored under `provenance/reviewer_defenses/results/` rather than the historical active benchmark surface.
