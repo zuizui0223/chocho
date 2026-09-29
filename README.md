@@ -1,4 +1,4 @@
-# chocho — Butterfly specialization ecology
+# chocho — Butterfly resource geography under host redistribution
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
@@ -10,7 +10,7 @@ Target journal: *Global Ecology and Biogeography*.
 
 The paper's conceptual advance is to separate **taxonomic interaction breadth** from **consumer-specific resource geography**. Previous work has linked butterfly diet breadth to consumer ranges, host distributions to consumer constraints, introduced plants to regional responses, and species introductions to biotic or interaction-network homogenization. This study asks the missing resource-side question: how much does moving already-known host plants change where a butterfly has access to resources?
 
-The design holds host identities fixed and contrasts a native-host resource envelope with the envelope obtained after introduced host ranges are retained. The difference therefore represents redistribution of known resources rather than host switching or expansion of recorded diet breadth.
+The design holds known host identities fixed analytically and contrasts a native-host resource envelope with the envelope obtained after introduced host ranges are retained. The difference therefore isolates the geographic contribution of partner redistribution without requiring a change in recorded diet breadth.
 
 The current v0.2 claim map supports the following manuscript-order results:
 
