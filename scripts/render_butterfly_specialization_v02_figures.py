@@ -247,7 +247,7 @@ def fig3_robustness(ceiling,regional,outdir):
 
 def fig4_climate(climate_rows,effect,outdir):
     cols=[
-      ("original_score_recomputed","Original"),
+      ("original_score_recomputed","Primary"),
       ("same_level1_score","Same region"),
       ("distance_matched_score_250km","250 km"),
       ("distance_matched_score_500km","500 km"),
