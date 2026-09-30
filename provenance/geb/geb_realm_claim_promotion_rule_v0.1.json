@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_geb_realm_claim_promotion_rule_v0.1",
+  "status": "FROZEN_BEFORE_REALM_GENERALITY_RESULT",
+  "frozen_on": "2026-10-01",
+  "parent_protocol": "docs/exploratory/geb_occurrence_realm_protocol_v0.1.json",
+  "purpose": "Prevent post-result escalation of the realized-realm audit into the manuscript title, abstract, or main conclusions.",
+  "levels": {
+    "not_evaluable": {
+      "condition": "the frozen evaluability gate fails",
+      "manuscript_use": "Do not make a realized-realm generality claim. Report the audit as NOT_EVALUABLE in supplement/provenance only."
+    },
+    "descriptive_main_text": {
+      "condition": [
+        "evaluability gate passes",
+        "pooled within-realm effective-contributor association is positive",
+        "pooled within-realm maximum-single-host-share association is negative"
+      ],
+      "manuscript_use": "May report realized-realm stratification descriptively in Results/Discussion, explicitly as post-hoc generality audit. Do not state robust replication in abstract."
+    },
+    "robust_main_text": {
+      "condition": [
+        "descriptive_main_text conditions pass",
+        "two-sided within-realm permutation p < 0.05 for both architecture responses",
+        "butterfly-family-stratified permutation retains the expected sign for both responses",
+        "leave-one-interpretable-realm-out pooled associations retain the expected sign for both responses",
+        "primary-realm-share >= 0.60 sensitivity retains the expected sign for both responses",
+        "1-degree-cell-weighted realm sensitivity retains the expected sign for both responses"
+      ],
+      "manuscript_use": "May state that the portfolio architecture is robust to realized zoogeographic context in the main Results and Discussion."
+    },
+    "abstract_eligible": {
+      "condition": [
+        "robust_main_text conditions pass",
+        "family-stratified permutation p < 0.05 for at least one architecture response and <= 0.10 for the other",
+        "stratified bootstrap 95% interval for architecture-minus-magnitude association is entirely above zero for effective contributors",
+        "stratified bootstrap 95% interval for dominance-oriented architecture-minus-magnitude association is entirely above zero"
+      ],
+      "manuscript_use": "A concise realized-realm robustness clause may enter the abstract. The title remains centered on butterfly specialization/resource portfolios rather than naming realms."
+    }
+  },
+  "magnitude_boundary": {
+    "no_equivalence_claim": true,
+    "reason": "The global magnitude association was not established as statistically equivalent to zero; realm analysis is a generality/contrast audit, not a retrospective equivalence rescue.",
+    "allowed": "Describe the magnitude association and compare its strength with architecture using the predeclared stratified bootstrap contrast.",
+    "forbidden": "Claim realm-wise independence or equivalence to zero unless a separately prospective equivalence design is conducted."
+  },
+  "claim_boundary": [
+    "The realm audit is post-hoc with respect to the already observed resource-portfolio result.",
+    "Promotion criteria are fixed before opening the recovered realm result.",
+    "Failure of promotion criteria does not authorize threshold changes, species replacement, realm regrouping, or alternative sampling-weight selection."
+  ]
+}
