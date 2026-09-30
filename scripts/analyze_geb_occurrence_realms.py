@@ -84,8 +84,13 @@ def pooled_within_group_rank(
     y_col: str,
     *,
     permutations: int = 9999,
+    permutation_strata_cols: tuple[str, ...] | None = None,
 ) -> dict[str, object]:
-    z = frame[[group_col, x_col, y_col]].copy()
+    cols = [group_col, x_col, y_col]
+    for name in permutation_strata_cols or ():
+        if name not in cols:
+            cols.append(name)
+    z = frame[cols].copy()
     z[x_col] = pd.to_numeric(z[x_col], errors="coerce")
     z[y_col] = pd.to_numeric(z[y_col], errors="coerce")
     z = z.dropna().reset_index(drop=True)
@@ -98,7 +103,11 @@ def pooled_within_group_rank(
     observed = float(np.corrcoef(xr, yr)[0, 1])
     seed = int.from_bytes(hashlib.sha256(PERMUTATION_TAG.encode("utf-8")).digest()[:8], "big")
     rng = np.random.default_rng(seed)
-    groups = [np.asarray(list(idx), dtype=int) for _, idx in z.groupby(group_col, sort=True).groups.items()]
+    strata = tuple(permutation_strata_cols or (group_col,))
+    groups = [
+        np.asarray(list(idx), dtype=int)
+        for _, idx in z.groupby(list(strata), sort=True).groups.items()
+    ]
     extreme = 0
     for _ in range(int(permutations)):
         xp = xr.copy()
@@ -114,6 +123,7 @@ def pooled_within_group_rank(
         "permutations": int(permutations),
         "seed_u64": int(seed),
         "p_two_sided": float((1 + extreme) / (int(permutations) + 1)),
+        "permutation_strata": list(strata),
     }
 
 
@@ -334,6 +344,25 @@ def correlations_by_group(
     return out
 
 
+def correlation_by_group_one_response(
+    frame: pd.DataFrame,
+    group_col: str,
+    x_col: str,
+    y_col: str,
+    *,
+    min_interpret: int,
+) -> dict[str, object]:
+    out = {}
+    for group, sub in frame.groupby(group_col, dropna=False):
+        key = "NA" if pd.isna(group) else str(group)
+        out[key] = {
+            "n": int(len(sub)),
+            "interpretable": bool(len(sub) >= min_interpret),
+            "association": spearman(sub, x_col, y_col),
+        }
+    return out
+
+
 def leave_one_group_out(
     frame: pd.DataFrame,
     group_col: str,
@@ -405,6 +434,11 @@ def main() -> int:
     ].copy()
     if len(adequate) != 191:
         raise RuntimeError(f"expected 191 expanded adequate species, got {len(adequate)}")
+
+    adequate["log_resource_expansion_rebuilt"] = np.log(
+        pd.to_numeric(adequate["contemporary_resource_units"], errors="raise")
+        / pd.to_numeric(adequate["native_resource_units"], errors="raise")
+    )
 
     informative = adequate[adequate["realm_informative"]].copy()
     realm_assigned = informative[
@@ -537,6 +571,33 @@ def main() -> int:
                         "maximum_single_host_fractional_share", permutations=9999
                     ),
                 },
+                "butterfly_family_stratified_permutation": {
+                    "effective": pooled_within_group_rank(
+                        realm_test, "primary_realm", "host_family_count",
+                        "effective_contributor_number", permutations=9999,
+                        permutation_strata_cols=("primary_realm", "Family"),
+                    ),
+                    "dominance": pooled_within_group_rank(
+                        realm_test, "primary_realm", "host_family_count",
+                        "maximum_single_host_fractional_share", permutations=9999,
+                        permutation_strata_cols=("primary_realm", "Family"),
+                    ),
+                },
+            },
+            "realm_decoupling": {
+                "magnitude_log_resource_expansion": pooled_within_group_rank(
+                    realm_test, "primary_realm", "host_family_count",
+                    "log_resource_expansion_rebuilt", permutations=9999
+                ),
+                "magnitude_family_stratified_permutation": pooled_within_group_rank(
+                    realm_test, "primary_realm", "host_family_count",
+                    "log_resource_expansion_rebuilt", permutations=9999,
+                    permutation_strata_cols=("primary_realm", "Family"),
+                ),
+                "by_primary_realm_magnitude": correlation_by_group_one_response(
+                    realm_test, "primary_realm", "host_family_count",
+                    "log_resource_expansion_rebuilt", min_interpret=minimum_realm_n
+                ),
             },
             "overall_informative": {
                 "host_family_vs_effective": spearman(
