@@ -75,26 +75,47 @@ jobs:
           pattern: geb-realm-recovered-shard-*
           path: input/occ
           merge-multiple: true
-      - name: Restore exact source-run Holt realm layer
-        uses: actions/download-artifact@v4
-        with:
-          name: geb-holt-zoorealms-v01
-          path: input/realm
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ env.SOURCE_RUN_ID }}
+      - name: Fetch current frozen Holt 2013 CMEC realm source
+        run: |
+          set -euo pipefail
+          mkdir -p input/realm/archive input/realm/extracted
+          curl --location --fail --silent --show-error \
+            "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip" \
+            -o input/realm/archive/cmec_regions_realms.zip
+          unzip -q input/realm/archive/cmec_regions_realms.zip -d input/realm/extracted
+          python - <<'PY'
+          import geopandas as gpd
+          from pathlib import Path
+          roots=list(Path("input/realm/extracted").rglob("newRealms.shp"))
+          if len(roots)!=1:
+              raise RuntimeError(f"expected one newRealms.shp, found {roots}")
+          g=gpd.read_file(roots[0])
+          if "Realm" not in g.columns:
+              raise RuntimeError(f"Realm field missing: {list(g.columns)}")
+          expected={"Neotropical","Australian","Afrotropical","Madagascan","Oceanian","Oriental","Panamanian","Saharo-Arabian","Nearctic","Sino-Japanese","Palearctic"}
+          g=g[["Realm","geometry"]].copy()
+          g["Realm"]=g["Realm"].astype(str).str.strip()
+          g=g[g["Realm"].ne("") & g.geometry.notna()]
+          if set(g["Realm"]) != expected:
+              raise RuntimeError(f"Holt realm label drift: {sorted(set(g['Realm']))}")
+          if g.crs is None:
+              raise RuntimeError("newRealms.shp has no CRS")
+          g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False).to_file(
+              "input/realm/holt2013_realms.geojson",driver="GeoJSON"
+          )
+          PY
       - name: Analyze recovered realized zoogeographic replication
         run: |
           set -euo pipefail
           mkdir -p results/geb-realm
-          realm_sha="$(cat input/realm/realm_source_sha256.txt)"
+          realm_sha="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
           python scripts/analyze_geb_occurrence_realms.py \
             --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json \
             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
             --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
             --occurrence-dir input/occ \
             --ledger-dir input/occ \
-            --realm-geojson input/realm/zoorealms.geojson \
+            --realm-geojson input/realm/holt2013_realms.geojson \
             --realm-source-sha256 "$realm_sha" \
             --expected-shards 40 \
             --output-species-csv results/geb-realm/species_realm_summary.csv \
