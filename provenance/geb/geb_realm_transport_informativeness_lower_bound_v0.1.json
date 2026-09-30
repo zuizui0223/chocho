@@ -1,0 +1,61 @@
+{
+  "schema": "chocho_geb_realm_transport_informativeness_lower_bound_v0.1",
+  "status": "TRANSPORT_ONLY_PRE_REALM_AUDIT",
+  "recorded_on": "2026-10-01",
+  "source_run_id": 36740694975,
+  "realm_assignment_opened": false,
+  "expanded_host_taxonomy_adequate_population": 191,
+  "already_fetched_occurrence_counts": {
+    "species_with_at_least_1_record": 187,
+    "species_with_at_least_10_records": 187,
+    "species_with_at_least_20_records": 187,
+    "species_with_at_least_30_records": 187,
+    "species_with_at_least_50_records": 186,
+    "species_with_at_least_100_records": 185,
+    "species_with_at_least_300_records": 183,
+    "species_with_at_least_600_records": 126,
+    "species_with_at_least_900_records": 105,
+    "species_with_at_least_1200_records": 74,
+    "species_with_at_least_1500_records": 64
+  },
+  "fetched_record_count_summary": {
+    "minimum": 0,
+    "median": 900,
+    "mean": 954.8429319371728,
+    "maximum": 1800
+  },
+  "transport_status_in_191": {
+    "COMPLETE": 65,
+    "PARTIAL_TRANSPORT": 123,
+    "REJECTED_GBIF_TAXON_MATCH": 3
+  },
+  "at_least_30_records_by_transport_status": {
+    "COMPLETE": {"n": 65, "at_least_30": 65, "median_records": 1800},
+    "PARTIAL_TRANSPORT": {"n": 123, "at_least_30": 122, "median_records": 600},
+    "REJECTED_GBIF_TAXON_MATCH": {"n": 3, "at_least_30": 0, "median_records": 0}
+  },
+  "at_least_30_records_by_host_breadth": {
+    "1_family": {"n": 82, "at_least_30": 80, "median_records": 962.5},
+    "2_families": {"n": 44, "at_least_30": 43, "median_records": 764},
+    "3_to_5_families": {"n": 37, "at_least_30": 37, "median_records": 900},
+    "6plus_families": {"n": 28, "at_least_30": 27, "median_records": 300}
+  },
+  "species_below_30_fetched_records": [
+    {"species": "Apodemia mormo", "records": 0, "status": "REJECTED_GBIF_TAXON_MATCH", "host_breadth_stratum": "2_families"},
+    {"species": "Graphium sarpedon", "records": 0, "status": "REJECTED_GBIF_TAXON_MATCH", "host_breadth_stratum": "6plus_families"},
+    {"species": "Limenitis camilla", "records": 0, "status": "REJECTED_GBIF_TAXON_MATCH", "host_breadth_stratum": "1_family"},
+    {"species": "Wallengrenia otho", "records": 0, "status": "PARTIAL_TRANSPORT", "host_breadth_stratum": "1_family"}
+  ],
+  "all_panel_rejected_taxa": [
+    {"species": "Graphium sarpedon", "resolver_status": "NONE", "usage_key": 0},
+    {"species": "Apodemia mormo", "resolver_status": "NONE", "usage_key": 0},
+    {"species": "Limenitis camilla", "resolver_status": "HIGHERRANK_FAMILY_NYMPHALIDAE", "usage_key": 7017},
+    {"species": "Harma theobene", "resolver_status": "NONE", "usage_key": 0}
+  ],
+  "interpretation": {
+    "minimum_occurrence_floor_is_already_met_by": "187/191 species before recovery and before any realm assignment",
+    "frozen_evaluability_minimum": 150,
+    "caveat": "This does not imply 187 realm-informative species because some fetched points may fail realm mapping; no realm geography was inspected in this audit.",
+    "scientific_result": false
+  }
+}
