@@ -118,18 +118,53 @@ def read_units(path):
     return out
 
 
-def level1_crosswalk(path):
-    g = json.loads(path.read_text(encoding="utf-8"))
-    values = defaultdict(set)
-    for feat in g.get("features", []):
-        p = {str(k).lower(): v for k, v in (feat.get("properties") or {}).items()}
-        c, n = p.get("level3_cod"), p.get("level1_nam")
-        if c is not None and n is not None and str(c).strip() and str(n).strip():
-            values[str(c).strip()].add(str(n).strip())
-    bad = {k: v for k, v in values.items() if len(v) != 1}
-    if bad:
-        raise RuntimeError(f"WGSRPD crosswalk conflicts: {list(bad)[:5]}")
-    return {k: next(iter(v)) for k, v in values.items()}
+def _comma_decimal_code(value: str) -> str:
+    value = value.strip()
+    if not value:
+        return ""
+    return value.replace(",", ".")
+
+
+def level1_crosswalk(level1_path, level2_path, level3_path):
+    level1 = {}
+    with level1_path.open(encoding="utf-8-sig") as f:
+        header = next(f, None)
+        for line in f:
+            parts = line.rstrip("\r\n").split("*")
+            if len(parts) >= 2:
+                code = _comma_decimal_code(parts[0])
+                name = parts[1].strip()
+                if code and name:
+                    level1[code] = name
+
+    level2_to_level1 = {}
+    with level2_path.open(encoding="utf-8-sig") as f:
+        header = next(f, None)
+        for line in f:
+            parts = line.rstrip("\r\n").split("*")
+            if len(parts) >= 3:
+                l2 = _comma_decimal_code(parts[0])
+                l1_code = _comma_decimal_code(parts[2])
+                if l2 and l1_code:
+                    level2_to_level1[l2] = l1_code
+
+    out = {}
+    with level3_path.open(encoding="utf-8-sig") as f:
+        header = next(f, None)
+        for line in f:
+            parts = line.rstrip("\r\n").split("*")
+            if len(parts) >= 3:
+                l3 = parts[0].strip()
+                l2 = _comma_decimal_code(parts[2])
+                l1_code = level2_to_level1.get(l2)
+                l1_name = level1.get(l1_code or "")
+                if l3 and l1_name:
+                    if l3 in out and out[l3] != l1_name:
+                        raise RuntimeError(f"WGSRPD crosswalk conflict for {l3}")
+                    out[l3] = l1_name
+    if len(out) < 300:
+        raise RuntimeError(f"WGSRPD hierarchy crosswalk unexpectedly small: {len(out)}")
+    return out
 
 
 def contribution(host_added, target):
@@ -199,7 +234,9 @@ def main():
     ap.add_argument("--insect-host-csv", type=Path, required=True)
     ap.add_argument("--native-distribution-csv", type=Path, required=True)
     ap.add_argument("--contemporary-distribution-csv", type=Path, required=True)
-    ap.add_argument("--level3-geojson", type=Path, required=True)
+    ap.add_argument("--level1-table", type=Path, required=True)
+    ap.add_argument("--level2-table", type=Path, required=True)
+    ap.add_argument("--level3-table", type=Path, required=True)
     ap.add_argument("--independent-panel-json", type=Path)
     ap.add_argument("--climate-result-json", type=Path)
     ap.add_argument("--output-json", type=Path, required=True)
@@ -217,7 +254,7 @@ def main():
     pairs = read_pairs(a.insect_host_csv)
     native = read_units(a.native_distribution_csv)
     contemp = read_units(a.contemporary_distribution_csv)
-    l1 = level1_crosswalk(a.level3_geojson)
+    l1 = level1_crosswalk(a.level1_table, a.level2_table, a.level3_table)
 
     species = {}
     region_rows = []
