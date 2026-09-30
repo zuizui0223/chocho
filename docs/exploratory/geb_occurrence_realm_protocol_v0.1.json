@@ -1,0 +1,57 @@
+{
+  "schema": "chocho_geb_occurrence_realm_protocol_v0.1",
+  "status": "FROZEN_POSTHOC_GENERALITY_AUDIT_BEFORE_NEW_GBIF_REALM_ACQUISITION",
+  "frozen_on": "2026-10-01",
+  "purpose": "Test whether the already-observed butterfly host-portfolio architecture is geographically replicated across realized butterfly biogeographic realms.",
+  "panel": {
+    "source": "data/frozen/figure_sources/host_contribution_metrics.csv",
+    "source_sha256": "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa",
+    "species_count": 239,
+    "species_order": "lexicographic scientific name",
+    "species_sha256_newline_joined": "c972e145e160f0c34a5fcee9f423e11c8e38072038e9765a40e79c0c5cd06157"
+  },
+  "gbif": {
+    "period": "2010-2026",
+    "taxon_resolution": "exact accepted species under the existing chocho resolver",
+    "has_coordinate": true,
+    "has_geospatial_issue": false,
+    "occurrence_status": "PRESENT",
+    "ordinal_windows_per_species": 6,
+    "window_size": 300,
+    "window_rule": "spread deterministic page offsets across the full GBIF result index, capped at the first 100000 searchable records",
+    "scientific_filter_change_from_existing_climate_route": false
+  },
+  "realm_source": {
+    "dataset": "RESOLVE Ecoregions 2017",
+    "citation": "Dinerstein et al. 2017 BioScience 67:534-545",
+    "doi": "10.1093/biosci/bix014",
+    "original_archive": "https://storage.googleapis.com/teow2016/Ecoregions2017.zip",
+    "realm_field": "REALM",
+    "assignment": "point-in-polygon in WGS84"
+  },
+  "species_realm_summary": {
+    "minimum_mapped_occurrences": 30,
+    "primary_realm": "realm with the largest mapped-occurrence count; exact count ties are TIE",
+    "primary_realm_share": "largest realm count divided by all realm-mapped occurrence records",
+    "realm_informative": "at least 30 realm-mapped records",
+    "core_realm_sensitivity": "realm_informative and primary_realm_share >= 0.60"
+  },
+  "generality_tests": {
+    "population": "host-taxonomy-adequate species with introduced-host expansion",
+    "primary_response_1": "effective_contributor_number",
+    "primary_response_2": "maximum_single_host_fractional_share",
+    "predictor": "host_family_count",
+    "statistic": "within-primary-realm Spearman correlation",
+    "minimum_realm_cell_n_for_interpretation": 10,
+    "robustness": [
+      "repeat on core_realm_sensitivity subset",
+      "leave one primary realm out at a time",
+      "report family x primary-realm cell counts without treating cells as independent replication"
+    ]
+  },
+  "claim_boundary": [
+    "This is a post-hoc generality audit of an already-observed portfolio pattern, not a prospective hypothesis test.",
+    "Realm assignment uses realized GBIF occurrence geography rather than host-resource geography.",
+    "No causal claim about host introduction or range expansion is added."
+  ]
+}
