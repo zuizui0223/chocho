@@ -136,7 +136,9 @@ def assign_realms(occ: pd.DataFrame, realm_geojson: Path) -> tuple[pd.DataFrame,
             realm = vals[0]
         elif len(vals) > 1:
             ambiguous += 1
-        row = points.loc[int(occ_id), ["species", "gbif_key"]].to_dict()
+        row = points.loc[
+            int(occ_id), ["species", "gbif_key", "longitude", "latitude"]
+        ].to_dict()
         row["Realm"] = realm
         records.append(row)
 
@@ -176,6 +178,42 @@ def summarize_species(
             leaders = [realm for realm, n in ordered if n == primary_count]
             primary = leaders[0] if len(leaders) == 1 else "TIE"
         share = None if mapped == 0 else primary_count / mapped
+
+        spatial = sub.copy()
+        if len(spatial):
+            spatial["grid_lon"] = np.floor(
+                pd.to_numeric(spatial["longitude"], errors="raise") + 180.0
+            ).astype(int)
+            spatial["grid_lat"] = np.floor(
+                pd.to_numeric(spatial["latitude"], errors="raise") + 90.0
+            ).astype(int)
+            spatial.loc[spatial["grid_lon"] == 360, "grid_lon"] = 359
+            spatial.loc[spatial["grid_lat"] == 180, "grid_lat"] = 179
+            cells = (
+                spatial[["Realm", "grid_lon", "grid_lat"]]
+                .drop_duplicates()
+            )
+            cell_counts = Counter(cells["Realm"].astype(str))
+        else:
+            cell_counts = Counter()
+        cell_total = int(sum(cell_counts.values()))
+        cell_ordered = sorted(
+            cell_counts.items(), key=lambda kv: (-kv[1], kv[0])
+        )
+        cell_primary = None
+        cell_primary_count = 0
+        if cell_ordered:
+            cell_primary_count = cell_ordered[0][1]
+            cell_leaders = [
+                realm for realm, n in cell_ordered if n == cell_primary_count
+            ]
+            cell_primary = (
+                cell_leaders[0] if len(cell_leaders) == 1 else "TIE"
+            )
+        cell_share = (
+            None if cell_total == 0 else cell_primary_count / cell_total
+        )
+
         rows.append({
             "species": name,
             "transport_status": status.get(name, "MISSING_LEDGER"),
@@ -188,6 +226,17 @@ def summarize_species(
             "primary_realm_share": share,
             "realm_informative": mapped >= 30,
             "core_realm": mapped >= 30 and share is not None and share >= 0.60,
+            "realm_occupied_1deg_cells": cell_total,
+            "realm_cell_counts_json": json.dumps(
+                dict(cell_ordered), sort_keys=True
+            ),
+            "cell_primary_realm": cell_primary,
+            "cell_primary_realm_share": cell_share,
+            "cell_core_realm": (
+                mapped >= 30
+                and cell_share is not None
+                and cell_share >= 0.60
+            ),
         })
     return pd.DataFrame(rows)
 
@@ -287,8 +336,10 @@ def main() -> int:
         raise RuntimeError(f"expected 191 expanded adequate species, got {len(adequate)}")
 
     informative = adequate[adequate["realm_informative"]].copy()
-    cell_counts = informative["primary_realm"].value_counts(dropna=False)
-    interpretable = cell_counts[cell_counts >= 10]
+    record_realm_counts = informative["primary_realm"].value_counts(dropna=False)
+    interpretable = record_realm_counts[record_realm_counts >= 10]
+    cell_realm_counts = informative["cell_primary_realm"].value_counts(dropna=False)
+    cell_interpretable = cell_realm_counts[cell_realm_counts >= 10]
     gate_pass = (
         len(informative) >= int(protocol["evaluable_gate"]["minimum_realm_informative_species"])
         and len(interpretable) >= int(protocol["evaluable_gate"]["minimum_interpretable_primary_realms"])
@@ -322,11 +373,17 @@ def main() -> int:
             "core_realm_expanded_adequate_species": int(
                 adequate["core_realm"].fillna(False).sum()
             ),
-            "primary_realm_counts_informative": {
-                str(k): int(v) for k, v in cell_counts.items()
+            "record_weighted_primary_realm_counts_informative": {
+                str(k): int(v) for k, v in record_realm_counts.items()
             },
-            "interpretable_primary_realms_n_ge_10": {
+            "record_weighted_interpretable_primary_realms_n_ge_10": {
                 str(k): int(v) for k, v in interpretable.items()
+            },
+            "cell_weighted_primary_realm_counts_informative": {
+                str(k): int(v) for k, v in cell_realm_counts.items()
+            },
+            "cell_weighted_interpretable_primary_realms_n_ge_10": {
+                str(k): int(v) for k, v in cell_interpretable.items()
             },
         },
         "evaluable_gate": {
@@ -368,6 +425,45 @@ def main() -> int:
                 .astype(int)
                 .to_dict()
             ),
+            "spatial_thinning_sensitivity": {
+                "definition": (
+                    "Primary realm determined by unique occupied 1-degree "
+                    "longitude-latitude cells rather than raw record counts."
+                ),
+                "by_cell_primary_realm": correlations_by_group(
+                    informative, "cell_primary_realm", min_interpret=10
+                ),
+                "cell_core_realm": {
+                    "n": int(adequate["cell_core_realm"].fillna(False).sum()),
+                    "by_cell_primary_realm": correlations_by_group(
+                        adequate[adequate["cell_core_realm"]].copy(),
+                        "cell_primary_realm",
+                        min_interpret=10,
+                    ),
+                },
+                "leave_one_cell_primary_realm_out": leave_one_group_out(
+                    informative, "cell_primary_realm"
+                ),
+                "record_vs_cell_primary_realm_agreement": {
+                    "n_compared": int(
+                        informative[["primary_realm", "cell_primary_realm"]]
+                        .dropna()
+                        .shape[0]
+                    ),
+                    "same": int(
+                        (
+                            informative["primary_realm"].astype(str)
+                            == informative["cell_primary_realm"].astype(str)
+                        ).sum()
+                    ),
+                    "fraction_same": float(
+                        (
+                            informative["primary_realm"].astype(str)
+                            == informative["cell_primary_realm"].astype(str)
+                        ).mean()
+                    ) if len(informative) else None,
+                },
+            },
         }
 
     args.output_species_csv.parent.mkdir(parents=True, exist_ok=True)
