@@ -1,0 +1,129 @@
+name: geb realm transport recovery v01
+
+on:
+  push:
+    branches:
+      - exploration/geb-generality-audit-v01
+    paths:
+      - "provenance/geb/TRIGGER_GEB_REALM_RECOVERY_V01"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  SOURCE_RUN_ID: "36740694975"
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]
+    env:
+      SHARD: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Download exact source shard
+        uses: actions/download-artifact@v4
+        with:
+          name: geb-realm-occ-shard-${{ matrix.shard }}
+          path: input/source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+      - name: Recover all and only missing ordinal windows
+        run: |
+          set -euo pipefail
+          mkdir -p "results/recovered-$SHARD"
+          python scripts/recover_geb_realm_transport.py \
+            --input-csv "input/source/occurrences-$SHARD.csv" \
+            --input-ledger "input/source/ledger-$SHARD.json" \
+            --recovery-contract provenance/geb/geb_realm_transport_recovery_v0.1.json \
+            --output-csv "results/recovered-$SHARD/occurrences-$SHARD.csv" \
+            --output-ledger "results/recovered-$SHARD/ledger-$SHARD.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-realm-recovered-shard-${{ matrix.shard }}
+          path: results/recovered-${{ matrix.shard }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  analyze:
+    needs: recover
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install analysis dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install pandas scipy geopandas pyogrio shapely
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: geb-realm-recovered-shard-*
+          path: input/occ
+          merge-multiple: true
+      - name: Restore exact source-run Holt realm layer
+        uses: actions/download-artifact@v4
+        with:
+          name: geb-holt-zoorealms-v01
+          path: input/realm
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+      - name: Analyze recovered realized zoogeographic replication
+        run: |
+          set -euo pipefail
+          mkdir -p results/geb-realm
+          realm_sha="$(cat input/realm/realm_source_sha256.txt)"
+          python scripts/analyze_geb_occurrence_realms.py \
+            --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json \
+            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --occurrence-dir input/occ \
+            --ledger-dir input/occ \
+            --realm-geojson input/realm/zoorealms.geojson \
+            --realm-source-sha256 "$realm_sha" \
+            --expected-shards 40 \
+            --output-species-csv results/geb-realm/species_realm_summary.csv \
+            --output-json results/geb-realm/geb_occurrence_realm_result_v0.1.json
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          def sha(p):
+              return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          result=Path("results/geb-realm/geb_occurrence_realm_result_v0.1.json")
+          species=Path("results/geb-realm/species_realm_summary.csv")
+          receipt={
+              "schema":"chocho_geb_occurrence_realm_recovery_receipt_v0.1",
+              "workflow_run_id":int(os.environ["GITHUB_RUN_ID"]),
+              "workflow_head_sha":os.environ["GITHUB_SHA"],
+              "source_run_id":int(os.environ["SOURCE_RUN_ID"]),
+              "recovery_contract":"provenance/geb/geb_realm_transport_recovery_v0.1.json",
+              "sampling_bias_sensitivity":"provenance/geb/geb_realm_sampling_bias_sensitivity_v0.1.json",
+              "result_sha256":sha(result),
+              "species_summary_sha256":sha(species),
+              "result":json.loads(result.read_text())
+          }
+          Path("results/geb-realm/workflow_receipt.json").write_text(
+              json.dumps(receipt,indent=2,sort_keys=True)+"\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-occurrence-realm-recovered-result-v01
+          path: results/geb-realm/
+          if-no-files-found: error
+          retention-days: 30
