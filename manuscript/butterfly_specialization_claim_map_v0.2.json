@@ -29,7 +29,8 @@
         "provenance/reviewer_defenses/results/butterfly_hostbias_parameter_grid_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_kawahara_match_bias_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_expansion_equivalence_v0.1.json",
-        "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json"
+        "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json",
+        "provenance/reviewer_defenses/results/butterfly_taxonomic_family_expansion_v0.1.json"
       ],
       "phylogenetic_sensitivity": "Kawahara exact-species subset n=124 is selective for higher expansion magnitude. Estimated Pagel lambda=0.033 and rank-PGLS beta=-0.051 (95% CI -0.234 to 0.131, p=0.581). Fixed Brownian lambda=1 gives beta=0.140 (95% CI -0.036 to 0.317, p=0.119), so moderate positive effects remain unresolved under that boundary model.",
       "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null.",
@@ -58,6 +59,16 @@
           "n": 33,
           "fraction": 1
         }
+      },
+      "butterfly_family_generality": {
+        "major_families_n_ge_10": {
+          "Nymphalidae": "86/103 expanded (83.5%)",
+          "Hesperiidae": "46/51 expanded (90.2%)",
+          "Pieridae": "37/43 expanded (86.0%)",
+          "Lycaenidae": "22/25 expanded (88.0%)",
+          "Papilionidae": "14/16 expanded (87.5%)"
+        },
+        "boundary": "Descriptive family summaries only; Riodinidae n=1 is not interpreted at family level."
       }
     },
     {
@@ -158,7 +169,7 @@
     "poaceae_sensitivity": "Poaceae users may be described as contributing substantial absolute added geography, but the sensitivity shows they do not generate the near-zero diet-breadth slope. Do not infer that Poaceae redistribution caused butterfly range expansion.",
     "novelty_gap": "Frame the gap as the mirror image of consumer niche expansion: prior work shows that broader host use can accompany consumer range expansion, host ranges can constrain consumers, introduced hosts can matter regionally, and introductions can homogenize interaction networks. Here host identities are held fixed analytically and the geography of those partners is allowed to change, quantifying the consumer-specific opportunity created by partner redistribution. Avoid unsupported 'first ever' wording.",
     "importance": "Emphasize that moving interaction partners can reorganize consumer opportunity even when taxonomic interaction breadth is held fixed analytically. Static/native resource templates and specialist-generalist labels can therefore miss a distinct pathway of anthropogenic biogeographic change.",
-    "butterfly_anchor": "The manuscript must present butterflies as the biological subject, not merely as a demonstration system. Lead Discussion with what host redistribution changes about butterfly larval-host specialization and range opportunity; reserve cross-taxon generalization for the final implications section."
+    "butterfly_anchor": "The manuscript must present butterflies as the biological subject, not merely as a demonstration system. Lead Discussion with what host redistribution changes about butterfly larval-host specialization and range opportunity; reserve cross-taxon generalization for the final implications section. The breadth of expansion across the five major butterfly families may be used descriptively to show the pattern is not confined to one lineage."
   },
   "figure_claim_mapping": {
     "Figure_1": [
