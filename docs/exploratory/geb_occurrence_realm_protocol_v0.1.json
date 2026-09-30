@@ -84,7 +84,39 @@
       "repeat on core_realm_sensitivity subset",
       "leave one primary realm out at a time",
       "report family x primary-realm cell counts without treating cells as independent replication"
-    ]
+    ],
+    "pooled_within_realm": {
+      "population": "realm-informative expanded host-taxonomy-adequate species with non-TIE primary realm",
+      "transform": "within each primary realm, replace predictor and response by average percentile ranks on [0,1]",
+      "estimand": "Pearson correlation across species between within-realm percentile ranks; this is a pooled within-realm rank association",
+      "responses": [
+        {
+          "response": "effective_contributor_number",
+          "expected_direction": "positive from the already-observed global exploratory architecture result"
+        },
+        {
+          "response": "maximum_single_host_fractional_share",
+          "expected_direction": "negative from the already-observed global exploratory architecture result"
+        }
+      ],
+      "inference": {
+        "null": "host-family breadth is unrelated to portfolio architecture within realized primary realms",
+        "permutation": "permute host-family-count values independently within each primary realm, preserving realm membership and outcome values",
+        "permutations": 9999,
+        "p_value": "two-sided Monte Carlo p = (1 + count(abs(null)>=abs(observed))) / 10000",
+        "deterministic_seed": "SHA256('chocho-geb-within-realm-v0.1') reduced to unsigned 64-bit integer"
+      },
+      "reporting": [
+        "observed pooled within-realm rank association",
+        "two-sided permutation p-value",
+        "realm-specific Spearman correlations for all n>=10 realms",
+        "leave-one-realm-out pooled association"
+      ],
+      "sensitivities": [
+        "primary_realm_share >= 0.60",
+        "1-degree-cell-weighted primary realm assignment"
+      ]
+    }
   },
   "claim_boundary": [
     "This is a post-hoc generality audit of an already-observed portfolio pattern, not a prospective hypothesis test.",
