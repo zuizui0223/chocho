@@ -1,0 +1,149 @@
+{
+  "schema": "chocho_geb_generality_audit_v0.1",
+  "status": "EXPLORATORY_POSTHOC_GENERALITY_AUDIT",
+  "created_on": "2026-09-30",
+  "claim_boundary": [
+    "This audit evaluates taxonomic-family and native host-resource geographic replication of already observed resource-portfolio patterns.",
+    "WGSRPD Level-1 groups describe native host-resource geography, not butterfly occurrence realms.",
+    "The audit does not convert exploratory mechanism results into prospective tests and is not evidence of causality."
+  ],
+  "inputs": {
+    "chocho_base_commit": "f34d91416090d2d56992db0878f7329e02c7dbe8",
+    "leptraits_snapshot_sha256": "6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b",
+    "leptraits_upstream_git_blob": "b2bc7bd87eca199b62f08ac539660aebc9fbaf79",
+    "anthropogenic_species_metrics_sha256": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+    "host_contribution_metrics_sha256": "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa",
+    "native_resource_footprints": {
+      "ttf_workflow_run_id": 36222306369,
+      "ttf_artifact_id": 10898504566,
+      "artifact_file": "butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json",
+      "sha256": "546c38970789a153735d6e54cc66bdd2e8987a22b93b097aa2062e8c7f84baef"
+    },
+    "wgsrpd_level3_geojson_git_blob": "91104e5159e31f88154833a51d3b0d1c9271083f"
+  },
+  "family_funnel": {
+    "resource_eligible_239": {
+      "n": 239,
+      "families": 6,
+      "counts": {"Nymphalidae": 104, "Hesperiidae": 51, "Pieridae": 43, "Lycaenidae": 26, "Papilionidae": 14, "Riodinidae": 1},
+      "effective_family_number": 3.539314703513228
+    },
+    "host_taxonomy_adequate_215": {
+      "n": 215,
+      "families": 6,
+      "counts": {"Nymphalidae": 89, "Hesperiidae": 48, "Pieridae": 43, "Lycaenidae": 20, "Papilionidae": 14, "Riodinidae": 1},
+      "effective_family_number": 3.6480940730802613
+    },
+    "expanded_adequate_191": {
+      "n": 191,
+      "families": 6,
+      "counts": {"Nymphalidae": 79, "Hesperiidae": 44, "Pieridae": 37, "Lycaenidae": 18, "Papilionidae": 12, "Riodinidae": 1},
+      "effective_family_number": 3.6426360459311042
+    },
+    "one_family_expanded_82": {
+      "n": 82,
+      "families": 5,
+      "counts": {"Nymphalidae": 27, "Hesperiidae": 26, "Pieridae": 20, "Papilionidae": 5, "Lycaenidae": 4},
+      "effective_family_number": 3.642470205850487
+    },
+    "independent_panel_32": {
+      "n": 32,
+      "families": 6,
+      "counts": {"Nymphalidae": 17, "Hesperiidae": 5, "Lycaenidae": 4, "Pieridae": 3, "Papilionidae": 2, "Riodinidae": 1},
+      "effective_family_number": 2.9767441860465116
+    },
+    "climate_informative_24": {
+      "n": 24,
+      "families": 5,
+      "counts": {"Nymphalidae": 13, "Hesperiidae": 4, "Lycaenidae": 3, "Pieridae": 3, "Papilionidae": 1},
+      "effective_family_number": 2.823529411764706
+    }
+  },
+  "family_replication_expanded_adequate_191": {
+    "overall": {"rho_effective": 0.4919670615030713, "rho_max_share": -0.4861161332504768},
+    "by_family": {
+      "Hesperiidae": {"n": 44, "rho_effective": 0.3363008599243945, "rho_max_share": -0.3160873743302798},
+      "Lycaenidae": {"n": 18, "rho_effective": 0.6387839343198604, "rho_max_share": -0.4793501773139182},
+      "Nymphalidae": {"n": 79, "rho_effective": 0.4612611787359997, "rho_max_share": -0.465758293590332},
+      "Papilionidae": {"n": 12, "rho_effective": 0.7831423278807593, "rho_max_share": -0.717270543292658},
+      "Pieridae": {"n": 37, "rho_effective": 0.6419124161305687, "rho_max_share": -0.6528852779447665},
+      "Riodinidae": {"n": 1, "rho_effective": null, "rho_max_share": null}
+    },
+    "leave_one_family_out": {
+      "Hesperiidae": {"n": 147, "rho_effective": 0.5262842143677938, "rho_max_share": -0.5258077864703187},
+      "Lycaenidae": {"n": 173, "rho_effective": 0.4617815738829126, "rho_max_share": -0.4663573933847235},
+      "Nymphalidae": {"n": 112, "rho_effective": 0.564347579170531, "rho_max_share": -0.5398653814742277},
+      "Papilionidae": {"n": 179, "rho_effective": 0.47262900316990364, "rho_max_share": -0.46689602056073043},
+      "Pieridae": {"n": 154, "rho_effective": 0.47214543149882465, "rho_max_share": -0.4579426897268009},
+      "Riodinidae": {"n": 190, "rho_effective": 0.4960394300256912, "rho_max_share": -0.4901297248564085}
+    }
+  },
+  "within_one_family_replication": {
+    "Hesperiidae": {"n": 26, "rho_host_species_vs_effective": 0.5658531480665937, "rho_host_species_vs_max_share": -0.5700957208730911},
+    "Lycaenidae": {"n": 4, "rho_host_species_vs_effective": 1.0, "rho_host_species_vs_max_share": -1.0},
+    "Nymphalidae": {"n": 27, "rho_host_species_vs_effective": 0.7750513673387448, "rho_host_species_vs_max_share": -0.7283393103064335},
+    "Papilionidae": {"n": 5, "rho_host_species_vs_effective": 0.7894736842105263, "rho_host_species_vs_max_share": -0.7894736842105263},
+    "Pieridae": {"n": 20, "rho_host_species_vs_effective": 0.7590828744792583, "rho_host_species_vs_max_share": -0.7574814338157999}
+  },
+  "native_resource_geography": {
+    "species_n": 239,
+    "median_wgsrpd_level1_units_per_species": 4.0,
+    "mean_wgsrpd_level1_units_per_species": 4.514644351464435,
+    "species_presence_by_level1": {
+      "Europe": 157,
+      "Africa": 161,
+      "Asia-Temperate": 196,
+      "Asia-Tropical": 167,
+      "Australasia": 55,
+      "Pacific": 38,
+      "Northern America": 179,
+      "Southern America": 122,
+      "Antarctic": 4
+    },
+    "species_x_wgsrpd3_units_by_level1": {
+      "Europe": 4819,
+      "Africa": 3912,
+      "Asia-Temperate": 5053,
+      "Asia-Tropical": 2075,
+      "Australasia": 268,
+      "Pacific": 246,
+      "Northern America": 6884,
+      "Southern America": 3269,
+      "Antarctic": 4
+    },
+    "total_native_species_x_wgsrpd3_units": 26530,
+    "dominant_native_resource_level1_counts": {
+      "Northern America": 102,
+      "Africa": 38,
+      "Europe": 34,
+      "Southern America": 32,
+      "Asia-Temperate": 24,
+      "Asia-Tropical": 8,
+      "TIE": 1
+    }
+  },
+  "resource_geography_replication_expanded_adequate_191": {
+    "definition": "Species grouped by the WGSRPD Level-1 continent containing the largest share of its native larval host-resource WGSRPD3 footprint.",
+    "by_dominant_native_resource_continent": {
+      "Africa": {"n": 32, "rho_effective": 0.514951554936694, "rho_max_share": -0.49199430910225644},
+      "Asia-Temperate": {"n": 15, "rho_effective": 0.15973446189193868, "rho_max_share": -0.15973446189193868},
+      "Asia-Tropical": {"n": 6, "rho_effective": 0.3188740696088466, "rho_max_share": -0.3188740696088466},
+      "Europe": {"n": 24, "rho_effective": 0.7297361283882434, "rho_max_share": -0.6870289249456745},
+      "Northern America": {"n": 88, "rho_effective": 0.4776197863252451, "rho_max_share": -0.4585463383826291},
+      "Southern America": {"n": 25, "rho_effective": 0.21731474805634687, "rho_max_share": -0.255762741943239}
+    },
+    "leave_one_dominant_continent_out": {
+      "Africa": {"n": 159, "rho_effective": 0.443035534993828, "rho_max_share": -0.44102314492862577},
+      "Asia-Temperate": {"n": 176, "rho_effective": 0.507850063576243, "rho_max_share": -0.5035819298531851},
+      "Asia-Tropical": {"n": 185, "rho_effective": 0.488256256865833, "rho_max_share": -0.48079498083149136},
+      "Europe": {"n": 167, "rho_effective": 0.48781507206360886, "rho_max_share": -0.48300273710055575},
+      "Northern America": {"n": 103, "rho_effective": 0.5177114925745361, "rho_max_share": -0.5187348676440936},
+      "Southern America": {"n": 166, "rho_effective": 0.5148517236160703, "rho_max_share": -0.4978973318454851}
+    }
+  },
+  "interpretation": {
+    "supported": "The host-portfolio architecture pattern is not generated by one butterfly family or one dominant native resource continent; its direction replicates across the major taxonomic families and major native resource-geography groups represented in the dataset.",
+    "not_supported": "This audit does not establish replication across butterfly biogeographic realms, because grouping uses host-resource geography rather than butterfly occurrence geography.",
+    "geb_implication": "The main 239/191-species resource analyses already have strong taxonomic and resource-geographic breadth. The clearest remaining scale limitation is the 32-species independent occurrence panel and 24-species climate-informative panel."
+  }
+}
