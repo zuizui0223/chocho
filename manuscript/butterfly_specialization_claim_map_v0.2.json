@@ -15,7 +15,7 @@
       "claim": "Human redistribution of host plants broadly expands butterfly resource geography, while family-level diet breadth has little relationship to proportional gain.",
       "status": "primary macroecological result with post-hoc precision/equivalence, finite-area, regional, random-effect and species-level phylogenetic sensitivities",
       "evidence": "239 butterflies in the full reconstruction; 207 species in the strict host-bias null; 8,909 host plants in 278 families in the plant-level analysis; 124 exact Kawahara-tree butterfly species in PGLS.",
-      "key_statistic": "206/239 butterflies expanded; aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho=0.008, 49,999-bootstrap 95% CI -0.111 to 0.128; ±0.10 Fisher-z TOST p=0.078 (equivalence not established); Family random-effect beta=0.021, p=0.752; estimated Pagel lambda=0.033 with rank-PGLS beta=-0.051, p=0.581; fixed Brownian beta=0.140, p=0.119.",
+      "key_statistic": "206/239 butterflies expanded; expansion occurred in all four breadth classes (82/97 one-family, 47/59 two-family, 44/50 three-to-five-family, 33/33 six-plus-family species); aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho=0.008, 49,999-bootstrap 95% CI -0.111 to 0.128; ±0.10 Fisher-z TOST p=0.078 (equivalence not established); Family random-effect beta=0.021, p=0.752; estimated Pagel lambda=0.033 with rank-PGLS beta=-0.051, p=0.581; fixed Brownian beta=0.140, p=0.119.",
       "sources": [
         "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json",
@@ -35,7 +35,29 @@
       "plant_prominence_gradient": "Exploratory SI result only: plant HOSTS degree covaries positively with redistribution but may reflect ecological prominence, recording intensity, and reverse causation.",
       "pgls_coverage_bias": "Tree-matched species have higher expansion magnitude (median log expansion 0.376 vs 0.285; p=0.0012) but similar host-family breadth (median 2 vs 2; p=0.677). Breadth–expansion rho is near zero in both matched (-0.055) and unmatched (+0.053) groups. PGLS is used only for the slope sensitivity.",
       "equivalence_precision": "Full-panel bootstrap 90% CI -0.092 to 0.108 and 95% CI -0.111 to 0.128. A post-hoc ±0.10 Fisher-z TOST is narrowly inconclusive (p=0.078). Do not claim exact zero or demonstrated ±0.10 equivalence.",
-      "poaceae_sensitivity": "58/239 butterflies had at least one resolved Poaceae host. Excluding all 58 left rho=0.026 (n=181; bootstrap 95% CI -0.116 to 0.168). Excluding only 34 one-family Poaceae specialists left rho=0.013 (n=205; 95% CI -0.122 to 0.147)."
+      "poaceae_sensitivity": "58/239 butterflies had at least one resolved Poaceae host. Excluding all 58 left rho=0.026 (n=181; bootstrap 95% CI -0.116 to 0.168). Excluding only 34 one-family Poaceae specialists left rho=0.013 (n=205; 95% CI -0.122 to 0.147).",
+      "expansion_across_breadth_classes": {
+        "1_family": {
+          "expanded": 82,
+          "n": 97,
+          "fraction": 0.845360824742268
+        },
+        "2_families": {
+          "expanded": 47,
+          "n": 59,
+          "fraction": 0.7966101694915254
+        },
+        "3_to_5_families": {
+          "expanded": 44,
+          "n": 50,
+          "fraction": 0.88
+        },
+        "6plus_families": {
+          "expanded": 33,
+          "n": 33,
+          "fraction": 1
+        }
+      }
     },
     {
       "id": "C1b",
