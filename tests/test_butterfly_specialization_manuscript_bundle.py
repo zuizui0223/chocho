@@ -87,12 +87,12 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
 
     # The conceptual contribution must remain explicit in the current manuscript.
     for literal in (
-        "consumer-specific resource envelope",
+        "butterfly-specific resource envelope",
         "Taxonomic interaction breadth",
         "Resource geography",
-        "Realized consumer geography",
+        "Realized butterfly geography",
         "Host identities were held fixed between the two envelopes",
-        "resource-side biogeography of globalization",
+        "resource-side biogeography of butterfly specialization under globalization",
     ):
         assert literal in manuscript
 
