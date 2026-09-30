@@ -41,6 +41,9 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     poaceae = _json(
         "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json"
     )
+    family_generality = _json(
+        "provenance/reviewer_defenses/results/butterfly_taxonomic_family_expansion_v0.1.json"
+    )
 
     expected_title = (
         "Human redistribution of host plants expands butterfly resource geography "
@@ -150,6 +153,16 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
         poaceae["excluding_family_level_poaceae_specialists"]["rho"]
         == 0.01324328000717657
     )
+
+    # Expansion is widespread across the five major butterfly families.
+    major = {row["family"]: row for row in family_generality["major_families"]}
+    assert major["Nymphalidae"]["expanded_species"] == 86
+    assert major["Nymphalidae"]["species"] == 103
+    assert major["Hesperiidae"]["expanded_species"] == 46
+    assert major["Pieridae"]["expanded_species"] == 37
+    assert major["Lycaenidae"]["expanded_species"] == 22
+    assert major["Papilionidae"]["expanded_species"] == 14
+    assert min(row["expanded_fraction"] for row in major.values()) > 0.83
 
     # Secondary occurrence validation remains species-robust.
     assert occurrence["species"] == 23
