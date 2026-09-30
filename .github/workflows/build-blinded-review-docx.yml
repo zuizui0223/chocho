@@ -16,6 +16,10 @@ on:
       - ".github/workflows/build-blinded-review-docx.yml"
   workflow_dispatch:
 
+concurrency:
+  group: blinded-geb-review-docx-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-review-docx:
     runs-on: ubuntu-latest
