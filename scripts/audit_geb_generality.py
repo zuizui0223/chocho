@@ -81,7 +81,7 @@ def read_descriptors(path):
 
 def read_families(path):
     out = {}
-    with path.open(newline="", encoding="latin-1") as f:
+    with path.open(newline="", encoding="utf-8-sig") as f:
         r = csv.DictReader(f)
         if not {"Species", "Family"} <= set(r.fieldnames or ()):
             raise RuntimeError("LepTraits Species/Family missing")
