@@ -135,7 +135,18 @@
         "pooled within-realm percentile-rank association of host-family breadth with log_resource_expansion",
         "the already-frozen pooled within-realm architecture associations on the identical species population"
       ],
-      "interpretation_rule": "Treat the magnitude association as a generality diagnostic, not an equivalence test. A large or sign-heterogeneous within-realm magnitude association would qualify the global decoupling claim rather than be averaged away."
+      "interpretation_rule": "Treat the magnitude association as a generality diagnostic, not an equivalence test. A large or sign-heterogeneous within-realm magnitude association would qualify the global decoupling claim rather than be averaged away.",
+      "stratified_bootstrap_contrast": {
+        "resampling": "within each interpretable primary realm, resample species with replacement to the original realm sample size",
+        "replicates": 9999,
+        "deterministic_seed": "SHA256('chocho-geb-realm-bootstrap-v0.1') reduced to unsigned 64-bit integer",
+        "contrasts": [
+          "pooled within-realm rho(host breadth, effective contributors) minus rho(host breadth, log resource expansion)",
+          "negative pooled within-realm rho(host breadth, maximum single-host share) minus rho(host breadth, log resource expansion)"
+        ],
+        "interval": "2.5th and 97.5th percentiles of the paired stratified-bootstrap contrast distribution",
+        "purpose": "quantify whether specialization is more strongly associated with the architecture of gain than with total proportional gain on the identical realm-stratified species sample"
+      }
     }
   },
   "claim_boundary": [
