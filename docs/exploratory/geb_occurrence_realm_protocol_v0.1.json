@@ -36,6 +36,14 @@
     "realm_informative": "at least 30 realm-mapped records",
     "core_realm_sensitivity": "realm_informative and primary_realm_share >= 0.60"
   },
+  "evaluable_gate": {
+    "population": "191 host-taxonomy-adequate species with introduced-host expansion",
+    "minimum_realm_informative_species": 150,
+    "minimum_interpretable_primary_realms": 4,
+    "interpretable_realm_definition": "realm cell n >= 10",
+    "if_below": "NOT_EVALUABLE_GEB_REALM_GENERALITY_AUDIT",
+    "no_species_replacement_or_post_result_backfill": true
+  },
   "generality_tests": {
     "population": "host-taxonomy-adequate species with introduced-host expansion",
     "primary_response_1": "effective_contributor_number",
