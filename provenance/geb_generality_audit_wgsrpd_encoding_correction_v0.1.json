@@ -1,0 +1,25 @@
+{
+  "schema": "chocho_geb_generality_audit_wgsrpd_encoding_correction_v0.1",
+  "status": "FROZEN_TECHNICAL_CORRECTION_BEFORE_ANY_GENERALITY_RESULT",
+  "created_on": "2026-09-30",
+  "triggering_run_id": 36735619599,
+  "triggering_failure": "UnicodeDecodeError while reading the pinned official WGSRPD hierarchy text tables as UTF-8.",
+  "diagnosis": "The historical WGSRPD text tables contain single-byte Western European characters (for example the byte representing ø in Føroyar) and are not UTF-8 encoded.",
+  "correction": {
+    "table_encoding": "latin-1",
+    "WGSRPD_commit_unchanged": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "hierarchy_tables_unchanged": [
+      "109-488-1-ED/2nd Edition/tblLevel1.txt",
+      "109-488-1-ED/2nd Edition/tblLevel2.txt",
+      "109-488-1-ED/2nd Edition/tblLevel3.txt"
+    ],
+    "geographic_unit_unchanged": "WGSRPD Level 1 botanical continent",
+    "informative_thresholds_unchanged": true,
+    "directional_replication_checks_unchanged": true
+  },
+  "response_firewall": {
+    "generality_result_seen_before_correction": false,
+    "region_effect_estimates_seen_before_correction": false,
+    "family_effect_estimates_seen_before_correction": false
+  }
+}
