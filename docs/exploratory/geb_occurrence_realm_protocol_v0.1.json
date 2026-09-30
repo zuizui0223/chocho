@@ -51,7 +51,14 @@
       "Palearctic"
     ],
     "assignment": "point-in-polygon/intersects in WGS84",
-    "execution_rule": "download the official CMEC archive, record archive SHA256, read newRealms.shp, retain Realm and geometry, dissolve by Realm, transform to EPSG:4326, record exact derived GeoJSON SHA256 used for assignment"
+    "execution_rule": "download the official CMEC archive, record archive SHA256, read newRealms.shp, retain Realm and geometry, dissolve by Realm, transform to EPSG:4326, record exact derived GeoJSON SHA256 used for assignment",
+    "geometry_validity": {
+      "observed_pre_result_issue": "The source-derived 11-realm GeoJSON can contain a Neotropical ring self-intersection near 76W, 6N after serialization/dissolve.",
+      "repair_rule": "apply shapely.make_valid to every dissolved realm geometry before any occurrence point assignment",
+      "postcondition": "all 11 geometries must be non-empty, valid Polygon/MultiPolygon geometries; otherwise stop",
+      "scientific_partition_change": "No realm labels, species, occurrence filters, or thresholds change; this is a topology repair of the frozen external partition.",
+      "frozen_before_any_recovered_realm_result": true
+    }
   },
   "species_realm_summary": {
     "minimum_mapped_occurrences": 30,
