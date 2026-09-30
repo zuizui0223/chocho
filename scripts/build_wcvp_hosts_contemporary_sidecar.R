@@ -153,7 +153,18 @@ native <- dist_df[
   required_dist,
   drop=FALSE
 ]
+native$plant_name_id <- as.character(native$plant_name_id)
+native$area_code_l3 <- as.character(native$area_code_l3)
 native <- unique(native[c("plant_name_id","area_code_l3")])
+native <- native[nzchar(native$area_code_l3),,drop=FALSE]
+names(native)[1] <- "accepted_plant_name_id"
+native$accepted_name <- unname(id_to_name[native$accepted_plant_name_id])
+native <- native[order(native$accepted_plant_name_id,native$area_code_l3),]
+write.csv(
+  native,
+  file.path(output_dir, "native_extant_nondoubtful_wgsrpd3.csv"),
+  row.names=FALSE, na=""
+)
 
 counts <- data.frame(
   key=c(
