@@ -80,5 +80,14 @@
     "This is a post-hoc generality audit of an already-observed portfolio pattern, not a prospective hypothesis test.",
     "Realm assignment uses realized GBIF occurrence geography rather than host-resource geography.",
     "No causal claim about host introduction or range expansion is added."
-  ]
+  ],
+  "evaluability_gate": {
+    "conservative_population": "host-taxonomy-adequate species with introduced-host expansion (expected n=191)",
+    "minimum_realm_informative_species": 150,
+    "minimum_interpretable_realms": 4,
+    "interpretable_realm_minimum_n": 10,
+    "if_failed": "NOT_EVALUABLE_REALM_GENERALITY_AUDIT",
+    "no_backfill_after_result": true,
+    "no_threshold_change_after_result": true
+  }
 }
