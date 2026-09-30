@@ -341,8 +341,8 @@ def main() -> int:
     cell_realm_counts = informative["cell_primary_realm"].value_counts(dropna=False)
     cell_interpretable = cell_realm_counts[cell_realm_counts >= 10]
     gate_pass = (
-        len(informative) >= int(protocol["evaluable_gate"]["minimum_realm_informative_species"])
-        and len(interpretable) >= int(protocol["evaluable_gate"]["minimum_interpretable_primary_realms"])
+        len(informative) >= int(protocol["evaluability_gate"]["minimum_realm_informative_species"])
+        and len(interpretable) >= int(protocol["evaluability_gate"]["minimum_interpretable_primary_realms"])
     )
 
     transport_status_counts = Counter()
