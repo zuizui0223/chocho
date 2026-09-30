@@ -84,49 +84,68 @@ jobs:
           pattern: geb-realm-occ-*
           path: input/shards
           merge-multiple: false
-      - name: Fetch and normalize RESOLVE realm polygons
+      - name: Fetch and normalize Holt 2013 zoogeographic realms
         run: |
-          mkdir -p input/realm
-          curl --location --fail --silent --show-error --get \
-            "https://data-gis.unep-wcmc.org/server/rest/services/Bio-geographicalRegions/Resolve_Ecoregions/FeatureServer/0/query" \
-            --data-urlencode "where=1=1" \
-            --data-urlencode "outFields=realm" \
-            --data-urlencode "returnGeometry=true" \
-            --data-urlencode "outSR=4326" \
-            --data-urlencode "resultRecordCount=1000" \
-            --data-urlencode "f=geojson" \
-            -o input/realm/resolve_raw.geojson
+          mkdir -p input/realm/archive input/realm/extracted results/realm
+          curl --location --fail --silent --show-error \
+            "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip" \
+            -o input/realm/archive/cmec_regions_realms.zip
+          ARCHIVE_SHA="$(sha256sum input/realm/archive/cmec_regions_realms.zip | awk '{print $1}')"
+          unzip -q input/realm/archive/cmec_regions_realms.zip -d input/realm/extracted
           python - <<'PY'
           import geopandas as gpd
+          import json
           from pathlib import Path
-          p=Path("input/realm/resolve_raw.geojson")
-          g=gpd.read_file(p)
-          field=next((x for x in ("Realm","REALM","realm") if x in g.columns),None)
-          if field is None:
-              raise RuntimeError(f"realm field missing: {list(g.columns)}")
-          g=g[[field,"geometry"]].rename(columns={field:"Realm"})
+          roots=list(Path("input/realm/extracted").rglob("newRealms.shp"))
+          if len(roots)!=1:
+              raise RuntimeError(f"expected one newRealms.shp, found {roots}")
+          shp=roots[0]
+          g=gpd.read_file(shp)
+          if "Realm" not in g.columns:
+              raise RuntimeError(f"Realm field missing: {list(g.columns)}")
+          g=g[["Realm","geometry"]].copy()
           g["Realm"]=g["Realm"].astype(str).str.strip()
           g=g[g["Realm"].ne("") & g.geometry.notna()]
-          g=g.dissolve(by="Realm",as_index=False)
           expected={"Neotropical","Australian","Afrotropical","Madagascan","Oceanian","Oriental","Panamanian","Saharo-Arabian","Nearctic","Sino-Japanese","Palearctic"}
           observed=set(g["Realm"])
           if observed != expected:
-              raise RuntimeError(f"realm label drift: {sorted(observed)}")
-          g.to_crs("EPSG:4326").to_file("input/realm/resolve_realms.geojson",driver="GeoJSON")
-          print(sorted(observed))
+              raise RuntimeError(f"Holt realm label drift: {sorted(observed)}")
+          if g.crs is None:
+              raise RuntimeError("newRealms.shp has no CRS")
+          g=g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False)
+          out=Path("input/realm/holt2013_realms.geojson")
+          g.to_file(out,driver="GeoJSON")
+          print(json.dumps({"shapefile":str(shp),"realms":sorted(observed)}))
           PY
-          sha256sum input/realm/resolve_realms.geojson
+          REALM_SHA="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
+          python - <<PY
+          import json
+          from pathlib import Path
+          Path("results/realm/realm_source_receipt.json").write_text(
+              json.dumps({
+                  "schema":"chocho_geb_holt_realm_source_v0.1",
+                  "provider":"Center for Macroecology, Evolution and Climate, University of Copenhagen",
+                  "archive_url":"https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip",
+                  "archive_sha256":"$ARCHIVE_SHA",
+                  "derived_geojson_sha256":"$REALM_SHA",
+                  "realm_field":"Realm",
+                  "realm_count":11
+              },indent=2,sort_keys=True)+"\n",
+              encoding="utf-8"
+          )
+          PY
+          cat results/realm/realm_source_receipt.json
       - name: Analyze realized butterfly realm replication
         run: |
           mkdir -p results/realm
-          REALM_SHA="$(sha256sum input/realm/resolve_realms.geojson | awk '{print $1}')"
+          REALM_SHA="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
           python scripts/analyze_geb_occurrence_realms.py \
             --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json \
             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
             --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
             --occurrence-dir input/shards \
             --ledger-dir input/shards \
-            --realm-geojson input/realm/resolve_realms.geojson \
+            --realm-geojson input/realm/holt2013_realms.geojson \
             --realm-source-sha256 "$REALM_SHA" \
             --expected-shards 40 \
             --output-species-csv results/realm/species_realm_summary.csv \
@@ -136,6 +155,6 @@ jobs:
           name: geb-realm-generality-result-v01
           path: |
             results/realm
-            input/realm/resolve_realms.geojson
+            input/realm/holt2013_realms.geojson
           if-no-files-found: error
           retention-days: 30
