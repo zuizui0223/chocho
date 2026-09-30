@@ -86,6 +86,7 @@ jobs:
           python - <<'PY'
           import geopandas as gpd
           from pathlib import Path
+          from shapely import make_valid
           roots=list(Path("input/realm/extracted").rglob("newRealms.shp"))
           if len(roots)!=1:
               raise RuntimeError(f"expected one newRealms.shp, found {roots}")
@@ -100,9 +101,13 @@ jobs:
               raise RuntimeError(f"Holt realm label drift: {sorted(set(g['Realm']))}")
           if g.crs is None:
               raise RuntimeError("newRealms.shp has no CRS")
-          g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False).to_file(
-              "input/realm/holt2013_realms.geojson",driver="GeoJSON"
-          )
+          g=g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False)
+          g["geometry"]=g.geometry.map(make_valid)
+          if g.geometry.is_empty.any() or (~g.geometry.is_valid).any():
+              raise RuntimeError("Holt realm topology repair failed")
+          if not set(g.geom_type).issubset({"Polygon","MultiPolygon"}):
+              raise RuntimeError(f"unexpected repaired geometry types: {sorted(set(g.geom_type))}")
+          g.to_file("input/realm/holt2013_realms.geojson",driver="GeoJSON")
           PY
       - name: Analyze recovered realized zoogeographic replication
         run: |
