@@ -337,12 +337,12 @@ def main() -> int:
 
     informative = adequate[adequate["realm_informative"]].copy()
     record_realm_counts = informative["primary_realm"].value_counts(dropna=False)
-    interpretable = record_realm_counts[record_realm_counts >= 10]
+    interpretable = record_realm_counts[record_realm_counts >= int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])]
     cell_realm_counts = informative["cell_primary_realm"].value_counts(dropna=False)
-    cell_interpretable = cell_realm_counts[cell_realm_counts >= 10]
+    cell_interpretable = cell_realm_counts[cell_realm_counts >= int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])]
     gate_pass = (
         len(informative) >= int(protocol["evaluability_gate"]["minimum_realm_informative_species"])
-        and len(interpretable) >= int(protocol["evaluability_gate"]["minimum_interpretable_primary_realms"])
+        and len(interpretable) >= int(protocol["evaluability_gate"]["minimum_interpretable_realms"])
     )
 
     transport_status_counts = Counter()
@@ -389,7 +389,7 @@ def main() -> int:
         "evaluable_gate": {
             "passed": bool(gate_pass),
             "minimum_realm_informative_species": 150,
-            "minimum_interpretable_primary_realms": 4,
+            "minimum_interpretable_realms": int(protocol["evaluability_gate"]["minimum_interpretable_realms"]),
             "observed_realm_informative_species": int(len(informative)),
             "observed_interpretable_primary_realms": int(len(interpretable)),
         },
@@ -407,12 +407,12 @@ def main() -> int:
                 ),
             },
             "by_primary_realm": correlations_by_group(
-                informative, "primary_realm", min_interpret=10
+                informative, "primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
             ),
             "core_realm_sensitivity": {
                 "n": int(len(core)),
                 "by_primary_realm": correlations_by_group(
-                    core, "primary_realm", min_interpret=10
+                    core, "primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
                 ),
             },
             "leave_one_primary_realm_out": leave_one_group_out(
@@ -431,14 +431,14 @@ def main() -> int:
                     "longitude-latitude cells rather than raw record counts."
                 ),
                 "by_cell_primary_realm": correlations_by_group(
-                    informative, "cell_primary_realm", min_interpret=10
+                    informative, "cell_primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
                 ),
                 "cell_core_realm": {
                     "n": int(adequate["cell_core_realm"].fillna(False).sum()),
                     "by_cell_primary_realm": correlations_by_group(
                         adequate[adequate["cell_core_realm"]].copy(),
                         "cell_primary_realm",
-                        min_interpret=10,
+                        min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"]),
                     ),
                 },
                 "leave_one_cell_primary_realm_out": leave_one_group_out(
