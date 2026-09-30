@@ -1,0 +1,181 @@
+name: geb realm transport recovery v02
+
+on:
+  push:
+    branches:
+      - exploration/geb-generality-audit-v01
+    paths:
+      - "provenance/geb/TRIGGER_GEB_REALM_RECOVERY_V02"
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: geb-realm-transport-recovery-v02
+  cancel-in-progress: true
+
+env:
+  SOURCE_RUN_ID: "36740694975"
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        group: [0,1,2,3,4,5,6,7]
+    env:
+      GROUP: ${{ matrix.group }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Download five exact source shards
+        run: |
+          set -euo pipefail
+          mkdir -p input/source results/recovered
+          gh api "/repos/$GH_REPO/actions/runs/$SOURCE_RUN_ID/artifacts?per_page=100" > /tmp/artifacts.json
+          python - <<'PY' > /tmp/shards.txt
+          import os
+          g=int(os.environ["GROUP"])
+          for shard in range(g*5, g*5+5):
+              print(shard)
+          PY
+          while read -r shard; do
+            aid="$(python - "$shard" <<'PY'
+          import json,sys
+          shard=int(sys.argv[1])
+          d=json.load(open("/tmp/artifacts.json"))
+          name=f"geb-realm-occ-shard-{shard}"
+          hits=[a for a in d["artifacts"] if a["name"]==name and not a.get("expired")]
+          if len(hits)!=1:
+              raise SystemExit(f"{name}: expected one live artifact, got {len(hits)}")
+          print(hits[0]["id"])
+          PY
+          )"
+            mkdir -p "input/source/$shard"
+            gh api "/repos/$GH_REPO/actions/artifacts/$aid/zip" > "/tmp/shard-$shard.zip"
+            unzip -q "/tmp/shard-$shard.zip" -d "input/source/$shard"
+          done < /tmp/shards.txt
+      - name: Recover all and only missing ordinal windows
+        run: |
+          set -euo pipefail
+          while read -r shard; do
+            python scripts/recover_geb_realm_transport.py               --input-csv "input/source/$shard/occurrences-$shard.csv"               --input-ledger "input/source/$shard/ledger-$shard.json"               --recovery-contract provenance/geb/geb_realm_transport_recovery_v0.1.json               --output-csv "results/recovered/occurrences-$shard.csv"               --output-ledger "results/recovered/ledger-$shard.json"
+          done < /tmp/shards.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-realm-recovered-group-${{ matrix.group }}
+          path: results/recovered/
+          if-no-files-found: error
+          retention-days: 30
+
+  analyze:
+    needs: recover
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install pandas scipy geopandas pyogrio shapely
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: geb-realm-recovered-group-*
+          path: input/occ
+          merge-multiple: true
+      - name: Verify exact 40 recovered ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ledgers=sorted(Path("input/occ").glob("ledger-*.json"))
+          if len(ledgers)!=40:
+              raise RuntimeError(f"expected 40 recovered ledgers, got {len(ledgers)}")
+          seen=set()
+          for p in ledgers:
+              d=json.loads(p.read_text())
+              seen.add(int(d["shard_index"]))
+              if d["status"]!="COMPLETE":
+                  raise RuntimeError(f"{p}: {d['status']}")
+          if seen!=set(range(40)):
+              raise RuntimeError(f"shard coverage drift: {sorted(seen)}")
+          print({"recovered_shards":40,"transport":"COMPLETE"})
+          PY
+      - name: Fetch frozen Holt 2013 CMEC realm source
+        run: |
+          set -euo pipefail
+          mkdir -p input/realm/archive input/realm/extracted results/realm
+          curl --location --fail --silent --show-error             "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip"             -o input/realm/archive/cmec_regions_realms.zip
+          ARCHIVE_SHA="$(sha256sum input/realm/archive/cmec_regions_realms.zip | awk '{print $1}')"
+          unzip -q input/realm/archive/cmec_regions_realms.zip -d input/realm/extracted
+          python - <<'PY'
+          import geopandas as gpd
+          from pathlib import Path
+          roots=list(Path("input/realm/extracted").rglob("newRealms.shp"))
+          if len(roots)!=1:
+              raise RuntimeError(f"expected one newRealms.shp, found {roots}")
+          g=gpd.read_file(roots[0])
+          if "Realm" not in g.columns:
+              raise RuntimeError(f"Realm field missing: {list(g.columns)}")
+          expected={"Neotropical","Australian","Afrotropical","Madagascan","Oceanian","Oriental","Panamanian","Saharo-Arabian","Nearctic","Sino-Japanese","Palearctic"}
+          g=g[["Realm","geometry"]].copy()
+          g["Realm"]=g["Realm"].astype(str).str.strip()
+          g=g[g["Realm"].ne("") & g.geometry.notna()]
+          if set(g["Realm"]) != expected:
+              raise RuntimeError(f"Holt realm label drift: {sorted(set(g['Realm']))}")
+          if g.crs is None:
+              raise RuntimeError("newRealms.shp has no CRS")
+          g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False).to_file(
+              "input/realm/holt2013_realms.geojson",driver="GeoJSON"
+          )
+          PY
+          echo "$ARCHIVE_SHA" > results/realm/realm_archive_sha256.txt
+      - name: Analyze realized butterfly realm replication
+        run: |
+          set -euo pipefail
+          REALM_SHA="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
+          python scripts/analyze_geb_occurrence_realms.py             --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv             --leptraits-csv data/external/leptraits_consensus_v1.0.csv             --occurrence-dir input/occ             --ledger-dir input/occ             --realm-geojson input/realm/holt2013_realms.geojson             --realm-source-sha256 "$REALM_SHA"             --expected-shards 40             --output-species-csv results/realm/species_realm_summary.csv             --output-json results/realm/geb_occurrence_realm_result_v0.1.json
+          cat results/realm/geb_occurrence_realm_result_v0.1.json
+      - name: Bind result receipt
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          result=Path("results/realm/geb_occurrence_realm_result_v0.1.json")
+          species=Path("results/realm/species_realm_summary.csv")
+          receipt={
+            "schema":"chocho_geb_occurrence_realm_recovery_v02_receipt",
+            "workflow_run_id":int(os.environ["GITHUB_RUN_ID"]),
+            "workflow_head_sha":os.environ["GITHUB_SHA"],
+            "source_run_id":int(os.environ["SOURCE_RUN_ID"]),
+            "recovery_contract":"provenance/geb/geb_realm_transport_recovery_v0.1.json",
+            "transport_bias_audit":"provenance/geb/geb_realm_transport_bias_audit_v0.1.json",
+            "sampling_bias_sensitivity":"provenance/geb/geb_realm_sampling_bias_sensitivity_v0.1.json",
+            "result_sha256":sha(result),
+            "species_summary_sha256":sha(species),
+            "result":json.loads(result.read_text())
+          }
+          Path("results/realm/workflow_receipt.json").write_text(
+              json.dumps(receipt,indent=2,sort_keys=True)+"\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-occurrence-realm-recovered-result-v02
+          path: results/realm/
+          if-no-files-found: error
+          retention-days: 30
