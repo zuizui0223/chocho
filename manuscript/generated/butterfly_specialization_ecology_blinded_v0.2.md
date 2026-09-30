@@ -23,7 +23,7 @@
 
 ## 1. Introduction
 
-Diet breadth is a central axis of herbivore ecology, but it is usually treated as a property of the consumer: how many host taxa a species uses, how phylogenetically diverse those hosts are, or how this breadth covaries with the consumer's own geographic range. In butterflies, broader diets have been linked to larger ranges and to range-shift dynamics, while recent global work has identified climate and regional plant richness as drivers of larval diet specialization (Slove & Janz 2011; Lancaster 2020; Gross et al. 2026). These approaches establish that **what a consumer can eat** matters for biogeography. They do not, however, specify **where those edible resources occur**.
+In butterflies, larval host specialization is a defining ecological axis. Comparative studies usually express it as a property of the consumer: how many host taxa a butterfly uses, how phylogenetically diverse those hosts are, or how host breadth covaries with the butterfly's own geographic range. Broader diets have been linked to larger ranges and to range-shift dynamics, while recent global work has identified climate and regional plant richness as drivers of larval diet specialization (Slove & Janz 2011; Lancaster 2020; Gross et al. 2026). These approaches establish that **what a butterfly can eat** matters for biogeography. They do not, however, specify **where those larval resources occur**.
 
 That distinction becomes important under global change because interaction partners are redistributed independently. Humans have naturalized more than 13,000 plant species outside their native ranges, and these movements have measurably homogenized regional floras worldwide (van Kleunen et al. 2015; Daru et al. 2021). For consumers, this plant globalization changes not only community composition but the geography of potential resources. A butterfly restricted to one plant family may use a host that humans have spread across continents, whereas a taxonomic generalist may depend on many hosts whose distributions remain geographically limited. Human transport can therefore change the geographic amount of resource opportunity without changing the butterfly's taxonomic diet breadth at all. Regional studies already show that introduced plants can become larval hosts and sometimes accompany butterfly range expansion or longer flight seasons (Graves & Shapiro 2003). Species-level range-shift studies also show the complementary route in which the consumer changes: exploiting more widespread hosts or reduced host specialization can accompany butterfly expansion (Braschler & Hill 2007; Neu et al. 2021). Our question is the mirror image. We hold the butterfly's known host list fixed and ask what happens when the **hosts themselves are redistributed**. Host-range studies further show that plant availability can constrain butterfly distributions, particularly for specialists, but typically treat host geography as a current or future constraint rather than ask how anthropogenic plant redistribution has already altered that geography (Rashid et al. 2026).
 
@@ -37,7 +37,7 @@ We expected anthropogenic host redistribution to enlarge resource opportunity ac
 
 ## 2. Methods
 
-### 2.1 Conceptual design: interaction breadth, resource geography and realization
+### 2.1 Conceptual design: larval host breadth, resource geography and butterfly occurrence
 
 We organized the analysis around three related but non-equivalent quantities. **Taxonomic interaction breadth** describes which kinds of larval hosts a butterfly uses, measured here as host-family richness. **Resource geography** describes where those known hosts occur, represented by the union of their geographic distributions. **Realized consumer geography** describes where the butterfly is actually observed. Human redistribution enters between the first two quantities: moving a known host can alter a butterfly's resource geography without changing its taxonomic interaction breadth.
 
@@ -127,7 +127,7 @@ More than half of species × region observations lying outside native host-resou
 
 That distinction matters for macroecological analyses that combine consumer distributions with resource distributions. When resources themselves have been redistributed, native resource maps can create apparent consumer–resource mismatches that are partly artifacts of treating present-day interaction opportunity as if plant geography were still native.
 
-### 4.3 Global change acts on interaction geography
+### 4.3 Implications for butterfly and global-change biogeography
 
 The broader implication is that globalization acts on **interaction geography**, not only on species ranges. Global plant naturalization has already eroded floristic distinctiveness among regions, and introductions can homogenize ecological interaction networks (Daru et al. 2021; Fricke & Svenning 2020). Our results identify a downstream, consumer-specific consequence of that restructuring: moving the resource can enlarge a consumer's potential geography even when its taxonomic niche breadth is unchanged. Macroecological comparisons that describe consumers by their own traits and distributions while treating resource layers as static can therefore miss a distinct pathway of anthropogenic change.
 
