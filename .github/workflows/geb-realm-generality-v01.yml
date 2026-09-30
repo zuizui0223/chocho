@@ -11,6 +11,14 @@ on:
       - "scripts/analyze_geb_occurrence_realms.py"
       - "scripts/acquire_butterfly_resource_envelope_occurrences.py"
       - "src/butterfly_specialization_ecology/checkpointed_gbif_occurrence.py"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/geb-realm-generality-v01.yml"
+      - "docs/exploratory/geb_occurrence_realm_protocol_v0.1.json"
+      - "scripts/acquire_geb_realm_occurrences.py"
+      - "scripts/analyze_geb_occurrence_realms.py"
   workflow_dispatch:
 
 permissions:
