@@ -1,0 +1,38 @@
+{
+  "schema": "chocho_geb_generality_leave_one_group_out_protocol_v0.1",
+  "status": "FROZEN_BEFORE_ANY_GEB_GENERALITY_AUDIT_RESULT",
+  "created_on": "2026-09-30",
+  "purpose": "Test whether the host-contribution architecture signal is driven by any single butterfly family or any single WGSRPD Level-1 botanical continent.",
+  "source": "Use exactly the species-host-region reconstruction produced by the prospectively frozen GEB generality audit; do not reacquire or alter upstream biological data.",
+  "primary_population": "host-taxonomy-adequate species with introduced-host resource expansion under the existing manuscript definition",
+  "analyses": {
+    "leave_one_butterfly_family_out": {
+      "procedure": "For every represented butterfly family, remove all species in that family and recompute the two global Spearman associations.",
+      "metrics": [
+        "rho(host-family breadth, effective contributor number)",
+        "rho(host-family breadth, maximum single-host fractional share)"
+      ],
+      "expected_directions": [">0", "<0"]
+    },
+    "leave_one_level1_out": {
+      "procedure": "For every WGSRPD Level-1 botanical continent, remove all resource units in that Level-1 region, rebuild each species' remaining introduced-added host contribution architecture, then recompute the two global Spearman associations.",
+      "metrics": [
+        "rho(host-family breadth, effective contributor number)",
+        "rho(host-family breadth, maximum single-host fractional share)"
+      ],
+      "expected_directions": [">0", "<0"]
+    }
+  },
+  "reporting": {
+    "report_every_omission": true,
+    "no_posthoc_exclusion": true,
+    "report_minimum_and_maximum_effect_across_omissions": true,
+    "report_number_retaining_expected_direction": true,
+    "do_not_convert_sign_consistency_into_a_new_null_hypothesis_test": true
+  },
+  "claim_boundary": {
+    "robustness_not_independent_replication": true,
+    "WGSRPD_level1_is_not_a_zoogeographic_realm": true,
+    "does_not_establish_realized_butterfly_range_expansion": true
+  }
+}
