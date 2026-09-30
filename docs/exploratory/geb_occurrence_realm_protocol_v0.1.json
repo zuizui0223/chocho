@@ -29,15 +29,29 @@
     }
   },
   "realm_source": {
-    "dataset": "RESOLVE Ecoregions 2017",
-    "citation": "Dinerstein et al. 2017 BioScience 67:534-545",
-    "doi": "10.1093/biosci/bix014",
-    "provider": "UNEP-WCMC Resolve_Ecoregions FeatureServer",
-    "endpoint": "https://data-gis.unep-wcmc.org/server/rest/services/Bio-geographicalRegions/Resolve_Ecoregions/FeatureServer/0/query",
-    "query": "where=1=1&outFields=realm&returnGeometry=true&outSR=4326&f=geojson",
-    "realm_field": "realm",
-    "execution_rule": "normalize the provider realm field to Realm, dissolve polygons by Realm, record SHA256 of the exact GeoJSON used",
-    "assignment": "point-in-polygon/intersects in WGS84"
+    "dataset": "CMEC Zoogeographic Realms and Regions — newRealms",
+    "citation": "Holt BG et al. 2013. An Update of Wallace's Zoogeographic Regions of the World. Science 339:74-78.",
+    "doi": "10.1126/science.1228282",
+    "provider": "Center for Macroecology, Evolution and Climate, University of Copenhagen",
+    "provider_page": "https://macroecology.ku.dk/resources/wallace",
+    "archive_url": "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip",
+    "archive_member": "CMEC regions & realms/newRealms.shp",
+    "realm_field": "Realm",
+    "expected_realms": [
+      "Neotropical",
+      "Australian",
+      "Afrotropical",
+      "Madagascan",
+      "Oceanian",
+      "Oriental",
+      "Panamanian",
+      "Saharo-Arabian",
+      "Nearctic",
+      "Sino-Japanese",
+      "Palearctic"
+    ],
+    "assignment": "point-in-polygon/intersects in WGS84",
+    "execution_rule": "download the official CMEC archive, record archive SHA256, read newRealms.shp, retain Realm and geometry, dissolve by Realm, transform to EPSG:4326, record exact derived GeoJSON SHA256 used for assignment"
   },
   "species_realm_summary": {
     "minimum_mapped_occurrences": 30,
@@ -74,7 +88,8 @@
   },
   "claim_boundary": [
     "This is a post-hoc generality audit of an already-observed portfolio pattern, not a prospective hypothesis test.",
-    "Realm assignment uses realized GBIF occurrence geography rather than host-resource geography.",
+    "Realm assignment uses realized GBIF occurrence geography and the 11 Holt et al. (2013) terrestrial zoogeographic realms.",
+    "The Holt realm map was derived from terrestrial vertebrate assemblage distributions and phylogenetic relationships; it is used here as an external broad-scale zoogeographic partition, not as a butterfly-derived regionalization.",
     "No causal claim about host introduction or range expansion is added."
   ],
   "evaluability_gate": {
