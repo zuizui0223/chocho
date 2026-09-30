@@ -44,7 +44,12 @@
     "primary_realm": "realm with the largest mapped-occurrence count; exact count ties are TIE",
     "primary_realm_share": "largest realm count divided by all realm-mapped occurrence records",
     "realm_informative": "at least 30 realm-mapped records",
-    "core_realm_sensitivity": "realm_informative and primary_realm_share >= 0.60"
+    "core_realm_sensitivity": "realm_informative and primary_realm_share >= 0.60",
+    "tie_handling": {
+      "informative_count": "species with >=30 mapped records remain realm-informative even if the top realm count is tied",
+      "realm_replication": "TIE is not a realm and is excluded from realm cell counts, the four-realm evaluability criterion, by-realm correlations, and leave-one-realm-out analyses",
+      "frozen_before_any_realm_assignment_or_realm_result": true
+    }
   },
   "evaluable_gate": {
     "population": "191 host-taxonomy-adequate species with introduced-host expansion",
