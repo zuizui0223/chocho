@@ -1,0 +1,64 @@
+{
+  "schema": "chocho_geb_realm_transport_bias_audit_v0.1",
+  "status": "TRANSPORT_ONLY_AUDIT_BEFORE_REALM_ASSIGNMENT_RESULT",
+  "recorded_on": "2026-10-01",
+  "source_workflow_run_id": 36740694975,
+  "source_workflow_head_sha": "33149e3f512616a8e42fc21f8d83646e51c3695a",
+  "information_boundary": {
+    "realm_assignment_opened": false,
+    "realm_stratified_portfolio_result_opened": false,
+    "allowed": ["transport status", "missing ordinal-window count", "transport error class", "pre-existing host-breadth descriptors"],
+    "recovery_selection_changed": false
+  },
+  "full_239_panel": {
+    "species": 239,
+    "status_counts": {
+      "COMPLETE": 91,
+      "PARTIAL_TRANSPORT": 144,
+      "REJECTED_GBIF_TAXON_MATCH": 4
+    },
+    "missing_ordinal_windows_across_partial_species": 503,
+    "partial_species_missing_windows": {
+      "minimum": 1,
+      "median": 4,
+      "mean": 3.4930555555555554,
+      "maximum": 5
+    },
+    "partial_final_error_class": {
+      "timeout": 124,
+      "duplicate_occurrence_keys": 17,
+      "other_http": 3
+    },
+    "partial_fraction_by_host_breadth_stratum": {
+      "1_family": {"species": 97, "partial": 55, "fraction": 0.5670103092783505},
+      "2_families": {"species": 59, "partial": 30, "fraction": 0.5084745762711864},
+      "3_to_5_families": {"species": 50, "partial": 33, "fraction": 0.66},
+      "6plus_families": {"species": 33, "partial": 26, "fraction": 0.7878787878787878}
+    },
+    "median_native_resource_units_by_transport_status": {
+      "COMPLETE": 62.0,
+      "PARTIAL_TRANSPORT": 132.0,
+      "REJECTED_GBIF_TAXON_MATCH": 20.5
+    }
+  },
+  "expanded_host_taxonomy_adequate_191": {
+    "species": 191,
+    "status_counts": {
+      "COMPLETE": 65,
+      "PARTIAL_TRANSPORT": 123,
+      "REJECTED_GBIF_TAXON_MATCH": 3
+    },
+    "partial_fraction_by_host_breadth_stratum": {
+      "1_family": {"species": 82, "partial": 50, "fraction": 0.6097560975609756},
+      "2_families": {"species": 44, "partial": 27, "fraction": 0.6136363636363636},
+      "3_to_5_families": {"species": 37, "partial": 24, "fraction": 0.6486486486486487},
+      "6plus_families": {"species": 28, "partial": 22, "fraction": 0.7857142857142857}
+    }
+  },
+  "interpretation": {
+    "transport_missingness_is_not_ignorable": true,
+    "reason": "Partial transport is more common among broader host-family diets and among species with larger native resource geography. Dropping partial species would therefore alter the specialization/resource-breadth composition of the panel.",
+    "consequence": "The frozen all-and-only PARTIAL_TRANSPORT recovery is necessary. A complete-case realm analysis from the source run is prohibited.",
+    "scientific_result": false
+  }
+}
