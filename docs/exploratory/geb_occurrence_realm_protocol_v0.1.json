@@ -115,7 +115,27 @@
       "sensitivities": [
         "primary_realm_share >= 0.60",
         "1-degree-cell-weighted primary realm assignment"
-      ]
+      ],
+      "family_structure_sensitivity": {
+        "statistic": "same observed pooled within-realm rank association",
+        "permutation": "permute host-family-breadth ranks only within primary-realm x butterfly-family cells; singleton cells remain fixed",
+        "permutations": 9999,
+        "purpose": "test whether the specialization-portfolio association is explainable by realized realm composition plus broad butterfly-family composition"
+      }
+    },
+    "realm_decoupling": {
+      "population": "same interpretable non-TIE primary-realm population as the pooled within-realm architecture test",
+      "magnitude_response": "log(contemporary_resource_units / native_resource_units), identical to log_resource_expansion",
+      "architecture_responses": [
+        "effective_contributor_number",
+        "maximum_single_host_fractional_share"
+      ],
+      "question": "Does realized realm structure reveal a hidden specialization effect on total proportional gain, or does specialization primarily predict portfolio architecture within realms?",
+      "statistics": [
+        "pooled within-realm percentile-rank association of host-family breadth with log_resource_expansion",
+        "the already-frozen pooled within-realm architecture associations on the identical species population"
+      ],
+      "interpretation_rule": "Treat the magnitude association as a generality diagnostic, not an equivalence test. A large or sign-heterogeneous within-realm magnitude association would qualify the global decoupling claim rather than be averaged away."
     }
   },
   "claim_boundary": [
