@@ -57,6 +57,77 @@ def spearman(frame: pd.DataFrame, x: str, y: str) -> dict[str, object]:
     return {"n": int(len(z)), "rho": rho}
 
 
+PERMUTATION_TAG = "chocho-geb-within-realm-v0.1"
+
+
+def _within_group_percentile_ranks(
+    frame: pd.DataFrame,
+    group_col: str,
+    value_col: str,
+) -> pd.Series:
+    out = pd.Series(index=frame.index, dtype=float)
+    for _, idx in frame.groupby(group_col, sort=True).groups.items():
+        values = pd.to_numeric(frame.loc[idx, value_col], errors="raise").to_numpy(dtype=float)
+        rr = rankdata(values, method="average")
+        if len(rr) == 1:
+            scaled = np.asarray([0.5], dtype=float)
+        else:
+            scaled = (rr - 1.0) / (len(rr) - 1.0)
+        out.loc[idx] = scaled
+    return out
+
+
+def pooled_within_group_rank(
+    frame: pd.DataFrame,
+    group_col: str,
+    x_col: str,
+    y_col: str,
+    *,
+    permutations: int = 9999,
+) -> dict[str, object]:
+    z = frame[[group_col, x_col, y_col]].copy()
+    z[x_col] = pd.to_numeric(z[x_col], errors="coerce")
+    z[y_col] = pd.to_numeric(z[y_col], errors="coerce")
+    z = z.dropna().reset_index(drop=True)
+    if len(z) < 3 or z[group_col].nunique() < 1:
+        return {"n": int(len(z)), "rho": None, "p_two_sided": None}
+    xr = _within_group_percentile_ranks(z, group_col, x_col).to_numpy(dtype=float)
+    yr = _within_group_percentile_ranks(z, group_col, y_col).to_numpy(dtype=float)
+    if np.std(xr) <= np.sqrt(np.finfo(float).eps) or np.std(yr) <= np.sqrt(np.finfo(float).eps):
+        return {"n": int(len(z)), "rho": None, "p_two_sided": None}
+    observed = float(np.corrcoef(xr, yr)[0, 1])
+    seed = int.from_bytes(hashlib.sha256(PERMUTATION_TAG.encode("utf-8")).digest()[:8], "big")
+    rng = np.random.default_rng(seed)
+    groups = [np.asarray(list(idx), dtype=int) for _, idx in z.groupby(group_col, sort=True).groups.items()]
+    extreme = 0
+    for _ in range(int(permutations)):
+        xp = xr.copy()
+        for idx in groups:
+            xp[idx] = rng.permutation(xp[idx])
+        null = float(np.corrcoef(xp, yr)[0, 1])
+        if abs(null) >= abs(observed):
+            extreme += 1
+    return {
+        "n": int(len(z)),
+        "realms": int(z[group_col].nunique()),
+        "rho": observed,
+        "permutations": int(permutations),
+        "seed_u64": int(seed),
+        "p_two_sided": float((1 + extreme) / (int(permutations) + 1)),
+    }
+
+
+def interpretable_group_subset(
+    frame: pd.DataFrame,
+    group_col: str,
+    *,
+    minimum_n: int,
+) -> pd.DataFrame:
+    counts = frame[group_col].value_counts()
+    keep = set(counts[counts >= int(minimum_n)].index.astype(str))
+    return frame[frame[group_col].astype(str).isin(keep)].copy()
+
+
 def family_map(path: Path) -> dict[str, str]:
     out: dict[str, str] = {}
     with path.open(newline="", encoding="utf-8") as handle:
@@ -406,8 +477,67 @@ def main() -> int:
     }
 
     if gate_pass:
-        core = adequate[adequate["core_realm"]].copy()
+        minimum_realm_n = int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
+        realm_test = interpretable_group_subset(
+            realm_assigned, "primary_realm", minimum_n=minimum_realm_n
+        )
+        core = adequate[
+            adequate["core_realm"].fillna(False)
+            & adequate["primary_realm"].notna()
+            & adequate["primary_realm"].astype(str).ne("TIE")
+        ].copy()
+        core_test = interpretable_group_subset(
+            core, "primary_realm", minimum_n=minimum_realm_n
+        )
+        cell_test = interpretable_group_subset(
+            cell_realm_assigned, "cell_primary_realm", minimum_n=minimum_realm_n
+        )
         payload["generality"] = {
+            "pooled_within_realm_rank": {
+                "effective": pooled_within_group_rank(
+                    realm_test, "primary_realm", "host_family_count",
+                    "effective_contributor_number", permutations=9999
+                ),
+                "dominance": pooled_within_group_rank(
+                    realm_test, "primary_realm", "host_family_count",
+                    "maximum_single_host_fractional_share", permutations=9999
+                ),
+                "leave_one_realm_out": {
+                    realm: {
+                        "effective": pooled_within_group_rank(
+                            realm_test[realm_test["primary_realm"].astype(str) != realm],
+                            "primary_realm", "host_family_count",
+                            "effective_contributor_number", permutations=9999
+                        ),
+                        "dominance": pooled_within_group_rank(
+                            realm_test[realm_test["primary_realm"].astype(str) != realm],
+                            "primary_realm", "host_family_count",
+                            "maximum_single_host_fractional_share", permutations=9999
+                        ),
+                    }
+                    for realm in sorted(realm_test["primary_realm"].astype(str).unique())
+                },
+                "core_realm_sensitivity": {
+                    "effective": pooled_within_group_rank(
+                        core_test, "primary_realm", "host_family_count",
+                        "effective_contributor_number", permutations=9999
+                    ),
+                    "dominance": pooled_within_group_rank(
+                        core_test, "primary_realm", "host_family_count",
+                        "maximum_single_host_fractional_share", permutations=9999
+                    ),
+                },
+                "cell_weighted_realm_sensitivity": {
+                    "effective": pooled_within_group_rank(
+                        cell_test, "cell_primary_realm", "host_family_count",
+                        "effective_contributor_number", permutations=9999
+                    ),
+                    "dominance": pooled_within_group_rank(
+                        cell_test, "cell_primary_realm", "host_family_count",
+                        "maximum_single_host_fractional_share", permutations=9999
+                    ),
+                },
+            },
             "overall_informative": {
                 "host_family_vs_effective": spearman(
                     informative, "host_family_count", "effective_contributor_number"
