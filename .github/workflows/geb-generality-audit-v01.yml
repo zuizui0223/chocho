@@ -9,6 +9,8 @@ on:
       - "scripts/audit_geb_generality.py"
       - "docs/exploratory/geb_generality_audit_protocol_v0.1.json"
       - "provenance/geb_generality_audit_crosswalk_correction_v0.1.json"
+      - "provenance/geb_generality_audit_wgsrpd_encoding_correction_v0.1.json"
+      - "scripts/build_wcvp_hosts_contemporary_sidecar.R"
   workflow_dispatch:
 
 concurrency:
@@ -74,15 +76,11 @@ jobs:
           echo "6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  data/external/leptraits_consensus_v1.0.csv" | sha256sum -c -
           echo "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc  inputs/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv" | sha256sum -c -
 
-      - name: Rebuild pinned native host sidecar
-        run: |
-          Rscript scripts/build_wcvp_hosts_sidecar.R _wcvp _hosts results/native-sidecar
-          echo "0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9  results/native-sidecar/insect_host_accepted.csv" | sha256sum -c -
-          echo "c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558  results/native-sidecar/native_extant_nondoubtful_wgsrpd3.csv" | sha256sum -c -
-
-      - name: Rebuild pinned contemporary host sidecar
+      - name: Rebuild pinned native and contemporary host sidecars
         run: |
           Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R _wcvp _hosts results/contemporary-sidecar
+          echo "0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9  results/contemporary-sidecar/insect_host_accepted.csv" | sha256sum -c -
+          echo "c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558  results/contemporary-sidecar/native_extant_nondoubtful_wgsrpd3.csv" | sha256sum -c -
 
       - name: Run prospectively frozen GEB generality audit
         run: |
@@ -91,8 +89,8 @@ jobs:
             --protocol-json docs/exploratory/geb_generality_audit_protocol_v0.1.json \
             --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
             --descriptors-csv inputs/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
-            --insect-host-csv results/native-sidecar/insect_host_accepted.csv \
-            --native-distribution-csv results/native-sidecar/native_extant_nondoubtful_wgsrpd3.csv \
+            --insect-host-csv results/contemporary-sidecar/insect_host_accepted.csv \
+            --native-distribution-csv results/contemporary-sidecar/native_extant_nondoubtful_wgsrpd3.csv \
             --contemporary-distribution-csv results/contemporary-sidecar/extant_nondoubtful_wgsrpd3.csv \
             --level1-table "_wgsrpd/109-488-1-ED/2nd Edition/tblLevel1.txt" \
             --level2-table "_wgsrpd/109-488-1-ED/2nd Edition/tblLevel2.txt" \
