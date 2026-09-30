@@ -81,7 +81,7 @@ def read_descriptors(path):
 
 def read_families(path):
     out = {}
-    with path.open(newline="", encoding="utf-8-sig") as f:
+    with path.open(newline="", encoding="latin-1") as f:
         r = csv.DictReader(f)
         if not {"Species", "Family"} <= set(r.fieldnames or ()):
             raise RuntimeError("LepTraits Species/Family missing")
@@ -127,7 +127,7 @@ def _comma_decimal_code(value: str) -> str:
 
 def level1_crosswalk(level1_path, level2_path, level3_path):
     level1 = {}
-    with level1_path.open(encoding="utf-8-sig") as f:
+    with level1_path.open(encoding="latin-1") as f:
         header = next(f, None)
         for line in f:
             parts = line.rstrip("\r\n").split("*")
@@ -138,7 +138,7 @@ def level1_crosswalk(level1_path, level2_path, level3_path):
                     level1[code] = name
 
     level2_to_level1 = {}
-    with level2_path.open(encoding="utf-8-sig") as f:
+    with level2_path.open(encoding="latin-1") as f:
         header = next(f, None)
         for line in f:
             parts = line.rstrip("\r\n").split("*")
@@ -149,7 +149,7 @@ def level1_crosswalk(level1_path, level2_path, level3_path):
                     level2_to_level1[l2] = l1_code
 
     out = {}
-    with level3_path.open(encoding="utf-8-sig") as f:
+    with level3_path.open(encoding="latin-1") as f:
         header = next(f, None)
         for line in f:
             parts = line.rstrip("\r\n").split("*")
