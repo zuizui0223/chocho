@@ -8,6 +8,7 @@ on:
       - ".github/workflows/geb-generality-audit-v01.yml"
       - "scripts/audit_geb_generality.py"
       - "docs/exploratory/geb_generality_audit_protocol_v0.1.json"
+      - "provenance/geb_generality_audit_crosswalk_correction_v0.1.json"
   workflow_dispatch:
 
 concurrency:
@@ -93,7 +94,9 @@ jobs:
             --insect-host-csv results/native-sidecar/insect_host_accepted.csv \
             --native-distribution-csv results/native-sidecar/native_extant_nondoubtful_wgsrpd3.csv \
             --contemporary-distribution-csv results/contemporary-sidecar/extant_nondoubtful_wgsrpd3.csv \
-            --level3-geojson _wgsrpd/geojson/level3.geojson \
+            --level1-table "_wgsrpd/109-488-1-ED/2nd Edition/tblLevel1.txt" \
+            --level2-table "_wgsrpd/109-488-1-ED/2nd Edition/tblLevel2.txt" \
+            --level3-table "_wgsrpd/109-488-1-ED/2nd Edition/tblLevel3.txt" \
             --independent-panel-json inputs/panel/panel.json \
             --climate-result-json data/frozen/figure_sources/independent_climate_primary_result.json \
             --output-json results/geb-generality-audit-v0.1/result.json \
