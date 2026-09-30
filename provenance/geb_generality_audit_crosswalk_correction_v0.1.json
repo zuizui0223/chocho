@@ -1,0 +1,21 @@
+{
+  "schema": "chocho_geb_generality_audit_crosswalk_correction_v0.1",
+  "status": "FROZEN_TECHNICAL_CORRECTION_BEFORE_ANY_GENERALITY_RESULT",
+  "created_on": "2026-09-30",
+  "triggering_run_id": 36734100313,
+  "triggering_failure": "WGSRPD Level-3 WCVP area codes such as ALA and AFG did not match the numeric Level3_cod field assumed by the first audit implementation.",
+  "diagnosis": "WCVP area_code_l3 uses the official three-letter WGSRPD Level-3 code. The pinned WGSRPD distribution includes authoritative hierarchy tables in which tblLevel3 maps that three-letter code to Level-2, tblLevel2 maps Level-2 to Level-1, and tblLevel1 supplies the Level-1 botanical-continent name.",
+  "correction": {
+    "old_crosswalk": "Attempt to map WCVP three-letter area_code_l3 directly through the Level-3 GeoJSON properties.",
+    "new_crosswalk": "Use pinned official tblLevel3.txt -> tblLevel2.txt -> tblLevel1.txt at the same WGSRPD commit.",
+    "WGSRPD_commit_unchanged": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "geographic_unit_unchanged": "WGSRPD Level 1 botanical continent",
+    "informative_thresholds_unchanged": true,
+    "directional_replication_checks_unchanged": true
+  },
+  "response_firewall": {
+    "generality_result_seen_before_correction": false,
+    "region_effect_estimates_seen_before_correction": false,
+    "family_effect_estimates_seen_before_correction": false
+  }
+}
