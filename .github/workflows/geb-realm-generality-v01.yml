@@ -51,9 +51,9 @@ jobs:
             --output-csv "results/shard-${{ matrix.shard }}/occurrences-${{ matrix.shard }}.csv" \
             --output-ledger "results/shard-${{ matrix.shard }}/ledger-${{ matrix.shard }}.json" \
             --species-seconds 1200 \
-            --request-seconds 120 \
+            --request-seconds 30 \
             --maximum-pages 6 \
-            --transport-chunk-size 300 \
+            --transport-chunk-size 50 \
             --passes 2
       - uses: actions/upload-artifact@v4
         with:
