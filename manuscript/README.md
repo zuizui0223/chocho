@@ -15,7 +15,7 @@ This directory contains the submission-facing paper package and its scientific-c
 
 ## v0.2 evidence order
 
-1. introduced host distributions broadly expand butterfly resource geography (+54.9% aggregate species × region coverage);
+1. introduced host distributions broadly expand butterfly resource geography (+54.9% aggregate species × region coverage), across every diet-breadth class and 83.5–90.2% of species in each major butterfly family;
 2. added opportunity is strongly uneven across host plants: 38/670 species or 25/431 genera account for half of the 14,553 added butterfly × region units;
 3. proportional expansion has little relationship to family-level diet breadth (rho = 0.008; bootstrap 95% CI -0.111 to 0.128), while strict ±0.10 equivalence remains narrowly inconclusive;
 4. introduced host geography recovers butterfly occurrences beyond structural-overlap expectations and survives species-cluster and leave-one-out tests;
