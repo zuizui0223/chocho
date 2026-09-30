@@ -163,6 +163,8 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert major["Lycaenidae"]["expanded_species"] == 22
     assert major["Papilionidae"]["expanded_species"] == 14
     assert min(row["expanded_fraction"] for row in major.values()) > 0.83
+    assert major["Hesperiidae"]["median_host_family_count"] == 1.0
+    assert major["Pieridae"]["median_host_family_count"] == 1.0
 
     # Secondary occurrence validation remains species-robust.
     assert occurrence["species"] == 23
