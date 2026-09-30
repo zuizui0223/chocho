@@ -127,6 +127,96 @@ def pooled_within_group_rank(
     }
 
 
+BOOTSTRAP_TAG = "chocho-geb-realm-bootstrap-v0.1"
+
+
+def pooled_within_group_rho(
+    frame: pd.DataFrame,
+    group_col: str,
+    x_col: str,
+    y_col: str,
+) -> float | None:
+    z = frame[[group_col, x_col, y_col]].copy()
+    z[x_col] = pd.to_numeric(z[x_col], errors="coerce")
+    z[y_col] = pd.to_numeric(z[y_col], errors="coerce")
+    z = z.dropna().reset_index(drop=True)
+    if len(z) < 3:
+        return None
+    xr = _within_group_percentile_ranks(z, group_col, x_col).to_numpy(dtype=float)
+    yr = _within_group_percentile_ranks(z, group_col, y_col).to_numpy(dtype=float)
+    if np.std(xr) <= np.sqrt(np.finfo(float).eps) or np.std(yr) <= np.sqrt(np.finfo(float).eps):
+        return None
+    return float(np.corrcoef(xr, yr)[0, 1])
+
+
+def stratified_bootstrap_architecture_vs_magnitude(
+    frame: pd.DataFrame,
+    group_col: str,
+    *,
+    x_col: str,
+    magnitude_col: str,
+    effective_col: str,
+    dominance_col: str,
+    replicates: int = 9999,
+) -> dict[str, object]:
+    z = frame[[group_col, x_col, magnitude_col, effective_col, dominance_col]].copy()
+    for col in (x_col, magnitude_col, effective_col, dominance_col):
+        z[col] = pd.to_numeric(z[col], errors="coerce")
+    z = z.dropna().reset_index(drop=True)
+    if len(z) < 3:
+        return {"n": int(len(z)), "replicates": int(replicates), "status": "INSUFFICIENT"}
+
+    observed_mag = pooled_within_group_rho(z, group_col, x_col, magnitude_col)
+    observed_eff = pooled_within_group_rho(z, group_col, x_col, effective_col)
+    observed_dom = pooled_within_group_rho(z, group_col, x_col, dominance_col)
+    if observed_mag is None or observed_eff is None or observed_dom is None:
+        return {"n": int(len(z)), "replicates": int(replicates), "status": "DEGENERATE"}
+
+    seed = int.from_bytes(hashlib.sha256(BOOTSTRAP_TAG.encode("utf-8")).digest()[:8], "big")
+    rng = np.random.default_rng(seed)
+    grouped = [sub.reset_index(drop=True) for _, sub in z.groupby(group_col, sort=True)]
+    d_eff = []
+    d_dom = []
+    for _ in range(int(replicates)):
+        parts = []
+        for sub in grouped:
+            take = rng.integers(0, len(sub), size=len(sub))
+            parts.append(sub.iloc[take].copy())
+        boot = pd.concat(parts, ignore_index=True)
+        r_mag = pooled_within_group_rho(boot, group_col, x_col, magnitude_col)
+        r_eff = pooled_within_group_rho(boot, group_col, x_col, effective_col)
+        r_dom = pooled_within_group_rho(boot, group_col, x_col, dominance_col)
+        if r_mag is None or r_eff is None or r_dom is None:
+            continue
+        d_eff.append(float(r_eff - r_mag))
+        d_dom.append(float((-r_dom) - r_mag))
+
+    if not d_eff or not d_dom:
+        return {"n": int(len(z)), "replicates": int(replicates), "status": "NO_FINITE_BOOTSTRAPS"}
+
+    def interval(values: list[float]) -> list[float]:
+        q = np.quantile(np.asarray(values, dtype=float), [0.025, 0.975])
+        return [float(q[0]), float(q[1])]
+
+    return {
+        "status": "COMPLETE",
+        "n": int(len(z)),
+        "realms": int(z[group_col].nunique()),
+        "replicates_requested": int(replicates),
+        "replicates_finite": int(min(len(d_eff), len(d_dom))),
+        "seed_u64": int(seed),
+        "observed": {
+            "magnitude_rho": float(observed_mag),
+            "effective_rho": float(observed_eff),
+            "dominance_rho": float(observed_dom),
+            "effective_minus_magnitude": float(observed_eff - observed_mag),
+            "dominance_oriented_minus_magnitude": float((-observed_dom) - observed_mag),
+        },
+        "effective_minus_magnitude_ci95": interval(d_eff),
+        "dominance_oriented_minus_magnitude_ci95": interval(d_dom),
+    }
+
+
 def interpretable_group_subset(
     frame: pd.DataFrame,
     group_col: str,
@@ -588,6 +678,14 @@ def main() -> int:
                 "magnitude_log_resource_expansion": pooled_within_group_rank(
                     realm_test, "primary_realm", "host_family_count",
                     "log_resource_expansion_rebuilt", permutations=9999
+                ),
+                "architecture_vs_magnitude_bootstrap": stratified_bootstrap_architecture_vs_magnitude(
+                    realm_test, "primary_realm",
+                    x_col="host_family_count",
+                    magnitude_col="log_resource_expansion_rebuilt",
+                    effective_col="effective_contributor_number",
+                    dominance_col="maximum_single_host_fractional_share",
+                    replicates=9999,
                 ),
                 "magnitude_family_stratified_permutation": pooled_within_group_rank(
                     realm_test, "primary_realm", "host_family_count",
