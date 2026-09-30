@@ -8,8 +8,13 @@ import json
 from pathlib import Path
 
 from acquire_butterfly_resource_envelope_occurrences import (
+    atomic_json,
     combine_records,
     fetch_species_pages,
+)
+from butterfly_specialization_ecology.checkpointed_gbif_occurrence import (
+    occurrence_window_chunks,
+    species_state_key,
 )
 
 EXPECTED_SOURCE_SHA256 = (
@@ -60,6 +65,94 @@ def write_occurrences(path: Path, rows: list[dict[str, object]]) -> None:
         writer.writerows(rows)
 
 
+def repair_completed_chunk_windows(
+    species: str,
+    state_root: Path,
+    *,
+    chunk_size: int,
+) -> dict[str, int]:
+    """Rebuild a fixed ordinal window from completed transport chunks.
+
+    GBIF occurrence-search paging is not guaranteed to be stable across
+    separately transported chunks. If the same GBIF key appears in more than
+    one completed chunk, retain its first fetched record and record the
+    duplicate count. This changes only transport assembly; the six frozen
+    ordinal parent windows and all scientific filters remain unchanged.
+    """
+    state_dir = state_root / species_state_key(species)
+    meta_path = state_dir / "metadata.json"
+    if not meta_path.exists():
+        return {"pages_rebuilt": 0, "duplicate_keys_removed": 0}
+    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    if meta.get("status") == "REJECTED_GBIF_TAXON_MATCH":
+        return {"pages_rebuilt": 0, "duplicate_keys_removed": 0}
+
+    total = int(meta.get("total_coordinate_records_2010_2026") or 0)
+    page_size = int(meta.get("page_size") or 300)
+    pages_dir = state_dir / "pages"
+    pages_dir.mkdir(exist_ok=True)
+    rebuilt = 0
+    duplicate_total = 0
+
+    for offset in map(int, meta.get("page_offsets") or []):
+        page_path = pages_dir / f"offset_{offset:06d}.json"
+        if page_path.exists():
+            continue
+        window_size = max(0, min(page_size, total - offset))
+        chunks = occurrence_window_chunks(
+            offset,
+            window_size,
+            chunk_size=int(chunk_size),
+        )
+        records = []
+        complete = True
+        for chunk_offset, chunk_limit in chunks:
+            chunk_path = (
+                pages_dir
+                / f"offset_{offset:06d}_chunks"
+                / f"offset_{chunk_offset:06d}_limit_{chunk_limit:03d}.json"
+            )
+            if not chunk_path.exists():
+                complete = False
+                break
+            payload = json.loads(chunk_path.read_text(encoding="utf-8"))
+            records.extend(payload.get("records", []))
+        if not complete:
+            continue
+
+        unique = {}
+        duplicates = 0
+        for record in records:
+            key = int(record["key"])
+            if key in unique:
+                duplicates += 1
+                continue
+            unique[key] = record
+        atomic_json(
+            page_path,
+            {
+                "species": species,
+                "usage_key": int(meta["usage_key"]),
+                "offset": int(offset),
+                "window_size": int(window_size),
+                "transport_chunk_size": int(chunk_size),
+                "records": list(unique.values()),
+                "realm_audit_transport_repair": {
+                    "completed_chunks_reassembled": True,
+                    "duplicate_gbif_keys_removed": int(duplicates),
+                    "scientific_window_changed": False,
+                },
+            },
+        )
+        rebuilt += 1
+        duplicate_total += duplicates
+
+    return {
+        "pages_rebuilt": int(rebuilt),
+        "duplicate_keys_removed": int(duplicate_total),
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--source-csv", type=Path, required=True)
@@ -90,6 +183,10 @@ def main() -> int:
 
     args.state_dir.mkdir(parents=True, exist_ok=True)
     final = {}
+    repair_totals = {
+        name: {"pages_rebuilt": 0, "duplicate_keys_removed": 0}
+        for name in species
+    }
     for pass_index in range(args.passes):
         for name in species:
             prior = final.get(name)
@@ -98,7 +195,7 @@ def main() -> int:
                 "REJECTED_GBIF_TAXON_MATCH",
             }:
                 continue
-            final[name] = fetch_species_pages(
+            result = fetch_species_pages(
                 name,
                 args.state_dir,
                 species_seconds=args.species_seconds,
@@ -106,6 +203,33 @@ def main() -> int:
                 request_seconds=args.request_seconds,
                 transport_chunk_size=args.transport_chunk_size,
             )
+            # A completed set of smaller transport chunks can contain repeated
+            # GBIF keys because occurrence-search order is not a formal stable
+            # paging contract. Reassemble that frozen parent window by key and
+            # continue; do not change offsets, filters, or species membership.
+            for _ in range(args.maximum_pages + 1):
+                if result.get("status") != "PARTIAL_TRANSPORT":
+                    break
+                repaired = repair_completed_chunk_windows(
+                    name,
+                    args.state_dir,
+                    chunk_size=args.transport_chunk_size,
+                )
+                repair_totals[name]["pages_rebuilt"] += repaired["pages_rebuilt"]
+                repair_totals[name]["duplicate_keys_removed"] += repaired[
+                    "duplicate_keys_removed"
+                ]
+                if repaired["pages_rebuilt"] == 0:
+                    break
+                result = fetch_species_pages(
+                    name,
+                    args.state_dir,
+                    species_seconds=args.species_seconds,
+                    maximum_pages=args.maximum_pages,
+                    request_seconds=args.request_seconds,
+                    transport_chunk_size=args.transport_chunk_size,
+                )
+            final[name] = result
 
     rows = combine_records(args.state_dir, species)
     write_occurrences(args.output_csv, rows)
@@ -115,13 +239,19 @@ def main() -> int:
         name = str(row["species"])
         counts[name] = counts.get(name, 0) + 1
 
+    species_ledger = []
+    for name in species:
+        row = dict(final[name])
+        row["realm_audit_transport_repair"] = dict(repair_totals[name])
+        species_ledger.append(row)
+
     ledger = {
         "schema": "chocho_geb_occurrence_realm_shard_v0.1",
         "status": (
             "COMPLETE"
             if all(
-                final[name]["status"] in {"COMPLETE", "REJECTED_GBIF_TAXON_MATCH"}
-                for name in species
+                row["status"] in {"COMPLETE", "REJECTED_GBIF_TAXON_MATCH"}
+                for row in species_ledger
             )
             else "RESUMABLE_PARTIAL_TRANSPORT"
         ),
@@ -129,7 +259,7 @@ def main() -> int:
         "shard_count": args.shard_count,
         "panel_species_count": len(panel),
         "panel_species_sha256": EXPECTED_SPECIES_SHA256,
-        "species": [final[name] for name in species],
+        "species": species_ledger,
         "occurrence_rows": len(rows),
         "occurrence_rows_by_species": dict(sorted(counts.items())),
         "transport": {
