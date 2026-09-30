@@ -19,7 +19,14 @@
     "ordinal_windows_per_species": 6,
     "window_size": 300,
     "window_rule": "spread deterministic page offsets across the full GBIF result index, capped at the first 100000 searchable records",
-    "scientific_filter_change_from_existing_climate_route": false
+    "scientific_filter_change_from_existing_climate_route": false,
+    "transport_repair": {
+      "parent_scientific_windows_unchanged": true,
+      "chunk_size": 50,
+      "duplicate_key_rule": "if completed transport chunks for one frozen parent window contain the same GBIF occurrence key more than once, retain the first fetched row for that key, record the number removed, and rebuild the parent window; no replacement key is sought",
+      "reason": "technical response paging can duplicate keys across separately transported chunks; occurrence identity rather than page multiplicity is the sampling unit",
+      "frozen_before_any_realm_assignment_or_realm_result": true
+    }
   },
   "realm_source": {
     "dataset": "RESOLVE Ecoregions 2017",
