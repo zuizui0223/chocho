@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_geb_realm_transport_recovery_v0.1",
+  "status": "FROZEN_TECHNICAL_RECOVERY_AFTER_PARTIAL_TRANSPORT_BEFORE_FULL_REALM_RESULT",
+  "frozen_on": "2026-10-01",
+  "source": {
+    "repository": "zuizui0223/chocho",
+    "workflow_run_id": 36740694975,
+    "workflow_head_sha": "33149e3f512616a8e42fc21f8d83646e51c3695a",
+    "workflow": ".github/workflows/geb-occurrence-realms-v01.yml",
+    "scientific_protocol": "docs/exploratory/geb_occurrence_realm_protocol_v0.1.json"
+  },
+  "triggering_observation": {
+    "allowed_information": [
+      "transport completion status",
+      "planned/completed/missing ordinal offsets",
+      "GBIF transport errors",
+      "occurrence row counts"
+    ],
+    "first_completed_shard": 3,
+    "first_completed_shard_species": 6,
+    "first_completed_shard_complete_species": 4,
+    "first_completed_shard_partial_species": 2,
+    "realm_assignment_opened_for_source_run": false,
+    "portfolio_by_realm_result_opened": false
+  },
+  "repair_population": {
+    "rule": "all and only species whose source-run ledger status is PARTIAL_TRANSPORT",
+    "species_identity_may_not_be_used_to_choose_recovery": true,
+    "complete_species_are_not_requeried": true,
+    "rejected_gbif_taxon_match_species_are_not_replaced": true
+  },
+  "scientific_query_invariants": {
+    "taxon_key": "reuse exact source-run resolved GBIF usage_key",
+    "hasCoordinate": true,
+    "hasGeospatialIssue": false,
+    "occurrenceStatus": "PRESENT",
+    "year": "2010,2026",
+    "planned_page_offsets": "reuse exact source-run missing_offsets only",
+    "ordinal_window_size": 300,
+    "maximum_windows_per_species": 6,
+    "species_panel_change": false,
+    "realm_rule_change": false,
+    "evaluable_gate_change": false
+  },
+  "transport_only_changes": {
+    "chunk_size": 50,
+    "request_timeout_cap_seconds": 600,
+    "species_total_deadline_seconds": 3600,
+    "passes": 2,
+    "request_attempts_per_chunk": 3,
+    "reason": "smaller transfer chunks and longer transport wall-clock limits change only how the already-fixed ordinal windows are transferred"
+  },
+  "if_still_partial": "NOT_EVALUABLE_GEB_REALM_GENERALITY_AUDIT; do not drop or replace the species",
+  "forbidden": [
+    "change any scientific GBIF filter",
+    "change the six ordinal windows",
+    "select recovery by realm, host breadth, family, or portfolio result",
+    "drop technically slow species from realm analysis",
+    "replace failed species",
+    "inspect the full realm-generalization result before the uniform recovery is complete"
+  ]
+}
