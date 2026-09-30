@@ -155,7 +155,7 @@ Human redistribution of host plants has substantially expanded reconstructed but
 
 The secondary occurrence analysis shows that the added geography is not merely cartographic potential. Introduced host distributions recovered 57.4% of butterfly species × region observations that lay outside native host-resource envelopes, more than expected under species-level region-matched nulls and after removal of the largest contributor.
 
-Together, these results show that **interaction breadth, partner geography and realized consumer distribution are distinct axes of global-change biogeography**. In butterflies, human redistribution of host plants substantially expands geographic resource opportunity, a concentrated subset of hosts carries much of that expansion, and family-level diet breadth poorly predicts proportional gain. Only part of the added opportunity is reflected in realized butterfly geography, emphasizing that resource redistribution creates opportunity rather than determining occupancy.
+Together, these results show that **interaction breadth, partner geography and realized consumer distribution are distinct axes of global-change biogeography**. Holding known butterfly–host identities fixed analytically, changing only host geography was sufficient to reveal a 54.9% increase in aggregate resource opportunity. That gain was concentrated among a minority of hosts, poorly predicted by family-level diet breadth and only partly reflected in realized butterfly occurrence. Global change can therefore reorganize consumer opportunity by moving interaction partners, even without invoking a broader consumer niche.
 
 ## References (working)
 
