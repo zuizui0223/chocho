@@ -1,0 +1,129 @@
+name: GEB realm generality v0.1
+
+on:
+  push:
+    branches:
+      - exploration/geb-generality-audit-v01
+    paths:
+      - ".github/workflows/geb-realm-generality-v01.yml"
+      - "docs/exploratory/geb_occurrence_realm_protocol_v0.1.json"
+      - "scripts/acquire_geb_realm_occurrences.py"
+      - "scripts/analyze_geb_occurrence_realms.py"
+      - "scripts/acquire_butterfly_resource_envelope_occurrences.py"
+      - "src/butterfly_specialization_ecology/checkpointed_gbif_occurrence.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Acquire frozen 239-species GBIF realm geometry shard
+        run: |
+          mkdir -p "results/shard-${{ matrix.shard }}" "state/shard-${{ matrix.shard }}"
+          python scripts/acquire_geb_realm_occurrences.py \
+            --source-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --shard-index "${{ matrix.shard }}" \
+            --shard-count 40 \
+            --state-dir "state/shard-${{ matrix.shard }}" \
+            --output-csv "results/shard-${{ matrix.shard }}/occurrences-${{ matrix.shard }}.csv" \
+            --output-ledger "results/shard-${{ matrix.shard }}/ledger-${{ matrix.shard }}.json" \
+            --species-seconds 1200 \
+            --request-seconds 120 \
+            --maximum-pages 6 \
+            --transport-chunk-size 300 \
+            --passes 2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-realm-occ-${{ matrix.shard }}
+          path: results/shard-${{ matrix.shard }}
+          if-no-files-found: error
+          retention-days: 30
+
+  analyze:
+    needs: acquire
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install pandas scipy geopandas pyogrio
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: geb-realm-occ-*
+          path: input/shards
+          merge-multiple: false
+      - name: Fetch and normalize RESOLVE realm polygons
+        run: |
+          mkdir -p input/realm
+          curl --location --fail --silent --show-error --get \
+            "https://data-gis.unep-wcmc.org/server/rest/services/Bio-geographicalRegions/Resolve_Ecoregions/FeatureServer/0/query" \
+            --data-urlencode "where=1=1" \
+            --data-urlencode "outFields=realm" \
+            --data-urlencode "returnGeometry=true" \
+            --data-urlencode "outSR=4326" \
+            --data-urlencode "resultRecordCount=1000" \
+            --data-urlencode "f=geojson" \
+            -o input/realm/resolve_raw.geojson
+          python - <<'PY'
+          import geopandas as gpd
+          from pathlib import Path
+          p=Path("input/realm/resolve_raw.geojson")
+          g=gpd.read_file(p)
+          field=next((x for x in ("Realm","REALM","realm") if x in g.columns),None)
+          if field is None:
+              raise RuntimeError(f"realm field missing: {list(g.columns)}")
+          g=g[[field,"geometry"]].rename(columns={field:"Realm"})
+          g["Realm"]=g["Realm"].astype(str).str.strip()
+          g=g[g["Realm"].ne("") & g.geometry.notna()]
+          g=g.dissolve(by="Realm",as_index=False)
+          expected={"Neotropical","Australian","Afrotropical","Madagascan","Oceanian","Oriental","Panamanian","Saharo-Arabian","Nearctic","Sino-Japanese","Palearctic"}
+          observed=set(g["Realm"])
+          if observed != expected:
+              raise RuntimeError(f"realm label drift: {sorted(observed)}")
+          g.to_crs("EPSG:4326").to_file("input/realm/resolve_realms.geojson",driver="GeoJSON")
+          print(sorted(observed))
+          PY
+          sha256sum input/realm/resolve_realms.geojson
+      - name: Analyze realized butterfly realm replication
+        run: |
+          mkdir -p results/realm
+          REALM_SHA="$(sha256sum input/realm/resolve_realms.geojson | awk '{print $1}')"
+          python scripts/analyze_geb_occurrence_realms.py \
+            --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json \
+            --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --occurrence-dir input/shards \
+            --ledger-dir input/shards \
+            --realm-geojson input/realm/resolve_realms.geojson \
+            --realm-source-sha256 "$REALM_SHA" \
+            --expected-shards 40 \
+            --output-species-csv results/realm/species_realm_summary.csv \
+            --output-json results/realm/geb_occurrence_realm_result_v0.1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-realm-generality-result-v01
+          path: |
+            results/realm
+            input/realm/resolve_realms.geojson
+          if-no-files-found: error
+          retention-days: 30
