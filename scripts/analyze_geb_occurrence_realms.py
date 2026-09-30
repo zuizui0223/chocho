@@ -336,9 +336,17 @@ def main() -> int:
         raise RuntimeError(f"expected 191 expanded adequate species, got {len(adequate)}")
 
     informative = adequate[adequate["realm_informative"]].copy()
-    record_realm_counts = informative["primary_realm"].value_counts(dropna=False)
+    realm_assigned = informative[
+        informative["primary_realm"].notna()
+        & informative["primary_realm"].astype(str).ne("TIE")
+    ].copy()
+    cell_realm_assigned = informative[
+        informative["cell_primary_realm"].notna()
+        & informative["cell_primary_realm"].astype(str).ne("TIE")
+    ].copy()
+    record_realm_counts = realm_assigned["primary_realm"].value_counts()
     interpretable = record_realm_counts[record_realm_counts >= int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])]
-    cell_realm_counts = informative["cell_primary_realm"].value_counts(dropna=False)
+    cell_realm_counts = cell_realm_assigned["cell_primary_realm"].value_counts()
     cell_interpretable = cell_realm_counts[cell_realm_counts >= int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])]
     gate_pass = (
         len(informative) >= int(protocol["evaluability_gate"]["minimum_realm_informative_species"])
@@ -370,6 +378,8 @@ def main() -> int:
             "species": 239,
             "expanded_host_taxonomy_adequate_species": 191,
             "realm_informative_expanded_adequate_species": int(len(informative)),
+            "primary_realm_assigned_expanded_adequate_species": int(len(realm_assigned)),
+            "cell_primary_realm_assigned_expanded_adequate_species": int(len(cell_realm_assigned)),
             "core_realm_expanded_adequate_species": int(
                 adequate["core_realm"].fillna(False).sum()
             ),
@@ -407,7 +417,7 @@ def main() -> int:
                 ),
             },
             "by_primary_realm": correlations_by_group(
-                informative, "primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
+                realm_assigned, "primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
             ),
             "core_realm_sensitivity": {
                 "n": int(len(core)),
@@ -416,10 +426,10 @@ def main() -> int:
                 ),
             },
             "leave_one_primary_realm_out": leave_one_group_out(
-                informative, "primary_realm"
+                realm_assigned, "primary_realm"
             ),
             "family_x_primary_realm_counts": (
-                informative.groupby(["Family", "primary_realm"])
+                realm_assigned.groupby(["Family", "primary_realm"])
                 .size()
                 .unstack(fill_value=0)
                 .astype(int)
@@ -431,7 +441,7 @@ def main() -> int:
                     "longitude-latitude cells rather than raw record counts."
                 ),
                 "by_cell_primary_realm": correlations_by_group(
-                    informative, "cell_primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
+                    cell_realm_assigned, "cell_primary_realm", min_interpret=int(protocol["evaluability_gate"]["interpretable_realm_minimum_n"])
                 ),
                 "cell_core_realm": {
                     "n": int(adequate["cell_core_realm"].fillna(False).sum()),
@@ -442,26 +452,60 @@ def main() -> int:
                     ),
                 },
                 "leave_one_cell_primary_realm_out": leave_one_group_out(
-                    informative, "cell_primary_realm"
+                    cell_realm_assigned, "cell_primary_realm"
                 ),
                 "record_vs_cell_primary_realm_agreement": {
                     "n_compared": int(
-                        informative[["primary_realm", "cell_primary_realm"]]
+                        informative[
+                            informative["primary_realm"].notna()
+                            & informative["cell_primary_realm"].notna()
+                            & informative["primary_realm"].astype(str).ne("TIE")
+                            & informative["cell_primary_realm"].astype(str).ne("TIE")
+                        ][["primary_realm", "cell_primary_realm"]]
                         .dropna()
                         .shape[0]
                     ),
                     "same": int(
                         (
-                            informative["primary_realm"].astype(str)
-                            == informative["cell_primary_realm"].astype(str)
+                            informative[
+                                informative["primary_realm"].notna()
+                                & informative["cell_primary_realm"].notna()
+                                & informative["primary_realm"].astype(str).ne("TIE")
+                                & informative["cell_primary_realm"].astype(str).ne("TIE")
+                            ]["primary_realm"].astype(str)
+                            ==
+                            informative[
+                                informative["primary_realm"].notna()
+                                & informative["cell_primary_realm"].notna()
+                                & informative["primary_realm"].astype(str).ne("TIE")
+                                & informative["cell_primary_realm"].astype(str).ne("TIE")
+                            ]["cell_primary_realm"].astype(str)
                         ).sum()
                     ),
                     "fraction_same": float(
                         (
-                            informative["primary_realm"].astype(str)
-                            == informative["cell_primary_realm"].astype(str)
+                            informative[
+                                informative["primary_realm"].notna()
+                                & informative["cell_primary_realm"].notna()
+                                & informative["primary_realm"].astype(str).ne("TIE")
+                                & informative["cell_primary_realm"].astype(str).ne("TIE")
+                            ]["primary_realm"].astype(str)
+                            ==
+                            informative[
+                                informative["primary_realm"].notna()
+                                & informative["cell_primary_realm"].notna()
+                                & informative["primary_realm"].astype(str).ne("TIE")
+                                & informative["cell_primary_realm"].astype(str).ne("TIE")
+                            ]["cell_primary_realm"].astype(str)
                         ).mean()
-                    ) if len(informative) else None,
+                    ) if len(
+                        informative[
+                            informative["primary_realm"].notna()
+                            & informative["cell_primary_realm"].notna()
+                            & informative["primary_realm"].astype(str).ne("TIE")
+                            & informative["cell_primary_realm"].astype(str).ne("TIE")
+                        ]
+                    ) else None,
                 },
             },
         }
