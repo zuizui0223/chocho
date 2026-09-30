@@ -95,6 +95,11 @@ jobs:
           if g.crs is None:
               raise RuntimeError("newRealms.shp has no CRS")
           g=g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False)
+          g["geometry"]=g.geometry.map(make_valid)
+          if g.geometry.is_empty.any() or (~g.geometry.is_valid).any():
+              raise RuntimeError("Holt realm topology repair failed")
+          if not set(g.geom_type).issubset({"Polygon","MultiPolygon"}):
+              raise RuntimeError(f"unexpected repaired geometry types: {sorted(set(g.geom_type))}")
           out=Path("input/realm/holt2013_realms.geojson")
           g.to_file(out,driver="GeoJSON")
           print(json.dumps({"shapefile":str(shp),"realms":sorted(observed)}))
