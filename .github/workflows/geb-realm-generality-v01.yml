@@ -24,6 +24,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: geb-realm-generality-v01
+  cancel-in-progress: true
+
 jobs:
   acquire:
     runs-on: ubuntu-latest
