@@ -1,0 +1,75 @@
+{
+  "schema": "chocho_geb_generality_audit_protocol_v0.1",
+  "status": "FROZEN_BEFORE_GEB_GENERALITY_AUDIT_RESULT",
+  "created_on": "2026-09-30",
+  "purpose": "Audit whether the butterfly host-resource results have broad taxonomic and geographic replication suitable for a GEB-scale generality claim, without changing the existing primary analyses.",
+  "source_identities": {
+    "s1_descriptor_run_id": 36222306369,
+    "s1_species": 339,
+    "resource_eligible_species_expected": 239,
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "WGSRPD_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "LepTraits_sha256": "6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b"
+  },
+  "known_funnel_required_before_generality_audit": {
+    "resource_eligible": 239,
+    "host_taxonomy_adequate": 215,
+    "expanded": 206,
+    "host_taxonomy_adequate_expanded": 191,
+    "one_family_host_taxonomy_adequate_expanded": 82
+  },
+  "taxonomic_replication": {
+    "butterfly_family_source": "LepTraits Family",
+    "rule": "All represented butterfly families are retained; no family is selected or excluded based on effect direction.",
+    "reported_subsets": [
+      "resource_eligible",
+      "host_taxonomy_adequate",
+      "expanded",
+      "host_taxonomy_adequate_expanded",
+      "one_family_host_taxonomy_adequate_expanded",
+      "independent_panel",
+      "climate_informative"
+    ]
+  },
+  "geographic_replication": {
+    "unit": "WGSRPD Level 1 botanical continent",
+    "crosswalk_source": "Official tdwg/wgsrpd level3 GeoJSON at the pinned commit",
+    "rule": "Every WGSRPD3 unit used by the resource reconstruction is mapped to its Level 1 region. No Level 1 region is selected after seeing the result.",
+    "regional_metrics": [
+      "native resource units",
+      "contemporary resource units",
+      "introduced-added resource units",
+      "log1p contemporary minus log1p native resource units",
+      "effective number of contributing hosts",
+      "maximum single-host fractional share"
+    ]
+  },
+  "informative_thresholds": {
+    "level1_region": {
+      "min_total": 20,
+      "min_informative_strata": 3,
+      "min_per_stratum": 5
+    },
+    "butterfly_family": {
+      "min_total": 15,
+      "min_informative_strata": 3,
+      "min_per_stratum": 3
+    }
+  },
+  "directional_replication_checks": {
+    "portfolio_effective_contributors": "rho(host-family breadth, effective contributor number) > 0",
+    "portfolio_single_host_dominance": "rho(host-family breadth, maximum single-host share) < 0",
+    "aggregate_expansion": "No directional success rule; regional estimates are reported descriptively because the existing full-panel association is near zero."
+  },
+  "interpretation_rule": "Informative thresholds label where a directional replication estimate is interpretable; they never remove regions or families from the reported audit table.",
+  "claim_boundary": {
+    "exploratory_extension_of_an_existing_manuscript": true,
+    "does_not_measure_butterfly_range_expansion": true,
+    "does_not_measure_realized_use_of_introduced_hosts": true,
+    "WGSRPD_level1_is_biogeographic_replication_proxy_not_ecological_realm": true,
+    "no_posthoc_region_selection": true,
+    "no_posthoc_family_selection": true,
+    "existing_primary_result_is_not_refit_or_retuned": true
+  }
+}
