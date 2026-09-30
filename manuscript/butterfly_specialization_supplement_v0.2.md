@@ -109,13 +109,13 @@ Poaceae users did contribute more absolute added geography (median **69.5** adde
 
 Resource expansion was not confined to one major butterfly lineage. Among families represented by at least 10 focal species, the fraction gaining at least one introduced-host resource region ranged from **83.5% to 90.2%**.
 
-| Butterfly family | Species | Expanded | Fraction expanded | Median added WGSRPD3 units | Median log expansion |
-|---|---:|---:|---:|---:|---:|
-| Nymphalidae | 103 | 86 | **83.5%** | 51 | 0.285 |
-| Hesperiidae | 51 | 46 | **90.2%** | 56 | 0.359 |
-| Pieridae | 43 | 37 | **86.0%** | 78 | 0.405 |
-| Lycaenidae | 25 | 22 | **88.0%** | 73 | 0.367 |
-| Papilionidae | 16 | 14 | **87.5%** | 49.5 | 0.388 |
+| Butterfly family | Species | Expanded | Fraction expanded | Median host-family breadth | Median added WGSRPD3 units | Median log expansion |
+|---|---:|---:|---:|---:|---:|---:|
+| Nymphalidae | 103 | 86 | **83.5%** | 2 | 51 | 0.285 |
+| Hesperiidae | 51 | 46 | **90.2%** | **1** | 56 | 0.359 |
+| Pieridae | 43 | 37 | **86.0%** | **1** | 78 | 0.405 |
+| Lycaenidae | 25 | 22 | **88.0%** | 3 | 73 | 0.367 |
+| Papilionidae | 16 | 14 | **87.5%** | 2 | 49.5 | 0.388 |
 
 Riodinidae was represented by a single species and is not interpreted as a family-level estimate. These summaries are descriptive; unequal family sample sizes preclude treating the table as a comparative test among butterfly families.
 
