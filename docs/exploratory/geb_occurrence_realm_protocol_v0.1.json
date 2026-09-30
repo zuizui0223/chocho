@@ -2,7 +2,7 @@
   "schema": "chocho_geb_occurrence_realm_protocol_v0.1",
   "status": "FROZEN_POSTHOC_GENERALITY_AUDIT_BEFORE_NEW_GBIF_REALM_ACQUISITION",
   "frozen_on": "2026-10-01",
-  "purpose": "Test whether the already-observed butterfly host-portfolio architecture is geographically replicated across realized butterfly biogeographic realms.",
+  "purpose": "Test whether the already-observed butterfly host-portfolio architecture is geographically replicated across realized butterfly zoogeographic realms.",
   "panel": {
     "source": "data/frozen/figure_sources/host_contribution_metrics.csv",
     "source_sha256": "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa",
@@ -22,12 +22,31 @@
     "scientific_filter_change_from_existing_climate_route": false
   },
   "realm_source": {
-    "dataset": "RESOLVE Ecoregions 2017",
-    "citation": "Dinerstein et al. 2017 BioScience 67:534-545",
-    "doi": "10.1093/biosci/bix014",
-    "original_archive": "https://storage.googleapis.com/teow2016/Ecoregions2017.zip",
-    "realm_field": "REALM",
-    "assignment": "point-in-polygon in WGS84"
+    "framework": "Holt et al. 2013 update of Wallace zoogeographic realms",
+    "citation": "Holt et al. 2013 Science 339:74-78",
+    "doi": "10.1126/science.1228282",
+    "distribution_source": "CMEC regions and realms",
+    "source_url_recorded_by_geodat": "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip",
+    "pinned_derived_copy": {
+      "repository": "RS-eco/geodat",
+      "path": "data/zoorealms.rda",
+      "git_blob_sha": "ebd2724ee047ce6613b69404bed3711074ffcac8"
+    },
+    "realm_field": "Realm",
+    "assignment": "point-in-polygon in WGS84",
+    "expected_realm_labels": [
+      "Neotropical",
+      "Australian",
+      "Afrotropical",
+      "Madagascan",
+      "Oceanian",
+      "Oriental",
+      "Panamanian",
+      "Saharo-Arabian",
+      "Nearctic",
+      "Sino-Japanese",
+      "Palearctic"
+    ]
   },
   "species_realm_summary": {
     "minimum_mapped_occurrences": 30,
