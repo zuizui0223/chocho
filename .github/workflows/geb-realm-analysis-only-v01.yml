@@ -1,0 +1,146 @@
+name: geb realm analysis only v01
+
+on:
+  push:
+    branches:
+      - exploration/geb-generality-audit-v01
+    paths:
+      - "provenance/geb/TRIGGER_GEB_REALM_ANALYSIS_V01"
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  RECOVERY_RUN_ID: "36791586104"
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install pandas scipy geopandas pyogrio shapely
+      - name: Download exact recovered transport groups
+        uses: actions/download-artifact@v4
+        with:
+          pattern: geb-realm-recovered-group-*
+          path: input/occ
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.RECOVERY_RUN_ID }}
+      - name: Verify 40 complete recovered ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ledgers=sorted(Path("input/occ").glob("ledger-*.json"))
+          if len(ledgers)!=40:
+              raise RuntimeError(f"expected 40 recovered ledgers, got {len(ledgers)}")
+          seen=set()
+          status={}
+          for p in ledgers:
+              d=json.loads(p.read_text())
+              seen.add(int(d["shard_index"]))
+              status[d["status"]]=status.get(d["status"],0)+1
+              if d["status"]!="COMPLETE":
+                  raise RuntimeError(f"{p}: {d['status']}")
+          if seen!=set(range(40)):
+              raise RuntimeError(f"shard coverage drift: {sorted(seen)}")
+          print({"ledgers":40,"status":status})
+          PY
+      - name: Fetch and topology-repair frozen Holt 2013 CMEC realms
+        run: |
+          set -euo pipefail
+          mkdir -p input/realm/archive input/realm/extracted results/realm
+          curl --location --fail --silent --show-error             "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip"             -o input/realm/archive/cmec_regions_realms.zip
+          ARCHIVE_SHA="$(sha256sum input/realm/archive/cmec_regions_realms.zip | awk '{print $1}')"
+          unzip -q input/realm/archive/cmec_regions_realms.zip -d input/realm/extracted
+          python - <<'PY'
+          import geopandas as gpd
+          from pathlib import Path
+          from shapely import make_valid
+          roots=list(Path("input/realm/extracted").rglob("newRealms.shp"))
+          if len(roots)!=1:
+              raise RuntimeError(f"expected one newRealms.shp, found {roots}")
+          g=gpd.read_file(roots[0])
+          if "Realm" not in g.columns:
+              raise RuntimeError(f"Realm field missing: {list(g.columns)}")
+          expected={"Neotropical","Australian","Afrotropical","Madagascan","Oceanian","Oriental","Panamanian","Saharo-Arabian","Nearctic","Sino-Japanese","Palearctic"}
+          g=g[["Realm","geometry"]].copy()
+          g["Realm"]=g["Realm"].astype(str).str.strip()
+          g=g[g["Realm"].ne("") & g.geometry.notna()]
+          if set(g["Realm"]) != expected:
+              raise RuntimeError(f"Holt realm label drift: {sorted(set(g['Realm']))}")
+          if g.crs is None:
+              raise RuntimeError("newRealms.shp has no CRS")
+          g=g.to_crs("EPSG:4326").dissolve(by="Realm",as_index=False)
+          g["geometry"]=g.geometry.map(make_valid)
+          if g.geometry.is_empty.any() or (~g.geometry.is_valid).any():
+              raise RuntimeError("Holt realm topology repair failed")
+          if not set(g.geom_type).issubset({"Polygon","MultiPolygon"}):
+              raise RuntimeError(f"unexpected repaired geometry types: {sorted(set(g.geom_type))}")
+          g.to_file("input/realm/holt2013_realms.geojson",driver="GeoJSON")
+          PY
+          REALM_SHA="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
+          python - <<PY
+          import json
+          from pathlib import Path
+          Path("results/realm/realm_source_receipt.json").write_text(
+              json.dumps({
+                  "schema":"chocho_geb_holt_realm_source_v0.2",
+                  "archive_sha256":"$ARCHIVE_SHA",
+                  "derived_valid_geojson_sha256":"$REALM_SHA",
+                  "topology_repair":"shapely.make_valid",
+                  "realm_count":11
+              },indent=2,sort_keys=True)+"\n"
+          )
+          PY
+      - name: Analyze realized realm generality with latest frozen estimands
+        run: |
+          set -euo pipefail
+          REALM_SHA="$(sha256sum input/realm/holt2013_realms.geojson | awk '{print $1}')"
+          python scripts/analyze_geb_occurrence_realms.py             --protocol docs/exploratory/geb_occurrence_realm_protocol_v0.1.json             --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv             --leptraits-csv data/external/leptraits_consensus_v1.0.csv             --occurrence-dir input/occ             --ledger-dir input/occ             --realm-geojson input/realm/holt2013_realms.geojson             --realm-source-sha256 "$REALM_SHA"             --expected-shards 40             --output-species-csv results/realm/species_realm_summary.csv             --output-json results/realm/geb_occurrence_realm_result_v0.1.json
+          python scripts/classify_geb_realm_claim.py             --result-json results/realm/geb_occurrence_realm_result_v0.1.json             --promotion-rule provenance/geb/geb_realm_claim_promotion_rule_v0.1.json             --output-json results/realm/geb_realm_claim_promotion_result_v0.1.json
+      - name: Bind latest-analysis receipt
+        run: |
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          result=Path("results/realm/geb_occurrence_realm_result_v0.1.json")
+          promotion=Path("results/realm/geb_realm_claim_promotion_result_v0.1.json")
+          species=Path("results/realm/species_realm_summary.csv")
+          receipt={
+            "schema":"chocho_geb_realm_analysis_only_receipt_v0.1",
+            "workflow_run_id":int(os.environ["GITHUB_RUN_ID"]),
+            "workflow_head_sha":os.environ["GITHUB_SHA"],
+            "recovery_run_id":int(os.environ["RECOVERY_RUN_ID"]),
+            "protocol":"docs/exploratory/geb_occurrence_realm_protocol_v0.1.json",
+            "promotion_rule":"provenance/geb/geb_realm_claim_promotion_rule_v0.1.json",
+            "result_sha256":sha(result),
+            "promotion_sha256":sha(promotion),
+            "species_summary_sha256":sha(species),
+            "result":json.loads(result.read_text()),
+            "promotion":json.loads(promotion.read_text())
+          }
+          Path("results/realm/analysis_receipt.json").write_text(
+              json.dumps(receipt,indent=2,sort_keys=True)+"\n"
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-realm-analysis-only-result-v01
+          path: results/realm/
+          if-no-files-found: error
+          retention-days: 30
