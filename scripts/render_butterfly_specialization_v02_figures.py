@@ -52,7 +52,7 @@ def fig1_resource_and_null(anth, matched, hostbias, prominence, concentration, o
     axes[0].set_xlabel("Native resource units")
     axes[0].set_ylabel("Contemporary resource units")
     expanded = sum(int(r["introduced_added_units"]) > 0 for r in anth)
-    axes[0].set_title(f"{expanded}/{len(anth)} species expanded across major butterfly families")
+    axes[0].set_title(f"{expanded}/{len(anth)} species expanded across 5 major families")
     axes[0].text(
         0.04, 0.95,
         "26,530 → 41,083\n+54.9%\nknown host links fixed",
