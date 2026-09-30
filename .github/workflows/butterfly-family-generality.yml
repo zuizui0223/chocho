@@ -1,0 +1,38 @@
+name: butterfly family generality
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - review/geb-null-validation-v02
+    paths:
+      - "scripts/analyze_butterfly_taxonomic_family_expansion.py"
+      - "data/external/leptraits_consensus_v1.0.csv"
+      - "data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+      - ".github/workflows/butterfly-family-generality.yml"
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Summarize expansion by butterfly family
+        run: |
+          mkdir -p results/butterfly-family-generality
+          python scripts/analyze_butterfly_taxonomic_family_expansion.py \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --output-json results/butterfly-family-generality/butterfly_taxonomic_family_expansion_v0.1.json
+      - name: Upload family summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-family-generality-v01
+          path: results/butterfly-family-generality/butterfly_taxonomic_family_expansion_v0.1.json
+          retention-days: 30
