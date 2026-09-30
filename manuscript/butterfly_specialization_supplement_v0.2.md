@@ -105,6 +105,20 @@ Because seven of the ten largest plant contributors were Poaceae, we tested whet
 
 Poaceae users did contribute more absolute added geography (median **69.5** added WGSRPD3 units versus **54.0** among non-Poaceae users), but their median log proportional expansion was slightly lower (**0.310** versus **0.329**). Thus the redistributed-grass guild contributes substantially to absolute resource geography without explaining the near-zero relationship between family-level diet breadth and proportional gain.
 
+### Butterfly-family distribution of resource expansion
+
+Resource expansion was not confined to one major butterfly lineage. Among families represented by at least 10 focal species, the fraction gaining at least one introduced-host resource region ranged from **83.5% to 90.2%**.
+
+| Butterfly family | Species | Expanded | Fraction expanded | Median added WGSRPD3 units | Median log expansion |
+|---|---:|---:|---:|---:|---:|
+| Nymphalidae | 103 | 86 | **83.5%** | 51 | 0.285 |
+| Hesperiidae | 51 | 46 | **90.2%** | 56 | 0.359 |
+| Pieridae | 43 | 37 | **86.0%** | 78 | 0.405 |
+| Lycaenidae | 25 | 22 | **88.0%** | 73 | 0.367 |
+| Papilionidae | 16 | 14 | **87.5%** | 49.5 | 0.388 |
+
+Riodinidae was represented by a single species and is not interpreted as a family-level estimate. These summaries are descriptive; unequal family sample sizes preclude treating the table as a comparative test among butterfly families.
+
 Tree coverage was not fully representative of expansion magnitude. Exact tree matches and unmatched species had the same median host-family breadth (2 vs 2; Wilcoxon p = 0.677), but matched species had greater median log resource expansion (0.376 vs 0.285; p = 0.0012) and a higher fraction with any expansion (0.952 vs 0.765; Fisher p < 0.001). Importantly for the focal slope, host-family breadth versus log expansion was near zero in both groups (rho = -0.055 among matched species and +0.053 among unmatched species). We therefore use PGLS only as a sensitivity for the breadth–expansion association, not as an estimator of panel-wide expansion magnitude.
 
 ## Supplementary Methods S1. Climate filtering within contemporary resource opportunity
