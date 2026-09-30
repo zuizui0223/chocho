@@ -22,31 +22,15 @@
     "scientific_filter_change_from_existing_climate_route": false
   },
   "realm_source": {
-    "framework": "Holt et al. 2013 update of Wallace zoogeographic realms",
-    "citation": "Holt et al. 2013 Science 339:74-78",
-    "doi": "10.1126/science.1228282",
-    "distribution_source": "CMEC regions and realms",
-    "source_url_recorded_by_geodat": "https://macroecology.ku.dk/resources/wallace/cmec_regions___realms.zip",
-    "pinned_derived_copy": {
-      "repository": "RS-eco/geodat",
-      "path": "data/zoorealms.rda",
-      "git_blob_sha": "ebd2724ee047ce6613b69404bed3711074ffcac8"
-    },
-    "realm_field": "Realm",
-    "assignment": "point-in-polygon in WGS84",
-    "expected_realm_labels": [
-      "Neotropical",
-      "Australian",
-      "Afrotropical",
-      "Madagascan",
-      "Oceanian",
-      "Oriental",
-      "Panamanian",
-      "Saharo-Arabian",
-      "Nearctic",
-      "Sino-Japanese",
-      "Palearctic"
-    ]
+    "dataset": "RESOLVE Ecoregions 2017",
+    "citation": "Dinerstein et al. 2017 BioScience 67:534-545",
+    "doi": "10.1093/biosci/bix014",
+    "provider": "UNEP-WCMC Resolve_Ecoregions FeatureServer",
+    "endpoint": "https://data-gis.unep-wcmc.org/server/rest/services/Bio-geographicalRegions/Resolve_Ecoregions/FeatureServer/0/query",
+    "query": "where=1=1&outFields=realm&returnGeometry=true&outSR=4326&f=geojson",
+    "realm_field": "realm",
+    "execution_rule": "normalize the provider realm field to Realm, dissolve polygons by Realm, record SHA256 of the exact GeoJSON used",
+    "assignment": "point-in-polygon/intersects in WGS84"
   },
   "species_realm_summary": {
     "minimum_mapped_occurrences": 30,
