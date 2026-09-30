@@ -1,0 +1,32 @@
+{
+  "schema": "chocho_geb_realm_sampling_bias_sensitivity_v0.1",
+  "status": "FROZEN_METHOD_SENSITIVITY_AFTER_TRANSPORT_STARTED_BEFORE_SOURCE_RUN_REALM_RESULT",
+  "frozen_on": "2026-10-01",
+  "parent_protocol": "docs/exploratory/geb_occurrence_realm_protocol_v0.1.json",
+  "reason": "Raw GBIF record counts can overweight intensively sampled regions. Preserve the frozen record-weighted primary analysis, but require a spatially thinned realm-assignment sensitivity before interpreting broad realm generality.",
+  "information_state": {
+    "source_run_id": 36740694975,
+    "source_run_transport_status_inspected": true,
+    "source_run_realm_assignment_opened": false,
+    "source_run_realm_stratified_portfolio_result_opened": false,
+    "preexisting_32_species_occurrence_panel_used_for_pipeline_feasibility_check": true,
+    "preexisting_panel_is_not_part_of_the_239_species_source_run": true
+  },
+  "sensitivity": {
+    "grid": "1 degree longitude x 1 degree latitude cells in EPSG:4326",
+    "cell_id": "floor(longitude + 180), floor(latitude + 90), after point-to-realm assignment",
+    "realm_cell_count": "number of unique occupied 1-degree cells assigned to each Holt realm",
+    "cell_primary_realm": "realm with the largest unique occupied-cell count; exact ties are TIE",
+    "cell_primary_realm_share": "largest realm cell count divided by total unique realm-assigned cells",
+    "cell_core_realm": "realm-informative species with cell_primary_realm_share >= 0.60",
+    "repeat": [
+      "within-cell-primary-realm Spearman correlations",
+      "cell-core-realm subset",
+      "leave-one-cell-primary-realm-out"
+    ]
+  },
+  "interpretation_rule": "A strong claim of realm-general portfolio architecture should not depend on record-weighted versus 1-degree-cell-weighted primary-realm assignment; disagreements are reported rather than resolved by choosing the more favorable scheme.",
+  "scientific_gbif_query_changed": false,
+  "species_panel_changed": false,
+  "evaluable_gate_changed": false
+}
