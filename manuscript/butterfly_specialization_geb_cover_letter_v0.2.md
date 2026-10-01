@@ -4,7 +4,7 @@
 
 Dear Editors,
 
-Please consider our Research Article, **“Human redistribution of host plants expands butterfly resource geography across the specialization spectrum”** for publication in *Global Ecology and Biogeography*.
+Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum”** for publication in *Global Ecology and Biogeography*.
 
 Global-change biogeography usually asks how focal species respond to climate, dispersal barriers or changing interactions. Yet human activity also redistributes the interaction partners themselves. Our manuscript addresses this resource-side problem by separating **taxonomic interaction breadth**—what a butterfly can eat—from **consumer-specific resource geography**—where those known hosts occur. Earlier studies have shown that broader host use can accompany butterfly range expansion, that host availability can constrain distributions, and that species introductions homogenize biotas and interaction networks. We ask the mirror-image question: what happens when known butterfly–host links are held fixed analytically, but the hosts' geography changes?
 
