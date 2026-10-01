@@ -2,7 +2,7 @@
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
-> **Human redistribution of host plants expands butterfly resource geography across the specialization spectrum**
+> **Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum**
 
 Target journal: *Global Ecology and Biogeography*.
 
