@@ -1,6 +1,6 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Human redistribution of host plants expands butterfly resource geography across the specialization spectrum
+**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum
 
 **Article type:** Research Article
 
