@@ -9,6 +9,7 @@ on:
       - "docs/exploratory/butterfly_crop_exclusion_sensitivity_v0.1.json"
       - "scripts/extract_fao_crop_taxa.py"
       - "scripts/analyze_butterfly_crop_exclusion_sensitivity.py"
+      - "scripts/render_crop_sensitivity_si.py"
       - "tests/test_butterfly_crop_exclusion_sensitivity.py"
       - "scripts/build_wcvp_hosts_sidecar.R"
       - "scripts/build_wcvp_hosts_contemporary_sidecar.R"
@@ -109,6 +110,10 @@ jobs:
           mkdir -p results/crop-sensitivity
           python scripts/analyze_butterfly_crop_exclusion_sensitivity.py             --protocol-json docs/exploratory/butterfly_crop_exclusion_sensitivity_v0.1.json             --descriptors-csv input/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv             --insect-host-csv results/native-host-sidecar/insect_host_accepted.csv             --native-distribution-csv results/native-host-sidecar/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv results/contemporary-host-sidecar/extant_nondoubtful_wgsrpd3.csv             --crop-json input/fao/fao_crop_taxa_v0.1.json             --output-json results/crop-sensitivity/crop_exclusion_sensitivity_result_v0.1.json             --output-csv results/crop-sensitivity/crop_exclusion_species_metrics_v0.1.csv
           cp input/fao/fao_crop_taxa_v0.1.json results/crop-sensitivity/
+          python scripts/render_crop_sensitivity_si.py \
+            --result-json results/crop-sensitivity/crop_exclusion_sensitivity_result_v0.1.json \
+            --crop-json results/crop-sensitivity/fao_crop_taxa_v0.1.json \
+            --output-md results/crop-sensitivity/crop_host_sensitivity_SI_v0.1.md
           sha256sum results/crop-sensitivity/* > results/crop-sensitivity/SHA256SUMS
 
       - uses: actions/upload-artifact@v4
