@@ -244,3 +244,20 @@ def test_current_v02_claim_map_preserves_layered_inference_boundaries():
     assert "unit-preserving" in language["host_contribution_concentration"]
     assert "fixed Brownian" in language["phylogeny"]
     assert "Discussion/SI" in language["host_prominence"]
+
+
+def test_ruderal_interpretation_is_bounded():
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.2.json")
+
+    assert "the pattern was not reducible to crops" in manuscript.lower()
+    assert "roadside/ruderal" in manuscript
+    assert "disturbance and propagule pressure" in manuscript
+    assert "cannot be partitioned quantitatively into weeds" in manuscript
+    assert "Lázaro-Lobo & Ervin 2019" in manuscript
+    assert "van Kleunen et al. 2018" in manuscript
+    assert "caused by weeds" not in manuscript.lower()
+    boundary = claim_map["required_language"]["ruderal_non_crop_interpretation"]
+    assert "Do not quantify a 'weed effect'" in boundary

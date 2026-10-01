@@ -38,5 +38,11 @@ def test_release_preflight_uses_current_v02_title() -> None:
         "across the specialization spectrum"
     )
     assert current_title == expected
-    assert expected in preflight
+    match = re.search(
+        r'EXPECTED_TITLE\s*=\s*\(\s*"([^"]*)"\s*"([^"]*)"\s*\)',
+        preflight,
+        re.DOTALL,
+    )
+    assert match is not None
+    assert "".join(match.groups()) == expected
     assert "largely independently of diet breadth" not in preflight
