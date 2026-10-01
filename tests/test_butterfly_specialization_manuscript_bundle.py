@@ -189,7 +189,7 @@ def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
     title_line = manuscript.splitlines()[0]
     assert title_line == (
         "# Anthropogenic host redistribution expands butterfly resource geography "
-        "through contrasting host portfolios in specialists and generalists"
+        "across the specialization spectrum"
     )
     assert "climate" not in title_line.lower()
     assert (
