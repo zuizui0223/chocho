@@ -2,7 +2,7 @@
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
-> **Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists**
+> **Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum**
 
 Target journal: *Global Ecology and Biogeography*.
 
