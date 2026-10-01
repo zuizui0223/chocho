@@ -198,7 +198,11 @@ def reconstruct(
         contribution = fractional_contributions(added_by_host, added_union)
         n_native = len(native_union)
         n_contemporary = len(contemporary_union)
-        ratio = (n_contemporary / n_native) if n_native else None
+        log_expansion = (
+            math.log1p(n_contemporary) - math.log1p(n_native)
+            if n_native > 0
+            else None
+        )
         rows.append({
             "species": name,
             "host_family_count": float(d["host_family_count"]),
@@ -212,7 +216,7 @@ def reconstruct(
             "native_resource_units": n_native,
             "contemporary_resource_units": n_contemporary,
             "introduced_added_units": len(added_union),
-            "log_resource_expansion": math.log(ratio) if ratio and ratio > 0 else None,
+            "log_resource_expansion": log_expansion,
             "maximum_single_host_fractional_share": contribution[
                 "maximum_single_host_fractional_share"
             ],
@@ -354,6 +358,50 @@ def main() -> int:
             raise RuntimeError(
                 f"baseline reconstruction drift for {key}: "
                 f"{baseline_full[key]} != {value}"
+            )
+
+    expected_rho = {
+        "full": 0.00798541214928876,
+        "adequate": 0.015116819188962507,
+    }
+    observed_rho = {
+        "full": baseline_full["spearman_host_family_vs_log_resource_expansion"],
+        "adequate": baseline_adequate["spearman_host_family_vs_log_resource_expansion"],
+    }
+    for label, target in expected_rho.items():
+        observed = observed_rho[label]
+        if observed is None or abs(float(observed) - target) > 1e-12:
+            raise RuntimeError(
+                f"baseline log-expansion estimand drift for {label}: "
+                f"{observed} != {target}"
+            )
+
+    expected_architecture = {
+        "full_effective": 0.3980294089358999,
+        "full_dominance": -0.39096539476191006,
+        "adequate_effective": 0.4919670615030713,
+        "adequate_dominance": -0.4861161332504768,
+    }
+    observed_architecture = {
+        "full_effective": baseline_full[
+            "spearman_host_family_vs_effective_contributor_number"
+        ],
+        "full_dominance": baseline_full[
+            "spearman_host_family_vs_maximum_single_host_fractional_share"
+        ],
+        "adequate_effective": baseline_adequate[
+            "spearman_host_family_vs_effective_contributor_number"
+        ],
+        "adequate_dominance": baseline_adequate[
+            "spearman_host_family_vs_maximum_single_host_fractional_share"
+        ],
+    }
+    for label, target in expected_architecture.items():
+        observed = observed_architecture[label]
+        if observed is None or abs(float(observed) - target) > 1e-12:
+            raise RuntimeError(
+                f"baseline architecture estimand drift for {label}: "
+                f"{observed} != {target}"
             )
 
     variants = {}
