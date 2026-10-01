@@ -91,7 +91,7 @@ def test_no_non_crop_native_resource_is_none_for_ratio_estimand():
 
 def test_crop_submission_receipt_omits_structural_portfolio_panel():
     receipt = (
-        ROOT / "manuscript" / "generated" / "butterfly_crop_host_sensitivity_SI_v0.1.md"
+        ROOT / "manuscript" / "butterfly_specialization_supplement_v0.2.md"
     ).read_text(encoding="utf-8")
     renderer = (ROOT / "scripts" / "render_crop_sensitivity_si.py").read_text(
         encoding="utf-8"
@@ -103,4 +103,4 @@ def test_crop_submission_receipt_omits_structural_portfolio_panel():
     assert "architecture_row" not in renderer
     assert "47.0%" in receipt
     assert "46.0%" in receipt
-    assert "37-38 host species" in receipt
+    assert "Supplementary Table S7. Crop-host exclusion sensitivity" in receipt\n    assert "| 0.052 | 38 |" in receipt\n    assert "| 0.057 | 37 |" in receipt
