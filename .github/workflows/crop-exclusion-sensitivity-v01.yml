@@ -69,10 +69,24 @@ jobs:
           test "$(git -C _hosts rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
           echo "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc  input/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv" | sha256sum -c -
 
-      - name: Rebuild exact WCVP-HOSTS sidecars
+      - name: Restore authenticated native WCVP-HOSTS sidecar
+        uses: actions/download-artifact@v4
+        with:
+          name: wcvp-v13-hosts-sidecar
+          path: results/native-host-sidecar
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 35548614200
+
+      - name: Verify native sidecar hashes
         run: |
           set -euo pipefail
-          Rscript scripts/build_wcvp_hosts_sidecar.R             _wcvp _hosts results/native-host-sidecar
+          echo "0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9  results/native-host-sidecar/insect_host_accepted.csv" | sha256sum -c -
+          echo "c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558  results/native-host-sidecar/native_extant_nondoubtful_wgsrpd3.csv" | sha256sum -c -
+
+      - name: Rebuild exact contemporary WCVP-HOSTS sidecar
+        run: |
+          set -euo pipefail
           Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R             _wcvp _hosts results/contemporary-host-sidecar
           cmp             results/native-host-sidecar/insect_host_accepted.csv             results/contemporary-host-sidecar/insect_host_accepted.csv
 
