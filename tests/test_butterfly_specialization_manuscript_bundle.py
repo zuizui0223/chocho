@@ -46,7 +46,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     )
 
     expected_title = (
-        "Human redistribution of host plants expands butterfly resource geography "
+        "Anthropogenic host redistribution expands butterfly resource geography "
         "across the specialization spectrum"
     )
     assert manuscript.splitlines()[0] == f"# {expected_title}"
@@ -189,10 +189,16 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     ).read_text(encoding="utf-8")
     assert "## Supplementary Methods S1. Climate filtering within contemporary resource opportunity" in supplement
     assert "## Supplementary Table S5. Climate-distance sensitivity and effect-size precision" in supplement
+    assert "## Supplementary Table S7. Crop-host exclusion sensitivity" in supplement
+    assert "47.0%" in supplement
+    assert "46.0%" in supplement
+    assert "| 0.052 | 38 |" in supplement
+    assert "| 0.057 | 37 |" in supplement
+    assert "broader diets retained a more distributed host-contribution architecture" not in supplement.lower()
 
     # Three main figures plus one supplementary figure, with Figure 1 carrying C1 + C1b.
     for literal in (
-        "**Figure 1. Human redistribution of host plants expands butterfly resource geography across specialization classes and through concentrated host contributions.**",
+        "**Figure 1. Anthropogenic host redistribution expands butterfly resource geography across specialization classes and through concentrated host contributions.**",
         "**Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.**",
         "**Figure 3. Finite-support diet-breadth associations remain weak while regional associations are heterogeneous.**",
         "**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.**",
