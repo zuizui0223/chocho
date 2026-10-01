@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_butterfly_crop_exclusion_sensitivity_v0.1",
+  "status": "FROZEN_BEFORE_CROP_EXCLUSION_RESULT",
+  "frozen_on": "2026-10-01",
+  "purpose": "Test whether reconstructed resource expansion and host-contribution concentration are artifacts of agricultural crop hosts.",
+  "parent_inputs": {
+    "descriptor_workflow_run_id": 36222306369,
+    "descriptor_sha256": "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc",
+    "WCVP_repository": "matildabrown/rWCVPdata",
+    "WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "HOSTS_repository": "globalbioticinteractions/HOSTS",
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+  },
+  "crop_definition": {
+    "authority": "FAO Indicative Crop Classification, Appendix 4 alphabetical list of crops with botanical names",
+    "source_url": "https://www.fao.org/4/a0135e/A0135E10.htm",
+    "exact_species_rule": "Exclude a resolved WCVP host when its accepted binomial exactly matches a botanical binomial parsed from the FAO crop list.",
+    "conservative_genus_rule": "In addition to exact binomials, exclude every resolved host species whose genus is represented by an FAO botanical entry using spp.; this intentionally over-excludes non-crop congeners and is a conservative sensitivity.",
+    "predictor_change": false,
+    "note": "Original LepTraits host-family breadth is retained as the specialization predictor; crop exclusion changes reconstructed resource geography, not the definition of the butterfly diet trait."
+  },
+  "reconstruction": {
+    "native_host_units": "WCVP v13 introduced=0, extinct=0, location_doubtful=0 at WGSRPD3",
+    "contemporary_host_units": "WCVP v13 extinct=0, location_doubtful=0 at WGSRPD3, retaining native and introduced records",
+    "operation": "Remove crop-classified host species before taking butterfly-level native and contemporary unions.",
+    "reason": "Unit overlap among hosts means crop contributions cannot be subtracted from aggregate fractional credits after the fact."
+  },
+  "outputs": [
+    "remaining resource-eligible species",
+    "species expanded",
+    "total native species x WGSRPD3 units",
+    "total contemporary species x WGSRPD3 units",
+    "total added units and proportional aggregate increase",
+    "Spearman host-family breadth vs log proportional resource expansion",
+    "number of contributing host species accounting for 50% of all added fractional credit",
+    "median maximum single-host fractional share",
+    "Spearman host-family breadth vs effective contributor number",
+    "Spearman host-family breadth vs maximum single-host fractional share"
+  ],
+  "populations": {
+    "full": "Original 239 resource-eligible butterflies; species with no non-crop native resource after exclusion are reported and omitted only from species-level ratios/correlations.",
+    "adequate": "Original host-taxonomy-lower-bound-adequate butterflies, with the adequacy flag inherited from the primary analysis."
+  },
+  "claim_boundary": [
+    "Sensitivity analysis only; it does not redefine the primary WCVP introduced-distribution estimand.",
+    "WCVP introduced status represents wild non-native distributions, not cultivated acreage.",
+    "Purely cultivated or merely planted non-self-reproducing records are not WCVP introduced distributions.",
+    "The conservative genus-expanded crop sensitivity may remove genuinely wild non-crop congeners and therefore is deliberately over-conservative."
+  ]
+}
