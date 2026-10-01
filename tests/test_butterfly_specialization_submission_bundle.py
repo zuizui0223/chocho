@@ -138,3 +138,35 @@ def test_anonymous_bundle_excludes_internal_response_memos():
     )
     assert 'Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md")' in source
     assert 'Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md")' in source
+
+
+def test_cover_letter_interest_paragraph_and_title_page_contacts_are_submission_ready():
+    cover = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_cover_letter_v0.2.md"
+    ).read_text(encoding="utf-8")
+    title_page = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
+    ).read_text(encoding="utf-8")
+    checklist = json.loads(
+        (
+            ROOT
+            / "manuscript"
+            / "butterfly_specialization_geb_submission_checklist_v0.2.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", cover) if p.strip()]
+    interest = next(p for p in paragraphs if p.startswith("This manuscript addresses"))
+    interest_words = len(re.findall(r"\b[\w–'-]+\b", interest))
+    assert interest_words < 250
+    assert checklist["manuscript"]["cover_letter_interest_paragraph_words"] == interest_words
+    assert "Submission draft" not in cover
+    assert "Points to customize before submission" not in cover
+
+    author_lines = [
+        line for line in title_page.splitlines()
+        if re.match(r"^[1-3]\. \[Author ", line)
+    ]
+    assert len(author_lines) == 3
+    assert all("[Email]" in line and "[ORCID]" in line for line in author_lines)
+    assert title_page.count("## Corresponding author") == 1

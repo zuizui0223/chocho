@@ -10,9 +10,9 @@
 
 Replace the placeholders below with the final author list before submission.
 
-1. [Author 1 full name] — [ORCID]
-2. [Author 2 full name] — [ORCID]
-3. [Author 3 full name] — [ORCID]
+1. [Author 1 full name] — [Email] — [ORCID]
+2. [Author 2 full name] — [Email] — [ORCID]
+3. [Author 3 full name] — [Email] — [ORCID]
 
 ## Affiliations
 
