@@ -1,7 +1,3 @@
-# Cover letter — Global Ecology and Biogeography
-
-**Submission draft v0.2**
-
 Dear Editors,
 
 Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum”**, for publication in *Global Ecology and Biogeography*.
