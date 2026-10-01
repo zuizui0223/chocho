@@ -24,6 +24,7 @@ COPY_PATHS = (
     "benchmarks/exploratory",
     "provenance/reviewer_defenses",
     "provenance/climate",
+    "provenance/crop",
     "provenance/archive/climate/operations",
     "provenance/archive/climate/pilot",
     "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
