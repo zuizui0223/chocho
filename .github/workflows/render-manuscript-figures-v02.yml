@@ -1,0 +1,45 @@
+name: render v0.2 manuscript figures
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - review/geb-null-validation-v02
+    paths:
+      - "scripts/render_butterfly_specialization_manuscript_figures_v02.py"
+      - "data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+      - "data/frozen/figure_sources/independent_climate_primary_result.json"
+      - "provenance/reviewer_defenses/results/butterfly_occurrence_resource_validation_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_climate_same_level1_sensitivity_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_climate_distance_sensitivity_v0.1.json"
+      - "provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json"
+      - ".github/workflows/render-manuscript-figures-v02.yml"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install figure environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[figure]"
+      - name: Render v0.2 figures
+        run: |
+          python scripts/render_butterfly_specialization_manuscript_figures_v02.py             --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv             --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json             --occurrence-validation-json provenance/reviewer_defenses/results/butterfly_occurrence_resource_validation_v0.1.json             --occurrence-null-json provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json             --ceiling-json provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json             --regional-json provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json             --same-level1-json provenance/reviewer_defenses/results/butterfly_climate_same_level1_sensitivity_v0.1.json             --distance-json provenance/reviewer_defenses/results/butterfly_climate_distance_sensitivity_v0.1.json             --climate-effect-json provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json             --outdir manuscript/figures_v02
+      - name: Inventory
+        run: |
+          ls -lh manuscript/figures_v02
+          sha256sum manuscript/figures_v02/* > manuscript/figures_v02/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-specialization-manuscript-figures-v02
+          path: manuscript/figures_v02/
+          retention-days: 30

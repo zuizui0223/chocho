@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_host_plant_prominence_expansion_receipt_v0.1",
+  "status": "SUCCESS_POSTHOC_PLANT_LEVEL_NETWORK_PROMINENCE_ANALYSIS",
+  "workflow": {
+    "run_id": 36436638484,
+    "artifact_id": 10977262671,
+    "artifact_name": "geb-family-composition-matched-null-v01",
+    "artifact_sha256": "4d06fff793cc9f6eac5f78940739a790c2246df94a96f148e66dd3e1ec30e284"
+  },
+  "plants": 8909,
+  "plant_families": 278,
+  "degree_definition": "Number of distinct Lepidoptera species in the fixed HOSTS-WCVP interaction reconstruction recorded using the plant.",
+  "associations": {
+    "spearman_log_degree_vs_log_expansion": 0.31282667429829425,
+    "partial_rank_controlling_log_native_breadth": 0.2668211212974541,
+    "family_adjusted_rank_correlation": 0.34086065841372315,
+    "partial_rank_degree_vs_absolute_added_controlling_log_native_breadth": 0.27214870227177057,
+    "family_and_native_breadth_quintile_stratified_rank_correlation": 0.29457774681443866,
+    "stratified_permutation_exceedances": 0,
+    "stratified_permutations": 4999,
+    "stratified_permutation_monte_carlo_p_upper_wording": "p < 0.001",
+    "stratified_null_q025": -0.022171530998234882,
+    "stratified_null_median": -0.00009388381359277526,
+    "stratified_null_q975": 0.022058644901550073
+  },
+  "degree_classes": [
+    {
+      "class": "1 consumer",
+      "plants": 4060,
+      "median_degree": 1,
+      "expanded_fraction": 0.2620689655172414,
+      "median_log_expansion": 0,
+      "median_added_units": 0
+    },
+    {
+      "class": "2 consumers",
+      "plants": 1565,
+      "median_degree": 2,
+      "expanded_fraction": 0.3571884984025559,
+      "median_log_expansion": 0,
+      "median_added_units": 0
+    },
+    {
+      "class": "3–5 consumers",
+      "plants": 1647,
+      "median_degree": 4,
+      "expanded_fraction": 0.4304796599878567,
+      "median_log_expansion": 0,
+      "median_added_units": 0
+    },
+    {
+      "class": "6+ consumers",
+      "plants": 1637,
+      "median_degree": 11,
+      "expanded_fraction": 0.659132559560171,
+      "median_log_expansion": 0.1764564373415567,
+      "median_added_units": 4
+    }
+  ],
+  "interpretation": "Plants prominent across the Lepidoptera-host network are disproportionately anthropogenically redistributed even after accounting for native geographic breadth and plant-family structure. The fraction of plants with any introduced-range expansion increases from 26.2% among degree-1 hosts to 65.9% among hosts used by six or more Lepidoptera species.",
+  "claim_boundary": "HOSTS consumer degree conflates ecological host commonness/breadth with study and recording intensity. The association identifies a network-prominence axis but cannot partition biological commonness from database visibility."
+}

@@ -22,12 +22,14 @@ COPY_PATHS = (
     "docs/exploratory",
     "docs/REPRODUCIBILITY.md",
     "benchmarks/exploratory",
+    "provenance/reviewer_defenses",
     "provenance/climate",
+    "provenance/crop",
     "provenance/archive/climate/operations",
     "provenance/archive/climate/pilot",
-    "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md",
-    "manuscript/generated/butterfly_crop_host_sensitivity_SI_v0.1.md",
-    "manuscript/butterfly_specialization_claim_map_v0.1.json",
+    "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
+    "manuscript/butterfly_specialization_claim_map_v0.2.json",
+    "manuscript/butterfly_specialization_supplement_v0.2.md",
 )
 
 EXCLUDE_RELATIVE = {
@@ -40,6 +42,8 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_butterfly_climate_release_postgate_recovery.py"),
     Path("tests/test_butterfly_climate_release_execution_binding.py"),
     Path("tests/test_repository_layout.py"),
+    Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
+    Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
 }
 
 IDENTITY_REPLACEMENTS = {
@@ -75,9 +79,9 @@ ANON_README = """# Butterfly specialization ecology — anonymous review snapsho
 This archive is a double-anonymous review snapshot of the analysis package for a
 global butterfly-specialization manuscript.
 
-It contains the scientific code, frozen protocols, de-identified result receipts,
+It contains the scientific code, frozen protocols, de-identified result receipts, the v0.2 supplementary robustness tables,
 the exact LepTraits input used by the reconstruction, and byte-exact source inputs
-needed to regenerate the five manuscript figures. Identifying repository metadata,
+needed to regenerate the three main manuscript figures and the climate supplementary figure. Identifying repository metadata,
 Git history, author metadata, cover letters, title pages, release metadata, and
 internal hosting/run identifiers are intentionally omitted or redacted for review.
 
@@ -94,11 +98,19 @@ docs/REPRODUCIBILITY.md.
 
 ## Regenerate the manuscript figures
 
-    python scripts/render_butterfly_specialization_manuscript_figures.py \
-      --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+    python scripts/render_butterfly_specialization_v02_figures.py \
       --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
-      --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
-      --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
+      --matched-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json \
+            --hostbias-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json \
+      --plant-prominence-json provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json \
+      --host-concentration-json provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json \
+      --occurrence-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+      --occurrence-null-json provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json \
+      --occurrence-species-robustness-json provenance/reviewer_defenses/results/butterfly_occurrence_species_robustness_v0.1.json \
+      --ceiling-json provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json \
+      --regional-json provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json \
+      --climate-csv data/frozen/figure_sources/climate_distance_sensitivity_species.csv \
+      --climate-effect-json provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json \
       --output-dir results/manuscript-figures
 
 The review snapshot intentionally does not contain author names or a public

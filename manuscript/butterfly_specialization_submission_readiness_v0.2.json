@@ -1,0 +1,88 @@
+{
+  "schema": "chocho_butterfly_specialization_submission_readiness_v0.2",
+  "status": "SCIENTIFICALLY_READY_CURRENT_V02_PENDING_EXTERNAL_METADATA_LICENSE_ARCHIVE_AND_ANONYMOUS_URL",
+  "updated_on": "2026-10-01",
+  "target_journal": {
+    "primary": "Global Ecology and Biogeography",
+    "article_type": "Research Article",
+    "format_snapshot_checked_on": "2026-09-27",
+    "structured_abstract_max_words": 300,
+    "typical_main_body_words": 5000,
+    "double_anonymous_review": true,
+    "separate_title_page_required": true,
+    "keywords": "6-10",
+    "running_title_max_characters": 40
+  },
+  "manuscript": {
+    "file": "manuscript/butterfly_specialization_ecology_v0.2.md",
+    "working_title": "Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum",
+    "approximate_total_words": 6030,
+    "approximate_main_text_words": 4827,
+    "approximate_abstract_words": 289,
+    "structured_abstract": true,
+    "blinded_file": "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
+    "title_page_template": "manuscript/butterfly_specialization_geb_title_page_template_v0.2.md",
+    "cover_letter": "manuscript/butterfly_specialization_geb_cover_letter_v0.2.md",
+    "running_title": "Host redistribution and resource gain",
+    "running_title_characters": 37,
+    "keyword_count": 7
+  },
+  "scientific_state": {
+    "central_story_complete": true,
+    "claim_map": "manuscript/butterfly_specialization_claim_map_v0.2.json",
+    "resource_expansion": "206/239 butterflies expanded; aggregate butterfly×WGSRPD3 coverage +54.9% (14,553 added units)",
+    "host_contribution_concentration": "670 host species contribute; top 10=25.1%, top 50=57.0%, 38 species reach half; genus sensitivity 431 genera with 25 reaching half",
+    "diet_breadth_precision": "rho=0.008; 49,999-bootstrap 95% CI -0.111 to 0.128; post-hoc ±0.10 TOST p=0.078, so exact equivalence is not claimed",
+    "phylogenetic_boundary": "124/239 exact Kawahara matches; fitted Pagel lambda=0.033, beta=-0.051 p=0.581; fixed Brownian beta=0.140 p=0.119 retained as boundary sensitivity",
+    "occurrence_validation": "secondary climate-stratified panel; 66/115 outside-native units recovered; species-level region-matched null exceeded",
+    "network_prominence": "exploratory explanatory hypothesis in Discussion/SI only",
+    "within_butterfly_portfolio_architecture": "SI-only structural diagnostic",
+    "climate": "secondary; filtering persists but host-breadth release prediction unsupported and imprecise",
+    "new_confirmatory_analysis_required_before_submission": false,
+    "poaceae_sensitivity": "58 Poaceae users; excluding all leaves rho=0.026 (n=181), excluding 34 one-family Poaceae specialists leaves rho=0.013 (n=205)",
+    "conceptual_framework": "taxonomic interaction breadth -> resource geography -> realized consumer geography; introduced host redistribution acts on resource geography while known host identities are held fixed",
+    "butterfly_family_generality": "Expansion affected 83.5–90.2% of species in each of the five major butterfly families represented by at least 10 species (Nymphalidae, Hesperiidae, Pieridae, Lycaenidae, Papilionidae).",
+    "butterfly_first_implications": "Discussion 4.3 now leads with implications for butterfly larval-resource geography and butterfly range-shift interpretation before cross-taxon generalization.",
+    "crop_host_sensitivity": "complete; FAO exact-binomial crop exclusion leaves +47.0% aggregate expansion, 203/238 evaluable butterflies expanded (85.3%), rho=0.052 and 38 host species accounting for half of added credit; conservative genus-expanded exclusion leaves +46.0%, 197/233 (84.5%), rho=0.057 and 37 hosts."
+  },
+  "figures": {
+    "main_figures": 3,
+    "supplementary_figures": 1,
+    "renderer": "scripts/render_butterfly_specialization_v02_figures.py",
+    "formats": [
+      "pdf",
+      "png"
+    ],
+    "figure_1": "resource expansion + diet-breadth precision + host species/genus contribution concentration",
+    "figure_2": "secondary occurrence validation with structural null and leave-one-out sensitivity",
+    "figure_3": "finite-support sensitivity and regional heterogeneity",
+    "supplementary_figure_s1": "climate filtering, geographic matching and effect-size precision",
+    "current_head_must_pass_render_workflow": true
+  },
+  "review_package_state": {
+    "blinded_docx_builder": "scripts/build_blinded_review_docx.py",
+    "blinded_docx_ci": ".github/workflows/build-blinded-review-docx.yml",
+    "anonymous_bundle_builder": "scripts/build_anonymous_review_bundle.py",
+    "anonymous_bundle_ci": ".github/workflows/build-anonymous-review-bundle.yml",
+    "internal_response_memos_excluded_from_anonymous_bundle": true,
+    "anonymous_hosting_status": "PENDING_EXTERNAL_ANONYMOUS_REVIEW_URL"
+  },
+  "remaining_before_submission": [
+    "Choose and add the software license.",
+    "Insert final author list, affiliations, corresponding-author details, emails and ORCIDs in the separate v0.2 title page.",
+    "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
+    "Create the final release candidate and reserve the public archive DOI.",
+    "Insert the real public DOI into CITATION.cff, the identifying title page and final public Data and Code Availability statement.",
+    "Upload the de-identified reviewer bundle to a non-identifying reviewer-access host and insert its URL into the blinded manuscript.",
+    "Rebuild and proofread the final blinded DOCX after URL insertion.",
+    "Require paper CI, current v0.2 figure rendering, blinded DOCX build and anonymous-bundle build to be green on the exact release commit.",
+    "Require scripts/release_preflight.py to report READY before tagging v1.0.0-butterfly."
+  ],
+  "not_required": [
+    "Additional response-driven predictor searches.",
+    "Claiming exact zero diet-breadth effect.",
+    "Promoting network prominence to a causal mechanism.",
+    "Returning the within-butterfly portfolio architecture to the main Results.",
+    "Retuning the unsupported host-breadth climate prediction."
+  ]
+}

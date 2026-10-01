@@ -1,0 +1,42 @@
+{
+  "schema": "chocho_butterfly_expansion_equivalence_receipt_v0.1",
+  "status": "SUCCESS_POSTHOC_EQUIVALENCE_DIAGNOSTIC",
+  "workflow": {
+    "run_id": 36511815412,
+    "artifact_id": 11009312341,
+    "artifact_name": "geb-host-concentration-equivalence-v01",
+    "artifact_digest": "sha256:f1cefeb5956da047afa8e22e46772cf1b8a309f7d7048cb506a1b245169234ab"
+  },
+  "n": 239,
+  "association": "Spearman host-family breadth vs log resource expansion",
+  "rho": 0.00798541214928876,
+  "bootstrap": {
+    "replicates": 49999,
+    "seed": 20260929,
+    "ci90": [
+      -0.09223196161517727,
+      0.10807084871397284
+    ],
+    "ci95": [
+      -0.1113648840403796,
+      0.12777832073032636
+    ]
+  },
+  "fisher_z_approx_ci90": [
+    -0.09876226828893196,
+    0.11455140213898654
+  ],
+  "fisher_z_approx_ci95": [
+    -0.11903023091475005,
+    0.13474390357263244
+  ],
+  "tost_fisher_z_approx": {
+    "margin": 0.1,
+    "p_lower": 0.04805045000116415,
+    "p_upper": 0.0779926620144849,
+    "p_tost": 0.0779926620144849,
+    "equivalent_at_alpha_0_05": false
+  },
+  "interpretation": "The full-panel point estimate is near zero, but equivalence within ±0.10 is not established at alpha=0.05. The manuscript therefore uses 'largely independently of diet breadth' and 'little relationship' rather than an exact-null claim.",
+  "claim_boundary": "The deterministic bootstrap quantifies uncertainty in Spearman rho. Fisher-z TOST is an approximate equivalence diagnostic for Spearman rho; neither establishes an exactly zero effect."
+}

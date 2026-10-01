@@ -6,7 +6,8 @@ import re
 from pathlib import Path
 
 
-RUNNING_TITLE = "Host redistribution and specialization"
+LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
+V02_RUNNING_TITLE = "Host redistribution and resource gain"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
@@ -34,15 +35,25 @@ def render_blinded(text: str) -> str:
     if not lines or not lines[0].startswith("# "):
         raise ValueError("expected manuscript title as first Markdown heading")
     if len(lines) < 2 or not lines[1].startswith("**Running title:**"):
-        lines.insert(1, f"**Running title:** {RUNNING_TITLE}")
+        title = lines[0][2:].strip()
+        running_title = (
+            V02_RUNNING_TITLE
+            if (
+                "Human redistribution of host plants expands butterfly resource geography" in title
+                or "Anthropogenic host redistribution expands butterfly resource geography" in title
+            )
+            else LEGACY_RUNNING_TITLE
+        )
+        lines.insert(1, f"**Running title:** {running_title}")
         lines.insert(2, "")
     text = "\n".join(lines).rstrip() + "\n"
 
     data_start = text.find("## Data and Code Availability")
-    refs_start = text.find("## References", data_start)
-    if data_start < 0 or refs_start < 0:
-        raise ValueError("could not locate Data and Code Availability / References sections")
-    text = text[:data_start] + ANON_DATA_CODE + text[refs_start:]
+    if data_start < 0:
+        raise ValueError("could not locate Data and Code Availability section")
+    next_heading = text.find("\n## ", data_start + len("## Data and Code Availability"))
+    data_end = len(text) if next_heading < 0 else next_heading + 1
+    text = text[:data_start] + ANON_DATA_CODE + text[data_end:]
 
     provenance_start = text.find("## Repository provenance")
     if provenance_start >= 0:

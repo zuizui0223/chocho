@@ -1,0 +1,56 @@
+name: GEB phylogenetic sensitivity
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - review/geb-null-validation-v02
+    paths:
+      - "scripts/analyze_butterfly_pgls_kawahara.R"
+      - "scripts/analyze_butterfly_pgls_match_bias.R"
+      - ".github/workflows/geb-phylogeny-sensitivity.yml"
+
+jobs:
+  pgls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Install phylogenetic environment
+        run: |
+          Rscript -e 'install.packages(c("ape","nlme","jsonlite","megatrees"), repos="https://cloud.r-project.org")'
+
+      - name: Restore anthropogenic resource result
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-anthropogenic-resource-expansion-v01
+          path: inputs/anthropogenic
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36243549495
+
+      - name: Run Kawahara PGLS
+        run: |
+          mkdir -p results/geb-phylogeny
+          Rscript scripts/analyze_butterfly_pgls_kawahara.R \
+            data/external/leptraits_consensus_v1.0.csv \
+            inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv \
+            results/geb-phylogeny/kawahara_pgls.json
+
+      - name: Run PGLS coverage-bias diagnostic
+        run: |
+          Rscript scripts/analyze_butterfly_pgls_match_bias.R \
+            inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv \
+            results/geb-phylogeny/kawahara_match_bias.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: geb-kawahara-pgls-v01
+          path: results/geb-phylogeny/
+          retention-days: 30

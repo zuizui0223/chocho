@@ -19,58 +19,45 @@ python -m pip install -e ".[test]"
 pytest -q
 ```
 
-The active GitHub Actions paper CI installs the test extra, so Shapely-dependent tests are executed rather than silently skipped.
+The active paper CI validates the current v0.2 manuscript/submission package and current claim boundaries rather than the superseded v0.1 manuscript.
 
 ## R host-distribution sidecars
 
-Two reconstruction scripts use R:
+The pinned WCVP/HOSTS reconstructions use base-R sidecar scripts. Current post-hoc concentration/null reconstruction uses `scripts/build_wcvp_hosts_null_sidecars.R`; the historical native/contemporary builders are retained as provenance.
 
-- `scripts/build_wcvp_hosts_sidecar.R`
-- `scripts/build_wcvp_hosts_contemporary_sidecar.R`
-
-They use **base R only**. There are no CRAN/Bioconductor package dependencies and no `library()` or `require()` calls.
-
-The historical frozen WCVP/HOSTS sidecar workflow used:
-
-- Ubuntu GitHub Actions runner
-- `r-lib/actions/setup-r@v2`
-- `r-version: "release"`
-
-The scripts read the pinned upstream files directly:
+The pinned upstream identities are:
 
 - rWCVPdata / WCVP v13 commit `65bed76bae9d644ccb6ad200c05f9f5071d89e05`
 - HOSTS mirror commit `808e0b869f9ec1adf8efff87cf6a395adda103e0`
 
-Example rebuild:
+The sidecar scripts use **base R only**. The historical CI used `r-lib/actions/setup-r@v2` with `r-version: "release"`. Because that label moves, the archival guarantee is the pinned source identity plus git-tracked/frozen outputs and receipts, not an assumption that future R releases are bitwise identical.
 
-```bash
-Rscript scripts/build_wcvp_hosts_sidecar.R \
-  /path/to/rWCVPdata \
-  /path/to/HOSTS \
-  results/wcvp_native_sidecar
+## Current v0.2 figure rebuild
 
-Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R \
-  /path/to/rWCVPdata \
-  /path/to/HOSTS \
-  results/wcvp_contemporary_sidecar
-```
-
-Because the historical workflow selected the moving R label `release` rather than a semantic R version, the archival guarantee is the frozen input identity plus output SHA-256, not an assumption that a future R release is bitwise identical. Release provenance should therefore retain the exact frozen sidecar/source outputs and their hashes.
-
-## Figure-source inputs
-
-The exact four inputs consumed by the audited manuscript-figure workflow are vendored in `data/frozen/figure_sources/` and recorded in `provenance/FIGURE_SOURCE_ARTIFACTS.md`. Their raw-byte SHA-256 values are part of the release boundary.
-
-A figure rebuild no longer requires historical Actions artifacts:
+Install the figure extra and run:
 
 ```bash
 python -m pip install -e ".[figure]"
-python scripts/render_butterfly_specialization_manuscript_figures.py \
-  --descriptors-csv data/frozen/figure_sources/s1_resource_descriptors.csv \
+python scripts/render_butterfly_specialization_v02_figures.py \
   --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
-  --mechanism-csv data/frozen/figure_sources/host_contribution_metrics.csv \
-  --climate-primary-json data/frozen/figure_sources/independent_climate_primary_result.json \
-  --output-dir results/butterfly-specialization-manuscript-figures-v0.1
+  --matched-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json \
+  --hostbias-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json \
+  --plant-prominence-json provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json \
+  --host-concentration-json provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json \
+  --occurrence-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+  --occurrence-null-json provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json \
+  --occurrence-species-robustness-json provenance/reviewer_defenses/results/butterfly_occurrence_species_robustness_v0.1.json \
+  --ceiling-json provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json \
+  --regional-json provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json \
+  --climate-csv data/frozen/figure_sources/climate_distance_sensitivity_species.csv \
+  --climate-effect-json provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json \
+  --output-dir results/butterfly-specialization-v02-figures
 ```
 
-The active paper CI executes this rebuild and requires five PDF plus five PNG outputs.
+The expected output is four PDFs and four PNGs: Figure 1, Figure 2, Figure 3 and Supplementary Figure S1. The current `.github/workflows/paper-ci.yml`, blinded-DOCX workflow and anonymous-bundle workflow all use this same renderer and source surface.
+
+## Historical reconstruction source hashes
+
+The earlier reconstruction/figure-source files remain byte-exact and hash-tested because they anchor the route to the current results. Their identities are documented in `provenance/FIGURE_SOURCE_ARTIFACTS.md` and checked by `tests/test_reproducibility_snapshot_integrity.py`.
+
+The current v0.2 submission should be reproduced from the current git-tracked renderer, figure-source tables and result receipts listed above; the historical five-figure renderer is retained only for provenance.

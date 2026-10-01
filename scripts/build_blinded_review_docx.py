@@ -17,11 +17,12 @@ from lxml import etree
 
 
 FIGURES = {
-    1: "Figure1_anthropogenic_resource_expansion.png",
-    2: "Figure2_host_contribution_architecture.png",
-    3: "Figure3_taxonomic_vs_geographic_specialization.png",
-    4: "Figure4_within_family_specialization_hierarchy.png",
-    5: "Figure5_independent_climate_filtering.png",
+    1: "Figure1_resource_expansion_matched_null.png",
+    2: "Figure2_occurrence_validation.png",
+    3: "Figure3_expansion_robustness.png",
+}
+SUPPLEMENTARY_FIGURES = {
+    "S1": "FigureS1_climate_filtering_and_precision.png",
 }
 
 
@@ -249,14 +250,22 @@ def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path, review
             add_inline_markdown(p, line[2:].strip())
             continue
 
-        figure_match = re.match(r"^\*\*Figure\s+([1-5])\.", line)
-        if in_figure_legends and figure_match:
-            number = int(figure_match.group(1))
-            if number > 1:
+        figure_match = re.match(r"^\*\*Figure\s+([1-3])\.", line)
+        supplementary_match = re.match(r"^\*\*Supplementary Figure\s+(S\d+)\.", line)
+        if in_figure_legends and (figure_match or supplementary_match):
+            if figure_match:
+                key = int(figure_match.group(1))
+                image_name = FIGURES[key]
+                page_break = key > 1
+            else:
+                key = supplementary_match.group(1)
+                image_name = SUPPLEMENTARY_FIGURES[key]
+                page_break = True
+            if page_break:
                 doc.add_page_break()
             caption = add_body_paragraph(doc, line)
             caption.paragraph_format.keep_with_next = True
-            image_path = figures_dir / FIGURES[number]
+            image_path = figures_dir / image_name
             if not image_path.exists():
                 raise FileNotFoundError(image_path)
             p = doc.add_paragraph()

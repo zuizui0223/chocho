@@ -1,0 +1,111 @@
+{
+  "schema": "chocho_butterfly_hostbias_parameter_grid_receipt_v0.1",
+  "status": "SUCCESS_POSTHOC_PARAMETER_ROBUSTNESS",
+  "workflow": {
+    "run_id": 36436638484,
+    "artifact_id": 10977262671,
+    "artifact_name": "geb-family-composition-matched-null-v01",
+    "artifact_sha256": "4d06fff793cc9f6eac5f78940739a790c2246df94a96f148e66dd3e1ec30e284"
+  },
+  "species": 207,
+  "permutations_per_cell": 299,
+  "native_log_bandwidths": [
+    0.1,
+    0.2,
+    0.4
+  ],
+  "usage_exponents": [
+    0.5,
+    1,
+    2
+  ],
+  "observed": {
+    "total_added_units": 12853,
+    "mean_log_expansion": 0.43903441165398327,
+    "median_log_expansion": 0.33301002889274134
+  },
+  "grid": [
+    {
+      "bandwidth": 0.1,
+      "usage_exponent": 0.5,
+      "null_total_median": 9809,
+      "p_total_high": 0.0033333333333333335,
+      "p_mean_high": 0.0033333333333333335,
+      "p_median_high": 0.0033333333333333335
+    },
+    {
+      "bandwidth": 0.1,
+      "usage_exponent": 1,
+      "null_total_median": 12783,
+      "p_total_high": 0.43333333333333335,
+      "p_mean_high": 0.023333333333333334,
+      "p_median_high": 0.023333333333333334
+    },
+    {
+      "bandwidth": 0.1,
+      "usage_exponent": 2,
+      "null_total_median": 16911,
+      "p_total_high": 1,
+      "p_mean_high": 1,
+      "p_median_high": 1
+    },
+    {
+      "bandwidth": 0.2,
+      "usage_exponent": 0.5,
+      "null_total_median": 9765,
+      "p_total_high": 0.0033333333333333335,
+      "p_mean_high": 0.0033333333333333335,
+      "p_median_high": 0.0033333333333333335
+    },
+    {
+      "bandwidth": 0.2,
+      "usage_exponent": 1,
+      "null_total_median": 13038,
+      "p_total_high": 0.6533333333333333,
+      "p_mean_high": 0.08666666666666667,
+      "p_median_high": 0.08333333333333333
+    },
+    {
+      "bandwidth": 0.2,
+      "usage_exponent": 2,
+      "null_total_median": 17631,
+      "p_total_high": 1,
+      "p_mean_high": 1,
+      "p_median_high": 1
+    },
+    {
+      "bandwidth": 0.4,
+      "usage_exponent": 0.5,
+      "null_total_median": 9777,
+      "p_total_high": 0.0033333333333333335,
+      "p_mean_high": 0.0033333333333333335,
+      "p_median_high": 0.0033333333333333335
+    },
+    {
+      "bandwidth": 0.4,
+      "usage_exponent": 1,
+      "null_total_median": 13349,
+      "p_total_high": 0.81,
+      "p_mean_high": 0.37333333333333335,
+      "p_median_high": 0.27
+    },
+    {
+      "bandwidth": 0.4,
+      "usage_exponent": 2,
+      "null_total_median": 18153,
+      "p_total_high": 1,
+      "p_mean_high": 1,
+      "p_median_high": 1
+    }
+  ],
+  "summary": {
+    "total_endpoint_significant_cells": 3,
+    "mean_endpoint_significant_cells": 4,
+    "median_endpoint_significant_cells": 4,
+    "total_cells": 9,
+    "pattern": "All usage-exponent 0.5 cells retain an observed excess; exponent 1.0 cells place total expansion inside the null and give mean/median p values from 0.023 to 0.373 depending on range bandwidth; exponent 2.0 cells produce null expansion greater than observed.",
+    "conclusion": "The attenuation of the simple host-identity excess is not parameter-robust. Inference depends strongly on the arbitrary strength assigned to other-Lepidoptera-use weighting."
+  },
+  "interpretation": "Do not use the weighted host null to claim that network prominence fully explains the butterfly host-identity excess. Use it only to show that the excess is sensitive to plausible adjustment for plant network prominence/recording intensity. The direct 8,909-plant association is the supported positive plant-level result.",
+  "claim_boundary": "Other-Lepidoptera consumer degree is a joint proxy for biological host prominence and recording intensity, and its weighting exponent has no uniquely identified ecological value."
+}

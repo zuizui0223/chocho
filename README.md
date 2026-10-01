@@ -1,4 +1,4 @@
-# chocho — Butterfly specialization ecology
+# chocho — Butterfly resource geography under host redistribution
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
@@ -8,18 +8,20 @@ Target journal: *Global Ecology and Biogeography*.
 
 ## Scientific result
 
-The paper treats butterfly specialization as a hierarchy of partially coupled, non-interchangeable ecological dimensions rather than a single specialist–generalist axis.
+The paper's butterfly-specific advance is to separate **larval host breadth** from **butterfly resource geography**. Previous work has linked butterfly diet breadth to consumer ranges, host distributions to consumer constraints, introduced plants to regional responses, and species introductions to biotic or interaction-network homogenization. This study asks the missing resource-side question: how much does moving already-known host plants change where a butterfly has access to resources?
 
-The frozen manuscript claim map supports six claims, presented here in manuscript order:
+The design holds known host identities fixed analytically and contrasts a native-host resource envelope with the envelope obtained after introduced host ranges are retained. The difference therefore isolates the geographic contribution of partner redistribution without requiring a change in recorded diet breadth.
 
-1. Introduced host ranges expand reconstructed resource opportunity for most butterflies, but proportional expansion is not concentrated in broad family-level generalists.
-2. Similar aggregate expansion can be assembled through concentrated host contributions in specialists or distributed host portfolios in generalists.
-3. Family-level host breadth only partly tracks geographic larval-resource breadth.
-4. Species-level host richness reveals strong specialization structure even within a fixed host-family breadth category.
-5. Climate commonly filters realized butterfly geography within reconstructed contemporary larval-resource opportunity.
-6. The independent prediction that broader host-family diets weaken climate filtering after controlling contemporary resource breadth was **not supported** and is retained without retuning.
+The current v0.2 claim map supports the following manuscript-order results:
 
-See `manuscript/butterfly_specialization_claim_map_v0.1.json` for the exact claim boundaries and source receipts.
+1. Introduced host ranges expand reconstructed resource opportunity for **206/239 butterflies**, increasing aggregate butterfly × WGSRPD3 coverage by **54.9%**. Expansion occurs in every diet-breadth class and in **83.5–90.2%** of species within each of the five major butterfly families represented by at least 10 species.
+2. The **14,553 added butterfly × region units are strongly uneven across host plants**: 670 host species contribute, the top 10 account for 25.1%, the top 50 for 57.0%, and 38 species account for half.
+3. Host-family breadth has **little relationship to proportional expansion** (Spearman rho = 0.008; 49,999-bootstrap 95% CI -0.111 to 0.128). Removing all 58 butterflies with any Poaceae host leaves rho = 0.026 (n = 181), so redistributed grasses do not generate the weak diet-breadth slope. A strict post-hoc ±0.10 equivalence diagnostic remains narrowly inconclusive, so the paper does not claim an exact zero effect. FAO crop-host exclusion leaves the aggregate increase at **47.0%** under exact-binomial removal and **46.0%** under an intentionally over-conservative genus-expanded rule, with rho remaining near zero (**0.052–0.057**) and **37–38 host species** still accounting for half of added opportunity.
+4. In a secondary climate-stratified panel, introduced-host geography recovers **66/115 outside-native butterfly × region observations**, exceeding region-matched structural expectations and surviving species-level sensitivity checks.
+5. Within-butterfly portfolio-concentration gradients are largely explained by resolved host-species richness and are retained only as Supplementary structural diagnostics.
+6. Climate-associated filtering remains visible within contemporary resource opportunity, while the pre-specified prediction that broader diets weaken that filtering is **not supported** and remains imprecisely estimated.
+
+See `manuscript/butterfly_specialization_claim_map_v0.2.json` for the exact claim boundaries and source receipts.
 
 ## Repository boundary
 
@@ -84,11 +86,11 @@ The reconstructed host envelopes represent **potential regional larval-resource 
 
 Introduced host distributions are not interpreted as proof that host introduction caused butterfly range expansion. GBIF non-observation is not treated as true absence. Climate filtering is an association within the declared resource-opportunity design, not proof of physiological causation.
 
-The independent host-breadth climate-release prediction was not supported (`partial Spearman rho = -0.166`, one-sided `p = 0.2237`, `n = 24`). No response-driven replacement predictor search is used to rescue that result.
+The full-panel diet-breadth association is near zero but is not presented as proven equivalence: a post-hoc ±0.10 TOST is narrowly inconclusive (`p = 0.078`). The independent host-breadth climate-release prediction was also not supported (`partial Spearman rho = -0.166`, one-sided `p = 0.2237`, `n = 24`). No response-driven replacement predictor search is used to rescue either result.
 
 ## Submission state
 
-The scientific story is frozen, and both review-package builders are complete: the privacy-scrubbed line-numbered DOCX and the de-identified reviewer code bundle are generated and CI-audited. Remaining release tasks are administrative/external:
+The submission-facing v0.2 is in final pre-submission audit, and both review-package builders are complete: the privacy-scrubbed line-numbered DOCX and the de-identified reviewer code bundle are generated and CI-audited. Remaining release tasks are administrative/external:
 
 - choose and add the software license;
 - complete final author/affiliation/CRediT/funding/conflict metadata;

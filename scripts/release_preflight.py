@@ -11,6 +11,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_VERSION = "1.0.0"
 EXPECTED_TAG = "v1.0.0-butterfly"
+CURRENT_MANUSCRIPT = "manuscript/butterfly_specialization_ecology_v0.2.md"
+CURRENT_TITLE_PAGE = "manuscript/butterfly_specialization_geb_title_page_template_v0.2.md"
+CURRENT_BLINDED = "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md"
+CURRENT_CLAIM_MAP = "manuscript/butterfly_specialization_claim_map_v0.2.json"
+EXPECTED_TITLE = (
+    "Anthropogenic host redistribution expands butterfly resource geography "
+    "largely independently of diet breadth"
+)
 
 
 def cff_version(text: str) -> str | None:
@@ -41,9 +49,31 @@ def inspect_release(root: Path = ROOT) -> dict[str, object]:
     else:
         blockers.append("LICENSE is not chosen/added")
 
-    title = (root / "manuscript/butterfly_specialization_geb_title_page_template_v0.1.md").read_text(
-        encoding="utf-8"
+    manuscript = (root / CURRENT_MANUSCRIPT).read_text(encoding="utf-8")
+    title_line = manuscript.splitlines()[0].removeprefix("# ").strip()
+    if title_line == EXPECTED_TITLE:
+        complete.append("current v0.2 manuscript title is synchronized")
+    else:
+        blockers.append(
+            f"current manuscript title is {title_line!r}; expected {EXPECTED_TITLE!r}"
+        )
+
+    abstract_start = manuscript.index("## Abstract")
+    abstract_end = manuscript.index("---", abstract_start)
+    abstract_words = len(
+        re.findall(r"\b[\w–'-]+\b", manuscript[abstract_start:abstract_end])
     )
+    if abstract_words <= 300:
+        complete.append(f"structured abstract is within 300-word limit ({abstract_words})")
+    else:
+        blockers.append(f"structured abstract exceeds 300 words ({abstract_words})")
+
+    if (root / CURRENT_CLAIM_MAP).exists():
+        complete.append("current v0.2 claim map exists")
+    else:
+        blockers.append("current v0.2 claim map is missing")
+
+    title = (root / CURRENT_TITLE_PAGE).read_text(encoding="utf-8")
     author_tokens = (
         "[Author 1 full name]",
         "[Author 2 full name]",
@@ -86,9 +116,7 @@ def inspect_release(root: Path = ROOT) -> dict[str, object]:
     else:
         blockers.append("public archive DOI is not yet minted/recorded")
 
-    blinded = (
-        root / "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md"
-    ).read_text(encoding="utf-8")
+    blinded = (root / CURRENT_BLINDED).read_text(encoding="utf-8")
     if "[ANONYMIZED REVIEW LINK]" in blinded:
         blockers.append("anonymized reviewer-access URL is not yet inserted")
     else:
@@ -101,7 +129,8 @@ def inspect_release(root: Path = ROOT) -> dict[str, object]:
         blockers.append(f"release manifest does not record tag {EXPECTED_TAG}")
 
     return {
-        "schema": "chocho_release_preflight_v1",
+        "schema": "chocho_release_preflight_v1_1",
+        "manuscript": CURRENT_MANUSCRIPT,
         "expected_version": EXPECTED_VERSION,
         "expected_tag": EXPECTED_TAG,
         "ready": not blockers,

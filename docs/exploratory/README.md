@@ -21,6 +21,7 @@ Execution history is separated from active scientific specifications:
 - current independent-climate panel, execution binding and pre-climate gate receipt → `provenance/climate/`;
 - climate pilot materials → `provenance/archive/climate/pilot/`;
 - post-gate transport recovery/completion contracts → `provenance/archive/climate/operations/`;
-- superseded climate protocols → `provenance/archive/climate/protocols/`.
+- superseded climate protocols → `provenance/archive/climate/protocols/`;
+- post-hoc matched-null and reviewer-defense specifications → `provenance/reviewer_defenses/protocols/`.
 
 The submission manuscript is authoritative for presentation order. Frozen protocols are authoritative for when questions and hypotheses were defined.

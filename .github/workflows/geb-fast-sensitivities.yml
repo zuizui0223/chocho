@@ -1,0 +1,118 @@
+name: GEB fast sensitivities
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - review/geb-null-validation-v02
+    paths:
+      - "scripts/analyze_butterfly_occurrence_overlap_null.py"
+      - "scripts/analyze_butterfly_occurrence_species_robustness.py"
+      - "scripts/analyze_butterfly_regional_robustness.py"
+      - "scripts/analyze_butterfly_climate_effect_size.py"
+      - "scripts/analyze_butterfly_family_random_intercept.py"
+      - ".github/workflows/geb-fast-sensitivities.yml"
+
+jobs:
+  sensitivities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install environment
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install "statsmodels>=0.14,<1"
+
+      - name: Restore S1 native resource reconstruction
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Restore anthropogenic resource result
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-anthropogenic-resource-expansion-v01
+          path: inputs/anthropogenic
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36243549495
+
+      - name: Restore independent contemporary resource envelope
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-resource-v01
+          path: inputs/resource
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36241187187
+
+      - name: Restore independent occurrence summary
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: inputs/summary
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Restore independent climate result
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: inputs/climate
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Checkout official WGSRPD geometry
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _wgsrpd
+
+      - name: Run occurrence overlap null
+        run: |
+          mkdir -p results/geb-fast-sensitivities
+          python scripts/analyze_butterfly_occurrence_overlap_null.py             --native-footprints-json inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json             --contemporary-footprints-json inputs/resource/contemporary_footprints.json             --unit-table-csv inputs/summary/wgsrpd3_unit_table.csv             --level3-geojson _wgsrpd/geojson/level3.geojson             --output-json results/geb-fast-sensitivities/occurrence_overlap_null.json
+
+      - name: Run species-cluster occurrence robustness
+        run: |
+          python scripts/analyze_butterfly_occurrence_species_robustness.py \
+            --native-footprints-json inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json \
+            --contemporary-footprints-json inputs/resource/contemporary_footprints.json \
+            --unit-table-csv inputs/summary/wgsrpd3_unit_table.csv \
+            --level3-geojson _wgsrpd/geojson/level3.geojson \
+            --output-json results/geb-fast-sensitivities/occurrence_species_robustness.json
+
+      - name: Run regional robustness
+        run: |
+          python scripts/analyze_butterfly_regional_robustness.py             --native-footprints-json inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_host_resource_footprints.json             --anthropogenic-csv inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv             --level3-geojson _wgsrpd/geojson/level3.geojson             --output-json results/geb-fast-sensitivities/regional_robustness.json
+
+      - name: Run butterfly Family random intercept
+        run: |
+          python scripts/analyze_butterfly_family_random_intercept.py \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --anthropogenic-csv inputs/anthropogenic/butterfly-anthropogenic-resource-expansion-v0.1/species_metrics.csv \
+            --output-json results/geb-fast-sensitivities/family_random_intercept.json
+
+      - name: Run climate effect-size diagnostic
+        run: |
+          python scripts/analyze_butterfly_climate_effect_size.py             --primary-result-json inputs/climate/primary_result.json             --output-json results/geb-fast-sensitivities/climate_effect_size.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-fast-sensitivities-v01
+          path: results/geb-fast-sensitivities/
+          retention-days: 30

@@ -16,337 +16,231 @@ def _words(text: str) -> int:
     return len(re.findall(r"\b[\w–'-]+\b", text))
 
 
-def test_butterfly_specialization_manuscript_bundle_is_internally_consistent():
-    manuscript_path = ROOT / "manuscript/butterfly_specialization_ecology_v0.1.md"
+def test_current_v02_manuscript_bundle_is_internally_consistent():
+    manuscript_path = ROOT / "manuscript/butterfly_specialization_ecology_v0.2.md"
     manuscript = manuscript_path.read_text(encoding="utf-8")
-    claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.1.json")
+    claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.2.json")
     readiness = _json(
-        "manuscript/butterfly_specialization_submission_readiness_v0.1.json"
+        "manuscript/butterfly_specialization_submission_readiness_v0.2.json"
     )
-    figures = _json("manuscript/butterfly_specialization_figures_v0.1.json")
+    concentration = _json(
+        "provenance/reviewer_defenses/results/"
+        "butterfly_host_contribution_concentration_v0.1.json"
+    )
+    equivalence = _json(
+        "provenance/reviewer_defenses/results/"
+        "butterfly_expansion_equivalence_v0.1.json"
+    )
+    occurrence = _json(
+        "provenance/reviewer_defenses/results/"
+        "butterfly_occurrence_species_robustness_v0.1.json"
+    )
+    pgls = _json(
+        "provenance/reviewer_defenses/results/butterfly_kawahara_pgls_v0.2.json"
+    )
+    poaceae = _json(
+        "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json"
+    )
+    family_generality = _json(
+        "provenance/reviewer_defenses/results/butterfly_taxonomic_family_expansion_v0.1.json"
+    )
 
-    dimensionality = _json(
-        "benchmarks/exploratory/butterfly_specialization_dimensionality_result_v0.1.json"
+    expected_title = (
+        "Anthropogenic host redistribution expands butterfly resource geography "
+        "across the specialization spectrum"
     )
-    anthropogenic = _json(
-        "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json"
-    )
-    mechanism = _json(
-        "benchmarks/exploratory/butterfly_resource_expansion_mechanism_result_v0.1.json"
-    )
-    hierarchy = _json(
-        "benchmarks/exploratory/butterfly_host_specialization_hierarchy_result_v0.1.json"
-    )
-    climate = _json(
-        "benchmarks/exploratory/butterfly_climate_release_postgate_independent_result_v0.1.json"
-    )
+    assert manuscript.splitlines()[0] == f"# {expected_title}"
+    assert claim_map["title"] == expected_title
+    assert readiness["manuscript"]["working_title"] == expected_title
 
-    assert claim_map["status"] == "WORKING_SUBMISSION_CLAIM_MAP"
-    assert readiness["target_journal"]["primary"] == "Global Ecology and Biogeography"
-    assert readiness["target_journal"]["article_type"] == "Research Article"
-    assert readiness["figures"]["render_status"] == "RENDERED_AND_VISUALLY_AUDITED_SCALE_RICH"
-    assert figures["status"] == "RENDERED_AND_VISUALLY_AUDITED"
-    assert figures["workflow"]["run_id"] == readiness["figures"]["render_workflow_run_id"]
-    assert figures["workflow"]["artifact_id"] == readiness["figures"]["artifact_id"]
-    assert len(figures["figures"]) == 5
-    assert figures["visual_audit"]["data_scale_annotations_present_in_all_five_figures"] is True
-    assert figures["visual_audit"]["figure_1_aggregate_species_region_magnitude_present"] is True
-    assert figures["visual_audit"]["figure_2_key_portfolio_medians_present"] is True
-    assert figures["visual_audit"]["figure_5_resource_breadth_size_legend_present"] is True
-
-    # Structured GEB abstract should remain below 300 words.
+    # Submission-scale format checks must apply to the current v0.2 manuscript.
     abstract_start = manuscript.index("## Abstract")
     abstract_end = manuscript.index("---", abstract_start)
     abstract = manuscript[abstract_start:abstract_end]
     abstract_words = _words(abstract)
     assert abstract_words <= 300
 
-    # Approximate main-text budget remains under the GEB typical 5,000 words.
     intro_start = manuscript.index("## 1. Introduction")
-    legend_start = manuscript.index("## Figure legends")
-    main_text_words = _words(manuscript[intro_start:legend_start])
+    refs_start = manuscript.index("## References (working)")
+    main_text_words = _words(manuscript[intro_start:refs_start])
     assert main_text_words <= 5000
 
-    # Readiness metadata must stay synchronized with the actual manuscript.
-    assert readiness["manuscript"]["approx_total_words"] == _words(manuscript)
-    assert readiness["manuscript"]["approx_abstract_words"] == abstract_words
-    assert readiness["manuscript"]["approx_main_text_words"] == main_text_words
+    assert readiness["manuscript"]["approximate_abstract_words"] == abstract_words
+    assert readiness["manuscript"]["approximate_main_text_words"] == main_text_words
+    assert readiness["manuscript"]["keyword_count"] == 7
 
-    # GEB reference list is alphabetical by first author / corporate author.
+    # Current manuscript references remain alphabetical by first/corporate author.
     refs_start = manuscript.index("## References (working)")
-    refs_end = manuscript.index("## Repository provenance", refs_start)
+    refs_end = manuscript.index("## Data and Code Availability", refs_start)
     reference_lines = [
         line[2:]
         for line in manuscript[refs_start:refs_end].splitlines()
         if line.startswith("- ")
     ]
     reference_keys = [
-        re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip()
+        ("van Kleunen" if line.startswith("van Kleunen") else
+         "GBIF" if line.startswith("GBIF.org") else
+         re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip())
         for line in reference_lines
     ]
     assert reference_keys == sorted(reference_keys, key=str.casefold)
 
-    # Submission sections expected in the working bundle.
-    for heading in (
-        "## 1. Introduction",
-        "## 2. Methods",
-        "## 3. Results",
-        "## 4. Discussion",
-        "## 5. Limitations",
-        "## 6. Conclusions",
-        "## Figure legends",
-        "## Data and Code Availability",
-        "## References (working)",
-    ):
-        assert heading in manuscript
-
-    # Core source values used in the paper remain identical to frozen receipts.
-    assert (
-        dimensionality["host_taxonomy_lower_bound_adequate_subset"][
-            "spearman_host_family_vs_geographic_resource_breadth"
-        ]
-        == 0.398238154462201
-    )
-
-    full = anthropogenic["full_resource_eligible_panel"]
-    assert full["species"] == 239
-    assert full["species_expanded_by_introduced_host_ranges"] == 206
-    assert full["total_native_species_units"] == 26530
-    assert full["total_contemporary_species_units"] == 41083
-    assert full["total_introduced_added_species_units"] == 14553
-    assert (
-        full["spearman"]["host_family_count_vs_log_resource_expansion"]
-        == 0.00798541214928876
-    )
-
-    adequate_mech = mechanism["host_taxonomy_lower_bound_adequate_subset"]
-    assert (
-        adequate_mech["spearman"][
-            "host_family_count_vs_effective_contributor_number"
-        ]
-        == 0.4919670615030713
-    )
-    assert (
-        adequate_mech["spearman"][
-            "host_family_count_vs_maximum_single_host_fractional_share"
-        ]
-        == -0.4861161332504768
-    )
-    assert (
-        adequate_mech["host_breadth_strata"]["1_family"][
-            "median_maximum_single_host_fractional_share"
-        ]
-        == 0.7465747904577693
-    )
-    assert (
-        adequate_mech["host_breadth_strata"]["6plus_families"][
-            "median_maximum_single_host_fractional_share"
-        ]
-        == 0.313289241622575
-    )
-
-    one_family = hierarchy["primary_focus"]
-    assert one_family["species"] == 82
-    assert (
-        one_family["spearman"][
-            "resolved_host_species_vs_effective_contributor_number"
-        ]
-        == 0.7338967715221224
-    )
-    assert (
-        one_family["spearman"][
-            "resolved_host_species_vs_maximum_single_host_fractional_share"
-        ]
-        == -0.7065837667974557
-    )
-
-    assert climate["climate_crossfit"]["climate_informative_species"] == 24
-    assert climate["climate_crossfit"]["species_with_score_above_neutral_0_5"] == 23
-    assert climate["primary_test"]["observed_partial_spearman"] == -0.16643611123731772
-    assert climate["primary_test"]["one_sided_p_value"] == 0.2237
-    assert (
-        climate["primary_test"]["decision"]
-        == "PILOT_DERIVED_CLIMATE_RELEASE_HYPOTHESIS_NOT_SUPPORTED"
-    )
-
-    # Abstract should lead with biological magnitude and architecture, not only correlations.
+    # The conceptual contribution must remain explicit in the current manuscript.
     for literal in (
-        "206/239",
-        "26,530",
-        "41,083",
-        "54.9% increase",
-        "74.7%",
-        "31.3%",
-        "rho = 0.008",
-        "median score = 0.801",
-        "partial rho = -0.166",
-        "p = 0.2237",
+        "butterfly-specific resource envelope",
+        "Taxonomic interaction breadth",
+        "Resource geography",
+        "Realized butterfly geography",
+        "Host identities were held fixed between the two envelopes",
+        "resource-side biogeography of butterfly specialization under globalization",
     ):
-        assert literal in abstract
-    assert abstract.index("206/239") < abstract.index("rho = 0.276")
+        assert literal in manuscript
 
-    # Novelty framing should foreground the anthropogenic resource-portfolio result.
-    title_line = manuscript.splitlines()[0]
-    assert title_line == (
-        "# Anthropogenic host redistribution expands butterfly resource geography "
-        "across the specialization spectrum"
+    # References remain alphabetized by first-author/corporate-author key.
+    refs_start = manuscript.index("## References (working)")
+    refs_end = manuscript.index("## Data and Code Availability", refs_start)
+    ref_lines = [
+        line[2:]
+        for line in manuscript[refs_start:refs_end].splitlines()
+        if line.startswith("- ")
+    ]
+    ref_keys = [
+        re.split(r",|\. \d{4}\.", line, maxsplit=1)[0].strip()
+        for line in ref_lines
+    ]
+    assert ref_keys == sorted(ref_keys, key=str.casefold)
+
+    # Core ecological magnitudes and the new positive plant-side result.
+    assert concentration["reconstruction"]["expanded_butterflies"] == 206
+    assert concentration["reconstruction"]["added_butterfly_x_wgsrpd3_units"] == 14553
+    species = concentration["plant_species"]
+    genera = concentration["genera"]
+    assert species["contributors"] == 670
+    assert species["contributors_for_50pct"] == 38
+    assert species["top_k_share"]["10"] == 0.2510105136113853
+    assert species["top_k_share"]["50"] == 0.5700407340691861
+    assert species["top10_poaceae"] == 7
+    assert genera["contributors"] == 431
+    assert genera["contributors_for_50pct"] == 25
+    assert genera["top_k_share"]["10"] == 0.28686383837607116
+    assert genera["top_k_share"]["50"] == 0.6703956605963941
+
+    # Near-zero point estimate is not allowed to become an exact-null claim.
+    assert equivalence["n"] == 239
+    assert equivalence["rho"] == 0.00798541214928876
+    assert equivalence["bootstrap"]["replicates"] == 49999
+    assert equivalence["bootstrap"]["ci95"] == [
+        -0.1113648840403796,
+        0.12777832073032636,
+    ]
+    assert equivalence["tost_fisher_z_approx"]["margin"] == 0.1
+    assert equivalence["tost_fisher_z_approx"]["equivalent_at_alpha_0_05"] is False
+    assert equivalence["tost_fisher_z_approx"]["p_tost"] == 0.0779926620144849
+
+    # Phylogenetic coverage and model boundary are explicit.
+    assert pgls["exact_tree_match_species"] == 124
+    assert pgls["pagel_rank_pgls"]["lambda"] == 0.0327902289475728
+    assert pgls["pagel_rank_pgls"]["coefficient"] == -0.05108744710537585
+    assert pgls["brownian_rank_pgls"]["coefficient"] == 0.1401214490702778
+    assert pgls["brownian_rank_pgls"]["ci95"][1] > 0.3
+
+    # Grass-feeding guilds do not generate the near-zero diet-breadth slope.
+    assert poaceae["poaceae_users"]["species"] == 58
+    assert poaceae["excluding_any_poaceae_user"]["species"] == 181
+    assert poaceae["excluding_any_poaceae_user"]["rho"] == 0.025860902287550575
+    assert poaceae["family_level_poaceae_specialists"]["species"] == 34
+    assert (
+        poaceae["excluding_family_level_poaceae_specialists"]["rho"]
+        == 0.01324328000717657
     )
-    assert "climate" not in title_line.lower()
-    assert (
-        "**Aim:** To determine how anthropogenic host redistribution reshapes "
-        "butterfly resource geography"
-    ) in abstract
-    assert (
-        "**Main conclusions:** Anthropogenic host redistribution expands butterfly "
-        "resource geography without a proportional advantage"
-    ) in abstract
-    assert "A complementary resource-side problem remains unresolved" in manuscript
 
-    discussion_start = manuscript.index("## 4. Discussion")
-    discussion_end = manuscript.index("### 4.1", discussion_start)
-    discussion_lead = manuscript[discussion_start:discussion_end]
-    for literal in ("206/239", "54.9%", "74.7%", "31.3%"):
-        assert literal in discussion_lead
-    assert (
-        "The key result is therefore not simply that introduced hosts can add opportunity"
-        in discussion_lead
-    )
+    # Expansion is widespread across the five major butterfly families.
+    major = {row["family"]: row for row in family_generality["major_families"]}
+    assert major["Nymphalidae"]["expanded_species"] == 86
+    assert major["Nymphalidae"]["species"] == 103
+    assert major["Hesperiidae"]["expanded_species"] == 46
+    assert major["Pieridae"]["expanded_species"] == 37
+    assert major["Lycaenidae"]["expanded_species"] == 22
+    assert major["Papilionidae"]["expanded_species"] == 14
+    assert min(row["expanded_fraction"] for row in major.values()) > 0.83
+    assert major["Hesperiidae"]["median_host_family_count"] == 1.0
+    assert major["Pieridae"]["median_host_family_count"] == 1.0
 
-    cover_letter = (
-        ROOT / "manuscript/butterfly_specialization_geb_cover_letter_v0.1.md"
-    ).read_text(encoding="utf-8")
-    assert title_line[2:] in cover_letter
-    assert "Our contribution is the complementary resource-side reconstruction" in cover_letter
+    # Secondary occurrence validation remains species-robust.
+    assert occurrence["species"] == 23
+    assert occurrence["observed"]["recovered_units"] == 66
+    assert occurrence["observed"]["outside_native_units"] == 115
+    assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["recovered_units"] == 44
+    assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["outside_units"] == 93
 
-    # Results and display order must follow the novelty-first story.
+    # Current main Results order: expansion/concentration -> diet breadth -> occurrence.
     result_headings = [
-        "### 3.1 Introduced host ranges expand resource opportunity across the specialization spectrum",
-        "### 3.2 Similar aggregate expansion conceals contrasting host architectures",
-        "### 3.3 Taxonomic specialization only partly tracks geographic resource specialization",
-        "### 3.4 Species-level portfolio richness reveals hierarchy within the same family breadth",
-        "### 3.5 Climate-associated filtering is widespread within host-resource opportunity",
-        "### 3.6 Broader host-family diets did not detectably weaken climate filtering",
+        "### 3.1 Human redistribution broadly expands butterfly resource geography",
+        "### 3.2 Taxonomic diet breadth poorly predicts proportional resource gain",
+        "### 3.3 Added resource geography aligns with contemporary butterfly occurrence",
     ]
-    result_positions = [manuscript.index(h) for h in result_headings]
-    assert result_positions == sorted(result_positions)
+    positions = [manuscript.index(h) for h in result_headings]
+    assert positions == sorted(positions)
+    assert "### 3.4 Secondary climate analysis" not in manuscript
+    assert "### 4.3 Resource opportunity is filtered before realization" not in manuscript
 
-    figure_titles = [
-        "**Figure 1. Introduced host distributions expand reconstructed resource opportunity across the specialization spectrum.**",
-        "**Figure 2. Similar aggregate expansion is assembled through different host-contribution architectures.**",
-        "**Figure 3. Taxonomic host breadth only partly predicts geographic resource breadth.**",
-        "**Figure 4. Species-level host portfolios reveal hierarchical specialization within one-family butterflies.**",
-        "**Figure 5. Climate-associated filtering is common, but its strength is not detectably weakened by broader family-level diet breadth.**",
-    ]
-    figure_positions = [manuscript.index(h) for h in figure_titles]
-    assert figure_positions == sorted(figure_positions)
-    assert readiness["figures"]["planned_files"][:3] == [
-        "Figure1_anthropogenic_resource_expansion",
-        "Figure2_host_contribution_architecture",
-        "Figure3_taxonomic_vs_geographic_specialization",
-    ]
-
-    # Submission surfaces should stand alone as an ecology paper.
-    submission_paths = [
-        "manuscript/butterfly_specialization_ecology_v0.1.md",
-        "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md",
-        "manuscript/butterfly_specialization_geb_cover_letter_v0.1.md",
-        "manuscript/butterfly_specialization_geb_title_page_template_v0.1.md",
-    ]
-    for rel in submission_paths:
-        surface = (ROOT / rel).read_text(encoding="utf-8").lower()
-        assert "ttf" not in surface
-        assert "transferability" not in surface
-
-    assert claim_map["figure_claim_mapping"] == {
-        "Figure_1": ["C2"],
-        "Figure_2": ["C3"],
-        "Figure_3": ["C1"],
-        "Figure_4": ["C4"],
-        "Figure_5": ["C5", "C6"],
-    }
-    lineage = claim_map["hypothesis_lineage"]
-    assert lineage["paper_is_independent_ecology_study"] is True
-    assert lineage["submission_surface_should_not_require_precursor_context"] is True
-    assert lineage["provenance"] == "provenance/SCIENTIFIC_ORIGIN_AND_HYPOTHESIS_LINEAGE.md"
-
-    # Figure legends should expose sample size and ecological magnitude without requiring the text.
-    for literal in (
-        "aggregate species × region units increased from 26,530 to 41,083",
-        "191 host-taxonomy-adequate butterflies",
-        "74.7% to 31.3%",
-        "82 host-taxonomy-adequate butterflies",
-        "resolved host-species richness spans 1–37 species",
-        "median filtering score was 0.801 and 23/24 species exceeded 0.5",
-    ):
-        assert literal in manuscript
-
-    renderer = (
-        ROOT / "scripts" / "render_butterfly_specialization_manuscript_figures.py"
+    supplement = (
+        ROOT / "manuscript/butterfly_specialization_supplement_v0.2.md"
     ).read_text(encoding="utf-8")
+    assert "## Supplementary Methods S1. Climate filtering within contemporary resource opportunity" in supplement
+    assert "## Supplementary Table S5. Climate-distance sensitivity and effect-size precision" in supplement
+    assert "## Supplementary Table S7. Crop-host exclusion sensitivity" in supplement
+    assert "47.0%" in supplement
+    assert "46.0%" in supplement
+    assert "| 0.052 | 38 |" in supplement
+    assert "| 0.057 | 37 |" in supplement
+    assert "broader diets retained a more distributed host-contribution architecture" not in supplement.lower()
+
+    # Three main figures plus one supplementary figure, with Figure 1 carrying C1 + C1b.
     for literal in (
-        "Aggregate species × region units",
-        "median effective contributors:",
-        "median share:",
-        "resolved host species)",
-        "species > 0.5",
-        "Contemporary resource breadth",
+        "**Figure 1. Anthropogenic host redistribution expands butterfly resource geography across specialization classes and through concentrated host contributions.**",
+        "**Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.**",
+        "**Figure 3. Finite-support diet-breadth associations remain weak while regional associations are heterogeneous.**",
+        "**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.**",
     ):
-        assert literal in renderer
-
-    # Methods should expose the nested analysis scale in one place.
-    scale_funnel = (
-        "The S1 descriptor set contained 339 species; 239 met resource-eligibility criteria; "
-        "215 met the conservative host-taxonomy lower-bound criterion; 191 of those showed "
-        "introduced-host expansion"
-    )
-    assert scale_funnel in manuscript
-    assert (
-        "82 were expanded one-family species used for the within-family hierarchy analysis"
-        in manuscript
-    )
-    assert (
-        "The independent climate panel was frozen at 32 species, of which 24 passed "
-        "the pre-climate quality gate and were climate-informative."
-        in manuscript
-    )
-
-    # Detailed portfolio correlations remain available in the full manuscript.
-    for literal in ("rho = 0.734", "rho = -0.707"):
         assert literal in manuscript
+    assert claim_map["figure_claim_mapping"]["Figure_1"] == ["C1", "C1b"]
 
-    # A non-supported association must not be rewritten as statistical independence.
+    # Submission-facing text must not retain development/review-history language.
     lowered = manuscript.lower()
-    for overclaim in (
-        "independently of family-level diet breadth",
-        "largely separate filter",
-        "climate strongly filters realized distributions",
-        "climate is a strong filter",
-        "rejects the simple interpretation",
-        "climate helps determine which portions",
+    for forbidden in (
+        "added after manuscript review",
+        "the original descriptive analysis",
+        "systematically misses",
+        "most importantly",
+        "no broad-generalist proportional advantage",
+        "the absence of a broad-generalist advantage",
     ):
-        assert overclaim not in lowered
+        assert forbidden not in lowered
 
-    # Portfolio-concentration results must expose their structural upper-bound caveat.
-    assert "host-contribution concentration metrics are structurally bounded by portfolio size" in lowered
-    assert "associations between host richness and these concentration metrics" in lowered
+    # Strong null and causal plant-trait overclaims are explicitly forbidden.
+    forbidden_claims = "\n".join(claim_map["forbidden_overclaims"]).lower()
+    assert "exactly zero effect" in forbidden_claims
+    assert "demonstrated equivalent to a zero effect within ±0.10" in forbidden_claims
+    assert "causal plant traits" in forbidden_claims
+    assert "poaceae membership explains" in forbidden_claims
 
 
-def test_manuscript_claim_map_preserves_inference_boundaries():
-    claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.1.json")
+def test_current_v02_claim_map_preserves_layered_inference_boundaries():
+    claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.2.json")
     claims = {row["id"]: row for row in claim_map["claims"]}
 
-    assert claims["C1"]["status"] == "exploratory descriptive"
-    assert claims["C2"]["status"] == "exploratory descriptive"
-    assert claims["C3"]["status"] == "exploratory post-result mechanism analysis"
-    assert claims["C4"]["status"] == "exploratory post-result follow-up"
-    assert claims["C5"]["status"] == "independent cross-fit descriptive result"
-    assert claims["C6"]["status"] == "independent hypothesis test"
-    assert (
-        claims["C6"]["decision"]
-        == "PILOT_DERIVED_CLIMATE_RELEASE_HYPOTHESIS_NOT_SUPPORTED"
+    assert "little relationship" in claims["C1"]["claim"]
+    assert claims["C1b"]["status"].startswith("post-hoc descriptive decomposition")
+    assert claims["C1b"]["allowed_use"].startswith(
+        "Describe which resources generate reconstructed added opportunity"
     )
+    assert claims["C2"]["status"].startswith("secondary occurrence validation")
+    assert "Supplementary Information" in claims["C3"]["status"]
+    assert claims["C5"]["decision"] == "PILOT_DERIVED_CLIMATE_RELEASE_HYPOTHESIS_NOT_SUPPORTED"
 
-    forbidden = "\n".join(claim_map["forbidden_overclaims"])
-    assert "caused butterfly range expansion" in forbidden
-    assert "true absence" in forbidden
-    assert "confirmatory tests" in forbidden
+    language = claim_map["required_language"]
+    assert "equivalence" in language["diet_breadth_equivalence"].lower()
+    assert "unit-preserving" in language["host_contribution_concentration"]
+    assert "fixed Brownian" in language["phylogeny"]
+    assert "Discussion/SI" in language["host_prominence"]
