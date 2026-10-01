@@ -1,0 +1,101 @@
+name: crop exclusion sensitivity v01
+
+on:
+  push:
+    branches:
+      - revision/crop-sensitivity-v01
+    paths:
+      - ".github/workflows/crop-exclusion-sensitivity-v01.yml"
+      - "docs/exploratory/butterfly_crop_exclusion_sensitivity_v0.1.json"
+      - "scripts/extract_fao_crop_taxa.py"
+      - "scripts/analyze_butterfly_crop_exclusion_sensitivity.py"
+      - "scripts/build_wcvp_hosts_sidecar.R"
+      - "scripts/build_wcvp_hosts_contemporary_sidecar.R"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: crop-exclusion-sensitivity-v01
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout exact WCVP v13 redistribution snapshot
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+
+      - name: Checkout exact HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Install chocho
+        run: python -m pip install -e .
+
+      - name: Restore exact S1 descriptors
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: input/reconstruction
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Verify frozen source identities
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          test "$(git -C _hosts rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          echo "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc  input/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv" | sha256sum -c -
+
+      - name: Rebuild exact WCVP-HOSTS sidecars
+        run: |
+          set -euo pipefail
+          Rscript scripts/build_wcvp_hosts_sidecar.R             _wcvp _hosts results/native-host-sidecar
+          Rscript scripts/build_wcvp_hosts_contemporary_sidecar.R             _wcvp _hosts results/contemporary-host-sidecar
+          cmp             results/native-host-sidecar/insect_host_accepted.csv             results/contemporary-host-sidecar/insect_host_accepted.csv
+
+      - name: Freeze FAO crop-list execution bytes
+        run: |
+          set -euo pipefail
+          mkdir -p input/fao
+          curl --location --fail --silent --show-error --retry 3             "https://www.fao.org/4/a0135e/A0135E10.htm"             -o input/fao/fao_icc_appendix4.html
+          sha256sum input/fao/fao_icc_appendix4.html
+          python scripts/extract_fao_crop_taxa.py             --html input/fao/fao_icc_appendix4.html             --output-json input/fao/fao_crop_taxa_v0.1.json
+          cat input/fao/fao_crop_taxa_v0.1.json
+
+      - name: Run exact and conservative crop exclusions
+        run: |
+          set -euo pipefail
+          mkdir -p results/crop-sensitivity
+          python scripts/analyze_butterfly_crop_exclusion_sensitivity.py             --protocol-json docs/exploratory/butterfly_crop_exclusion_sensitivity_v0.1.json             --descriptors-csv input/reconstruction/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv             --insect-host-csv results/native-host-sidecar/insect_host_accepted.csv             --native-distribution-csv results/native-host-sidecar/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv results/contemporary-host-sidecar/extant_nondoubtful_wgsrpd3.csv             --crop-json input/fao/fao_crop_taxa_v0.1.json             --output-json results/crop-sensitivity/crop_exclusion_sensitivity_result_v0.1.json             --output-csv results/crop-sensitivity/crop_exclusion_species_metrics_v0.1.csv
+          cp input/fao/fao_crop_taxa_v0.1.json results/crop-sensitivity/
+          sha256sum results/crop-sensitivity/* > results/crop-sensitivity/SHA256SUMS
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-crop-exclusion-sensitivity-v01
+          path: results/crop-sensitivity/
+          if-no-files-found: error
+          retention-days: 30
