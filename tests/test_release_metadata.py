@@ -39,7 +39,7 @@ def test_release_preflight_uses_current_v02_title() -> None:
     )
     assert current_title == expected
     match = re.search(
-        r'EXPECTED_TITLE\\s*=\\s*\\(\\s*"([^"]*)"\\s*"([^"]*)"\\s*\\)',
+        r'EXPECTED_TITLE\s*=\s*\(\s*"([^"]*)"\s*"([^"]*)"\s*\)',
         preflight,
         re.DOTALL,
     )
