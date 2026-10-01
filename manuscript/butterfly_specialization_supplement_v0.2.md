@@ -1,6 +1,6 @@
 # Supplementary Information — butterfly resource geography v0.2
 
-**Associated manuscript:** *Human redistribution of host plants expands butterfly resource geography across the specialization spectrum*
+**Associated manuscript:** *Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum*
 
 This file collects post-hoc robustness analyses that define the manuscript's inference boundaries. The main text reports the ecological results; this supplement provides the parameter and sensitivity details.
 
@@ -214,6 +214,18 @@ Among 191 expanded butterflies in the host-taxonomy-adequate subset, the unadjus
 
 These within-butterfly architecture metrics are therefore retained only as structural diagnostics. They are distinct from the across-plant concentration result above: the former asks how each butterfly's added units are partitioned among its hosts, whereas the latter asks which host plants account for the aggregate 14,553-unit expansion across the whole panel.
 
+## Supplementary Table S7. Crop-host exclusion sensitivity
+
+WCVP introduced distributions represent wild non-native distributions rather than cultivated acreage. To test whether the primary expansion signal was being driven by agricultural crop hosts, we removed FAO-listed crop taxa before reconstructing butterfly-level native and contemporary resource envelopes. The primary sensitivity used exact botanical binomial matches; a deliberately over-conservative stress test also removed all congeners when the FAO list specified a crop at genus level (spp.). Host-family breadth remained fixed as the specialization predictor.
+
+| Analysis | Evaluable butterflies | Expanded butterflies | Added butterfly × region units | Aggregate increase | Spearman rho: host-family breadth vs log expansion | Host species accounting for 50% of added credit |
+|---|---:|---:|---:|---:|---:|---:|
+| Primary reconstruction | 239 | 206 (86.2%) | 14,553 | 54.9% | 0.008 | 38 |
+| FAO exact-binomial crop exclusion | 238 | 203 (85.3%) | 12,088 | 47.0% | 0.052 | 38 |
+| FAO exact + genus-level conservative exclusion | 233 | 197 (84.5%) | 11,228 | 46.0% | 0.057 | 37 |
+
+The crop-host sensitivity therefore preserves all three conclusions used in the main manuscript: resource expansion remains widespread, family-level diet breadth remains only weakly associated with proportional expansion, and aggregate added opportunity remains concentrated among a few dozen host species. The genus-expanded variant intentionally removes non-crop congeners and is treated only as a conservative stress test, not as an alternative primary estimand.
+
 ## Supplementary inference boundaries
 
 1. Resource envelopes are reconstructed geographic opportunities, not realized local host use.
@@ -222,3 +234,5 @@ These within-butterfly architecture metrics are therefore retained only as struc
 4. Occurrence recovery does not establish local larval use or host-caused colonization.
 5. The occurrence panel was climate-stratified rather than designed as a validation sample.
 6. Null-model, equivalence, host-contribution, ceiling, phylogenetic and geographic sensitivity analyses are post-hoc analyses and are interpreted as such.
+7. WCVP introduced status represents wild non-native occurrence, not cultivated acreage; the primary estimand therefore does not map crop planting directly.
+8. Crop-host exclusion is a sensitivity analysis only and does not redefine the primary host set or specialization predictor; the genus-expanded variant deliberately over-excludes congeners.
