@@ -26,6 +26,7 @@ COPY_PATHS = (
     "provenance/archive/climate/operations",
     "provenance/archive/climate/pilot",
     "manuscript/generated/butterfly_specialization_ecology_blinded_v0.1.md",
+    "manuscript/generated/butterfly_crop_host_sensitivity_SI_v0.1.md",
     "manuscript/butterfly_specialization_claim_map_v0.1.json",
 )
 
