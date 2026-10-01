@@ -2,10 +2,10 @@
   "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
   "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_HOST_CONCENTRATION_AND_EQUIVALENCE_AUDIT",
   "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
-  "title": "Human redistribution of host plants expands butterfly resource geography across the specialization spectrum",
+  "title": "Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum",
   "central_claim": {
-    "text": "Human redistribution of larval host plants changes the geography of butterfly resource opportunity in a way that is only weakly captured by conventional family-level diet breadth. The added opportunity is large, concentrated among a minority of redistributed hosts, and partially aligned with contemporary butterfly occurrence.",
-    "support_type": "global resource reconstruction + unit-preserving host-contribution decomposition + diet-breadth precision/equivalence diagnostic + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation",
+    "text": "Anthropogenic redistribution of larval host plants changes the geography of butterfly resource opportunity in a way that is only weakly captured by conventional family-level diet breadth. The added opportunity is large, concentrated among a minority of redistributed hosts, and partially aligned with contemporary butterfly occurrence.",
+    "support_type": "global resource reconstruction + unit-preserving host-contribution decomposition + diet-breadth precision/equivalence diagnostic + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation + FAO crop-host exclusion sensitivity",
     "allowed": true,
     "conceptual_advance": "The paper separates taxonomic interaction breadth from consumer-specific resource geography and treats redistribution of already-known interaction partners as a distinct global-change pathway for consumer biogeography.",
     "butterfly_specific_contribution": "In butterflies, larval host-family breadth and the geography of larval resources are distinct dimensions of specialization under contemporary plant redistribution. Narrow-diet butterflies can gain substantial resource geography when their hosts are widely transported."
@@ -13,7 +13,7 @@
   "claims": [
     {
       "id": "C1",
-      "claim": "Human redistribution of host plants broadly expands butterfly resource geography, while family-level diet breadth has little relationship to proportional gain.",
+      "claim": "Anthropogenic redistribution of host plants broadly expands butterfly resource geography, while family-level diet breadth has little relationship to proportional gain.",
       "status": "primary macroecological result with post-hoc precision/equivalence, finite-area, regional, random-effect and species-level phylogenetic sensitivities",
       "evidence": "239 butterflies in the full reconstruction; 207 species in the strict host-bias null; 8,909 host plants in 278 families in the plant-level analysis; 124 exact Kawahara-tree butterfly species in PGLS.",
       "key_statistic": "206/239 butterflies expanded; expansion occurred in all four breadth classes (82/97 one-family, 47/59 two-family, 44/50 three-to-five-family, 33/33 six-plus-family species); aggregate species×WGSRPD3 coverage +54.9%; full-panel Spearman rho=0.008, 49,999-bootstrap 95% CI -0.111 to 0.128; ±0.10 Fisher-z TOST p=0.078 (equivalence not established); Family random-effect beta=0.021, p=0.752; estimated Pagel lambda=0.033 with rank-PGLS beta=-0.051, p=0.581; fixed Brownian beta=0.140, p=0.119.",
@@ -30,7 +30,8 @@
         "provenance/reviewer_defenses/results/butterfly_kawahara_match_bias_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_expansion_equivalence_v0.1.json",
         "provenance/reviewer_defenses/results/butterfly_poaceae_sensitivity_v0.1.json",
-        "provenance/reviewer_defenses/results/butterfly_taxonomic_family_expansion_v0.1.json"
+        "provenance/reviewer_defenses/results/butterfly_taxonomic_family_expansion_v0.1.json",
+        "benchmarks/exploratory/butterfly_crop_exclusion_sensitivity_result_v0.1.json"
       ],
       "phylogenetic_sensitivity": "Kawahara exact-species subset n=124 is selective for higher expansion magnitude. Estimated Pagel lambda=0.033 and rank-PGLS beta=-0.051 (95% CI -0.234 to 0.131, p=0.581). Fixed Brownian lambda=1 gives beta=0.140 (95% CI -0.036 to 0.317, p=0.119), so moderate positive effects remain unresolved under that boundary model.",
       "null_parameter_sensitivity": "3×3 grid: degree exponent 0.5 retained a host-identity excess across all native-range bandwidths; exponent 1 largely attenuated it; exponent 2 produced null expansion greater than observed. Attribution to host choice versus prominence is therefore not identified by an arbitrarily weighted null.",
@@ -73,7 +74,8 @@
       "specialist_rich_family_examples": {
         "Hesperiidae": "median host-family breadth=1; 46/51 species expanded (90.2%)",
         "Pieridae": "median host-family breadth=1; 37/43 species expanded (86.0%)"
-      }
+      },
+      "crop_host_sensitivity": "FAO crop-host exclusion preserves the primary pattern: +47.0% aggregate expansion after exact-binomial crop removal and +46.0% under a deliberately over-conservative genus-expanded exclusion; 85.3% and 84.5% of evaluable butterflies still expand, rho=0.052 and 0.057, and 38 and 37 host species account for half of added opportunity."
     },
     {
       "id": "C1b",
@@ -173,7 +175,8 @@
     "poaceae_sensitivity": "Poaceae users may be described as contributing substantial absolute added geography, but the sensitivity shows they do not generate the near-zero diet-breadth slope. Do not infer that Poaceae redistribution caused butterfly range expansion.",
     "novelty_gap": "Frame the gap as the mirror image of consumer niche expansion: prior work shows that broader host use can accompany consumer range expansion, host ranges can constrain consumers, introduced hosts can matter regionally, and introductions can homogenize interaction networks. Here host identities are held fixed analytically and the geography of those partners is allowed to change, quantifying the consumer-specific opportunity created by partner redistribution. Avoid unsupported 'first ever' wording.",
     "importance": "Emphasize that moving interaction partners can reorganize consumer opportunity even when taxonomic interaction breadth is held fixed analytically. Static/native resource templates and specialist-generalist labels can therefore miss a distinct pathway of anthropogenic biogeographic change.",
-    "butterfly_anchor": "The manuscript must present butterflies as the biological subject, not merely as a demonstration system. Lead Discussion with what host redistribution changes about butterfly larval-host specialization and range opportunity; reserve cross-taxon generalization for the final implications section. The breadth of expansion across the five major butterfly families may be used descriptively to show the pattern is not confined to one lineage. Hesperiidae and Pieridae may be used as concrete examples that families with median host-family breadth of one still show widespread resource expansion."
+    "butterfly_anchor": "The manuscript must present butterflies as the biological subject, not merely as a demonstration system. Lead Discussion with what host redistribution changes about butterfly larval-host specialization and range opportunity; reserve cross-taxon generalization for the final implications section. The breadth of expansion across the five major butterfly families may be used descriptively to show the pattern is not confined to one lineage. Hesperiidae and Pieridae may be used as concrete examples that families with median host-family breadth of one still show widespread resource expansion.",
+    "crop_host_sensitivity": "Describe WCVP introduced distributions as wild non-native records rather than cultivated acreage. Report crop exclusion only as a sensitivity: exact-binomial exclusion leaves +47.0% aggregate expansion and the conservative genus-expanded stress test +46.0%; do not revive within-butterfly portfolio-architecture claims."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -231,6 +234,7 @@
     "figure_visual_audit": "Figure 1 three-panel redesign and Figure 3 regional-heterogeneity wording manually inspected; final Supplementary Figure S1 uses 'Primary' rather than version-history wording.",
     "poaceae_host_guild_sensitivity": "complete; excluding all 58 Poaceae users leaves rho=0.026 (n=181), and excluding 34 one-family Poaceae specialists leaves rho=0.013 (n=205)",
     "novelty_framing": "complete; Introduction, conceptual Methods design, Discussion and cover letter now distinguish fixed interaction breadth from changing partner geography and position the study as the resource-side mirror image of host-breadth expansion studies.",
-    "butterfly_identity": "complete; title, Abstract, Results and Discussion retain butterfly-specific questions and results, with cross-taxon generalization confined to the final implications section."
+    "butterfly_identity": "complete; title, Abstract, Results and Discussion retain butterfly-specific questions and results, with cross-taxon generalization confined to the final implications section.",
+    "crop_host_sensitivity": "complete; compact Supplementary Table S7 reports expansion, expanded-species fraction, breadth–expansion rho and the number of host species accounting for half of added credit; structural portfolio panel omitted."
   }
 }
