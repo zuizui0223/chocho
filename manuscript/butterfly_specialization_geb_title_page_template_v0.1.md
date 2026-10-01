@@ -1,6 +1,6 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists
+**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum
 
 **Article type:** Research Article
 
