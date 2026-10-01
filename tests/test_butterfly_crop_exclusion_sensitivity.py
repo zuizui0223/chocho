@@ -57,6 +57,7 @@ def test_reconstruction_uses_primary_log1p_expansion_estimand():
         native,
         contemporary,
         excluded_hosts=set(),
+        expected_species=None,
     )
     assert len(rows) == 1
     row = rows[0]
@@ -82,6 +83,7 @@ def test_no_non_crop_native_resource_is_none_for_ratio_estimand():
         native,
         contemporary,
         excluded_hosts={"crop"},
+        expected_species=None,
     )
     assert rows[0]["native_resource_units"] == 0
     assert rows[0]["log_resource_expansion"] is None
