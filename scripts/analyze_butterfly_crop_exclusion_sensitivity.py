@@ -90,20 +90,24 @@ def load_interactions(path: Path) -> tuple[dict[str, set[str]], dict[str, dict[s
             if not insect or not hid:
                 continue
             by_butterfly[insect].add(hid)
-            meta = {
-                "accepted_name": str(row.get("accepted_name") or "").strip(),
-                "input_host_name": str(row.get("input_host_name") or "").strip(),
-                "family": str(row.get("family") or "").strip(),
-            }
-            if hid in host_meta and host_meta[hid] != meta:
-                # Multiple input synonyms can resolve to the same accepted host.
-                old = host_meta[hid]
-                if old["accepted_name"] != meta["accepted_name"]:
-                    raise RuntimeError(f"accepted host identity drift for {hid}")
-                if not old["input_host_name"] and meta["input_host_name"]:
-                    host_meta[hid] = meta
+            accepted_name = str(row.get("accepted_name") or "").strip()
+            input_name = str(row.get("input_host_name") or "").strip()
+            family = str(row.get("family") or "").strip()
+            if hid not in host_meta:
+                host_meta[hid] = {
+                    "accepted_name": accepted_name,
+                    "input_host_name": input_name,
+                    "input_host_names": {input_name} if input_name else set(),
+                    "family": family,
+                }
             else:
-                host_meta[hid] = meta
+                old = host_meta[hid]
+                if old["accepted_name"] != accepted_name:
+                    raise RuntimeError(f"accepted host identity drift for {hid}")
+                if input_name:
+                    old.setdefault("input_host_names", set()).add(input_name)
+                    if not old.get("input_host_name"):
+                        old["input_host_name"] = input_name
     return by_butterfly, host_meta
 
 
@@ -158,6 +162,7 @@ def classify_hosts(
     excluded = set()
     for hid, meta in host_meta.items():
         names = [meta.get("accepted_name", ""), meta.get("input_host_name", "")]
+        names.extend(sorted(meta.get("input_host_names", set())))
         if any(base_binomial(name) in exact for name in names if name):
             excluded.add(hid)
             continue
@@ -408,6 +413,22 @@ def main() -> int:
                 f"baseline architecture estimand drift for {label}: "
                 f"{observed} != {target}"
             )
+
+    baseline_concentration = baseline_full[
+        "aggregate_host_contribution_concentration"
+    ]
+    if int(baseline_concentration["hosts_for_half_added_credit"]) != 38:
+        raise RuntimeError(
+            "baseline host-contribution concentration drift: "
+            f"{baseline_concentration['hosts_for_half_added_credit']} != 38"
+        )
+    if abs(
+        float(baseline_concentration["total_fractional_added_credit"]) - 14553.0
+    ) > 1e-9:
+        raise RuntimeError(
+            "baseline pooled fractional added credit drift: "
+            f"{baseline_concentration['total_fractional_added_credit']} != 14553"
+        )
 
     variants = {}
     csv_rows = []
