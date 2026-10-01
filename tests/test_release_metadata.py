@@ -22,3 +22,21 @@ def test_release_version_identifiers_are_consistent() -> None:
     manifest = (ROOT / "provenance/RELEASE_MANIFEST.md").read_text(encoding="utf-8")
     assert f"version `{EXPECTED_VERSION}`" in manifest
     assert f"tag `{EXPECTED_TAG}`" in manifest
+
+
+def test_release_preflight_uses_current_v02_title() -> None:
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    current_title = manuscript.splitlines()[0].removeprefix("# ").strip()
+
+    preflight = (ROOT / "scripts" / "release_preflight.py").read_text(
+        encoding="utf-8"
+    )
+    expected = (
+        "Anthropogenic host redistribution expands butterfly resource geography "
+        "across the specialization spectrum"
+    )
+    assert current_title == expected
+    assert expected in preflight
+    assert "largely independently of diet breadth" not in preflight
