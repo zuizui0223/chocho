@@ -172,6 +172,8 @@ def reconstruct(
     native_by_host: dict[str, set[str]],
     contemporary_by_host: dict[str, set[str]],
     excluded_hosts: set[str],
+    *,
+    expected_species: int | None = 239,
 ) -> list[dict[str, object]]:
     rows = []
     for name, d in descriptors.items():
@@ -225,8 +227,11 @@ def reconstruct(
             ],
             "_fractional_credits": contribution["fractional_credits"],
         })
-    if len(rows) != 239:
-        raise RuntimeError(f"expected 239 original resource-eligible species, got {len(rows)}")
+    if expected_species is not None and len(rows) != int(expected_species):
+        raise RuntimeError(
+            f"expected {int(expected_species)} original resource-eligible species, "
+            f"got {len(rows)}"
+        )
     return rows
 
 
