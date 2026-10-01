@@ -103,4 +103,6 @@ def test_crop_submission_receipt_omits_structural_portfolio_panel():
     assert "architecture_row" not in renderer
     assert "47.0%" in receipt
     assert "46.0%" in receipt
-    assert "Supplementary Table S7. Crop-host exclusion sensitivity" in receipt\n    assert "| 0.052 | 38 |" in receipt\n    assert "| 0.057 | 37 |" in receipt
+    assert "Supplementary Table S7. Crop-host exclusion sensitivity" in receipt
+    assert "| 0.052 | 38 |" in receipt
+    assert "| 0.057 | 37 |" in receipt
