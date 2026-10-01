@@ -38,7 +38,7 @@ def render_blinded(text: str) -> str:
         title = lines[0][2:].strip()
         running_title = (
             V02_RUNNING_TITLE
-            if "Human redistribution of host plants expands butterfly resource geography" in title
+            if ("Human redistribution of host plants expands butterfly resource geography" in title\n            or "Anthropogenic host redistribution expands butterfly resource geography" in title)
             else LEGACY_RUNNING_TITLE
         )
         lines.insert(1, f"**Running title:** {running_title}")
