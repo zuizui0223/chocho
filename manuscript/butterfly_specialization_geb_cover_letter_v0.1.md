@@ -4,7 +4,7 @@
 
 Dear Editors,
 
-Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography through contrasting host portfolios in specialists and generalists,”** for publication in *Global Ecology and Biogeography*.
+Please consider our Research Article, **“Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum,”** for publication in *Global Ecology and Biogeography*.
 
 Butterfly specialization is commonly summarized along a specialist–generalist axis, but global change acts directly on the geography of the resources underlying that axis. We therefore ask how anthropogenic redistribution of larval host plants changes butterfly resource geography, whether broad generalists receive a disproportionate gain, and whether similar aggregate gains are assembled through the same or different host portfolios.
 
