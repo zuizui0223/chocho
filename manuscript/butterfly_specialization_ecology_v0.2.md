@@ -170,7 +170,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 - Couto, H. et al. 2026. The Lepidopteran Hitchhiker's Guide to the Globe: The Spread and Dispersal of Non-Native Moths and Butterflies. *Global Ecology and Biogeography*. https://doi.org/10.1111/geb.70292
 - Daru, B. H., Davies, T. J., Willis, C. G. et al. 2021. Widespread homogenization of plant communities in the Anthropocene. *Nature Communications* 12: 6983. https://doi.org/10.1038/s41467-021-27186-8
 - Fricke, E. C. & Svenning, J.-C. 2020. Accelerating homogenization of the global plant–frugivore meta-network. *Nature* 585: 74–78. https://doi.org/10.1038/s41586-020-2640-y
-- GBIF.org. 2026. GBIF Occurrence API, version 1. Global Biodiversity Information Facility. Occurrence queries accessed September 2026.
+- GBIF.org. 2026. GBIF Occurrence Download for the 53,434 records used in butterfly occurrence validation. https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER
 - Govaerts, R., Nic Lughadha, E., Black, N., Turner, R. & Paton, A. 2021. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. *Scientific Data* 8: 215. https://doi.org/10.1038/s41597-021-00997-6
 - Graves, S. D. & Shapiro, A. M. 2003. Exotics as host plants of the California butterfly fauna. *Biological Conservation* 110: 413–433. https://doi.org/10.1016/S0006-3207(02)00233-1
 - Gross, C., Kawahara, A. & Daru, B. 2026. Climate and regional plant richness drive diet specialization in butterfly caterpillars. *Nature Communications*. https://doi.org/10.1038/s41467-026-73236-4
@@ -190,7 +190,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 
 ## Data and Code Availability
 
-Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A permanent archival snapshot and DOI will be supplied with the final submission.
+Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER). Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A stable public archival snapshot of the analysis package will be deposited before publication.
 
 ## Figure legends
 
