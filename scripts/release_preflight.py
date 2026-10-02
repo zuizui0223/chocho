@@ -118,9 +118,9 @@ def inspect_release(root: Path = ROOT) -> dict[str, object]:
 
     blinded = (root / CURRENT_BLINDED).read_text(encoding="utf-8")
     if "[ANONYMIZED REVIEW LINK]" in blinded:
-        blockers.append("anonymized reviewer-access URL is not yet inserted")
+        blockers.append("obsolete anonymized-reviewer-link placeholder remains in blinded manuscript")
     else:
-        complete.append("anonymized reviewer-access URL inserted")
+        complete.append("blinded manuscript is free of obsolete reviewer-link placeholders")
 
     manifest = (root / "provenance/RELEASE_MANIFEST.md").read_text(encoding="utf-8")
     if EXPECTED_TAG in manifest:
