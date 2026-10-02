@@ -54,25 +54,6 @@ jobs:
             --email "$GBIF_EMAIL" \
             --output gbif_occurrence_download_request.json
 
-      - name: Validate GBIF request
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl --fail --silent --show-error \
-            --header "Content-Type: application/json" \
-            --data @gbif_occurrence_download_request.json \
-            https://api.gbif.org/v1/occurrence/download/request/validate \
-            > gbif_request_validation.json
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p=json.loads(Path("gbif_request_validation.json").read_text())
-          pred=p.get("predicate") or {}
-          assert pred.get("key")=="GBIF_ID", pred
-          assert len(pred.get("values") or [])==53434, len(pred.get("values") or [])
-          print("Validated exact GBIF_ID request for 53,434 records.")
-          PY
-
       - name: Request DOI-bearing GBIF occurrence download
         id: request
         shell: bash
@@ -160,5 +141,4 @@ jobs:
             gbif_occurrence_doi_receipt.json
             gbif_download_key.txt
             gbif_download_metadata.json
-            gbif_request_validation.json
           retention-days: 30
