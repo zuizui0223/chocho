@@ -1,0 +1,61 @@
+{
+  "schema": "chocho_geb_initial_submission_manifest_v0.1",
+  "checked_on": "2026-10-02",
+  "journal": "Global Ecology and Biogeography",
+  "article_type": "Research Article",
+  "peer_review_mode": "double anonymous",
+  "peer_review_data_code_mode": "attach anonymized review archive as supplementary review material",
+  "submission_files": [
+    {
+      "order": 1,
+      "role": "Blinded main manuscript",
+      "source": "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
+      "generated_artifact": "line-numbered blinded DOCX from .github/workflows/build-blinded-review-docx.yml",
+      "upload_note": "Upload as the main manuscript. Verify author names and identifying document metadata are absent."
+    },
+    {
+      "order": 2,
+      "role": "Identifying title page",
+      "source": "manuscript/butterfly_specialization_geb_title_page_template_v0.2.md",
+      "upload_note": "Fill authors, affiliations, emails, ORCIDs, one corresponding author, CRediT, acknowledgements, funding and COI before upload."
+    },
+    {
+      "order": 3,
+      "role": "Cover letter",
+      "source": "manuscript/butterfly_specialization_geb_cover_letter_v0.2.md",
+      "upload_note": "Fill corresponding-author signature and upload separately as PDF."
+    },
+    {
+      "order": 4,
+      "role": "Supporting Information",
+      "source": "manuscript/butterfly_specialization_supplement_v0.2.md",
+      "upload_note": "Upload as a separate supporting-information file."
+    },
+    {
+      "order": 5,
+      "role": "Anonymous data-and-code review supplement",
+      "generated_artifact": "butterfly_specialization_anonymous_review_bundle.zip",
+      "workflow": ".github/workflows/build-anonymous-review-bundle.yml",
+      "upload_note": "Upload the ZIP directly as supplementary review material/data-code review archive. Do not expose the public GitHub repository during double-anonymous review."
+    }
+  ],
+  "initial_submission_blockers": [
+    "final author list, affiliations, emails and ORCIDs",
+    "one corresponding-author identity and signature",
+    "CRediT contributions",
+    "acknowledgements",
+    "funding statement",
+    "conflict-of-interest statement"
+  ],
+  "deferred_until_publication": [
+    "public/stable archive licensing",
+    "stable public repository deposit",
+    "persistent archive DOI",
+    "public v1.0.0-butterfly release/tag"
+  ],
+  "not_required_for_initial_submission": [
+    "external anonymous reviewer URL when the anonymous review archive is attached directly",
+    "public archive DOI",
+    "public GitHub release/tag"
+  ]
+}
