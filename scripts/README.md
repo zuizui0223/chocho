@@ -6,8 +6,9 @@ The repository keeps executable history, but only a small set of scripts are nor
 
 - `render_butterfly_specialization_v02_figures.py` — regenerate the current three main figures plus Supplementary Figure S1 from vendored figure sources and frozen result receipts.
 - `build_blinded_review_docx.py` — build the editable double-anonymous review DOCX.
-- `build_anonymous_review_bundle.py` — build the de-identified reviewer code bundle.
-- `release_preflight.py` — report the remaining administrative blockers for the v1 release.
+- `build_anonymous_review_bundle.py` — build the de-identified data-and-code ZIP uploaded directly as supplementary review material.
+- `submission_preflight.py` — report blockers for the initial double-anonymous GEB submission; public DOI/license/release tasks are deliberately deferred.
+- `release_preflight.py` — report the remaining administrative blockers for the later public v1 archival release.
 
 ## Resource reconstruction and ecological analyses
 

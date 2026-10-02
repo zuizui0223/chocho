@@ -46,3 +46,17 @@ def test_release_preflight_uses_current_v02_title() -> None:
     assert match is not None
     assert "".join(match.groups()) == expected
     assert "largely independently of diet breadth" not in preflight
+
+
+def test_release_preflight_does_not_require_external_review_url() -> None:
+    preflight = (ROOT / "scripts" / "release_preflight.py").read_text(
+        encoding="utf-8"
+    ).lower()
+    assert "anonymized reviewer-access url is not yet inserted" not in preflight
+    assert "obsolete anonymized-reviewer-link placeholder remains" in preflight
+
+    release_doc = (ROOT / "docs" / "RELEASE_PROCEDURE.md").read_text(
+        encoding="utf-8"
+    ).lower()
+    assert "no external anonymous reviewer url is required" in release_doc
+    assert "uploaded directly as supplementary review material" in release_doc

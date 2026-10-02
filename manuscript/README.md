@@ -12,6 +12,7 @@ This directory contains the submission-facing paper package and its scientific-c
 - `butterfly_specialization_supplement_v0.2.md` — robustness tables and supplementary inference boundaries.
 - `butterfly_specialization_submission_readiness_v0.2.json` — current scientific/submission readiness and remaining external blockers.
 - `butterfly_specialization_geb_submission_checklist_v0.2.json` — current GEB format/package checklist.
+- `geb_initial_submission_manifest_v0.1.json` — file-by-file initial GEB upload map and peer-review data/code route.
 
 ## v0.2 evidence order
 
@@ -37,3 +38,10 @@ Host-contribution concentration is a main descriptive result. Within-butterfly p
 The v0.1 manuscript, five-figure package and associated metadata are retained as the pre-review development state. They are no longer the preferred submission surfaces because the raw host-contribution architecture gradient was shown to be largely structural.
 
 Submission-facing files remain independent of precursor-project history. Detailed execution provenance is kept outside the main manuscript.
+
+
+## Initial submission versus public archive
+
+For initial double-anonymous review, use the CI-built anonymous data-and-code ZIP as supplementary review material. The initial-submission gate is `scripts/submission_preflight.py`; it intentionally does not require a public DOI, public release tag or external reviewer URL.
+
+The later public archival release remains governed by `scripts/release_preflight.py`.

@@ -35,6 +35,7 @@ COPY_PATHS = (
 EXCLUDE_RELATIVE = {
     Path("scripts/build_anonymous_review_bundle.py"),
     Path("scripts/release_preflight.py"),
+    Path("scripts/submission_preflight.py"),
     Path("tests/test_release_metadata.py"),
     Path("tests/test_reproducibility_snapshot_integrity.py"),
     Path("tests/test_butterfly_specialization_submission_bundle.py"),
@@ -76,8 +77,10 @@ RAW_PRESERVE_PREFIXES = (
 
 ANON_README = """# Butterfly specialization ecology — anonymous review snapshot
 
-This archive is a double-anonymous review snapshot of the analysis package for a
-global butterfly-specialization manuscript.
+This archive is the anonymized data-and-code review supplement intended to be
+uploaded directly with the manuscript during double-anonymous peer review. It is
+a review snapshot of the analysis package for a global butterfly-specialization
+manuscript.
 
 It contains the scientific code, frozen protocols, de-identified result receipts, the v0.2 supplementary robustness tables,
 the exact LepTraits input used by the reconstruction, and byte-exact source inputs

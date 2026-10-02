@@ -63,10 +63,10 @@ Not applicable to the analyses reported here unless an author identifies an addi
 
 ## Data and code availability
 
-A permanent archival snapshot of the analysis code and reproducibility materials will be deposited before submission.
+For double-anonymous peer review, an anonymized data-and-code reproducibility archive is supplied with the submission as supplementary review material. A stable public archival snapshot with a persistent DOI and applicable licensing will be deposited before publication.
 
-**Archive DOI:** [DOI PLACEHOLDER]
+**Public archive DOI (final/publication version):** [DOI PLACEHOLDER]
 
 ## Double-anonymous review note
 
-Upload this identifying title page separately from the blinded main manuscript.
+Upload this identifying title page separately from the blinded main manuscript. The anonymized reproducibility archive should be uploaded as supplementary review material rather than linked to an identifying repository.

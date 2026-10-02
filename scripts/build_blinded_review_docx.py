@@ -185,10 +185,8 @@ def add_body_paragraph(doc: Document, text: str, *, references: bool = False):
     return p
 
 
-def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path, review_link: str | None = None):
+def build_docx(markdown_path: Path, figures_dir: Path, output_path: Path):
     text = markdown_path.read_text(encoding="utf-8")
-    if review_link:
-        text = text.replace("[ANONYMIZED REVIEW LINK]", review_link)
     doc = Document()
     configure_document(doc)
 
@@ -328,9 +326,8 @@ def main() -> int:
     ap.add_argument("--input-md", type=Path, required=True)
     ap.add_argument("--figures-dir", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
-    ap.add_argument("--review-link", default=None)
     args = ap.parse_args()
-    build_docx(args.input_md, args.figures_dir, args.output, args.review_link)
+    build_docx(args.input_md, args.figures_dir, args.output)
     print(args.output)
     return 0
 
