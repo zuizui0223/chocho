@@ -1,10 +1,6 @@
 name: mint GBIF occurrence DOI
 
 on:
-  push:
-    branches: [ops/gbif-occurrence-doi-v01]
-    paths:
-      - ".github/workflows/mint-gbif-occurrence-doi.yml"
   workflow_dispatch:
 
 permissions:
