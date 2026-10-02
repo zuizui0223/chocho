@@ -35,6 +35,7 @@ COPY_PATHS = (
 EXCLUDE_RELATIVE = {
     Path("scripts/build_anonymous_review_bundle.py"),
     Path("scripts/release_preflight.py"),
+    Path("scripts/submission_preflight.py"),
     Path("tests/test_release_metadata.py"),
     Path("tests/test_reproducibility_snapshot_integrity.py"),
     Path("tests/test_butterfly_specialization_submission_bundle.py"),
