@@ -1,0 +1,168 @@
+name: mint GBIF occurrence DOI
+
+on:
+  push:
+    branches: [ops/gbif-occurrence-doi-v01]
+    paths:
+      - ".github/workflows/mint-gbif-occurrence-doi.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  mint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GBIF_USERNAME: ${{ secrets.GBIF_USERNAME }}
+      GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
+      GBIF_EMAIL: ${{ secrets.GBIF_EMAIL }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Require GBIF repository secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for key in GBIF_USERNAME GBIF_PASSWORD GBIF_EMAIL; do
+            if [ -z "${!key:-}" ]; then
+              echo "::error::Missing repository secret $key"
+              missing=1
+            fi
+          done
+          test "$missing" -eq 0
+
+      - name: Restore exact historical GBIF occurrence set
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: inputs/gbif-source
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Verify and build exact 53,434-ID GBIF request
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f inputs/gbif-source/occurrences.csv
+          python scripts/prepare_gbif_occurrence_doi_request.py \
+            --occurrences inputs/gbif-source/occurrences.csv \
+            --email "$GBIF_EMAIL" \
+            --output gbif_occurrence_download_request.json
+
+      - name: Validate GBIF request
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            --header "Content-Type: application/json" \
+            --data @gbif_occurrence_download_request.json \
+            https://api.gbif.org/v1/occurrence/download/request/validate \
+            > gbif_request_validation.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("gbif_request_validation.json").read_text())
+          pred=p.get("predicate") or {}
+          assert pred.get("key")=="GBIF_ID", pred
+          assert len(pred.get("values") or [])==53434, len(pred.get("values") or [])
+          print("Validated exact GBIF_ID request for 53,434 records.")
+          PY
+
+      - name: Request DOI-bearing GBIF occurrence download
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          key="$(
+            curl --fail --silent --show-error \
+              --user "$GBIF_USERNAME:$GBIF_PASSWORD" \
+              --header "Content-Type: application/json" \
+              --data @gbif_occurrence_download_request.json \
+              https://api.gbif.org/v1/occurrence/download/request
+          )"
+          key="$(printf '%s' "$key" | tr -d '\r\n"')"
+          if [ -z "$key" ]; then
+            echo "::error::GBIF returned an empty download key"
+            exit 1
+          fi
+          echo "GBIF accepted download request: $key"
+          echo "download_key=$key" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$key" > gbif_download_key.txt
+
+      - name: Wait for GBIF DOI
+        shell: bash
+        env:
+          DOWNLOAD_KEY: ${{ steps.request.outputs.download_key }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 120); do
+            curl --fail --silent --show-error \
+              "https://api.gbif.org/v1/occurrence/download/$DOWNLOAD_KEY" \
+              > gbif_download_metadata.json
+            python - <<'PY' > gbif_status.txt
+          import json
+          from pathlib import Path
+          p=json.loads(Path("gbif_download_metadata.json").read_text())
+          print(p.get("status",""))
+          PY
+            status="$(tr -d '\r\n' < gbif_status.txt)"
+            echo "GBIF status: $status"
+            if [ "$status" = "SUCCEEDED" ]; then
+              break
+            fi
+            if [ "$status" = "KILLED" ] || [ "$status" = "CANCELLED" ]; then
+              echo "::error::GBIF download ended with status $status"
+              exit 1
+            fi
+            sleep 20
+          done
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("gbif_download_metadata.json").read_text())
+          if p.get("status")!="SUCCEEDED":
+              raise SystemExit(f"GBIF download did not finish: {p.get('status')}")
+          doi=str(p.get("doi") or "").strip()
+          if not doi:
+              raise SystemExit("GBIF download succeeded but DOI is absent")
+          if doi.startswith("doi:"):
+              doi=doi.split(":",1)[1].strip()
+          doi_url=doi if doi.startswith("http") else f"https://doi.org/{doi}"
+          receipt={
+              "schema":"chocho_gbif_occurrence_download_doi_v0.1",
+              "status":"SUCCEEDED",
+              "records_requested":53434,
+              "download_key":p.get("key"),
+              "doi":doi,
+              "doi_url":doi_url,
+              "download_link":p.get("downloadLink"),
+              "created":p.get("created"),
+              "modified":p.get("modified"),
+          }
+          Path("gbif_occurrence_doi_receipt.json").write_text(
+              json.dumps(receipt,indent=2,sort_keys=True)+"\n"
+          )
+          Path("GBIF_OCCURRENCE_DOI.txt").write_text(doi_url+"\n")
+          print(doi_url)
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gbif-occurrence-doi
+          path: |
+            GBIF_OCCURRENCE_DOI.txt
+            gbif_occurrence_doi_receipt.json
+            gbif_download_key.txt
+            gbif_download_metadata.json
+            gbif_request_validation.json
+          retention-days: 30
