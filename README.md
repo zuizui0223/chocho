@@ -90,21 +90,28 @@ The full-panel diet-breadth association is near zero but is not presented as pro
 
 ## Submission state
 
-The submission-facing v0.2 is in final pre-submission audit, and both review-package builders are complete: the privacy-scrubbed line-numbered DOCX and the de-identified reviewer code bundle are generated and CI-audited. Remaining release tasks are administrative/external:
+The scientific v0.2 manuscript is frozen for initial submission. The privacy-scrubbed line-numbered DOCX and de-identified data-and-code review bundle are generated and CI-audited.
 
-- choose and add the software license;
-- complete final author/affiliation/CRediT/funding/conflict metadata;
-- create/tag the final `v1.0.0-butterfly` release and mint the permanent archive DOI;
-- upload the anonymous reviewer bundle behind a non-identifying reviewer-access URL and insert that URL before the final DOCX rebuild.
+For **initial GEB peer review**, the anonymous review bundle can be uploaded directly as supplementary review material. An external anonymous reviewer URL, public archive DOI and public GitHub release are therefore not prerequisites for initial submission. The remaining initial-submission blockers are author-specific metadata and declarations:
 
-Until the archival release is minted, cite the eventual versioned release rather than a moving branch.
+- final author list, affiliations, emails and ORCIDs, with exactly one corresponding author;
+- CRediT contributions;
+- acknowledgements, funding and conflict-of-interest statements;
+- corresponding-author signature in the cover letter;
+- exact-commit green rebuild of the blinded DOCX and anonymous review-bundle ZIP.
 
-The v1 release identifiers are fixed as package/CITATION version `1.0.0` and intended GitHub tag `v1.0.0-butterfly`. To show only the remaining administrative blockers, run:
+Run the initial-submission gate with:
+
+```bash
+python scripts/submission_preflight.py
+```
+
+See `docs/GEB_INITIAL_SUBMISSION_PROCEDURE.md` and `manuscript/geb_initial_submission_manifest_v0.1.json` for the upload mapping.
+
+Public archival tasks are tracked separately and may be completed before publication: choose/apply the archive licence, deposit a stable public data/code archive, record its DOI, and create/tag `v1.0.0-butterfly`. Those later tasks are checked by:
 
 ```bash
 python scripts/release_preflight.py
 ```
 
-This preflight deliberately fails until the software license, final author/CRediT metadata, public archive DOI, and anonymized reviewer-access URL are supplied. It does not request or authorize additional ecological analyses.
-
-For the exact DOI-first release order, use `docs/RELEASE_PROCEDURE.md`. The v1 archive should use a manual Zenodo draft so the DOI can be reserved and written into the exact green release commit before `v1.0.0-butterfly` is tagged.
+Neither preflight requests nor authorizes additional ecological analyses.
