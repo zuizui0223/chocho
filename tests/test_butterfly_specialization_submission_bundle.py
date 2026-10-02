@@ -85,8 +85,10 @@ def test_blinded_v02_manuscript_removes_identity_and_internal_history():
     ):
         assert token not in text
 
-    assert "**reviewer link:** [anonymized review link]" in text
-    assert "landing page and metadata do not identify the authors" in text
+    assert "[anonymized review link]" not in text
+    assert "an anonymized supplementary review archive" in text
+    assert "supplied with this submission" in text
+    assert "stable public archival snapshot" in text
 
 
 def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
@@ -170,3 +172,25 @@ def test_cover_letter_interest_paragraph_and_title_page_contacts_are_submission_
     assert len(author_lines) == 3
     assert all("[Email]" in line and "[ORCID]" in line for line in author_lines)
     assert title_page.count("## Corresponding author") == 1
+
+
+def test_initial_submission_uses_attached_anonymous_review_archive():
+    title_page = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
+    ).read_text(encoding="utf-8").lower()
+    cover = (
+        ROOT / "manuscript" / "butterfly_specialization_geb_cover_letter_v0.2.md"
+    ).read_text(encoding="utf-8").lower()
+    renderer = (
+        ROOT / "scripts" / "render_butterfly_specialization_blinded_manuscript.py"
+    ).read_text(encoding="utf-8").lower()
+    bundle = (ROOT / "scripts" / "build_anonymous_review_bundle.py").read_text(
+        encoding="utf-8"
+    ).lower()
+
+    assert "supplementary review material" in title_page
+    assert "before publication" in title_page
+    assert "supplementary review material" in cover
+    assert "[anonymized review link]" not in renderer
+    assert "anonymized supplementary review archive" in renderer
+    assert "uploaded directly with the manuscript" in bundle
