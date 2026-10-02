@@ -194,3 +194,29 @@ def test_initial_submission_uses_attached_anonymous_review_archive():
     assert "[anonymized review link]" not in renderer
     assert "anonymized supplementary review archive" in renderer
     assert "uploaded directly with the manuscript" in bundle
+
+
+def test_initial_submission_preflight_defers_public_archive_tasks():
+    script = ROOT / "scripts" / "submission_preflight.py"
+    spec = importlib.util.spec_from_file_location("geb_submission_preflight", script)
+    assert spec is not None and spec.loader is not None
+    preflight = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(preflight)
+
+    result = preflight.inspect_initial_submission(ROOT)
+    blockers = "\n".join(result["blockers"]).lower()
+    deferred = "\n".join(result["deferred_until_publication"]).lower()
+
+    assert result["ready_for_initial_submission"] is False
+    assert "title-page author/affiliation/contact placeholders remain" in result["blockers"]
+    assert "credit contribution placeholders remain" in blockers
+    assert "cover-letter corresponding-author placeholders remain" in result["blockers"]
+
+    assert "public archive doi" not in blockers
+    assert "license" not in blockers
+    assert "reviewer-access url" not in blockers
+    assert "persistent public archive doi" in deferred
+    assert "licens" in deferred
+    assert result["peer_review_data_code_mode"] == (
+        "attach anonymized review archive as supplementary review material"
+    )
