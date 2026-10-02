@@ -212,6 +212,7 @@ def test_initial_submission_preflight_defers_public_archive_tasks():
     assert "credit contribution placeholders remain" in blockers
     assert "cover-letter corresponding-author placeholders remain" in result["blockers"]
 
+    assert "gbif occurrence-download doi placeholder remains" in blockers
     assert "public archive doi" not in blockers
     assert "license" not in blockers
     assert "reviewer-access url" not in blockers
@@ -220,3 +221,32 @@ def test_initial_submission_preflight_defers_public_archive_tasks():
     assert result["peer_review_data_code_mode"] == (
         "attach anonymized review archive as supplementary review material"
     )
+
+
+def test_gbif_occurrence_doi_inputs_are_frozen_and_reproducible():
+    receipt = json.loads(
+        (
+            ROOT / "provenance" / "gbif" / "gbif_occurrence_set_receipt_v0.1.json"
+        ).read_text(encoding="utf-8")
+    )
+    counts = (
+        ROOT / "data" / "frozen" / "gbif" / "gbif_dataset_key_record_counts_v0.1.csv"
+    ).read_text(encoding="utf-8").splitlines()
+    builder = (
+        ROOT / "scripts" / "prepare_gbif_occurrence_doi_request.py"
+    ).read_text(encoding="utf-8")
+    instructions = (ROOT / "docs" / "GBIF_OCCURRENCE_DOI.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert receipt["records"] == 53434
+    assert receipt["unique_gbif_keys"] == 53434
+    assert receipt["contributing_gbif_datasets"] == 313
+    assert receipt["occurrences_csv_sha256"] == (
+        "1dc71938fd5fbed48756cc8bfd0e4bb9580f7d20eebfb652547febcc2893dcad"
+    )
+    assert len(counts) == 314
+    assert sum(int(line.rsplit(",", 1)[1]) for line in counts[1:]) == 53434
+    assert '"key": "GBIF_ID"' in builder
+    assert "EXPECTED_RECORDS = 53_434" in builder
+    assert "101,000" in instructions
