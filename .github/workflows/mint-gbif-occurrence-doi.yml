@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      GBIF_USERNAME: ${{ secrets.GBIF_USERNAME }}
+      GBIF_USERNAME: zuizui
       GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
       GBIF_EMAIL: ${{ secrets.GBIF_EMAIL }}
     steps:
@@ -31,7 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          for key in GBIF_USERNAME GBIF_PASSWORD GBIF_EMAIL; do
+          for key in GBIF_PASSWORD GBIF_EMAIL; do
             if [ -z "${!key:-}" ]; then
               echo "::error::Missing repository secret $key"
               missing=1
