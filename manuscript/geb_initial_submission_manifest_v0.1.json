@@ -40,6 +40,7 @@
     }
   ],
   "initial_submission_blockers": [
+    "exact-record GBIF occurrence-download DOI for the 53,434 occurrence records",
     "final author list, affiliations, emails and ORCIDs",
     "one corresponding-author identity and signature",
     "CRediT contributions",
@@ -57,5 +58,13 @@
     "external anonymous reviewer URL when the anonymous review archive is attached directly",
     "public archive DOI",
     "public GitHub release/tag"
-  ]
+  ],
+  "gbif_occurrence_data": {
+    "records": 53434,
+    "status": "PENDING_EXACT_RECORD_DOWNLOAD_DOI",
+    "receipt": "provenance/gbif/gbif_occurrence_set_receipt_v0.1.json",
+    "request_builder": "scripts/prepare_gbif_occurrence_doi_request.py",
+    "instructions": "docs/GBIF_OCCURRENCE_DOI.md",
+    "placeholder": "GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER"
+  }
 }

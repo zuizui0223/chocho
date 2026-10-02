@@ -149,7 +149,7 @@ Primary host-breadth release test:
 - 30,000-species-bootstrap 95% interval = **-0.583 to 0.261**
 - approximate magnitude required for 80% power: **|partial rho| ≈ 0.505**
 
-This analysis is secondary in v0.2 and is shown as Supplementary Figure S1.
+This secondary analysis is shown as Fig. S1.
 
 ## Supplementary Table S6. Concentration of added opportunity across host plants and structural portfolio diagnostics
 

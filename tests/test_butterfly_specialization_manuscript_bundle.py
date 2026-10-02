@@ -61,7 +61,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert abstract_words <= 300
 
     intro_start = manuscript.index("## 1. Introduction")
-    refs_start = manuscript.index("## References (working)")
+    refs_start = manuscript.index("## References")
     main_text_words = _words(manuscript[intro_start:refs_start])
     assert main_text_words <= 5000
 
@@ -70,7 +70,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert readiness["manuscript"]["keyword_count"] == 7
 
     # Current manuscript references remain alphabetical by first/corporate author.
-    refs_start = manuscript.index("## References (working)")
+    refs_start = manuscript.index("## References")
     refs_end = manuscript.index("## Data and Code Availability", refs_start)
     reference_lines = [
         line[2:]
@@ -97,7 +97,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
         assert literal in manuscript
 
     # References remain alphabetized by first-author/corporate-author key.
-    refs_start = manuscript.index("## References (working)")
+    refs_start = manuscript.index("## References")
     refs_end = manuscript.index("## Data and Code Availability", refs_start)
     ref_lines = [
         line[2:]
@@ -261,3 +261,38 @@ def test_ruderal_interpretation_is_bounded():
     assert "caused by weeds" not in manuscript.lower()
     boundary = claim_map["required_language"]["ruderal_non_crop_interpretation"]
     assert "Do not quantify a 'weed effect'" in boundary
+
+
+def test_submission_citations_cover_figures_supplement_and_external_data():
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    supplement = (
+        ROOT / "manuscript" / "butterfly_specialization_supplement_v0.2.md"
+    ).read_text(encoding="utf-8")
+
+    for literal in (
+        "Fig. 1a",
+        "Fig. 1b",
+        "Fig. 1c",
+        "Fig. 2a",
+        "Fig. 2b",
+        "Fig. 3a",
+        "Fig. 3b",
+        "Fig. S1",
+        "Supplementary Table S1",
+        "Supplementary Table S2",
+        "Supplementary Table S3",
+        "Supplementary Table S4",
+        "Supplementary Table S5",
+        "Supplementary Table S6",
+        "Supplementary Table S7",
+        "(GBIF.org 2026)",
+        "(Karger et al. 2017, 2021)",
+    ):
+        assert literal in manuscript
+
+    assert "## References (working)" not in manuscript
+    assert "## References" in manuscript
+    assert "secondary in v0.2" not in supplement
+    assert "shown as Fig. S1" in supplement

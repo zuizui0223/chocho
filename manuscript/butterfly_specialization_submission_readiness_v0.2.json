@@ -1,6 +1,6 @@
 {
   "schema": "chocho_butterfly_specialization_submission_readiness_v0.2",
-  "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_AND_DECLARATIONS",
+  "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_DECLARATIONS_AND_GBIF_DOI",
   "updated_on": "2026-10-02",
   "target_journal": {
     "primary": "Global Ecology and Biogeography",
@@ -20,7 +20,7 @@
     "file": "manuscript/butterfly_specialization_ecology_v0.2.md",
     "working_title": "Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum",
     "approximate_total_words": 6296,
-    "approximate_main_text_words": 4859,
+    "approximate_main_text_words": 4897,
     "approximate_abstract_words": 289,
     "structured_abstract": true,
     "blinded_file": "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md",
@@ -48,7 +48,17 @@
     "butterfly_family_generality": "Expansion affected 83.5–90.2% of species in each of the five major butterfly families represented by at least 10 species (Nymphalidae, Hesperiidae, Pieridae, Lycaenidae, Papilionidae).",
     "butterfly_first_implications": "Discussion 4.3 now leads with implications for butterfly larval-resource geography and butterfly range-shift interpretation before cross-taxon generalization.",
     "crop_host_sensitivity": "complete; FAO exact-binomial crop exclusion leaves +47.0% aggregate expansion, 203/238 evaluable butterflies expanded (85.3%), rho=0.052 and 38 host species accounting for half of added credit; conservative genus-expanded exclusion leaves +46.0%, 197/233 (84.5%), rho=0.057 and 37 hosts.",
-    "ruderal_non_crop_interpretation": "Discussion now distinguishes the crop sensitivity from the broader residual signal: +47.0% to +46.0% aggregate expansion persists after crop-host exclusion. WCVP introduced records are wild non-native occurrences, making naturalized forage, pasture/turf, roadside/ruderal and escaped plants plausible contributors. No quantitative weed/ruderal attribution is claimed because non-crop hosts were not exhaustively classified by land use or introduction pathway."
+    "ruderal_non_crop_interpretation": "Discussion now distinguishes the crop sensitivity from the broader residual signal: +47.0% to +46.0% aggregate expansion persists after crop-host exclusion. WCVP introduced records are wild non-native occurrences, making naturalized forage, pasture/turf, roadside/ruderal and escaped plants plausible contributors. No quantitative weed/ruderal attribution is claimed because non-crop hosts were not exhaustively classified by land use or introduction pathway.",
+    "gbif_occurrence_citation": {
+      "status": "PENDING_EXTERNAL_GBIF_DOWNLOAD_DOI",
+      "records": 53434,
+      "unique_gbif_ids": 53434,
+      "contributing_datasets": 313,
+      "source_receipt": "provenance/gbif/gbif_occurrence_set_receipt_v0.1.json",
+      "request_builder": "scripts/prepare_gbif_occurrence_doi_request.py",
+      "instructions": "docs/GBIF_OCCURRENCE_DOI.md",
+      "manuscript_placeholder": "GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER"
+    }
   },
   "figures": {
     "main_figures": 3,
@@ -76,6 +86,7 @@
     "public_archive_status": "DEFERRED_UNTIL_PUBLICATION"
   },
   "remaining_before_submission": [
+    "Create the exact-record GBIF occurrence download DOI for the 53,434 occurrence records and replace GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER in the manuscript/blinded manuscript with the DOI supplied by GBIF.",
     "Insert the final author list, affiliations, emails and ORCIDs in the separate v0.2 title page, with exactly one corresponding author.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
     "Fill the corresponding-author signature block in the cover letter.",

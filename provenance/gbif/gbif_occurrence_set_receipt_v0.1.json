@@ -1,0 +1,36 @@
+{
+  "schema": "chocho_gbif_occurrence_set_receipt_v0.1",
+  "status": "EXACT_API_RECORD_SET_RECOVERED_FOR_GBIF_CITATION",
+  "created_on": "2026-10-02",
+  "source": {
+    "repository": "zuizui0223/TTF",
+    "workflow_run_id": 36270581743,
+    "artifact_id": 10920120240,
+    "artifact_name": "butterfly-climate-release-postgate-summary-v01",
+    "source_file": "occurrences.csv"
+  },
+  "records": 53434,
+  "unique_gbif_keys": 53434,
+  "species_with_records": 31,
+  "contributing_gbif_datasets": 313,
+  "occurrences_csv_sha256": "1dc71938fd5fbed48756cc8bfd0e4bb9580f7d20eebfb652547febcc2893dcad",
+  "query_semantics": {
+    "year": "2010-2026",
+    "hasCoordinate": true,
+    "hasGeospatialIssue": false,
+    "occurrenceStatus": "PRESENT"
+  },
+  "dataset_counts_file": "data/frozen/gbif/gbif_dataset_key_record_counts_v0.1.csv",
+  "citation_requirement": {
+    "route": "GBIF derived dataset for occurrence-search API data",
+    "rationale": "The analysis used GBIF occurrence search API records, which do not receive an automatic download DOI. GBIF recommends registering a derived dataset for a citable DOI.",
+    "doi": "GBIF_DERIVED_DATASET_DOI_PLACEHOLDER",
+    "registration_requires_gbif_account": true,
+    "persistent_data_url": "TO_BE_SUPPLIED_AT_GBIF_REGISTRATION"
+  },
+  "manuscript_insertion": {
+    "methods": "GBIF.org 2026",
+    "reference_template": "GBIF.org. 2026. Filtered export of GBIF occurrence data used for butterfly occurrence validation. GBIF derived dataset. https://doi.org/GBIF_DERIVED_DATASET_DOI_PLACEHOLDER",
+    "data_availability_template": "The 53,434 GBIF occurrence records used in the occurrence validation are registered as a GBIF derived dataset: https://doi.org/GBIF_DERIVED_DATASET_DOI_PLACEHOLDER."
+  }
+}

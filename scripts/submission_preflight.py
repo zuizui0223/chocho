@@ -47,7 +47,7 @@ def inspect_initial_submission(root: Path = ROOT) -> dict[str, object]:
         blockers.append(f"structured abstract exceeds 300 words ({abstract_words})")
 
     main_start = manuscript.index("## 1. Introduction")
-    refs_start = manuscript.index("## References (working)")
+    refs_start = manuscript.index("## References")
     main_words = words(manuscript[main_start:refs_start])
     if main_words <= 5000:
         complete.append(f"main text within approximately 5,000 words ({main_words})")
@@ -86,6 +86,15 @@ def inspect_initial_submission(root: Path = ROOT) -> dict[str, object]:
     for forbidden in ("zuizui0223", "ruiqi", "zhang.ruiqi", "repository provenance"):
         if forbidden in blinded.lower():
             blockers.append(f"blinded manuscript contains identifying/internal token: {forbidden}")
+
+    gbif_doi_re = re.compile(r"https://doi\.org/10\.15468/dl\.[A-Za-z0-9]+")
+    gbif_placeholder = "GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER"
+    if gbif_placeholder in manuscript or gbif_placeholder in blinded:
+        blockers.append("GBIF occurrence-download DOI placeholder remains")
+    elif gbif_doi_re.search(manuscript) and gbif_doi_re.search(blinded):
+        complete.append("GBIF occurrence-download DOI recorded in manuscript and blinded manuscript")
+    else:
+        blockers.append("GBIF occurrence-download DOI is missing from manuscript or blinded manuscript")
 
     title_page = (root / TITLE_PAGE).read_text(encoding="utf-8")
     title_page_tokens = (
