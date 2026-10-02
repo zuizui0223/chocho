@@ -11,13 +11,11 @@ V02_RUNNING_TITLE = "Host redistribution and resource gain"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
-For double-anonymous review, the analysis code, frozen scientific protocols, provenance receipts and figure-generation workflow will be supplied through an anonymized reviewer-access link whose landing page and metadata do not identify the authors:
-
-**Reviewer link:** [ANONYMIZED REVIEW LINK]
+For double-anonymous peer review, the analysis code, frozen scientific protocols, de-identified result receipts and figure-source files needed to reproduce the reported analyses are supplied with this submission as an anonymized supplementary review archive.
 
 The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods.
 
-A permanent public archival snapshot and DOI will replace this anonymized review statement in the final public version.
+A stable public archival snapshot with a persistent DOI and applicable licensing will be deposited before publication; the public version of this statement will then cite that archive.
 
 """
 
