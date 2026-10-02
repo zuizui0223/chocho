@@ -1,4 +1,4 @@
-# Final release procedure — v1.0.0-butterfly
+# Public archival release procedure — v1.0.0-butterfly
 
 This procedure is administrative only. The current v0.2 scientific claim map, species panels, thresholds, result receipts and manuscript statistics are the release boundary.
 
@@ -42,10 +42,10 @@ The public DOI should appear inside the exact tagged source snapshot. A manual Z
    - Insert the same DOI in the final public Data and Code Availability statement.
    - Do not put the public DOI in the double-anonymous review manuscript.
 
-5. **Create the anonymous reviewer URL**
-   - Upload the de-identified reviewer ZIP to a host whose landing page and file metadata do not identify the authors.
-   - Replace `[ANONYMIZED REVIEW LINK]` in the blinded Data and Code Availability statement.
-   - Rebuild the final blinded DOCX and rerun anonymity/metadata checks.
+5. **Keep peer-review access separate from the public release**
+   - Initial GEB peer review uses the de-identified reviewer ZIP uploaded directly as supplementary review material.
+   - No external anonymous reviewer URL is required when that ZIP is attached to the submission.
+   - Do not expose the public author-identifying archive in the blinded manuscript.
 
 6. **Run release preflight**
    - `python scripts/release_preflight.py`
@@ -75,10 +75,10 @@ The public DOI should appear inside the exact tagged source snapshot. A manual Z
     - Publishing registers/activates the reserved DOI.
     - Verify that the DOI resolves and the archived file corresponds to `v1.0.0-butterfly`.
 
-12. **Final submission check**
-    - Identifying/public metadata: public Zenodo DOI.
-    - Blinded manuscript: anonymous reviewer URL, not the public author-identifying archive.
-    - Final DOCX rebuilt after URL insertion.
+12. **Final public-version check**
+    - Identifying/public metadata: public stable-archive DOI.
+    - Final public Data and Code Availability statement cites that archive.
+    - The double-anonymous review manuscript remains free of author-identifying repository links.
     - Final proofread and exact-head CI confirmation.
 
 ## Do not do
