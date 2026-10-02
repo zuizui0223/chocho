@@ -1,7 +1,7 @@
 {
   "schema": "chocho_butterfly_specialization_geb_submission_checklist_v0.2",
-  "status": "READY_PENDING_EXTERNAL_AUTHOR_LICENSE_ARCHIVE_AND_ANONYMOUS_URL",
-  "checked_on": "2026-10-01",
+  "status": "READY_FOR_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_AND_DECLARATIONS",
+  "checked_on": "2026-10-02",
   "journal": "Global Ecology and Biogeography",
   "article_type": "Research Article",
   "author_guideline_snapshot": {
@@ -13,9 +13,11 @@
     "separate_title_page_required": true,
     "running_title_max_characters": 40,
     "source": "Wiley Global Ecology and Biogeography Author Guidelines checked 2026-10-01",
-    "format_snapshot_checked_on": "2026-10-01",
+    "format_snapshot_checked_on": "2026-10-02",
     "free_format_submission": true,
-    "cover_letter_interest_paragraph_max_words": 250
+    "cover_letter_interest_paragraph_max_words": 250,
+    "peer_review_data_code_access": "link or supplementary submission material",
+    "stable_public_archive_required_for_publication": true
   },
   "manuscript": {
     "working_source": "manuscript/butterfly_specialization_ecology_v0.2.md",
@@ -65,24 +67,32 @@
   "complete_now": [
     "Current v0.2 scientific analyses and claim boundaries.",
     "Structured abstract below 300 words.",
-    "Seven keywords.",
+    "Seven alphabetized keywords.",
     "Main text below approximately 5,000 words.",
     "Three main figures plus one supplementary figure with current v0.2 renderer.",
-    "Separate double-anonymous title-page template and cover letter.",
+    "Separate double-anonymous title-page template and submission-facing cover letter.",
     "Reproducible blinded manuscript/DOCX builder and anonymous review-bundle builder.",
+    "Anonymous data-and-code review archive can be attached directly as supplementary review material.",
     "Unit-preserving host-contribution concentration receipt at species and genus levels.",
     "Diet-breadth bootstrap precision and strict equivalence diagnostic receipt.",
     "Current v0.2 claim map and post-hoc inference boundaries."
   ],
   "remaining_before_submission": [
-    "Choose and add the software license.",
-    "Insert final author list, affiliations, corresponding-author details, emails and ORCIDs in the separate v0.2 title page.",
-    "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
-    "Create the final release candidate and reserve the public archive DOI.",
-    "Insert the real public DOI into CITATION.cff, the identifying title page and final public Data and Code Availability statement.",
-    "Upload the de-identified reviewer bundle to a non-identifying reviewer-access host and insert its URL into the blinded manuscript.",
-    "Rebuild and proofread the final blinded DOCX after URL insertion.",
-    "Require paper CI, current v0.2 figure rendering, blinded DOCX build and anonymous-bundle build to be green on the exact release commit.",
-    "Require scripts/release_preflight.py to report READY before tagging v1.0.0-butterfly."
+    "Fill final author list, affiliations, emails and ORCIDs, with one corresponding author.",
+    "Complete CRediT, acknowledgements, funding and conflict-of-interest statements.",
+    "Fill the cover-letter corresponding-author signature.",
+    "Generate the exact-commit blinded DOCX and anonymous review-bundle ZIP and require green submission workflows.",
+    "Upload the anonymous review-bundle ZIP as supplementary review material/data-code review archive."
+  ],
+  "deferred_until_publication": [
+    "Choose/apply public archive licensing.",
+    "Deposit stable public data/code archive.",
+    "Record persistent public archive DOI.",
+    "Create/tag public v1.0.0-butterfly release."
+  ],
+  "not_required_before_initial_submission": [
+    "External anonymous reviewer URL if the review archive is attached directly.",
+    "Public archive DOI.",
+    "Public GitHub release/tag."
   ]
 }
