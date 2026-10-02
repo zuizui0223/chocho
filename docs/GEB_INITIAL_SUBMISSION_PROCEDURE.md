@@ -8,6 +8,12 @@ GEB uses double-anonymous review. The initial submission therefore separates the
 
 The journal requires data and code supporting the paper to be accessible during peer review. A stable public repository is required for publication, but peer-review access may be provided through supplementary materials. This repository therefore uses the already-tested anonymous review bundle as a file uploaded directly with the submission, rather than requiring an external anonymous reviewer URL.
 
+## GBIF occurrence DOI gate
+
+The 53,434 occurrence records used in the secondary occurrence validation were originally retrieved through the GBIF occurrence search API, so the historical API retrieval has no automatic DOI. Before initial submission, create one exact-record GBIF occurrence download using `scripts/prepare_gbif_occurrence_doi_request.py` and follow `docs/GBIF_OCCURRENCE_DOI.md`.
+
+Replace `GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER` in the manuscript surfaces with the DOI supplied by GBIF. This DOI is an initial-submission requirement because it cites the external occurrence data actually used; it is distinct from the public DOI for this study's code/reproducibility archive, which remains deferred until publication.
+
 ## Upload order
 
 1. **Blinded main manuscript** — use the line-numbered DOCX produced by `.github/workflows/build-blinded-review-docx.yml`. Confirm that the document properties and visible text contain no author identity.
@@ -37,7 +43,7 @@ Run:
 python scripts/submission_preflight.py
 ```
 
-This gate intentionally checks the journal-facing initial submission rather than the later public archival release. With the current repository state, the expected remaining blockers are author-specific metadata and declarations only.
+This gate intentionally checks the journal-facing initial submission rather than the later public archival release. With the current repository state, the expected remaining blockers are the exact-record GBIF occurrence-download DOI plus author-specific metadata and declarations.
 
 After filling those items, rebuild the blinded DOCX and anonymous review bundle on the exact commit to be submitted and require all submission workflows to pass.
 
