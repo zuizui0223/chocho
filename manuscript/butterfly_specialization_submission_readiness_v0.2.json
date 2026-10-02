@@ -1,18 +1,20 @@
 {
   "schema": "chocho_butterfly_specialization_submission_readiness_v0.2",
-  "status": "SCIENTIFICALLY_READY_CURRENT_V02_PENDING_EXTERNAL_METADATA_LICENSE_ARCHIVE_AND_ANONYMOUS_URL",
-  "updated_on": "2026-10-01",
+  "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_AND_DECLARATIONS",
+  "updated_on": "2026-10-02",
   "target_journal": {
     "primary": "Global Ecology and Biogeography",
     "article_type": "Research Article",
-    "format_snapshot_checked_on": "2026-10-01",
+    "format_snapshot_checked_on": "2026-10-02",
     "structured_abstract_max_words": 300,
     "typical_main_body_words": 5000,
     "double_anonymous_review": true,
     "separate_title_page_required": true,
     "keywords": "6-10",
     "running_title_max_characters": 40,
-    "cover_letter_interest_paragraph_max_words": 250
+    "cover_letter_interest_paragraph_max_words": 250,
+    "data_code_peer_review_access": "link or submission supplementary materials",
+    "public_stable_archive_required_for_publication": true
   },
   "manuscript": {
     "file": "manuscript/butterfly_specialization_ecology_v0.2.md",
@@ -68,19 +70,17 @@
     "anonymous_bundle_builder": "scripts/build_anonymous_review_bundle.py",
     "anonymous_bundle_ci": ".github/workflows/build-anonymous-review-bundle.yml",
     "internal_response_memos_excluded_from_anonymous_bundle": true,
-    "anonymous_hosting_status": "PENDING_EXTERNAL_ANONYMOUS_REVIEW_URL",
-    "cover_letter": "submission-facing v0.2 cover letter tightened to a <250-word GEB-interest paragraph plus declarations"
+    "anonymous_hosting_status": "NOT_REQUIRED_IF_BUNDLE_ATTACHED_AS_SUBMISSION_SUPPLEMENT",
+    "cover_letter": "submission-facing v0.2 cover letter tightened to a <250-word GEB-interest paragraph plus declarations",
+    "peer_review_data_code_mode": "attach butterfly_specialization_anonymous_review_bundle.zip as supplementary review material",
+    "public_archive_status": "DEFERRED_UNTIL_PUBLICATION"
   },
   "remaining_before_submission": [
-    "Choose and add the software license.",
-    "Insert final author list, affiliations, corresponding-author details, emails and ORCIDs in the separate v0.2 title page.",
+    "Insert the final author list, affiliations, emails and ORCIDs in the separate v0.2 title page, with exactly one corresponding author.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
-    "Create the final release candidate and reserve the public archive DOI.",
-    "Insert the real public DOI into CITATION.cff, the identifying title page and final public Data and Code Availability statement.",
-    "Upload the de-identified reviewer bundle to a non-identifying reviewer-access host and insert its URL into the blinded manuscript.",
-    "Rebuild and proofread the final blinded DOCX after URL insertion.",
-    "Require paper CI, current v0.2 figure rendering, blinded DOCX build and anonymous-bundle build to be green on the exact release commit.",
-    "Require scripts/release_preflight.py to report READY before tagging v1.0.0-butterfly."
+    "Fill the corresponding-author signature block in the cover letter.",
+    "Build the exact-commit blinded DOCX and anonymous data-and-code review supplement and confirm submission workflows are green.",
+    "Upload the anonymous review bundle ZIP directly as supplementary review material with the initial submission."
   ],
   "not_required": [
     "Additional response-driven predictor searches.",
@@ -88,5 +88,17 @@
     "Promoting network prominence to a causal mechanism.",
     "Returning the within-butterfly portfolio architecture to the main Results.",
     "Retuning the unsupported host-breadth climate prediction."
+  ],
+  "deferred_until_publication": [
+    "Choose and apply the public archive/data-code licence.",
+    "Deposit the stable public data-and-code archive.",
+    "Insert the persistent public archive DOI into CITATION.cff, the title page and the final public Data and Code Availability statement.",
+    "Create/tag the public v1.0.0-butterfly release after scripts/release_preflight.py reports READY."
+  ],
+  "not_required_before_initial_submission": [
+    "An external anonymous reviewer URL when the anonymous review archive is uploaded directly as supplementary material.",
+    "A public archive DOI.",
+    "A public GitHub release/tag.",
+    "Additional ecological analyses."
   ]
 }
