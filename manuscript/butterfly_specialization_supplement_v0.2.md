@@ -1,4 +1,4 @@
-# Supplementary Information — butterfly resource geography v0.2
+# Supplementary Information — butterfly resource geography
 
 **Associated manuscript:** *Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum*
 
