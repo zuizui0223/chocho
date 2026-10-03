@@ -212,7 +212,8 @@ def test_initial_submission_preflight_defers_public_archive_tasks():
     assert "credit contribution placeholders remain" in blockers
     assert "cover-letter corresponding-author placeholders remain" in result["blockers"]
 
-    assert "gbif occurrence-download doi placeholder remains" in blockers
+    assert "gbif occurrence-download doi placeholder remains" not in blockers
+    assert "GBIF occurrence-download DOI recorded in manuscript and blinded manuscript" in result["complete"]
     assert "public archive doi" not in blockers
     assert "license" not in blockers
     assert "reviewer-access url" not in blockers
