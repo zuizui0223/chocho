@@ -251,3 +251,26 @@ def test_gbif_occurrence_doi_inputs_are_frozen_and_reproducible():
     assert '"key": "GBIF_ID"' in builder
     assert "EXPECTED_RECORDS = 53_434" in builder
     assert "101,000" in instructions
+
+
+def test_gbif_archival_download_total_and_si_title_are_final():
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    supplement = (
+        ROOT / "manuscript" / "butterfly_specialization_supplement_v0.2.md"
+    ).read_text(encoding="utf-8")
+    receipt = json.loads(
+        (
+            ROOT / "provenance" / "gbif" / "gbif_occurrence_download_doi_v0.1.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert receipt["records_requested"] == 53434
+    assert receipt["total_records_returned"] == 53144
+    assert receipt["records_not_returned_at_archival_download"] == 290
+    assert receipt["doi"] == "10.15468/dl.pp5nc9"
+    assert "GBIF returned 53,144 records" in manuscript
+    assert "290 records used in the frozen analysis were no longer returned" in manuscript
+    assert supplement.splitlines()[0] == "# Supplementary Information — butterfly resource geography"
+    assert "v0.2" not in supplement.splitlines()[0]
