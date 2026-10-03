@@ -1,6 +1,6 @@
 {
   "schema": "chocho_butterfly_specialization_submission_readiness_v0.2",
-  "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_DECLARATIONS_AND_GBIF_DOI",
+  "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_AND_DECLARATIONS",
   "updated_on": "2026-10-02",
   "target_journal": {
     "primary": "Global Ecology and Biogeography",
@@ -50,14 +50,16 @@
     "crop_host_sensitivity": "complete; FAO exact-binomial crop exclusion leaves +47.0% aggregate expansion, 203/238 evaluable butterflies expanded (85.3%), rho=0.052 and 38 host species accounting for half of added credit; conservative genus-expanded exclusion leaves +46.0%, 197/233 (84.5%), rho=0.057 and 37 hosts.",
     "ruderal_non_crop_interpretation": "Discussion now distinguishes the crop sensitivity from the broader residual signal: +47.0% to +46.0% aggregate expansion persists after crop-host exclusion. WCVP introduced records are wild non-native occurrences, making naturalized forage, pasture/turf, roadside/ruderal and escaped plants plausible contributors. No quantitative weed/ruderal attribution is claimed because non-crop hosts were not exhaustively classified by land use or introduction pathway.",
     "gbif_occurrence_citation": {
-      "status": "PENDING_EXTERNAL_GBIF_DOWNLOAD_DOI",
+      "status": "COMPLETE",
       "records": 53434,
       "unique_gbif_ids": 53434,
       "contributing_datasets": 313,
       "source_receipt": "provenance/gbif/gbif_occurrence_set_receipt_v0.1.json",
       "request_builder": "scripts/prepare_gbif_occurrence_doi_request.py",
       "instructions": "docs/GBIF_OCCURRENCE_DOI.md",
-      "manuscript_placeholder": "GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER"
+      "manuscript_placeholder": "10.15468/dl.pp5nc9",
+      "doi": "10.15468/dl.pp5nc9",
+      "download_key": "0008693-260928105237408"
     }
   },
   "figures": {
@@ -86,7 +88,6 @@
     "public_archive_status": "DEFERRED_UNTIL_PUBLICATION"
   },
   "remaining_before_submission": [
-    "Create the exact-record GBIF occurrence download DOI for the 53,434 occurrence records and replace GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER in the manuscript/blinded manuscript with the DOI supplied by GBIF.",
     "Insert the final author list, affiliations, emails and ORCIDs in the separate v0.2 title page, with exactly one corresponding author.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
     "Fill the corresponding-author signature block in the cover letter.",
