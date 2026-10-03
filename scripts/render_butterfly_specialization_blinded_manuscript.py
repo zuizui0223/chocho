@@ -13,7 +13,7 @@ ANON_DATA_CODE = """## Data and Code Availability
 
 For double-anonymous peer review, the analysis code, frozen scientific protocols, de-identified result receipts and figure-source files needed to reproduce the reported analyses are supplied with this submission as an anonymized supplementary review archive.
 
-The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER).
+The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/10.15468/dl.pp5nc9).
 
 A stable public archival snapshot of the analysis package will be deposited before publication; the public version of this statement will then cite that archive.
 
