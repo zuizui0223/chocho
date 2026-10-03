@@ -1,6 +1,6 @@
 # GBIF occurrence DOI for the occurrence-validation panel
 
-## Why a DOI is required
+## DOI minted\n\nThe exact occurrence set is now archived as **https://doi.org/10.15468/dl.pp5nc9** (GBIF download key `0008693-260928105237408`; 53,434 records).\n\n## Why a DOI was required
 
 The butterfly occurrence validation used records retrieved synchronously through the GBIF occurrence search API. Search-API results do not receive an automatic DOI. GBIF citation guidance recommends citing GBIF-mediated data using a DOI.
 
@@ -64,7 +64,7 @@ When status is `SUCCEEDED`, the response contains the download DOI and download 
 
 ### 5. Update the manuscript
 
-Replace `GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER` everywhere with the DOI URL, e.g.
+Replace `10.15468/dl.pp5nc9` everywhere with the DOI URL, e.g.
 `https://doi.org/10.15468/dl.xxxxx`.
 
 The submission preflight must reject the placeholder and accept only a real GBIF occurrence-download DOI.
@@ -73,7 +73,7 @@ The submission preflight must reject the placeholder and accept only a real GBIF
 
 Use the citation supplied by the GBIF download landing page as authoritative. The working manuscript template is:
 
-> GBIF.org. 2026. GBIF occurrence download for the butterfly occurrence-validation record set. https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER
+> GBIF.org. 2026. GBIF occurrence download for the butterfly occurrence-validation record set. https://doi.org/10.15468/dl.pp5nc9
 
 Do not substitute the generic GBIF website citation for the data DOI.
 
