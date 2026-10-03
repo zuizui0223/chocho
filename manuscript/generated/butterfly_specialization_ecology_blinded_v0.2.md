@@ -170,7 +170,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 - Couto, H. et al. 2026. The Lepidopteran Hitchhiker's Guide to the Globe: The Spread and Dispersal of Non-Native Moths and Butterflies. *Global Ecology and Biogeography*. https://doi.org/10.1111/geb.70292
 - Daru, B. H., Davies, T. J., Willis, C. G. et al. 2021. Widespread homogenization of plant communities in the Anthropocene. *Nature Communications* 12: 6983. https://doi.org/10.1038/s41467-021-27186-8
 - Fricke, E. C. & Svenning, J.-C. 2020. Accelerating homogenization of the global plant–frugivore meta-network. *Nature* 585: 74–78. https://doi.org/10.1038/s41586-020-2640-y
-- GBIF.org. 2026. GBIF Occurrence Download for the 53,434 records used in butterfly occurrence validation. https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER
+- GBIF.org. 2026. GBIF Occurrence Download for the 53,434 records used in butterfly occurrence validation. https://doi.org/10.15468/dl.pp5nc9
 - Govaerts, R., Nic Lughadha, E., Black, N., Turner, R. & Paton, A. 2021. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. *Scientific Data* 8: 215. https://doi.org/10.1038/s41597-021-00997-6
 - Graves, S. D. & Shapiro, A. M. 2003. Exotics as host plants of the California butterfly fauna. *Biological Conservation* 110: 413–433. https://doi.org/10.1016/S0006-3207(02)00233-1
 - Gross, C., Kawahara, A. & Daru, B. 2026. Climate and regional plant richness drive diet specialization in butterfly caterpillars. *Nature Communications*. https://doi.org/10.1038/s41467-026-73236-4
@@ -192,7 +192,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 
 For double-anonymous peer review, the analysis code, frozen scientific protocols, de-identified result receipts and figure-source files needed to reproduce the reported analyses are supplied with this submission as an anonymized supplementary review archive.
 
-The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER).
+The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/10.15468/dl.pp5nc9).
 
 A stable public archival snapshot of the analysis package will be deposited before publication; the public version of this statement will then cite that archive.
 
