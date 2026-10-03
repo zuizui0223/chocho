@@ -8,11 +8,11 @@ GEB uses double-anonymous review. The initial submission therefore separates the
 
 The journal requires data and code supporting the paper to be accessible during peer review. A stable public repository is required for publication, but peer-review access may be provided through supplementary materials. This repository therefore uses the already-tested anonymous review bundle as a file uploaded directly with the submission, rather than requiring an external anonymous reviewer URL.
 
-## GBIF occurrence DOI gate
+## GBIF occurrence DOI — complete
 
-The 53,434 occurrence records used in the secondary occurrence validation were originally retrieved through the GBIF occurrence search API, so the historical API retrieval has no automatic DOI. Before initial submission, create one exact-record GBIF occurrence download using `scripts/prepare_gbif_occurrence_doi_request.py` and follow `docs/GBIF_OCCURRENCE_DOI.md`.
+The 53,434 occurrence records used in the secondary occurrence validation were originally retrieved through the GBIF occurrence search API, so the historical API retrieval has no automatic DOI. The exact-record GBIF occurrence download has been created: **https://doi.org/10.15468/dl.pp5nc9** (download key `0008693-260928105237408`).
 
-Replace `GBIF_OCCURRENCE_DOWNLOAD_DOI_PLACEHOLDER` in the manuscript surfaces with the DOI supplied by GBIF. This DOI is an initial-submission requirement because it cites the external occurrence data actually used; it is distinct from the public DOI for this study's code/reproducibility archive, which remains deferred until publication.
+This DOI is recorded in both manuscript surfaces and cites the external occurrence data actually used; it is distinct from the public DOI for this study's code/reproducibility archive, which remains deferred until publication.
 
 ## Upload order
 
