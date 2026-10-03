@@ -190,7 +190,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 
 ## Data and Code Availability
 
-Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. The 53,434 GBIF occurrence records used in the secondary occurrence validation are represented by an exact-record GBIF occurrence download (https://doi.org/10.15468/dl.pp5nc9). Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A stable public archival snapshot of the analysis package will be deposited before publication.
+Analysis code and the inputs required to reproduce the reported results and figures are versioned in the study repository. Public source datasets include LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD. The secondary occurrence validation used 53,434 GBIF occurrence records. An exact-ID archival download requested those same records (https://doi.org/10.15468/dl.pp5nc9); GBIF returned 53,144 records, indicating that 290 records used in the frozen analysis were no longer returned by GBIF at archival download time. Exact source identities, retrieval rules, robustness-analysis specifications and execution records are documented in the supplementary reproducibility materials rather than the main text. A stable public archival snapshot of the analysis package will be deposited before publication.
 
 ## Figure legends
 
