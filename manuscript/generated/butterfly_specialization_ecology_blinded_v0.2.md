@@ -16,7 +16,7 @@
 
 **Results:** Introduced hosts expanded reconstructed resource geography for 206/239 butterflies (86.2%) and increased aggregate species × region coverage by 54.9%. Contributions were strongly uneven: among 670 host species, the top 10 accounted for 25.1% of added units and 38 species accounted for half; genus-level aggregation retained this concentration. Host-family breadth was nearly unrelated to proportional expansion (Spearman rho = 0.008; bootstrap 95% CI -0.111 to 0.128), although a strict post-hoc ±0.10 equivalence test was narrowly inconclusive (p = 0.078). Introduced hosts recovered 66/115 outside-native species × region observations (57.4%), exceeding region-matched structural expectation.
 
-**Main conclusions:** Human redistribution of known host plants expands butterfly resource opportunity across the specialization spectrum. Much of the gain is carried by a minority of hosts and is poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without invoking host switching or diet expansion; native-only maps therefore miss part of contemporary opportunity.
+**Main conclusions:** Human redistribution of known host plants expands butterfly resource opportunity across the specialization spectrum. Much of the gain is carried by a minority of hosts and is poorly predicted by family-level diet breadth. More generally, partner redistribution can reorganize consumer resource geography without host switching or diet expansion; globalization responses therefore depend on both interaction breadth and partner geography.
 
 **Keywords:** biotic redistribution, butterflies, ecological specialization, global change, host plants, introduced species, resource geography
 ---
@@ -129,16 +129,17 @@ More than half of species × region observations lying outside native host-resou
 
 That distinction matters for butterfly macroecology. When larval host plants have been redistributed, native-only host maps can create apparent butterfly–host mismatches that are partly artifacts of treating present-day resource opportunity as if plant geography were still native.
 
-### 4.3 Implications for butterfly and global-change biogeography
+### 4.3 Implications for invasion ecology, conservation and global-change biogeography
 
-For butterfly biogeography, the main implication is that global change modifies not only where butterflies occur but also where their larval resources occur. Global plant naturalization has already eroded floristic distinctiveness among regions (Daru et al. 2021), and our results show that this redistribution can substantially enlarge butterfly host-resource geography. Native-only host layers can therefore misrepresent contemporary larval-resource opportunity, especially when a taxonomically narrow-diet butterfly uses a plant that has been widely transported.
+For butterfly biogeography, global change modifies not only where butterflies occur but also where their larval resources occur. Global plant naturalization has already eroded floristic distinctiveness among regions (Daru et al. 2021), and our results show that this redistribution can enlarge butterfly host-resource geography. Native-only host layers can therefore misrepresent contemporary opportunity, especially when a narrow-diet butterfly uses a plant transported widely by people.
 
-This distinction also changes how butterfly range shifts should be interpreted. Expansion can arise through changes on the butterfly side, such as broader host use or reduced specialization, but it can also arise because the geography of an already-known host has changed. The two processes are biologically different: one changes the butterfly's recorded interaction breadth, whereas the other changes the spatial availability of the same interaction. Treating both as a single “generalist advantage” risks missing which side of the butterfly–plant relationship actually changed.
+This also changes how range shifts should be interpreted. Expansion can reflect changes on the butterfly side, such as broader host use, or changes on the resource side because an already-known host has moved. Treating both as a single “generalist advantage” obscures which side of the interaction changed.
 
-The broader implication follows from this butterfly result. Globalization acts on **interaction geography**, not only on focal-species ranges, and introductions can homogenize ecological interaction networks (Fricke & Svenning 2020). Herbivores, pollinators, frugivores, parasites and other consumers increasingly encounter partners whose ranges have been altered by cultivation, trade and invasion. Global-change biogeography should therefore distinguish the taxonomic breadth of interactions, the changing geography of interaction partners, and the subset of that opportunity that becomes realized distribution.
+For invasion ecology, the result is not that alien plants are beneficial. Exotic hosts can provide usable resources but can also reduce larval performance or create ecological traps (Yoon & Read 2016; Braga 2023). Our envelopes measure **availability**, not host quality or fitness. The 46–47% expansion remaining after crop exclusion nevertheless shows that this interaction-mediated geography extends beyond cultivated crops.
 
-The next step for butterflies is temporal and local. Dated plant introductions and locality-level larval host-use records would allow direct tests of whether redistributed hosts precede butterfly colonization, facilitate persistence or induce host switching. The present analysis establishes the large-scale host-resource opportunity on which those causal tests can be built.
+For conservation, vulnerability may therefore depend not only on how specialized a butterfly is but on **which host it specializes on and how that host has been redistributed**. Two equally narrow specialists can face very different resource geographies if one uses a cosmopolitan human-dispersed host and the other a range-restricted host. Risk assessment, restoration and invasive-plant removal can therefore pair specialization with partner geography and ask whether native consumers depend on the focal plant and whether suitable native hosts are available. This is an interaction-aware management problem, consistent with recent calls to incorporate species-interaction networks into global-change management (Abdala-Roberts et al. 2025).
 
+The next step is to combine dated introductions, locality-level host use and performance data to test whether redistributed hosts precede colonization, facilitate persistence, or instead impose demographic costs.
 
 ## 5. Limitations
 
@@ -164,6 +165,8 @@ Together, these results show that **taxonomic host breadth, host geography and r
 
 ## References
 
+- Abdala-Roberts, L., Puentes, A., Finke, D. L., Marquis, R. J., Montserrat, M., Poelman, E. H., Rasmann, S., Sentis, A., Symons, C. C., van Dam, N. M., Wimp, G., Björkman, C. & Mooney, K. A. 2025. Connecting the dots: Managing species interaction networks to mitigate the impacts of global change. *eLife* 14: e98899. https://doi.org/10.7554/eLife.98899
+- Braga, M. P. 2023. Are exotic host plants a life raft or a trap for butterflies? *Current Opinion in Insect Science* 58: 101074. https://doi.org/10.1016/j.cois.2023.101074
 - Braschler, B. & Hill, J. K. 2007. Role of larval host plants in the climate-driven range expansion of the butterfly *Polygonia c-album*. *Journal of Animal Ecology* 76: 415–423. https://doi.org/10.1111/j.1365-2656.2007.01217.x
 - Brummitt, R. K., Pando, F., Hollis, S. & Brummitt, N. A. 2001. *World Geographical Scheme for Recording Plant Distributions*, 2nd edn. Hunt Institute for Botanical Documentation, Carnegie Mellon University.
 - Chowdhury, S. et al. 2026. Extensive climate-induced range shifts in butterflies across the globe. *Nature Ecology & Evolution*. https://doi.org/10.1038/s41559-026-03117-y
@@ -187,6 +190,7 @@ Together, these results show that **taxonomic host breadth, host geography and r
 - Slove, J. & Janz, N. 2011. The relationship between diet breadth and geographic range size in the butterfly subfamily Nymphalinae: a study of global scale. *PLoS ONE* 6: e16057. https://doi.org/10.1371/journal.pone.0016057
 - van Kleunen, M., Bossdorf, O. & Dawson, W. 2018. The ecology and evolution of alien plants. *Annual Review of Ecology, Evolution, and Systematics* 49: 25–47. https://doi.org/10.1146/annurev-ecolsys-110617-062654
 - van Kleunen, M., Dawson, W., Essl, F. et al. 2015. Global exchange and accumulation of non-native plants. *Nature* 525: 100–103. https://doi.org/10.1038/nature14910
+- Yoon, S. & Read, Q. D. 2016. Consequences of exotic host use: impacts on Lepidoptera and a test of the ecological trap hypothesis. *Oecologia* 181: 985–996. https://doi.org/10.1007/s00442-016-3560-2
 
 ## Data and Code Availability
 

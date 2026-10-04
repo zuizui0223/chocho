@@ -93,6 +93,13 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
         "Realized butterfly geography",
         "Host identities were held fixed between the two envelopes",
         "resource-side biogeography of butterfly specialization under globalization",
+        "Implications for invasion ecology, conservation and global-change biogeography",
+        "availability**, not host quality or fitness",
+        "which host it specializes on and how that host has been redistributed",
+        "interaction-aware management problem",
+        "Braga, M. P. 2023",
+        "Yoon, S. & Read, Q. D. 2016",
+        "Abdala-Roberts, L.",
     ):
         assert literal in manuscript
 
