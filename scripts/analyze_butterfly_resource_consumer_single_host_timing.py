@@ -168,14 +168,16 @@ def main():
             "wgsrpd3_region":region_robust
         },
         "decision":{
-            "identity_specific_resource_timing_supported":bool(sign_p<=0.05 and observed_median>0),
-            "identity_specific_resource_precedence_supported":bool(precedence_p<=0.05 and actual_only>pseudo_only),
+            "primary_temporal_mismatch_supported":bool(precedence_p<=0.05 and actual_only>pseudo_only),
+            "secondary_resource_timing_supported":bool(sign_p<=0.05 and observed_median>0),
             "broad_generality_supported":bool(
-                sign_p<=0.05 and observed_median>0
+                precedence_p<=0.05 and actual_only>pseudo_only
                 and species_robust["exact_one_sided_sign_p_positive"]<=0.05
                 and host_robust["exact_one_sided_sign_p_positive"]<=0.05
             ),
-            "interpretation_if_cluster_robustness_fails":"Retain a cell-level identity-specific timing result only as a concentrated pattern; do not present it as a general butterfly resource-tracking principle."
+            "primary_rule":"Protocol v0.3: actual-only versus pseudo-only resource precedence relative to the same butterfly first-record clock.",
+            "secondary_rule":"Pseudo-resource year minus actual-host year; the butterfly clock cancels algebraically.",
+            "interpretation_if_cluster_robustness_fails":"A cell-level precedence result may be retained as concentrated evidence, but not as a general butterfly resource-tracking principle."
         },
         "claim_boundary":[
             "First records are detection/digitization dates rather than establishment dates.",
