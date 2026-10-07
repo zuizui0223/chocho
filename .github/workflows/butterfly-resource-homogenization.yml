@@ -11,6 +11,7 @@ on:
       - "scripts/analyze_butterfly_resource_homogenization_level1_null.py"
       - "scripts/analyze_butterfly_resource_overlap_resilience.py"
       - "scripts/simulate_butterfly_competition_attenuation.py"
+      - "scripts/analyze_butterfly_opportunity_crowding_coupling.py"
       - "scripts/analyze_butterfly_resource_niche_rewiring.py"
       - "scripts/analyze_butterfly_resource_homogenization_sensitivity.py"
       - "scripts/analyze_butterfly_resource_connectivity.py"
@@ -181,6 +182,14 @@ jobs:
             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --output-json results/resource-homogenization/butterfly_competition_attenuation_v0.1.json \
             --output-species-csv results/resource-homogenization/butterfly_competition_attenuation_species_v0.1.csv
+
+      - name: Test coupling between resource gain and crowding exposure
+        run: |
+          python scripts/analyze_butterfly_opportunity_crowding_coupling.py \
+            --competition-species-csv results/resource-homogenization/butterfly_competition_attenuation_species_v0.1.csv \
+            --bootstrap 19999 \
+            --seed 20261007 \
+            --output-json results/resource-homogenization/butterfly_opportunity_crowding_coupling_v0.1.json
 
       - name: Build introduced-host dependency ledger
         run: |
