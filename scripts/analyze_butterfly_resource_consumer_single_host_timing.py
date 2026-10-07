@@ -169,7 +169,13 @@ def main():
         },
         "decision":{
             "identity_specific_resource_timing_supported":bool(sign_p<=0.05 and observed_median>0),
-            "identity_specific_resource_precedence_supported":bool(precedence_p<=0.05 and actual_only>pseudo_only)
+            "identity_specific_resource_precedence_supported":bool(precedence_p<=0.05 and actual_only>pseudo_only),
+            "broad_generality_supported":bool(
+                sign_p<=0.05 and observed_median>0
+                and species_robust["exact_one_sided_sign_p_positive"]<=0.05
+                and host_robust["exact_one_sided_sign_p_positive"]<=0.05
+            ),
+            "interpretation_if_cluster_robustness_fails":"Retain a cell-level identity-specific timing result only as a concentrated pattern; do not present it as a general butterfly resource-tracking principle."
         },
         "claim_boundary":[
             "First records are detection/digitization dates rather than establishment dates.",
