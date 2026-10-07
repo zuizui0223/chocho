@@ -85,7 +85,7 @@ def read_history(download_zip: Path, taxon_map: dict[str, str], candidate_keys: 
             if not header:
                 raise RuntimeError("empty GBIF occurrence file")
             delimiter = "\t" if header.count("\t") >= header.count(",") else ","
-            reader = csv.DictReader(io.StringIO(header + text.read()), delimiter=delimiter)
+            reader = csv.DictReader(io.StringIO(header) if False else text, fieldnames=next(csv.reader([header], delimiter=delimiter)), delimiter=delimiter)
             fields = reader.fieldnames or []
             key_field = lookup_field(fields, ["speciesKey", "taxonKey", "acceptedTaxonKey"])
             lat_field = lookup_field(fields, ["decimalLatitude"])
