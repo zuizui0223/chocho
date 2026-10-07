@@ -1,0 +1,113 @@
+name: temporal-hindcast-full-history-sharded
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-full-history-sharded.yml"
+      - "scripts/audit_butterfly_temporal_hindcast_parallel.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: _ttf
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Rebuild exact frozen cohort
+        run: |
+          mkdir -p results/sharded
+          python scripts/map_butterfly_occurrences_wgsrpd3_year.py             --occurrences-csv _ttf/occurrences.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --output-csv results/sharded/occurrences_wgsrpd3_year.csv
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py prepare             --occurrence-mapped-csv results/sharded/occurrences_wgsrpd3_year.csv             --insect-host-csv _sidecars/native/insect_host_accepted.csv             --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --effort-threshold 10             --output-csv results/sharded/candidates.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: temporal-hindcast-sharded-candidates
+          path: results/sharded/candidates.csv
+          if-no-files-found: error
+          retention-days: 14
+
+  query:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sharded-candidates
+          path: _prepared
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Query full GBIF history for shard ${{ matrix.shard }}
+        run: |
+          mkdir -p results/shards
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py query             --candidates-csv _prepared/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --shard-index ${{ matrix.shard }}             --shard-count 8             --history-start 1800             --history-end 2025             --workers 4             --output-csv results/shards/history_shard_${{ matrix.shard }}.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: temporal-history-shard-${{ matrix.shard }}
+          path: results/shards/history_shard_${{ matrix.shard }}.csv
+          if-no-files-found: error
+          retention-days: 14
+
+  aggregate:
+    needs: query
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: temporal-history-shard-*
+          path: _shards
+          merge-multiple: true
+      - name: Aggregate exact corrected hindcast
+        run: |
+          mkdir -p results/exploratory
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py aggregate             --shard-dir _shards             --permutations 99999             --seed 20261007             --output-csv results/exploratory/butterfly_temporal_hindcast_full_history_cells_parallel_v0.1.csv             --output-json results/exploratory/butterfly_temporal_hindcast_full_history_parallel_v0.1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-temporal-hindcast-full-history-parallel-v01
+          path: results/exploratory/
+          if-no-files-found: error
+          retention-days: 14
