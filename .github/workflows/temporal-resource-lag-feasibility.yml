@@ -6,6 +6,8 @@ on:
       - analysis/resource-homogenization-v01
     paths:
       - ".github/workflows/temporal-resource-lag-feasibility.yml"
+      - "scripts/query_gbif_event_host_first_records.py"
+      - "docs/exploratory/butterfly_temporal_lag_event_hosts_v0.1.csv"
   workflow_dispatch:
 
 permissions:
