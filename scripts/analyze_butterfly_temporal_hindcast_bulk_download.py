@@ -72,6 +72,7 @@ def read_history(download_zip: Path, taxon_map: dict[str, str], candidate_keys: 
     tree = STRtree(geoms)
     species_set = {s for s, _ in candidate_keys}
     earliest = {}
+    all_earliest = {}
     first_basis = defaultdict(set)
     first_datasets = defaultdict(set)
     scanned = mapped = relevant = 0
@@ -112,6 +113,9 @@ def read_history(download_zip: Path, taxon_map: dict[str, str], candidate_keys: 
                     continue
                 mapped += 1
                 key = (species, code)
+                old_all = all_earliest.get(key)
+                if old_all is None or year < old_all:
+                    all_earliest[key] = year
                 if key not in candidate_keys:
                     continue
                 relevant += 1
@@ -125,7 +129,7 @@ def read_history(download_zip: Path, taxon_map: dict[str, str], candidate_keys: 
                         first_basis[key].add(str(row.get(basis_field) or ""))
                     if dataset_field:
                         first_datasets[key].add(str(row.get(dataset_field) or ""))
-    return earliest, first_basis, first_datasets, {"scanned_records": scanned, "mapped_records": mapped, "candidate_region_records": relevant}
+    return earliest, all_earliest, first_basis, first_datasets, {"scanned_records": scanned, "mapped_records": mapped, "candidate_region_records": relevant, "all_species_region_first_records": len(all_earliest)}
 
 
 def main():
@@ -137,6 +141,7 @@ def main():
     ap.add_argument("--permutations", type=int, default=99999)
     ap.add_argument("--seed", type=int, default=20261007)
     ap.add_argument("--output-csv", type=Path, required=True)
+    ap.add_argument("--output-all-first-csv", type=Path, required=True)
     ap.add_argument("--output-json", type=Path, required=True)
     args = ap.parse_args()
 
@@ -150,7 +155,7 @@ def main():
     if len(candidate_keys) != len(rows):
         raise RuntimeError("candidate key duplication")
 
-    earliest, first_basis, first_datasets, ingest = read_history(
+    earliest, all_earliest, first_basis, first_datasets, ingest = read_history(
         args.download_zip, taxon_map, candidate_keys, args.level3_geojson
     )
     for r in rows:
@@ -181,6 +186,16 @@ def main():
     )
 
     args.output_csv.parent.mkdir(parents=True, exist_ok=True)
+    with args.output_all_first_csv.open("w", newline="", encoding="utf-8") as handle:
+        w_all = csv.DictWriter(handle, fieldnames=["species", "wgsrpd3_code", "historical_first_record_year"])
+        w_all.writeheader()
+        for (species, code), year in sorted(all_earliest.items()):
+            w_all.writerow({
+                "species": species,
+                "wgsrpd3_code": code,
+                "historical_first_record_year": year,
+            })
+
     with args.output_csv.open("w", newline="", encoding="utf-8") as handle:
         w = csv.DictWriter(handle, fieldnames=list(rows[0]))
         w.writeheader()
