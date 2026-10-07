@@ -1,0 +1,80 @@
+{
+  "schema": "chocho_butterfly_temporal_resource_hindcast_protocol_v0.1",
+  "status": "POSTHOC_PROTOCOL_FROZEN_BEFORE_TEMPORAL_OUTCOME_CALCULATION",
+  "created_on": "2026-10-07",
+  "scope": {
+    "primary_paper_change": false,
+    "branch": "analysis/resource-homogenization-v01",
+    "purpose": "Test whether the geographic placement of anthropogenically redistributed known larval hosts predicts subsequent butterfly detection, rather than merely enlarging a reconstructed resource envelope."
+  },
+  "nontriviality_criterion": "A result is treated as ecologically nontrivial only if the amount of added opportunity is held fixed and changing where that opportunity is placed could change the outcome.",
+  "stage_A_temporal_outcome_hindcast": {
+    "question": "Among butterfly x WGSRPD3 cells not detected in 2010-2017, are cells with introduced-only known-host resource opportunity more likely to be detected in 2018-2025 than otherwise comparable cells with no reconstructed known-host opportunity?",
+    "occurrence_snapshot": {
+      "records": 53434,
+      "query_years": "2010-2026",
+      "primary_baseline": "2010-2017",
+      "primary_test": "2018-2025",
+      "sensitivity_test": "2018-2026",
+      "reason_for_excluding_2026_from_primary": "2026 is incomplete at analysis date."
+    },
+    "treatment": "introduced-only resource cell = contemporary known-host footprint minus native known-host footprint, using the fixed HOSTS-WCVP reconstruction",
+    "control": "cell outside the contemporary known-host footprint for the same butterfly",
+    "exclusions": [
+      "cells detected for the focal butterfly during 2010-2017",
+      "cells with fewer than 10 records of other panel butterflies during 2010-2017",
+      "cells with fewer than 10 records of other panel butterflies during 2018-2025"
+    ],
+    "outcome": "at least one focal-butterfly GBIF record in the cell during 2018-2025",
+    "primary_null": {
+      "statistic": "number of subsequent-detection cells overlapping introduced-only resource cells",
+      "preserves": [
+        "the exact number of introduced-only resource cells allocated to each butterfly",
+        "broad biogeographic placement at WGSRPD level 1",
+        "baseline other-butterfly sampling-effort stratum",
+        "test-period other-butterfly sampling-effort stratum",
+        "distance-to-nearest-baseline-detection stratum"
+      ],
+      "interpretation": "If observed overlap exceeds this null, the geographic identity of where resource opportunity was added predicts subsequent detection beyond amount, broad geography, accessibility, and sampling effort."
+    },
+    "secondary_effect_sizes": [
+      "raw subsequent-detection risk in introduced-only versus control cells",
+      "risk difference and risk ratio",
+      "species-level direction consistency",
+      "distance-matched and effort-matched sensitivity"
+    ],
+    "claim_boundary": [
+      "Stage A uses a contemporary WCVP introduced-range reconstruction and therefore does not establish that the host was already present by 2017.",
+      "A new GBIF detection is not necessarily a true colonization event.",
+      "GBIF non-detection is not true absence.",
+      "Host presence is resource opportunity, not host abundance or quality."
+    ]
+  },
+  "stage_B_resource_consumer_lag": {
+    "question": "Where dated evidence for introduced known hosts is available, does recorded resource opportunity precede butterfly detection, and by how much?",
+    "treatment_time": "earliest dated record of any known larval host in the introduced-only WGSRPD3 cell, restricted to hosts classified as introduced there by the frozen WCVP reconstruction",
+    "response_time": "earliest focal-butterfly record in the same WGSRPD3 cell",
+    "lag_definition": "recorded_resource_lead_years = butterfly_first_record_year - earliest_introduced_known_host_record_year",
+    "primary_endpoints": [
+      "fraction of paired cells with positive host-first lag",
+      "median recorded resource lead among positive-lag cells",
+      "distribution of negative, zero, and positive lags",
+      "subsequent butterfly detection as a function of years since first recorded host presence"
+    ],
+    "crucial_negative_result": "If butterfly records commonly precede dated host records, do not interpret this as reverse causality; treat it as evidence that first-record dates are too noisy, known-host reconstruction is incomplete, or host records lag true establishment.",
+    "novelty_boundary": "Previous global work has shown that nonnative plant invasions can precede nonnative insect invasions. The distinct target here is whether redistribution of already-known larval resources creates a delayed geographic opportunity that resident or already-established butterfly consumers subsequently realize.",
+    "claim_boundary": [
+      "first record is a detection date, not an establishment date",
+      "sampling intensity differs between plants and butterflies",
+      "resource-consumer lag is descriptive unless sampling-time bias is controlled",
+      "no claim of realized larval use is licensed from co-occurrence alone"
+    ]
+  },
+  "decision_rule": {
+    "strong_positive": "Stage A exceeds the matched placement null and Stage B, if estimable, shows predominantly host-first lags.",
+    "opportunity_without_realization": "Stage A shows no enrichment despite large static resource expansion.",
+    "accessibility_or_sampling_explanation": "Stage A raw enrichment disappears after geography, distance, and effort matching.",
+    "temporal_data_inadequate": "Stage B first-record ordering is dominated by negative or unstable lags; retain Stage A only and state that host chronology cannot be resolved."
+  },
+  "analysis_stop_rule": "Do not add competition-alpha, future-naturalization, or additional homogenization simulations to rescue a weak temporal result."
+}
