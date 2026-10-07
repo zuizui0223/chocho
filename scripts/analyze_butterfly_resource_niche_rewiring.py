@@ -150,6 +150,57 @@ def main():
             for h in cs:host_credit[h]+=share
     assert len(unit_contrib)==14553
     ps=pairwise_summary(ncells,ccells,tax)
+
+    # Fixed-demand null allocation model.
+    # Each butterfly has total larval demand = 1 and allocates it uniformly
+    # across all exact host×region resource cells available to it. Under this
+    # deliberately simple scenario, sum(p^2) is within-species concentration,
+    # while sum(p_i * p_j) over shared cells is between-species co-allocation.
+    self_native=[]
+    self_contemporary=[]
+    inter_native=[]
+    inter_contemporary=[]
+    inter_delta=[]
+    for sp in spp:
+        self_native.append(1.0/len(ncells[sp]))
+        self_contemporary.append(1.0/len(ccells[sp]))
+    for i,a in enumerate(spp):
+        A=ncells[a]; C=ccells[a]
+        for b in spp[i+1:]:
+            B=ncells[b]; D=ccells[b]
+            on=len(A&B)/(len(A)*len(B))
+            oc=len(C&D)/(len(C)*len(D))
+            inter_native.append(on)
+            inter_contemporary.append(oc)
+            inter_delta.append(oc-on)
+
+    competition_null={
+        'assumption':'Each butterfly has fixed total larval demand = 1 and distributes it uniformly across all available exact host×WGSRPD3 resource cells. All resource cells are equal quality and no density response is fitted.',
+        'within_species_resource_concentration':{
+            'mean_native':sum(self_native)/len(self_native),
+            'mean_contemporary':sum(self_contemporary)/len(self_contemporary),
+            'median_native':median(self_native),
+            'median_contemporary':median(self_contemporary),
+            'relative_change_mean':(sum(self_contemporary)/sum(self_native))-1.0,
+        },
+        'between_species_exact_resource_coallocation':{
+            'mean_pair_overlap_native':sum(inter_native)/len(inter_native),
+            'mean_pair_overlap_contemporary':sum(inter_contemporary)/len(inter_contemporary),
+            'sum_pair_overlap_native':sum(inter_native),
+            'sum_pair_overlap_contemporary':sum(inter_contemporary),
+            'relative_change_sum':(sum(inter_contemporary)/sum(inter_native)-1.0) if sum(inter_native)>0 else None,
+            'pairs_increased':sum(d>1e-15 for d in inter_delta),
+            'pairs_decreased':sum(d<-1e-15 for d in inter_delta),
+            'pairs_unchanged':sum(abs(d)<=1e-15 for d in inter_delta),
+        },
+        'inter_to_intra_pressure_ratio':{
+            'native':sum(inter_native)/sum(self_native),
+            'contemporary':sum(inter_contemporary)/sum(self_contemporary),
+            'relative_change':(sum(inter_contemporary)/sum(self_contemporary))/(sum(inter_native)/sum(self_native))-1.0,
+        },
+        'boundary':'This is a null allocation scenario, not a demographic competition model. It assumes equal resource quality, fixed abundance and uniform use, and omits phenology, host biomass, preference, natural enemies and local density dependence.'
+    }
+
     ps['native_shared_host_region_pair_cells']=native_paircells
     ps['introduced_added_shared_host_region_pair_cells']=intro_paircells
     ps['relative_increase_shared_resource_cells']=intro_paircells/native_paircells if native_paircells else None
@@ -184,6 +235,7 @@ def main():
     payload={'schema':'chocho_butterfly_resource_niche_rewiring_v0.1','status':'SUCCESS_POSTHOC_RESOURCE_NICHE_REWIRING_AND_REMOVAL_STRESS_TEST',
              'panel':{'butterflies':239,'added_butterfly_x_region_units':len(unit_contrib),'contributing_introduced_hosts':len(contributing_hosts)},
              'resource_niche_overlap':ps,
+             'fixed_demand_competition_null':competition_null,
              'added_opportunity_redundancy':{'contributor_count_distribution':dict(sorted(redundancy.items())),
                  'single_host_supported_units':single,'fraction_single_host_supported':single/len(unit_contrib),
                  'median_contributing_hosts_per_added_unit':median([len(c) for _,_,c in unit_contrib])},
