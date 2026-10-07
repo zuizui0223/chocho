@@ -1,0 +1,65 @@
+{
+  "schema": "chocho_resource_consumer_temporal_mismatch_protocol_v0.1",
+  "status": "POSTHOC_EXTENSION_FROZEN_BEFORE_GLOBAL_FIRST_RECORD_PANEL_INSPECTION",
+  "created_on": "2026-10-07",
+  "motivation": {
+    "stage_A_result": "The corrected 2018-2025 hindcast retained a raw Host+ risk ratio of 1.65 but showed no resource-placement signal after preserving species and WGSRPD level-1 geography (p=0.46542); therefore short-window realization is not supported.",
+    "next_question": "Does the chronology of the actual known larval resource, rather than generic alien-plant chronology, preferentially precede butterfly occurrence in introduced-only resource regions?"
+  },
+  "panel": {
+    "butterflies": "the same 31 species in the frozen full-history GBIF bulk download",
+    "spatial_unit": "WGSRPD level 3",
+    "resource_cells": "all introduced-only known-host cells: contemporary WCVP known-host union minus native WCVP known-host union",
+    "outcome_selection": "No 2018-2025 event filter is used to define the primary chronology panel. Resource cells are defined from frozen HOSTS-WCVP data before inspecting the global butterfly first-record map."
+  },
+  "chronology": {
+    "butterfly_time": "earliest mapped GBIF record in each butterfly x WGSRPD3 cell from the 1800-2025 bulk download",
+    "actual_resource_time": "earliest mapped GBIF record among the focal butterfly's known host species that WCVP classifies as introduced in that WGSRPD3 region",
+    "lag_definition": "butterfly_first_record_year - actual_resource_first_record_year",
+    "interpretation_of_lag": "Positive means the documented host record precedes the documented butterfly record; zero/negative does not prove biological reversal because first records are sampling dates."
+  },
+  "matched_pseudoresource_null": {
+    "unit": "butterfly x WGSRPD3 cell",
+    "construction": "For each actual introduced known host in a cell, replace it with one alien plant that is introduced in the same WGSRPD3 region but is not a documented host of that butterfly.",
+    "matching_features": [
+      "same WGSRPD3 region",
+      "log1p WCVP introduced WGSRPD3 breadth",
+      "log1p SInAS alien-region record count",
+      "log1p SInAS dated-record count",
+      "SInAS earliest global alien-record year"
+    ],
+    "resource_richness_preserved": "Sample one pseudo plant for each actual host, then define pseudo resource time as the earliest local record among the sampled pseudo plants.",
+    "repetitions": 99999,
+    "seed": 20261007
+  },
+  "primary_endpoint": {
+    "statistic": "number (or fraction) of cells in which documented resource time is <= butterfly first-record time",
+    "null": "distribution of the same host-before-butterfly statistic after matched pseudo-resource replacement",
+    "decision": "Identity-specific temporal precedence is supported only if the actual statistic exceeds the matched pseudo-resource null at one-sided Monte Carlo p <= 0.05."
+  },
+  "secondary_endpoints": [
+    "signed lag distribution (butterfly year minus resource year)",
+    "median positive lag among host-first cells",
+    "actual-minus-pseudo difference in median signed lag",
+    "fraction of cells with negative, zero, and positive lags",
+    "species-level direction consistency",
+    "sensitivity to requiring >=3, >=5, or 10 dated pseudo-host candidates per actual host"
+  ],
+  "censored_extension": {
+    "status": "secondary exploratory only",
+    "description": "For introduced-only cells with documented resource time but no butterfly record by 2025, treat butterfly occurrence as right-censored and examine whether years since documented resource appearance predicts realization. Do not promote this to primary unless the identity-specific precedence test is positive."
+  },
+  "interpretation_rules": {
+    "identity_specific_precedence": "Actual known-host chronology precedes butterfly chronology more often than matched alien non-host chronology. This supports a resource-consumer temporal mismatch / resource-tracking lag interpretation.",
+    "generic_alien_chronology": "Actual and pseudo resources show similar precedence. Long apparent lags are attributable to generic alien-plant residence and recording history, not known-host identity.",
+    "no_resource_first_pattern": "Actual resources do not preferentially precede butterflies. Reject the resource-first temporal mismatch narrative."
+  },
+  "claim_boundaries": [
+    "First record is not establishment or colonization.",
+    "GBIF plant and butterfly sampling histories differ; pseudo plants are used to absorb plant-side residence and recording structure.",
+    "Known host presence does not establish local larval use, abundance, quality, or demographic benefit.",
+    "The analysis is post-hoc relative to the original main paper and must remain outside the GEB manuscript unless independently validated.",
+    "Do not use the labels invasion debt, colonization credit, or trophic debt as headline concepts unless the matched pseudo-resource test is positive and robust."
+  ],
+  "stop_rule": "If actual host timing does not exceed the matched pseudo-resource null, terminate the temporal-mismatch branch rather than adding new simulation assumptions."
+}
