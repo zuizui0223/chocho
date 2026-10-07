@@ -15,11 +15,11 @@ jobs:
   export-wgsrpd3:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout WGSRPD
+      - name: Checkout pinned WGSRPD
         uses: actions/checkout@v4
         with:
           repository: tdwg/wgsrpd
-          ref: master
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
           path: _external/WGSRPD
       - name: Verify geometry
         run: |
