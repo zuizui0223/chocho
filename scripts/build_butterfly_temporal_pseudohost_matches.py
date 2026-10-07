@@ -126,15 +126,24 @@ def main():
 
     out = []
     diagnostics = []
+    skipped = []
     for ev in events:
         sp = str(ev["species"]).strip()
         region = str(ev["wgsrpd3_code"]).strip()
         actual_id = str(ev["host_id"]).strip()
         actual_name = str(ev["host_name"]).strip()
         if actual_id not in pool_meta:
-            raise RuntimeError(f"actual host not in all-plant introduced pool: {actual_name} {actual_id}")
+            skipped.append({
+                "species": sp, "region": region, "actual_host_id": actual_id,
+                "actual_host_name": actual_name, "reason": "ACTUAL_HOST_NOT_IN_WCVP_INTRODUCED_POOL"
+            })
+            continue
         if pool_meta[actual_id]["accepted_name"] not in sinas or sinas[pool_meta[actual_id]["accepted_name"]]["earliest_year"] is None:
-            raise RuntimeError(f"actual host lacks SInAS chronology: {actual_name}")
+            skipped.append({
+                "species": sp, "region": region, "actual_host_id": actual_id,
+                "actual_host_name": actual_name, "reason": "ACTUAL_HOST_LACKS_SINAS_DATED_CHRONOLOGY"
+            })
+            continue
 
         group = f"{sp}|{region}|{actual_id}"
         actual_s = sinas[pool_meta[actual_id]["accepted_name"]]
@@ -207,15 +216,22 @@ def main():
         "schema": "chocho_butterfly_temporal_pseudohost_matches_v0.1",
         "status": "POSTHOC_IDENTITY_SPECIFIC_TEMPORAL_NULL_MATCHES",
         "event_host_pairs": len(events),
+        "input_actual_host_region_rows": len(events),
         "match_groups": len(diagnostics),
+        "skipped_actual_host_region_rows": len(skipped),
+        "skipped_reason_counts": {
+            reason: sum(x["reason"] == reason for x in skipped)
+            for reason in sorted({x["reason"] for x in skipped})
+        },
         "matches_per_host_requested": args.matches_per_host,
         "all_plant_introduced_pool_species": len(pool_meta),
         "wcvp_sinas_eligible_pool_species": len(eligible_ids),
         "groups_with_full_requested_matches": sum(d["matches_selected"] == args.matches_per_host for d in diagnostics),
-        "minimum_candidate_pool": min(d["candidate_pool"] for d in diagnostics),
-        "median_candidate_pool": sorted(d["candidate_pool"] for d in diagnostics)[len(diagnostics)//2],
+        "minimum_candidate_pool": None if not diagnostics else min(d["candidate_pool"] for d in diagnostics),
+        "median_candidate_pool": None if not diagnostics else sorted(d["candidate_pool"] for d in diagnostics)[len(diagnostics)//2],
         "maximum_selected_match_distance": max(
-            d["worst_selected_distance"] for d in diagnostics if d["worst_selected_distance"] is not None
+            (d["worst_selected_distance"] for d in diagnostics if d["worst_selected_distance"] is not None),
+            default=None
         ),
         "matching_features": [
             "log1p WCVP introduced WGSRPD3 breadth",
@@ -229,6 +245,7 @@ def main():
             "plants without SInAS chronology",
         ],
         "diagnostics": diagnostics,
+        "skipped": skipped,
         "claim_boundary": "These matches create a conditional post-hoc identity/timing null for the nine event cells. They do not make the event-cell sample response-blind.",
     }
     args.output_json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
