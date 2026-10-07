@@ -1,0 +1,96 @@
+name: temporal-resource-mismatch-panel-prep
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-resource-mismatch-panel-prep.yml"
+      - "scripts/build_butterfly_resource_consumer_temporal_panel.py"
+      - "scripts/build_wcvp_introduced_plant_pool.R"
+      - "scripts/build_butterfly_temporal_pseudohost_matches.py"
+      - "docs/exploratory/butterfly_resource_consumer_temporal_mismatch_protocol_v0.1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: temporal-resource-mismatch-panel-prep
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download frozen 31-species occurrence snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: _ttf
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Download exact HOSTS-WCVP sidecars
+        uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+
+      - name: Checkout fixed WCVP
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Download SInAS 2.5
+        run: |
+          mkdir -p _external results/temporal-panel
+          python - <<'PY'
+          import urllib.request
+          url="https://zenodo.org/api/records/10038256/files/SInAS_AlienSpeciesDB_2.5.csv/content"
+          req=urllib.request.Request(url,headers={"User-Agent":"chocho-temporal-panel/0.1"})
+          with urllib.request.urlopen(req,timeout=240) as r, open("_external/SInAS_AlienSpeciesDB_2.5.csv","wb") as f:
+              while True:
+                  b=r.read(1<<20)
+                  if not b: break
+                  f.write(b)
+          PY
+
+      - name: Freeze outcome-blind introduced-resource panel
+        run: |
+          python scripts/build_butterfly_resource_consumer_temporal_panel.py             --occurrences-csv _ttf/occurrences.csv             --insect-host-csv _sidecars/native/insect_host_accepted.csv             --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv             --output-host-csv results/temporal-panel/actual_host_region_rows.csv             --output-cell-csv results/temporal-panel/resource_cells.csv             --output-json results/temporal-panel/resource_panel_summary.json
+
+      - name: Build all-alien-plant comparison pool
+        run: |
+          Rscript scripts/build_wcvp_introduced_plant_pool.R             _external/WCVP             results/temporal-panel/wcvp_all_introduced_plants.csv
+
+      - name: Match pseudo-resources before temporal outcome inspection
+        run: |
+          python scripts/build_butterfly_temporal_pseudohost_matches.py             --event-host-csv results/temporal-panel/actual_host_region_rows.csv             --insect-host-csv _sidecars/native/insect_host_accepted.csv             --introduced-pool-csv results/temporal-panel/wcvp_all_introduced_plants.csv             --sinas-csv _external/SInAS_AlienSpeciesDB_2.5.csv             --matches-per-host 10             --output-csv results/temporal-panel/pseudoresource_matches.csv             --output-json results/temporal-panel/pseudoresource_match_summary.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-resource-consumer-temporal-panel-v01
+          path: |
+            results/temporal-panel/actual_host_region_rows.csv
+            results/temporal-panel/resource_cells.csv
+            results/temporal-panel/resource_panel_summary.json
+            results/temporal-panel/pseudoresource_matches.csv
+            results/temporal-panel/pseudoresource_match_summary.json
+          if-no-files-found: error
+          retention-days: 14
