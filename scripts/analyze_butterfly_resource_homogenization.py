@@ -96,6 +96,21 @@ def mean_pairwise_jaccard(masks: list[int]) -> tuple[float, float, int]:
     return sum(values) / len(values), median(values), len(values)
 
 
+def mean_pairwise_set_jaccard(sets: list[set[int]]) -> tuple[float, float, int]:
+    values = []
+    for i in range(len(sets)):
+        a = sets[i]
+        for j in range(i + 1, len(sets)):
+            b = sets[j]
+            union = len(a | b)
+            if union == 0:
+                continue
+            values.append(len(a & b) / union)
+    if not values:
+        raise RuntimeError("no set pairs with non-empty union")
+    return sum(values) / len(values), median(values), len(values)
+
+
 def masks_from_species_units(
     species_order: list[str],
     region_order: list[str],
@@ -181,12 +196,18 @@ def swap_null(
     spacing_attempts = max(2000, 2 * len(edges))
 
     null_means = []
+    null_species_means = []
     accepted_total = burn_accepted
     for _ in range(permutations):
         accepted_total += attempt_swaps(spacing_attempts)
         masks = [native_masks[j] | added_masks[j] for j in range(len(native_masks))]
         mean_sim, _, _ = mean_pairwise_jaccard(masks)
         null_means.append(mean_sim)
+        contemporary_species_sets = [
+            native_by_species[i] | rows[i] for i in range(len(rows))
+        ]
+        species_mean, _, _ = mean_pairwise_set_jaccard(contemporary_species_sets)
+        null_species_means.append(species_mean)
 
     return {
         "permutations": permutations,
@@ -197,7 +218,13 @@ def swap_null(
         "accepted_swaps_total": accepted_total,
         "mean_similarity_null_median": median(null_means),
         "mean_similarity_null_ci95": [quantile(null_means, 0.025), quantile(null_means, 0.975)],
+        "mean_butterfly_niche_overlap_null_median": median(null_species_means),
+        "mean_butterfly_niche_overlap_null_ci95": [
+            quantile(null_species_means, 0.025),
+            quantile(null_species_means, 0.975),
+        ],
         "_null_means": null_means,
+        "_null_species_means": null_species_means,
     }
 
 
@@ -306,6 +333,19 @@ def main() -> int:
         {region_index[u] for u in added_by_species_name[sp] if u in region_index}
         for sp in species_order
     ]
+    contemporary_by_species_idx = [
+        native_by_species_idx[i] | added_by_species_idx[i]
+        for i in range(len(species_order))
+    ]
+    native_species_mean, native_species_median, species_pair_count = (
+        mean_pairwise_set_jaccard(native_by_species_idx)
+    )
+    contemporary_species_mean, contemporary_species_median, species_pair_count2 = (
+        mean_pairwise_set_jaccard(contemporary_by_species_idx)
+    )
+    if species_pair_count != species_pair_count2:
+        raise RuntimeError("butterfly pair count drift")
+
 
     null = swap_null(
         native_by_species_idx,
@@ -315,7 +355,11 @@ def main() -> int:
         args.seed,
     )
     null_means = list(null.pop("_null_means"))
+    null_species_means = list(null.pop("_null_species_means"))
     p_greater = (1 + sum(x >= contemporary_mean for x in null_means)) / (len(null_means) + 1)
+    p_species_greater = (
+        1 + sum(x >= contemporary_species_mean for x in null_species_means)
+    ) / (len(null_species_means) + 1)
 
     ranked_hosts = sorted(host_credit, key=lambda h: (-host_credit[h], h))
     total_credit = sum(host_credit.values())
@@ -407,6 +451,16 @@ def main() -> int:
             "relative_change_mean_jaccard": (contemporary_mean / native_mean - 1.0) if native_mean else None,
             "median_pairwise_jaccard_native": native_median,
             "median_pairwise_jaccard_contemporary": contemporary_median,
+            "mean_butterfly_pair_resource_geography_jaccard_native": native_species_mean,
+            "mean_butterfly_pair_resource_geography_jaccard_contemporary": contemporary_species_mean,
+            "delta_mean_butterfly_resource_niche_overlap": contemporary_species_mean - native_species_mean,
+            "relative_change_mean_butterfly_resource_niche_overlap": (
+                contemporary_species_mean / native_species_mean - 1.0
+                if native_species_mean else None
+            ),
+            "median_butterfly_pair_resource_geography_jaccard_native": native_species_median,
+            "median_butterfly_pair_resource_geography_jaccard_contemporary": contemporary_species_median,
+            "butterfly_pair_comparisons": species_pair_count,
         },
         "fixed_margin_null": {
             **null,
@@ -417,6 +471,11 @@ def main() -> int:
             ],
             "observed_minus_null_median": contemporary_mean - float(null["mean_similarity_null_median"]),
             "p_greater_or_equal": p_greater,
+            "observed_butterfly_niche_overlap_minus_null_median": (
+                contemporary_species_mean
+                - float(null["mean_butterfly_niche_overlap_null_median"])
+            ),
+            "p_butterfly_niche_overlap_greater_or_equal": p_species_greater,
         },
         "top38_half_credit_hosts": {
             "hosts": len(top38_rows),
@@ -439,7 +498,9 @@ def main() -> int:
         "top_hosts": host_rows[:20],
         "claim_boundary": (
             "This is a post-hoc analysis of reconstructed larval-resource opportunity, not "
-            "realized butterfly community composition. Higher regional similarity indicates "
+            "realized butterfly community composition. Butterfly-pair resource-geography "
+            "Jaccard is a potential trophic-geographic niche-overlap metric, not evidence of "
+            "realized competition. Higher regional similarity indicates "
             "homogenization of potential resource opportunity. The fixed-margin null controls "
             "the amount of expansion per butterfly and per region but does not establish a "
             "historical causal effect on butterfly colonization or fitness."
