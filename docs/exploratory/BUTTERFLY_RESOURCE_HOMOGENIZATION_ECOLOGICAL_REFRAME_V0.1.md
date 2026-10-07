@@ -2,6 +2,22 @@
 
 Status: exploratory candidate framing. Do not merge into the submission manuscript until the post-hoc inference boundary is accepted.
 
+## Candidate paper identity
+
+**Candidate title:** *Plant globalization homogenizes butterfly resource landscapes and expands shared resource space*
+
+Alternative, more conservative title: *Anthropogenic host redistribution homogenizes butterfly resource geography*
+
+### Candidate ecological abstract
+
+**Aim:** Species introductions are known to homogenize floras, but it is unclear whether redistribution of resource species also homogenizes the ecological opportunity available to their consumers. We asked whether human redistribution of larval host plants has made regional butterfly resource assemblages more similar, increased resource-niche overlap among butterfly species, and concentrated contemporary opportunity on a small set of globally redistributed hosts.
+
+**Methods:** For 239 butterflies, we reconstructed native and contemporary larval-resource geography from known butterfly–host interactions and plant native and introduced distributions. We compared regional butterfly-resource assemblage similarity and butterfly resource-niche overlap before and after host redistribution. Fixed-margin swap nulls preserved both the amount of added opportunity per butterfly and per region. We then quantified exact shared-host resource exposure and simulated removal of introduced-range contributions from high-contribution versus randomly selected hosts.
+
+**Results:** Mean regional resource-assemblage Jaccard similarity increased from 0.277 to 0.462 (+66.8%), exceeding a fixed-margin null (p = 0.002). Mean overlap in butterfly resource geography increased by 47.4% and likewise exceeded the null (p = 0.002). Introduced host ranges created 79,412 novel butterfly-pair × region units of exact shared-host resource exposure, 52.3% of them between butterfly families. Newly added resource opportunities were more crowded by host-sharing butterflies than native opportunities (mean 5.71 versus 4.71 other focal species). Resource gain was also fragile: 58.9% of added butterfly × region units were supported by a single introduced host, and removing the 38 highest-contribution hosts eliminated 39.9% of added opportunity across 123 butterflies, compared with a median loss of 433 units under random 38-host removal (p = 0.002). Homogenization persisted after crop-host and Poaceae exclusions.
+
+**Conclusions:** Plant globalization has done more than enlarge individual butterfly resource envelopes. It has made regional larval-resource assemblages more similar, expanded shared resource space among butterfly lineages, and created a geographically broader but partly non-redundant resource network. These changes predict new opportunities for both colonization and interspecific interaction, while also identifying where invasive-host removal could create resource gaps. The analysis quantifies potential resource co-use rather than realized competition or demographic benefit.
+
 ## Ecological question
 
 Does anthropogenic redistribution of larval host plants merely enlarge individual butterfly resource envelopes, or does it reorganize the ecological structure of resource space by:
