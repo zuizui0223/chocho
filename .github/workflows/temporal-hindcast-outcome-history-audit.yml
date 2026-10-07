@@ -1,0 +1,87 @@
+name: temporal-hindcast-outcome-history-audit
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-outcome-history-audit.yml"
+      - "docs/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.csv"
+      - "scripts/acquire_butterfly_temporal_lag_symmetric_pilot.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Query full-history butterfly records
+        run: |
+          mkdir -p results/exploratory
+          python - <<'PY'
+          import csv, json, statistics, sys
+          from pathlib import Path
+          sys.path.insert(0, "scripts")
+          from acquire_butterfly_temporal_lag_symmetric_pilot import load_regions, resolve, first_exact_record
+
+          regions=load_regions(Path("_external/WGSRPD/geojson/level3.geojson"))
+          with open("docs/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.csv",newline="",encoding="utf-8") as f:
+              rows=list(csv.DictReader(f))
+          resolved={s:resolve(s) for s in sorted({r["species"] for r in rows})}
+          out=[]
+          for r in rows:
+              s=r["species"]; u=r["region"]; key,meta=resolved[s]
+              y,recs=(None,[]) if key is None else first_exact_record(key,regions[u],1800,2025)
+              z=dict(r)
+              z["historical_first_record_year"]="" if y is None else y
+              z["window_truncation_years"]="" if y is None else int(r["input_first_test_year"])-y
+              z["historical_record_before_2010"]=int(y is not None and y<2010)
+              z["historical_record_before_2018"]=int(y is not None and y<2018)
+              z["historical_first_basis"]=";".join(sorted({str(x.get("basisOfRecord") or "") for x in recs}))
+              z["historical_first_dataset_count"]=len({str(x.get("datasetKey") or "") for x in recs})
+              z["gbif_match_type"]=str(meta.get("matchType") or "")
+              out.append(z)
+          with open("results/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.csv","w",newline="",encoding="utf-8") as f:
+              w=csv.DictWriter(f,fieldnames=list(out[0]));w.writeheader();w.writerows(out)
+          valid=[r for r in out if str(r["historical_first_record_year"]).strip()]
+          trunc=[int(r["window_truncation_years"]) for r in valid]
+          payload={
+            "schema":"chocho_butterfly_temporal_hindcast_outcome_history_audit_v0.1",
+            "status":"POSTHOC_FULL_HISTORY_AUDIT",
+            "outcome_cells":len(out),
+            "dated_cells":len(valid),
+            "historical_record_before_2010":sum(int(r["historical_record_before_2010"]) for r in valid),
+            "historical_record_before_2018":sum(int(r["historical_record_before_2018"]) for r in valid),
+            "apparently_first_2018plus":sum(int(r["historical_record_before_2018"])==0 for r in valid),
+            "median_window_truncation_years":None if not trunc else statistics.median(trunc),
+            "by_treatment":{
+              str(t):{
+                "cells":sum(int(r["treatment"])==t for r in valid),
+                "before_2018":sum(int(r["treatment"])==t and int(r["historical_record_before_2018"]) for r in valid)
+              } for t in (0,1)
+            },
+            "claim_boundary":"This audit asks whether the apparent 2018-2025 'new detections' were already documented before the frozen 2010-2017 baseline window. It does not establish establishment or continuous occupancy."
+          }
+          Path("results/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.json").write_text(json.dumps(payload,indent=2)+"\n")
+          print(json.dumps(payload,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-temporal-hindcast-outcome-history-audit-v01
+          path: |
+            results/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.csv
+            results/exploratory/butterfly_temporal_hindcast_outcome_history_audit_v0.1.json
+          if-no-files-found: error
+          retention-days: 14
