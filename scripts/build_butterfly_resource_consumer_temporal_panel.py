@@ -54,6 +54,20 @@ def main():
                 host_rows.append({"species":sp,"wgsrpd3_code":u,"host_id":h,"host_name":meta[h]["accepted_name"],"host_family":meta[h]["family"]})
         by_species[sp]={"known_hosts":len(hosts),"native_resource_units":len(nu),"contemporary_resource_units":len(cu),"introduced_only_resource_units":len(introduced_only),"introduced_host_x_region_rows":hrows}
     if not host_rows or not cell_rows: raise RuntimeError("empty temporal resource panel")
+    frozen_counts={
+        "introduced_only_resource_cells":2035,
+        "introduced_host_x_region_rows":5117,
+        "unique_actual_hosts":215,
+        "species_with_introduced_only_cells":29,
+    }
+    observed_counts={
+        "introduced_only_resource_cells":len(cell_rows),
+        "introduced_host_x_region_rows":len(host_rows),
+        "unique_actual_hosts":len({r["host_id"] for r in host_rows}),
+        "species_with_introduced_only_cells":sum(v["introduced_only_resource_units"]>0 for v in by_species.values()),
+    }
+    if observed_counts != frozen_counts:
+        raise RuntimeError(f"frozen temporal resource panel drift: {observed_counts} != {frozen_counts}")
     a.output_host_csv.parent.mkdir(parents=True,exist_ok=True)
     with a.output_host_csv.open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(host_rows[0])); w.writeheader(); w.writerows(host_rows)
