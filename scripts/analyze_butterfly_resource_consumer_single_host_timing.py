@@ -132,6 +132,39 @@ def main():
     host_robust=cluster_direction("actual_host")
     region_robust=cluster_direction("wgsrpd3_code")
 
+    def cluster_precedence(field):
+        grouped=defaultdict(list)
+        for r in complete:
+            grouped[str(r[field])].append(r)
+        scores={}
+        details={}
+        for key, vals in sorted(grouped.items()):
+            aonly=sum(
+                int(r["actual_resource_precedes_butterfly"])==1
+                and int(r["pseudo_resource_precedes_butterfly"])==0
+                for r in vals
+            )
+            ponly=sum(
+                int(r["actual_resource_precedes_butterfly"])==0
+                and int(r["pseudo_resource_precedes_butterfly"])==1
+                for r in vals
+            )
+            scores[key]=aonly-ponly
+            details[key]={"actual_only":aonly,"pseudo_only":ponly,"difference":aonly-ponly}
+        pos=sum(v>0 for v in scores.values()); neg=sum(v<0 for v in scores.values()); zero=sum(v==0 for v in scores.values())
+        return {
+            "clusters":len(scores),
+            "positive_precedence_difference":pos,
+            "negative_precedence_difference":neg,
+            "zero_precedence_difference":zero,
+            "exact_one_sided_sign_p_positive":exact_one_sided_binom(pos,pos+neg),
+            "details":details,
+        }
+
+    species_precedence_robust=cluster_precedence("species")
+    host_precedence_robust=cluster_precedence("actual_host")
+    region_precedence_robust=cluster_precedence("wgsrpd3_code")
+
     a.output_cell_csv.parent.mkdir(parents=True,exist_ok=True)
     with a.output_cell_csv.open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(cells[0])); w.writeheader(); w.writerows(cells)
@@ -163,17 +196,24 @@ def main():
             "exact_one_sided_discordant_p_actual_precedence":precedence_p
         },
         "cluster_robustness":{
-            "species":species_robust,
-            "actual_host":host_robust,
-            "wgsrpd3_region":region_robust
+            "resource_timing_difference":{
+                "species":species_robust,
+                "actual_host":host_robust,
+                "wgsrpd3_region":region_robust
+            },
+            "resource_precedence_relative_to_butterfly":{
+                "species":species_precedence_robust,
+                "actual_host":host_precedence_robust,
+                "wgsrpd3_region":region_precedence_robust
+            }
         },
         "decision":{
             "primary_temporal_mismatch_supported":bool(precedence_p<=0.05 and actual_only>pseudo_only),
             "secondary_resource_timing_supported":bool(sign_p<=0.05 and observed_median>0),
             "broad_generality_supported":bool(
                 precedence_p<=0.05 and actual_only>pseudo_only
-                and species_robust["exact_one_sided_sign_p_positive"]<=0.05
-                and host_robust["exact_one_sided_sign_p_positive"]<=0.05
+                and species_precedence_robust["exact_one_sided_sign_p_positive"]<=0.05
+                and host_precedence_robust["exact_one_sided_sign_p_positive"]<=0.05
             ),
             "primary_rule":"Protocol v0.3: actual-only versus pseudo-only resource precedence relative to the same butterfly first-record clock.",
             "secondary_rule":"Pseudo-resource year minus actual-host year; the butterfly clock cancels algebraically.",
