@@ -95,8 +95,9 @@ def main():
             except Exception as e:error=str(e)
         years=[y for y,n in q['years'] if 1750<=y<=2026 and n>0]
         earliest=min(years) if years else None
-        butterfly=int(r['butterfly_first_record_year'])
-        out.append({**r,'gbif_host_usage_key':meta.get('usage_key'),'gbif_host_canonical_name':meta.get('canonical_name'),'gbif_host_match_type':meta.get('match_type'),'gbif_host_match_confidence':meta.get('confidence'),'gbif_coordinate_records_in_region':q['count'],'gbif_earliest_host_record_year':earliest,'recorded_host_to_butterfly_lag_years':None if earliest is None or butterfly_full is None else int(butterfly_full)-earliest,'host_record_precedes_butterfly':None if earliest is None or butterfly_full is None else int(earliest<int(butterfly_full)),'host_record_by_2017':None if earliest is None else int(earliest<=2017),'geometry_simplify_tolerance':q['geometry_simplify_tolerance'],'request_url_length':q['request_url_length'],'error':error})
+        butterfly_2010plus=int(r['butterfly_first_record_year'])
+        butterfly_full=binfo.get('earliest')
+        out.append({**r,'gbif_butterfly_usage_key':binfo.get('meta',{}).get('usage_key'),'gbif_butterfly_coordinate_records_in_region':binfo.get('count'),'gbif_earliest_butterfly_record_year_full':butterfly_full,'butterfly_has_pre2010_record':None if butterfly_full is None else int(int(butterfly_full)<2010),'gbif_host_usage_key':meta.get('usage_key'),'gbif_host_canonical_name':meta.get('canonical_name'),'gbif_host_match_type':meta.get('match_type'),'gbif_host_match_confidence':meta.get('confidence'),'gbif_coordinate_records_in_region':q['count'],'gbif_earliest_host_record_year':earliest,'recorded_host_to_butterfly_lag_years':None if earliest is None or butterfly_full is None else int(butterfly_full)-earliest,'host_record_precedes_butterfly':None if earliest is None or butterfly_full is None else int(earliest<int(butterfly_full)),'host_record_by_2017':None if earliest is None else int(earliest<=2017),'geometry_simplify_tolerance':q['geometry_simplify_tolerance'],'request_url_length':q['request_url_length'],'error':error})
         print(i,len(rows),name,code,'host earliest',earliest,'butterfly full earliest',butterfly_full,'2010plus',butterfly_2010plus,'error',error,flush=True)
     fields=list(out[0])
     a.output_csv.parent.mkdir(parents=True,exist_ok=True)
