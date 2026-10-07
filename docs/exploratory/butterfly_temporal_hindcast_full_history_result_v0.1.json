@@ -1,0 +1,119 @@
+{
+  "schema": "chocho_butterfly_temporal_resource_hindcast_full_history_v0.1",
+  "status": "NULL_PLACEMENT_SIGNAL_AFTER_FULL_HISTORY_CORRECTION",
+  "created_on": "2026-10-07",
+  "source_run_id": 37638190066,
+  "source_artifact_id": 11492745879,
+  "protocol": "docs/exploratory/butterfly_temporal_resource_hindcast_protocol_v0.1.json",
+  "snapshot_candidate_reconstruction": {
+    "candidate_cells": 1477,
+    "treatment_cells": 442,
+    "control_cells": 1035,
+    "treatment_snapshot_hits": 9,
+    "control_snapshot_hits": 11
+  },
+  "history_window": [
+    1800,
+    2025
+  ],
+  "history_audit": {
+    "cells_with_pre2018_record_removed": 50,
+    "treatment_pre2018_removed": 20,
+    "control_pre2018_removed": 30,
+    "clean_cells": 1427,
+    "clean_treatment_cells": 422,
+    "clean_control_cells": 1005
+  },
+  "observed": {
+    "treatment_first_records_2018_2025": 9,
+    "treatment_rate": 0.02132701421800948,
+    "control_first_records_2018_2025": 13,
+    "control_rate": 0.012935323383084577,
+    "raw_risk_difference": 0.008391690834924904,
+    "raw_risk_ratio": 1.648742253007656,
+    "treatment_first_years": [
+      2019,
+      2020,
+      2020,
+      2022,
+      2024,
+      2024,
+      2025,
+      2025,
+      2025
+    ],
+    "control_first_years": [
+      2019,
+      2019,
+      2020,
+      2020,
+      2020,
+      2021,
+      2021,
+      2021,
+      2022,
+      2023,
+      2025,
+      2025,
+      2025
+    ]
+  },
+  "null_ladder": {
+    "species_only": {
+      "observed_treatment_hits": 9,
+      "null_mean": 7.904629046290463,
+      "p_high": 0.37351,
+      "strata": 27,
+      "mixed_strata": 21,
+      "event_containing_mixed_strata": 6,
+      "events_in_mixed_strata": 18
+    },
+    "species_plus_level1": {
+      "observed_treatment_hits": 9,
+      "null_mean": 8.374943749437495,
+      "p_high": 0.46542,
+      "strata": 137,
+      "mixed_strata": 47,
+      "event_containing_mixed_strata": 4,
+      "events_in_mixed_strata": 9
+    },
+    "full_protocol_match": {
+      "observed_treatment_hits": 9,
+      "null_mean": 9,
+      "p_high": 1,
+      "strata": 618,
+      "mixed_strata": 77,
+      "event_containing_mixed_strata": 1,
+      "events_in_mixed_strata": 3
+    }
+  },
+  "species_event_concentration": {
+    "treatment_events_by_species": {
+      "Anartia jatrophae": 3,
+      "Historis acheronta": 1,
+      "Nacaduba biocellata": 2,
+      "Siproeta stelenes": 3
+    },
+    "treatment_event_species": 4,
+    "interpretation": "All nine Host+ first-record events are concentrated in four butterfly species; the temporal pattern is not broadly distributed across the panel."
+  },
+  "corrected_treatment_event_hosts_file": "docs/exploratory/butterfly_temporal_full_history_event_hosts_v0.1.csv",
+  "decision": {
+    "raw_enrichment_present": true,
+    "signal_beyond_species": false,
+    "signal_beyond_species_plus_level1": false,
+    "signal_beyond_full_protocol_match": false,
+    "manuscript_use": "Do not use Stage A as positive evidence that introduced-host placement predicts subsequent butterfly appearance."
+  },
+  "ecological_interpretation": [
+    "Static introduced-resource expansion does not translate into a detectable short-window placement effect on first documented butterfly occurrence once broad geography is preserved.",
+    "The result is compatible with temporal decoupling, dispersal limitation, habitat limitation, host-quality limitation, observation structure, or heterogeneous long lags; Stage A alone cannot distinguish these mechanisms.",
+    "A temporal-mismatch claim therefore requires an identity-specific host chronology test against matched non-host alien plants, not merely a butterfly time split."
+  ],
+  "claim_boundary": [
+    "A first GBIF record is a first documented detection, not a colonization or establishment date.",
+    "Full-history correction removes cells with any focal-butterfly record through 2017 but cannot establish true biological absence.",
+    "Contemporary WCVP introduced ranges are time-invariant and do not establish host presence by 2017.",
+    "The full-protocol matched null is nearly degenerate for outcomes: only one mixed treatment/control stratum contains any events; species+Level1 is therefore the more informative geography-preserving null."
+  ]
+}
