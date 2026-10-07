@@ -189,3 +189,64 @@ The defensible sequence is:
 5. **then**, only as a sensitivity analysis, use a transparent fixed-abundance/null allocation model to ask how resource expansion could redistribute potential crowding from within species to among host-sharing species.
 
 Any competition simulation must be labeled a scenario model rather than a fitted demographic prediction.
+
+
+## 11. Crop and grass sensitivity: homogenization is not a crop/Poaceae artifact
+
+A completed sensitivity run (`37613267331`) reconstructed the resource matrices after excluding major anthropogenic host categories.
+
+### Regional resource-assemblage similarity
+
+| Reconstruction | Native mean Jaccard | Contemporary mean Jaccard | Relative increase |
+|---|---:|---:|---:|
+| Baseline | 0.2770 | 0.4621 | **+66.8%** |
+| Exclude FAO crop binomials | 0.2704 | 0.4279 | **+58.2%** |
+| Conservative crop-genus exclusion | 0.2646 | 0.4180 | **+58.0%** |
+| Exclude all Poaceae hosts | 0.2600 | 0.4327 | **+66.5%** |
+
+### Butterfly-pair resource-geography overlap
+
+| Reconstruction | Native mean Jaccard | Contemporary mean Jaccard | Relative increase |
+|---|---:|---:|---:|
+| Baseline | 0.2224 | 0.3248 | **+46.0%** |
+| Exclude FAO crop binomials | 0.2126 | 0.2927 | **+37.7%** |
+| Conservative crop-genus exclusion | 0.1942 | 0.2646 | **+36.2%** |
+| Exclude all Poaceae hosts | 0.1310 | 0.1906 | **+45.6%** |
+
+Thus the resource-homogenization signal is not reducible to crop hosts or redistributed grasses. These exclusions are sensitivity reconstructions, not causal estimates of agriculture or Poaceae.
+
+## 12. Minimal fixed-demand prediction for intraspecific crowding
+
+Before fitting any competition dynamics, a parameter-light null prediction can be obtained from resource geography alone.
+
+Assume each butterfly species has a fixed total larval demand of one unit and allocates that demand uniformly across all available resource regions. The probability that two independent units of conspecific demand fall in the same resource region is then proportional to (1/R_i), where (R_i) is the number of resource regions available to species (i).
+
+Across 239 butterflies:
+
+- mean (1/R_i), native resource geography: **0.02126**
+- mean (1/R_i), contemporary resource geography: **0.01416**
+- relative change in the mean concentration proxy: **−33.4%**
+- median species-level change: **−28.0%**
+- 206/239 species show lower concentration; 33 are unchanged.
+
+This creates a clear field-testable prediction:
+
+> If total abundance and resource quality were held constant, host redistribution should reduce within-species spatial concentration of larval demand while increasing the geography over which host-sharing species can potentially interact.
+
+The first half is a null allocation prediction, not an observed demographic effect. The second half is supported structurally by the >2× increase in exact shared-resource pair × region opportunities.
+
+## 13. Conservation prediction framework
+
+The exploratory results motivate two independent screening axes:
+
+1. **introduced-resource dependence** — how much added geography is supported by one or a few introduced known hosts;
+2. **novel interaction exposure** — how strongly the new resource geography overlaps host-sharing butterflies.
+
+This generates four useful field-validation classes:
+
+- low dependence / low exposure: comparatively buffered;
+- high dependence / low exposure: removal-sensitive resource opportunity;
+- low dependence / high exposure: interaction-rich but resource-redundant;
+- high dependence / high exposure: highest priority for local validation of host use, larval performance, competitors and shared natural enemies.
+
+The framework does not produce site-level management decisions from WGSRPD3 data. It identifies where fieldwork would most efficiently distinguish a true life-raft effect from competition, apparent competition, ecological traps or unused potential resources.
