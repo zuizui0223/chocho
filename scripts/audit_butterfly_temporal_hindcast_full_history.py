@@ -19,7 +19,7 @@ GBIF="https://api.gbif.org/v1"
 UA="chocho-full-history-temporal-hindcast/0.1"
 
 
-def get_json(path:str,params:dict,attempts:int=6,timeout:float=30.0)->dict:
+def get_json(path:str,params:dict,attempts:int=12,timeout:float=30.0)->dict:
     url=f"{GBIF}/{path}?{urlencode(params)}"
     last=None
     for i in range(attempts):
@@ -27,10 +27,23 @@ def get_json(path:str,params:dict,attempts:int=6,timeout:float=30.0)->dict:
             req=Request(url,headers={"User-Agent":UA,"Accept":"application/json"})
             with urlopen(req,timeout=timeout) as r:
                 return json.loads(r.read().decode("utf-8"))
+        except HTTPError as exc:
+            last=exc
+            if i+1>=attempts:
+                break
+            if exc.code==429:
+                raw=exc.headers.get("Retry-After")
+                try:
+                    delay=float(raw)
+                except Exception:
+                    delay=15.0+5.0*i
+                time.sleep(min(120.0,max(10.0,delay)))
+            else:
+                time.sleep(min(30.0,0.75*(2**i)))
         except Exception as exc:
             last=exc
             if i+1<attempts:
-                time.sleep(min(8.0,0.5*(2**i)))
+                time.sleep(min(30.0,0.75*(2**i)))
     raise RuntimeError(f"GBIF request failed: {url} ({last})")
 
 
