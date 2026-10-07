@@ -17,7 +17,8 @@ ANON_BUNDLE_WORKFLOW = ".github/workflows/build-anonymous-review-bundle.yml"
 ANON_BUNDLE_BUILDER = "scripts/build_anonymous_review_bundle.py"
 
 EXPECTED_TITLE = (
-    "Plant globalization expands and homogenizes butterfly larval-resource geography"
+    "Plant globalization expands and homogenizes "
+    "butterfly larval-resource geography"
 )
 EXPECTED_RUNNING_TITLE = "Plant globalization and resource niches"
 
