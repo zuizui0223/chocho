@@ -84,6 +84,19 @@ jobs:
             --output-json results/resource-homogenization/butterfly_resource_overlap_resilience_v0.1.json \
             --output-host-csv results/resource-homogenization/butterfly_resource_overlap_resilience_hosts_v0.1.csv
 
+      - name: Test resource-niche rewiring and removal robustness
+        run: |
+          python scripts/analyze_butterfly_resource_niche_rewiring.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --random-reps 499 \
+            --seed 20261007 \
+            --output-json results/resource-homogenization/butterfly_resource_niche_rewiring_v0.1.json \
+            --output-host-csv results/resource-homogenization/butterfly_resource_niche_rewiring_hosts_v0.1.csv
+
       - uses: actions/upload-artifact@v4
         with:
           name: butterfly-resource-homogenization-v01
