@@ -17,10 +17,9 @@ ANON_BUNDLE_WORKFLOW = ".github/workflows/build-anonymous-review-bundle.yml"
 ANON_BUNDLE_BUILDER = "scripts/build_anonymous_review_bundle.py"
 
 EXPECTED_TITLE = (
-    "Anthropogenic host redistribution expands butterfly resource geography "
-    "across the specialization spectrum"
+    "Plant globalization expands and homogenizes butterfly larval-resource geography"
 )
-EXPECTED_RUNNING_TITLE = "Host redistribution and resource gain"
+EXPECTED_RUNNING_TITLE = "Plant globalization and resource niches"
 
 
 def words(text: str) -> int:
