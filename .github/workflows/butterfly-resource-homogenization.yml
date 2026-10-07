@@ -41,6 +41,15 @@ jobs:
           repository: zuizui0223/TTF
           run-id: 36222306369
 
+      - name: Restore independent climate cross-fit
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: inputs/climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
       - name: Checkout fixed HOSTS source
         uses: actions/checkout@v7
         with:
@@ -129,6 +138,18 @@ jobs:
             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --output-json results/resource-homogenization/butterfly_competition_attenuation_v0.1.json \
             --output-species-csv results/resource-homogenization/butterfly_competition_attenuation_species_v0.1.csv
+
+      - name: Simulate competition sensitivity and generate colonization frontier
+        run: |
+          python scripts/analyze_butterfly_competition_sensitivity_frontier.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --climate-crossfit-csv inputs/climate/unit_climate_crossfit.csv \
+            --output-json results/resource-homogenization/butterfly_competition_sensitivity_frontier_v0.1.json \
+            --output-frontier-csv results/resource-homogenization/butterfly_colonization_frontier_v0.1.csv \
+            --output-region-csv results/resource-homogenization/butterfly_regional_introduced_dependency_v0.1.csv
 
       - uses: actions/upload-artifact@v4
         with:
