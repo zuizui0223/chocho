@@ -110,11 +110,27 @@ def main():
     p_mean=(1+sum(x>=observed_mean for x in null_means))/(a.permutations+1)
     p_median=(1+sum(x>=observed_median for x in null_medians))/(a.permutations+1)
 
-    # species-direction summary based on median paired difference within species.
-    by_species=defaultdict(list)
-    for r in complete:
-        by_species[r["species"]].append(int(r["pseudo_minus_actual_resource_year"]))
-    species_medians={sp:float(statistics.median(v)) for sp,v in sorted(by_species.items())}
+    # Cluster-level robustness: cells are the frozen primary unit, but repeated
+    # species, actual hosts and regions can induce dependence. Aggregate paired
+    # differences within each cluster and test only the direction of cluster medians.
+    def cluster_direction(field):
+        grouped=defaultdict(list)
+        for r in complete:
+            grouped[str(r[field])].append(int(r["pseudo_minus_actual_resource_year"]))
+        med={k:float(statistics.median(v)) for k,v in sorted(grouped.items())}
+        pos=sum(v>0 for v in med.values()); neg=sum(v<0 for v in med.values()); zero=sum(v==0 for v in med.values())
+        return {
+            "clusters":len(med),
+            "positive_median":pos,
+            "negative_median":neg,
+            "zero_median":zero,
+            "exact_one_sided_sign_p_positive":exact_one_sided_binom(pos,pos+neg),
+            "median_difference_by_cluster":med,
+        }
+
+    species_robust=cluster_direction("species")
+    host_robust=cluster_direction("actual_host")
+    region_robust=cluster_direction("wgsrpd3_code")
 
     a.output_cell_csv.parent.mkdir(parents=True,exist_ok=True)
     with a.output_cell_csv.open("w",newline="",encoding="utf-8") as f:
@@ -146,12 +162,10 @@ def main():
             "neither_precedes_butterfly":neither,
             "exact_one_sided_discordant_p_actual_precedence":precedence_p
         },
-        "species_consistency":{
-            "species":len(species_medians),
-            "species_positive_median":sum(v>0 for v in species_medians.values()),
-            "species_negative_median":sum(v<0 for v in species_medians.values()),
-            "species_zero_median":sum(v==0 for v in species_medians.values()),
-            "median_difference_by_species":species_medians
+        "cluster_robustness":{
+            "species":species_robust,
+            "actual_host":host_robust,
+            "wgsrpd3_region":region_robust
         },
         "decision":{
             "identity_specific_resource_timing_supported":bool(sign_p<=0.05 and observed_median>0),
