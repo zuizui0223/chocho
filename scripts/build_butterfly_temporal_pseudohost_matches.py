@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def parse_year(value: str):
-    m = re.search(r"(?<!\\d)(1[5-9]\\d{2}|20[0-2]\\d)(?!\\d)", str(value or ""))
+    m = re.search(r"(?<!\d)(1[5-9]\d{2}|20[0-2]\d)(?!\d)", str(value or ""))
     return None if not m else int(m.group(1))
 
 
