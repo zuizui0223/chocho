@@ -1,0 +1,56 @@
+{
+  "schema": "chocho_resource_consumer_temporal_mismatch_protocol_v0.2",
+  "status": "PRIMARY_SINGLE_HOST_DESIGN_FROZEN_BEFORE_GLOBAL_FIRST_RECORD_PANEL_INSPECTION",
+  "created_on": "2026-10-07",
+  "supersedes_for_primary_inference": "docs/exploratory/butterfly_resource_consumer_temporal_mismatch_protocol_v0.1.json",
+  "rationale": "Use the 1,143 introduced-only butterfly x WGSRPD3 cells supported by exactly one introduced known host as the primary identity-specific timing test. This fixes resource richness at one and avoids making the temporal null depend on how many host plants a cell contains.",
+  "primary_panel": {
+    "source": "Outcome-blind HOSTS-WCVP introduced-only resource panel for the frozen 31 butterfly species",
+    "cell_rule": "actual_host_count == 1",
+    "expected_cells": 1143,
+    "outcome_selection": false
+  },
+  "actual_resource_clock": "Earliest exact-WGSRPD3 GBIF record from 1800-2025 for the single documented known host that WCVP classifies as introduced in that cell.",
+  "paired_pseudoresource": {
+    "rule": "Choose the nearest matched alien non-host plant introduced in the same WGSRPD3 region.",
+    "exclusions": [
+      "any documented host of the focal butterfly",
+      "plants not introduced in the focal WGSRPD3 region",
+      "plants lacking usable SInAS chronology"
+    ],
+    "matching_features": [
+      "log1p WCVP introduced WGSRPD3 breadth",
+      "log1p SInAS alien-region record count",
+      "log1p SInAS dated-record count",
+      "SInAS earliest global alien-record year"
+    ],
+    "tie_break": "deterministic accepted plant name then WCVP plant id",
+    "resource_richness": "exactly one actual host versus exactly one pseudo-resource per cell"
+  },
+  "butterfly_clock": "Earliest exact-WGSRPD3 GBIF record from 1800-2025 for the focal butterfly, from the frozen full-history/bulk-history reconstruction.",
+  "primary_endpoint": {
+    "inclusion": "Cells with a butterfly first record and dated local records for both actual and paired pseudo-resource.",
+    "statistic": "Paired difference in resource lead: (butterfly_year - actual_host_year) - (butterfly_year - pseudo_host_year) = pseudo_host_year - actual_host_year.",
+    "interpretation": "Positive values mean the actual known host was documented earlier than its matched alien non-host control.",
+    "test": "One-sided paired sign/randomization test of whether actual known hosts are earlier than matched pseudo-resources; report median paired year difference and fraction actual-earlier.",
+    "alpha": 0.05
+  },
+  "secondary": [
+    "All 2,035 introduced-only cells using the richness-preserving multi-host pseudo-resource null from v0.1",
+    "Sensitivity using the 2nd and 3rd nearest matched pseudo-resource instead of only the nearest",
+    "Host-before-butterfly fraction and signed lag distribution",
+    "Species-level consistency",
+    "Right-censored no-butterfly cells only if the primary identity-specific test is positive"
+  ],
+  "interpretation_rules": {
+    "supported": "Actual known hosts are locally documented earlier than matched alien non-host plants in the same regions. This supports identity-specific resource-consumer temporal mismatch.",
+    "unsupported": "Actual hosts are no earlier than matched alien non-hosts. Apparent long lags are generic alien-plant/collection chronology rather than known-resource tracking."
+  },
+  "boundaries": [
+    "First records are detection/digitization dates, not establishment dates.",
+    "Known-host presence does not prove local larval use or demographic benefit.",
+    "The original GEB main paper remains unchanged unless independently validated.",
+    "Do not call the result invasion debt or trophic debt unless the identity-specific paired test is positive and robust."
+  ],
+  "stop_rule": "If the paired single-host primary test is null, terminate the temporal-mismatch branch rather than adding more timing or simulation variants."
+}
