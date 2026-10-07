@@ -139,6 +139,38 @@ def main():
         r["actual_minus_pseudo_median_lag"] = obs - r["pseudo_lag_median"]
         r["cell_p_pseudo_lag_ge_actual"] = (1 + sum(v >= obs for v in vals)) / (len(vals) + 1)
 
+    def summarize_subset(subset):
+        if not subset:
+            return {"cells": 0}
+        keys = [(x[0][0], x[0][1]) for x in subset]
+        obs_lags = [int(x[3]) for x in subset]
+        obs_median = float(statistics.median(obs_lags))
+        obs_positive = sum(x > 0 for x in obs_lags)
+        obs_nonnegative = sum(x >= 0 for x in obs_lags)
+        sim_medians, sim_positive, sim_nonnegative = [], [], []
+        for b in range(args.permutations):
+            vals = [cell_null_lags[key][b] for key in keys]
+            sim_medians.append(float(statistics.median(vals)))
+            sim_positive.append(sum(x > 0 for x in vals))
+            sim_nonnegative.append(sum(x >= 0 for x in vals))
+        return {
+            "cells": len(subset),
+            "species_regions": [f"{x[0][0]}|{x[0][1]}" for x in subset],
+            "actual_median_record_lag_years": obs_median,
+            "actual_positive_host_first_cells": obs_positive,
+            "actual_nonnegative_host_first_cells": obs_nonnegative,
+            "pseudo_median_lag_median": float(statistics.median(sim_medians)),
+            "pseudo_median_lag_ci95": [quantile(sim_medians, 0.025), quantile(sim_medians, 0.975)],
+            "pseudo_positive_cells_median": float(statistics.median(sim_positive)),
+            "pseudo_positive_cells_ci95": [quantile(sim_positive, 0.025), quantile(sim_positive, 0.975)],
+            "p_pseudo_median_lag_ge_actual": (1 + sum(x >= obs_median for x in sim_medians)) / (args.permutations + 1),
+            "p_pseudo_positive_cells_ge_actual": (1 + sum(x >= obs_positive for x in sim_positive)) / (args.permutations + 1),
+            "p_pseudo_nonnegative_cells_ge_actual": (1 + sum(x >= obs_nonnegative for x in sim_nonnegative)) / (args.permutations + 1),
+        }
+
+    post2017_cells = [x for x in eligible_cells if int(x[2]) >= 2018]
+    post2017_summary = summarize_subset(post2017_cells)
+
     args.output_cell_csv.parent.mkdir(parents=True, exist_ok=True)
     with args.output_cell_csv.open("w", newline="", encoding="utf-8") as handle:
         fields = list(cell_rows[0].keys())
@@ -164,6 +196,7 @@ def main():
             "positive_host_first_cells": observed_positive,
             "nonnegative_host_first_cells": observed_nonnegative,
         },
+        "full_history_post2017_subset": post2017_summary,
         "matched_pseudohost_null": {
             "median_lag_median": float(statistics.median(null_medians)),
             "median_lag_ci95": [quantile(null_medians, 0.025), quantile(null_medians, 0.975)],
