@@ -14,6 +14,10 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: temporal-hindcast-full-history
+  cancel-in-progress: true
+
 jobs:
   full-history-audit:
     runs-on: ubuntu-latest
@@ -75,7 +79,7 @@ jobs:
             --history-end 2025 \
             --permutations 99999 \
             --seed 20261007 \
-            --workers 8 \
+            --workers 1 \
             --output-csv results/exploratory/butterfly_temporal_hindcast_full_history_cells_v0.1.csv \
             --output-json results/exploratory/butterfly_temporal_hindcast_full_history_v0.1.json
 
