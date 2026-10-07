@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_butterfly_resource_overlap_resilience_v0.1",
+  "status": "SUCCESS_POSTHOC_RESOURCE_OVERLAP_AND_REMOVAL_SCENARIOS",
+  "source_workflow_run": 37612135885,
+  "artifact_id": 11478935973,
+  "panel": {
+    "butterflies": 239,
+    "contributing_hosts": 670,
+    "added_butterfly_x_region_units": 14553
+  },
+  "potential_interspecific_resource_overlap": {
+    "native_shared_host_pair_x_region_units": 62473,
+    "contemporary_shared_host_pair_x_region_units": 141885,
+    "novel_pair_x_region_units": 79412,
+    "relative_increase": 1.2711411329694426,
+    "host_sharing_butterfly_pairs": 986,
+    "pairs_gaining_novel_shared_resource_regions": 920,
+    "novel_within_family_pair_x_region_units": 37869,
+    "novel_between_family_pair_x_region_units": 41543,
+    "fraction_novel_between_family": 0.5231325240517806
+  },
+  "potential_resource_crowding": {
+    "native_mean_other_focal_butterflies_sharing_exact_host_in_region": 4.7096117602713905,
+    "native_median": 3,
+    "native_zero_fraction": 0.18288729739917076,
+    "introduced_added_mean": 5.712567855424998,
+    "introduced_added_median": 4,
+    "introduced_added_zero_fraction": 0.09894867037724181
+  },
+  "redundancy": {
+    "single_host_supported_added_units": 8574,
+    "fraction_single_host_supported": 0.5891568748711606,
+    "median_contributing_hosts_per_added_unit": 1
+  },
+  "targeted_removal_top38": {
+    "removed_hosts": 38,
+    "lost_added_butterfly_x_region_units": 5812,
+    "fraction_added_opportunity_lost": 0.3993678279392565,
+    "butterflies_losing_any_added_opportunity": 123,
+    "butterflies_losing_at_least_50pct_added_opportunity": 56,
+    "butterflies_losing_all_added_opportunity": 16,
+    "random_38_host_removal_median_lost_units": 433,
+    "random_38_host_removal_ci95": [
+      168.9,
+      1123.5
+    ],
+    "randomization_p_ge_observed": 0.002
+  },
+  "claim_boundary": "Shared exact host×region geography and crowding quantify potential resource co-use, not realized competition. Removal is a coarse regional counterfactual stress test; ranking hosts by observed contribution makes targeted-vs-random loss partly expected and should be interpreted as network concentration/redundancy rather than a causal management experiment."
+}
