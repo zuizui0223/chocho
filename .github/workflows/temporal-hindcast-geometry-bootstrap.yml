@@ -1,0 +1,40 @@
+name: temporal-hindcast-geometry-bootstrap
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-geometry-bootstrap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-wgsrpd3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout WGSRPD
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: master
+          path: _external/WGSRPD
+      - name: Verify geometry
+        run: |
+          test -s _external/WGSRPD/geojson/level3.geojson
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_external/WGSRPD/geojson/level3.geojson")
+          x=json.loads(p.read_text())
+          print({"features": len(x["features"]), "bytes": p.stat().st_size})
+          PY
+      - name: Upload exact WGSRPD3 geometry
+        uses: actions/upload-artifact@v4
+        with:
+          name: temporal-hindcast-wgsrpd3
+          path: _external/WGSRPD/geojson/level3.geojson
+          if-no-files-found: error
+          retention-days: 7
