@@ -84,6 +84,17 @@ Of these, **159** have climate compatibility rank >=0.5 and **44** >=0.8 relativ
 
 These should be frozen as **prospective detection/colonization-frontier candidates**, not described as guaranteed future colonizations. Examples among the highest-ranked, high-effort candidates include *Melanitis leda* in Brazil Southeast and *Biblis hyperia* in Florida.
 
+
+## Candidate ecological abstract
+
+**Aim:** Human transport redistributes plant resources across biogeographic barriers, but whether this merely enlarges herbivore resource ranges or reorganizes the spatial structure and robustness of consumer niches is unclear. We asked how globalization of known larval host plants changes butterfly resource landscapes, resource sharing among consumers and dependence on particular redistributed hosts.
+
+**Methods:** For 239 butterflies, we held known larval-host identities fixed and reconstructed native and contemporary host-resource geography across WGSRPD3 regions. We quantified regional resource-assemblage homogenization, butterfly resource-niche overlap, geographic amplification of exact-host sharing, redundancy of newly added resource regions and counterfactual sensitivity to loss of high-contribution introduced hosts. Fixed-margin nulls preserved butterfly-specific, region-specific and broad continental amounts of added opportunity.
+
+**Results:** Human host redistribution increased aggregate butterfly × region resource opportunity by 54.9%, but its stronger ecological effect was structural. Mean similarity among regional butterfly-resource assemblages rose by 66.8% and butterfly resource-geography overlap by 47.4%; both exceeded level-1-constrained fixed-margin expectations (p = 0.002). Existing exact-host-sharing relationships were geographically amplified: shared-resource butterfly-pair × region units increased from 62,473 to 141,885 (+127.1%), with 920/986 host-sharing pairs gaining new shared-resource regions. Added resource opportunities were more crowded by exact-host co-users than native opportunities (mean 5.71 versus 4.71 other butterflies). At the same time, 58.9% of added butterfly × region opportunities were supported by only one introduced host in that butterfly-region combination. Removing the 38 highest-contribution hosts eliminated 39.9% of all added opportunity, compared with a median 3.0% under random removal of 38 hosts (p = 0.002).
+
+**Main conclusion:** Plant globalization does more than enlarge butterfly resource ranges. It spatially homogenizes larval-resource landscapes, amplifies pre-existing trophic overlap and creates geographically extensive but often weakly redundant resource dependencies. Thus anthropogenic redistribution can simultaneously relax resource limitation and increase potential resource-sharing exposure, creating a trade-off between opportunity, interaction exposure and robustness that is invisible from consumer diet breadth alone.
+
 ## What is genuinely non-trivial
 
 The paper should not sell “resources increased.” The non-trivial pattern is:
