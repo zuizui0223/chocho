@@ -1,0 +1,106 @@
+name: sinas-host-first-record-probe
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/sinas-host-first-record-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download and filter SInAS 2.5
+        run: |
+          mkdir -p results/sinas-probe
+          python - <<'PY'
+          import csv, io, json, urllib.request
+          from pathlib import Path
+
+          url = "https://zenodo.org/api/records/10038256/files/SInAS_AlienSpeciesDB_2.5.csv/content"
+          focal = {
+              "Lantana camara",
+              "Melissa officinalis",
+              "Mentha pulegium",
+              "Mangifera indica",
+              "Vachellia farnesiana",
+              "Malva neglecta",
+              "Malva sylvestris",
+              "Modiola caroliniana",
+              "Passiflora edulis",
+              "Passiflora quadrangularis",
+              "Passiflora suberosa",
+              "Sida rhombifolia",
+              "Abutilon theophrasti",
+              "Alcea rosea",
+              "Althaea officinalis",
+              "Hibiscus trionum",
+          }
+          req = urllib.request.Request(url, headers={"User-Agent":"chocho-sinas-probe/0.1"})
+          rows=[]
+          with urllib.request.urlopen(req, timeout=120) as r:
+              text=io.TextIOWrapper(r, encoding="utf-8-sig", newline="")
+              reader=csv.DictReader(text)
+              for row in reader:
+                  name=(row.get("scientificName") or row.get("Taxon") or "").strip()
+                  if name not in focal:
+                      continue
+                  em=(row.get("establishmentMeans") or "").strip().lower()
+                  os_=(row.get("occurrenceStatus") or "").strip().lower()
+                  if em and em != "introduced":
+                      continue
+                  if os_ and os_ != "present":
+                      continue
+                  rows.append(row)
+
+          out=Path("results/sinas-probe/focal_host_sinas_records_v0.1.csv")
+          if rows:
+              fields=list(rows[0])
+              with out.open("w",newline="",encoding="utf-8") as f:
+                  w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(rows)
+          else:
+              out.write_text("",encoding="utf-8")
+
+          by_name={}
+          for name in sorted(focal):
+              rr=[x for x in rows if (x.get("scientificName") or x.get("Taxon") or "").strip()==name]
+              dated=[]
+              for x in rr:
+                  v=str(x.get("eventDate") or "").strip()
+                  try: dated.append(int(float(v)))
+                  except Exception: pass
+              by_name[name]={
+                  "records":len(rr),
+                  "locations":len({str(x.get("Location") or x.get("location") or "").strip() for x in rr}),
+                  "dated_records":len(dated),
+                  "earliest_first_record":min(dated) if dated else None,
+              }
+          payload={
+              "schema":"chocho_sinas_host_first_record_probe_v0.1",
+              "source":{
+                  "dataset":"SInAS 2.5",
+                  "zenodo_record":"10038256",
+                  "download_url":url,
+              },
+              "focal_hosts":len(focal),
+              "hosts_found":sum(v["records"]>0 for v in by_name.values()),
+              "rows":len(rows),
+              "by_host":by_name,
+          }
+          Path("results/sinas-probe/focal_host_sinas_summary_v0.1.json").write_text(
+              json.dumps(payload,indent=2)+"\n",encoding="utf-8"
+          )
+          print(json.dumps(payload,indent=2))
+          PY
+      - name: Upload SInAS probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: sinas-host-first-record-probe-v01
+          path: results/sinas-probe/
+          if-no-files-found: error
+          retention-days: 14
