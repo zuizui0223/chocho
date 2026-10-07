@@ -1,0 +1,91 @@
+name: temporal-hindcast-recover-gbif-download
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: [".github/workflows/temporal-hindcast-recover-gbif-download.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: _ttf
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Rebuild identical candidates
+        run: |
+          mkdir -p results/bulk
+          python scripts/map_butterfly_occurrences_wgsrpd3_year.py --occurrences-csv _ttf/occurrences.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --output-csv results/bulk/occurrences_wgsrpd3_year.csv
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py prepare --occurrence-mapped-csv results/bulk/occurrences_wgsrpd3_year.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --effort-threshold 10 --output-csv results/bulk/candidates.csv
+      - name: Retrieve existing successful GBIF download
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --retry 5 --retry-delay 10 --silent --show-error https://api.gbif.org/v1/occurrence/download/0014625-260928105237408 -o results/bulk/download_metadata.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.load(open("results/bulk/download_metadata.json"))
+          if x.get("status")!="SUCCEEDED": raise SystemExit(f"existing download is {x.get('status')}")
+          Path("results/bulk/download_url.txt").write_text(str(x["downloadLink"])+"\n")
+          print("GBIF DOI:",x.get("doi"),"records:",x.get("totalRecords"))
+          PY
+          curl --fail --location --retry 5 --retry-delay 15 --silent --show-error "$(cat results/bulk/download_url.txt)" -o results/bulk/gbif_full_history.zip
+          unzip -tq results/bulk/gbif_full_history.zip
+      - name: Recover accepted GBIF taxon map
+        run: |
+          python - <<'PY'
+          import csv,json,urllib.parse,urllib.request,time
+          from pathlib import Path
+          species=sorted({r["species"].strip() for r in csv.DictReader(open("_ttf/occurrences.csv",newline="",encoding="utf-8")) if r["species"].strip()})
+          if len(species)!=31: raise SystemExit(f"expected 31 species, got {len(species)}")
+          mapping={}
+          for name in species:
+              u="https://api.gbif.org/v1/species/match?"+urllib.parse.urlencode({"name":name,"strict":"false"})
+              with urllib.request.urlopen(urllib.request.Request(u,headers={"User-Agent":"chocho-temporal-recovery/0.1"}),timeout=45) as response:
+                  x=json.load(response)
+              key=x.get("usageKey")
+              if not key: raise SystemExit(f"unmatched: {name}")
+              mapping[str(int(key))]=name
+              time.sleep(0.2)
+          metadata=json.load(open("results/bulk/download_metadata.json"))
+          Path("results/bulk/taxon_map.json").write_text(json.dumps({"taxon_key_to_species":mapping,"download":{"key":metadata.get("key"),"doi":metadata.get("doi"),"download_link":metadata.get("downloadLink"),"total_records":metadata.get("totalRecords")}},indent=2)+"\n")
+          PY
+      - name: Analyze fixed historical download
+        run: |
+          python scripts/analyze_butterfly_temporal_hindcast_bulk_download.py --download-zip results/bulk/gbif_full_history.zip --taxon-map-json results/bulk/taxon_map.json --candidates-csv results/bulk/candidates.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --permutations 99999 --seed 20261007 --output-csv results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv --output-all-first-csv results/bulk/butterfly_full_history_first_records_wgsrpd3_v0.1.csv --output-json results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: temporal-hindcast-recovered-bulk-v01
+          path: |
+            results/bulk/download_metadata.json
+            results/bulk/taxon_map.json
+            results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv
+            results/bulk/butterfly_full_history_first_records_wgsrpd3_v0.1.csv
+            results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
+          retention-days: 30
