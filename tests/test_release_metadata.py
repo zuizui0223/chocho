@@ -34,8 +34,8 @@ def test_release_preflight_uses_current_v02_title() -> None:
         encoding="utf-8"
     )
     expected = (
-        "Anthropogenic host redistribution expands butterfly resource geography "
-        "across the specialization spectrum"
+        "Plant globalization expands and homogenizes "
+        "butterfly larval-resource geography"
     )
     assert current_title == expected
     match = re.search(
