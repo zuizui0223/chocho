@@ -1,0 +1,59 @@
+name: temporal-hindcast-sidecar-bootstrap
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-sidecar-bootstrap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-sidecars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout analysis branch
+        uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Checkout fixed HOSTS source
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Checkout fixed WCVP source
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Rebuild exact frozen sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R             _external/WCVP _external/HOSTS results/native results/contemporary
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          for p in [
+              Path("results/native/insect_host_accepted.csv"),
+              Path("results/native/native_extant_nondoubtful_wgsrpd3.csv"),
+              Path("results/contemporary/extant_nondoubtful_wgsrpd3.csv"),
+          ]:
+              with p.open() as f:
+                  n=sum(1 for _ in f)-1
+              print(p, n)
+          PY
+      - name: Upload exact hindcast inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: |
+            results/native/insect_host_accepted.csv
+            results/native/native_extant_nondoubtful_wgsrpd3.csv
+            results/contemporary/extant_nondoubtful_wgsrpd3.csv
+          if-no-files-found: error
+          retention-days: 7
