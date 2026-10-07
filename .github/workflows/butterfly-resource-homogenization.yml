@@ -12,6 +12,7 @@ on:
       - "scripts/simulate_butterfly_competition_attenuation.py"
       - "scripts/analyze_butterfly_resource_niche_rewiring.py"
       - "scripts/analyze_butterfly_resource_homogenization_sensitivity.py"
+      - "scripts/analyze_butterfly_resource_connectivity.py"
       - ".github/workflows/butterfly-resource-homogenization.yml"
 
 permissions:
@@ -102,6 +103,19 @@ jobs:
             --permutations 499 \
             --seed 20261007 \
             --output-json results/resource-homogenization/butterfly_resource_homogenization_level1_null_v0.1.json
+
+      - name: Test resource connectivity and stepping-stone bridging
+        run: |
+          python scripts/analyze_butterfly_resource_connectivity.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --permutations 499 \
+            --seed 20261007 \
+            --output-json results/resource-homogenization/butterfly_resource_connectivity_v0.1.json \
+            --output-species-csv results/resource-homogenization/butterfly_resource_connectivity_species_v0.1.csv
 
       - name: Test potential competition and removal resilience
         run: |
