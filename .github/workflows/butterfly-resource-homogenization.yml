@@ -7,6 +7,7 @@ on:
       - analysis/resource-homogenization-v01
     paths:
       - "scripts/analyze_butterfly_resource_homogenization.py"
+      - "scripts/analyze_butterfly_resource_homogenization_level1_null.py"
       - "scripts/analyze_butterfly_resource_overlap_resilience.py"
       - "scripts/simulate_butterfly_competition_attenuation.py"
       - "scripts/analyze_butterfly_resource_niche_rewiring.py"
@@ -64,6 +65,13 @@ jobs:
           ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
           path: _external/WCVP
 
+      - name: Checkout fixed WGSRPD source
+        uses: actions/checkout@v7
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+
       - name: Rebuild exact butterfly-host distribution sidecars
         run: |
           Rscript scripts/build_wcvp_hosts_null_sidecars.R \
@@ -82,6 +90,18 @@ jobs:
             --seed 20261007 \
             --output-json results/resource-homogenization/butterfly_resource_homogenization_v0.1.json \
             --output-host-csv results/resource-homogenization/butterfly_resource_homogenization_hosts_v0.1.csv
+
+      - name: Test level1-constrained homogenization null
+        run: |
+          python scripts/analyze_butterfly_resource_homogenization_level1_null.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --permutations 499 \
+            --seed 20261007 \
+            --output-json results/resource-homogenization/butterfly_resource_homogenization_level1_null_v0.1.json
 
       - name: Test potential competition and removal resilience
         run: |
