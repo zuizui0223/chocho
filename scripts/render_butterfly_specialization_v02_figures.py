@@ -214,35 +214,93 @@ def fig2_occurrence(occ, overlap, species_robustness, outdir):
     save(fig,outdir,"Figure2_occurrence_validation")
 
 
-def fig3_robustness(ceiling,regional,outdir):
-    fig,axes=plt.subplots(1,2,figsize=(11.5,4.6))
-    for label,ax in zip(("a","b"),axes):
-        ax.text(0.0,1.06,label,transform=ax.transAxes,fontweight="bold",fontsize=12,va="bottom")
+def fig3_resource_homogenization(homog, overlap, outdir):
+    fig, axes = plt.subplots(1, 3, figsize=(15.0, 4.7))
+    for label, ax in zip(("a", "b", "c"), axes):
+        ax.text(
+            -0.10, 1.06, label,
+            transform=ax.transAxes,
+            fontweight="bold",
+            fontsize=12,
+            va="bottom",
+        )
 
-    thresh=ceiling["restricted_native_breadth_thresholds"]
-    xs=[100,150,168,200,250]
-    ys=[thresh[str(x)]["rho_family_vs_log_expansion"] for x in xs]
-    axes[0].plot(xs,ys,marker="o")
-    axes[0].axhline(ceiling["rho_host_family_vs_log_expansion"],linestyle="--",linewidth=1,label="Full panel ρ=0.008")
-    axes[0].axhline(0,linewidth=0.8)
-    axes[0].set_xlabel("Maximum native resource breadth retained")
-    axes[0].set_ylabel("Spearman ρ: host families vs log expansion")
-    axes[0].set_title("Associations remain small under narrower map support")
-    axes[0].legend(frameon=False,fontsize=8)
+    regional = homog["regional_resource_assemblage_similarity"]
+    x = np.arange(3)
+    vals = [
+        regional["mean_pairwise_jaccard_native"],
+        regional["mean_pairwise_jaccard_contemporary"],
+        regional["fixed_margin_null_median"],
+    ]
+    axes[0].bar(x[:2], vals[:2])
+    nlo, nhi = regional["fixed_margin_null_ci95"]
+    axes[0].errorbar(
+        [2], [vals[2]],
+        yerr=[[vals[2] - nlo], [nhi - vals[2]]],
+        fmt="o", capsize=5,
+    )
+    axes[0].set_xticks(x, ["Native", "Contemporary", "Fixed-margin\nnull"])
+    axes[0].set_ylabel("Mean pairwise Jaccard similarity")
+    axes[0].set_title("Regional resource assemblages converge")
+    axes[0].text(
+        0.03, 0.96,
+        "+66.8% raw similarity\n"
+        f"observed vs null p = {regional['p_greater_or_equal']:.3f}",
+        transform=axes[0].transAxes,
+        va="top",
+        fontsize=9,
+    )
 
-    region=regional["dominant_native_resource_region"]
-    order=["Northern America","Europe","Africa","Temperate Asia","Tropical Asia","Southern America"]
-    vals=[region[k]["rho"] if "rho" in region[k] else region[k].get("rho_host_family_vs_log_expansion") for k in order]
-    ns=[region[k]["species"] for k in order]
-    xx=np.arange(len(order))
-    axes[1].bar(xx,vals)
-    axes[1].axhline(0,linewidth=0.8)
-    axes[1].set_xticks(xx,[f"{name}\n(n={n})" for name,n in zip(order,ns)],rotation=28,ha="right")
-    axes[1].set_ylabel("Within-region Spearman ρ")
-    axes[1].set_title("Regional diet-breadth associations are heterogeneous")
-    fig.suptitle("Ceiling sensitivities remain weak; regional diet-breadth associations are heterogeneous",fontsize=13)
-    fig.tight_layout(rect=(0,0,1,0.94))
-    save(fig,outdir,"Figure3_expansion_robustness")
+    niche = homog["butterfly_resource_geography_overlap"]
+    vals2 = [
+        niche["mean_jaccard_native"],
+        niche["mean_jaccard_contemporary"],
+        niche["fixed_margin_null_median"],
+    ]
+    axes[1].bar(x[:2], vals2[:2])
+    nlo2, nhi2 = niche["fixed_margin_null_ci95"]
+    axes[1].errorbar(
+        [2], [vals2[2]],
+        yerr=[[vals2[2] - nlo2], [nhi2 - vals2[2]]],
+        fmt="o", capsize=5,
+    )
+    axes[1].set_xticks(x, ["Native", "Contemporary", "Fixed-margin\nnull"])
+    axes[1].set_ylabel("Mean pairwise resource-envelope Jaccard")
+    axes[1].set_title("Butterfly resource geography overlaps more")
+    axes[1].text(
+        0.03, 0.96,
+        "+47.4% raw overlap\n"
+        f"observed vs null p = {niche['p_greater_or_equal']:.3f}",
+        transform=axes[1].transAxes,
+        va="top",
+        fontsize=9,
+    )
+
+    shared = overlap["potential_interspecific_resource_overlap"]
+    vals3 = [
+        shared["native_shared_host_pair_x_region_units"],
+        shared["contemporary_shared_host_pair_x_region_units"],
+    ]
+    axes[2].bar([0, 1], vals3)
+    axes[2].set_xticks([0, 1], ["Native", "Contemporary"])
+    axes[2].set_ylabel("Butterfly-pair × region units")
+    axes[2].set_title("Exact shared-host geography expands")
+    axes[2].text(
+        0.03, 0.96,
+        f"+{100.0 * shared['relative_increase']:.1f}%\n"
+        f"{shared['pairs_gaining_novel_shared_resource_regions']}/"
+        f"{shared['host_sharing_butterfly_pairs']} host-sharing pairs gain regions",
+        transform=axes[2].transAxes,
+        va="top",
+        fontsize=9,
+    )
+
+    fig.suptitle(
+        "Plant globalization homogenizes butterfly resource geography and shared-resource exposure",
+        fontsize=13,
+    )
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    save(fig, outdir, "Figure3_expansion_robustness")
 
 
 def fig4_climate(climate_rows,effect,outdir):
@@ -299,11 +357,21 @@ def main():
     ap.add_argument("--regional-json",type=Path,required=True)
     ap.add_argument("--climate-csv",type=Path,required=True)
     ap.add_argument("--climate-effect-json",type=Path,required=True)
+    ap.add_argument(
+        "--homogenization-json",
+        type=Path,
+        default=Path("provenance/reviewer_defenses/results/butterfly_resource_homogenization_v0.1.json"),
+    )
+    ap.add_argument(
+        "--overlap-resilience-json",
+        type=Path,
+        default=Path("provenance/reviewer_defenses/results/butterfly_resource_overlap_resilience_v0.1.json"),
+    )
     ap.add_argument("--output-dir",type=Path,required=True)
     a=ap.parse_args()
     fig1_resource_and_null(read_csv(a.anthropogenic_csv),json.loads(a.matched_null_json.read_text()),json.loads(a.hostbias_null_json.read_text()),json.loads(a.plant_prominence_json.read_text()),json.loads(a.host_concentration_json.read_text()),a.output_dir)
     fig2_occurrence(read_csv(a.occurrence_csv),json.loads(a.occurrence_null_json.read_text()),json.loads(a.occurrence_species_robustness_json.read_text()),a.output_dir)
-    fig3_robustness(json.loads(a.ceiling_json.read_text()),json.loads(a.regional_json.read_text()),a.output_dir)
+    fig3_resource_homogenization(json.loads(a.homogenization_json.read_text()),json.loads(a.overlap_resilience_json.read_text()),a.output_dir)
     fig4_climate(read_csv(a.climate_csv),json.loads(a.climate_effect_json.read_text()),a.output_dir)
     print(json.dumps({"figures":4,"output_dir":str(a.output_dir)},indent=2))
 
