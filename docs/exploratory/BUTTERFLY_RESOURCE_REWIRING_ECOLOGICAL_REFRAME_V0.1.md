@@ -66,7 +66,9 @@ Thus contribution concentration translates into **network fragility**, not merel
 
 A transparent sensitivity model down-weighted each butterfly × region opportunity by the number of other focal butterflies sharing an exact host there. The penalty parameter is hypothetical and is **not** estimated from ecological data.
 
-Under reciprocal weighting, aggregate effective opportunity remains greater than native opportunity across the tested range, but species-level reversals accumulate: 11 species have negative effective gain at alpha=0.1, 26 at 0.25, 42 at 0.5 and 56 at 1. Under an exponential penalty, sufficiently strong crowding can reverse the aggregate gain.
+Under reciprocal weighting, aggregate effective opportunity remains greater than native opportunity across the tested range, but species-level reversals accumulate: 11 species have negative effective gain at alpha=0.1, 26 at 0.25, 42 at 0.5 and 56 at 1. The aggregate reciprocal-model break-even occurs only at alpha = **9.55**. Under an exponential penalty, the aggregate break-even occurs at alpha = **1.51**, after which crowding can outweigh the nominal geographic gain.
+
+Species-level break-even thresholds are heterogeneous. Under the reciprocal model, 98/206 expanded species have a finite threshold within the search range (median alpha = **0.666**), whereas 108 never reverse within the search. Under the exponential model, 157/206 have a finite threshold (median alpha = **0.502**). These thresholds are dimensionless and model-dependent; they quantify how strong crowding costs would need to be to erase the reconstructed gain, not measured competition coefficients.
 
 This is a mechanistic **sensitivity boundary**, not evidence that competition actually cancels resource gain.
 
@@ -102,7 +104,7 @@ H2 — **Interaction exposure:** Added geography is more densely shared among ex
 
 H3 — **Fragility:** Because added opportunity is concentrated and weakly redundant, removing high-contribution introduced hosts eliminates far more resource opportunity than random host removal.
 
-H4 — **Connectivity (pending):** Introduced resource regions act as stepping stones that connect native resource components more than level-1-matched random additions.
+H4 — **Connectivity (technical rerun pending):** Introduced resource regions act as stepping stones that connect native resource components more than level-1-matched random additions. The first execution failed only because the workflow omitted the Shapely dependency; the workflow has been repaired and the ecological test itself is unchanged.
 
 ## Conservation interpretation
 
@@ -112,7 +114,7 @@ At WGSRPD3 resolution these are screening hypotheses and prioritization tools, n
 
 ## Literature position
 
-Global introductions are already known to homogenize species composition and plant–frugivore interaction networks (e.g. Fricke & Svenning 2020). Butterfly work also shows that host availability and landscape connectivity can constrain occupancy and range expansion. The distinct contribution here is the **resource-side spatial rewiring of a herbivore interaction network while consumer host identities are held fixed**: host globalization changes where resource-sharing interactions can potentially occur, without requiring host switching.
+Global introductions are already known to homogenize species composition and plant–frugivore interaction networks (e.g. Fricke & Svenning 2020), and recent work has examined exotic plants in local or multi-site plant–herbivore networks. Butterfly work also shows that host availability and host sharing can structure geographic co-occurrence. The distinct contribution here is the **resource-side spatial rewiring of a herbivore interaction network while consumer host identities are held fixed**: host globalization changes where pre-existing trophic relationships can potentially occur, amplifies their geographic overlap and exposes the resulting network to concentration and redundancy tests without requiring host switching.
 
 ## Candidate title direction
 
