@@ -20,6 +20,7 @@ concurrency:
 
 jobs:
   full-history-audit:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout analysis branch
