@@ -164,7 +164,7 @@ The homogenization and shared-resource analyses are post-hoc. WGSRPD3 is coarse,
 
 Potential resource-sharing exposure is not realized competition. The analysis lacks local host abundance, butterfly density, phenology, per-capita consumption, natural enemies and host quality. Shared host geography may promote co-occurrence through niche filtering, competition when resources are limiting, or both. The global removal scenarios likewise quantify network sensitivity, not demographic effects or site-specific management outcomes.
 
-The secondary occurrence validation is presence-side and opportunistic. Its 32-species panel was constructed for a stratified climate test rather than specifically for occurrence validation; GBIF non-observation is not absence, and co-occurrence of a butterfly with an introduced known host does not prove local larval use. The panel includes species with non-native butterfly populations, including *Pieris brassicae*; leave-one-out analyses did not change the qualitative conclusion.
+The secondary occurrence validation is presence-side and opportunistic. Its 32-species panel was constructed for a stratified climate test rather than specifically for occurrence validation; GBIF non-observation is not absence, and co-occurrence of a butterfly with an introduced known host does not prove local larval use. The panel includes species with non-native butterfly populations, including *Pieris brassicae* (Phillips et al. 2020); leave-one-out analyses did not change the qualitative conclusion.
 
 Diet-breadth, phylogenetic, crop-exclusion, plant-prominence and climate analyses are retained as secondary robustness or boundary tests. The near-zero host-breadth slope does not prove exact equivalence, and network-wide HOSTS degree remains a joint proxy for ecological prominence and recording intensity. These limitations do not affect the arithmetic reconstruction of resource geography but constrain causal interpretation of why particular plants or butterflies contribute most strongly.
 
@@ -176,23 +176,18 @@ The ecological consequence is a dual one. For individual species, redistributed 
 
 ## References
 
-- Abdala-Roberts, L., Puentes, A., Finke, D. L., Marquis, R. J., Montserrat, M., Poelman, E. H., Rasmann, S., Sentis, A., Symons, C. C., van Dam, N. M., Wimp, G., Björkman, C. & Mooney, K. A. 2025. Connecting the dots: Managing species interaction networks to mitigate the impacts of global change. *eLife* 14: e98899. https://doi.org/10.7554/eLife.98899
 - Braga, M. P. 2023. Are exotic host plants a life raft or a trap for butterflies? *Current Opinion in Insect Science* 58: 101074. https://doi.org/10.1016/j.cois.2023.101074
 - Braschler, B. & Hill, J. K. 2007. Role of larval host plants in the climate-driven range expansion of the butterfly *Polygonia c-album*. *Journal of Animal Ecology* 76: 415–423. https://doi.org/10.1111/j.1365-2656.2007.01217.x
 - Brummitt, R. K., Pando, F., Hollis, S. & Brummitt, N. A. 2001. *World Geographical Scheme for Recording Plant Distributions*, 2nd edn. Hunt Institute for Botanical Documentation, Carnegie Mellon University.
-- Chowdhury, S. et al. 2026. Extensive climate-induced range shifts in butterflies across the globe. *Nature Ecology & Evolution*. https://doi.org/10.1038/s41559-026-03117-y
-- Couto, H. et al. 2026. The Lepidopteran Hitchhiker's Guide to the Globe: The Spread and Dispersal of Non-Native Moths and Butterflies. *Global Ecology and Biogeography*. https://doi.org/10.1111/geb.70292
 - Daru, B. H., Davies, T. J., Willis, C. G. et al. 2021. Widespread homogenization of plant communities in the Anthropocene. *Nature Communications* 12: 6983. https://doi.org/10.1038/s41467-021-27186-8
 - Fricke, E. C. & Svenning, J.-C. 2020. Accelerating homogenization of the global plant–frugivore meta-network. *Nature* 585: 74–78. https://doi.org/10.1038/s41586-020-2640-y
 - GBIF.org. 2026. GBIF Occurrence Download for the 53,434 records used in butterfly occurrence validation. https://doi.org/10.15468/dl.pp5nc9
 - Govaerts, R., Nic Lughadha, E., Black, N., Turner, R. & Paton, A. 2021. The World Checklist of Vascular Plants, a continuously updated resource for exploring global plant diversity. *Scientific Data* 8: 215. https://doi.org/10.1038/s41597-021-00997-6
 - Graves, S. D. & Shapiro, A. M. 2003. Exotics as host plants of the California butterfly fauna. *Biological Conservation* 110: 413–433. https://doi.org/10.1016/S0006-3207(02)00233-1
-- Gross, C., Kawahara, A. & Daru, B. 2026. Climate and regional plant richness drive diet specialization in butterfly caterpillars. *Nature Communications*. https://doi.org/10.1038/s41467-026-73236-4
 - Karger, D. N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R. W., Zimmermann, N. E., Linder, H. P. & Kessler, M. 2017. Climatologies at high resolution for the earth's land surface areas. *Scientific Data* 4: 170122. https://doi.org/10.1038/sdata.2017.122
 - Karger, D. N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza, R. W., Zimmermann, N. E., Linder, H. P. & Kessler, M. 2021. Climatologies at high resolution for the earth's land surface areas. EnviDat. https://doi.org/10.16904/envidat.228
 - Kawahara, A. Y., Storer, C., Carvalho, A. P. S. et al. 2023. A global phylogeny of butterflies reveals their evolutionary history, ancestral hosts and biogeographic origins. *Nature Ecology & Evolution* 7: 903–913. https://doi.org/10.1038/s41559-023-02041-9
 - Lancaster, L. T. 2020. Host use diversification during range shifts shapes global variation in Lepidopteran dietary breadth. *Nature Ecology & Evolution* 4: 963–969. https://doi.org/10.1038/s41559-020-1199-1
-- Lázaro-Lobo, A. & Ervin, G. N. 2019. A global examination on the differential impacts of roadsides on native vs. exotic and weedy plant species. *Global Ecology and Conservation* 17: e00555. https://doi.org/10.1016/j.gecco.2019.e00555
 - Nakadai, R., Hashimoto, K., Iwasaki, T. & Sato, Y. 2018. Geographical co-occurrence of butterfly species: the importance of niche filtering by host plant species. *Oecologia* 186: 995–1005. https://doi.org/10.1007/s00442-018-4062-1
 - Neu, A., Lötters, S., Nörenberg, L., Wiemers, M. & Fischer, K. 2021. Reduced host-plant specialization is associated with the rapid range expansion of a Mediterranean butterfly. *Journal of Biogeography* 48: 3016–3031. https://doi.org/10.1111/jbi.14258
 - Phillips, C. B., Brown, K., Green, C., Toft, R., Walker, G. & Broome, K. 2020. Eradicating the large white butterfly from New Zealand eliminates a threat to endemic Brassicaceae. *PLoS ONE* 15: e0236791. https://doi.org/10.1371/journal.pone.0236791
@@ -200,7 +195,6 @@ The ecological consequence is a dual one. For individual species, redistributed 
 - Robinson, G. S., Ackery, P. R., Kitching, I., Beccaloni, G. W. & Hernández, L. M. 2023. HOSTS - a Database of the World's Lepidopteran Hostplants [Data set]. Natural History Museum. https://doi.org/10.5519/havt50xw
 - Shirey, V., Larsen, E., Doherty, A. et al. 2022. LepTraits 1.0: A globally comprehensive dataset of butterfly traits. *Scientific Data* 9: 382. https://doi.org/10.1038/s41597-022-01473-5
 - Slove, J. & Janz, N. 2011. The relationship between diet breadth and geographic range size in the butterfly subfamily Nymphalinae: a study of global scale. *PLoS ONE* 6: e16057. https://doi.org/10.1371/journal.pone.0016057
-- van Kleunen, M., Bossdorf, O. & Dawson, W. 2018. The ecology and evolution of alien plants. *Annual Review of Ecology, Evolution, and Systematics* 49: 25–47. https://doi.org/10.1146/annurev-ecolsys-110617-062654
 - van Kleunen, M., Dawson, W., Essl, F. et al. 2015. Global exchange and accumulation of non-native plants. *Nature* 525: 100–103. https://doi.org/10.1038/nature14910
 - Yoon, S. & Read, Q. D. 2016. Consequences of exotic host use: impacts on Lepidoptera and a test of the ecological trap hypothesis. *Oecologia* 181: 985–996. https://doi.org/10.1007/s00442-016-3560-2
 
