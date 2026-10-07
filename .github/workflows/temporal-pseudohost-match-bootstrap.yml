@@ -1,0 +1,68 @@
+name: temporal-pseudohost-match-bootstrap
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-pseudohost-match-bootstrap.yml"
+      - "scripts/build_wcvp_introduced_plant_pool.R"
+      - "scripts/build_butterfly_temporal_pseudohost_matches.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  match:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Checkout fixed WCVP
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Download frozen interaction sidecar
+        uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - name: Download SInAS 2.5
+        run: |
+          mkdir -p _external results/exploratory
+          python - <<'PY'
+          import urllib.request
+          url="https://zenodo.org/api/records/10038256/files/SInAS_AlienSpeciesDB_2.5.csv/content"
+          req=urllib.request.Request(url,headers={"User-Agent":"chocho-pseudohost-bootstrap/0.1"})
+          with urllib.request.urlopen(req,timeout=240) as r, open("_external/SInAS_AlienSpeciesDB_2.5.csv","wb") as f:
+              while True:
+                  b=r.read(1<<20)
+                  if not b: break
+                  f.write(b)
+          PY
+      - name: Build all-plant introduced pool
+        run: |
+          Rscript scripts/build_wcvp_introduced_plant_pool.R             _external/WCVP             results/exploratory/wcvp_all_introduced_plants_v0.1.csv
+      - name: Build matched pseudo-host candidates
+        run: |
+          python scripts/build_butterfly_temporal_pseudohost_matches.py             --event-host-csv docs/exploratory/butterfly_temporal_lag_event_hosts_v0.1.csv             --insect-host-csv _sidecars/native/insect_host_accepted.csv             --introduced-pool-csv results/exploratory/wcvp_all_introduced_plants_v0.1.csv             --sinas-csv _external/SInAS_AlienSpeciesDB_2.5.csv             --matches-per-host 10             --output-csv results/exploratory/butterfly_temporal_pseudohost_matches_v0.1.csv             --output-json results/exploratory/butterfly_temporal_pseudohost_matches_v0.1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-temporal-pseudohost-matches-v01
+          path: |
+            results/exploratory/butterfly_temporal_pseudohost_matches_v0.1.csv
+            results/exploratory/butterfly_temporal_pseudohost_matches_v0.1.json
+          if-no-files-found: error
+          retention-days: 14
