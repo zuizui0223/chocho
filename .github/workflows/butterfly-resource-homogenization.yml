@@ -1,0 +1,77 @@
+name: butterfly resource homogenization
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - "scripts/analyze_butterfly_resource_homogenization.py"
+      - ".github/workflows/butterfly-resource-homogenization.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Restore exact S1 resource reconstruction
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Checkout fixed HOSTS source
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+
+      - name: Checkout fixed WCVP source
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Rebuild exact butterfly-host distribution sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Test resource-assemblage homogenization
+        run: |
+          mkdir -p results/resource-homogenization
+          python scripts/analyze_butterfly_resource_homogenization.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --leptraits-csv data/external/leptraits_consensus_v1.0.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --permutations 499 \
+            --seed 20261007 \
+            --output-json results/resource-homogenization/butterfly_resource_homogenization_v0.1.json \
+            --output-host-csv results/resource-homogenization/butterfly_resource_homogenization_hosts_v0.1.csv
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-resource-homogenization-v01
+          path: results/resource-homogenization/
+          retention-days: 30
