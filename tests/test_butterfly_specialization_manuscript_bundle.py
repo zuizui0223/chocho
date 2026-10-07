@@ -95,7 +95,7 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
         "58.9%",
         "resource filtering",
         "interspecific resource competition",
-        "global counterfactual stress test",
+        "coarse global stress test",
         "Nakadai et al. 2018",
         "Braga 2023",
         "Yoon & Read 2016",
