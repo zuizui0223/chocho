@@ -19,6 +19,10 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: butterfly-resource-homogenization-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
