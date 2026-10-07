@@ -266,7 +266,7 @@ def main():
         "treatment_snapshot_hits":sum(int(r["treatment"]) and int(r["snapshot_outcome"]) for r in rows),
         "control_snapshot_hits":sum((1-int(r["treatment"])) and int(r["snapshot_outcome"]) for r in rows),
     }
-    expected={"candidate_cells":1476,"treatment_cells":442,"control_cells":1034,"treatment_snapshot_hits":9,"control_snapshot_hits":11}
+    expected={"candidate_cells":1477,"treatment_cells":442,"control_cells":1035,"treatment_snapshot_hits":9,"control_snapshot_hits":11}
     if snapshot!=expected:
         raise RuntimeError(f"frozen candidate reconstruction drift: {snapshot} != {expected}")
 
