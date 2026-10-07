@@ -226,6 +226,49 @@ WCVP introduced distributions represent wild non-native distributions rather tha
 
 The crop-host sensitivity therefore preserves all three conclusions used in the main manuscript: resource expansion remains widespread, family-level diet breadth remains only weakly associated with proportional expansion, and aggregate added opportunity remains concentrated among a few dozen host species. The genus-expanded variant intentionally removes non-crop congeners and is treated only as a conservative stress test, not as an alternative primary estimand.
 
+## Supplementary Table S8. Resource homogenization, shared-resource exposure and host-removal stress
+
+All analyses in this section are post-hoc and use the same fixed 239-butterfly resource reconstruction as the main manuscript. Homogenization is evaluated on reconstructed resource opportunity rather than realized butterfly communities.
+
+### Resource homogenization
+
+| Quantity | Native | Contemporary | Fixed-margin null median (95% interval) | Observed vs null |
+|---|---:|---:|---:|---:|
+| Mean pairwise Jaccard among 355 regional butterfly resource assemblages | 0.2770 | 0.4621 | 0.4535 (0.4533–0.4536) | p = 0.002 |
+| Mean pairwise Jaccard among 28,441 butterfly resource envelopes | 0.2224 | 0.3279 | 0.3215 (0.3214–0.3216) | p = 0.002 |
+
+The fixed-margin null preserves each butterfly's number of added WGSRPD3 regions, each region's number of added butterfly opportunities and native resource incidences as structural exclusions. It therefore asks whether the observed arrangement of additions produces extra convergence beyond the large homogenization expected from the amount of resource opportunity added.
+
+### Exact shared-resource exposure
+
+| Quantity | Native | Contemporary / introduced-added |
+|---|---:|---:|
+| Butterfly-pair × WGSRPD3 units sharing at least one exact host | 62,473 | 141,885 |
+| Increase in shared-host pair × region units | — | +127.1% |
+| Host-sharing butterfly pairs gaining at least one new shared-resource region | — | 920/986 |
+| Novel shared-resource pair × region units between butterfly families | — | 41,543/79,412 (52.3%) |
+| Mean number of other focal butterflies sharing an exact host per resource opportunity | 4.71 | 5.71 |
+| Median number of other focal butterflies sharing an exact host | 3 | 4 |
+| Fraction with no other focal butterfly sharing an exact host | 18.3% | 9.9% |
+
+These quantities represent potential resource co-use. They do not measure realized competition, local density or demographic interaction strength.
+
+### Added-resource redundancy and removal stress
+
+Of 14,553 introduced-added butterfly × region units, **8,574 (58.9%)** were supported by only one contributing introduced host; the median number of contributing hosts per added unit was **1**.
+
+| Highest-contributing introduced hosts removed | Added units lost | Fraction of added opportunity lost | Butterflies losing any added opportunity | Butterflies losing ≥50% of added opportunity | Butterflies losing all added opportunity |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 446 | 3.1% | 14 | 3 | 0 |
+| 5 | 1,816 | 12.5% | 40 | 17 | 6 |
+| 10 | 2,893 | 19.9% | 61 | 24 | 7 |
+| 20 | 4,199 | 28.9% | 93 | 36 | 9 |
+| 38 | 5,812 | 39.9% | 123 | 56 | 16 |
+| 50 | 6,615 | 45.5% | 133 | 66 | 20 |
+| 100 | 8,781 | 60.3% | 164 | 101 | 33 |
+
+For comparison, random removal of 38 of the 670 contributing hosts lost a median of **433** added units (95% interval 169–1,124), whereas removing the 38 highest-contributing hosts lost 5,812. Because the targeted hosts are selected using their observed contribution, this contrast describes network concentration and redundancy rather than an independent causal test. It is a global counterfactual stress test, not a site-level removal recommendation.
+
 ## Supplementary inference boundaries
 
 1. Resource envelopes are reconstructed geographic opportunities, not realized local host use.
@@ -233,6 +276,8 @@ The crop-host sensitivity therefore preserves all three conclusions used in the 
 3. Network degree cannot separate ecological host commonness from HOSTS recording intensity.
 4. Occurrence recovery does not establish local larval use or host-caused colonization.
 5. The occurrence panel was climate-stratified rather than designed as a validation sample.
-6. Null-model, equivalence, host-contribution, ceiling, phylogenetic and geographic sensitivity analyses are post-hoc analyses and are interpreted as such.
+6. Null-model, equivalence, host-contribution, homogenization, shared-resource and removal-stress analyses are post-hoc and are interpreted as such.
 7. WCVP introduced status represents wild non-native occurrence, not cultivated acreage; the primary estimand therefore does not map crop planting directly.
 8. Crop-host exclusion is a sensitivity analysis only and does not redefine the primary host set or specialization predictor; the genus-expanded variant deliberately over-excludes congeners.
+9. Shared exact-host geography quantifies potential resource co-use, not realized competition; local abundance, host biomass, phenology and performance are required to distinguish filtering from competition.
+10. Host-removal scenarios quantify regional resource-network sensitivity and do not justify retaining invasive plants or predict local population responses.
