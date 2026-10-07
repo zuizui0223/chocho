@@ -72,6 +72,19 @@ Species-level break-even thresholds are heterogeneous. Under the reciprocal mode
 
 This is a mechanistic **sensitivity boundary**, not evidence that competition actually cancels resource gain.
 
+
+### 6b. The biggest resource gains also carry the biggest crowding increases
+
+Across 239 butterflies, proportional resource gain was positively associated with the increase in mean exact-host co-user exposure (**Spearman rho = 0.317; 19,999-bootstrap 95% CI 0.187–0.438**). The relationship remained positive in rank-residual sensitivities controlling native resource breadth (~0.397), native resource breadth plus host-family breadth (~0.397), or native resource breadth, host-family breadth and native co-user exposure together (~0.372).
+
+Thus the resource and interaction consequences of plant globalization are not independent. Butterflies receiving larger proportional expansions of host-resource geography also tend to enter geography in which more other focal butterflies share their exact hosts.
+
+This gives a sharper ecological trade-off than either result alone:
+
+> **the largest apparent resource winners also acquire the largest increases in potential interspecific resource-sharing exposure.**
+
+The association is not evidence of demographic competition. It shows coupling between reconstructed resource release and a spatial proxy for potential competitive interaction.
+
 ### 7. A falsifiable range-frontier prediction set exists
 
 Within the independently constructed 24-species climate panel, **806 species × region units** have:
