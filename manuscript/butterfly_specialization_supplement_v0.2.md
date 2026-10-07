@@ -1,6 +1,6 @@
 # Supplementary Information — butterfly resource geography
 
-**Associated manuscript:** *Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum*
+**Associated manuscript:** *Plant globalization expands and homogenizes butterfly larval-resource geography*
 
 This file collects post-hoc robustness analyses that define the manuscript's inference boundaries. The main text reports the ecological results; this supplement provides the parameter and sensitivity details.
 
