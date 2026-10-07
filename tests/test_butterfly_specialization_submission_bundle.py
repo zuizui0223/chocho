@@ -39,7 +39,7 @@ def test_blinded_v02_manuscript_has_geb_front_matter_and_limits():
 
     running = re.search(r"^\*\*Running title:\*\*\s*(.+)$", text, re.MULTILINE)
     assert running is not None
-    assert running.group(1).strip() == "Host redistribution and resource gain"
+    assert running.group(1).strip() == "Plant globalization and resource niches"
     assert len(running.group(1).strip()) < 40
 
     abstract_start = text.index("## Abstract")
@@ -93,8 +93,8 @@ def test_blinded_v02_manuscript_removes_identity_and_internal_history():
 
 def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
     expected_title = (
-        "Anthropogenic host redistribution expands butterfly resource geography "
-        "across the specialization spectrum"
+        "Plant globalization expands and homogenizes "
+        "butterfly larval-resource geography"
     )
     title_page = (
         ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
