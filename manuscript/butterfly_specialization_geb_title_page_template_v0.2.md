@@ -1,10 +1,10 @@
 # Title page — Global Ecology and Biogeography
 
-**Manuscript:** Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum
+**Manuscript:** Plant globalization expands and homogenizes butterfly larval-resource geography
 
 **Article type:** Research Article
 
-**Running title:** Host redistribution and resource gain
+**Running title:** Plant globalization and resource niches
 
 ## Authors
 
