@@ -52,5 +52,15 @@
     "The original GEB main paper remains unchanged unless independently validated.",
     "Do not call the result invasion debt or trophic debt unless the identity-specific paired test is positive and robust."
   ],
-  "stop_rule": "If the paired single-host primary test is null, terminate the temporal-mismatch branch rather than adding more timing or simulation variants."
+  "stop_rule": "If the paired single-host primary test is null, terminate the temporal-mismatch branch rather than adding more timing or simulation variants.",
+  "cluster_robustness": {
+    "prespecified_summaries": [
+      "median paired pseudo-minus-actual resource year within each butterfly species",
+      "median paired pseudo-minus-actual resource year within each actual host species",
+      "median paired pseudo-minus-actual resource year within each WGSRPD3 region"
+    ],
+    "tests": "One-sided exact sign tests over nonzero cluster medians.",
+    "generality_gate": "Broad generality is claimed only if the cell-level timing test is positive and both butterfly-species and actual-host cluster direction tests are positive at p <= 0.05.",
+    "failure_interpretation": "If the cell-level result is positive but cluster direction fails, describe the timing effect as concentrated in particular butterflies or hosts rather than as a general resource-tracking principle."
+  }
 }
