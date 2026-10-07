@@ -174,7 +174,7 @@ jobs:
           url="$(cat results/bulk/download_url.txt)"
           test -n "$url"
           curl --fail --location --silent --show-error "$url" -o results/bulk/gbif_full_history.zip
-          python scripts/analyze_butterfly_temporal_hindcast_bulk_download.py             --download-zip results/bulk/gbif_full_history.zip             --taxon-map-json results/bulk/taxon_map.json             --candidates-csv results/bulk/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --permutations 99999             --seed 20261007             --output-csv results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv             --output-json results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
+          python scripts/analyze_butterfly_temporal_hindcast_bulk_download.py             --download-zip results/bulk/gbif_full_history.zip             --taxon-map-json results/bulk/taxon_map.json             --candidates-csv results/bulk/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --permutations 99999             --seed 20261007             --output-csv results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv             --output-all-first-csv results/bulk/butterfly_full_history_first_records_wgsrpd3_v0.1.csv             --output-json results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
 
       - uses: actions/upload-artifact@v4
         with:
@@ -182,6 +182,7 @@ jobs:
           path: |
             results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
             results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv
+            results/bulk/butterfly_full_history_first_records_wgsrpd3_v0.1.csv
             results/bulk/taxon_map.json
             results/bulk/download_metadata.json
             results/bulk/download_key.txt
