@@ -1,0 +1,114 @@
+{
+  "schema": "chocho_resource_homogenization_ecology_summary_v0.1",
+  "status": "EXPLORATORY_POSTHOC_ANALYSIS_COMPLETE_PENDING_COMPETITION_ATTENUATION_RUN",
+  "source_workflow": {
+    "run_id": 37612135885,
+    "head_sha": "c1eaa7eacd12e766df52fea7b910fe34d7321084",
+    "artifact_id": 11478935973,
+    "artifact_digest": "sha256:3f402c2ca517cb9185d0f418e363a27c4cafe7f11a08bda62d48621f803465fa"
+  },
+  "regional_resource_homogenization": {
+    "butterflies": 239,
+    "active_wgsrpd3_regions": 355,
+    "pairwise_region_comparisons": 62835,
+    "mean_jaccard_native": 0.27698189773361664,
+    "mean_jaccard_contemporary": 0.4620834004986041,
+    "relative_change": 0.6682801449465341,
+    "fixed_margin_null_median": 0.4534762210314019,
+    "fixed_margin_null_ci95": [
+      0.4533297299321847,
+      0.4536272462493615
+    ],
+    "p_greater_or_equal": 0.002
+  },
+  "butterfly_resource_niche_overlap": {
+    "pairwise_comparisons": 28441,
+    "mean_geographic_jaccard_native": 0.22237325689920187,
+    "mean_geographic_jaccard_contemporary": 0.3278808188864098,
+    "relative_change": 0.47446155827556535,
+    "fixed_margin_null_median": 0.32145344025121375,
+    "fixed_margin_p": 0.002
+  },
+  "exact_shared_host_resource_exposure": {
+    "native_unique_butterfly_pair_x_region_units": 62473,
+    "contemporary_unique_butterfly_pair_x_region_units": 141885,
+    "novel_pair_x_region_units": 79412,
+    "relative_increase": 1.2711411329694426,
+    "novel_within_family": 37869,
+    "novel_between_family": 41543,
+    "fraction_novel_between_family": 0.5231325240517806,
+    "butterfly_pairs_gaining_novel_shared_resource_region": 920
+  },
+  "crowding": {
+    "mean_other_focal_butterflies_sharing_exact_host_native_resource_units": 4.7096117602713905,
+    "mean_other_focal_butterflies_sharing_exact_host_added_resource_units": 5.712567855424998,
+    "native_zero_fraction": 0.18288729739917076,
+    "added_zero_fraction": 0.09894867037724181
+  },
+  "opportunity_redundancy": {
+    "added_butterfly_x_region_units": 14553,
+    "single_host_supported_units": 8574,
+    "fraction_single_host_supported": 0.5891568748711606,
+    "median_contributing_hosts_per_added_unit": 1
+  },
+  "targeted_removal_scenarios": {
+    "top1": {
+      "lost_units": 446,
+      "fraction_lost": 0.030646602075173505,
+      "affected_butterflies": 14,
+      "random_median_lost_units": 1,
+      "p_random_ge_observed": 0.002
+    },
+    "top5": {
+      "lost_units": 1816,
+      "fraction_lost": 0.1247852676424105,
+      "affected_butterflies": 40,
+      "lose_all_added": 6,
+      "random_median_lost_units": 30,
+      "p_random_ge_observed": 0.002
+    },
+    "top10": {
+      "lost_units": 2893,
+      "fraction_lost": 0.19879062736205594,
+      "affected_butterflies": 61,
+      "lose_all_added": 7,
+      "random_median_lost_units": 86,
+      "p_random_ge_observed": 0.002
+    },
+    "top38": {
+      "lost_units": 5812,
+      "fraction_lost": 0.3993678279392565,
+      "affected_butterflies": 123,
+      "lose_all_added": 16,
+      "random_median_lost_units": 433,
+      "p_random_ge_observed": 0.002
+    },
+    "top50": {
+      "lost_units": 6615,
+      "fraction_lost": 0.45454545454545453,
+      "affected_butterflies": 133,
+      "lose_all_added": 20,
+      "random_median_lost_units": 622,
+      "p_random_ge_observed": 0.002
+    },
+    "top100": {
+      "lost_units": 8781,
+      "fraction_lost": 0.6033807462378891,
+      "affected_butterflies": 164,
+      "lose_all_added": 33,
+      "random_median_lost_units": 1267,
+      "p_random_ge_observed": 0.002
+    }
+  },
+  "crop_and_grass_sensitivity": {
+    "fao_exact_binomial_regional_jaccard_relative_change": 0.5822878518694108,
+    "fao_exact_plus_spp_genus_relative_change": 0.5798648452829387,
+    "exclude_all_poaceae_relative_change": 0.6645446219101476
+  },
+  "claim_boundary": [
+    "Resource homogenization is reconstructed potential larval-resource opportunity, not realized butterfly community homogenization.",
+    "Shared exact-host geography is potential interaction exposure, not observed interspecific competition.",
+    "Removal scenarios are global coarse-resolution counterfactual stress tests and do not justify retaining invasive plants or predict local population responses.",
+    "No abundance data are available, so intraspecific competition and realized competition coefficients are not estimated."
+  ]
+}
