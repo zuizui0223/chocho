@@ -51,49 +51,20 @@ jobs:
               text = io.TextIOWrapper(r, encoding="utf-8-sig", newline="")
               return r, csv.DictReader(text, delimiter=" ", skipinitialspace=True)
 
-          ids_by_name = defaultdict(set)
-          taxa_header = None
-          r, reader = reader_for(taxa_url)
-          try:
-              taxa_header = list(reader.fieldnames or [])
-              for row in reader:
-                  candidates = {
-                      str(row.get("scientificName") or "").strip(),
-                      str(row.get("Taxon") or "").strip(),
-                      str(row.get("species") or "").strip(),
-                  }
-                  matched = focal & candidates
-                  if not matched:
-                      continue
-                  taxon_id = str(row.get("taxonID") or "").strip()
-                  if not taxon_id:
-                      continue
-                  for name in matched:
-                      ids_by_name[name].add(taxon_id)
-          finally:
-              r.close()
-
-          name_by_id = {}
-          for name, ids in ids_by_name.items():
-              for taxon_id in ids:
-                  name_by_id.setdefault(taxon_id, name)
-
           rows = []
           main_header = None
           r, reader = reader_for(occurrence_url)
           try:
               main_header = list(reader.fieldnames or [])
               for row in reader:
-                  taxon_id = str(row.get("taxonID") or "").strip()
-                  name = name_by_id.get(taxon_id)
-                  if name is None:
+                  taxon = str(row.get("Taxon") or "").strip()
+                  if taxon not in focal:
                       continue
-                  out = {"matched_name": name, **row}
-                  rows.append(out)
+                  rows.append({"matched_name": taxon, **row})
           finally:
               r.close()
 
-          out_path = Path("results/sinas-probe/focal_host_sinas_records_v0.2.csv")
+          out_path = Path("results/sinas-probe/focal_host_sinas_records_v0.3.csv")
           if rows:
               fields = list(rows[0])
               with out_path.open("w", newline="", encoding="utf-8") as f:
@@ -115,7 +86,6 @@ jobs:
               years = [(y,x) for y,x in years if y is not None]
               locations = sorted({str(x.get("Location") or "").strip() for x in rr if str(x.get("Location") or "").strip()})
               by_name[name] = {
-                  "taxon_ids": sorted(ids_by_name.get(name, set()), key=lambda x: int(x) if x.isdigit() else x),
                   "records": len(rr),
                   "locations": len(locations),
                   "location_names": locations,
@@ -124,7 +94,7 @@ jobs:
               }
 
           payload = {
-              "schema":"chocho_sinas_host_first_record_probe_v0.2",
+              "schema":"chocho_sinas_host_first_record_probe_v0.3",
               "source":{
                   "dataset":"SInAS 2.5",
                   "zenodo_record":"10038256",
@@ -140,7 +110,7 @@ jobs:
               "rows":len(rows),
               "by_host":by_name,
           }
-          Path("results/sinas-probe/focal_host_sinas_summary_v0.2.json").write_text(
+          Path("results/sinas-probe/focal_host_sinas_summary_v0.3.json").write_text(
               json.dumps(payload, indent=2) + "\n", encoding="utf-8"
           )
           print(json.dumps(payload, indent=2))
@@ -148,7 +118,7 @@ jobs:
       - name: Upload SInAS probe
         uses: actions/upload-artifact@v4
         with:
-          name: sinas-host-first-record-probe-v02
+          name: sinas-host-first-record-probe-v03
           path: results/sinas-probe/
           if-no-files-found: error
           retention-days: 14
