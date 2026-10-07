@@ -1,0 +1,26 @@
+name: temporal-hindcast-artifact-access-check
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-artifact-access-check.yml"
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download public TTF occurrence artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: _ttf
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - name: Inspect
+        run: |
+          find _ttf -maxdepth 2 -type f -printf '%P %s bytes\n' | sort
+          test -s _ttf/occurrences.csv
