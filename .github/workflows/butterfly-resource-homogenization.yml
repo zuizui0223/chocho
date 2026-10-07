@@ -8,6 +8,7 @@ on:
     paths:
       - "scripts/analyze_butterfly_resource_homogenization.py"
       - "scripts/analyze_butterfly_resource_overlap_resilience.py"
+      - "scripts/simulate_butterfly_competition_attenuation.py"
       - "scripts/analyze_butterfly_resource_niche_rewiring.py"
       - "scripts/analyze_butterfly_resource_homogenization_sensitivity.py"
       - ".github/workflows/butterfly-resource-homogenization.yml"
@@ -118,6 +119,16 @@ jobs:
             --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --crop-json input/fao/fao_crop_taxa_v0.1.json \
             --output-json results/resource-homogenization/butterfly_resource_homogenization_sensitivity_v0.1.json
+
+      - name: Simulate competition attenuation of new resource opportunity
+        run: |
+          python scripts/simulate_butterfly_competition_attenuation.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --output-json results/resource-homogenization/butterfly_competition_attenuation_v0.1.json \
+            --output-species-csv results/resource-homogenization/butterfly_competition_attenuation_species_v0.1.csv
 
       - uses: actions/upload-artifact@v4
         with:
