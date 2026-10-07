@@ -44,7 +44,7 @@ jobs:
 
           def parse_year(value):
               s=str(value or "").strip()
-              m=re.search(r"(?<!\\d)(1[5-9]\\d{2}|20[0-2]\\d)(?!\\d)",s)
+              m=re.search(r"(?<!\d)(1[5-9]\d{2}|20[0-2]\d)(?!\d)",s)
               return None if not m else int(m.group(1))
 
           out=Path("results/sinas-probe/focal_host_sinas_records_v0.3.csv")
