@@ -132,3 +132,60 @@ The active branch additionally tests:
 - targeted versus random host-loss robustness.
 
 If normalized niche overlap also increases, the ecological claim can be sharpened from regional resource homogenization to **consumer resource-niche convergence**.
+
+
+## 8. Normalized species-pair resource-niche overlap: a useful boundary
+
+The latest exact run (`37612135885`, head `c1eaa7eacd12e766df52fea7b910fe34d7321084`) additionally represented each butterfly niche as its set of exact **host species × WGSRPD3** resource cells and calculated pairwise Jaccard overlap across all 28,441 butterfly pairs.
+
+- mean native Jaccard: **0.004032**
+- mean contemporary Jaccard: **0.004885**
+- mean change: **+0.000853**
+- pairs increasing: **616**
+- pairs decreasing: **366**
+- pairs unchanged: **27,459**
+- pairs gaining at least one newly shared host × region cell: **920**
+- of these, **450 (48.9%)** are cross-family pairs
+
+This result prevents an overclaim. Anthropogenic host redistribution does **not** produce a wholesale convergence of the resource niches of all butterflies. Most butterfly pairs use different hosts and remain resource-disjoint.
+
+The stronger, biologically defensible interpretation is:
+
+> Host redistribution greatly expands the **geographic interaction opportunity among butterflies that already share hosts**, while regional resource assemblages become more similar overall.
+
+Thus “resource-niche convergence” should not be used as the headline without qualification. “Regional resource homogenization” and “expanded interspecific resource-sharing geography” are better supported.
+
+## 9. Added opportunity is often locally non-redundant in the reconstructed network
+
+Across the 14,553 butterfly × region units added by introduced host ranges:
+
+- **8,574 (58.9%)** are supported by exactly **one** introduced known host;
+- median number of contributing introduced hosts per added unit = **1**.
+
+Several butterflies have all of their reconstructed added geography supported by a single introduced host at each added region, including high-magnitude cases such as:
+
+- `Pseudozizeeria maha`: 259/259 added regions single-host supported;
+- `Ypthima asterope`: 133/133;
+- `Lasiommata megera`: 126/126;
+- `Oeneis norna`: 101/101;
+- `Carcharodus alceae`: 91/91.
+
+This is a **known-host network redundancy** result, not proof of demographic dependence. HOSTS incompleteness and unrecorded local hosts can only make apparent redundancy lower than reality.
+
+Nevertheless, it motivates a practical field-validation priority:
+
+> high introduced-resource gain + low reconstructed host redundancy = high priority for checking local host use and native replacement resources before invasive-host removal.
+
+## 10. Competition simulation decision
+
+A fully parameterized Lotka–Volterra or MacArthur consumer–resource model is **not yet justified** by these data because local host biomass, butterfly abundance, host quality, phenology and parasitoid/predator networks are absent.
+
+The defensible sequence is:
+
+1. empirical structural result: regional resource homogenization;
+2. empirical structural result: >2× expansion of shared-resource geography among host-sharing butterfly pairs;
+3. empirical robustness result: 58.9% of added units are single-host supported;
+4. counterfactual network stress test: targeted host loss disproportionately contracts added resource opportunity;
+5. **then**, only as a sensitivity analysis, use a transparent fixed-abundance/null allocation model to ask how resource expansion could redistribute potential crowding from within species to among host-sharing species.
+
+Any competition simulation must be labeled a scenario model rather than a fitted demographic prediction.
