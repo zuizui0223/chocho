@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
-V02_RUNNING_TITLE = "Host redistribution and resource gain"
+V02_RUNNING_TITLE = "Plant globalization and resource niches"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
@@ -39,6 +39,7 @@ def render_blinded(text: str) -> str:
             if (
                 "Human redistribution of host plants expands butterfly resource geography" in title
                 or "Anthropogenic host redistribution expands butterfly resource geography" in title
+                or "Plant globalization expands and homogenizes butterfly larval-resource geography" in title
             )
             else LEGACY_RUNNING_TITLE
         )
