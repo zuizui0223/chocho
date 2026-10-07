@@ -84,7 +84,7 @@ jobs:
           try:
               main_header = list(reader.fieldnames or [])
               for row in reader:
-                  taxon_id = str(row.get("Taxon") or "").strip()
+                  taxon_id = str(row.get("taxonID") or "").strip()
                   name = name_by_id.get(taxon_id)
                   if name is None:
                       continue
