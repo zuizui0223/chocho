@@ -8,6 +8,7 @@ on:
     paths:
       - "scripts/analyze_butterfly_resource_homogenization.py"
       - "scripts/analyze_butterfly_resource_overlap_resilience.py"
+      - "scripts/analyze_butterfly_resource_homogenization_sensitivity.py"
       - ".github/workflows/butterfly-resource-homogenization.yml"
 
 permissions:
@@ -96,6 +97,26 @@ jobs:
             --seed 20261007 \
             --output-json results/resource-homogenization/butterfly_resource_niche_rewiring_v0.1.json \
             --output-host-csv results/resource-homogenization/butterfly_resource_niche_rewiring_hosts_v0.1.csv
+
+      - name: Build FAO crop taxonomy
+        run: |
+          mkdir -p input/fao
+          curl --location --fail --silent --show-error --retry 3 \
+            "https://www.fao.org/4/a0135e/A0135E10.htm" \
+            -o input/fao/fao_icc_appendix4.html
+          python scripts/extract_fao_crop_taxa.py \
+            --html input/fao/fao_icc_appendix4.html \
+            --output-json input/fao/fao_crop_taxa_v0.1.json
+
+      - name: Test crop and Poaceae homogenization sensitivities
+        run: |
+          python scripts/analyze_butterfly_resource_homogenization_sensitivity.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --crop-json input/fao/fao_crop_taxa_v0.1.json \
+            --output-json results/resource-homogenization/butterfly_resource_homogenization_sensitivity_v0.1.json
 
       - uses: actions/upload-artifact@v4
         with:
