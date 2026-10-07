@@ -1,0 +1,54 @@
+{
+  "schema": "chocho_resource_consumer_temporal_mismatch_protocol_v0.3",
+  "status": "PRIMARY_PRECEDENCE_DESIGN_FROZEN_BEFORE_GLOBAL_FIRST_RECORD_PANEL_INSPECTION",
+  "created_on": "2026-10-07",
+  "supersedes_for_primary_inference": "docs/exploratory/butterfly_resource_consumer_temporal_mismatch_protocol_v0.2.json",
+  "reason_for_revision": "In v0.2 the paired lag-difference statistic algebraically cancels the butterfly clock and reduces to pseudo_resource_year - actual_resource_year. That is useful for resource-timing specificity but is insufficient by itself to establish resource-consumer temporal precedence. No global single-host chronology outcome had been inspected when this correction was frozen.",
+  "primary_panel": {
+    "source": "Outcome-blind introduced-only HOSTS-WCVP resource panel for the frozen 31 butterfly species",
+    "cell_rule": "actual_host_count == 1",
+    "expected_cells": 1143,
+    "paired_control": "rank-1 nearest matched alien non-host in the same WGSRPD3 region, selected before local chronology is inspected"
+  },
+  "clocks": {
+    "butterfly": "earliest exact-WGSRPD3 GBIF record in 1800-2025",
+    "actual_resource": "earliest exact-WGSRPD3 GBIF record in 1800-2025 for the single introduced known host",
+    "pseudo_resource": "earliest exact-WGSRPD3 GBIF record in 1800-2025 for the paired alien non-host"
+  },
+  "primary_endpoint": {
+    "inclusion": "cells with dated local actual-resource, pseudo-resource and butterfly first records",
+    "actual_precedence": "actual_resource_year <= butterfly_year",
+    "pseudo_precedence": "pseudo_resource_year <= butterfly_year",
+    "statistic": "discordant paired cells: actual-only precedence versus pseudo-only precedence",
+    "test": "one-sided exact McNemar/sign test on discordant pairs",
+    "direction": "actual-only precedence > pseudo-only precedence",
+    "alpha": 0.05,
+    "interpretation": "Tests whether the documented known resource preferentially predates the butterfly relative to an alien non-host with matched invasion/recording history in the same region."
+  },
+  "secondary_identity_timing_endpoint": {
+    "statistic": "pseudo_resource_year - actual_resource_year",
+    "interpretation": "Positive values mean the actual known host was locally documented earlier than the matched non-host; the butterfly clock cancels from this contrast.",
+    "tests": [
+      "one-sided paired sign test",
+      "sign-flip randomization of mean and median"
+    ]
+  },
+  "cluster_robustness": {
+    "required_reporting": [
+      "species-level median paired direction and sign test",
+      "actual-host-level median paired direction and sign test",
+      "WGSRPD3-region-level median paired direction and sign test"
+    ],
+    "purpose": "Diagnose pseudoreplication from repeated butterflies, hosts or regions; these are robustness checks rather than replacements for the frozen cell-level paired endpoint."
+  },
+  "strong_support_rule": "Call the pattern identity-specific resource-consumer temporal mismatch only if the primary precedence test is positive (p <= 0.05, actual-only > pseudo-only), the secondary actual-versus-pseudo timing contrast is directionally supportive, and the effect is not confined to one butterfly species.",
+  "null_rule": "If actual-only precedence does not exceed pseudo-only precedence, reject the resource-consumer temporal-mismatch interpretation even if actual host plants are generally older than pseudo plants.",
+  "boundaries": [
+    "First records are detection/digitization dates, not establishment dates.",
+    "Known-host presence does not prove local larval use or demographic benefit.",
+    "Matching controls measured alien-plant residence/recording structure but cannot eliminate all horticultural or collection-history differences.",
+    "The original GEB main manuscript remains unchanged.",
+    "Do not use invasion debt, trophic debt or colonization debt as headline language unless the primary precedence test is positive and robust."
+  ],
+  "stop_rule": "If the paired precedence primary test is null, terminate the temporal-mismatch branch rather than adding further timing models or simulations."
+}
