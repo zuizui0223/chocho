@@ -1,0 +1,189 @@
+name: temporal-hindcast-bulk-download
+
+on:
+  push:
+    branches:
+      - analysis/resource-homogenization-v01
+    paths:
+      - ".github/workflows/temporal-hindcast-bulk-download.yml"
+      - "scripts/analyze_butterfly_temporal_hindcast_bulk_download.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: temporal-hindcast-bulk-download
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GBIF_USERNAME: zuizui
+      GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
+      GBIF_EMAIL: ${{ secrets.GBIF_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install analysis dependencies
+        run: python -m pip install "numpy>=2,<3" "shapely>=2,<3"
+
+      - name: Require GBIF credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${GBIF_PASSWORD:-}"
+          test -n "${GBIF_EMAIL:-}"
+
+      - name: Download frozen 53,434-record snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-summary-v01
+          path: _ttf
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Download exact HOSTS-WCVP sidecars
+        uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+
+      - name: Checkout fixed WGSRPD
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+
+      - name: Rebuild frozen candidate cohort
+        run: |
+          mkdir -p results/bulk
+          python scripts/map_butterfly_occurrences_wgsrpd3_year.py             --occurrences-csv _ttf/occurrences.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --output-csv results/bulk/occurrences_wgsrpd3_year.csv
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py prepare             --occurrence-mapped-csv results/bulk/occurrences_wgsrpd3_year.csv             --insect-host-csv _sidecars/native/insect_host_accepted.csv             --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv             --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --effort-threshold 10             --output-csv results/bulk/candidates.csv
+
+      - name: Build 31-taxon full-history GBIF request
+        run: |
+          python - <<'PY'
+          import csv, json, urllib.parse, urllib.request
+          from pathlib import Path
+
+          species=sorted({r["species"].strip() for r in csv.DictReader(open("_ttf/occurrences.csv",newline="",encoding="utf-8")) if r["species"].strip()})
+          if len(species)!=31:
+              raise SystemExit(f"expected 31 occurrence species, got {len(species)}")
+          key_to_species={}
+          resolution={}
+          for name in species:
+              url="https://api.gbif.org/v1/species/match?"+urllib.parse.urlencode({"name":name,"strict":"false"})
+              req=urllib.request.Request(url,headers={"User-Agent":"chocho-temporal-bulk/0.1"})
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  x=json.load(r)
+              key=x.get("usageKey")
+              if not key:
+                  raise SystemExit(f"no GBIF match for {name}: {x}")
+              key_to_species[str(int(key))]=name
+              resolution[name]={"taxon_key":int(key),"canonical_name":x.get("canonicalName"),"rank":x.get("rank"),"match_type":x.get("matchType")}
+          request={
+              "notificationAddresses":[str(Path("/dev/null"))] if False else [],
+              "sendNotification":True,
+              "format":"SIMPLE_CSV",
+              "predicate":{
+                  "type":"and",
+                  "predicates":[
+                      {"type":"in","key":"TAXON_KEY","values":sorted(key_to_species,key=int)},
+                      {"type":"greaterThanOrEquals","key":"YEAR","value":"1800"},
+                      {"type":"lessThanOrEquals","key":"YEAR","value":"2025"},
+                      {"type":"equals","key":"HAS_COORDINATE","value":"true"},
+                      {"type":"equals","key":"HAS_GEOSPATIAL_ISSUE","value":"false"},
+                      {"type":"equals","key":"OCCURRENCE_STATUS","value":"PRESENT"}
+                  ]
+              }
+          }
+          request["notificationAddresses"]=["__GBIF_EMAIL__"]
+          Path("results/bulk/taxon_map.json").write_text(json.dumps({"taxon_key_to_species":key_to_species,"resolution":resolution},indent=2)+"\n")
+          Path("results/bulk/request.json").write_text(json.dumps(request,separators=(",",":"))+"\n")
+          print(json.dumps({"species":len(species),"taxon_keys":len(key_to_species)}))
+          PY
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path("results/bulk/request.json")
+          p.write_text(p.read_text().replace("__GBIF_EMAIL__",os.environ["GBIF_EMAIL"]))
+          PY
+
+      - name: Request bulk GBIF history
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          key="$(
+            curl --fail --silent --show-error               --user "$GBIF_USERNAME:$GBIF_PASSWORD"               --header "Content-Type: application/json"               --data @results/bulk/request.json               https://api.gbif.org/v1/occurrence/download/request
+          )"
+          key="$(printf '%s' "$key" | tr -d '\r\n\"')"
+          test -n "$key"
+          echo "download_key=$key" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$key" > results/bulk/download_key.txt
+
+      - name: Wait for bulk GBIF history
+        shell: bash
+        env:
+          DOWNLOAD_KEY: ${{ steps.request.outputs.download_key }}
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 150); do
+            curl --fail --silent --show-error               "https://api.gbif.org/v1/occurrence/download/$DOWNLOAD_KEY"               > results/bulk/download_metadata.json
+            status="$(python - <<'PY'
+          import json
+          print(json.load(open("results/bulk/download_metadata.json")).get("status",""))
+          PY
+            )"
+            echo "GBIF status: $status"
+            if [ "$status" = "SUCCEEDED" ]; then break; fi
+            if [ "$status" = "KILLED" ] || [ "$status" = "CANCELLED" ]; then exit 1; fi
+            sleep 12
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.load(open("results/bulk/download_metadata.json"))
+          if x.get("status")!="SUCCEEDED":
+              raise SystemExit(f"download incomplete: {x.get('status')}")
+          m=json.load(open("results/bulk/taxon_map.json"))
+          m["download"]={
+              "key":x.get("key"),"doi":x.get("doi"),"download_link":x.get("downloadLink"),
+              "total_records":x.get("totalRecords"),"created":x.get("created")
+          }
+          Path("results/bulk/taxon_map.json").write_text(json.dumps(m,indent=2)+"\n")
+          Path("results/bulk/download_url.txt").write_text(str(x.get("downloadLink") or "")+"\n")
+          PY
+
+      - name: Download and audit bulk history
+        run: |
+          set -euo pipefail
+          url="$(cat results/bulk/download_url.txt)"
+          test -n "$url"
+          curl --fail --location --silent --show-error "$url" -o results/bulk/gbif_full_history.zip
+          python scripts/analyze_butterfly_temporal_hindcast_bulk_download.py             --download-zip results/bulk/gbif_full_history.zip             --taxon-map-json results/bulk/taxon_map.json             --candidates-csv results/bulk/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --permutations 99999             --seed 20261007             --output-csv results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv             --output-json results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-temporal-hindcast-bulk-v01
+          path: |
+            results/bulk/butterfly_temporal_hindcast_bulk_v0.1.json
+            results/bulk/butterfly_temporal_hindcast_bulk_cells_v0.1.csv
+            results/bulk/taxon_map.json
+            results/bulk/download_metadata.json
+            results/bulk/download_key.txt
+          if-no-files-found: error
+          retention-days: 14
