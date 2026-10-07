@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/temporal-hindcast-full-history-sharded.yml"
       - "scripts/audit_butterfly_temporal_hindcast_parallel.py"
+      - "scripts/audit_butterfly_temporal_hindcast_full_history.py"
   workflow_dispatch:
 
 permissions:
@@ -57,7 +58,7 @@ jobs:
     needs: prepare
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 1
       matrix:
         shard: [0, 1, 2, 3, 4, 5, 6, 7]
     runs-on: ubuntu-latest
@@ -79,7 +80,7 @@ jobs:
       - name: Query full GBIF history for shard ${{ matrix.shard }}
         run: |
           mkdir -p results/shards
-          python scripts/audit_butterfly_temporal_hindcast_parallel.py query             --candidates-csv _prepared/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --shard-index ${{ matrix.shard }}             --shard-count 8             --history-start 1800             --history-end 2025             --workers 4             --output-csv results/shards/history_shard_${{ matrix.shard }}.csv
+          python scripts/audit_butterfly_temporal_hindcast_parallel.py query             --candidates-csv _prepared/candidates.csv             --level3-geojson _external/WGSRPD/geojson/level3.geojson             --shard-index ${{ matrix.shard }}             --shard-count 8             --history-start 1800             --history-end 2025             --workers 1             --output-csv results/shards/history_shard_${{ matrix.shard }}.csv
       - uses: actions/upload-artifact@v4
         with:
           name: temporal-history-shard-${{ matrix.shard }}
