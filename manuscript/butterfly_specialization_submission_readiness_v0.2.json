@@ -1,7 +1,7 @@
 {
   "schema": "chocho_butterfly_specialization_submission_readiness_v0.2",
   "status": "SCIENTIFICALLY_READY_INITIAL_SUBMISSION_PENDING_AUTHOR_METADATA_AND_DECLARATIONS",
-  "updated_on": "2026-10-02",
+  "updated_on": "2026-10-08",
   "target_journal": {
     "primary": "Global Ecology and Biogeography",
     "article_type": "Research Article",
@@ -64,7 +64,8 @@
     "conservation_implication": "complete and scale-bounded; management implications are explicitly provisional at WGSRPD3 resolution and require locality-level validation.",
     "resource_homogenization": "regional mean Jaccard 0.277→0.462 (+66.8%), fixed-margin null median 0.453, p=0.002; butterfly resource-envelope overlap 0.222→0.328 (+47.4%), null 0.321, p=0.002",
     "shared_resource_exposure": "exact shared-host butterfly-pair×WGSRPD3 units 62,473→141,885 (+127.1%); 920/986 host-sharing pairs gain new regions; 52.3% of novel units between butterfly families",
-    "resource_network_redundancy": "58.9% of added butterfly×region units single-host-supported; top-38 global removal stress loses 39.9% of added opportunity; descriptive, not a local management prediction"
+    "resource_network_redundancy": "58.9% of added butterfly×region units single-host-supported; top-38 global removal stress loses 39.9% of added opportunity; descriptive, not a local management prediction",
+    "host_inventory_completeness_robustness": "Supplementary Table S9 only: 1027 additional BCE/Clarke accepted-ID candidate butterfly-host edges for 81 European exact species; proportional potential-resource expansion 54.9%->50.1%; 355-region continent-preserving null residual +0.003616 vs +0.003436, each 499-draw p=0.002. Source-conditional post-hoc structural sensitivity, not corrected worldwide biology."
   },
   "figures": {
     "main_figures": 3,
@@ -89,14 +90,24 @@
     "anonymous_hosting_status": "NOT_REQUIRED_IF_BUNDLE_ATTACHED_AS_SUBMISSION_SUPPLEMENT",
     "cover_letter": "submission-facing v0.2 cover letter tightened to a <250-word GEB-interest paragraph plus declarations",
     "peer_review_data_code_mode": "attach butterfly_specialization_anonymous_review_bundle.zip as supplementary review material",
-    "public_archive_status": "DEFERRED_UNTIL_PUBLICATION"
+    "public_archive_status": "DEFERRED_UNTIL_PUBLICATION",
+    "s9_anonymous_review_addendum": {
+      "source": "BCE/Clarke-derived evidence-filtered published foodplant records, WCVP accepted-species-ID botanical crosswalk, regional sensitivity and Level1 source-conditioned null",
+      "source_provenance": "Clarke 2024, BCE-derived rank 1-3, not original independently collected feeding records",
+      "file": "bce_clarke_anonymous_s9_reproducibility_v01.zip",
+      "delivered_in": "same GitHub Actions anonymous-review-bundle CI artifact as butterfly_specialization_anonymous_review_bundle.zip",
+      "checked_by": ".github/workflows/build-anonymous-review-bundle.yml",
+      "archive_contents_checked": true,
+      "double_anonymous_scan_complete": true,
+      "repository_artifact_retention_days": 30
+    }
   },
   "remaining_before_submission": [
     "Insert the final author list, affiliations, emails and ORCIDs in the separate v0.2 title page, with exactly one corresponding author.",
     "Complete CRediT contributions, acknowledgements, funding and conflict-of-interest statements.",
     "Fill the corresponding-author signature block in the cover letter.",
     "Build the exact-commit blinded DOCX and anonymous data-and-code review supplement and confirm submission workflows are green.",
-    "Upload the anonymous review bundle ZIP directly as supplementary review material with the initial submission."
+    "Download both anonymous data-and-code review bundle and separate Table S9 accepted-host source/reproducibility ZIP from the same CI artifact and upload both directly as supplementary review material; CI artifacts expire, so retain the downloaded ZIP files before upload."
   ],
   "not_required": [
     "Additional response-driven predictor searches.",
