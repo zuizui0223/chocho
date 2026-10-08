@@ -1,0 +1,41 @@
+{
+  "schema": "chocho_clarke2024_heldout_host_evidence_gate_v0.1",
+  "created": "2026-10-08",
+  "status": "SOURCE_FIRST_DESIGN_FROZEN_BEFORE_ORIGINAL_2024_CSV_RETRIEVAL_AND_OVERLAP_ANALYSIS",
+  "scientific_question": "Does a separately compiled, evidence-ranked and geographically localized European butterfly host inventory expose important botanical host-link missingness or false confidence in the frozen global butterfly HOSTS resource reconstruction?",
+  "source": {
+    "paper": "Clarke H E (2024) A checklist of European butterfly larval foodplants, Ecology and Evolution 14:e10834; DOI 10.1002/ece3.10834",
+    "data": "10.5061/dryad.1vhhmgr12",
+    "table_files": [
+      "larval_host_plant.csv",
+      "butterfly_synonym.csv",
+      "larval_host_plant_status.csv",
+      "wcvp_extendedb.csv",
+      "larval_plants.csv",
+      "region.csv"
+    ],
+    "required": "Read original source tables AND README; preserve source taxonomic identifiers, evidence status, locality and publication references.",
+    "source_access": "Attempt original file_stream then canonical Dryad API file endpoint for each approved file; an alternative author-deposited copy or PMC appendix is acceptable only after provenance reconciliation, never substitute scraped names silently."
+  },
+  "design": {
+    "frozen_butterflies": "data/frozen/figure_sources/anthropogenic_species_metrics.csv 239 exact scientific binomials",
+    "host_list": "Pinned globalbioticinteractions/HOSTS commit 808e0b869f9ec1adf8efff87cf6a395adda103e0 + WCVP rWCVPdata commit 65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "taxonomic_join": "Exact accepted species binomial for butterflies, unique WCVP accepted plant identity or exact unequivocal normalized accepted binomial, no genus-level imputation, no hidden synonym aggregation. Report unmatched denominator.",
+    "evidence_classes": {
+      "high": "1=wild use plus rearing, 2=wild larvae, 3=wild eggs/oviposition",
+      "lower": "4=claim only or 5=breeding only",
+      "exclude": "6=mistake; never add"
+    },
+    "source_independence": "Independently COMPILED checklist, not guaranteed source-observation independent of HOSTS or WCVP. Quantify overlapping citations where possible before claiming independent empirical validation.",
+    "primary": "Among exact butterfly matches and evidence<=3 exact plant species, fraction with/without corresponding exact frozen HOSTS butterfly-host link. Report species count, host pair count, and per-butterfly missed-link count; do not calculate an uncorrected global missing-link fraction.",
+    "quality_control": "Report mistakenly accepted status=6, status unknown, infraspecific taxa, names with ambiguity; exclude missing or conflicting evidence. Separate endemic native European butterflies from introduced populations if origins known.",
+    "next_gate": "Only if source tables and stable joins succeed: evaluate whether adding high-evidence missing host species changes native vs contemporary regional resource envelope, preserving existing 239 GEB panel as frozen comparator, post-hoc sensitivity only."
+  },
+  "stop": [
+    "If source download unavailable, record exact HTTP failures; no reconstructed statistics.",
+    "If synonym crosswalk or status semantics uncertain, stop without inferred links.",
+    "If >25% taxon matches ambiguous, report feasibility and do not proceed to biological outcome.",
+    "Do not fit fitness, colonization, causal globalization or interspecific competition from bibliography-only host records.",
+    "No change to main GEB manuscript, figures or frozen claim map based on exploratory audit alone."
+  ]
+}
