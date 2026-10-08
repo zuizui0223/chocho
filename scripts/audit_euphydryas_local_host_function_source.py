@@ -49,16 +49,20 @@ def audit_file(record: dict[str, str]) -> dict[str, object]:
         data = raw.decode("utf-8-sig")
     except UnicodeError as exc:
         raise RuntimeError(f"Undecodable original CSV {record['name']}") from exc
-    reader = csv.DictReader(io.StringIO(data))
-    if not reader.fieldnames:
+    reader = csv.reader(io.StringIO(data))
+    try:
+        header = next(reader)
+    except StopIteration as exc:
+        raise RuntimeError(f"Missing CSV header in {record['name']}") from exc
+    if not header:
         raise RuntimeError(f"Missing CSV header in {record['name']}")
-    header = reader.fieldnames
-    if len(set(header)) != len(header):
-        raise RuntimeError(f"Duplicate CSV columns in {record['name']}")
+    repeated = sorted({field for field in header if header.count(field) > 1})
     count = 0
     for row in reader:
-        if None in row:
-            raise RuntimeError(f"CSV parser found unaligned records in {record['name']}")
+        if len(row) != len(header):
+            raise RuntimeError(
+                f"CSV source has non-rectangular records in {record['name']}"
+            )
         count += 1
     if count == 0:
         raise RuntimeError(f"Empty original source {record['name']}")
@@ -69,6 +73,8 @@ def audit_file(record: dict[str, str]) -> dict[str, object]:
         "bytes": len(raw),
         "rows": count,
         "columns": header,
+        "duplicate_column_names": repeated,
+        "fit_readiness": "HOLD_COLUMN_AMBIGUITY" if repeated else "SCHEMA_ONLY",
         "source_url": url,
         "response_values_examined": False,
     }
@@ -85,7 +91,11 @@ def main() -> None:
     audited = [audit_file(f) for f in protocol["source"]["files"]]
     result = {
         "schema": "chocho_euphydryas_host_function_raw_source_schema_v0.1",
-        "status": "RAW_SOURCE_VERIFIED_SCHEMA_ONLY_NOT_A_NEW_MECHANISM_TEST",
+        "status": (
+            "RAW_SOURCE_VERIFIED_BUT_DUPLICATE_COLUMNS_HOLD"
+            if any(f["duplicate_column_names"] for f in audited)
+            else "RAW_SOURCE_VERIFIED_SCHEMA_ONLY_NOT_A_NEW_MECHANISM_TEST"
+        ),
         "sources": audited,
         "source_population": "Taylor's checkerspot in Haan et al. (2021), not Nevada population of Singer & Parmesan (2018)",
         "causal_boundary": [
