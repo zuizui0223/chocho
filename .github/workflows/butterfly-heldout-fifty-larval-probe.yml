@@ -1,0 +1,113 @@
+name: butterfly heldout fifty larval evidence probe
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: [".github/workflows/butterfly-heldout-fifty-larval-probe.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  sample-and-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: _s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Select and freeze stratified 50-species panel before looking at any GloBI data
+        run: |
+          mkdir -p results/heldout-fifty
+          python - <<'PY'
+          import csv,random,json
+          from collections import defaultdict
+          from pathlib import Path
+          import sys
+          sys.path.insert(0,"scripts")
+          import probe_independent_butterfly_larval_hostuse as baseline
+          d=Path("_s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv")
+          species=set()
+          with d.open(newline="",encoding="utf-8") as f:
+              for r in csv.DictReader(f):
+                  if float(r["host_family_count"])>0 and int(r["host_wgsrpd3_unit_count"])>0:
+                      species.add(r["species"].strip())
+          assert len(species)==239, f"expected 239 got {len(species)}"
+          taxonomy={}
+          with open("data/external/leptraits_consensus_v1.0.csv",newline="",encoding="utf-8") as f:
+              for r in csv.DictReader(f):
+                  name=r["Species"].strip()
+                  family=r["Family"].strip()
+                  if name and family:taxonomy[name]=family
+          excluded=set(baseline.SPECIES)
+          assert len(excluded)==11
+          strata=defaultdict(list)
+          for name in sorted(species - excluded):
+              if name not in taxonomy:raise RuntimeError("unmatched taxonomy "+name)
+              strata[taxonomy[name]].append(name)
+          rng=random.Random(20261008)
+          families=["Hesperiidae","Lycaenidae","Nymphalidae","Papilionidae","Pieridae"]
+          selection={family:sorted(rng.sample(sorted(strata[family]),10)) for family in families}
+          chosen=sorted(set().union(*selection.values()))
+          assert len(chosen)==50 and not set(chosen)&excluded
+          output={"schema":"chocho_heldout_fifty_random_butterfly_panel_v0.1","status":"FROZEN_BEFORE_GLOBI_OUTCOME","seed":20261008,"species":chosen,"family_strata":selection,"excluded_original_11":sorted(excluded),"eligible_species":len(species)}
+          Path("results/heldout-fifty/panel.json").write_text(json.dumps(output,indent=2)+"\n")
+          print(json.dumps({"species":len(chosen),"strata":{k:len(v) for k,v in selection.items()}},indent=2))
+          PY
+      - name: Query original-source larval feeding for heldout species
+        run: |
+          python - <<'PY'
+          import json,sys,csv
+          from pathlib import Path
+          sys.path.insert(0,"scripts")
+          import probe_independent_butterfly_larval_hostuse as p
+          panel=json.loads(Path("results/heldout-fifty/panel.json").read_text())
+          p.SPECIES=list(panel["species"])
+          sys.argv=[
+              "probe_independent_butterfly_larval_hostuse.py",
+              "--insect-host-csv","_sidecars/native/insect_host_accepted.csv",
+              "--native-distribution-csv","_sidecars/native/native_extant_nondoubtful_wgsrpd3.csv",
+              "--contemporary-distribution-csv","_sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv",
+              "--level3-geojson","_external/WGSRPD/geojson/level3.geojson",
+              "--page-limit","512",
+              "--pages-per-species","2",
+              "--output-json","results/heldout-fifty/globi_feasibility_summary.json",
+              "--output-csv","results/heldout-fifty/strict_larval_use.csv",
+              "--raw-dir","results/heldout-fifty/raw_pages"
+          ]
+          p.main()
+          rows=list(csv.DictReader(open("results/heldout-fifty/strict_larval_use.csv",newline="",encoding="utf-8")))
+          intro=[r for r in rows if r["introduced_only_resource_cell"]=="1"]
+          direct=[r for r in intro if "/observations/" in r["source_occurrence_id"]]
+          status=json.loads(Path("results/heldout-fifty/globi_feasibility_summary.json").read_text())
+          out={"schema":"chocho_heldout_fifty_direct_hostuse_evidence_v0.1","status":"EXPLORATORY_HELDOUT_SOURCE_FEASIBILITY","panel_size":50,"all_strict_records":len(rows),"introduced_only_records":len(intro),"introduced_only_direct_inat_records":len(direct),"direct_species":len({r["butterfly_species"] for r in direct}),"direct_regions":len({r["wgsrpd3_code"] for r in direct}),"candidate_species":sorted({r["butterfly_species"] for r in direct}),"source_query_failed":sum(bool(r.get("error")) for r in status["query_audit"]),"limitation":"Capped and missing source records do not imply ecological absence; original butterfly native range and native host alternatives not yet validated; presence only, no performance."}
+          Path("results/heldout-fifty/direct_evidence_summary.json").write_text(json.dumps(out,indent=2)+"\n")
+          print(json.dumps(out,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-heldout-fifty-direct-larval-evidence-v01
+          path: results/heldout-fifty/
+          if-no-files-found: warn
+          retention-days: 30
