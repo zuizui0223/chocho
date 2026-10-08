@@ -1,0 +1,31 @@
+name: Monarch published experimental adult-fate audit
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_monarch_warming_host_survival.py
+      - .github/workflows/butterfly-monarch-warming-fate-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify pinned published 2025 original cohort and descriptive survival cells
+        run: |
+          python scripts/audit_monarch_warming_host_survival.py \
+            --protocol-json docs/exploratory/MONARCH_WARMING_HOST_SURVIVAL_SOURCE_GATE_V01.json \
+            --output-json results/monarch_warming/adult_fate_factorial_source_audit_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-monarch-warming-adult-fate-source-v01
+          path: results/monarch_warming/
+          if-no-files-found: warn
+          retention-days: 30
