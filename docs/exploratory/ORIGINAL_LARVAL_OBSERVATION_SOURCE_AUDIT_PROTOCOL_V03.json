@@ -1,0 +1,25 @@
+{
+  "schema": "chocho_original_inat_larval_case_source_audit_v0.3",
+  "status": "POSTHOC_FROZEN_BEFORE_INAT_ORIGINAL_API_RETRIEVAL",
+  "date": "2026-10-08",
+  "source": "All 45 original iNaturalist IDs in GloBI v0.2 run 37712115731, no cherry-picking",
+  "criteria": [
+    "Public API source retrieval",
+    "Taxon/year consistency with GloBI record",
+    "Photo count, explicit larval annotation, feeding observation field",
+    "Observed location precision and captive status"
+  ],
+  "limits": [
+    "Original iNaturalist observation field is a contributor assertion, not verified feeding",
+    "Photo presence is not photo-confirmed feeding",
+    "Puerto Rico Danaus plexippus is native Caribbean; introduced-only resource cell may be a false negative for native Asclepias curassavica due to missing HOSTS link",
+    "Calotropis procera host use in Puerto Rico was studied previously"
+  ],
+  "refs": [
+    "https://powo.science.kew.org/taxon/94213-1",
+    "https://powo.science.kew.org/taxon/1004515-2",
+    "https://www.arecibo.inter.edu/wp-content/uploads/portal/pdf/inter_scientific_05.pdf",
+    "https://doi.org/10.1371/journal.pbio.3003988"
+  ],
+  "claim_boundary": "No butterfly colonization or fitness inference; no new native-host discovery claimed; main GEB unchanged"
+}
