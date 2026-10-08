@@ -74,7 +74,7 @@ We tested whether the host-family-breadth association with proportional expansio
 
 An exploratory plant-level analysis related HOSTS consumer degree to plant geographic expansion across 8,909 HOSTS-WCVP plants (Supplementary Table S2). Because HOSTS includes moths as well as butterflies, this is a Lepidoptera-wide network measure rather than a butterfly-specific trait. We treat it only as a possible explanatory axis because degree may reflect ecological host prominence, study intensity, and reverse causation if introduced plants acquire additional consumer records after redistribution.
 
-Within-butterfly portfolio-concentration metrics were retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number. This diagnostic is distinct from the across-plant concentration of total added opportunity described above.
+Within-butterfly portfolio-concentration metrics were retained only as a secondary structural diagnostic because effective contributor number and maximum single-host share are bounded by host number. This diagnostic is distinct from the across-plant concentration of total added opportunity described above. A separate European host-inventory sensitivity is reported in Supplementary Table S9.
 
 ### 2.5 Secondary occurrence validation
 
