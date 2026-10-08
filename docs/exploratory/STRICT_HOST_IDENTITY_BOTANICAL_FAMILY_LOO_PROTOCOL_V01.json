@@ -1,0 +1,61 @@
+{
+  "schema": "chocho_botanical_family_leave_one_out_strict_null_protocol_v0.1",
+  "status": "POSTHOC_ROBUSTNESS_FROZEN_BEFORE_BOTANICAL_LOO_OUTCOME",
+  "created": "2026-10-08",
+  "rationale": "Check if the strict butterfly-family x botanical-family host identity effect (p=0.030) is dominated by a single common host plant family.",
+  "selection": "The eight most linked botanical families selected using frozen HOSTS interactions alone, before any botanical family LOO results",
+  "families": [
+    [
+      "Fabaceae",
+      573
+    ],
+    [
+      "Poaceae",
+      258
+    ],
+    [
+      "Brassicaceae",
+      200
+    ],
+    [
+      "Apocynaceae",
+      139
+    ],
+    [
+      "Asteraceae",
+      134
+    ],
+    [
+      "Apiaceae",
+      115
+    ],
+    [
+      "Passifloraceae",
+      103
+    ],
+    [
+      "Rutaceae",
+      72
+    ]
+  ],
+  "panel": {
+    "butterflies": 239,
+    "host_plants": 1706,
+    "host_links": 2596,
+    "regions": 355
+  },
+  "statistic": "Same original climate-analogue-minus-discordant difference in contemporary-minus-native regional butterfly-resource Jaccard, with one complete botanical family of host links excluded from observed AND randomized networks.",
+  "null": "Double-edge swaps within butterfly-family x botanical-family link classes in the full network, preserving host degree and butterfly plant-family diet composition. Exclusion is only in evaluation, not in the swap process.",
+  "climate_groups": "Pre-frozen four-BIO distances, 12,944 far cross-Level1 climate analog and 12,944 discordant regional pairs",
+  "permutations": 499,
+  "primary_seed": 20261008,
+  "second_seed": 20261009,
+  "alpha": 0.05,
+  "decision": "All-positive LOO excess supports direction robustness but NOT an independent butterfly mechanism; sign reversals expose single-family dependence. Treat all p values as descriptive posthoc audits; do not select favorable subsets.",
+  "boundaries": [
+    "Output remains potential larval-resource geography, not realized butterfly response or fitness.",
+    "If a butterfly loses all host links after deleting one plant family, retain it as an empty resource species in the same frozen 239-butterfly frame.",
+    "p-values generated from network randomizations, not independence of regional pairs.",
+    "No changes to the GEB main manuscript."
+  ]
+}
