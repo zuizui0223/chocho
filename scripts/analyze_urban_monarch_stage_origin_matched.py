@@ -30,7 +30,8 @@ def read(path):
             if r["Native_status"] not in ("Exotic","Native"):raise RuntimeError("unexpected native status")
             e={**nums,"year":d.year,"month":d.month,"route":int(r["Route"]),
                "native_status":r["Native_status"],"milkweed":r["Milkweed_sp"],
-               "Too_far_accessible":(str(r.get("Too_far") or "").strip().lower() in ("","no"))}
+               "Too_far_accessible":(str(r.get("Too_far") or "").strip().lower() in ("","na","n/a","no")),
+               "Too_far_explicit_no":(str(r.get("Too_far") or "").strip().lower()=="no")}
             e["late"]=e["Instar_4"]+e["Instar_5"]
             e["early"]=e["Instar_1"]+e["Instar_2"]
             e["all_larvae"]=sum(e[f"Instar_{j}"] for j in range(1,6))
@@ -134,6 +135,7 @@ def main():
         raise RuntimeError("frozen 2022 matched panel drift")
     sensitive={end:analyze(rows,2022,endpoint=end)[0] for end in ("early","all_larvae","Instar_5")}
     access,_=analyze([r for r in rows if r["Too_far_accessible"]],2022)
+    explicit_no,_=analyze([r for r in rows if r["Too_far_explicit_no"]],2022)
     partial={str(y):analyze(rows,y)[0] for y in (2023,2024)}
     species=defaultdict(set);counts=Counter()
     for r in rows:
@@ -149,6 +151,8 @@ def main():
       "protocol":"docs/exploratory/URBAN_MILKWEED_ORIGIN_STAGE_MATCHED_PROTOCOL_V01.json",
       "source_audit":audit,"primary_2022":primary,
       "sensitivity_accessible_patches":{k:access[k] for k in ("patch_observations","route_months_both_plant_origins","active_route_month_strata","stratified_MH_OR")},
+      "sensitivity_explicit_no_too_far":{k:explicit_no[k] for k in ("patch_observations","route_months_both_plant_origins","active_route_month_strata","stratified_MH_OR")},
+      "accessibility_category_audit":"Literal NA in the source is not an observed too-far count. Main accessible filter allows blank/NA/No; stricter explicit-No filter isolates records affirmatively marked accessible.",
       "alternate_larval_stages":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"]} for k,v in sensitive.items()},
       "incomplete_other_years":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"],"paired_route_months":v["route_months_both_plant_origins"]} for k,v in partial.items()},
       "plant_species_identity":{"plant_species_in_both_native_statuses":sum(len(x)>1 for x in species.values()),
@@ -156,6 +160,7 @@ def main():
       "inference_limit":["Egg and instar observations are different cross-sectional individuals; the ratio is NOT egg-to-larva survival.",
       "Native versus exotic categories fully confounded with plant species identity.",
       "15 route cluster bootstrap; garden and individual plant detection and independence may remain unaddressed.",
+      "Original Too_far has both blank and literal NA (not pandas missing); these are UNKNOWN, not confirmed accessible. Report both unknown-allowed and explicitly-No restrictions.",
       "One full season (2022); 2023 incomplete and 2024 partial, NOT independent replicates.",
       "The published paper already described seasonal monarch egg-to-larva patterns; this is posthoc origin-stratified reanalysis.",
       "Do not change main GEB manuscript."]
