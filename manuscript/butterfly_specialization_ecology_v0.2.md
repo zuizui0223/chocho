@@ -179,6 +179,7 @@ The ecological consequence is a dual one. For individual species, redistributed 
 - Braga, M. P. 2023. Are exotic host plants a life raft or a trap for butterflies? *Current Opinion in Insect Science* 58: 101074. https://doi.org/10.1016/j.cois.2023.101074
 - Braschler, B. & Hill, J. K. 2007. Role of larval host plants in the climate-driven range expansion of the butterfly *Polygonia c-album*. *Journal of Animal Ecology* 76: 415–423. https://doi.org/10.1111/j.1365-2656.2007.01217.x
 - Brummitt, R. K., Pando, F., Hollis, S. & Brummitt, N. A. 2001. *World Geographical Scheme for Recording Plant Distributions*, 2nd edn. Hunt Institute for Botanical Documentation, Carnegie Mellon University.
+- Clarke, H. E. 2024. A checklist of European butterfly larval foodplants. *Ecology and Evolution* 14: e10834. https://doi.org/10.1002/ece3.10834
 - Daru, B. H., Davies, T. J., Willis, C. G. et al. 2021. Widespread homogenization of plant communities in the Anthropocene. *Nature Communications* 12: 6983. https://doi.org/10.1038/s41467-021-27186-8
 - Fricke, E. C. & Svenning, J.-C. 2020. Accelerating homogenization of the global plant–frugivore meta-network. *Nature* 585: 74–78. https://doi.org/10.1038/s41586-020-2640-y
 - GBIF.org. 2026. GBIF Occurrence Download for the 53,434 records used in butterfly occurrence validation. https://doi.org/10.15468/dl.pp5nc9
