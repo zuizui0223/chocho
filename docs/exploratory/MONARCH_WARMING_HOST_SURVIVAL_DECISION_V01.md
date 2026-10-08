@@ -1,6 +1,6 @@
 # Monarch host × warming × parasite adult-survival reality check
 
-**Date:** 2026-10-08. **Status:** PUBLISHED SOURCE RE-EXTRACTION; NOT AN INDEPENDENT ECOLOGICAL DISCOVERY. Experimental outcome values are transcribed from a pinned original author CSV and grouped deterministically; independent GitHub Actions reproducer may be inspected at `.github/workflows/butterfly-monarch-warming-fate-source.yml`. **No modification to the GEB manuscript or PR #38.**
+**Date:** 2026-10-08. **Status:** ORIGINAL SOURCE VERIFIED AND REPRODUCED / PUBLISHED BIOLOGICAL RESULTS, NOT AN INDEPENDENT ECOLOGICAL DISCOVERY. The source-audited [successful GitHub Actions run 37772889623](https://github.com/zuizui0223/chocho/actions/runs/37772889623) verified 240 unique individual records, exactly one unavailable adult fate, all eight predefined 30-individual treatment cohorts, and SHA-256 `dc7373e28f836c8da6d3a57754d13fbd965bbfa7c6132b7b7d2` for the pinned original CSV. Code: `.github/workflows/butterfly-monarch-warming-fate-source.yml`. **No modification to the GEB manuscript or PR #38.**
 
 ## Original provenance and scientific status
 
