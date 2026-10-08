@@ -31,7 +31,7 @@ jobs:
       - name: Install review build environment
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -e ".[review]"
+          python -m pip install -e ".[review,test]"
 
       - name: Render current blinded v0.2 manuscript
         run: |
