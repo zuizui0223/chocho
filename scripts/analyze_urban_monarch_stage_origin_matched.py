@@ -188,9 +188,21 @@ def triad_common_strata(rows,ordered_species):
         pairs=[(route,month,vals[first]["late"],vals[first]["Eggs"],
                 vals[second]["late"],vals[second]["Eggs"])
                for ((route,month),vals) in active]
+        # Presence-conditioned sensitivity keeps every route-month with all
+        # three plants, even when one of them has zero stage detections.
+        # Omit only strata where this pair has no egg or late count at all
+        # (n=0 makes the MH fraction undefined).
+        presence_pairs=[(route,month,vals[first]["late"],vals[first]["Eggs"],
+                         vals[second]["late"],vals[second]["Eggs"])
+                        for ((route,month),vals) in present
+                        if sum(vals[z][metric] for z in (first,second)
+                               for metric in ("late","Eggs"))>0]
         routes=sorted({r["route"] for r in rows if r["year"]==2022})
         contrasts.append({
            "first_species":first,
+           "presence_conditioned_stage_strata":len(presence_pairs),
+           "presence_conditioned_MH_OR":or_mh(presence_pairs),
+           "presence_conditioned_bootstrap":block_bootstrap(presence_pairs,routes,4999,20261008),
            "second_species":second,
            "identical_triad_route_month_strata":len(pairs),
            "relative_late_to_egg_MH_OR":or_mh(pairs),
@@ -210,7 +222,7 @@ def triad_common_strata(rows,ordered_species):
        "route_months_with_all_three_species_and_stage_events":len(active),
        "active_by_season":seasons,
        "contrasts":contrasts,
-       "inference_limit":"All pairs share identical route×month strata, removing pair-specific stratum support as an explanation. Plant native status still perfectly follows species identity; these are cross-sectional reports, not survival. Matched Mantel-Haenszel odds ratios need not be multiplicatively transitive; small common support may make intervals broad."
+       "inference_limit":Event-positive triad contrasts share identical route×month support; a separate plant-presence-conditioned sensitivity uses every route×month where all three species were reported, allowing stage-count zeros and dropping only completely event-free pairwise strata. The former conditions on detected stages in all three species; Plant native status still perfectly follows species identity; these are cross-sectional reports, not survival. Matched Mantel-Haenszel odds ratios need not be multiplicatively transitive; small common support may make intervals broad."
     }
 
 def main():
@@ -284,7 +296,10 @@ def main():
              "by_season":result["species_triad_identical_strata_negative_control"]["active_by_season"],
              "pairs":[{"first":p["first_species"],"second":p["second_species"],
                        "OR":p["relative_late_to_egg_MH_OR"],
-                       "bootstrap_ci":p["route_cluster_bootstrap"]["overall"]["ci95"]}
+                       "bootstrap_ci":p["route_cluster_bootstrap"]["overall"]["ci95"],
+                       "presence_n":p["presence_conditioned_stage_strata"],
+                       "presence_OR":p["presence_conditioned_MH_OR"],
+                       "presence_ci":p["presence_conditioned_bootstrap"]["overall"]["ci95"]}
                       for p in result["species_triad_identical_strata_negative_control"]["contrasts"]]
           }},indent=2),flush=True)
 if __name__=="__main__":main()
