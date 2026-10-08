@@ -1,0 +1,42 @@
+name: pieridae fabaceae independent larval feeding pilot
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/probe_pieridae_fabaceae_larval_use.py",".github/workflows/butterfly-pieridae-fabaceae-larval-use.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Probe independent Fabaceae-feeding larval events; archive raw pages
+        run: |
+          mkdir -p results/pieridae-fabaceae-larval-use
+          python scripts/probe_pieridae_fabaceae_larval_use.py --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --page-limit 512 --pages-per-species 2 --output-json results/pieridae-fabaceae-larval-use/pieridae_fabaceae_larval_use_v0.1.json --output-csv results/pieridae-fabaceae-larval-use/geolocated_fabaceae_larval_records_v0.1.csv --raw-dir results/pieridae-fabaceae-larval-use/api_raw_pages
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-pieridae-fabaceae-larval-use-v01
+          path: results/pieridae-fabaceae-larval-use/
+          if-no-files-found: warn
+          retention-days: 30
