@@ -10,7 +10,7 @@ We viewed the published study abstract and first source rows before freezing the
 
 ## Adult survival, with every treatment arm retained
 
-The original CSV contains **240 individual larvae**, 30 randomly assigned to each listed host × temperature × inoculation group. Of 240, **239 `Surv_adult` fields** contain binary 0/1; the other is missing in ambient, tropical, parasite-free controls. The table below uses all measured adult survival outcomes without deleting observed deaths. Survival is adult eclosion during the experiment, not survival of a free-living population.
+The original CSV contains **240 individual larvae**, 30 recorded in each listed host × temperature × inoculation group; original assignment procedures should be confirmed from the published Methods before making design-based causal claims. Of 240, **239 `Surv_adult` fields** contain binary 0/1; the other is missing in ambient, tropical, parasite-free controls. The table below uses all measured adult survival outcomes without deleting observed deaths. Survival is adult eclosion during the experiment, not survival of a free-living population.
 
 | OE inoculation | Temperature | Tropical milkweed survived/observed | Swamp milkweed survived/observed |
 | --- | --- | ---: | ---: |
