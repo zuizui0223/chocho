@@ -1,0 +1,46 @@
+{
+  "schema": "chocho_H3_monarch_host_enemy_exposure_survival_interaction_v0.1",
+  "status": "EXPLORATORY_FROZEN_BEFORE_DOWNLOADING_RAW_COHORT_OUTCOMES",
+  "date": "2026-10-08",
+  "question": "Do two milkweeds independently classified as high-performance monarch larval hosts have different adult-survival responses to predator-exposed versus cage treatments, including a possible host ranking reversal?",
+  "origin": "Both Asclepias speciosa and A. fascicularis are H3 in Greenstein et al 2022 S1 Appendix; an independent 2018-2019 outdoor common-garden factorial source can test context dependence of actual adult eclosion.",
+  "source": {
+    "dryad_doi": "10.5061/dryad.51c59zwgx",
+    "authors": "Diethelm et al (2026)",
+    "files": [
+      "2018_VR_Predation_CG_subsetAfAs.csv",
+      "2019_VR_Predation_CG_subsetAfAs.csv"
+    ],
+    "publication_status": "study already published host x predator effects on development, growth and adult morphology"
+  },
+  "original_data_vars": {
+    "year": "2018 or 2019 file",
+    "host": "milkweed_spp, Af=fascicularis, As=speciosa",
+    "treatment": "treatment cage vs roof",
+    "endpoint": "survived_binary, adult eclosion from second instar placement"
+  },
+  "design": {
+    "cohort": "one larva per experimental plant per study year, n approximately 322+171",
+    "inclusion": "valid host, treatment, binary survival, unique monarch_id; no dropping of exposed deaths",
+    "primary_effect": "pooled year-weighted [cage-roof adult-emergence risk difference for As] minus same risk difference for Af",
+    "model": "binomial GLM survived_binary ~ study_year + host + cage + host:cage, test 1-df interaction by likelihood-ratio",
+    "uncertainty": "stratified nonparametric bootstrap within year x host x treatment cells; percentile 95% CI",
+    "bootstrap_draws": 3999,
+    "seed": 20261008
+  },
+  "secondary": [
+    "within-year host x treatment interaction risk differences",
+    "whether host ranking crosses between cage and roof treatments, assessed descriptively",
+    "plants and fate missingness by year x condition",
+    "pupation and growth only as supporting endpoints if clearly linked"
+  ],
+  "decision": "Promote only if adult-survival interaction is supported, confidence interval excludes zero, direction consistent across 2018 and 2019, and result is not already the central published result. Otherwise label a mechanism-relevant negative or unresolved endpoint and stop.",
+  "qualifiers": [
+    "Predator-exclusion cage can alter microclimate, so cage effects are not pure predation estimates.",
+    "Host genotype, plant architecture, and between-year effects may influence outcomes.",
+    "Two native milkweeds, not a cultivation-vs-naturalization origin contrast.",
+    "Existing 2026 paper already discusses host dependence of growth under predator exposure; the source reanalysis is not independent experimental replication.",
+    "Adult survival in common garden is not butterfly geographic distribution or fitness across global introduced regions.",
+    "Main GEB manuscript unchanged."
+  ]
+}
