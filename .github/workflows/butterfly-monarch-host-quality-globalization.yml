@@ -1,0 +1,48 @@
+name: monarch host larval performance versus plant globalization
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/analyze_monarch_host_quality_globalization.py", "scripts/map_monarch_127_quality_wcvp.R", ".github/workflows/butterfly-monarch-host-quality-globalization.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - uses: actions/download-artifact@v4
+        with:
+          name: monarch-127-host-quality-independent-source-v01
+          path: _quality
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37736225347
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Source-exact quality and pinned WCVP distribution crosswalk
+        run: |
+          mkdir -p results/quality-globalization
+          python scripts/analyze_monarch_host_quality_globalization.py extract --original-tables-json _quality/greenstein_2022_s1_tables_full_v01.json --output-csv results/quality-globalization/greenstein_2022_original_127_quality.csv
+          Rscript scripts/map_monarch_127_quality_wcvp.R _external/WCVP results/quality-globalization/greenstein_2022_original_127_quality.csv results/quality-globalization/monarch_127_quality_wcvp_crosswalk.csv
+      - name: Two-sided range-matched permutation test
+        run: |
+          python scripts/analyze_monarch_host_quality_globalization.py test --mapped-csv results/quality-globalization/monarch_127_quality_wcvp_crosswalk.csv --permutations 9999 --seed 20261008 --output-json results/quality-globalization/monarch_127_quality_globalization_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-monarch-host-quality-globalization-v01
+          path: results/quality-globalization/
+          retention-days: 30
+          if-no-files-found: warn
