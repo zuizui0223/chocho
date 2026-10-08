@@ -1,0 +1,31 @@
+name: public Figshare urban milkweed raw data source gate
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/probe_urban_milkweed_figshare_source.py
+      - .github/workflows/butterfly-urban-milkweed-figshare-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Retrieve Figshare source and inspect file schemas
+        run: |
+          mkdir -p results/urban-milkweed-source
+          python scripts/probe_urban_milkweed_figshare_source.py \
+            --protocol-json docs/exploratory/URBAN_MILKWEED_STAGE_SOURCE_GATE_V01.json \
+            --output-dir results/urban-milkweed-source
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-urban-milkweed-figshare-source-v01
+          path: results/urban-milkweed-source/
+          retention-days: 30
