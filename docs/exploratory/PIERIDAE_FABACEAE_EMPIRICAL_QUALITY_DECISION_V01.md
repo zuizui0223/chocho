@@ -40,3 +40,17 @@ This is a positive biological link-source check, but it can change the resource-
 4. **Publication:** do not promote a new ecological mechanism paper without an independently sourced, multi-species site-level success/abundance endpoint including control opportunities or a replicated experimentally observed fitness outcome; do not update main GEB manuscript.
 
 The next substantive test must separate **host exploitation**, **larval-to-adult fitness**, and **enemy mediation** across introduced and native resources at matched sites. More static host-list randomizations will not accomplish this.
+
+## A distinct anthropogenic route: cultivated host plants outside naturalization maps
+
+The 2024 south-Florida study documents `Senna polyphylla` growing as an introduced ornamental host plant used by the monitored Phoebis butterflies, with adults successfully reared from larvae collected on these plants. In the study's Table 1, `S. polyphylla` accounts for **44 juveniles with resolved fates, including 8 parasitoid emergences** (18.2% among resolved outcomes); this is pooled over the Phoebis butterflies and sites.
+
+Yet [Kew POWO's contemporary geographic distribution](https://powo.science.kew.org/taxon/234621-2) lists `S. polyphylla` as native to tropical America and the Caribbean and introduced in certain parts of South America/Africa, **not Florida**. It is absent from the accepted host-plant universe of the frozen HOSTS-WCVP sidecar. Therefore the observed **cultivated** host opportunity in Florida is invisible to the reconstructed `S. polyphylla` introduced-range resource map. Neither source proves naturalization in Florida.
+
+This identifies **two distinct exposure-generating pathways**:
+- **Naturalization pathway:** an introduced plant becomes established or otherwise listed in the regional botanical distribution, making it countable in WCVP-based reconstructed resources.
+- **Horticultural pathway:** deliberate plantings of an alien host plant may support larval development despite no corresponding naturalization footprint in the WCVP regional distribution.
+
+**Crucial limitation:** A single published cultivation case is an existence proof of a *measurement gap*, not evidence that urban ornamental resources generally rescue butterflies, increase reproduction, or systematically broaden distributions. Such claims would require replicated site-level plant presence and effort, feeding, adult emergence, and parasitoid data. Do not treat Kew's absence of an introduced-status listing as evidence that the plant is biologically absent from local gardens.
+
+This is potentially a more interesting mechanistic question than additional reshuffling of static host lists, because an identical host-species identity can yield different spatial ecological opportunities depending on whether populations of that plant are cultivated, naturalized, or absent.
