@@ -199,6 +199,9 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert "## Supplementary Table S7. Crop-host exclusion sensitivity" in supplement
     assert "## Supplementary Table S8. Resource homogenization, shared-resource exposure and host-removal stress" in supplement
     assert "## Supplementary Table S9. Host-interaction knowledge sensitivity and resource homogenization" in supplement
+    assert "Clarke, H. E. 2024. A checklist of European butterfly larval foodplants." in manuscript
+    assert "https://doi.org/10.1002/ece3.10834" in manuscript
+    assert "10.1002/ece3.10834" in supplement
     assert "54.9%" in supplement
     assert "50.1%" in supplement
     assert "+0.003616" in supplement
