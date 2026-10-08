@@ -1,0 +1,65 @@
+{
+  "schema": "chocho_euphydryas_four_hosts_exact_crosswalk_v0.1",
+  "date": "2026-10-08",
+  "status": "EXPLORATORY_INPUT_AUDIT_FROZEN_BEFORE_RAW_CROSSWALK",
+  "question": "Are the four locally established hosts in Singer & Parmesan 2018 and Haan et al. 2021 represented as exact accepted host links for Euphydryas editha in the fixed global HOSTS/WCVP sidecars, and how much of the E editha potential introduced range would be structurally lost if each documented introduced host's introduced-only regional supply were excluded?",
+  "species": "Euphydryas editha",
+  "source": {
+    "hosts_repository": "globalbioticinteractions/HOSTS",
+    "hosts_sha": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "wcvp_repository": "matildabrown/rWCVPdata",
+    "wcvp_sha": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "builder": "scripts/build_wcvp_hosts_null_sidecars.R",
+    "global_metrics": "data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+  },
+  "focal_plants": [
+    {
+      "binomial": "Plantago lanceolata",
+      "role": "introduced at Singer Nevada meadow; also novel host Haan Washington Taylor's checkerspot",
+      "references": [
+        "Singer & Parmesan 2018",
+        "Haan et al 2021"
+      ]
+    },
+    {
+      "binomial": "Collinsia parviflora",
+      "role": "ancestral host in Singer Nevada meadow",
+      "references": [
+        "Singer & Parmesan 2018"
+      ]
+    },
+    {
+      "binomial": "Castilleja hispida",
+      "role": "ancestral host in Haan Taylor's checkerspot",
+      "references": [
+        "Haan et al 2021"
+      ]
+    },
+    {
+      "binomial": "Castilleja levisecta",
+      "role": "ancestral host in Haan Taylor's checkerspot",
+      "references": [
+        "Haan et al 2021"
+      ]
+    }
+  ],
+  "fixed_expected_global": {
+    "resolved_host_species": 30,
+    "native_resource_units": 131,
+    "contemporary_resource_units": 245,
+    "introduced_added_units": 114
+  },
+  "analysis": {
+    "link_status": "Exact species-level input_host_name or accepted_name; no genus expansion and no unverified synonyms; report both status and accepted ID",
+    "range_comparison": "For each exact linked host with an accepted ID, count WCVP native and contemporary WGSRPD3 units and their difference. For E editha, remove ONLY introduced-only units of the focal accepted host while retaining its native units and all other hosts; count structurally lost contemporary resource units and structurally lost introduced-added units.",
+    "null_requirement": "No permutations: purpose is input-data provenance and exact geographic contribution, not biological hypothesis testing",
+    "missing_link": "Records absent from frozen HOSTS are unknown/incomplete knowledge, never evidence of non-use by any local population",
+    "limitations": [
+      "WCVP WGSRPD3 extant and nondoubtful regions do not establish host availability at a local meadow",
+      "Global HOSTS is species-wide and cannot determine local female choice, larval survival or functional fallback",
+      "Removal from static reconstruction is not field plant removal or demographic impact",
+      "Four focal taxa drawn from known published examples, posthoc not independent causal discovery"
+    ]
+  },
+  "decision": "If any of the locally observed hosts is missing from exact frozen HOSTS mapping, disclose completeness gap, do not revise recorded 30 globally except through openly labeled sensitivity. Do not alter main GEB manuscript pending scientific review."
+}
