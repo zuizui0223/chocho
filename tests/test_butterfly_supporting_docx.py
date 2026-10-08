@@ -33,7 +33,7 @@ def test_separate_supplementary_docx_has_real_s1_to_s9_tables(tmp_path):
     assert "Supplementary Information" in paragraphs
     assert doc.core_properties.author in ("",None)
     assert doc.core_properties.last_modified_by in ("",None)
-    text=" ".join(paragraphs+" "+" ".join(
+    text=(paragraphs+" "+" ".join(
         cell.text for tab in doc.tables for row in tab.rows for cell in row.cells
     )).lower()
     assert "bce/clarke" in text
