@@ -40,6 +40,55 @@ def plantago_loss(ids,plantago_id,native,contemporary):
     after=footprint(ids-{plantago_id},native,contemporary)["contemporary"] | native[plantago_id]
     return fp["contemporary"]-after
 
+def host_counts(ids, distribution):
+    """Count distinct fixed accepted host species within each botanical region."""
+    counts=defaultdict(int)
+    for host in ids:
+        for region in distribution[host]:
+            counts[region]+=1
+    return dict(counts)
+
+
+def composition_difference(base_ids, augmented_ids, distribution, added_regions=None):
+    """Deterministic change in recorded host richness at exact region grain.
+
+    A host-species inventory change is NOT a change in biologically usable
+    alternative hosts or local demographic resilience.
+    """
+    before=host_counts(base_ids,distribution)
+    after=host_counts(augmented_ids,distribution)
+    if any(after.get(region,0) < n for region,n in before.items()):
+        raise RuntimeError("Adding recorded hosts must not reduce host count")
+    all_regions=sorted(set(before)|set(after))
+    affected=[]
+    for region in all_regions:
+        n=before.get(region,0)
+        m=after.get(region,0)
+        if m!=n:
+            affected.append({"region":region,"baseline_host_species":n,
+                             "augmented_host_species":m,"additional_species":m-n})
+    if added_regions is None:
+        added_regions=set()
+    return {
+        "baseline_covered_regions":sum(v>0 for v in before.values()),
+        "augmented_covered_regions":sum(v>0 for v in after.values()),
+        "baseline_single_recorded_host_regions":sum(v==1 for v in before.values()),
+        "augmented_single_recorded_host_regions":sum(v==1 for v in after.values()),
+        "regional_host_incidences_added":sum(after.values())-sum(before.values()),
+        "regions_with_changed_recorded_host_count":len(affected),
+        "regions_one_to_two_or_more_recorded_hosts":sum(
+            x["baseline_host_species"]==1 and x["augmented_host_species"]>=2
+            for x in affected),
+        "regions_touched_in_baseline_introduced_added_area":sum(
+            x["region"] in added_regions for x in affected),
+        "regions_by_count_increment":{
+            "plus_one":sum(x["additional_species"]==1 for x in affected),
+            "plus_two":sum(x["additional_species"]==2 for x in affected)},
+        "affected_region_codes_and_host_counts":affected,
+        "interpretation":"Database host-species count per botanical level-3 region, NOT field availability, larval success, or functional fallback."
+    }
+
+
 def main():
     parser=argparse.ArgumentParser()
     for name in ["protocol_json","original_interaction_csv","original_native_csv",
@@ -119,6 +168,15 @@ def main():
         raise RuntimeError("Adding known hosts cannot increase absolute Plantago-sole resource cells")
     base_added=base["contemporary"]-base["native"]
     aug_added=aug["contemporary"]-aug["native"]
+    native_composition=composition_difference(baseline_ids,ids,n,base_added)
+    contemporary_composition=composition_difference(baseline_ids,ids,c,base_added)
+    # Affected region count is bounded by the 2 precisely named host plants.
+    expected_native_incidence=sum(len(an[id]) for id in additions)
+    expected_contemporary_incidence=sum(len(ac[id]) for id in additions)
+    if native_composition["regional_host_incidences_added"]!=expected_native_incidence:
+        raise RuntimeError("Native host-incidence accounting mismatch")
+    if contemporary_composition["regional_host_incidences_added"]!=expected_contemporary_incidence:
+        raise RuntimeError("Contemporary host-incidence accounting mismatch")
     result={
       "schema":"chocho_euphydryas_two_host_completeness_sensitivity_result_v0.1",
       "status":"POSTHOC_BOTANICAL_CROSSWALK_AND_STRUCTURAL_SENSITIVITY_NOT_DEMOGRAPHIC",
@@ -130,6 +188,11 @@ def main():
          "sole_Plantago_added_regions":len(newloss),
          "sole_Plantago_share_of_added":len(newloss)/len(aug_added) if aug_added else None},
       "original_missing_hosts":focal,
+      "within_region_host_species_composition":{
+         "native":native_composition,
+         "contemporary":contemporary_composition,
+         "status":"POSTHOC_REGIONAL_SPECIES_LIST_COMPLETENESS_DIAGNOSTIC_NOT_FUNCTIONAL_REDUNDANCY"
+      },
       "comparison":{
          "added_native_regions":len(aug["native"]-base["native"]),
          "added_contemporary_regions":len(aug["contemporary"]-base["contemporary"]),
