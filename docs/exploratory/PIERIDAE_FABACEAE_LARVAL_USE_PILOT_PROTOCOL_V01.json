@@ -1,0 +1,71 @@
+{
+  "schema": "chocho_fabaceae_pieridae_independent_larval_use_pilot_v0.1",
+  "status": "EXPLORATORY_OUTCOME_BLIND_WRT_NEW_GLOBI_OBSERVATIONS",
+  "created": "2026-10-08",
+  "rationale": "A family-conditioned host-link null lost significance after omitting Fabaceae (p=0.18, independent seed p=0.196). Check whether the associated Pieridae×Fabaceae resource projections have separately recorded actual larval feeding on introduced Fabaceae, rather than assuming every known HOSTS edge implies ecological benefit.",
+  "species_selection": "All, not a favorable subset, of the 24 Pieridae in the frozen 239-butterfly panel with >=1 accepted HOSTS Fabaceae host; selected from HOSTS+LepTraits alone.",
+  "species": [
+    "Anteos clorinde",
+    "Anteos maerula",
+    "Catopsilia pomona",
+    "Catopsilia pyranthe",
+    "Colias alexandra",
+    "Colias christina",
+    "Colias croceus",
+    "Colias erate",
+    "Colias eurytheme",
+    "Colias hecla",
+    "Colias hyale",
+    "Colias nastes",
+    "Colias philodice",
+    "Delias hyparete",
+    "Eurema arbela",
+    "Eurema hecabe",
+    "Eurema mexicana",
+    "Leptidea sinapis",
+    "Phoebis agarithe",
+    "Phoebis neocypris",
+    "Phoebis philea",
+    "Phoebis sennae",
+    "Pieris brassicae",
+    "Zerene cesonia"
+  ],
+  "data_sources": [
+    "frozen HOSTS accepted butterfly-plant edges, WCVP native/current distributions, exact WGSRPD3",
+    "GloBI interactionType=eats records, with dated geolocation, explicit larval life stage and non-HOSTS provenance"
+  ],
+  "scope": {
+    "species": 24,
+    "known_fabaceae_edges": 238,
+    "species_with_fabaceae_hosts": 24
+  },
+  "extraction": {
+    "max_pages_per_species": 2,
+    "page_size": 512,
+    "date_window": [
+      1800,
+      2025
+    ],
+    "retain_raw_pages_sha256": true,
+    "exact_accepted_plant_names_only": true,
+    "wgsrpd3_polygon_exact": true,
+    "strict_larval_stage": true,
+    "known_fabaceae_edge": true,
+    "local_introduced_host_status": true
+  },
+  "diagnostic_gate": {
+    "min_independent_introduced_fabaceae_larval_records": 10,
+    "min_butterfly_species": 3,
+    "min_WGSRPD3_regions": 3
+  },
+  "interpretation": "Only verifies feasibility of independently recorded larval use of known introduced Fabaceae in a region. Native alternative hosts, abundance, larval survival and colonization are not inferred.",
+  "limitations": [
+    "GloBI observation duplication or source misclassification requires original-source verification.",
+    "GloBI observations reflect biased observer effort and are presence-only.",
+    "Truncated species API queries cannot be treated as zero records.",
+    "User-generated life-stage and feeding fields are not independently verified photographs.",
+    "Selection follows exploratory structural analysis and is not a confirmatory test.",
+    "No changes to main GEB manuscript."
+  ],
+  "stop": "If field-record gate fails, do not claim realized resource tracking and do not lower quality thresholds post hoc."
+}
