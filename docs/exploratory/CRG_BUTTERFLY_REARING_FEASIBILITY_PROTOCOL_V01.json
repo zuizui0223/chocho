@@ -1,0 +1,76 @@
+{
+  "schema": "chocho_crg_independent_butterfly_rearing_endpoint_feasibility_v0.1",
+  "status": "OUTCOME_BLIND_FEASIBILITY_PROTOCOL_FROZEN_BEFORE_PUBLIC_CRG_API_EXTRACTION",
+  "created": "2026-10-08",
+  "goal": "Recover independently documented butterfly larval host-use followed by identified adult or parasitoid emergence; ascertain whether a multi-taxon ecological endpoint can be tested rather than recycling plant-distribution proxies.",
+  "source": {
+    "site": "iNaturalist Caterpillar Rearing Group (CRG) project, South Africa and wider Afrotropical region",
+    "project_url": "https://www.inaturalist.org/projects/caterpillar-rearing-group",
+    "original_field_documentation": "https://www.inaturalist.org/projects/caterpillar-rearing-group/journal/115479-crg-observation-fields-explained",
+    "journal_2026_summary": "9,519 rearings, 3,040 Lepidoptera species, 2,031 host plants over project history; THESE ARE PROJECT-REPORTED TOTALS, NOT ASSERTED TO BE AVAILABLE AS iNAT API SOURCE RECORDS",
+    "historical_peer_reviewed_archive": "Staude et al. (2020), Metamorphosis 31(3), historical ~11,628 compiled records; not automatically available in the iNat project API"
+  },
+  "prespecified_sample": {
+    "date_min": "2012-01-01",
+    "date_max": "2025-12-31",
+    "project_resolution": "exact slug caterpillar-rearing-group via public iNaturalist project metadata",
+    "page_size": 200,
+    "max_pages_each_direction": 6,
+    "ordering": [
+      "oldest observed_on ascending",
+      "newest observed_on descending"
+    ],
+    "deduplication": "unique public iNaturalist observation id, then unique observer×CRG Ref No. when nonblank",
+    "upper_bound_unique_observation_ids": 2400,
+    "record_total_from_api_required": true,
+    "sampling_limits": "If total records exceed sampled volume, only report pilot coverage; no inference about missing taxa or failed rearings."
+  },
+  "valid_butterflies": {
+    "families": [
+      "Hesperiidae",
+      "Lycaenidae",
+      "Nymphalidae",
+      "Papilionidae",
+      "Pieridae",
+      "Riodinidae"
+    ],
+    "source": "CRG Family observation field, with exact LepTraits 239-butterfly taxonomy as a secondary source for in-panel species",
+    "require_species_level_exact_binomial": true,
+    "report_non_butterfly_taxa_separately": true
+  },
+  "required_fields": {
+    "event_provenance": [
+      "public iNaturalist observation URL",
+      "date of collection or observation",
+      "observer or rearing reference ID"
+    ],
+    "independent_larval_use": [
+      "CRG Food Plant Species (verbatim binomial)",
+      "CRG Caterpillar URL or original iNaturalist larval stage/photo"
+    ],
+    "confirmed_adult_emergence": [
+      "CRG Date of Emergence as parsable date",
+      "CRG Moth/Butterfly URL matching a public original observation, or explicit adult photo in same rearing observation"
+    ],
+    "parasitoid_emergence": [
+      "CRG Parasitoid details nonblank",
+      "CRG Parasitoid URL if provided"
+    ],
+    "locality_management": "CRG Locality/habitat may mention garden/cultivated, but cannot infer origin from unspecified habitat."
+  },
+  "stage1_decision": {
+    "feasibility_pass": "At least 30 source-referenced and nonduplicated butterfly rearing events with exact host plant species, at least five butterfly species, at least two host plant families, and adult emergence or parasitoid emergence recorded.",
+    "secondary": "At least 5 distinct original 239-butterfly panel species and at least 10 explicitly parasitoid (not all necessarily in panel); report separately. If missing, fail those branches independently.",
+    "attrition_gate": "Counts of observed collected larvae with UNKNOWN outcome are required before estimating survival/parasitism percentages; without denominators, report ONLY occurrence of realized success/failure, not relative probabilities.",
+    "stop": "If butterfly sample too small or outcome fields too sparse, close CRG route without retuning API pages or substituting moths as butterfly evidence."
+  },
+  "quality_boundaries": [
+    "CRG provides actual lab rearings, not local field population persistence or colonization.",
+    "Adult emergence after collection is not evidence of positive growth or absence of natural-enemy cost in nature.",
+    "Do not assume all 9,519 historical rearings are accessible in public iNaturalist records.",
+    "Outcome-selected project reports may have severe rearing-success and taxonomic selection biases.",
+    "No native/exotic status without geographically matched botanical distributions.",
+    "No new confirmed butterfly-host edges until original source URLs and taxonomic matches are validated.",
+    "Main GEB paper untouched; exploratory analysis branch only."
+  ]
+}
