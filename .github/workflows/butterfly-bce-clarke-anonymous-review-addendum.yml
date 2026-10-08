@@ -1,0 +1,63 @@
+name: Anonymous BCE host-source robustness review addendum
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/build_bce_clarke_anonymous_review_addendum.py
+      - .github/workflows/butterfly-bce-clarke-anonymous-review-addendum.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download frozen full-92 source-extraction receipt
+        uses: actions/download-artifact@v4
+        with:
+          repository: zuizui0223/chocho
+          run-id: 37777242991
+          name: chocho-bce-clarke-all92-lexical-source-audit-v01
+          path: inputs/lexical
+          github-token: ${{ github.token }}
+      - name: Download frozen accepted-WCVP butterfly-host source crosswalk
+        uses: actions/download-artifact@v4
+        with:
+          repository: zuizui0223/chocho
+          run-id: 37777881774
+          name: chocho-bce-clarke-92-wcvp-accepted-host-gap-v01
+          path: inputs/wcvp
+          github-token: ${{ github.token }}
+      - name: Download source-augmented geography audit
+        uses: actions/download-artifact@v4
+        with:
+          repository: zuizui0223/chocho
+          run-id: 37778961442
+          name: chocho-bce-clarke-accepted-host-europe-geography-v01
+          path: inputs/geo
+          github-token: ${{ github.token }}
+      - name: Download order-deterministic strict Level1 null
+        uses: actions/download-artifact@v4
+        with:
+          repository: zuizui0223/chocho
+          run-id: 37791619318
+          name: chocho-bce-clarke-continent-preserving-host-source-null-v01
+          path: inputs/level1
+          github-token: ${{ github.token }}
+      - name: Verify all source-conditional quantities and anonymize review addendum
+        run: |
+          python scripts/build_bce_clarke_anonymous_review_addendum.py \
+            --inputs-dir inputs \
+            --output results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bce-clarke-anonymous-s9-review-addendum-v01
+          path: results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip
+          if-no-files-found: error
+          retention-days: 30
