@@ -85,6 +85,11 @@ jobs:
           python scripts/build_bce_clarke_anonymous_review_addendum.py \
             --inputs-dir inputs \
             --output results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip
+      - name: Verify ZIP integrity and manifest are present
+        run: |
+          unzip -t results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip
+          unzip -Z1 results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip | grep -x 'SHA256SUMS'
+          unzip -Z1 results/review/bce_clarke_anonymous_s9_reproducibility_v01.zip | grep -x 'VALIDATED_SUMMARY.json'
       - uses: actions/upload-artifact@v4
         with:
           name: bce-clarke-anonymous-s9-review-addendum-v01
