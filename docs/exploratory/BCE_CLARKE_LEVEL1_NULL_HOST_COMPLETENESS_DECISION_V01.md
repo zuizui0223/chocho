@@ -1,6 +1,6 @@
 # BCE/Clarke accepted host additions under a continent-preserving resource-homogenization null
 
-**Date:** 2026-10-08. **Status:** SOURCE-CHECKED NUMERICAL RESULTS IN ORIGINAL GITHUB ACTIONS LOG; FINAL ARTIFACT RERUN PENDING A NONSTATISTICAL METADATA KEY REPAIR. **Post-hoc resource-network sensitivity, not ecological causality.** Frozen GEB paper PR #38 unchanged.
+**Date:** 2026-10-08. **Status:** COMPLETE VERIFIED GITHUB OUTPUT AFTER NONSTATISTICAL METADATA REPAIR; ADDITIONAL DETERMINISTIC-ORDER REPRODUCIBILITY REGRESSION IN PROGRESS. **Post-hoc resource-network sensitivity, not ecological causality.** Frozen GEB paper PR #38 unchanged.
 
 ## Scientific question
 
@@ -19,20 +19,19 @@ The source-blind protocol `BCE_CLARKE_LEVEL1_NULL_HOST_COMPLETENESS_PROTOCOL_V01
 
 The new `scripts/analyze_bce_clarke_homogenization_level1_null.py` mirrors the original `scripts/analyze_butterfly_resource_homogenization_level1_null.py` method and explicitly tests row, column, species × Level1 and native-exclusion invariants. All **three synthetic unit tests passed** in the original job [37784230410](https://github.com/zuizui0223/chocho/actions/runs/37784230410). Original 239 resource sums and four frozen regional/species overlap observables were validated against reference before sampling.
 
-## Observed result from finished computation in first run
+## Final output and reproducibility resolution
 
-The original workflow run [37784230410](https://github.com/zuizui0223/chocho/actions/runs/37784230410) **completed both 499-sample model calculations and printed these statistics**, but then failed while writing final JSON due to an undeclared, **nonstatistical** `prior_geography_run` provenance key. This did not affect MCMC inputs, observed values, or printed output; the code was repaired in commit `128f5123243b71bc42cc7cd89d16cba3a5438494` without changing any statistical logic, and a complete rerun [37786325837](https://github.com/zuizui0223/chocho/actions/runs/37786325837) was triggered. The numbers below come from the finished original computation; verify against successful rerun before labeling the artifact complete.
-
+The first workflow [37784230410](https://github.com/zuizui0223/chocho/actions/runs/37784230410) completed all 499 permutations per scenario but failed during final JSON creation because of an incorrect provenance-only key; calculations and output were printed. The corrected [GitHub Actions rerun 37786325837](https://github.com/zuizui0223/chocho/actions/runs/37786325837) **completed successfully**, uploaded the source JSON artifact `chocho-bce-clarke-continent-preserving-host-source-null-v01` (artifact ID **11554734608**) and passed all 3 unit tests. Its exact regional excesses are **+0.0036249015** (original HOSTS) and **+0.0034393111** (BCE-augmented), with one-sided Monte Carlo `p=0.002` for both. They differ by approximately 1×10^-5 and 1×10^-6 from the first calculation, which suggests hash/insertion order affected the exact pseudorandom null sampling despite identical seed and scenario. The algorithmic conclusion is unchanged. Follow-up deterministic edge/group sorting was implemented in [commit 858c347](https://github.com/zuizui0223/chocho/commit/858c347aa387e2c8cc9dafa5c71883351ae9eca9), with reverse-insertion order regression test in [commit 0398e53](https://github.com/zuizui0223/chocho/commit/0398e5372220d2c75573f6ea37e69e7db589e1ee). The stable-order rerun is separate; **the statistics below are from the verified successful 37786325837 receipt**, not the first failed workflow.
 | Same 355 regions, each scenario's continent-constrained null | Original frozen HOSTS | BCE/Clarke accepted-host augmentation |
 | --- | ---: | ---: |
 | Native mean regional Jaccard | 0.2769818977 | 0.2993793713 |
 | Contemporary mean regional Jaccard | 0.4620834005 | 0.4850609467 |
-| Mean contemporary Jaccard under within-Level1 null (median) | **0.4584679180** | **0.4816226476** |
-| **Regional observed−null excess** | **+0.0036154825** | **+0.0034382991** |
+| Mean contemporary Jaccard under within-Level1 null (median) | **0.4584584990** | **0.4816216356** |
+| **Regional observed−null excess** | **+0.0036249015** | **+0.0034393111** |
 | One-sided Monte Carlo p (499 samples) | 0.002 | 0.002 |
-| Butterfly resource geography observed−null excess | +0.0027136382 | +0.0028002021 |
+| Butterfly resource geography observed−null excess | +0.0027159214 | +0.0028002081 |
 | Butterfly resource geography one-sided Monte Carlo p | 0.002 | 0.002 |
-| Accepted swaps across burn/samples | 1,023,224 | 986,324 |
+| Accepted swaps across burn/samples | 1,023,872 | 985,706 |
 | New resource butterfly × region incidences within fixed 355 regions | 14,121 | 14,444 |
 
 The raw regional Jaccard gains are approximately **+0.18510** and **+0.18568**, respectively. Only about **1.95%** and **1.85%** of these raw changes are represented by the observed-minus-strict-null residual in this specific comparison; this is a descriptive effect-size ratio, not a variance explained decomposition. The stricter geographic null absorbs much of the nonrandom structure remaining beyond the ordinary row/column margin control:
@@ -40,7 +39,7 @@ The raw regional Jaccard gains are approximately **+0.18510** and **+0.18568**, 
 | Conditional null | Original observed−null regional excess | BCE-augmented observed−null regional excess |
 | --- | ---: | ---: |
 | Butterfly × region margins only | +0.008604 | +0.007906 |
-| Add butterfly × Level1 regional margins | +0.003615 | +0.003438 |
+| Add butterfly × Level1 regional margins | +0.003625 | +0.003439 |
 
 ## Scientific inference
 
