@@ -1,0 +1,27 @@
+{
+  "schema": "chocho_bce_clarke2024_all_exact_europe_species_link_audit_v0.1",
+  "created": "2026-10-08",
+  "status": "EXPLORATORY_FULL_EXACT_INTERSECTION_FROZEN_AFTER_12_SPECIES_PILOT_OUTCOMES",
+  "source": {
+    "site": "https://www.bc-europe.eu/taxonomy.php",
+    "source_attribution": "BCE per-butterfly foodplants are derived from Clarke (2024), Ecology and Evolution DOI 10.1002/ece3.10834, filtered to evidence ranks 1-3. This is a secondary derivative, not original independent observations."
+  },
+  "frozen_chocho_panel": "data/frozen/figure_sources/anthropogenic_species_metrics.csv, 239 species",
+  "fixed_host_source": "globalbioticinteractions/HOSTS at commit 808e0b869f9ec1adf8efff87cf6a395adda103e0/resource.csv",
+  "species_selection": "ALL 92 exact Latin butterfly binomials in both the frozen 239-species chocho sample and BCE's 501-species website; no butterfly selected by host outcomes.",
+  "site_drift_control": "Require exactly 92 matched species, else report taxonomy drift and stop.",
+  "plant_name_rule": "Exact genus plus simple species epithet; exclude genus-only, subspecies, hybrids and ambiguous names. Zero species-level BCE host lists are NOT negative biological evidence.",
+  "outputs": [
+    "Per butterfly exact BCE host names, exact fixed HOSTS host names, and lexical overlap",
+    "Pooled BCE-only and HOSTS-only exact names, number of valid species pages and reasons for missingness",
+    "BCE taxonomy and species page SHA256, URL, parsed table row counts"
+  ],
+  "stops": [
+    "Exact spelling differences require later synonym and WCVP reconciliation before biological missing-edge claims",
+    "European sample must never be extrapolated to all 239 butterflies",
+    "No colonization, demography, fitness or new global resource geography claim",
+    "Compiled source references can overlap between BCE and HOSTS",
+    "Do not select species or plant subsets after examining the output",
+    "If over one quarter of BCE species pages fail, stop the crosswalk"
+  ]
+}
