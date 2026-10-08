@@ -1,0 +1,43 @@
+{
+  "schema": "chocho_monarch_external_host_quality_audit_v0.1",
+  "status": "SOURCE_GATE_FROZEN_BEFORE_SPECIES_LEVEL_QUALITY_MATCH",
+  "created": "2026-10-08",
+  "question": "Among HOSTS/WCVP-recorded resource hosts of Danaus plexippus, how many are independently supported as high, low, nonhost, or unsubstantiated, and where does this change the confidence of inferred anthropogenic resource geography?",
+  "independent_study": {
+    "citation": "Greenstein, Steele & Taylor 2022 PLOS ONE 17 e0269701",
+    "doi": "10.1371/journal.pone.0269701",
+    "data_doi": "10.5061/dryad.7wm37pvvp",
+    "supplement_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0269701.s001&type=supplementary",
+    "literature_classes": {
+      "high": 34,
+      "low": 42,
+      "nonhost": 33,
+      "unsubstantiated": 18
+    }
+  },
+  "local_reference": {
+    "repo": "zuizui0223/chocho",
+    "branch": "analysis/resource-homogenization-v01",
+    "native_source": "fixed HOSTS/WCVP sidecars",
+    "expected_Danaus_plexippus_known_links": 42
+  },
+  "primary_source_check": "Retrieve original independent quality classifications, preserve exact original plant names and categories with provenance; do not infer from the article abstract.",
+  "matching": "Exact scientific binomial names and WCVP accepted names only initially, aliases/synonyms require independent taxonomic justification and explicit crosswalk, NEVER genus-only matches.",
+  "quality_rules": {
+    "high": "H1-H3 positive evidence of relative high performance",
+    "low": "L1-L3 documented low performance (some L1 only oviposition), do not reclassify as nonhost",
+    "nonhost": "N",
+    "unsubstantiated": "U",
+    "missing": "UNKNOWN, never guessed"
+  },
+  "feasibility_gate": {
+    "at_least_exact_link_matches": 10,
+    "at_least_two_quality_classes": true,
+    "all_source_categories_recoverable": true
+  },
+  "analysis_gate": "Report exact classified host-link counts and known introduced-only geography where classification is recoverable. Do NOT extrapolate quality per geography as regionally invariant fact, and do NOT infer quality of unclassified hosts.",
+  "non_tautological_test": "After classification, compare observed quality-class association with host alien-region breadth conditional on botanical family and taxonomic/source coverage. Do not claim 'deleting poor hosts shrinks range' as new biology.",
+  "published_prior_art": "The nonhost/low quality distinction and preference-performance mismatch were already demonstrated by Greenstein et al. 2022; only a genuinely novel, conditional spatial biological finding could support a separate ecological paper.",
+  "stop": "If source archive or classifications cannot be independently verified, no numerical host-quality classification is published and route is held.",
+  "manuscripts": "Main GEB manuscript unchanged."
+}
