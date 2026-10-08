@@ -310,3 +310,16 @@ def test_submission_citations_cover_figures_supplement_and_external_data():
     assert "## References" in manuscript
     assert "secondary in v0.2" not in supplement
     assert "shown as Fig. S1" in supplement
+
+
+def test_host_fallback_is_population_specific_and_not_a_demographic_estimate():
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    assert "mapped host redundancy does not ensure functional fallback" in manuscript
+    assert "Singer & Parmesan 2018" in manuscript
+    assert "Haan et al. 2021" in manuscript
+    assert "although ancestral *Collinsia* remained locally available" in manuscript
+    assert "The targeted-removal contrast is structural, not causal" in manuscript
+    assert "Singer, M. C. & Parmesan, C. 2018." in manuscript
+    assert "Haan, N. L., Bowers, M. D. & Bakker, J. D. 2021." in manuscript
