@@ -293,7 +293,8 @@ def test_s9_review_source_archive_is_listed_anonymized_and_packaged():
     assert "actions/download-artifact@v4" in workflow
     assert "bce-clarke-anonymous-s9-review-addendum-v01" in workflow
     assert "unzip -t dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
-    assert "sha256sum dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
+    assert "(cd dist && sha256sum bce_clarke_anonymous_s9_reproducibility_v01.zip >> ANONYMOUS_BUNDLE_SHA256)" in workflow
+    assert "(cd dist && sha256sum -c ANONYMOUS_BUNDLE_SHA256)" in workflow
 
     word_flow=(root/".github/workflows/build-blinded-review-docx.yml").read_text(encoding="utf-8")
     support_docx="butterfly_specialization_GEB_supporting_information.docx"
