@@ -1,0 +1,68 @@
+{
+  "schema": "chocho_monarch_revisit_host_identity_prediction_protocol_v0.1",
+  "status": "EXPLORATORY_FROZEN_BEFORE_FORWARD_PREDICTIVE_MODEL_FITTING",
+  "created": "2026-10-08",
+  "motivation": "Cross-sectional exotic/native milkweed stage odds exhibit seasonal Simpson reversal; species identity among native hosts appears important. Test whether species identity predicts future observed late-instar occurrence beyond egg input, season, patch size and elapsed survey time using actual repeat-visit panels.",
+  "source": {
+    "doi": "10.6084/m9.figshare.25648644.v1",
+    "file": "Milkweed_dat_with_coords_DEC2024.csv",
+    "github_source_gate_run": 37735892534,
+    "artifact": "butterfly-urban-milkweed-figshare-source-v01"
+  },
+  "study_unit": "Repeat surveys at same exact Route + Address_comp + Milkweed_sp; aggregate multiple within-date records to one host-species address-day observation; next chronological visit of same key only, without cross-year transitions.",
+  "outcome": "Any 4th/5th-instar larvae at next visit 10-35 days after index survey; cross-sectional stage count, NOT tracked-individual survival.",
+  "core_window": {
+    "train_year": 2022,
+    "validation_year": 2023,
+    "secondary_2024_descriptive": true,
+    "next_visit_days_min": 10,
+    "next_visit_days_max": 35
+  },
+  "species_selection": "Species with >=100 qualifying 2022 repeat-visit transitions, based only on observation frequency not on target outcomes.",
+  "expected_four_species": [
+    "Asclepias curassavica",
+    "Asclepias fascicularis",
+    "Asclepias speciosa",
+    "Gomphocarpus physocarpus"
+  ],
+  "inclusion": [
+    "Date valid",
+    "Num_plants >0",
+    "Eggs and instars 4 and 5 nonnegative numeric",
+    "Index and next visit both same year",
+    "Exact Route/Address_comp/Milkweed_sp keys with correct species label",
+    "Do not drop zero-egg/zero-larva observations"
+  ],
+  "baseline_features": [
+    "log1p(index visit Eggs)",
+    "log1p(index visit 4th+5th instars)",
+    "log1p(index plant count)",
+    "log1p(next visit plant count)",
+    "days to next revisit",
+    "month sine/cosine for index date"
+  ],
+  "contrast": {
+    "reference_model": "baseline plus botanical origin (Native/Exotic) indicator",
+    "new_model": "identical features plus four-species one-hot identity instead of botanical origin",
+    "model": "L2 penalized logistic regression sklearn liblinear C=1, fixed settings, no tuned hyperparameters",
+    "test_metric": "Log loss of next-visit late-instar presence (lower better)",
+    "secondary_metric": "Brier score"
+  },
+  "validation": {
+    "route_holdout": "Leave one 2022 survey route out, train on remaining routes and predict complete held-out route; aggregate predictions across held-out routes",
+    "temporal_holdout": "Train 2022 only, predict 2023 same four species and same revisit rules, using no fitted hyperparameters from 2023",
+    "bootstrapping": "4999 resamples of 2022 routes with replacement on frozen held-out predictions; 95% CI for reference-minus-new log loss, routes are units",
+    "predicted_prob_clip": 1e-12
+  },
+  "gate": "Species identity improves route-heldout 2022 log loss with route bootstrap 95% CI fully above zero AND improves 2023 temporal-heldout log loss. Otherwise do not promote the identity-specific ecological prediction.",
+  "caveats": [
+    "This is an exploratory follow-up to a previously observed host species effect, not genuinely preregistered inference.",
+    "Monarch eggs and late larvae 10-35 days later are NOT matched individuals; larval stages could come from new eggs, movement, or repeated plant observations.",
+    "Addresses are imperfect patch identifiers and double rows on a date will be aggregated.",
+    "A logistic probability of later-stage detections conflates reproduction, predation, detection, weather, morphology and garden management.",
+    "2023 and 2024 sample sizes and seasonal coverage differ; do not compare naïvely as full replications.",
+    "No species-specific trait cause, demographic survival or fitness.",
+    "No p-value from treating repeated patch records as independent; 2022 route-cluster bootstrap only.",
+    "Main GEB manuscript unchanged."
+  ]
+}
