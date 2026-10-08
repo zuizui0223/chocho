@@ -1,0 +1,102 @@
+name: pieridae Fabaceae original feeding observation audit
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: [".github/workflows/butterfly-pieridae-fabaceae-original-source-audit.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-pieridae-fabaceae-larval-use-v01
+          path: _globi
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37715427511
+      - name: Verify four independently indexed introduced Fabaceae larval source observations
+        run: |
+          mkdir -p results/pieridae-fabaceae-original-audit
+          python - <<'PY'
+          import csv,json,time,re,urllib.request
+          from pathlib import Path
+          from collections import Counter
+          records=[r for r in csv.DictReader(open("_globi/geolocated_fabaceae_larval_records_v0.1.csv",newline="",encoding="utf-8")) if r["introduced_known_host_in_record_region"]=="1" and "/observations/" in (r["source_occurrence_id"] or "")]
+          assert len(records)==4
+          ids=[int(re.search(r"/observations/([0-9]+)",r["source_occurrence_id"]).group(1)) for r in records]
+          assert len(set(ids))==4
+          found={}
+          for i in range(0,len(ids),15):
+              batch=ids[i:i+15]
+              url="https://api.inaturalist.org/v1/observations/"+",".join(map(str,batch))
+              for attempt in range(4):
+                  try:
+                      req=urllib.request.Request(url,headers={"User-Agent":"chocho-fabaceae-pieridae-source-audit/0.1","Accept":"application/json"})
+                      with urllib.request.urlopen(req,timeout=45) as f: payload=json.load(f)
+                      break
+                  except Exception:
+                      if attempt==3:raise
+                      time.sleep(3*(attempt+1))
+              for obs in payload.get("results",[]):found[int(obs["id"])]=obs
+              print("Found",len(found),"/",len(ids),flush=True)
+              time.sleep(1)
+          Path("results/pieridae-fabaceae-original-audit/original_observations.json").write_text(json.dumps({"results":list(found.values())},ensure_ascii=False)+"\n",encoding="utf-8")
+          rows=[]
+          for item,oid in zip(records,ids):
+              o=found.get(oid,{})
+              of=o.get("ofvs") or o.get("observation_field_values") or []
+              names=[str((f.get("observation_field") or {}).get("name") or "") for f in of]
+              values=[str(f.get("value") or "") for f in of]
+              life=[str((a.get("controlled_value") or {}).get("label") or "") for a in (o.get("annotations") or [])]
+              name=str((o.get("taxon") or {}).get("name") or "")
+              year=str(o.get("observed_on") or "")[:4]
+              rows.append({
+                  "species":item["butterfly_species"],"plant":item["plant_name"],"wgsrpd3":item["wgsrpd3_code"],"observation_id":oid,
+                  "found":int(bool(o)),"name":name,
+                  "species_agrees":int(name==item["butterfly_species"] or name.startswith(item["butterfly_species"]+" ")),
+                  "year_agrees":int(year==item["year"]),
+                  "quality_grade":o.get("quality_grade") or "",
+                  "photo_count":len(o.get("photos") or []),
+                  "larval_annotation":int(any("larva" in v.lower() for v in life)),
+                  "eating_field":int(any("eat" in v.lower() or "feed" in v.lower() for v in names)),
+                  "observation_field_names":";".join(names),
+                  "observation_field_values":";".join(values)[:500],
+                  "positional_accuracy":o.get("positional_accuracy") or "",
+                  "geoprivacy":o.get("geoprivacy") or "",
+                  "captive":str(o.get("captive")) if o.get("captive") is not None else "",
+                  "url":"https://www.inaturalist.org/observations/"+str(oid)
+              })
+          with open("results/pieridae-fabaceae-original-audit/source_rows.csv","w",newline="",encoding="utf-8") as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          summary={
+              "schema":"chocho_pieridae_fabaceae_inaturalist_source_audit_v0.1",
+              "status":"SOURCE_METADATA_VERIFIED_NOT_VISUALLY_REVIEWED",
+              "records":len(rows),"found":sum(r["found"] for r in rows),
+              "taxon_agree":sum(r["species_agrees"] for r in rows),
+              "year_agree":sum(r["year_agrees"] for r in rows),
+              "photo_present":sum(r["photo_count"]>0 for r in rows),
+              "larval_annotation":sum(r["larval_annotation"] for r in rows),
+              "eating_field":sum(r["eating_field"] for r in rows),
+              "grades":dict(Counter(r["quality_grade"] for r in rows)),
+              "regions":dict(Counter(r["wgsrpd3"] for r in rows)),
+              "interpretation":"Original iNaturalist source metadata and field annotations only. No photograph-level independent adjudication, larval emergence/survival measurement, or claim of butterfly colonization. The three other GloBI introduced-host records were literature-indexed without direct occurrence IDs, and remain unverified as independent field observations."
+          }
+          Path("results/pieridae-fabaceae-original-audit/source_summary.json").write_text(json.dumps(summary,indent=2,ensure_ascii=False)+"\n")
+          print(json.dumps(summary,indent=2),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-pieridae-fabaceae-original-source-audit-v01
+          path: results/pieridae-fabaceae-original-audit/
+          if-no-files-found: warn
+          retention-days: 30
