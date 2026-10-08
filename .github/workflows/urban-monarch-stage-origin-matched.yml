@@ -1,0 +1,39 @@
+name: urban monarch route-month host-origin stage contrast
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/analyze_urban_monarch_stage_origin_matched.py
+      - .github/workflows/urban-monarch-stage-origin-matched.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-urban-milkweed-figshare-source-v01
+          path: _figshare
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37735892534
+      - name: Reproduce source-audited seasonal contrasts
+        run: |
+          mkdir -p results/urban-monarch-stage
+          python scripts/analyze_urban_monarch_stage_origin_matched.py \
+            --source-csv _figshare/figshare_51434612_Milkweed_dat_with_coords_DEC2024.csv \
+            --protocol-json docs/exploratory/URBAN_MILKWEED_ORIGIN_STAGE_MATCHED_PROTOCOL_V01.json \
+            --output-json results/urban-monarch-stage/urban_monarch_stage_origin_matched_v01.json \
+            --output-matched-csv results/urban-monarch-stage/urban_monarch_paired_route_month_stage_counts_v01.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-urban-monarch-stage-origin-matched-v01
+          path: results/urban-monarch-stage/
+          if-no-files-found: warn
+          retention-days: 30
