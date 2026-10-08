@@ -222,7 +222,14 @@ def triad_common_strata(rows,ordered_species):
        "route_months_with_all_three_species_and_stage_events":len(active),
        "active_by_season":seasons,
        "contrasts":contrasts,
-       "inference_limit":Event-positive triad contrasts share identical route×month support; a separate plant-presence-conditioned sensitivity uses every route×month where all three species were reported, allowing stage-count zeros and dropping only completely event-free pairwise strata. The former conditions on detected stages in all three species; Plant native status still perfectly follows species identity; these are cross-sectional reports, not survival. Matched Mantel-Haenszel odds ratios need not be multiplicatively transitive; small common support may make intervals broad."
+       "inference_limit":(
+           "Event-positive triad contrasts share identical route x month support but "
+           "condition on stage detections in all three plants. The presence-conditioned "
+           "sensitivity retains route-months with all three plant species even when stage "
+           "counts are zero, dropping only fully event-free pairwise strata. Native status "
+           "is fully confounded with species; stage composition is not cohort survival. "
+           "Mantel-Haenszel odds ratios need not be multiplicatively transitive."
+       )
     }
 
 def main():
