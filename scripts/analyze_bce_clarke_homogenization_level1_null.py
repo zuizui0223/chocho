@@ -28,7 +28,6 @@ def within_level1_null(native_sets, added_sets, native_masks, level1_labels, per
         raise ValueError("Empty source matrix")
     native = [set(x) for x in native_sets]
     added = [set(x) for x in added_sets]
-    original_added = [set(x) for x in added]
     if any(n & a for n,a in zip(native,added)):
         raise ValueError("Native and introduced-only resource cells must be disjoint")
     if any(not (0<=c<region_count) for row in native+added for c in row):
@@ -45,11 +44,14 @@ def within_level1_null(native_sets, added_sets, native_masks, level1_labels, per
         return out
 
     by_level1_original = level1_row_margins(added)
-    edges=[(i,c) for i,row in enumerate(added) for c in row]
+    # Stable traversal is REQUIRED: Python set insertion/iteration order can
+    # differ when host strings are read through a hash-dependent source union.
+    # A seed alone is insufficient to reproduce the exact null draw sequence.
+    edges=[(i,c) for i,row in enumerate(added) for c in sorted(row)]
     groups=defaultdict(list)
     for k,(_,c) in enumerate(edges):
         groups[level1_labels[c]].append(k)
-    eligible=[key for key,v in groups.items() if len(v)>=2]
+    eligible=sorted(key for key,v in groups.items() if len(v)>=2)
     if not eligible or not edges:
         raise RuntimeError("No original added edges in eligible Level1 groups")
 
