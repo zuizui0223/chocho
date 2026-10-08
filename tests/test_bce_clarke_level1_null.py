@@ -40,6 +40,28 @@ class TestBceLevelOneNull(unittest.TestCase):
         # Original input structures must be immutable.
         self.assertEqual(self.added,[{1,4},{2,5},{0,3},{2,5}])
 
+    def test_sampling_independent_of_set_insertion_order(self):
+        def construct(rows, reverse):
+            out = []
+            for row in rows:
+                cells = sorted(row, reverse=reverse)
+                val = set()
+                for c in cells:
+                    val.add(c)
+                out.append(val)
+            return out
+        a=within_level1_null(
+            construct(self.native, False),
+            construct(self.added, False),
+            self.native_masks,self.labels,29,20261007,
+        )
+        b=within_level1_null(
+            construct(self.native, True),
+            construct(self.added, True),
+            self.native_masks,self.labels,29,20261007,
+        )
+        self.assertEqual(a,b)
+
     def test_refuses_incorrect_native_overlap(self):
         bad=[set(x) for x in self.added]
         bad[0].add(0)
