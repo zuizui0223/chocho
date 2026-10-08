@@ -1,0 +1,40 @@
+name: cultivated Senna observer and Phoebis larval source audit
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/audit_cultivated_senna_observers_and_larvae.py",".github/workflows/butterfly-cultivated-senna-observer-larva-audit.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-cultivated-senna-inat-pilot-v01
+          path: _senna
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37723666255
+      - name: Verify original Senna observers and Phoebis larval host fields
+        run: |
+          mkdir -p results/cultivated-senna
+          python scripts/audit_cultivated_senna_observers_and_larvae.py \
+            --source-csv _senna/flower_garden_iNat_senna_source_records_v0.1.csv \
+            --protocol-json docs/exploratory/CULTIVATED_SENNA_OBSERVER_AND_DIRECT_LARVAL_USE_PROTOCOL_V02.json \
+            --output-json results/cultivated-senna/original_observer_and_larval_audit_v02.json \
+            --output-candidates-csv results/cultivated-senna/larval_trophic_source_candidates_v02.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-cultivated-senna-observer-larva-v02
+          path: results/cultivated-senna/
+          retention-days: 30
+          if-no-files-found: warn
