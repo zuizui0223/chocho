@@ -1,0 +1,44 @@
+{
+  "schema": "chocho_euphydryas_host_fallback_independent_source_gate_v0.1",
+  "date": "2026-10-08",
+  "status": "FROZEN_BEFORE_ORIGINAL_HAAN_RAW_FILE_ACCESS",
+  "motivation": "Euphydryas editha is in the 239-species chocho panel (30 resolved mapped host species, 131 native and 245 contemporary resource regions). Test whether independently observed local host tissue choice and measured larval growth can diagnose which ecological processes are excluded from this coarse species-level resource envelope.",
+  "source": {
+    "paper": "Haan, Bowers & Bakker (2021) Scientific Reports 11:992, DOI 10.1038/s41598-020-80413-y",
+    "record": "https://zenodo.org/records/4318182",
+    "original_dryad_doi": "10.5061/dryad.612jm642h",
+    "source_relation": "Zenodo copy of the same original experiment, NOT new replication",
+    "files": [
+      {
+        "name": "eet.mass.csv",
+        "md5": "dfa3375a1bdca8dc84b04250f59b1853",
+        "role": "larval performance, inspect schema before inference"
+      },
+      {
+        "name": "oviposition.csv",
+        "md5": "6d9770cce9cacfccd98f7d19c67d0ec5",
+        "role": "adult oviposition choices, inspect schema before inference"
+      },
+      {
+        "name": "neonate.choice.trials.csv",
+        "md5": "1936df1ef6e85fc7645fbd05b1915961",
+        "role": "newly-hatched larval choice, inspect schema before inference"
+      },
+      {
+        "name": "iridoid.glycosides.200306.csv",
+        "md5": "a66fbe664628a9f36a65db9ff60b466b",
+        "role": "larval secondary chemical uptake, inspect schema before inference"
+      }
+    ]
+  },
+  "source_gate": [
+    "Require matching MD5 of each original file before parsing",
+    "Record original headers and row counts, not selected outcome effect sizes",
+    "Determine observational unit and clustering from original Methods and data dictionary before any hypothesis test",
+    "Check if individual survival through pupation/eclosion is actually measured; do not substitute larval mass for demographic replacement"
+  ],
+  "candidate_contrast": "Within the same studied population, can plant identity and tissue choice be separated in individual choice/performance data? Any reanalysis is explicitly posthoc and prior published result, and cannot estimate differences between populations in host fallback.",
+  "negative_control": "Plant species range count alone cannot establish whether bracts vs leaves are available or chosen at a site; a source-backed mismatch is a calibration example, not empirical validation of the chocho global map.",
+  "stop_if": "Any source checksum, data dictionary, cohort origin, trait unit or endpoint definition fails, or no independent demographic endpoint; do not fit new ecological outcomes.",
+  "main_geb": "Do not change manuscript inference on the basis of this source audit."
+}
