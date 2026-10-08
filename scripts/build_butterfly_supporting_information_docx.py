@@ -63,6 +63,11 @@ def add_table(doc, rows: list[list[str]]):
     table.autofit=True
     size=8.25 if count<=5 else 7.6 if count<=7 else 7.2
     for i,row in enumerate(rows):
+        # Avoid splitting one biological-data row across adjacent Word pages.
+        # Headers may repeat, but individual observations must remain intact.
+        trPr=table.rows[i]._tr.get_or_add_trPr()
+        if trPr.find(qn("w:cantSplit")) is None:
+            trPr.append(OxmlElement("w:cantSplit"))
         for col,text in enumerate(row):
             cell=table.cell(i,col)
             cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
