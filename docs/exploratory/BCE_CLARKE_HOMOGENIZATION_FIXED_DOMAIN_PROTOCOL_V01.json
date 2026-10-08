@@ -1,0 +1,57 @@
+{
+  "schema": "chocho_bce_clarke_resource_homogenization_fixed_domain_v0.1",
+  "created": "2026-10-08",
+  "epistemic_status": "POSTHOC_STRUCTURAL_SOURCE_COMPLETENESS_SENSITIVITY_NOT_CONFIRMATORY_OR_DEMOGRAPHIC",
+  "question": "Does the original host-redistribution-associated resource assemblage homogenization exceed a newly matched fixed-margin null after adding all accepted-ID-resolved BCE/Clarke rank1-3 host link candidates to the fixed host list of the exact European subset?",
+  "fixed_input": {
+    "primary_species_count": 239,
+    "primary_native_butterfly_region_units": 26530,
+    "primary_contemporary_butterfly_region_units": 41083,
+    "primary_added_units": 14553,
+    "original_active_native_regions": 355,
+    "original_regional_native_jaccard": 0.27698189773361664,
+    "original_regional_contemporary_jaccard": 0.4620834004986041,
+    "original_butterfly_native_jaccard": 0.22237325689920187,
+    "original_butterfly_contemporary_jaccard": 0.3278808188864098,
+    "null_reference": "provenance/reviewer_defenses/results/butterfly_resource_homogenization_v0.1.json"
+  },
+  "source": {
+    "BCE_Clarke": "BCE-derived Clarke 2024 evidence 1-3, 83 species-level evidence-bearing pages within 92 exact-butterfly matches, not original Dryad data",
+    "original_HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "original_WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "crosswalk_workflow_run": 37777881774,
+    "prior_geography_run": 37778961442,
+    "candidate_accepted_link_count": 1027,
+    "candidate_accepted_plant_species": 679
+  },
+  "analysis": {
+    "comparability_primary": "Keep EXACT 355 WGSRPD3 regions that had ANY native resource opportunity in ORIGINAL 239 butterfly-region matrix. Comparative Jaccard and fixed-margin null tests use same fixed domain for original and BCE-augmented panels.",
+    "secondary": "Report native-active domain after augmentation and new region count separately, descriptive only; never compare secondary domain to 355-region null.",
+    "scenarios": [
+      "original host inventory, original native and contemporary",
+      "all 1027 BCE-identified unique accepted host edges added to same butterfly as evidenced; no changes to remaining species"
+    ],
+    "null_method": "Use original analyze_butterfly_resource_homogenization.py swap_null preserving each butterfly added region count, each region added opportunity count and native incidences as forbidden, separately for each scenario",
+    "permutations": 499,
+    "seed": 20261007,
+    "outcomes": [
+      "native/contemporary mean regional assemblage Jaccard",
+      "native/contemporary mean butterfly resource-geography Jaccard",
+      "fixed-margin null median, 95% interval and Monte Carlo one-sided p",
+      "observed-minus-null excess and direction",
+      "baseline exact receipt reproduction",
+      "domain coverage summary"
+    ],
+    "acceptance": [
+      "Hard fail if reconstructed original species metrics or exact 355-region observed Jaccard differ from frozen reference beyond 1e-9",
+      "Hard fail on nonmonotonic native/contemporary footprint or null margin breach",
+      "No butterfly/region selection after outcomes",
+      "No favorable host subset tuning if evidence fails"
+    ]
+  },
+  "claim_boundaries": [
+    "This is Europe-derived literature-host-source upper-bound extrapolation, not corrected global ecological truth",
+    "No observed butterfly colonization, survival, competition, abundance or host quality inferred",
+    "No original GEB manuscript or PR38 changes"
+  ]
+}
