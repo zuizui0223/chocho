@@ -157,6 +157,23 @@ def inspect_initial_submission(root: Path = ROOT) -> dict[str, object]:
         else:
             blockers.append(f"submission asset missing: {path}")
 
+    si_workflow_file = root / ".github/workflows/build-blinded-review-docx.yml"
+    si_builder_file = root / "scripts/build_butterfly_supporting_information_docx.py"
+    if not si_workflow_file.is_file() or not si_builder_file.is_file():
+        blockers.append("editable Supporting Information Word builder or workflow missing")
+    else:
+        word_pipeline=si_workflow_file.read_text(encoding="utf-8")
+        si_manifest=root / "manuscript/geb_initial_submission_manifest_v0.1.json"
+        rows=json.loads(si_manifest.read_text(encoding="utf-8")).get("submission_files",[]) if si_manifest.is_file() else []
+        source_file=next((r for r in rows if r.get("order")==4),None)
+        if (not source_file or
+            source_file.get("generated_artifact")!="butterfly_specialization_GEB_supporting_information.docx" or
+            "--input-md manuscript/butterfly_specialization_supplement_v0.2.md" not in word_pipeline or
+            "dist/butterfly_specialization_GEB_supporting_information.docx" not in word_pipeline):
+            blockers.append("Supporting Information DOCX not mapped and generated from final supplement")
+        else:
+            complete.append("Supporting Information DOCX S1-S9 rendered separately from editable source")
+
     supplement_text = (root / SUPPLEMENT).read_text(encoding="utf-8")
     if "## Supplementary Table S9." in supplement_text:
         workflow = (root / ANON_BUNDLE_WORKFLOW).read_text(encoding="utf-8")
