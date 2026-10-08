@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_euphydryas_two_omitted_hosts_augmentation_v0.1",
+  "date": "2026-10-08",
+  "epistemic_status": "POSTHOC_SENSITIVITY_FROZEN_AFTER_KNOWING_TWO_CASTILLEJA_EXACT_LINKS_ABSENT_AND_BASELINE_PLANTAGO_52_OF_114",
+  "objective": "Measure how augmenting the E. editha species-wide frozen HOSTS repertoire with exactly two locally documented Castilleja species changes native and contemporary botanical resource geography and reliance on introduced Plantago, without inferring local butterfly demography.",
+  "frozen_inputs": {
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "original_reconstruction": "scripts/build_wcvp_hosts_null_sidecars.R",
+    "primary_dataset": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+    "butterfly": "Euphydryas editha",
+    "baseline_taxa": 30,
+    "native_units": 131,
+    "contemporary_units": 245,
+    "added_units": 114,
+    "Plantago_lanceolata_sole_added_units": 52
+  },
+  "literature_host_additions": [
+    {
+      "species": "Castilleja hispida",
+      "source": "Haan, Bowers & Bakker 2021 Scientific Reports doi:10.1038/s41598-020-80413-y",
+      "scope": "locally documented host, not proof of global use"
+    },
+    {
+      "species": "Castilleja levisecta",
+      "source": "Haan, Bowers & Bakker 2021 Scientific Reports doi:10.1038/s41598-020-80413-y",
+      "scope": "locally documented host, not proof of global use"
+    }
+  ],
+  "botanical_rules": "Find each exact accepted WCVP species binomial and unique accepted ID; ambiguous, synonym-only or missing matches must be disclosed and excluded, not silently resolved. Use frozen extant, non-doubtful level3 WCVP region records, introduced=0 for native and all for contemporary. No genus-level imputation.",
+  "analysis_rules": [
+    "Preserve the 30 exact original host IDs and baseline 131/245/114 footprint unmodified.",
+    "Add up to two exact independently documented host IDs in an explicitly labeled augmented butterfly-only sensitivity.",
+    "Recompute native and contemporary union and contemporary-minus-native added regions; report counts and identities of gains/losses.",
+    "Remove only WCVP introduced-only Plantago lanceolata units in both baseline and augmented reconstructions, retaining its native distribution and other mapped hosts. Measure lost added regions before and after.",
+    "Report Castilleja native, contemporary and introduced region counts; if any host has no usable WCVP record, do not assume presence or absence.",
+    "Do not reinterpret native WCVP botany as proof of local alternate host availability or developmental suitability.",
+    "Do not select additional plants after seeing changes, sweep host sets, or modify the GEB figures/primary results."
+  ],
+  "outcomes": [
+    "augmented resolved host count",
+    "native resource regions",
+    "contemporary resource regions",
+    "added resource regions",
+    "Plantago unique introduced contribution count and fraction",
+    "which previously known added regions were rescued by augmented other host ranges"
+  ],
+  "result_status": "If matched, sensitivity of host-database completeness for ONE butterfly, not 239-butterfly global estimate; not a new ecological mechanism or independent confirmatory test."
+}
