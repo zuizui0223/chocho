@@ -155,6 +155,64 @@ def compare_species_pair(rows,first,second):
       "route_cluster_bootstrap":block_bootstrap(active,routes,4999,20261008),
       "interpretation":"Stage composition in different milkweed species, NOT larval survival or an independent native/exotic treatment effect."}
 
+
+def triad_common_strata(rows,ordered_species):
+    """Post-hoc compositional negative control on identical route-month support.
+
+    Restrict to route-months with all three species and at least one egg
+    or late-instar report per species. Never interpret as cohort survival.
+    """
+    if len(ordered_species)!=3 or len(set(ordered_species))!=3:
+        raise ValueError("three distinct preselected species required")
+    by=defaultdict(lambda:Counter())
+    for r in rows:
+        if r["year"]!=2022 or r["milkweed"] not in ordered_species:
+            continue
+        key=(r["route"],r["month"],r["milkweed"])
+        for metric in ("late","Eggs","Num_plants"):
+            by[key][metric]+=r[metric]
+    route_months=defaultdict(dict)
+    for (route,month,species),counts in by.items():
+        route_months[(route,month)][species]=counts
+    present=[(key,vals) for key,vals in sorted(route_months.items())
+             if all(species in vals for species in ordered_species)]
+    active=[(key,vals) for key,vals in present
+            if all(vals[species]["late"]+vals[species]["Eggs"]>0
+                   for species in ordered_species)]
+    seasons={name:sum(month in months for ((_,month),_) in active)
+             for name,months in SEASONS.items()}
+    contrasts=[]
+    for first,second in ((ordered_species[1],ordered_species[2]),
+                         (ordered_species[0],ordered_species[1]),
+                         (ordered_species[0],ordered_species[2])):
+        pairs=[(route,month,vals[first]["late"],vals[first]["Eggs"],
+                vals[second]["late"],vals[second]["Eggs"])
+               for ((route,month),vals) in active]
+        routes=sorted({r["route"] for r in rows if r["year"]==2022})
+        contrasts.append({
+           "first_species":first,
+           "second_species":second,
+           "identical_triad_route_month_strata":len(pairs),
+           "relative_late_to_egg_MH_OR":or_mh(pairs),
+           "route_cluster_bootstrap":block_bootstrap(pairs,routes,4999,20261008),
+           "season":{name:{"strata":len(season(pairs,months)),
+                            "OR":or_mh(season(pairs,months))}
+                     for name,months in SEASONS.items()},
+           "counts":{"first_late":int(sum(x[2] for x in pairs)),
+                     "first_eggs":int(sum(x[3] for x in pairs)),
+                     "second_late":int(sum(x[4] for x in pairs)),
+                     "second_eggs":int(sum(x[5] for x in pairs))}
+        })
+    return {
+       "status":"POSTHOC_NEGATIVE_CONTROL_IDENTICAL_STRATA_NOT_CONFIRMATORY",
+       "species":list(ordered_species),
+       "route_months_with_all_three_species":len(present),
+       "route_months_with_all_three_species_and_stage_events":len(active),
+       "active_by_season":seasons,
+       "contrasts":contrasts,
+       "inference_limit":"All pairs share identical route×month strata, removing pair-specific stratum support as an explanation. Plant native status still perfectly follows species identity; these are cross-sectional reports, not survival. Matched Mantel-Haenszel odds ratios need not be multiplicatively transitive; small common support may make intervals broad."
+    }
+
 def main():
     p=argparse.ArgumentParser()
     for name in ("source_csv","protocol_json","output_json","output_matched_csv"):
@@ -198,6 +256,7 @@ def main():
       "alternate_larval_stages":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"]} for k,v in sensitive.items()},
       "incomplete_other_years":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"],"paired_route_months":v["route_months_both_plant_origins"]} for k,v in partial.items()},
       "species_pair_stage_comparisons":species_pairs,
+      "species_triad_identical_strata_negative_control":triad_common_strata(rows,expected_three),
       "species_pair_protocol":"docs/exploratory/URBAN_MILKWEED_SPECIES_PAIR_STAGE_PROTOCOL_V01.json",
       "plant_species_identity":{"plant_species_in_both_native_statuses":sum(len(x)>1 for x in species.values()),
           "top_species_by_plant_reports":[{"species":s,"status":n,"reported_plants":int(v)} for (s,n),v in counts.most_common(8)]},
