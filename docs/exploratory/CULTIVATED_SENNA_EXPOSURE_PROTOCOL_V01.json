@@ -1,0 +1,76 @@
+{
+  "schema": "chocho_cultivated_senna_exposure_pilot_v0.1",
+  "status": "EXPLORATORY_DESIGN_FROZEN_BEFORE_iNAT_OUTCOME",
+  "date": "2026-10-08",
+  "scientific_question": "Can independent cultivated-plant occurrence records document anthropogenic butterfly host exposure in Florida outside the naturalized/wild WCVP distribution, even where native/introduced plant range reconstruction contains no host opportunity?",
+  "panel": {
+    "region": "Florida, USA",
+    "iNaturalist_place_id_expected": 21,
+    "taxa": [
+      {
+        "taxon": "Senna polyphylla",
+        "wcvp_accepted_id": "2490545",
+        "Florida_in_frozen_WCVP": false,
+        "selection_rationale": "Cultivated exotic Phoebis larval host with local adult emergence documented by Koptur et al. (2024), but no frozen WCVP FLA record"
+      },
+      {
+        "taxon": "Senna surattensis",
+        "wcvp_accepted_id": "2897969",
+        "Florida_in_frozen_WCVP": true,
+        "Florida_WCVP_status": "introduced"
+      },
+      {
+        "taxon": "Senna ligustrina",
+        "wcvp_accepted_id": "2490490",
+        "Florida_in_frozen_WCVP": true,
+        "Florida_WCVP_status": "native"
+      },
+      {
+        "taxon": "Senna alata",
+        "wcvp_accepted_id": "2475546",
+        "Florida_in_frozen_WCVP": true,
+        "Florida_WCVP_status": "introduced"
+      }
+    ]
+  },
+  "fixed_WCVP_reference": {
+    "source": "matildabrown/rWCVPdata",
+    "commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "verified_in_github_run": 37716723493
+  },
+  "iNaturalist_observations": {
+    "source": "api.inaturalist.org/v1",
+    "dates": [
+      "2010-01-01",
+      "2025-12-31"
+    ],
+    "filters": [
+      "place_id=21, validated to Florida",
+      "taxon_id exact species",
+      "captive=true versus captive=false",
+      "observations with photos",
+      "verifiable=any"
+    ],
+    "sampling": "Retrieve total_results for each status, and only up to 100 top public observations for source audit; do not treat sample counts as the total",
+    "rates": "no comparison of cultivated vs wild proportions as real abundance because reporting, tagging and ascertainment differ",
+    "location_accuracy_filter_metres": 1000,
+    "minimum_distinct_observation_ids": 3,
+    "minimum_distinct_approx_5km_cells": 2,
+    "source_requires": "source URL, taxon exact species (or infra under it), captive true, date, photo, public location and accuracy"
+  },
+  "pilot_gate": "A source-confirmed positive for Senna polyphylla requires at least 3 explicitly captive/cultivated, photo-supported, <=1000 m positional accuracy observations within Florida in at least two approximately 5 km cells; call this a cultivated occurrence footprint outside frozen WCVP distribution, not butterfly utilization or horticultural extent.",
+  "failure": "If data are absent/ambiguous, retain Koptur (2024) only as the independent cultivation and larval-emergence example. Do not broaden to an invented global effect.",
+  "core_literature": [
+    "Koptur et al 2024 DOI 10.3390/insects15020123",
+    "Baker & Potter 2019 DOI 10.3389/fevo.2019.00474",
+    "Baker & Potter 2020 DOI 10.1038/s41598-020-66621-6"
+  ],
+  "boundaries": [
+    "iNaturalist cultivated annotations may be incomplete or erroneous; absence of records is not absence of garden plants",
+    "Photos are not externally adjudicated cultivated evidence without field or image review",
+    "Plant occurrence does NOT document butterfly feeding, reproduction, colonization, or fitness at that particular observation",
+    "Do not treat WCVP no Florida range record as proof there are no established populations",
+    "Floristic and invertebrate observation metadata have drastically different detection effort",
+    "Post-hoc pilot, main GEB unchanged"
+  ]
+}
