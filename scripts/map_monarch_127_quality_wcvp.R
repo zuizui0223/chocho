@@ -30,13 +30,30 @@ results <- vector("list",nrow(source))
 for(i in seq_len(nrow(source))){
   name <- source$original_species_name[i]
   hits <- n[tolower(trimws(as.character(n$taxon_rank)))=="species" & n$taxon_name==name,,drop=FALSE]
+  # Exact accepted-name priority. Duplicate spelling rows can denote alternate
+  # synonyms/homonyms; an actual unique accepted species record takes precedence.
+  accepted_hits <- hits[
+    tolower(trimws(as.character(hits$taxon_status)))=="accepted" &
+    hits$plant_name_id==hits$accepted_plant_name_id,,drop=FALSE]
+  accepted_ids <- unique(accepted_hits$plant_name_id)
+  accepted_ids <- accepted_ids[!is.na(accepted_ids)&nzchar(accepted_ids)]
   ids <- unique(hits$accepted_plant_name_id)
   ids <- ids[!is.na(ids)&nzchar(ids)]
-  status <- if(length(ids)==0) "unmatched" else if(length(ids)>1) "ambiguous" else "matched"
-  id <- if(status=="matched")ids[[1]] else ""
+  if(length(accepted_ids)==1){
+    id <- accepted_ids[[1]]
+    status <- "matched"
+    matched_as <- "accepted_name_prioritized"
+  } else if(length(ids)==1){
+    id <- ids[[1]]
+    status <- "matched"
+    matched_as <- "unambiguous_synonym"
+  } else {
+    id <- ""
+    status <- if(length(ids)==0) "unmatched" else "ambiguous"
+    matched_as <- ""
+  }
   canonical <- if(nzchar(id) && id%in%names(canon_name))canon_name[[id]] else ""
   fam <- if(nzchar(id) && id%in%names(canon_fam))canon_fam[[id]] else ""
-  matched_as <- if(!nzchar(id))"" else if(id%in%hits$plant_name_id) "accepted_name" else "synonym"
   dd <- if(nzchar(id)) d[d$plant_name_id==id,,drop=FALSE] else d[FALSE,,drop=FALSE]
   nat <- sort(unique(dd$area_code_l3[!is.na(dd$introduced)&dd$introduced==0L]))
   ali <- sort(unique(dd$area_code_l3[!is.na(dd$introduced)&dd$introduced==1L]))
@@ -53,6 +70,12 @@ for(i in seq_len(nrow(source))){
 }
 ans <- do.call(rbind,results)
 if(nrow(ans)!=127)stop("output panel drift")
+control <- ans[ans$original_species_name=="Asclepias curassavica",,drop=FALSE]
+if(nrow(control)!=1 || control$match_status!="matched" ||
+   control$accepted_id!="500848" ||
+   control$native_regions!=41 || control$introduced_regions!=97){
+  stop("Asclepias curassavica independent quality and WCVP positive-control mismatch")
+}
 dir.create(dirname(output),recursive=TRUE,showWarnings=FALSE)
 write.csv(ans,output,row.names=FALSE,na="")
 print(table(ans$match_status,ans$quality_bin))
