@@ -32,11 +32,11 @@ jobs:
       - name: Probe GloBI geodated larval host use and preserve raw API pages
         run: |
           mkdir -p results/observed-larval-hostuse
-          python scripts/probe_independent_butterfly_larval_hostuse.py --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --page-limit 512 --pages-per-species 2 --output-json results/observed-larval-hostuse/larval_hostuse_feasibility_v0.1.json --output-csv results/observed-larval-hostuse/strict_local_larval_hostuse_records_v0.1.csv --raw-dir results/observed-larval-hostuse/api_raw_pages
+          python scripts/probe_independent_butterfly_larval_hostuse.py --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --page-limit 512 --pages-per-species 10 --output-json results/observed-larval-hostuse/larval_hostuse_feasibility_v0.2.json --output-csv results/observed-larval-hostuse/strict_local_larval_hostuse_records_v0.2.csv --raw-dir results/observed-larval-hostuse/api_raw_pages
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: butterfly-independent-larval-hostuse-probe-v01
+          name: butterfly-independent-larval-hostuse-probe-v02
           path: results/observed-larval-hostuse/
           if-no-files-found: warn
           retention-days: 30

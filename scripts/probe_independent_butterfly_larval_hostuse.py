@@ -65,6 +65,7 @@ def map_code(lat,lon,geoms,codes,tree):
 def fetch_page(species,offset,limit,attempts=4):
     query=urlencode({
         "sourceTaxon":species,
+        "interactionType":"eats",
         "includeObservations":"true",
         "limit":limit,
         "offset":offset,
@@ -86,7 +87,9 @@ def fetch_page(species,offset,limit,attempts=4):
 
 def read_year(text):
     match=re.search(r"(?<!\d)(1[8-9]\d{2}|20[0-2]\d)(?!\d)",str(text or ""))
-    return None if not match else int(match.group(1))
+    if not match:return None
+    year=int(match.group(1))
+    return year if 1800<=year<=2025 else None
 
 def canonical_match(actual,wanted):
     actual=" ".join(str(actual or "").strip().split())
@@ -110,7 +113,7 @@ def main():
     hosts,native,contemp,native_union=load_sources(a.insect_host_csv,a.native_distribution_csv,a.contemporary_distribution_csv)
     geoms,codes,tree=geometry_index(a.level3_geojson)
     a.raw_dir.mkdir(parents=True,exist_ok=True)
-    found=[];query_audit=[];stages=Counter();types=Counter();studies=Counter()
+    found=[];query_audit=[];stages=Counter();types=Counter();studies=Counter();query_completion=[]
     for species in SPECIES:
         n_species=0;any_failed=False;maybe_capped=False
         for page in range(a.pages_per_species):
@@ -173,6 +176,8 @@ def main():
                     "introduced_only_resource_cell":int(introduced_only)
                 }
                 found.append(record)
+            if len(rows)<a.page_limit:break
+        query_completion.append({"species":species,"rows":n_species,"query_failed":any_failed,"possibly_capped":maybe_capped})
         print(json.dumps({"species":species,"response_rows":n_species,"failed":any_failed,"possibly_capped":maybe_capped}),flush=True)
         stages["species_query_finished"]+=1
     dedup={}
@@ -194,12 +199,15 @@ def main():
         "strict_introduced_only_regions":len(set(r["wgsrpd3_code"] for r in positive))
     }
     result={
-        "schema":"chocho_independent_larval_hostuse_feasibility_v0.1",
-        "status":"OBSERVATION_SOURCE_FEASIBILITY_ONLY",
-        "protocol":"docs/exploratory/INDEPENDENT_LARVAL_HOSTUSE_FEASIBILITY_PROTOCOL_V01.json",
+        "schema":"chocho_independent_larval_hostuse_feasibility_v0.2",
+        "status":"OBSERVATION_SOURCE_FEASIBILITY_COVERAGE_CORRECTION_ONLY",
+        "protocol":"docs/exploratory/INDEPENDENT_LARVAL_HOSTUSE_FEASIBILITY_PROTOCOL_V02.json",
         "species_panel":SPECIES,
         "page_limit":a.page_limit,
         "pages_per_species":a.pages_per_species,
+        "api_restriction":"interactionType=eats, not all GloBI interaction types",
+        "query_completion":query_completion,
+        "possibly_capped_species":[x["species"] for x in query_completion if x["possibly_capped"]],
         "query_audit":query_audit,
         "stages":dict(stages),
         "interaction_types":dict(types.most_common(25)),

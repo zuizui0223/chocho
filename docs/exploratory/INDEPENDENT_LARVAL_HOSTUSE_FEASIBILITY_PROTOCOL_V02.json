@@ -1,0 +1,18 @@
+{
+  "schema": "chocho_independent_larval_hostuse_observation_feasibility_v0.2",
+  "status": "PROTOCOL_REPAIR_AFTER_FIRST_CAPPED_FEASIBILITY; EXPLORATORY_NOT_CONFIRMATORY",
+  "parent": "docs/exploratory/INDEPENDENT_LARVAL_HOSTUSE_FEASIBILITY_PROTOCOL_V01.json",
+  "date": "2026-10-08",
+  "corrections": [
+    "Fix year parser accepting 2026 and 2027-2029 despite primary window ending 2025",
+    "Query GloBI with interactionType=eats to avoid adult floral visitation and other unrelated relationships consuming pagination slots",
+    "Increase fixed per-species pagination to at most 10 pages x 512 rows, stopping after partial page",
+    "Explicitly report pages truncated / capped and preserve raw pages with hashes; missing cases in capped species are not absences"
+  ],
+  "species_panel": "exact same frozen 11 species as v0.1",
+  "strict_evidence": "butterfly explicitly larval, actual easting plant relation, plausible plant taxon, coordinates, year 1800-2025, independently traceable provenance not labelled HOSTS, mapped exact WGSRPD3",
+  "plant_join": "accepted-name exact HOSTS WCVP; if plant introduced but native alternatives exist distinguish introduced host use from introduced-only resource geography",
+  "pass": "same feasibility gate >=10 records across >=3 butterfly species >=3 WGSRPD3 introduced-only resource cells",
+  "boundary": "post-hoc coverage repair, not independent biological replication; visual/manual provenance inspection is needed even for apparently geodated GloBI interactions",
+  "main_GEB": "unchanged"
+}
