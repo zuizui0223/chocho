@@ -1,0 +1,33 @@
+name: monarch H3 host by predator exposure adult survival
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/audit_monarch_H3_host_enemy_survival.py",".github/workflows/butterfly-monarch-H3-host-enemy-survival.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  reanalysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "scipy>=1.14" "statsmodels>=0.14,<1"
+      - name: Fetch original 2018/2019 Dryad source
+        run: |
+          mkdir -p results/monarch_H3_predator
+          python scripts/audit_monarch_H3_host_enemy_survival.py download --directory results/monarch_H3_predator
+      - name: Test host by exclusion on adult emergence
+        run: |
+          python scripts/audit_monarch_H3_host_enemy_survival.py test --directory results/monarch_H3_predator --output-json results/monarch_H3_predator/host_enemy_adult_survival_v0.1.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-monarch-H3-host-enemy-survival-v01
+          path: results/monarch_H3_predator/
+          retention-days: 30
+          if-no-files-found: warn
