@@ -1,0 +1,81 @@
+{
+  "schema": "chocho_independent_butterfly_resource_realization_source_manifest_v0.1",
+  "created": "2026-10-08",
+  "status": "SOURCE_DISCOVERY_AND_IDENTIFIABILITY_ONLY_NO_NEW_REANALYSIS_OUTCOMES",
+  "project_aim": "Test whether host-resource presence translates to butterfly larval recruitment and adult reproduction only under appropriate phenology, host quality and enemy conditions, rather than treating each introduced plant distribution as equivalent fitness opportunity.",
+  "sources": [
+    {
+      "id": "ferreira_rodrigues_2021",
+      "published": "2021",
+      "doi": "10.1002/ece3.7821",
+      "dataset_doi": "10.5061/dryad.3bk3j9kk2",
+      "files": [
+        "field_performance.txt",
+        "lab_performance.txt",
+        "README.txt"
+      ],
+      "scope": "two Danaus species, native Asclepias curassavica versus introduced Calotropis procera; lab and field, bagged versus exposed",
+      "strength": "Real larval survivorship and development observations",
+      "fatal_confounding": "Field host species and field site are fully confounded: one site per host, and bagging also changes abiotic environment; cannot attribute host-type × bagging contrast purely to natural enemies."
+    },
+    {
+      "id": "diethelm_2026",
+      "published": "2026",
+      "doi": "10.1111/een.70094",
+      "dataset_doi": "10.5061/dryad.51c59zwgx",
+      "files": [
+        "2018_VR_Predation_CG_subsetAfAs.csv",
+        "2019_VR_Predation_CG_subsetAfAs.csv",
+        "2018_VR_Predation_CG_SurvCurve.csv",
+        "2019_VR_Predation_CG_SurvCurve.csv",
+        "Dryad_EcoEnto_2026.R",
+        "README.md"
+      ],
+      "scope": "493 Danaus plexippus larvae over 2018-2019 in a common garden, 2 native Asclepias hosts × predator-exclusion versus exposed",
+      "strength": "Original individual identity, full adult emergence, repeated years, manipulated access to predators",
+      "fatal_confounding": "All plants are native to study region. This experiment supports host-identity×enemy-effect biological calibration, not native-vs-exotic fitness differences. Published paper itself already reports interactions."
+    },
+    {
+      "id": "erickson_2025",
+      "published": "2025",
+      "doi": "10.1002/ecs2.70259",
+      "dataset_doi": "10.6084/m9.figshare.25648644.v1",
+      "scope": "monthly surveys of 15 East Bay garden routes 2022 and four repeated 2023 routes, with native/exotic milkweeds, monarch eggs, larvae, adults and OE",
+      "published_model_findings": {
+        "native_vs_exotic_composition_eggs_p": 0.01,
+        "larvae_p": 0.122,
+        "adults_p": 0.006,
+        "OE_p": 0.251
+      },
+      "strength": "Observed real garden resources and three butterfly life stages at repeated spatial-temporal units",
+      "fatal_confounding": "Egg and larva counts are contemporaneous stage indices, not followed cohorts or survival probabilities; survey visibility, season, host type and weather vary jointly. A difference in separate model p-values does not test a stage interaction."
+    },
+    {
+      "id": "koptur_2024",
+      "published": "2024",
+      "doi": "10.3390/insects15020123",
+      "scope": "Phoebis rearing on cultivated native and alien Senna, plus parasitoid emergence, three Florida localities",
+      "provenance": "chocho GitHub Actions 37716820173",
+      "strength": "Actual post-collection adult or parasitoid emergence on independently studied hosts",
+      "fatal_confounding": "176 unresolved individual fates, inconsistent printed native parasitoid grand total, origin linked to species, site and repeated sampling. No cultivated-vs-wild treatment."
+    },
+    {
+      "id": "crg_africa",
+      "source": "iNaturalist Caterpillar Rearing Group",
+      "project": "https://www.inaturalist.org/projects/caterpillar-rearing-group",
+      "run": 37730024907,
+      "status_as_of_manifest": "GitHub job queued; NO results",
+      "strength": "Possibly original caterpillar->adult/parasitoid link chain",
+      "fatal_confounding": "Successfully reared and documented taxa preferentially reported; all larval failures not guaranteed recorded. 9519 project-reported cases may not all be API-accessible."
+    }
+  ],
+  "guidance": [
+    "Do not launch a separate full ecology manuscript using already-published examples alone.",
+    "Do not pool species/site experiments as if independent natural vs cultivated treatment replicates.",
+    "Prioritize original factorial 2026 dryad to check how much stage-based emergence differs under predator exclusion at equal host category; generalization to alien plants requires an additional paired experiment.",
+    "Prioritize route×month raw data from 2025 Figshare to test stage×non-native milkweed fraction at constant plant abundance/season/route, NOT by comparing two separate p-values.",
+    "Use 2023 repeated routes only as a limited temporal sensitivity, not an independent new city.",
+    "Raw downloads via Dryad/Figshare were not accessible in current analysis runtime as of this manifest; no unpublished results were inferred.",
+    "No automatic changes to main GEB manuscript."
+  ]
+}
