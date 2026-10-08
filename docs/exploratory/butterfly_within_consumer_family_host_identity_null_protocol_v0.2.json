@@ -1,0 +1,26 @@
+{
+  "schema": "chocho_butterfly_within_consumer_family_host_identity_null_v0.2",
+  "status": "POSTHOC_STRICTER_ROBUSTNESS_GATE_FROZEN_BEFORE_STRICT_NULL_OUTCOMES",
+  "created": "2026-10-08",
+  "parent": "docs/exploratory/butterfly_host_identity_climate_selectivity_null_protocol_v0.1.json",
+  "motivation": "The initial within-plant-family host-identity null may confound identity effects with butterfly family phylogenetic conservatism.",
+  "operation": "Double-edge swaps only when the two original links have the same butterfly Family AND the same host plant botanical family.",
+  "preserves": [
+    "all native and contemporary plant geographic occurrences",
+    "each butterfly's number of hosts per botanical family",
+    "each plant's number of butterfly consumers per butterfly family",
+    "all species host link totals",
+    "taxonomic butterfly family assignment"
+  ],
+  "statistic": "unchanged primary: distant cross-Level1 region pair climate-analogue Jaccard gain minus climatically discordant gain",
+  "null": {
+    "permutations": 499,
+    "seed": 20261008,
+    "burn": "max(10000,15*edges)",
+    "spacing": "max(2000,3*edges)",
+    "sufficient_mixing": "at least 1000 accepted swaps"
+  },
+  "test": "one-sided Monte Carlo p<=0.05 and observed > null median",
+  "claim_boundary": "Stricter taxonomic null still does not preserve butterfly-specific geographic opportunity counts; this is a robustness check, not independent confirmation or proof of realized trophic interactions.",
+  "stop_rule": "If strict null does not pass or cannot mix, label consumer-specific evidence sensitive to phylogenetic structure, and do not claim generality."
+}
