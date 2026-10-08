@@ -1,0 +1,29 @@
+{
+  "schema": "chocho_bce_clarke2024_evidence_filtered_host_pilot_v0.1",
+  "created": "2026-10-08",
+  "epistemic_status": "EXPLORATORY_SOURCE_PILOT_FROZEN_BEFORE_BCE_HTML_HOST_COMPARISON; CLA RKE ORIGINAL DRYAD UNAVAILABLE",
+  "source": {
+    "site": "https://www.bc-europe.eu/taxonomy.php",
+    "pages": "https://www.bc-europe.eu/butterfly.php?genus={G}&species={s}",
+    "provenance": "Butterfly Conservation Europe species foodplant pages explicitly derived from Clarke (2024), DOI 10.1002/ece3.10834, retaining only evidence tiers 1-3; not an original field observation or byte-identical Dryad original.",
+    "limitations": "No per-link evidence tier, country, primary references, or original Dryad full list of claims; cannot estimate raw evidence-tier frequency, represent all of Europe, or claim biological independence."
+  },
+  "candidate_rule": "Read exact 239 species names from pinned data/frozen/figure_sources/anthropogenic_species_metrics.csv, and BCE exact two-token binomials from the site's 501-species taxonomy table. Alphabetically sort their EXACT intersection, then take first 12 (not chosen based on HOSTS overlap). This is source/access pilot only.",
+  "fixed_hosts": "Pinned globalbioticinteractions/HOSTS 808e0b869f9ec1adf8efff87cf6a395adda103e0 resource.csv; exact insect genus/species and exact plant genus/species binomials only. No implicit synonym normalization.",
+  "inclusion": [
+    "Only a uniquely matched butterfly page with valid exact title and explicit Larval Foodplants table",
+    "Only species-rank plant genus + unambiguous simple species epithet; exclude genera alone, hybrids, subspecies, varieties and ambiguous epithets",
+    "Treat missing host-page table or unavailable page as NOT AUDITED, not zero confirmed hosts"
+  ],
+  "metrics": [
+    "Exact overlap counts, BCE-only host names and HOSTS-only names per selected butterfly",
+    "Number of plant-name pairs excluded for rank/ambiguity",
+    "Page source URLs and SHA256 hashes, download errors and pilot denominator"
+  ],
+  "stop_rules": [
+    "Do not generalize exact name mismatch to genuine unreported interaction: synonyms/taxonomy not fully reconciled",
+    "Do not infer historic colonization, fitness, host quality or abundance from checklist",
+    "If source site denies access, preserve error and stop",
+    "No GEB manuscript updates or 239-species summary changes from this small post-hoc pilot"
+  ]
+}
