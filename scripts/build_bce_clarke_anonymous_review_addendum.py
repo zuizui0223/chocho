@@ -26,6 +26,7 @@ SOURCE_FILES={
     "results/bce_continent_355_region_null.json":"level1/bce_clarke_continent_fixed_margin_comparison_v01.json",
 }
 REPO_FILES=(
+    "scripts/build_bce_clarke_anonymous_review_addendum.py",
     "scripts/audit_bce_clarke_evidence_host_pilot.py",
     "scripts/audit_bce_clarke_full_exact_overlap.py",
     "scripts/audit_bce_clarke_taxonomic_crosswalk.py",
@@ -78,6 +79,11 @@ but pins their exact Git commits above. The scripts build their sidecars from
 those original provider checkouts. Re-executing source retrieval from the live
 BCE website is NOT guaranteed to produce byte-identical data: use the frozen
 source records here for scientific comparisons.
+
+Dependency: Python 3.12+; use beautifulsoup4 to rerun live BCE page parsing,
+and a base-R installation for WCVP/HOSTS sidecar generation.
+The published source-conditional null analysis itself uses Python standard
+library modules and stored input snapshots.
 
 Verification:
   python -m unittest discover -s tests -p test_bce_clarke_level1_null.py -v
