@@ -1,0 +1,32 @@
+{
+  "schema": "chocho_monarch_milkweed_stage_source_gate_v0.1",
+  "status": "OUTCOME_BLIND_SOURCE_FEASIBILITY_GATE",
+  "created": "2026-10-08",
+  "study": "Erickson Schultz Crone 2025 Ecosphere 10.1002/ecs2.70259",
+  "figshare_doi": "10.6084/m9.figshare.25648644.v1",
+  "figshare_article_id": 25648644,
+  "already_known": "Prior publication analyzed independent monarch egg, larva, adult and milkweed abundances; raw data have not been inspected here.",
+  "initial_task": "Download metadata and allowed open files and audit schema; never compute coefficients from incomplete survey units.",
+  "main_data_requirements": [
+    "2022 route-month IDs",
+    "monarch egg counts",
+    "monarch larva counts",
+    "native and nonnative milkweed counts",
+    "compatible stage survey denominator",
+    "date/month",
+    "repeated routes and survey effort"
+  ],
+  "minimum_complete_route_months": 60,
+  "minimum_mixed_native_exotic_routes": 5,
+  "minimum_months_for_effective_route_variation": 4,
+  "intended_primary": "Stage (egg vs larva) x nonnative milkweed fraction association, adjusted for route, month, total milkweeds, survey exposure.",
+  "prior_literature_boundary": "Published paper contains separate stage models. Any interaction is exploratory and can repeat prior biology.",
+  "failure": "If raw files inaccessible or no comparable counts/denominators, stop without fitting or assuming counts.",
+  "biological_claims_not_allowed": [
+    "stage ratios as cohort survival",
+    "native vs exotic causal effect",
+    "ecological trap",
+    "monarch findings generalized to other butterflies"
+  ],
+  "action_limit": "Do not modify GEB main manuscript"
+}
