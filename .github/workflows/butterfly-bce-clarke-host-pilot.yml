@@ -1,0 +1,40 @@
+name: BCE Clarke evidence-filtered butterfly host source pilot
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_bce_clarke_evidence_host_pilot.py
+      - .github/workflows/butterfly-bce-clarke-host-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "beautifulsoup4>=4.12,<5"
+      - name: Clone original fixed HOSTS records
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Audit exact host names on 12 deterministically chosen European butterfly pages
+        run: |
+          python scripts/audit_bce_clarke_evidence_host_pilot.py \
+            --protocol docs/exploratory/BCE_CLARKE_HIGH_EVIDENCE_HOST_PILOT_PROTOCOL_V01.json \
+            --focal-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --hosts-csv _external/HOSTS/resource.csv \
+            --output results/bce_clarke/host_source_pilot_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-bce-clarke-evidence-host-pilot-v01
+          path: results/bce_clarke/
+          retention-days: 30
+          if-no-files-found: warn
