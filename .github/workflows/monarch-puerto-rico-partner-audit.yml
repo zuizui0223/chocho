@@ -1,0 +1,64 @@
+name: Puerto Rico monarch feeding partner audit
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: [".github/workflows/monarch-puerto-rico-partner-audit.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original partner plant observation and taxon-ID link
+        run: |
+          mkdir -p results/puerto-rico
+          python - <<'PY'
+          import json,urllib.request,time
+          from pathlib import Path
+          ids=[109870256,109865691]
+          meta={}
+          for id in ids:
+              u=f"https://api.inaturalist.org/v1/observations/{id}"
+              req=urllib.request.Request(u,headers={"User-Agent":"chocho-case-provenance/0.1","Accept":"application/json"})
+              with urllib.request.urlopen(req,timeout=45) as r:
+                  obj=json.load(r)
+              rs=obj.get("results") or []
+              if len(rs)!=1:raise RuntimeError(f"observation unavailable {id}")
+              obs=rs[0]
+              meta[str(id)]={
+                  "id":id,"date":obs.get("observed_on"),"taxon":(obs.get("taxon") or {}).get("name"),
+                  "taxon_id":(obs.get("taxon") or {}).get("id"),
+                  "quality_grade":obs.get("quality_grade"),
+                  "photo_count":len(obs.get("photos") or []),
+                  "accuracy_m":obs.get("positional_accuracy"),
+                  "location":obs.get("location"),
+                  "captive":obs.get("captive"),
+                  "fields":[{"name":str(f.get("name") or (f.get("observation_field") or {}).get("name") or ""),"value":str(f.get("value") or ""),"taxon":(f.get("taxon") or {}).get("name")} for f in (obs.get("ofvs") or [])]
+              }
+              time.sleep(1)
+          monarch=meta["109870256"];plant=meta["109865691"]
+          feeding=[f for f in monarch["fields"] if f["name"].lower()=="feeding on"]
+          partner=[f for f in monarch["fields"] if f["name"].lower()=="associated observation"]
+          result={
+              "schema":"chocho_puerto_rico_monarch_plant_partner_evidence_v0.1",
+              "status":"POSTHOC_PARTNER_SOURCE_AUDIT_NOT_FITNESS_EVIDENCE",
+              "monarch":monarch,"associated_plant_observation":plant,
+              "feeding_field_taxon_calotropis":any(f["value"]=="120917" and f["taxon"]=="Calotropis procera" for f in feeding),
+              "partner_id_correct":any("109865691" in f["value"] for f in partner),
+              "plant_partner_taxon_correct":plant["taxon"]=="Calotropis procera",
+              "claim_boundary":"Existing published Puerto Rico Danaus plexippus / Calotropis procera feeding preference research predates this 2022 observation; this is not a novel host use report. Native Asclepias curassavica is absent from frozen HOSTS links and is native to PUE per Kew POWO."
+          }
+          Path("results/puerto-rico/monarch_partner_source_audit.json").write_text(json.dumps(result,indent=2,ensure_ascii=False)+"\n")
+          print(json.dumps(result,indent=2,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monarch-puerto-rico-partner-audit-v01
+          path: results/puerto-rico/
+          retention-days: 30
