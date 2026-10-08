@@ -295,3 +295,13 @@ def test_s9_review_source_archive_is_listed_anonymized_and_packaged():
     assert "unzip -t dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
     assert "sha256sum dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
 
+    word_flow=(root/".github/workflows/build-blinded-review-docx.yml").read_text(encoding="utf-8")
+    support_docx="butterfly_specialization_GEB_supporting_information.docx"
+    si_entry=[r for r in manifest["submission_files"] if r.get("order")==4]
+    assert len(si_entry)==1
+    assert si_entry[0]["generated_artifact"]==support_docx
+    assert "scripts/build_butterfly_supporting_information_docx.py" in word_flow
+    assert f"dist/{support_docx}" in word_flow
+    assert "dist/SHA256SUMS" in word_flow
+
+
