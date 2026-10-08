@@ -32,6 +32,28 @@ Both accepted taxa exist botanically, but their species-level links with *E. edi
 
 **Outcome:** The two documented omissions affect **interaction-list completeness** but, at the WGSRPD3 regional scale, do **not** affect **geographic envelope completeness** in this single example. The result is compatible with the original 131/245/114 geographic calculation. This is a nontrivial audit outcome (zero difference was not imposed), but **not** evidence that host incompleteness is innocuous across 239 butterflies.
 
+## Region-level host composition despite unchanged envelopes — completed diagnostic
+
+The additional post-hoc source-frozen composition protocol `EUPHYDRYAS_HOST_COMPOSITION_WITHIN_FIXED_ENVELOPE_PROTOCOL_V01.json` and original-data workflow [37772294904](https://github.com/zuizui0223/chocho/actions/runs/37772294904) completed successfully. Its triggering source [commit `343f8278`](https://github.com/zuizui0223/chocho/commit/343f8278f5a957ffcc494ea5ca752b0fcdcecce5) measures exact accepted known-host species counts per WGSRPD3 botanical region, not field larval food suitability.
+
+**Nine newly documented host-species × region incidences affected six already-covered regions; 3 regions gained one and 3 gained two recorded known host species.** The exact native versus contemporary reconstructed host-count changes are:
+
+| Botanical region code | Native 30-host → 32-host count | Contemporary count |
+| --- | --- | --- |
+| ABT | 2 → 3 | 3 → 4 |
+| BRC | 2 → 4 | 4 → 6 |
+| IDA | 7 → 8 | 9 → 10 |
+| MNT | 5 → 6 | 7 → 8 |
+| ORE | 14 → 16 | 16 → 18 |
+| WAS | 5 → 7 | 7 → 9 |
+
+- **Area remains unchanged:** native 131 → 131, contemporary 245 → 245, introduced-added 114 → 114.
+- **No newly converted single-host regions:** native regions with exactly one *recorded* host stay **39**, contemporary exactly-one host stay **82**; **zero** regions moved from exactly one to two or more recorded hosts.
+- **No overlap with baseline introduced-added regions:** all six regions lie in the already-present native resource envelope, and zero of the 114 added regions gain a *Castilleja* incidence. Original *Plantago* unique introduced-range dependence remains 52/114.
+- These counts are species-level **network projection** diagnostics within the published, frozen botanical region scheme. WGSRPD3 covers extensive heterogeneous habitats; plants sharing a region do not establish shared individual butterfly habitats, stage-appropriate phenology, nor functional fallback.
+
+The zero regional-area and unchanged single-host results are useful **negative completeness tests**. The new source confirms locally documented host connections omitted from the original HOSTS list, but does not provide evidence that the original region-level analysis missed area expansion, nor that global host-list incompleteness is unimportant. Do not elevate this deterministic post-hoc change in host richness to an independent ecological discovery or a population-resilience test.
+
 ## Why this is interesting biologically but not a second result about fitness
 
 Two different types of incomplete knowledge must be separated:
