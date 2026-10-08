@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 pytest.importorskip("docx")
 from docx import Document
+from docx.oxml.ns import qn
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"scripts"))
@@ -26,6 +27,8 @@ def test_separate_supplementary_docx_has_real_s1_to_s9_tables(tmp_path):
     doc=Document(output)
     assert result["supporting_information_tables"]==12
     assert len(doc.tables)==12
+    assert all(row._tr.get_or_add_trPr().find(qn("w:cantSplit")) is not None
+               for tab in doc.tables for row in tab.rows)
     paragraphs="\n".join(x.text for x in doc.paragraphs)
     for i in range(1,10):
         assert f"Supplementary Table S{i}." in paragraphs
