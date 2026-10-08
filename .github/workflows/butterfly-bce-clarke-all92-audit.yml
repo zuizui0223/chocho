@@ -1,0 +1,40 @@
+name: BCE Clarke evidence-filtered all 92 butterfly host names
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_bce_clarke_full_exact_overlap.py
+      - .github/workflows/butterfly-bce-clarke-all92-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "beautifulsoup4>=4.12,<5"
+      - name: Retrieve frozen original HOSTS dataset
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Compare source-audited BCE host names across all 92 exact species
+        run: |
+          python scripts/audit_bce_clarke_full_exact_overlap.py \
+            --protocol docs/exploratory/BCE_CLARKE_92_SPECIES_HOST_LINK_AUDIT_PROTOCOL_V01.json \
+            --focal-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --hosts-csv _external/HOSTS/resource.csv \
+            --output results/bce_clarke/evidence_filtered_all92_exact_host_names_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-bce-clarke-all92-lexical-source-audit-v01
+          path: results/bce_clarke/
+          if-no-files-found: warn
+          retention-days: 30
