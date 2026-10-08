@@ -25,6 +25,8 @@ Its WCVP accepted botanical geography is **79 native / 218 contemporary** WGSRPD
 
 Counterfactually excluding only *Plantago*'s **introduced** regions and retaining all 30 original known host identities and botanical native distributions removes **52/114 = 45.6%** of *E. editha*'s reconstructed introduced-added resource regions. The other 87 *Plantago* introduced-only botanical regions were already covered by at least one of the other 29 mapped host plants (or by native resources), so they are not uniquely attributable to it.
 
+**Mechanism alignment warning:** In Singer & Parmesan (2018), the Nevada trap was **not** physical eradication of *Plantago*: cattle grazing ceased, grasses embedded/shaded plantain and cooled the thermophilic larval microclimate while *Collinsia* remained in unaffected xeric patches. The 2013–2014 return was **recolonization by Collinsia-feeding butterflies**, not demonstrated within-population recovery of host choice in the extinct lineage. Hence removing *Plantago* distribution from our static map is an **illustrative network perturbation only**, not a causal reconstruction of that historical extinction.
+
 **Ecological limit:** 52 is **structural introduced-range reliance within the current database**, not the number of habitats occupied by a Plantago-dependent butterfly population, not field evidence of exclusive larval use, and not the population loss after plant removal. There is no direct causal link to the local Nevada extinction or Washington host choice data.
 
 ## Independently specified follow-up
