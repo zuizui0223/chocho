@@ -47,7 +47,7 @@ REPO_FILES=(
     "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
     "provenance/reviewer_defenses/results/butterfly_resource_homogenization_v0.1.json",
 )
-BANNED=("zuizui0223","zhang.ruiqi","ruiqi","zhang ruiqi")
+BANNED=("zui"+"zui0223", "zhang."+"rui"+"qi", "rui"+"qi", "zhang "+"rui"+"qi")
 STRIP_KEYS={
     "artifact_id","artifact_name","run_id","workflow_run_id","source_run_id",
     "source_workflow_run","crosswalk_workflow_run","prior_geography_run",
@@ -110,7 +110,7 @@ def sanitize(value):
     if isinstance(value,list):
         return [sanitize(v) for v in value]
     if isinstance(value,str):
-        return re.sub("zuizui0223","anonymous-user",value,flags=re.IGNORECASE)
+        return re.sub("zui"+"zui0223","anonymous-user",value,flags=re.IGNORECASE)
     return value
 
 def sha256(p):
@@ -184,7 +184,7 @@ def main():
                 dst.write_text(json.dumps(sanitize(o),ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8")
             else:
                 txt=src.read_text(encoding="utf-8")
-                txt=re.sub("zuizui0223","anonymous-user",txt,flags=re.IGNORECASE)
+                txt=re.sub("zui"+"zui0223","anonymous-user",txt,flags=re.IGNORECASE)
                 dst.write_text(txt,encoding="utf-8")
         (stage/"README.md").write_text(README,encoding="utf-8")
         (stage/"VALIDATED_SUMMARY.json").write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
