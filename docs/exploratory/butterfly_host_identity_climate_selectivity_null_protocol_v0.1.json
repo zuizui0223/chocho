@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_butterfly_host_identity_climate_selectivity_null_v0.1",
+  "status": "EXPLORATORY_HOST_IDENTITY_GATE_FROZEN_BEFORE_NULL_OUTCOMES",
+  "created": "2026-10-08",
+  "scope": "analysis only, GEB main manuscript unchanged",
+  "motivation": "Observed butterfly-resource climate-selective regional convergence could be a direct projection of known host plant floristic homogenization. Testing the identical climatic pattern alone has limited ecological novelty.",
+  "question": "Is the climate-selective convergence of butterfly resource geography unusually strong for the ACTUAL exact butterfly-host network, relative to alternative exact-host assignments preserving butterfly diet composition at botanical-family level and plant usage degree?",
+  "fixed_inputs": {
+    "butterflies": 239,
+    "hosts": 1706,
+    "documented_exact_host_links": 2596,
+    "botanical_host_families": 107,
+    "WGSRPD3_native_resource_regions": 355,
+    "plant_native_and_contemporary_distributions": "unaltered"
+  },
+  "network_null": {
+    "operation": "Bipartite double-edge swaps among host links whose plants belong to the SAME botanical family; swap (butterfly A, plant X) and (butterfly B, plant Y) to (A,Y),(B,X) only when new links absent",
+    "preserves": [
+      "exact native and contemporary plant distributions in all regions",
+      "each butterfly's count of known host links in each botanical family",
+      "each plant species' number of butterfly consumers",
+      "total number of host associations",
+      "plant-family specialization of each butterfly"
+    ],
+    "does_not_preserve": [
+      "butterfly-specific number of regional opportunities",
+      "butterfly-native distribution breadth under reassignment"
+    ],
+    "burn_in_attempts": "max(10000,15*edge_count)",
+    "spacing_attempts": "max(2000,3*edge_count)",
+    "permutations": 499,
+    "seed": 20261008
+  },
+  "primary": {
+    "region_pairs": "between WGSRPD Level1 continental codes and >=3000 km apart",
+    "climate_distance": "z(BIO1),z(BIO7),z(log1p(BIO12)),z(BIO15); Euclidean, frozen TTF independent climate crossfit",
+    "analog": "bottom quartile climate distance among eligible far pairs",
+    "discordant": "top quartile climate distance",
+    "statistic": "[mean Jaccard contemporary-native gain across climate analog far region pairs] - [mean Jaccard gain across climate discordant far region pairs], projected through butterfly-host links",
+    "test": "observed minus within-family host-link swap null median; one-sided Monte Carlo p<=0.05",
+    "qualifiers": "A positive result is conditional on exact host list quality and within-family rewiring, not direct evidence of butterfly use or interactions in each region."
+  },
+  "stop_rule": "If host identity null is not exceeded, treat the environmental selectivity as floristic structure inherited by butterfly resource projections and do not publish it as novel consumer-specific homogenization.",
+  "precedents": [
+    "https://www.nature.com/articles/s41467-021-27603-y",
+    "https://www.nature.com/articles/s41586-020-2640-y",
+    "https://www.nature.com/articles/s41467-018-07677-x"
+  ]
+}
