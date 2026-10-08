@@ -277,5 +277,14 @@ def main():
     print(json.dumps({"source_clean":audit,"primary":primary["stratified_MH_OR"],
           "season_or":{k:v["exotic_vs_native_late_to_eggs_MH_OR"] for k,v in primary["season"].items()},
           "boot":primary["route_bootstrap"],"accessibility":result["sensitivity_accessible_patches"],
-          "stages":result["alternate_larval_stages"]},indent=2),flush=True)
+          "stages":result["alternate_larval_stages"],
+          "triad_common_support":{
+             "available":result["species_triad_identical_strata_negative_control"]["route_months_with_all_three_species"],
+             "active":result["species_triad_identical_strata_negative_control"]["route_months_with_all_three_species_and_stage_events"],
+             "by_season":result["species_triad_identical_strata_negative_control"]["active_by_season"],
+             "pairs":[{"first":p["first_species"],"second":p["second_species"],
+                       "OR":p["relative_late_to_egg_MH_OR"],
+                       "bootstrap_ci":p["route_cluster_bootstrap"]["overall"]["ci95"]}
+                      for p in result["species_triad_identical_strata_negative_control"]["contrasts"]]
+          }},indent=2),flush=True)
 if __name__=="__main__":main()
