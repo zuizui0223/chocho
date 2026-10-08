@@ -121,6 +121,40 @@ def analyze(rows,year,endpoint="late",bootstrap=False):
         out["leave_one_route_out"]={str(r):or_mh([x for x in active if x[0]!=r]) for r in routes}
     return out,active
 
+
+def compare_species_pair(rows,first,second):
+    data=defaultdict(lambda:Counter())
+    for r in rows:
+        if r["year"]==2022 and r["milkweed"] in (first,second):
+            key=(r["route"],r["month"],r["milkweed"])
+            for metric in ("late","Eggs","Num_plants"):data[key][metric]+=r[metric]
+    pairs=defaultdict(dict)
+    for (route,month,species),v in data.items():pairs[(route,month)][species]=v
+    both=0;active=[]
+    for (route,month),v in sorted(pairs.items()):
+        if first not in v or second not in v:continue
+        both+=1
+        a=v[first]["late"];b=v[first]["Eggs"]
+        c=v[second]["late"];d=v[second]["Eggs"]
+        if a+b>0 and c+d>0:active.append((route,month,a,b,c,d))
+    if not active:raise RuntimeError(f"no matched species pair {first} vs {second}")
+    seasons={k:{"strata":len(season(active,months)),"OR":or_mh(season(active,months))}
+             for k,months in SEASONS.items()}
+    routes=sorted({r["route"] for r in rows if r["year"]==2022})
+    return {"first_species":first,"second_species":second,
+      "posthoc_source_selection":"three dominant 2022 milkweeds by native/exotic plant report counts",
+      "matched_route_months_both_present":both,
+      "active_stage_route_months":len(active),
+      "relative_late_to_egg_MH_OR":or_mh(active),
+      "stage_counts_from_active_route_months":{
+         "first_late":int(sum(x[2] for x in active)),
+         "first_eggs":int(sum(x[3] for x in active)),
+         "second_late":int(sum(x[4] for x in active)),
+         "second_eggs":int(sum(x[5] for x in active))},
+      "season":seasons,
+      "route_cluster_bootstrap":block_bootstrap(active,routes,4999,20261008),
+      "interpretation":"Stage composition in different milkweed species, NOT larval survival or an independent native/exotic treatment effect."}
+
 def main():
     p=argparse.ArgumentParser()
     for name in ("source_csv","protocol_json","output_json","output_matched_csv"):
@@ -144,6 +178,14 @@ def main():
             counts[(r["milkweed"],r["native_status"])]+=r["Num_plants"]
     if any(len(x)>1 for x in species.values()):
         raise RuntimeError("plant origin not perfectly taxon-specific: interpretation must change")
+    source_ranked=[s for (s,_),n in counts.most_common(3)]
+    expected_three=["Asclepias curassavica","Asclepias fascicularis","Asclepias speciosa"]
+    if source_ranked!=expected_three:raise RuntimeError(f"top three source species drift: {source_ranked}")
+    species_pairs=[
+        compare_species_pair(rows,expected_three[1],expected_three[2]),
+        compare_species_pair(rows,expected_three[0],expected_three[1]),
+        compare_species_pair(rows,expected_three[0],expected_three[2])
+    ]
     result={
       "schema":"chocho_monarch_stage_origin_route_month_v0.1",
       "status":"EXPLORATORY_REANALYSIS_OF_PUBLISHED_COUNTS_NOT_TRACKED_COHORT_SURVIVAL",
@@ -155,6 +197,8 @@ def main():
       "accessibility_category_audit":"Literal NA in the source is not an observed too-far count. Main accessible filter allows blank/NA/No; stricter explicit-No filter isolates records affirmatively marked accessible.",
       "alternate_larval_stages":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"]} for k,v in sensitive.items()},
       "incomplete_other_years":{k:{"OR":v["stratified_MH_OR"],"active_strata":v["active_route_month_strata"],"paired_route_months":v["route_months_both_plant_origins"]} for k,v in partial.items()},
+      "species_pair_stage_comparisons":species_pairs,
+      "species_pair_protocol":"docs/exploratory/URBAN_MILKWEED_SPECIES_PAIR_STAGE_PROTOCOL_V01.json",
       "plant_species_identity":{"plant_species_in_both_native_statuses":sum(len(x)>1 for x in species.values()),
           "top_species_by_plant_reports":[{"species":s,"status":n,"reported_plants":int(v)} for (s,n),v in counts.most_common(8)]},
       "inference_limit":["Egg and instar observations are different cross-sectional individuals; the ratio is NOT egg-to-larva survival.",
