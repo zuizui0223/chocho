@@ -78,3 +78,21 @@ A global botanical host-presence map or an annual egg/larva abundance average mi
 The hypothesis is not a discovery until direct within-species host use, repeated individual fate/survival and plant seasonality are observed under comparable conditions. Do not turn this source reanalysis into a new ecology manuscript on the strength of a post-hoc p-value or the 29-fold seasonal descriptive contrast. Any new test must separate plant origin from species identity, account for stage-specific detectability, and follow cohorts or measure adult eclosion/parasitoids.
 
 **Submission main/GEB untouched.**
+
+## Identical three-species route-month support — supplementary diagnostic, 2026-10-08
+
+An additional **post-hoc negative-control sensitivity** fixes the survey-comparison universe to route × calendar-month cells where all three dominant species (*A. curassavica*, *A. fascicularis*, *A. speciosa*) are reported. This avoids comparing different available route-month universes for each botanical pair. Reproducible source-audited GitHub Actions [run 37763626497](https://github.com/zuizui0223/chocho/actions/runs/37763626497), commit `4114edc`.
+
+There are **91 route-month cells** with all three plants present, of which **40** have nonzero egg or late-instar records for every species (spring 14, summer 19, fall 7, winter 0). On those *identical 40 active strata*, the matched fourth+fifth instar to egg odds ratio (first/second species) is:
+
+| Same-route-month pair | MH OR | 4,999 route-resample 95% CI |
+| --- | ---: | ---: |
+| Native *A. fascicularis* / native *A. speciosa* | 3.389 | 1.030–26.924 |
+| Exotic *A. curassavica* / native *A. fascicularis* | 0.300 | 0.093–0.672 |
+| Exotic *A. curassavica* / native *A. speciosa* | 2.038 | 0.130–8.530 |
+
+**Selection-on-observation sensitivity:** requiring *all three* to have observed stages can select unusually active patches/routes. Repeating on all 91 *plant-present* cells, allowing zero stage counts and excluding only entirely event-free pairs, gives 79/88/86 stage-informative route-month strata and OR **3.766 / 0.220 / 2.237**, respectively (route-bootstrap 95% CI **1.241–28.716 / 0.075–0.470 / 0.371–7.934**). The direction of all three botanical pair contrasts is unchanged under this additional support definition.
+
+**Ecological interpretation:** an order-of-magnitude late-instar/egg contrast exists **between two native host species** on the same matched calendar and route support, while the two exotic/native pair contrasts point in different directions. Thus **nativeness is not a sufficient botanical explanatory variable** for the observed stage composition. This is a limitation of the categorical indicator, *not* proof that specific host physiology caused survival differences. Host identity remains confounded with location within route, planting phenology, plant architecture and observation/detection; cross-sectional stage counts are not tracked survival. The matched ratios are noncollapsible across groups and should not be multiplied to derive other comparisons. With only seven active fall triad cells and broad route-bootstrap intervals, do not fit a stronger biological mechanism or create a new stand-alone manuscript from this post-hoc reanalysis.
+
+The main GEB manuscript and PR #38 remain scientifically separate and unchanged.
