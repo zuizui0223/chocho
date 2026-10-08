@@ -1,0 +1,54 @@
+name: butterfly host identity native-current decomposition
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/audit_butterfly_host_identity_native_current.py",".github/workflows/butterfly-host-identity-decomposition.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  decomposition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: _s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: _climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Decompose exact host-network contrast into native and introduced components
+        run: |
+          mkdir -p results/decomposition
+          python scripts/audit_butterfly_host_identity_native_current.py --descriptors-csv _s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --climate-crossfit-csv _climate/unit_climate_crossfit.csv --leptraits-csv data/external/leptraits_consensus_v1.0.csv --permutations 499 --seed 20261008 --output-json results/decomposition/native_current_strict_null_v0.1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-host-identity-native-current-decomposition-v01
+          path: results/decomposition/
+          retention-days: 30
