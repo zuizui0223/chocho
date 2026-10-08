@@ -1,0 +1,31 @@
+name: Euphydryas editha published local host data source gate
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_euphydryas_local_host_function_source.py
+      - .github/workflows/butterfly-euphydryas-host-fallback-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original Haan source files and schema
+        run: |
+          python scripts/audit_euphydryas_local_host_function_source.py \
+            --protocol docs/exploratory/EUPHYDRYAS_LOCAL_HOST_FUNCTION_SOURCE_GATE_V01.json \
+            --output-json results/euphydryas/euphydryas_local_host_original_schema_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-euphydryas-original-host-source-gate-v01
+          path: results/euphydryas/
+          retention-days: 30
+          if-no-files-found: warn
