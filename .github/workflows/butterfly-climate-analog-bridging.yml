@@ -1,0 +1,54 @@
+name: butterfly climate analog bridging validation
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/analyze_butterfly_climate_analog_bridging.py", ".github/workflows/butterfly-climate-analog-bridging.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exploratory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: _s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: _climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - name: Evaluate frozen climate analogue validation
+        run: |
+          mkdir -p results/selective-geographic-bridging
+          python scripts/analyze_butterfly_climate_analog_bridging.py --descriptors-csv _s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --climate-crossfit-csv _climate/unit_climate_crossfit.csv --permutations 499 --seed 20261008 --output-json results/selective-geographic-bridging/level1_null_with_climate_v0.2.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-climate-analog-bridging-v02
+          path: results/selective-geographic-bridging/
+          retention-days: 30
