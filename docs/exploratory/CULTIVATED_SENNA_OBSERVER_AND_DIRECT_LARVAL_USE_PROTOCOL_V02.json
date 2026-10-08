@@ -1,0 +1,63 @@
+{
+  "schema": "chocho_cultivated_senna_observer_and_pierid_direct_use_v0.2",
+  "status": "EXPLORATORY_FROZEN_BEFORE_ORIGINAL_OBSERVER_AND_LARVAL_LINK_OUTCOMES",
+  "date": "2026-10-08",
+  "purpose": "Separate (A) an independent, spread-out cultivated host occurrence footprint missing from the frozen WCVP Florida listing, from (B) actual larval use of that host at a documented garden site.",
+  "original_data": {
+    "source": "iNaturalist public original observation IDs from prior frozen 2010-2025 Florida pilot",
+    "run": 37723666255,
+    "artifact_name": "butterfly-cultivated-senna-inat-pilot-v01",
+    "records": "flower_garden_iNat_senna_source_records_v0.1.csv",
+    "source_confirmation": "Retrieve all original observation IDs (not new opportunistic records); compare taxon, captive flag, date and photo availability with archived pilot"
+  },
+  "primary_quality": {
+    "target": "Senna polyphylla",
+    "frozen_sample_cultivated_observations": 59,
+    "original_observation_requirements": [
+      "exact Senna polyphylla or infraspecific taxon",
+      "captive=true",
+      "photo present",
+      "recorded year 2010-2025",
+      "georeferenced record with accuracy <=1000m"
+    ],
+    "independence_metrics": [
+      "unique iNaturalist observer IDs",
+      "largest fraction of original plant records contributed by one observer",
+      "unique observer x approx5km spatial cell",
+      "unique approx5km cells and distinct observed years",
+      "number of repeated observer-cell-year combinations"
+    ],
+    "robustness_gate": "At least 10 distinct public observer IDs, >=4 distinct years, >=10 distinct observer x approx5km cells; no observer contributes >50% of original 59 observations.",
+    "non_inference": "No claim of independently transplanted individuals or garden sites; observations and observers may repeatedly report the same plant and iNaturalist captive tag may be wrong."
+  },
+  "consumer_specificity": {
+    "butterfly_species": [
+      "Phoebis sennae",
+      "Phoebis philea"
+    ],
+    "reason": "Both are documented reared on cultivated nonnative Senna in Koptur et al 2024, but plant occurrence alone is not larval use.",
+    "source": "iNaturalist Florida wild/uncaptive observations 2010-2025 annotated Life Stage=Larva (term_id=1,term_value_id=6), with original observation fields",
+    "filters": [
+      "exact butterfly species identification",
+      "photo",
+      "explicit larva annotation",
+      "public taxon and public date",
+      "captive=false"
+    ],
+    "max_per_species": 1000,
+    "coverage_rule": "Return total_results and number scanned; when total exceeds cap, absence of linkage among scanned records is NOT evidence of absence in Florida",
+    "explicit_association": "Only an original observation field named Eating/Feeding on/Interaction->Herbivore of/Associated observation with exact Senna polyphylla (or iNaturalist plant taxon 335152 or an original frozen plant observation URL) counts as a candidate direct trophic observation; retain source ID and text for later human source/photo adjudication.",
+    "separate_diagnostic": "Spatial co-observation within 2km and +/-365d may be listed as context but must NOT be classified as feeding, reproduction or causal host support.",
+    "no_automatic_success": "Even an explicit feeding field is an observer assertion; source images and life stage need independent verification. Adult emergence at source site requires rearing, not iNaturalist annotation."
+  },
+  "ecological_claim_gate": "Consumer-specific horticultural pathway remains a hypothesis unless multiple independently verified larval feeding records and independent survival/rearing outcomes link cultivated, wild-range-unlisted hosts to butterfly reproduction.",
+  "reference_study": "Koptur et al 2024 DOI 10.3390/insects15020123. Its plant hosts were cultivated for both native and introduced origin groups; published parasitoid Table 1 has arithmetic conflicts. It does not identify cultivated vs naturalized plant treatment effect.",
+  "interpretation_boundaries": [
+    "Not a causal horticulture effect",
+    "Do not infer butterfly abundance, occupancy or fitness from presence-only volunteer records",
+    "No spatial enrichment p-value from mismatched observation effort",
+    "Observers may repeat sites",
+    "Do not alter main GEB paper",
+    "Do not widen taxon list or search time span after seeing outcome"
+  ]
+}
