@@ -1,0 +1,40 @@
+{
+  "schema": "chocho_monarch_missing_independent_high_quality_host_sensitivity_v0.1",
+  "status": "OUTCOME_BLIND_SPATIAL_SENSITIVITY_PROTOCOL_FROZEN_BEFORE_WCVP_RECOMPUTATION",
+  "created": "2026-10-08",
+  "frozen_baseline": {
+    "known_host_rows": 42,
+    "unique_host_ids": 40,
+    "native_resource_regions": 181,
+    "current_resource_regions": 263,
+    "added_only_resource_regions": 82
+  },
+  "source_review": {
+    "verified_high_host": "Asclepias curassavica (Greenstein 2022 H3)",
+    "missing_host_link": "Danaus plexippus × Asclepias curassavica",
+    "suspect_host": "Gossypium arboreum (monarch host legitimacy questioned by Greenstein et al. 2022, not automatically established nonhost)"
+  },
+  "scenarios": [
+    "baseline frozen HOSTS/WCVP",
+    "add independently documented high-quality A.curassavica",
+    "exclude questioned Gossypium arboreum",
+    "apply both as sensitivity"
+  ],
+  "frozen_WCVP": "matildabrown/rWCVPdata commit 65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+  "definitions": {
+    "native": "WCVP extant non-doubtful plant distributions with introduced=0",
+    "contemporary": "all WCVP extant non-doubtful region rows",
+    "introduced_only": "union contemporary host geography minus union native host geography",
+    "quality": "Species-level H3 high quality evidence is not assumed to apply to every region/cultivation phenotype"
+  },
+  "audit_required": [
+    "exact WCVP accepted species resolution and accepted ID",
+    "native and introduced region counts for the missing species",
+    "native,current,introduced-only for four scenarios",
+    "region codes reclassified from introduced-only to native vs genuinely newly supplied opportunities",
+    "no area added by a host is interpreted as colonization",
+    "explicit Puerto Rico cell check if codes present"
+  ],
+  "stop": "If accepted taxon ambiguous or frozen baseline drift, abort. No manuscript change. This one-butterfly sensitivity cannot support general host quality conclusions.",
+  "main": "GEB submission main unchanged"
+}
