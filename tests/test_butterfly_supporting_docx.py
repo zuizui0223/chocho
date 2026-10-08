@@ -30,7 +30,7 @@ def test_separate_supplementary_docx_has_real_s1_to_s9_tables(tmp_path):
     for i in range(1,10):
         assert f"Supplementary Table S{i}." in paragraphs
     assert "Host-interaction knowledge sensitivity" in paragraphs
-    assert "Supporting Information" in paragraphs
+    assert "Supplementary Information" in paragraphs
     assert doc.core_properties.author in ("",None)
     assert doc.core_properties.last_modified_by in ("",None)
     text=" ".join(paragraphs+" "+" ".join(
