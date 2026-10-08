@@ -1,0 +1,109 @@
+{
+  "schema": "chocho_pieridae_fabaceae_empirical_quality_decision_v0.1",
+  "date": "2026-10-08",
+  "scope": "exploratory_analysis_only",
+  "status": "SOURCE_REPRODUCED_BUT_BROAD_ECOLOGICAL_CLAIM_NOT_ESTABLISHED",
+  "evidence": {
+    "independent_GloBI_24_species": {
+      "run": 37715427511,
+      "source_audit_run": 37715634355,
+      "strict_geo_dated_larval_records": 58,
+      "exact_known_host_record_observations": 22,
+      "known_introduced_fabaceae_use_records": 7,
+      "introduced_species": 5,
+      "introduced_regions": 4,
+      "actual_source_observations_found": 4,
+      "source_metadata_explicit_eating_field": 1,
+      "introduced_only_cell_evidence": 0,
+      "predefined_feasibility_gate_pass": false
+    },
+    "published_Phoebis_Senna_rearing": {
+      "source_doi": "10.3390/insects15020123",
+      "reanalysis_run": 37716820173,
+      "native_site_sum_parasitoids": 16,
+      "native_published_all_site_parasitoids": 17,
+      "native_counted_fates": 235,
+      "introduced_site_sum_and_published_parasitoids": 49,
+      "introduced_counted_fates": 283,
+      "site_adjusted_mantel_haenszel_odds_ratio": 2.8313281186058203,
+      "site_adjusted_or_ci95": [
+        1.554007876273918,
+        5.158544585005022
+      ],
+      "site_adjusted_naive_individual_p": 0.00043468453031458854,
+      "source_table_inconsistency": "native site parasitoid sum is 16, printed grand total is 17; Senna ligustrina three site sum 9, printed species total 7",
+      "unresolved_fates_native": 70,
+      "unresolved_fates_introduced": 106,
+      "limitations": [
+        "Published observational counts; host species and origin confounded",
+        "Possible pseudoreplication of repeated larval records on the same monitored shrubs",
+        "No species-specific parasitoid probabilities or true cohort survival measured"
+      ]
+    },
+    "source_grounded_host_augmentation": {
+      "source_doi": "10.3390/insects15020123",
+      "model_reanalysis_run": 37716820173,
+      "added_exact_links": [
+        "Phoebis philea + Senna surattensis",
+        "Phoebis philea + Senna ligustrina",
+        "Phoebis sennae + Senna surattensis",
+        "Phoebis sennae + Senna ligustrina"
+      ],
+      "native_resource_regions": {
+        "Phoebis philea": [
+          83,
+          85
+        ],
+        "Phoebis sennae": [
+          104,
+          106
+        ]
+      },
+      "contemporary_resource_regions": {
+        "Phoebis philea": [
+          208,
+          208
+        ],
+        "Phoebis sennae": [
+          226,
+          227
+        ]
+      },
+      "introduced_only_regions": {
+        "Phoebis philea": [
+          125,
+          123
+        ],
+        "Phoebis sennae": [
+          122,
+          121
+        ]
+      },
+      "all_24_pierid_introduced_only_regions": [
+        1833,
+        1830
+      ],
+      "interpretation": "A new documented exact host relationship changes both native and contemporary resource unions. The increase in native support can make a nominal added-resource count DECREASE even as more actual local feeding possibilities are documented. All-WCVP-region use remains unobserved extrapolation."
+    },
+    "horticultural_pathway": {
+      "fixed_wcvp_run": 37716723493,
+      "independently_observed_cultivated_host": "Senna polyphylla in south Florida, 2024 Phoebis rearing study",
+      "accepted_WCVP_id": "2490545",
+      "WCVP_native_regions": 11,
+      "WCVP_introduced_regions": 6,
+      "WCVP_Florida_listed": false,
+      "S_polyphylla_published_resolved_reared": 44,
+      "S_polyphylla_published_parasitoid_emergences": 8,
+      "contrast": "Senna surattensis is introduced Florida in fixed WCVP; Senna ligustrina is native Florida",
+      "interpretation": "A cultivated alien host in Florida can be exploited by larvae while missing from the botanical naturalized distribution used to reconstruct anthropogenic larval-resource geography.",
+      "limits": [
+        "Existence proof of a map coverage gap, not a global estimate",
+        "No evidence Florida S.polyphylla is naturalized; WCVP no record is not local garden absence",
+        "One study does not identify cultivation versus naturalization effects on abundance, parasitism or reproductive fitness"
+      ]
+    }
+  },
+  "main_GEB_manuscript_unchanged": true,
+  "decision": "Do not promote a new generalized ecological paper on butterfly fitness or colonization from these sources. The defensible mechanism hypothesis is that horticultural and naturalized plant introductions generate distinct host-exposure pathways with potentially opposing developmental and enemy-mediated demographic effects.",
+  "next_test_needed": "Independent replicated site-level host occurrence (including cultivated vs naturalized status), larval host use, confirmed adult emergence and parasitism, standardized by survey effort; public presence-only interactions are insufficient."
+}
