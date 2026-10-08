@@ -1,0 +1,30 @@
+{
+  "schema": "chocho_bce_clarke_one_direction_botanical_opportunity_sensitivity_v0.1",
+  "created": "2026-10-08",
+  "status": "POSTHOC_EXPLORATORY_SENSITIVITY_FROZEN_BEFORE_WCVP_MATCHED_HOST-GAP_COUNTS",
+  "question": "How sensitive is the reconstructed butterfly resource geography to adding all uniquely accepted WCVP plant associations present in BCE/Clarke evidence-1-to-3 derivative but absent from frozen HOSTS for the exact matching European focal butterflies?",
+  "sources": {
+    "focal": "239 butterfly global panel from data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+    "bce": "All 92 exact matched butterfly species, 83 species-level source pages, GitHub source audit run 37777242991",
+    "accepted_mapping": "BCE_CLARKE_TAXONOMIC_HOST_CROSSWALK_PROTOCOL_V01.json with pinned WCVP 65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "original_pairs": "HOSTS 808e0b869f9ec1adf8efff87cf6a395adda103e0 x WCVP accepted species",
+    "baseline": "Exact original native and contemporary plant distributions and 239-species frozen figure source"
+  },
+  "inclusion": "For each source-verified butterfly, add ALL uniquely resolved accepted WCVP plant IDs labeled ABSENT from its frozen HOSTS species pairs; do not add ambiguous/unmatched IDs; no hand-picked host subset; no overwriting other 239 butterfly host sets.",
+  "analysis": [
+    "Validate every one of original 239 species native and contemporary unions against frozen 239-species metrics, before modifying any host relationships; if any mismatch, stop rather than silently replacing the baseline.",
+    "Build native and contemporary WCVP botanical ranges for all additional unique accepted plant taxa using pinned source, extinction=0, location_doubtful=0, introduced=0 for native, all for contemporary.",
+    "Compute per-butterfly original and augmented accepted host count, native regions, contemporary regions, contemporary-minus-native introduced-added regions, fractions added, and exact region codes newly covered/reclassified.",
+    "Produce (a) 83-BCE-observed-subset summaries (b) 239-panel partial-augmentation descriptive sensitivity; always label all unmodified other species and source coverage.",
+    "Do not recompute fixed-margin null p-values, choose a favorable geographical subset, change manuscript data or publish the partial-augmentation numbers as a corrected global estimate.",
+    "Report whether added native hosts reclassify existing introduced-added cells as native, and whether adding host names does not change regional area."
+  ],
+  "critical_limits": [
+    "BCE derived from Clarke 2024 and host records may share original cited literature with HOSTS; no independent causal replication.",
+    "Source filters evidence 1-3 include field oviposition and eggs but not necessarily adult eclosion; historical host reports need not generalize globally.",
+    "A butterfly-host relationship documented in European sources may not apply to each WGSRPD3 native or introduced region where the plant occurs.",
+    "Only European exact-binomial butterfly subset can be amended; 239-panel sensitivity is partial and nonrepresentative by geographic source.",
+    "The upper-bound envelope is structurally possible geography under additional linked botanical taxa, not predicted butterfly colonization or actual field feeding.",
+    "Original 239-species figures and GEB paper remain unchanged pending stronger causal and source provenance evidence."
+  ]
+}
