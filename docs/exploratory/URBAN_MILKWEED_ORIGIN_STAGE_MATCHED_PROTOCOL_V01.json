@@ -1,0 +1,29 @@
+{
+  "schema": "chocho_urban_monarch_stage_host_origin_v0.1",
+  "status": "POSTHOC_ROBUSTNESS_PROTOCOL_AFTER_PRELIMINARY_RAW_AND_MATCHED_STAGE_COUNTS",
+  "created": "2026-10-08",
+  "source": "Erickson Schultz Crone 2025 Ecosphere doi:10.1002/ecs2.70259; Figshare 10.6084/m9.figshare.25648644.v1; Milkweed_dat_with_coords_DEC2024.csv; source GitHub run 37735892534",
+  "disclosed_prior_view": "4518 source rows, 2022 unstratified egg and late instar totals, 131 paired route-month groups, 88 with events on both host origins, preliminary 2022 pooled MH odds ratio 0.414; seasonal M-H ORs spring 3.870 summer 0.174 fall 0.133. This is not independent confirmatory preregistration.",
+  "panel": "2022 source data for 15 urban routes, complete Eggs and Instar_1 to Instar_5, Num_plants>0, native vs exotic statuses",
+  "primary": "Native/exotic difference in late(Instar_4+Instar_5) vs egg stage composition from Mantel-Haenszel odds ratio for exotic/native within same Route x calendar month strata, both plant origins present and each status having >=1 recorded egg/late event.",
+  "bootstrap": {
+    "method": "Resample entire routes with replacement (not eggs or plants), retaining their month x origin data",
+    "draws": 4999,
+    "seed": 20261008,
+    "ci": "percentile 95%, report undefined draws"
+  },
+  "secondary": {
+    "seasons": "Jan-Mar, Apr-Jun, Jul-Sep, Oct-Dec (fixed)",
+    "interaction": "Spring versus fall log-odds-ratio contrast and route-bootstrap CI",
+    "stages": "all larvae vs eggs; early Instar1+2 vs eggs; Instar5 vs eggs",
+    "observation_access": "Exclude patches with explicit Too_far strings not blank or No",
+    "robustness": "leave-one-route-out, 2023 incomplete-period sensitivity; no 2024 confirmatory inference"
+  },
+  "limits": [
+    "Stage counts are distinct cross-sectional eggs and larvae, NOT tracked survival from egg to adult",
+    "Exotic/native status is confounded with milkweed species, phenology, foliage, accessibility and planting sites",
+    "Individual egg-level Mantel-Haenszel p values are anti-conservative under repeated patch and route sampling",
+    "Published source already analyzed seasonal larva:egg patterns; this is post-hoc reanalysis",
+    "Do not update GEB main manuscript"
+  ]
+}
