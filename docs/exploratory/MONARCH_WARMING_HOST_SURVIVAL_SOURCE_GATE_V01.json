@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_monarch_warming_host_survival_calibration_v0.1",
+  "created": "2026-10-08",
+  "status": "POSTHOC_DESCRIPTIVE_SOURCE_AUDIT_AFTER_PUBLISHED_ABSTRACT_AND_FIRST_CSV_ROWS_VIEWED; NOT_NEW_DISCOVERY",
+  "study": {
+    "publication": "Ragonese et al. 2025 Ecological Entomology DOI 10.1111/een.70010",
+    "data": "https://doi.org/10.5061/dryad.prr4xgxx7",
+    "original_repo": "IRagonese/MilkweedWarming2024",
+    "pinned_commit": "74e3e2cd8079401c9ccd4359f9e39e2d52d1f7d2",
+    "path": "MWwarming_comp_May16.csv"
+  },
+  "focal": "Danaus plexippus",
+  "source_fields": [
+    "ID",
+    "Plant_ID",
+    "PlotNum",
+    "Temp",
+    "Milkweed",
+    "OE_treatment",
+    "Surv_adult",
+    "Surv_pupa"
+  ],
+  "fixed_level_values": {
+    "Temp": [
+      "ambient",
+      "elevated"
+    ],
+    "Milkweed": [
+      "tropical",
+      "swamp"
+    ],
+    "OE_treatment": [
+      "control",
+      "infected"
+    ]
+  },
+  "analysis": [
+    "Do not drop dead larvae. Separate missing survival outcomes; flag unexpected coding.",
+    "Describe n, pupation, adult eclosion and distinct plots/plants in the eight predefined 2x2x2 treatment cells.",
+    "For each parasite-treatment stratum, calculate descriptive host survival difference within ambient/elevated temperature and their difference-in-differences. Not an independently hypothesized mechanistic discovery.",
+    "No treatment-effect p-values from individual rows; original larvae are shared by plants and plots. Any future inferential uncertainty needs design-aware plot/plant grouping and author analysis reconciliation.",
+    "Do not select infection status after treatment or other observed descendants as an entry criterion."
+  ],
+  "forbidden": [
+    "Inferring regional butterfly occupancy, newly introduced host use or population colonization from the rearing experiment",
+    "Treating the 2025 published host x thermal x parasite findings as novel chocho results",
+    "Using raw per-larva significance tests as though there were independent randomized populations",
+    "Converting 82 reconstructed introduced-added WGSRPD3 units to an actual fitness response"
+  ],
+  "stop_rule": "Stop if original repo cannot be pinned, expected fields missing, survival categories ambiguous, or cohort includes unresolved fates; report a source gate failure rather than inventing eclosion.",
+  "main_geb": "Untouched; separate exploratory endpoint-calibration only"
+}
