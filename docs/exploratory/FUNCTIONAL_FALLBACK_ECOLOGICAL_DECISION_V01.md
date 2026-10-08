@@ -60,6 +60,14 @@ A new source-frozen [exact HOSTS/WCVP crosswalk run 37767325222](https://github.
 
 Full reproducible decision and constraints: `EUPHYDRYAS_FOUR_HOST_CROSSWALK_DECISION_V01.md`. The augmented two-Castilleja sensitivity was prespecified **after** the above crosswalk and is a one-species robustness check. It must not be interpreted as an independent test of a novel local eco-evolutionary trap mechanism.
 
+## Completed missing-host perturbation: geographic robustness is not functional robustness
+
+The [completed WCVP-pinned two-Castilleja audit (run 37770418250)](https://github.com/zuizui0223/chocho/actions/runs/37770418250) independently matched *Castilleja hispida* (accepted ID 2705047, native/contemporary 6/6 botanical regions) and *C. levisecta* (accepted ID 2705113, 3/3). Adding these two documented local hosts expanded the recorded E. editha list **30 → 32 plant species**, but **did not change** its 131 native regions, 245 contemporary regions, 114 added resource regions, or 52 regions uniquely dependent on introduced *Plantago* under the frozen database. Both missing plant species' botanical regions fell within the already-covered global union. The preselected geographic-completeness sensitivity therefore had a **zero** difference.
+
+This supports only **area-level redundancy of documented plant ranges**, not resource substitutability within a host-rich cell. In particular, the original experiment found strong within-*Castilleja* bract/leaf performance differences, and direct field phenology/microclimate can remove functional availability despite unchanged botanical presence (Haan et al. 2021). The new result is a source-verified null sensitivity for **one handpicked butterfly**, not a demonstration of globally complete HOSTS inventories. Exact receipt: `EUPHYDRYAS_MISSING_CASTILLEJA_AUGMENTATION_DECISION_V01.md`.
+
+**Consequence for novelty:** This particular one-species repair does **not** yield a new spatial finding, nor does it establish a biological mechanism. It closes an inference loophole: apparent robustness of aggregate resource-envelopes to two missing host links can coexist with severe uncertainty in stage-specific local host quality. Further static host augmentations should not be used to chase a nonzero area result.
+
 ## Current evidentiary decision
 
 The chocho global indicators (239 butterflies, 14,553 added butterfly × region cells, 58.9% of added cells supported by one introduced plant in the database) are valid **supply-network descriptors**. The spatial stress test does not identify evolved fallback capacity or actual demographic dependence. This independent mechanism is not estimable from presently frozen HOSTS/WCVP/GBIF occurrences and published source audits.
