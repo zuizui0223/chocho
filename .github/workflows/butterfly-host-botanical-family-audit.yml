@@ -50,7 +50,7 @@ jobs:
       - name: Fixed eight botanical-family exclusions and seed replication
         run: |
           mkdir -p results/botanical-family-robustness
-          python scripts/audit_butterfly_host_identity_lineage_loo.py --descriptors-csv _s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --climate-crossfit-csv _climate/unit_climate_crossfit.csv --leptraits-csv data/external/leptraits_consensus_v1.0.csv --permutations 499 --seed ${{ matrix.seed }} --output-json results/botanical-family-robustness/strict_botanical_family_loo_seed_${{ matrix.seed }}.json
+          python scripts/audit_butterfly_host_identity_botanical_loo.py --descriptors-csv _s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --climate-crossfit-csv _climate/unit_climate_crossfit.csv --leptraits-csv data/external/leptraits_consensus_v1.0.csv --permutations 499 --seed ${{ matrix.seed }} --output-json results/botanical-family-robustness/strict_botanical_family_loo_seed_${{ matrix.seed }}.json
       - uses: actions/upload-artifact@v4
         with:
           name: strict-host-identity-botanical-loo-${{ matrix.seed }}
