@@ -1,0 +1,67 @@
+{
+  "schema": "chocho_monarch_global_host_quality_redistribution_protocol_v0.1",
+  "status": "EXPLORATORY_ANALYSIS_PLAN_FROZEN_BEFORE_127_WCVP_CROSSWALK",
+  "date": "2026-10-08",
+  "question": "Are monarch larval hosts with independently classified high versus low performance redistributed to different numbers of alien botanical regions, after accounting for their native range breadth and genus?",
+  "scientific_non_tautology": "Not whether deleting a low-performance host shrinks resource area, but whether external larval performance classification predicts an observed and independently sourced host plant introduction footprint.",
+  "prior_exposure": [
+    "Previously inspected Asclepias curassavica: H3, 97 introduced WGSRPD3 regions.",
+    "Previously inspected Araujia sericifera: L3, 24 introduced WGSRPD3 regions.",
+    "127-source quality panel H=34 L=42 N=33 U=18 known before WCVP crosswalk.",
+    "Comparison is not confirmatory; it follows other exploratory host-quality work."
+  ],
+  "source": {
+    "performance": "Greenstein, Steele & Taylor 2022 PLOS ONE doi:10.1371/journal.pone.0269701, source S1 Appendix table of 127 plants, downloaded/retained in GitHub Actions run 37736225347 artifact monarch-127-host-quality-independent-source-v01",
+    "plant_distribution": "Pinned rWCVPdata commit 65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "sampling_unit": "unique accepted botanical species with exactly one source quality classification and one unambiguous WCVP accepted taxon mapping"
+  },
+  "performance_classes": {
+    "high": "H1,H2,H3, from independently published qualitative classification",
+    "low": "L1,L2,L3",
+    "nonhosts": "N, excluded from primary",
+    "uncertain": "U, excluded from primary",
+    "stronger_evidence": "H3 versus L3 secondary; not necessarily commensurate sample sizes, and classify by author definition"
+  },
+  "matching": {
+    "method": "exact WCVP species-level name including accepted species or unique botanical synonym mapped to accepted_plant_name_id",
+    "ambiguous": "exclude, log",
+    "unresolved": "exclude, log",
+    "no_extant_nondoubtful_native_distribution": "exclude from primary rather than assuming zero",
+    "duplicate_to_same_accepted_species": "deduplicate only if classifications agree; otherwise exclude conflict, log",
+    "no_arbitrary_genus_matching": true
+  },
+  "primary": {
+    "population": "Asclepias genus; high vs low; retained distinct accepted species, native WCVP regions >=1",
+    "outcome": "log1p(number of WCVP WGSRPD3 regions classified introduced for species)",
+    "covariate": "log1p(number of WCVP native regions)",
+    "effect": "difference in native-range-residualized mean log1p introduced counts (high minus low)",
+    "null": "permute high/low species labels only within native-range quartiles of accepted Asclepias source species, preserving high/low count per stratum",
+    "two_sided_test": true,
+    "permutations": 9999,
+    "seed": 20261008,
+    "alpha": 0.05,
+    "pilot_min_per_class": 5
+  },
+  "secondary": [
+    "Raw high/low medians of introduced region count and any introduced range",
+    "Strong evidence H3 versus L3 Asclepias only, same method if >=4 per group",
+    "Robustness removing known globally distributed H3 Asclepias curassavica BEFORE inspecting the full mapping outcome",
+    "Broader Apocynaceae only as descriptive, not pooling other unrelated families",
+    "Quality class composition of introduced-only regions from independently classified plants, clearly labeled potential resources rather than observed butterfly colonization"
+  ],
+  "stop_rules": [
+    "If fewer than 5 independently matched Asclepias high and low, do not test association.",
+    "If permutation null cannot shuffle labels across at least two strata, do not report Monte Carlo significance.",
+    "If null is not exceeded two-sided or dominated by A.curassavica, do not claim high/low quality predicts globalization.",
+    "No opportunistic inclusion of unverified synonyms, N or U as true low.",
+    "Do not present phylogenetically correlated quality records as independent experimental studies.",
+    "Do not modify main GEB manuscript."
+  ],
+  "biological_claim_boundaries": [
+    "Performance class is a literature synthesis, may conflate feeding and survival and evidence quality. H1/H2 not directly equivalent to H3.",
+    "WCVP introduced presence is regional plant naturalization, not planted-only occurrence or plant biomass.",
+    "A difference in botanical range by quality is a macroecological association; it cannot quantify monarch larval survival, local population growth, competition or causal invasion.",
+    "Source taxonomy and introduced distributions may have coverage bias and strong within-genus phylogenetic structure.",
+    "Reconstructing any host quality map from same input cannot by itself establish an ecological mechanism. Independent consumer endpoints remain priority."
+  ]
+}
