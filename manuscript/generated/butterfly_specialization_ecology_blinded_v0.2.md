@@ -204,6 +204,8 @@ The ecological consequence is a dual one. For individual species, redistributed 
 
 For double-anonymous peer review, the analysis code, frozen scientific protocols, de-identified result receipts and figure-source files needed to reproduce the reported analyses are supplied with this submission as an anonymized supplementary review archive.
 
+A separate anonymized Table S9 source-data and reproducibility addendum accompanies that archive, containing BCE/Clarke-derived candidate host-association records, WCVP taxon crosswalks and geographic/null-model sensitivity outputs. These are source-dependent literature summaries, not new independent field feeding observations.
+
 The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The secondary occurrence validation used 53,434 GBIF occurrence records. An exact-ID archival download requested those same records (https://doi.org/10.15468/dl.pp5nc9); GBIF returned 53,144 records, indicating that 290 records used in the frozen analysis were no longer returned by GBIF at archival download time.
 
 A stable public archival snapshot of the analysis package will be deposited before publication; the public version of this statement will then cite that archive.
