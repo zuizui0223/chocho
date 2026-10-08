@@ -1,0 +1,32 @@
+{
+  "schema": "chocho_real_host_quality_contrast_battus_v0.1",
+  "status": "POSTHOC_LITERATURE_GROUNDED_EDGE_SENSITIVITY_NOT_SPECIES_WIDE_FITNESS_ESTIMATE",
+  "date": "2026-10-08",
+  "question": "Can the same introduced butterfly larval host be an actual feeding resource for one native butterfly and a lethal oviposition trap for a close relative, despite both links appearing as equally usable in HOSTS?",
+  "case": {
+    "butterflies": [
+      "Battus polydamas",
+      "Battus philenor"
+    ],
+    "plant": "Aristolochia littoralis (synonym Aristolochia elegans)",
+    "accepted_plant_name_id": "2651580",
+    "country_region": "FLA",
+    "plant_origins": "introduced in Florida from South America"
+  },
+  "evidence": [
+    "https://ask.ifas.ufl.edu/publication/IN219",
+    "https://ask.ifas.ufl.edu/publication/IN1170",
+    "https://plant-directory.ifas.ufl.edu/plant-directory/aristolochia-littoralis/",
+    "https://www.inaturalist.org/observations/91645851"
+  ],
+  "data": "Fixed HOSTS–WCVP sidecars generated in chocho Actions run 37628559686 plus TTF frozen resource descriptors run 36222306369",
+  "predefined_local_calculations": [
+    "exact native and contemporary potential host resource unions for each butterfly",
+    "introduced-only resources uniquely requiring Aristolochia littoralis as a recorded host (excluding its native plant ranges)",
+    "exact shared-host butterfly-pair×WGSRPD3 opportunity units that disappear if the B. philenor × A. littoralis edge is disallowed specifically in introduced plant regions",
+    "count introduced-plant regions and all known host users in 239 eligible butterflies"
+  ],
+  "important_limit": "Fitness contrast published for Florida context, not all 48 introduced WGSRPD3 units. Do not call globally removed opportunities actual traps, colonizations or losses; this is a literature-grounded upper-bound sensitivity example. B. polydamas successful reproductive performance on each introduced region is not established.",
+  "ecological_meaning": "Potential host breadth and shared-host exposure can have discordant fitness signs even for phylogenetically related butterfly species; raw host-link counts do not measure benefit.",
+  "status_of_novelty": "Specific case is known in literature; globalization of this asymmetry across 239 butterflies is not established and not claimed. GEB main unchanged."
+}
