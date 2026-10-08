@@ -1,0 +1,76 @@
+name: BCE Clarke source names reconciled through pinned WCVP
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_bce_clarke_taxonomic_crosswalk.py
+      - scripts/resolve_bce_clarke_plant_synonyms_wcvp.R
+      - .github/workflows/butterfly-bce-clarke-wcvp-host-crosswalk.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Retrieve exact full 92 BCE-derived source audit artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-bce-clarke-all92-lexical-source-audit-v01
+          path: inputs/bce
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          run-id: 37777242991
+      - name: Restore fixed original HOSTS
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Restore fixed original WCVP
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Freeze exact source-derived botanical candidate name table
+        run: |
+          python scripts/audit_bce_clarke_taxonomic_crosswalk.py prepare \
+            --input-json inputs/bce/evidence_filtered_all92_exact_host_names_v01.json \
+            --output-csv results/bce_clarke/candidate_names.csv
+      - name: Resolve candidate names to WCVP accepted plant identity
+        run: |
+          Rscript scripts/resolve_bce_clarke_plant_synonyms_wcvp.R \
+            _external/WCVP results/bce_clarke/candidate_names.csv \
+            results/bce_clarke/wcvp_name_map.csv
+      - name: Recreate exact pinned HOSTS x WCVP original host identity pairs
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS \
+            results/bce_clarke/original_native results/bce_clarke/original_contemporary
+      - name: Classify source-only spellings as synonyms or accepted missing edge candidates
+        run: |
+          python scripts/audit_bce_clarke_taxonomic_crosswalk.py audit \
+            --input-json inputs/bce/evidence_filtered_all92_exact_host_names_v01.json \
+            --mapping-csv results/bce_clarke/wcvp_name_map.csv \
+            --original-interaction-csv results/bce_clarke/original_native/insect_host_accepted.csv \
+            --output-json results/bce_clarke/bce_host_accepted_taxon_gap_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-bce-clarke-92-wcvp-accepted-host-gap-v01
+          path: |
+            results/bce_clarke/candidate_names.csv
+            results/bce_clarke/wcvp_name_map.csv
+            results/bce_clarke/bce_host_accepted_taxon_gap_v01.json
+          if-no-files-found: warn
+          retention-days: 30
