@@ -1,0 +1,19 @@
+{
+  "schema": "chocho_independent_heldout_50_butterfly_larval_observation_panel_v0.1",
+  "status": "OUTCOME_BLIND_SPECIES_SELECTION_FROZEN_BEFORE_NEW_GLOBI_INTERACTION_DATA",
+  "created": "2026-10-08",
+  "selection": "From the frozen TTF S1 cohort of 239 butterflies with >0 host family breadth and native host-region coverage, remove the original 11-species GloBI pilot, and sample exactly 10 species uniformly at random without replacement from each of Hesperiidae, Lycaenidae, Nymphalidae, Papilionidae and Pieridae. Riodinidae is exhausted by the original pilot.",
+  "seed": 20261008,
+  "randomization": "Python random.Random(20261008) over alphabetically sorted candidate species for each alphabetically sorted family, no substitution if zero observations",
+  "query": "GloBI interaction.csv: sourceTaxon=frozen species; interactionType=eats; includeObservations=true; two pages x 512 records per species; stop if page partial; archive raw pages and record checksum; cap or error as unknown not zero",
+  "stratification": [
+    "5 butterfly families",
+    "10 species each"
+  ],
+  "observational_evidence": "Restrict to observations dated 1800-2025, georeferenced exact WGSRPD3, explicitly larval, herbivory relation, non-HOSTS provenance, plant species accepted in frozen HOSTS-WCVP. iNaturalist original specimen IDs are mandatory for direct evidence subset.",
+  "outcome": "How many independently evidenced butterfly×introduced-host×WGSRPD3 interactions occur in introduced-only resource cells; report number of butterfly species and areas, native butterfly geography status not inferred from records.",
+  "gate": "Exploratory source coverage credible if introduced-only direct records occur across >=3 held-out species and >=3 regions, with no capped species hidden as reliable zeros; then manually check native butterfly range and host-alternative completeness. Passing does not prove colonization or fitness.",
+  "stopping_rule": "If source coverage is too sparse, do not infer ecological absence and stop using GloBI feeding-positive records to claim butterfly range filling. Do not adaptively replace sampled species.",
+  "previous_pilot": "11 species panel yielded 45 purported introduced-only host use records, 1 original taxon contradiction, 1 native Caribbean case with omitted known native host link; not counted as confirmation.",
+  "main_GEB": "unchanged"
+}
