@@ -2,6 +2,7 @@ name: build anonymous review bundle
 
 permissions:
   contents: read
+  actions: read
 
 on:
   pull_request:
@@ -119,10 +120,29 @@ jobs:
           test "$(find _review_figures -maxdepth 1 -name '*.pdf' | wc -l)" -eq 4
           test "$(find _review_figures -maxdepth 1 -name '*.png' | wc -l)" -eq 4
 
+      - name: Retrieve independently validated anonymous Table S9 source addendum
+        uses: actions/download-artifact@v4
+        with:
+          repository: zuizui0223/chocho
+          run-id: 37795847333
+          name: bce-clarke-anonymous-s9-review-addendum-v01
+          path: dist
+          github-token: ${{ github.token }}
+
+      - name: Verify Table S9 archived accepted-host evidence accompanies review submission
+        run: |
+          test -f dist/bce_clarke_anonymous_s9_reproducibility_v01.zip
+          unzip -t dist/bce_clarke_anonymous_s9_reproducibility_v01.zip
+          for required in               'SHA256SUMS'               'VALIDATED_SUMMARY.json'               'inputs/bce_accepted_species_host_edges.json'               'inputs/bce_original_pages_derived_Clarke_2024.json'               'results/bce_continent_355_region_null.json'; do
+            unzip -Z1 dist/bce_clarke_anonymous_s9_reproducibility_v01.zip | grep -Fx "$required"
+          done
+          sha256sum dist/bce_clarke_anonymous_s9_reproducibility_v01.zip >> dist/ANONYMOUS_BUNDLE_SHA256
+
       - uses: actions/upload-artifact@v4
         with:
           name: anonymous-review-bundle
           path: |
             dist/butterfly_specialization_anonymous_review_bundle.zip
+            dist/bce_clarke_anonymous_s9_reproducibility_v01.zip
             dist/ANONYMOUS_BUNDLE_SHA256
           retention-days: 30
