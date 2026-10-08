@@ -103,10 +103,12 @@ def main():
             "contemporary_regions":len(ac[id]) if id else None,
             "introduced_only_regions":len(ac[id]-an[id]) if id else None,
         })
-    # No overriding of previously frozen taxon distributions.
+    # The original all-Lepidoptera sidecar may include these plants through
+    # ANOTHER butterfly/insect even when there is no E. editha link. Check its
+    # frozen botanical range is identical rather than assuming it was absent.
     for id in additions:
-        if id in n or id in c:
-            raise RuntimeError("New host somehow already in original sidecar")
+        if (id in n and n[id] != an[id]) or (id in c and c[id] != ac[id]):
+            raise RuntimeError("Target-host botanical range disagrees with frozen global sidecar")
         n[id]=an[id]
         c[id]=ac[id]
     ids=baseline_ids|additions
