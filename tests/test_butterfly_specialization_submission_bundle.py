@@ -274,3 +274,24 @@ def test_gbif_archival_download_total_and_si_title_are_final():
     assert "290 records used in the frozen analysis were no longer returned" in manuscript
     assert supplement.splitlines()[0] == "# Supplementary Information — butterfly resource geography"
     assert "v0.2" not in supplement.splitlines()[0]
+
+
+def test_s9_review_source_archive_is_listed_anonymized_and_packaged():
+    """A published S9 supplementary claim needs its actual source-data ZIP in review."""
+    root=ROOT
+    supplement=(root/"manuscript/butterfly_specialization_supplement_v0.2.md").read_text(encoding="utf-8")
+    blinded=(root/"manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md").read_text(encoding="utf-8")
+    renderer=(root/"scripts/render_butterfly_specialization_blinded_manuscript.py").read_text(encoding="utf-8")
+    manifest=json.loads((root/"manuscript/geb_initial_submission_manifest_v0.1.json").read_text(encoding="utf-8"))
+    workflow=(root/".github/workflows/build-anonymous-review-bundle.yml").read_text(encoding="utf-8")
+    assert "## Supplementary Table S9." in supplement
+    assert "Table S9 source-data and reproducibility addendum" in blinded
+    assert "Table S9 source-data and reproducibility addendum" in renderer
+    entry=[r for r in manifest["submission_files"] if r.get("generated_artifact")=="bce_clarke_anonymous_s9_reproducibility_v01.zip"]
+    assert len(entry)==1
+    assert entry[0]["order"]==6
+    assert "actions/download-artifact@v4" in workflow
+    assert "bce-clarke-anonymous-s9-review-addendum-v01" in workflow
+    assert "unzip -t dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
+    assert "sha256sum dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
+
