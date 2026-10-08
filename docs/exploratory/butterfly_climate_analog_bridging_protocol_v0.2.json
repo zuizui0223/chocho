@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_butterfly_climate_analog_bridging_protocol_v0.2",
+  "status": "CONFIRMATORY_TO_EXPLORATORY_LATITUDE_FINDING; FROZEN_BEFORE_CLIMATE_CONTRAST_OUTCOME_INSPECTION",
+  "date": "2026-10-08",
+  "parent": "docs/exploratory/butterfly_selective_geographic_bridging_protocol_v0.1.json",
+  "source": "Frozen TTF independent climate crossfit artifact of run 36270581743: unit_climate_crossfit.csv; climate features identical for each WGSRPD3 across butterfly rows",
+  "climate_features": [
+    "BIO1",
+    "BIO7",
+    "BIO12",
+    "BIO15"
+  ],
+  "preprocessing": {
+    "bio12": "natural log1p before z-standardization, to limit heavy-tailed annual precipitation",
+    "others": "linear z-standardization",
+    "standardization_pool": "all unique WGSRPD3 with complete non-sentinel values (not outcome filtered)",
+    "missing": "exclude regions with missing climate data or BIO12 >= 65535 (suspected saturation/sentinel)",
+    "distance": "unweighted Euclidean distance in four z-scaled bioclimatic dimensions"
+  },
+  "pairs": {
+    "background": "WGSRPD3 regions with native butterfly resource presence",
+    "distance_km_min": 3000,
+    "cross_level1": true,
+    "analog": "lowest quartile of standardized climate distance among eligible far cross-Level1 pairs",
+    "discordant": "highest quartile of the same pool",
+    "cutoffs": "fixed by climate inputs alone, never by resource similarity outcomes"
+  },
+  "primary": "mean contemporary-minus-native butterfly resource Jaccard gain among climate analogue distant cross-Level1 pairs minus the same gain for climatically dissimilar distant cross-Level1 pairs",
+  "null": {
+    "method": "same Level1 restricted butterfly × region fixed margin edge swaps as v0.1",
+    "preserves": [
+      "native butterfly regional resources",
+      "introduced added regions by butterfly x Level1",
+      "introduced butterfly opportunity count by region"
+    ],
+    "repetitions": 499,
+    "seed": 20261008,
+    "p_one_sided_threshold": 0.05
+  },
+  "pass": "primary contrast > null median and one-sided Monte Carlo p<=0.05; pre-specified ecological validation of the earlier latitude proxy",
+  "fail": "do not call latitude result climate driven; do not select alternative climate variables or cutoffs after outcomes",
+  "limits": [
+    "regional climate summaries median of grid sample points; not microclimatic niches",
+    "regional pair observations are dependent but permutations operate on incidence edges",
+    "plant-only floristic benchmark needed to claim consumer-specific amplification",
+    "no realized butterfly occupancy or host use tested"
+  ],
+  "scope": "analysis branch only; main GEB manuscript unchanged"
+}
