@@ -1,0 +1,27 @@
+# Reviewer-defense decision memo: is butterfly resource homogenization robust to host knowledge incompleteness?
+
+**Date:** 2026-10-08. **Status:** CANDIDATE reviewer response / not incorporated into submission PR. Stricter Level1 statistics are confirmed from complete calculations in original [run 37784230410](https://github.com/zuizui0223/chocho/actions/runs/37784230410), whose **final JSON serialization failed on a metadata key**. The corrected [rerun 37786325837](https://github.com/zuizui0223/chocho/actions/runs/37786325837) is required for a complete permanent artifact.
+
+## Concern 1: the whole geographic homogenization effect follows from extra resource links
+
+**Response:** We agree that most of the raw 355-region Jaccard increase (native 0.27698 to contemporary 0.46208) is explained by the quantity and broad geographic placement of additional resource opportunities; that is why the revised manuscript distinguishes the **0.18510 raw gain** from the **+0.00860 observed-minus-row/column-fixed-null residual**. Under additional species-by-WGSRPD-Level1 continental constraints the residual falls to **+0.00362** (499 conditional permutations, one-sided p=0.002). This is a **small structure-dependent residual**, not a claim that the entire +66.8% raw increase is identity-specific. The model is a reconstructed network of *potential* host availability, not observed butterfly colonization.
+
+## Concern 2: the residual is an artifact of missing host records in HOSTS
+
+**Response:** An independently curated, literature-derived European butterfly foodplant compilation (BCE species pages based on Clarke 2024, restricted to evidence grades 1–3) identified 92 exact butterfly name intersections with the frozen 239-species panel and 83 comparable species-level host pages. Its host list was reconciled to pinned WCVP accepted species IDs. Of 1,052 BCE-only exact spelling differences, 25 mapped to existing accepted host edges and **1,027** were distinct butterfly–accepted-host-ID candidate associations absent from the frozen HOSTS edge inventory. We added **all** of those candidate associations to their original 81 focal butterflies in a one-direction exploratory sensitivity, without selecting hosts based on geographic outcomes or modifying other butterflies.
+
+The source-augmented reconstruction yielded **26,530→29,852 native** butterfly×region units, **41,083→44,819 contemporary** units and **14,553→14,967 added** units. Thus expansion over the native baseline shifted **54.85%→50.14%**, while resource redistribution still increased potential opportunity. The *same original 355-region domain* was then used for both regional Jaccard comparisons. Original fixed-margin residual **+0.00860** became **+0.00791** after source augmentation; continent-preserving residual **+0.00362** became **+0.00344** (each Monte Carlo p=0.002 in the printed execution). The sign is robust to **this one-sided European source sensitivity**.
+
+**Limit:** BCE is based on previously published studies and may overlap HOSTS primary sources. It does not include per-link citation or distinguish which of its evidence ranks 1–3 apply to each host; rank 3 wild oviposition is not larval adult survival. The original Clarke Dryad relational data were not available through attempted automated routes. Further, 156/239 butterflies have unmodified host lists; this test is **not proof of completeness, unbiased global source correction, or an independent mechanistic validation**. Geographic extrapolation of European foodplants across their entire global WCVP range is a model-based upper bound.
+
+## Concern 3: Jaccard p=0.002 implies a large ecological effect
+
+**Response:** It does not. The Monte Carlo p=0.002 is at the minimum possible resolution for 499 draws plus one correction (no draw at or above the observed statistic). The more important effect-size information is that the strongest geography-constrained residual is only **~0.0034–0.0036 Jaccard**. We avoid calling this 'global butterfly community homogenization', demonstrated competition, or increased butterfly abundance. It is a small, reproducible difference in **opportunities implied by fixed butterfly–host pairs and plant ranges**.
+
+## Concern 4: why not simply substitute the BCE-corrected figures?
+
+**Response:** Such a substitution would overstate the biological meaning of a European-only secondary literature supplement extrapolated over all global plant ranges. The manuscript's primary estimand is clearly **conditional on the frozen HOSTS/WCVP source version**. Additional source scenarios are sensitivity checks, not estimates of a unique biological truth. The original manuscript and supplementary results should be augmented with clear post-hoc caveats only after verified reproducibility artifacts and editorial agreement, not silently overwritten.
+
+## Editorial decision
+
+A **carefully qualified Supplementary Table S9** covering source disagreement and row/column- and Level1-constrained results would strengthen the source-robustness defense. A draft ready for author review is `GEB_SI_HOST_SOURCE_ROBUSTNESS_CANDIDATE_V01.md`. Do not inflate the main-text statement beyond 'potential-resource geographic homogenization', and do not claim a new ecological mechanism or realized host-use validation. The stronger next question requires independent local developmental/colonization outcomes with denominators.
