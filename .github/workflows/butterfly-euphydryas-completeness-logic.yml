@@ -1,0 +1,22 @@
+name: Euphydryas completeness set-logic regression
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - tests/test_euphydryas_host_completeness.py
+      - scripts/analyze_euphydryas_missing_hosts_augmentation.py
+      - .github/workflows/butterfly-euphydryas-completeness-logic.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate monotonicity and baseline reclassification on synthetic host maps
+        run: python -m unittest discover -s tests -p 'test_euphydryas_host_completeness.py' -v
