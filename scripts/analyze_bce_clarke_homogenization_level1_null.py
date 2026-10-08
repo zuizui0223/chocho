@@ -240,7 +240,7 @@ def main():
         "frozen_source_and_domain_verified":True,
         "source_receipts":{
             "accepted_crosswalk":proto["input"]["BCE_accepted_host_crosswalk_run"],
-            "previous_geography":proto["input"]["prior_geography_run"],
+            "previous_geography":37778961442,  # Fixed provenance receipt, not a statistical input.
             "original_HOSTS_commit":proto["input"]["original_source_Hosts_commit"],
             "original_WCVP_commit":proto["input"]["botany_WCVP_commit"],
             "WGSRPD_commit":proto["input"]["geography_WGSRPD_commit"]
