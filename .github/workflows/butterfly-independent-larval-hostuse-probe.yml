@@ -1,0 +1,42 @@
+name: independent butterfly larval host use observation feasibility
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: ["scripts/probe_independent_butterfly_larval_hostuse.py",".github/workflows/butterfly-independent-larval-hostuse-probe.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "shapely>=2,<3"
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Probe GloBI geodated larval host use and preserve raw API pages
+        run: |
+          mkdir -p results/observed-larval-hostuse
+          python scripts/probe_independent_butterfly_larval_hostuse.py --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --level3-geojson _external/WGSRPD/geojson/level3.geojson --page-limit 512 --pages-per-species 2 --output-json results/observed-larval-hostuse/larval_hostuse_feasibility_v0.1.json --output-csv results/observed-larval-hostuse/strict_local_larval_hostuse_records_v0.1.csv --raw-dir results/observed-larval-hostuse/api_raw_pages
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-independent-larval-hostuse-probe-v01
+          path: results/observed-larval-hostuse/
+          if-no-files-found: warn
+          retention-days: 30
