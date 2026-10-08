@@ -1,0 +1,31 @@
+name: Vanessa cardui original larval survival source gate
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_vanessa_cardui_survival_source.py
+      - .github/workflows/butterfly-vanessa-cardui-survival-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify independent published larval survival input and summarize limits
+        run: |
+          python scripts/audit_vanessa_cardui_survival_source.py \
+            --protocol docs/exploratory/VANESSA_CARDUI_SURVIVAL_REALIZATION_PROTOCOL_V01.json \
+            --output results/vanessa_cardui/larval_survival_source_gate_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-vanessa-cardui-realization-gate-v01
+          path: results/vanessa_cardui/
+          if-no-files-found: warn
+          retention-days: 30
