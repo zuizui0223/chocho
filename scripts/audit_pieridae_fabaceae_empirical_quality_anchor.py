@@ -58,7 +58,7 @@ def summarize_rearing():
     totals={origin:Counter() for origin in ("native","introduced")}
     for site in SITES:
         for origin in totals:totals[origin].update(by_site[site][origin])
-    if (totals["native"]["counted"],totals["native"]["parasitized"],totals["introduced"]["counted"],totals["introduced"]["parasitized"])!=(235,17,283,49):
+    if (totals["native"]["counted"],totals["native"]["parasitized"],totals["introduced"]["counted"],totals["introduced"]["parasitized"])!=(235,16,283,49):
         raise RuntimeError("Table 1 summed fate count drift")
     mat=[
         [
@@ -81,12 +81,24 @@ def summarize_rearing():
             "introduced":dict(by_site[site]["introduced"]),
             "conditional_parasitism_or":float(Table2x2(mat[i]).oddsratio)
         } for i,site in enumerate(SITES)],
-        "totals":{k:dict(v) for k,v in totals.items()},
+        "totals_reconstructed_by_adding_site_cells":{k:dict(v) for k,v in totals.items()},
+        "reported_paper_summary_column":{"native_parasitized":17,"native_counted":235,"introduced_parasitized":49,"introduced_counted":283},
+        "published_table_arithmetic_audit":{
+            "native_parasitized_site_sum":16,
+            "native_parasitized_printed_all_sites":17,
+            "native_difference_printed_minus_site_sum":1,
+            "Senna_ligustrina_parasitized_site_sum":9,
+            "Senna_ligustrina_parasitized_printed_plant_total":7,
+            "Senna_ligustrina_plant_row_difference":-2,
+            "action":"Report both original printed summary and cell reconstruction. Never silently alter source values. Stratified OR uses site cells only."
+        },
         "summary":{
-            "native_parasitoid_fraction_among_counted":17/235,
+            "native_parasitoid_fraction_reconstructed_from_site_cells":16/235,
+            "native_parasitoid_fraction_as_printed_in_all_sites_column":17/235,
             "introduced_parasitoid_fraction_among_counted":49/283,
-            "raw_odds_ratio":float(unadjusted.oddsratio),
-            "raw_or_ci95":[float(x) for x in unadjusted.oddsratio_confint()],
+            "raw_odds_ratio_reconstructed_from_site_cells":float(unadjusted.oddsratio),
+            "raw_odds_ratio_from_printed_overall_native_17":(49*218)/(234*17),
+            "raw_site_reconstructed_or_ci95":[float(x) for x in unadjusted.oddsratio_confint()],
             "site_stratified_mantel_haenszel_or":float(strat.oddsratio_pooled),
             "site_stratified_mh_or_ci95":[float(x) for x in strat.oddsratio_pooled_confint()],
             "site_stratified_mh_p":float(strat.test_null_odds().pvalue),
@@ -96,6 +108,7 @@ def summarize_rearing():
         },
         "source_limitations":[
             "This is a reanalysis of already published counts, not an independent ecological discovery.",
+            "Published Table 1 is internally inconsistent in the native parasitoid count: site totals 3+6+7=16 versus the printed all-site total 17. The Senna ligustrina site parasitized counts 2+0+7=9 versus printed plant total 7.",
             "Plant taxa are not randomized to origin, so Senna species, setting, season and origin are confounded.",
             "Weekly observations and larvae on the same shrubs induce dependence; individual-level contingency p-values may be anti-conservative.",
             "Outcome-conditioned Counted excludes lost and unresolved juveniles; ratios are NOT whole-cohort parasitism or survival rates.",
