@@ -13,6 +13,7 @@ SOURCE_CANDIDATES = [
  ("original_dryad_csv_via_files", "https://datadryad.org/api/v2/files/2850981/download", "csv"),
  ("original_dryad_csv_stream", "https://datadryad.org/downloads/file_stream/2850981", "csv"),
  ("publisher_appendix_s1", "https://pmc.ncbi.nlm.nih.gov/articles/instance/10771928/bin/ECE3-14-e10834-s005.xlsx", "xlsx"),
+ ("europepmc_original_publication_supplements", "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10771928/supplementaryFiles", "supplement_zip"),
 ]
 SCHEMA_TITLE="A checklist of European butterfly larval foodplants"
 
@@ -33,6 +34,18 @@ def examine(raw, expected):
         count=sum(1 for _ in rd)
         if count<1000:raise RuntimeError("implausibly small compiled host table")
         return {"kind":"source_table_csv","columns":header,"rows":count}
+    if expected=="supplement_zip":
+        with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            candidates=[x for x in z.namelist() if x.lower().endswith(".xlsx") and
+                        ("s005" in x.lower() or "appendixs1" in x.lower())]
+            if len(candidates)!=1:
+                raise RuntimeError("Original publisher Appendix S1 must match exactly one XLSX in supplement ZIP: "+repr(candidates))
+            inner=z.read(candidates[0])
+        nested=examine(inner,"xlsx")
+        return {"kind":"europepmc_suppl_recovered_publisher_appendix",
+                "inner_file":candidates[0],
+                "inner_sha256":hashlib.sha256(inner).hexdigest(),
+                "original_publisher_sheet":nested}
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         if not any(x.endswith("xl/workbook.xml") for x in z.namelist()):
             raise RuntimeError("XLSX archive workbook content missing")
