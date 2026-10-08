@@ -1,0 +1,30 @@
+name: butterfly cultivated Senna independent observation pilot
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/probe_cultivated_senna_florida_inaturalist.py
+      - .github/workflows/butterfly-cultivated-senna-inat-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Independently audit cultivated/wild observations
+        run: |
+          mkdir -p results/cultivated-senna
+          python scripts/probe_cultivated_senna_florida_inaturalist.py --protocol-json docs/exploratory/CULTIVATED_SENNA_EXPOSURE_PROTOCOL_V01.json --output-json results/cultivated-senna/flower_garden_iNat_senna_exposure_v0.1.json --output-csv results/cultivated-senna/flower_garden_iNat_senna_source_records_v0.1.csv
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-cultivated-senna-inat-pilot-v01
+          path: results/cultivated-senna/
+          retention-days: 30
+          if-no-files-found: warn
