@@ -1,0 +1,76 @@
+name: BCE Clarke fixed-domain butterfly resource homogenization null
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/analyze_bce_clarke_homogenization_fixed_domain.py
+      - .github/workflows/butterfly-bce-clarke-homogenization-null.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Fetch accepted-ID source candidate edges from the fixed audited run
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-bce-clarke-92-wcvp-accepted-host-gap-v01
+          path: inputs/bce
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          run-id: 37777881774
+      - name: Clone frozen original HOSTS
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Clone frozen original WCVP
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Exact original butterfly-host plus WCVP native and contemporary reconstruction
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS \
+            results/bce_homo/original_native results/bce_homo/original_contemporary
+      - name: Restore exact accepted additional host candidates with pinned botanical ranges
+        run: |
+          python scripts/analyze_bce_clarke_added_hosts_geography.py prepare \
+            --crosswalk-json inputs/bce/bce_host_accepted_taxon_gap_v01.json \
+            --output-csv results/bce_homo/additional_ids.csv
+          Rscript scripts/build_bce_clarke_additional_host_wcvp_ranges.R \
+            _external/WCVP results/bce_homo/additional_ids.csv \
+            results/bce_homo/added_ranges
+      - name: Compare original and BCE-augmented geography with paired fixed-margin null
+        run: |
+          python scripts/analyze_bce_clarke_homogenization_fixed_domain.py \
+            --protocol-json docs/exploratory/BCE_CLARKE_HOMOGENIZATION_FIXED_DOMAIN_PROTOCOL_V01.json \
+            --crosswalk-json inputs/bce/bce_host_accepted_taxon_gap_v01.json \
+            --insect-host-csv results/bce_homo/original_native/insect_host_accepted.csv \
+            --native-csv results/bce_homo/original_native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv results/bce_homo/original_contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --added-native-csv results/bce_homo/added_ranges/additional_native_wgsrpd3.csv \
+            --added-contemporary-csv results/bce_homo/added_ranges/additional_contemporary_wgsrpd3.csv \
+            --frozen-metrics-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --reference-json provenance/reviewer_defenses/results/butterfly_resource_homogenization_v0.1.json \
+            --output-json results/bce_homo/bce_clarke_fixed_domain_homogenization_null_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-bce-clarke-fixed355-homogenization-null-v01
+          path: results/bce_homo/bce_clarke_fixed_domain_homogenization_null_v01.json
+          retention-days: 30
+          if-no-files-found: warn
