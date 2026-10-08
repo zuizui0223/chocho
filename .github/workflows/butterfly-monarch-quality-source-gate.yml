@@ -1,0 +1,33 @@
+name: monarch 127 plant quality independent source gate
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/probe_monarch_host_quality_original_source.py
+      - .github/workflows/butterfly-monarch-quality-source-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original supplemental document reader
+        run: python -m pip install "python-docx>=1.1,<2"
+      - name: Retrieve Dryad metadata and independent PLOS supplement
+        run: |
+          mkdir -p results/monarch-quality-source
+          python scripts/probe_monarch_host_quality_original_source.py \
+            --protocol-json docs/exploratory/MONARCH_EXTERNAL_HOST_QUALITY_SOURCE_GATE_V01.json \
+            --output-dir results/monarch-quality-source
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monarch-127-host-quality-independent-source-v01
+          path: results/monarch-quality-source/
+          retention-days: 30
