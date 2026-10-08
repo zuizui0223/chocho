@@ -1,0 +1,63 @@
+{
+  "schema": "chocho_bce_clarke_level1_geography_preserving_null_v0.1",
+  "created": "2026-10-08",
+  "status": "POSTHOC_HARDER_NULL_PROTOCOL_FROZEN_BEFORE_NEW_LEVEL1_OUTCOME",
+  "scientific_question": "Does observed butterfly larval-resource homogenization remain above matched null expectation after adding BCE/Clarke evidence-1–3 published host records, when each butterfly's introduced-only resource additions within each WGSRPD Level1 group are also conserved?",
+  "input": {
+    "original_source_Hosts_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "botany_WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "geography_WGSRPD_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "BCE_accepted_host_crosswalk_run": 37777881774,
+    "focal_panel": 239,
+    "orig_native_active_regions": 355,
+    "original_added_units_all_regions": 14553,
+    "additional_butterfly_host_links": 1027,
+    "exact_reference": {
+      "original_native_region_jaccard": 0.27698189773361664,
+      "original_contemporary_region_jaccard": 0.4620834004986041,
+      "original_native_butterfly_geography_jaccard": 0.22237325689920187,
+      "original_contemporary_butterfly_geography_jaccard": 0.3278808188864098
+    }
+  },
+  "design": {
+    "scenarios": [
+      "unmodified original HOSTS, WCVP distributions",
+      "one-direction BCE/Clarke accepted-ID additions for same 81 known European butterfly species, other 158 focal butterflies unchanged"
+    ],
+    "same_domain": "The 355 native-active WGSRPD3 region codes from the ORIGINAL HOSTS scenario; retain EXACTLY these codes in BOTH comparisons; report new BCE native-active region separately without using it for the paired analysis",
+    "identical_null": "Reproduce the original scripts/analyze_butterfly_resource_homogenization_level1_null.py within-Level1 two-edge swaps, including burn=max(10000,15*added_edges), spacing=max(2000,3*added_edges), same eligible group sampling rule and native exclusion.",
+    "preserve": [
+      "Added resource-incidence count per butterfly",
+      "Added resource-incidence count per region",
+      "Butterfly-by-Level1 newly available region count",
+      "Original scenario-specific native resource-incidence cells as forbidden placements"
+    ],
+    "statistic": [
+      "mean Jaccard between regional sets of butterfly potential larval-host opportunities",
+      "mean pairwise butterfly resource-geographic Jaccard"
+    ],
+    "permutations": 499,
+    "random_seed": 20261007,
+    "test_synthetic_invariants_before_real_data": true,
+    "reject_if": [
+      "Original 239 source panel 26,530 native / 41,083 contemporary / 14,553 added resources not reproduced",
+      "Original 355-region baseline Jaccard metrics differ from frozen receipt",
+      "Any Level3 region missing Level1 mapping",
+      "Native not subset contemporary, any null randomization changes per-species-by-Level1, per-region or per-butterfly margins",
+      "Source crosswalk 1027 links in 679 accepted taxa fails"
+    ]
+  },
+  "interpretation": {
+    "decision": "Record sign, effect-size and Monte Carlo p of excess, even if negative or not distinguishable from null. No tuning or deleting butterfly families to rescue an effect.",
+    "limited_scope": "Post-hoc European host-source augmentation, original fixed 355 region domain, source-specific Level1 conditional structure, not corrected global biodiversity estimate.",
+    "no_claims": [
+      "observed native or invasive butterfly colonization",
+      "biological host nutritional quality",
+      "realized local assemblage homogenization",
+      "fitness",
+      "causal ecological rewiring",
+      "empirical competition"
+    ],
+    "manuscript": "Do not edit submission PR #38 before evaluation"
+  }
+}
