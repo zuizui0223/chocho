@@ -1,0 +1,42 @@
+{
+  "schema": "chocho_independent_larval_hostuse_observation_feasibility_v0.1",
+  "status": "EXPLORATORY_EVIDENCE_FEASIBILITY_FROZEN_BEFORE_GLOBI_QUERY",
+  "date": "2026-10-08",
+  "scientific_question": "Are there independently documented, georeferenced and dated butterfly larval feeding records in regions where a known host plant is classified as introduced? This is needed to connect potential larval-resource reconstructions to realized biological use.",
+  "source": "Global Biotic Interactions observation-level interaction.csv includeObservations=true; no HOSTS-only assertion can count as independent",
+  "source_guidance": "https://www.globalbioticinteractions.org/how-to ; https://www.globalbioticinteractions.org/data",
+  "sample_design": {
+    "species": [
+      "Pyrgus communis",
+      "Erynnis tristis",
+      "Danaus plexippus",
+      "Vanessa cardui",
+      "Pieris rapae",
+      "Colias eurytheme",
+      "Strymon melinus",
+      "Lycaena phlaeas",
+      "Papilio machaon",
+      "Papilio polyxenes",
+      "Apodemia mormo"
+    ],
+    "butterfly_families": "two from each of five families plus one from Riodinidae; selected for probe only, NOT representative",
+    "pagination": "Two 512-row pages per species; never interpret missing records as zero if capped",
+    "no_adaptive_species_replacement": true
+  },
+  "stages": {
+    "A": "all returned interactions with complete source and target taxa and plausible plant targets",
+    "B": "geocoordinates and event year (1800-2025), life stage recorded or missing distinctly",
+    "C": "strict evidence: butterfly source life stage explicitly larva/caterpillar, herbivorous ingestion relationship, plant taxon, year, coordinates, and identified non-HOSTS study provenance",
+    "D": "join strict evidence to exact frozen HOSTS × WCVP (introduced plant in WGSRPD3, focal butterfly has no native known-host resource in that region)"
+  },
+  "filtering": {
+    "invalid": "lat/lon missing/out of bounds/0,0; non-larval or unknown stage never assumed larval; flower visitation not larval use",
+    "not_independent": "HOSTS-like source citations flagged and excluded from strict evidence; ambiguous sources are unknown not independent",
+    "aliases": "no synonym guessing in strict species-level join",
+    "sampling": "GloBI REST snapshots can change; archive raw pages or their checksums, retrieval date and source citations"
+  },
+  "pass": "At least 10 independently sourced georeferenced dated larval host-use records in introduced-host regions, spanning >=3 butterfly species and >=3 WGSRPD3 regions; move to source verification, not hypothesis testing",
+  "fail": "Do not invent a realized host-use endpoint from a static HOSTS link. If thin, retain structural finding but do not write a realized butterfly ecology article from it.",
+  "main_manuscript": "unchanged",
+  "prior_ecological_results": "family×botanical-family conditional structural excess ~0.0105 Jaccard p=0.030; full-history butterfly short-window hindcast not supported"
+}
