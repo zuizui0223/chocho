@@ -169,7 +169,8 @@ def analyze(raw, protocol):
             "time_max":max(r["time"] for r in rr),
             "distinct_trial_labels":len({r["trial"] for r in rr}),
             "distinct_plant_trial_labels":len({r["plant_trial"] for r in rr}),
-            **km_at(rr, HORIZON)
+            "km_survival_day10": None,
+            "km_reason": "WITHHELD_PENDING_RECONCILIATION_OF_STATUS_CODES_AND_PUPATION",
         })
     if not plant_source_table:
         raise RuntimeError("No usable original natural-plant records")
@@ -182,14 +183,21 @@ def analyze(raw, protocol):
         "raw_diet_counts":dict(sorted(raw_classes.items())),
         "larva_source_counts":dict(sorted(source_counts.items())),
         "plant_source_strata":plant_source_table,
+        "raw_status_2_count":sum(r["event"] for r in rows),
+        "raw_status_1_count":sum(1-r["event"] for r in rows),
+        "adult_eclosion_estimate":None,
+        "source_fitness_gate":"HOLD_UNRECONCILED_RAW_STATUS_ALL_2_VS_PUBLISHED_99PCT_MORTALITY_ON_MAFA_SPAM",
+        "published_table_boundary":"Saldivar and Wilson-Rankin 2024 Ecosphere Table 1 reports MAFA and SPAM 99 percent mortality, and text documents some pupation. This original source extract codes all 1154 rows as status 2. Interpret only row counts and diet source, do not reconstruct adult emergence or experimental host-fitness ranks from this file.",
+        "source_origin_correction":"Oviposition eggs were laid by females reared from commercially sourced larvae (Methods); neither carolina nor oviposition is a wild-source cohort.",
         "limits":[
-            "status=1 may represent censoring/alive, never adult eclosion",
+            "All returned status codes are 2 despite published non-100 percent mortality in two natural plant diets: adult fitness endpoint NOT reconciled",
+            "Oviposition is a commercially derived next generation, NOT wild-collected",
             "Source origin and host plant are nonrandomized and potentially confounded",
             "Multiple larvae in the same plant/trial need cluster-aware inference",
             "Experimental host-quality contrasts were already published",
             "No direct geographic colonization, regional resource prevalence or realized global fitness"
         ],
-        "promotion":"Do NOT promote as an independent ecology paper or modify GEB main manuscript."
+        "promotion":"STOP: only verified source accessibility and descriptive row counts; survival and adult fitness remain unsupported. Do not modify GEB."
     }
 
 
@@ -211,7 +219,9 @@ def main():
         "source_rows":result["source_rows"],
         "diet_counts":result["raw_diet_counts"],
         "source_counts":result["larva_source_counts"],
-        "plant_source_strata":result["plant_source_strata"],
+        "source_fitness_gate":result["source_fitness_gate"],
+        "coded_status_2_count":result["raw_status_2_count"],
+        "source_origin_correction":result["source_origin_correction"],
         "source_md5":source["md5"],
         "warning":result["limits"]
     },indent=2),flush=True)
