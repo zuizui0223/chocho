@@ -1,0 +1,41 @@
+name: butterfly introduced host fitness sign counterexample
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths: [".github/workflows/butterfly-host-fitness-sign-contrast.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  case-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: _s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - name: Quantify alternative nutritional and ecological host-edge quality
+        run: |
+          mkdir -p results/battus-host-quality
+          python scripts/audit_battus_exotic_host_fitness_sign_contrast.py --descriptors-csv _s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv --insect-host-csv _sidecars/native/insect_host_accepted.csv --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv --output-json results/battus-host-quality/host_fitness_sign_contrast_v0.1.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-battus-host-fitness-sign-contrast-v01
+          path: results/battus-host-quality/
+          retention-days: 30
