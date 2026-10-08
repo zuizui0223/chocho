@@ -1,0 +1,41 @@
+name: monarch repeated-patch host identity forward prediction
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/analyze_urban_monarch_forward_species_prediction.py
+      - .github/workflows/butterfly-monarch-forward-species-prediction.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  predict:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=2,<3" "pandas>=2,<4" "scikit-learn>=1.5,<2"
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-urban-milkweed-figshare-source-v01
+          path: _urban
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37735892534
+      - name: Run held-out route and forward-year evaluation
+        run: |
+          mkdir -p results/urban-monarch-forward
+          python scripts/analyze_urban_monarch_forward_species_prediction.py \
+            --raw-csv _urban/figshare_51434612_Milkweed_dat_with_coords_DEC2024.csv \
+            --protocol-json docs/exploratory/URBAN_MILKWEED_FORWARD_HOST_IDENTITY_PROTOCOL_V01.json \
+            --output-json results/urban-monarch-forward/forward_species_prediction_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-urban-monarch-forward-species-v01
+          path: results/urban-monarch-forward/
+          retention-days: 30
