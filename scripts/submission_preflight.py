@@ -157,6 +157,27 @@ def inspect_initial_submission(root: Path = ROOT) -> dict[str, object]:
         else:
             blockers.append(f"submission asset missing: {path}")
 
+    supplement_text = (root / SUPPLEMENT).read_text(encoding="utf-8")
+    if "## Supplementary Table S9." in supplement_text:
+        workflow = (root / ANON_BUNDLE_WORKFLOW).read_text(encoding="utf-8")
+        manifest_path = root / "manuscript/geb_initial_submission_manifest_v0.1.json"
+        if not manifest_path.is_file():
+            blockers.append("S9 source-data submission manifest is missing")
+        else:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            s9_files = [
+                row for row in manifest.get("submission_files", [])
+                if row.get("generated_artifact") == "bce_clarke_anonymous_s9_reproducibility_v01.zip"
+            ]
+            if len(s9_files) != 1:
+                blockers.append("S9 separate anonymous source-data archive is absent from submission manifest")
+            elif "bce_clarke_anonymous_s9_reproducibility_v01.zip" not in workflow or "actions/download-artifact@v4" not in workflow:
+                blockers.append("S9 source-data ZIP is not provisioned by anonymous review workflow")
+            elif "Table S9 source-data and reproducibility addendum" not in blinded:
+                blockers.append("blinded data/code statement omits the separate S9 addendum")
+            else:
+                complete.append("S9 source-data addendum is documented and provisioned in anonymous review artifact")
+
     # A public DOI, public repository release/tag and external anonymous reviewer URL
     # are intentionally NOT initial-submission blockers. GEB permits data/code access
     # during peer review via supplementary materials; stable public archiving is
