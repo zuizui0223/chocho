@@ -1,0 +1,55 @@
+name: Euphydryas editha exact local host global crosswalk
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - scripts/audit_euphydryas_local_global_host_crosswalk.py
+      - .github/workflows/butterfly-euphydryas-local-global-crosswalk.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Clone fixed original HOSTS
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Clone fixed original WCVP
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Rebuild exact known-host botanical mapping
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/euphydryas/native results/euphydryas/contemporary
+      - name: Test original local hosts against frozen global reconstruction
+        run: |
+          python scripts/audit_euphydryas_local_global_host_crosswalk.py \
+            --protocol-json docs/exploratory/EUPHYDRYAS_FOUR_HOST_CROSSWALK_PROTOCOL_V01.json \
+            --original-hosts-csv _external/HOSTS/resource.csv \
+            --interaction-csv results/euphydryas/native/insect_host_accepted.csv \
+            --native-csv results/euphydryas/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv results/euphydryas/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --global-descriptors-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --output-json results/euphydryas/euphydryas_four_host_crosswalk_v01.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-euphydryas-four-host-global-crosswalk-v01
+          path: results/euphydryas/euphydryas_four_host_crosswalk_v01.json
+          if-no-files-found: warn
+          retention-days: 30
