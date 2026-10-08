@@ -130,8 +130,8 @@ jobs:
 
       - name: Record checksums
         run: |
-          sha256sum dist/butterfly_specialization_GEB_blinded_review.docx > dist/SHA256SUMS
-          sha256sum dist/butterfly_specialization_GEB_supporting_information.docx >> dist/SHA256SUMS
+          (cd dist && sha256sum butterfly_specialization_GEB_blinded_review.docx butterfly_specialization_GEB_supporting_information.docx > SHA256SUMS)
+          (cd dist && sha256sum -c SHA256SUMS)
 
       - uses: actions/upload-artifact@v4
         with:
