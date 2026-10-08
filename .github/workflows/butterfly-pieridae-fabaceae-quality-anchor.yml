@@ -1,0 +1,44 @@
+name: Pieridae Fabaceae empirical quality anchor
+on:
+  push:
+    branches: [analysis/resource-homogenization-v01]
+    paths:
+      - "scripts/audit_pieridae_fabaceae_empirical_quality_anchor.py"
+      - ".github/workflows/butterfly-pieridae-fabaceae-quality-anchor.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Dependencies
+        run: python -m pip install "statsmodels>=0.14,<1.0"
+      - uses: actions/download-artifact@v4
+        with:
+          name: temporal-hindcast-sidecars
+          path: _sidecars
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37628559686
+      - name: Audit open published rearing data and frozen HOSTS coverage
+        run: |
+          mkdir -p results/empirical-quality
+          python scripts/audit_pieridae_fabaceae_empirical_quality_anchor.py \
+            --insect-host-csv _sidecars/native/insect_host_accepted.csv \
+            --native-distribution-csv _sidecars/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv _sidecars/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --panel-protocol-json docs/exploratory/PIERIDAE_FABACEAE_LARVAL_USE_PILOT_PROTOCOL_V01.json \
+            --output-json results/empirical-quality/pieridae_fabaceae_empirical_quality_anchor_v0.1.json \
+            --output-species-csv results/empirical-quality/pieridae_fabaceae_external_link_sensitivity_v0.1.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-pieridae-fabaceae-quality-anchor-v01
+          path: results/empirical-quality/
+          retention-days: 30
