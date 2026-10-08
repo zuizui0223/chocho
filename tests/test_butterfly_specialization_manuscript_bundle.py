@@ -240,7 +240,7 @@ def test_current_v02_claim_map_preserves_layered_inference_boundaries():
     claims = {row["id"]: row for row in claim_map["claims"]}
 
     assert "homogenizes regional butterfly resource assemblages" in claims["C0"]["claim"]
-    assert "exact shared resources" in claims["C0b"]["claim"]
+    assert "share exact resources" in claims["C0b"]["claim"]
     assert "little relationship" in claims["C1"]["claim"]
     assert claims["C1b"]["status"].startswith("post-hoc descriptive decomposition")
     assert claims["C1b"]["allowed_use"].startswith(
@@ -257,7 +257,7 @@ def test_current_v02_claim_map_preserves_layered_inference_boundaries():
     assert "Discussion/SI" in language["host_prominence"]
     assert "fixed-margin" in language["resource_homogenization"]
     assert "realized competition" in language["competition_exposure"]
-    assert "network concentration" in language["removal_stress"]
+    assert "structural dependency/redundancy" in language["removal_stress"]
 
 
 def test_invasion_and_competition_interpretation_is_bounded():
@@ -273,7 +273,7 @@ def test_invasion_and_competition_interpretation_is_bounded():
     assert "not an argument for retaining invasive plants" in manuscript
     assert "site-level management" in manuscript
     assert "realized competition" in claim_map["required_language"]["competition_exposure"]
-    assert "network concentration and redundancy" in claim_map["required_language"]["removal_stress"]
+    assert "structural dependency/redundancy" in claim_map["required_language"]["removal_stress"]
 
 def test_submission_citations_cover_figures_supplement_and_external_data():
     manuscript = (
