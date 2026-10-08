@@ -1,0 +1,25 @@
+{
+  "schema": "chocho_bce_clarke2024_accepted_plant_id_crosswalk_v0.1",
+  "created": "2026-10-08",
+  "status": "EXPLORATORY_POST_12_PILOT_PRE_FULL92_OUTPUT",
+  "motivation": "Separate genuine high-evidence foodplant associations that are not in frozen HOSTS from simple nomenclatural synonyms/formatting differences.",
+  "input": {
+    "BCE": "All 92 butterfly original page records with species-level BCE-only exact plant spellings, based on BCE-derived Clarke evidence tiers 1-3",
+    "frozen_HOSTS": "globalbioticinteractions/HOSTS commit 808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "frozen_WCVP": "matildabrown/rWCVPdata commit 65bed76bae9d644ccb6ad200c05f9f5071d89e05, wcvp_names.rda",
+    "original_builder": "scripts/build_wcvp_hosts_null_sidecars.R"
+  },
+  "matching": {
+    "butterfly": "Exactly frozen binomial; do not silently lump synonymous butterfly species",
+    "plant": "First require unique accepted species name match; otherwise unique synonym accepted species ID, otherwise report unmatched/ambiguous. Do not map generic or infraspecific names to species without explicit taxonomy.",
+    "baseline": "Use fixed E x accepted plant ID sidecar from original HOSTS/WCVP builder; no new network edges added to main manuscript.",
+    "endpoint": "Among BCE-only exact names, count uniquely taxon-resolved links already present in HOSTS after synonymy vs uniquely resolved links still absent, plus unresolved and ambiguous; list names and accepted IDs.",
+    "denominator": "Do not use all 92 or all BCE links as if they were independent field events; report matched sites and taxonomic resolution, and this source's attrition."
+  },
+  "stop": [
+    "Do not equate source bibliographic evidence 1-3 with adult emergence or local realized fitness",
+    "Do not assume true missingness for unmatched names or butterfly synonym cases",
+    "Do not rerun GEB main inference, or promote any revised native/contemporary area effects without separate missing-host geography sensitivity and unbiased coverage",
+    "Do not claim statistical independent reference because original primary references may overlap"
+  ]
+}
