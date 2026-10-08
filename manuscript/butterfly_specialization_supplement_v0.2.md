@@ -269,6 +269,27 @@ Of 14,553 introduced-added butterfly × region units, **8,574 (58.9%)** were sup
 
 For comparison, random removal of 38 of the 670 contributing hosts lost a median of **433** added units (95% interval 169–1,124), whereas removing the 38 highest-contributing hosts lost 5,812. Because the targeted hosts are selected using their observed contribution, this contrast describes network concentration and redundancy rather than an independent causal test. It is a global counterfactual stress test, not a site-level removal recommendation.
 
+## Supplementary Table S9. Host-interaction knowledge sensitivity and resource homogenization
+
+The primary resource reconstruction is conditional on the recorded larval-host links in the frozen HOSTS database. To assess source dependence, we compared its host list against Butterfly Conservation Europe (BCE) foodplant listings, derived from Clarke (2024, *Ecology and Evolution*, 14:e10834; doi:10.1002/ece3.10834), which retain host-evidence categories 1–3. These are **independently compiled literature summaries**, not independent original feeding experiments. The BCE subset had 92 exact butterfly-binomial matches to our original 239 species, of which 83 supplied species-level foodplant records. Reconciliation with the same frozen WCVP accepted-plant IDs identified 1,027 additional *candidate* butterfly–host species pairs not recorded for 81 butterflies in frozen HOSTS (679 distinct accepted plants). These additions were included **all together**, without selecting hosts by their effects on resource geography; host associations for the other 158 butterflies remained unchanged. The original Clarke relational Dryad files were inaccessible via the tested automated routes, so the source here is the documented BCE-derived list, not the full original dataset.
+
+| Source-conditional measure | Primary HOSTS inventory | BCE/Clarke candidate hosts added |
+|---|---:|---:|
+| Native butterfly × WGSRPD3 resource units, all 239 butterflies | 26,530 | 29,852 |
+| Contemporary resource units | 41,083 | 44,819 |
+| Introduced-added resource units | 14,553 | 14,967 |
+| Introduced-added units / native units | **54.9%** | **50.1%** |
+| Butterfly species with an introduced-added resource region | 206 | 213 |
+| Regional mean Jaccard, native distribution (same 355 regions) | 0.27698 | 0.29938 |
+| Regional mean Jaccard, contemporary distribution (same 355 regions) | 0.46208 | 0.48506 |
+| Observed minus scenario-matched fixed-margin null median | +0.00860 | +0.00791 |
+| Observed minus Level1-constrained fixed-margin null median | **+0.003616** | **+0.003436** |
+| Level1-constrained one-sided permutation p (499 samples) | 0.002 | 0.002 |
+
+For fair comparison of Jaccard statistics, both host sets were evaluated on the *same original 355 native-active WGSRPD3 regions*; one additional region with native resource opportunity after host augmentation was excluded from this paired regional comparison. Each 499-draw fixed-margin null preserves the scenario-specific added-resource total for every butterfly and region and disallows additions to native-resource cells. The stricter Level1 variant additionally preserves each butterfly's added-resource count within each WGSRPD Level1 area. The continent-constrained results were reproduced to identical null medians, p-values and swap counts in two separate deterministic-order CI executions, with input/algorithm/unit-test receipts retained in the supplementary source review addendum.
+
+The host augmentation increased both native and contemporary estimated resource coverage, but enlarged the *native baseline* proportionally more, reducing estimated relative expansion while leaving the small, positive regional homogenization excess intact. This is a **post-hoc, Europe-biased, one-direction source-completeness sensitivity**, not a globally corrected effect estimate or evidence of larval survival on the added plants across their entire WCVP ranges. The p = 0.002 values represent the minimum one-sided Monte Carlo resolution for 499 randomizations, **not** large ecological effect sizes. Potential larval-resource geography is not observed butterfly community composition or realized competition. The original 239-species manuscript results remain tied to the frozen HOSTS/WCVP inventory; the BCE source sensitivity does not replace them.
+
 ## Supplementary inference boundaries
 
 1. Resource envelopes are reconstructed geographic opportunities, not realized local host use.
@@ -281,3 +302,5 @@ For comparison, random removal of 38 of the 670 contributing hosts lost a median
 8. Crop-host exclusion is a sensitivity analysis only and does not redefine the primary host set or specialization predictor; the genus-expanded variant deliberately over-excludes congeners.
 9. Shared exact-host geography quantifies potential resource co-use, not realized competition; local abundance, host biomass, phenology and performance are required to distinguish filtering from competition.
 10. Host-removal scenarios quantify regional resource-network sensitivity and do not justify retaining invasive plants or predict local population responses.
+11. A derived European evidence-filtered host checklist is not globally representative, and the candidate BCE associations are neither independent new field records nor confirmed region-wide larval performance.
+12. The supplemental host-list sensitivity is post-hoc and maintains a fixed 355-region comparison domain; its structural null excess is small and does not establish butterfly community homogenization.
