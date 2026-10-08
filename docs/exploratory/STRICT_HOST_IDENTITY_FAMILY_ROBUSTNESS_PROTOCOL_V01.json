@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_strict_host_identity_family_robustness_v0.1",
+  "status": "POSTHOC_ROBUSTNESS_PROTOCOL_FROZEN_BEFORE_LEAVE_FAMILY_OUTCOME",
+  "created": "2026-10-08",
+  "confirmed_previous_result": {
+    "family_and_host_family_strict_null": {
+      "observed": 0.09843700070646613,
+      "null_median": 0.08789915869331802,
+      "excess": 0.010537842013148113,
+      "p_one_sided": 0.03,
+      "permutations": 499,
+      "seed": 20261008,
+      "accepted_swaps": 1134859
+    }
+  },
+  "aims": [
+    "Assess whether apparent butterfly–host identity effect is dependent on one of the six butterfly families",
+    "Assess Monte Carlo chain stability to an independent seed"
+  ],
+  "family_exclusions": [
+    "Nymphalidae",
+    "Lycaenidae",
+    "Hesperiidae",
+    "Riodinidae",
+    "Pieridae",
+    "Papilionidae"
+  ],
+  "statistic": "Far cross-Level1 climate-analogue minus climate-discordant gain in regional potential butterfly resource Jaccard, recalculated excluding one complete butterfly family.",
+  "null": "Same butterfly-family×botanical-family-constrained host link swaps that preserve plant geography, butterfly host counts within plant families, and plant users within butterfly families. Recalculate the family-excluded statistic on each null draw with identical pairs and masks.",
+  "null_seed": 20261008,
+  "permutations": 499,
+  "Monte_Carlo_replication": {
+    "seed": 20261009,
+    "permutations": 499,
+    "report_independent_chain_p_as_sensitivity_not_picking_best_seed": true
+  },
+  "assessment": {
+    "largest_family_removal_must_keep_positive_excess": true,
+    "negative_excess_on_any_removal": "describe non-general concentration rather than claim a general effect",
+    "p_values": "exploratory sensitivity, not independent confirmatory tests",
+    "source_drift": "observed all-family score must equal 0.09843700070646613 and source family panel=6"
+  },
+  "boundaries": [
+    "The null does not preserve each butterfly's realized larval niche or overall added-region number",
+    "The response is derived from plant maps and known HOSTS links, not realized local larval use",
+    "Claims of consumer-mediated phylogenetic diversification require independent validation",
+    "Do not change main GEB manuscript"
+  ]
+}
