@@ -208,6 +208,19 @@ def test_initial_submission_preflight_defers_public_archive_tasks():
     deferred = "\n".join(result["deferred_until_publication"]).lower()
 
     assert result["ready_for_initial_submission"] is False
+    # Only declarations / final author-facing work may block initial submission.
+    # Scientific, citation, anonymity, S9 source-ZIP and reproducibility issues
+    # must not be silently bundled under a generic "pending" status.
+    expected_human_blockers = {
+        "title-page author/affiliation/contact placeholders remain",
+        "CRediT contribution placeholders remain",
+        "acknowledgements placeholder remains",
+        "funding placeholder remains",
+        "conflict-of-interest placeholder remains",
+        "cover-letter corresponding-author placeholders remain",
+    }
+    assert set(result["blockers"]) == expected_human_blockers, result["blockers"]
+    assert "S9 source-data addendum is documented and provisioned in anonymous review artifact" in result["complete"]
     assert "title-page author/affiliation/contact placeholders remain" in result["blockers"]
     assert "credit contribution placeholders remain" in blockers
     assert "cover-letter corresponding-author placeholders remain" in result["blockers"]
