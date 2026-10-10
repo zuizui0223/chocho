@@ -1,0 +1,96 @@
+{
+  "schema": "chocho_randomized_host_history_fallback_protocol_v01",
+  "created_on": "2026-10-10",
+  "status": "PROPOSED_DESIGN_NOT_EXECUTED",
+  "manuscript_pr38_untouched": true,
+  "question": "At equal CURRENT usable host biomass, does randomized past exposure to an introduced larval host causally change capacity to produce flight-capable adults after its removal?",
+  "prior_art": [
+    {
+      "study": "Singer and Parmesan 2018 Nature 10.1038/s41586-018-0074-6",
+      "already_established": "A population adopted an introduced host and collapsed after management shifted local microclimate."
+    },
+    {
+      "study": "Haan et al. 2021 Scientific Reports 10.1038/s41598-020-80413-y",
+      "already_established": "A different population retained ancestral-host competence and showed temporal preference change."
+    },
+    {
+      "study": "Singer and Parmesan 2021 Global Change Biology 10.1111/gcb.15656",
+      "already_established": "Long-term population host-use shifts and narrowing in E. editha."
+    },
+    {
+      "study": "Steward et al. 2022 Evolution 10.1111/evo.14608",
+      "already_established": "Novel lethal host can elicit heritable, sex-linked oviposition preference in Pieris macdunnoughii."
+    }
+  ],
+  "species_gate": "At least two independent butterfly species with laboratory-feasible documented development on both a locally ancestral and introduced plant. Do NOT use lethally unsuitable novel hosts for multigeneration propagation.",
+  "recruitment_gate": "Multiple geographically separate source populations per butterfly species; independent maternal families within populations; final sample size selected from blinded survival/variance pilot.",
+  "permissions": "Only permitted laboratory/enclosure rearing; threatened/protected butterfly handling and host-plant manipulation require appropriate approvals. Do not remove natural invasive hosts experimentally without ecological safeguards.",
+  "randomization": {
+    "source": "Split siblings or independent maternal lines within population into randomized resource-history arms before treatment outcomes, balancing parents and batch",
+    "history_arms": [
+      "Two generations with native hosts only",
+      "Two generations with both native and introduced hosts, matched initial total edible biomass"
+    ],
+    "carryover_control": "A common standardized pre-assay adult holding period across history arms; randomize plant pot and tester placement",
+    "assay_design": "Within each randomized history arm, randomly assign replicated lines to current mixed-host condition or introduced-host-loss condition",
+    "current_arms": [
+      "Retention: 50% native and 50% established introduced food biomass",
+      "Loss: 100% native host biomass (replace introduced biomass with native biomass, keeping total edible biomass constant)"
+    ],
+    "controls": [
+      "plant developmental stage and phenotype",
+      "calendar window and adult age",
+      "total accessible edible biomass",
+      "female mating status and family",
+      "microclimate and enclosure geometry",
+      "predators/parasitoids or measured protection",
+      "maternal nutritional history and larval rearing crowding",
+      "host transplants handled/shammed consistently"
+    ],
+    "avoid": "Do not select only surviving mothers and call treatment effects survival-independent; retain initial assigned lines and attrition denominators"
+  },
+  "measurements": {
+    "primary": "Number of flight-capable adults produced per initially assigned mated female within fixed follow-up period; zero after entire-lineage extinction counts as zero",
+    "secondary": [
+      "probability of ancestral-host oviposition within first 48h",
+      "eggs per accessible native biomass",
+      "individual neonate-to-flight-capable eclosion",
+      "host-specific time to pupation",
+      "egg clustering, larval biomass, parasitoid fate",
+      "after-loss rebound in next generation if feasible"
+    ],
+    "unit": "maternal lineage nested in population and species, not eggs; plant and enclosure are treatment units where shared",
+    "timing": "History generations G1-G2 and prospective offspring G3-G4 as feasible, without post-hoc interval selection"
+  },
+  "estimand": {
+    "primary": "(E[Y | history=adopted,loss] - E[Y | history=adopted,retain]) - (E[Y | history=native,loss] - E[Y | history=native,retain])",
+    "interpretation": "Intention-to-treat causal interaction of randomized experimental history and randomized current composition, not a retrospective natural invasion effect",
+    "fit": "Prespecified negative-binomial/hurdle mixed model after a variance/zero audit blinded to treatment outcome; report raw means and population-stratified contrasts irrespective of significance",
+    "robustness": [
+      "leave-one-population-out",
+      "species-stratified sign and intervals",
+      "exclude introduced-host trials with demonstrated lethal physiological toxicity only per predefined eligibility",
+      "family/block bootstrap rather than egg bootstrap"
+    ],
+    "null": "No history×loss interaction under matched current edible biomass",
+    "positive": "Introduced-host history worsens viable offspring recovery after removal even though usable native biomass is held constant, consistently across independent populations and ideally both species",
+    "opposite": "Retained fallback or increased capacity following exposure is equally informative",
+    "mechanism_limits": "A 1–2-generation history effect can reflect learning or maternal carryover; do not claim heritable evolutionary change unless multigeneration common garden, pedigrees and/or reciprocal crosses identify inheritance."
+  },
+  "feasibility_milestones": [
+    "Confirm local native and introduced plants produce viable adult butterflies in multiple species",
+    "Confirm independent rearing and source identity",
+    "Pilot variance/attrition (no fabricated power)",
+    "Approve environmental permits and welfare",
+    "Freeze independent randomization and analysis before treatment",
+    "No hypothesis testing from static map in lieu of manipulation"
+  ],
+  "stop_rules": [
+    "If one/both host diets cannot reach flight-capable adulthood, multigeneration randomization invalid; stop or redesign and re-register",
+    "If treatment pot-stage or total edible biomass differs systematically, cannot attribute effect to history or functional fallback",
+    "If >1 species is not feasible, interpretation restricted to focal species",
+    "No cohort outcomes -> no demographic inference",
+    "No retrospective claim from short-term within-female egg-choice series"
+  ],
+  "linked_pilot": "docs/exploratory/EEDITHA_SEQUENTIAL_OVIPOSITION_DECISION_V01.md; exploratory short-term lag model failed the predictive gate"
+}
