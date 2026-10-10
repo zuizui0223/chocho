@@ -1,0 +1,32 @@
+name: source-audited monarch host×infection×temperature endpoints
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_original_monarch_survival_bridge_calibration.py"
+      - "tests/test_original_monarch_survival_bridge_calibration.py"
+      - ".github/workflows/original-monarch-survival-bridge-audit.yml"
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check source hash and unit invariants
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_original_monarch_survival_bridge_calibration.py
+      - name: Audit independent originally published 240-larva adult endpoints
+        run: |
+          python scripts/audit_original_monarch_survival_bridge_calibration.py --receipt results/monarch_original_240_source_audit_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monarch-original-adult-eclosion-source-calibration
+          path: results/monarch_original_240_source_audit_v01.json
+          retention-days: 30
