@@ -47,3 +47,16 @@ def test_invalid_slope_assumption_rejected():
         try:m.one_slope_expected_overlap_lower_bound(**data)
         except ValueError:pass
         else:raise AssertionError("invalid premise accepted")
+
+def test_site_intercept_heterogeneity_breaks_common_intercept_lower_bound():
+    x=m.site_intercept_noncompetition_counterexample()
+    assert x["printed_2026_original_margins_exactly_reproduced_in_hypothetical_realization"]=={
+        "N":875,"S":209,"A":129,"both":5}
+    assert 4.8<x["expected_both_in_model"]<5
+    assert x["not_a_verified_Korean_site_distribution"] is True
+    assert x["not_a_causal_competition_effect"] is True
+    for group in x["groups"]:
+        s=m.logistic(group["group_intercept_for_reported_OR_S"]+math.log(m.OR_S)*50)
+        a=m.logistic(group["group_intercept_for_reported_OR_A"]+math.log(m.OR_A)*50)
+        assert math.isclose(s,group["S"]/group["N"],rel_tol=0,abs_tol=1e-12)
+        assert math.isclose(a,group["A"]/group["N"],rel_tol=0,abs_tol=1e-12)
