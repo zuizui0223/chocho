@@ -1,0 +1,23 @@
+{
+  "schema": "chocho_melitaea_dynamic_backup_strict_forward_validation_v01",
+  "created_on": "2026-10-10",
+  "status": "METHODOLOGICAL_CORRECTION_FROZEN_BEFORE_INSPECTING_FIRST_OUTCOME_FIT",
+  "why": "Leave-one-year-out may train on records from later calendar years, so it is not a prospective hindcast. Preserve it as interpolation sensitivity, not the main scientific success gate.",
+  "primary_validation": "Rolling origin: year t=2010...2017, fit only eligible patch-year triples whose t_train<t, hence all their outcomes (at t_train+1) are known by t; predict binary nonoccupancy in t+1 using only covariates observed at or before t.",
+  "first_train_year": 2000,
+  "first_test_year": 2010,
+  "last_test_year": 2017,
+  "support": "Use exactly frozen 10,061 occupied consecutive patch-year triples, and only complete-case covariates or training-only imputation.",
+  "fixed_covariates": "Same baseline and interaction as MELITAEA_19YEAR_FALLBACK_FIT_ADDENDUM_V01.json; no response-driven hyperparameter adjustments.",
+  "report": [
+    "raw decline high/low count and risk within strict forward test only",
+    "forward year-by-year baseline and augmented log loss",
+    "forward overall logloss and Brier improvement",
+    "bootstrap by patch and year separately, 2000 draws",
+    "retain old leave-one-year-out results clearly labeled nonforward"
+  ],
+  "primary_pass": "forward gain >0, full patch bootstrap lower CI>0, full year bootstrap lower CI>0, and >=6 of 8 forward years show improvement",
+  "failure": "If not passed, do not call host-loss buffering a novel predictive result; no post-hoc year/window/cutoff searches.",
+  "scope": "observational next-year non-detection; no causal host removal, nonnative impacts or evolutionary history",
+  "GEB_PR38_unchanged": true
+}
