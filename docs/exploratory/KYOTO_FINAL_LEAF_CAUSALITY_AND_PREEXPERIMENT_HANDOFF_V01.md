@@ -37,6 +37,29 @@ Final ordinal host-food-remaining score
 
 It is methodologically invalid to match on, adjust for, or stratify by `final_food_remaining` as if it were a *baseline* cause of survival: it can itself be affected by native butterfly survival and is a post-treatment variable. This may produce post-treatment selection/collider bias. The original experiment's exact 15 density groups and only two cages per group do not fix this by adding more regressions.
 
+## 2a. Source-driven advance: measure the high-demand instars, not only remaining leaves
+
+The published article's own **Table 1** (original openly accessible [authors' PDF](https://www.ecology.kyoto-u.ac.jp/~ohgushi/ja/achievements/PDF/Ohgushi271.pdf)) gives original leaf consumption (dry mass per individual):
+
+| Species | instars 1–2 (mg) | instars 3–5 (mg) | total (mg) | fraction consumed during instars 3–5 |
+| --- | ---: | ---: | ---: | ---: |
+| *A. alcinous* | 21.66 | 1,003.23 | 1,024.89 | **97.9%** |
+| *S. montela* | 1.88 | 394.25 | 396.13 | **99.5%** |
+
+These are **published consumption measurements**, not standing leaf biomass or known starvation thresholds. The larvae in instars 1–2 were originally reared in groups of 10; the later-stage consumption estimates have reported SEs (approximately 39.56 mg for A and 9.10 mg for S).
+
+To locate the recipient's high-demand stage without inventing a vegetation time series, the actual MD5-identical `Hashimoto_and_Ohgushi_2023_larvaldata.csv` was independently checked through [GitHub Action 38035260979](https://github.com/zuizui0223/chocho/actions/runs/38035260979) (**2 software tests passed**). Of **30** cages, **24** initially included *A. alcinous*; late instars (3–5) appeared in original census records for **23**. The first observed late-instar day was **day 3 in 3 cages, day 5 in 14, day 7 in 6**. This is an observed census interval, not exact molt dates; the remaining one cage cannot be classified by mechanism from this count alone.
+
+**Practical change:** Start recording accessible *Aristolochia* tissue **before** day 3, throughout third to fifth instars and before pupation, adjusting the actual calendar after a source-independent pilot under the new conditions. The original raw `a1–a5` count columns describe larval stages, but no synchronous accessible leaf mass, age/chemistry or stage-specific starvation exposure is recorded.
+
+**Not new:** The 2023 original authors themselves explicitly suggested in the Discussion that added *S. montela* might leave more foliage at the end **because native larval survival fell and subsequent consumption declined**. This feedback is an already published interpretation, not a hypothesis discovered by our reanalysis. What remains empirically unresolved is whether an undetected stage-specific shortage ever occurred, or whether tissue quality/contact drove the negative interspecific effect.
+
+### Source-independent stage-aware experimental ledger validation
+
+The updated `KYOTO_FOOD_CLAMP_ANALYSIS_CONTRACT_V01.json` and `scripts/analyze_kyoto_food_clamp_outcomes.py` require each scheduled food-access observation to contain **living native larvae** and **living third–fifth instars**, accessible area, separately added accessible leaf area and both current/added leaf-age categories. The original ITT whole-cage estimand does **not** condition on survival to third instar; a cage in which all natives died earlier cannot be reclassified as evidence of adequate food. Source-independent synthetic tests of the ledger and randomized cohort integrity: [GitHub Action 38035377637](https://github.com/zuizui0223/chocho/actions/runs/38035377637), **10/10 successful**.
+
+A useful sham where feasible is to add *the same age and provenance of leaf material* in all four arms, making the additional leaves inaccessible behind matched perforated barriers in the natural-food arms and accessible in the clamp arms. This partially equalizes fresh-leaf arrival, odors and handling, but could still modify plant microclimate or larval movement; monitor those directly. The true experimental unit is one **entire cage** even when it contains multiple potted plants. The CSV column `plant_id` is a legacy name for that randomized cage ID.
+
 ## 3. Executable new randomized comparison
 
 Freeze a **2×2** factorial assignment before any recipient larvae enter cages:
@@ -63,7 +86,7 @@ The following work is executable **once genuine experimental measurements exist*
 - `KYOTO_FOOD_CLAMP_ANALYSIS_CONTRACT_V01.json` — prespecified observational unit, fates, attrition bounds, interaction and limitations.
 - `KYOTO_HIDDEN_BOTTLENECK_FIELD_SCHEMA_V01.md` — exact allocation, original cohort, scheduled resource-access, and adult-fate CSV field definitions.
 - `scripts/randomize_kyoto_bottleneck_factorial.py` — auditable, balanced, fixed-seed block randomization; **4/4 unit tests passed** in [run 38021938106](https://github.com/zuizui0223/chocho/actions/runs/38021938106).
-- `scripts/analyze_kyoto_food_clamp_outcomes.py` — source-blind randomized cage-level interaction, natural/clamped competitor effects separately, block bootstrap, objective repeated food-floor status, missing outcomes retained; **6/6 unit tests passed** in [run 38026863764](https://github.com/zuizui0223/chocho/actions/runs/38026863764).
+- `scripts/analyze_kyoto_food_clamp_outcomes.py` — source-blind randomized **whole-cage** interaction, natural/clamped competitor effects separately, block bootstrap, *stage-specific* repeated food-floor and leaf-age diagnostics, missing outcomes retained; **10/10 current tests passed** in [run 38035377637](https://github.com/zuizui0223/chocho/actions/runs/38035377637).
 - The latter reports correctly constructed worst-case missing-outcome bounds for an interaction with *both positive and negative coefficients*. Simply treating every unknown adult outcome as success is **not** necessarily the upper bound of such an interaction, and has been explicitly corrected.
 - These test fixtures are **synthetic for code integrity only**. They are NOT claimed to be observed butterfly outcomes or evidence of biological effects. No experimental cohort or statistical sample size has been invented.
 
