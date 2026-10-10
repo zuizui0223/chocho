@@ -1,0 +1,35 @@
+name: validate Kyoto food-clamp outcome analysis contract
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/KYOTO_FOOD_CLAMP_ANALYSIS_CONTRACT_V01.json"
+      - "scripts/analyze_kyoto_food_clamp_outcomes.py"
+      - "tests/test_kyoto_food_clamp_outcomes.py"
+      - ".github/workflows/kyoto-food-clamp-outcome-contract.yml"
+permissions:
+  contents: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate source-blind outcome analysis and missingness bounds
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_kyoto_food_clamp_outcomes.py
+      - name: Ensure no outcome results have been described as observed
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("docs/exploratory/KYOTO_FOOD_CLAMP_ANALYSIS_CONTRACT_V01.json").read_text())
+          assert j["status"]=="PREEXPERIMENT_DATA_AND_ANALYSIS_CONTRACT_NO_FIELD_DATA"
+          assert j["GEB_pr38_untouched"] is True
+          print("No native butterfly experimental outcomes were collected or simulated for scientific inference.")
+          PY
