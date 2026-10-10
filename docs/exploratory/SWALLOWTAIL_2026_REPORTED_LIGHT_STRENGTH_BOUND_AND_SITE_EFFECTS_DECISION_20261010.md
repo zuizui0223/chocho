@@ -1,5 +1,7 @@
 # What the published light-intensity odds ratios do and do not explain about larval host co-use
 
+> **Additional independent 2023 host-quality evidence (source verified 2026-10-10):** Jeong et al. *Frontiers in Plant Science*, DOI [10.3389/fpls.2023.1145363](https://doi.org/10.3389/fpls.2023.1145363), independently measured *A. contorta* **whole-plant ontogeny (1–3 y), season, leaf AAI/C/N and specialist butterfly performance**. July leaf AAI was 83.80/7.61/2.26 ng/mg from 1-/2-/3-y plants; *S. montela* growth showed published plant-age×season interaction (F=8.952) despite replacement of heavily eaten leaves. Thus light-only environmental sorting is not the only plausible host-context axis, and even abundant foliage may differ in quality. **These are already published single-specialist effects, not a new proof of co-occurrence causality, and do not identify the Kyoto A. debilis competition mechanism.** The same author's 2024 SNU thesis preceding the 2026 coexistence article is indexed with environmental- and C/N-related appendices but raw stem-level rows were not retrieved; see [source provenance and access gate](SWALLOWTAIL_REAL_DATA_SOURCE_DISCOVERY_AND_QUALITY_CONFOUNDING_20261010.md). Source article XML [verified in GitHub Action](https://github.com/zuizui0223/chocho/actions/runs/38058682846).
+
 **2026-10-10 | New mathematical conditional-sensitivity result; NO newly estimated ecological/competition effect.**  
 Branch: `exploration/realized-host-window-v01`. **GEB PR #38 unchanged.**
 
