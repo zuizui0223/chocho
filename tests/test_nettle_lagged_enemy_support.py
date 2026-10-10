@@ -13,9 +13,9 @@ spec.loader.exec_module(s)
 def synthetic():
     rows=[]
     for w,new in [(20,True),(21,False),(22,True)]:
-        for sp,n,k in [("Aglais urticae",10,1),("Aglais io",8,2),
-                        ("Araschnia levana",12 if new else 0,0)]:
-            if sp=="Araschnia levana" and not new:
+        for sp,n,k in [("au",10,1),("aio",8,2),
+                        ("alev",12 if new else 0,0)]:
+            if sp=="alev" and not new:
                 continue
             rows.append(dict(BMS_id="siteA",year="2017",week_ISO=str(w),butterfly_species=sp,
                              nb_larvae_in_lab=str(n),larvae_Sturmia_bella=str(k),
