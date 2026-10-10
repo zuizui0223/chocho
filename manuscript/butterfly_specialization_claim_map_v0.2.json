@@ -1,17 +1,39 @@
 {
   "schema": "chocho_butterfly_specialization_manuscript_claim_map_v0.2",
-  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_HOST_CONCENTRATION_AND_EQUIVALENCE_AUDIT",
+  "status": "WORKING_SUBMISSION_CLAIM_MAP_AFTER_RESOURCE_HOMOGENIZATION_AUDIT",
   "manuscript": "manuscript/butterfly_specialization_ecology_v0.2.md",
-  "title": "Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum",
+  "title": "Plant globalization expands and homogenizes butterfly larval-resource geography",
   "central_claim": {
-    "text": "Anthropogenic redistribution of larval host plants changes the geography of butterfly resource opportunity in a way that is only weakly captured by conventional family-level diet breadth. The added opportunity is large, concentrated among a minority of redistributed hosts, and partially aligned with contemporary butterfly occurrence.",
-    "support_type": "global resource reconstruction + unit-preserving host-contribution decomposition + diet-breadth precision/equivalence diagnostic + ceiling/regional/taxonomic/phylogenetic robustness + secondary species-cluster occurrence validation + FAO crop-host exclusion sensitivity",
+    "text": "Plant globalization changes both the amount and structure of butterfly larval-resource geography: introduced host ranges expand individual resource envelopes, homogenize regional resource assemblages and butterfly resource geography, and increase exact shared-host exposure among butterflies while known host identities are held fixed.",
+    "support_type": "global native-to-contemporary resource reconstruction + fixed-margin homogenization null + exact shared-host pair×region exposure + host-contribution concentration and removal stress + secondary occurrence validation + specialization and crop/phylogenetic sensitivities",
     "allowed": true,
-    "conceptual_advance": "The paper separates taxonomic interaction breadth from consumer-specific resource geography and treats redistribution of already-known interaction partners as a distinct global-change pathway for consumer biogeography.",
-    "butterfly_specific_contribution": "In butterflies, larval host-family breadth and the geography of larval resources are distinct dimensions of specialization under contemporary plant redistribution. Narrow-diet butterflies can gain substantial resource geography when their hosts are widely transported.",
-    "conservation_relevance": "For global-change vulnerability, taxonomic specialization and partner geography are distinct axes: two equally narrow-diet butterflies can differ in contemporary resource opportunity when their hosts have different redistribution histories."
+    "conceptual_advance": "The paper shows that redistribution of existing interaction partners can simultaneously create resource release for individual consumers and resource homogenization among consumers and regions without requiring new interaction identities.",
+    "butterfly_specific_contribution": "For butterflies, plant globalization increases larval-resource opportunity while also making resource environments more similar and expanding the geography over which host-sharing butterflies can encounter the same resources.",
+    "conservation_relevance": "The same redistribution that creates opportunity can create low-redundancy dependence on introduced hosts; local management should distinguish resource availability from host quality and validate replacement hosts before site-specific removal."
   },
   "claims": [
+    {
+      "id": "C0",
+      "claim": "Plant globalization homogenizes regional butterfly resource assemblages and butterfly resource geography beyond fixed-margin expectation.",
+      "status": "post-hoc primary ecological structure result",
+      "evidence": "239 butterflies; 355 WGSRPD3 regions with native baseline; 62,835 regional pairs; 28,441 butterfly pairs; 499 fixed-margin randomizations.",
+      "key_statistic": "Regional mean Jaccard 0.277→0.462 (+66.8%), fixed-margin null median 0.453, p=0.002. Butterfly resource-envelope mean Jaccard 0.222→0.328 (+47.4%), null median 0.321, p=0.002.",
+      "sources": [
+        "provenance/reviewer_defenses/results/butterfly_resource_homogenization_v0.1.json"
+      ],
+      "boundary": "Most raw homogenization is structurally expected from widespread resource addition; the observed excess over the conservative fixed-margin null is statistically resolved but modest."
+    },
+    {
+      "id": "C0b",
+      "claim": "Introduced host ranges increase the geography over which host-sharing butterflies share exact resources and create a low-redundancy added resource network.",
+      "status": "post-hoc ecological exposure and structural resilience result",
+      "evidence": "986 host-sharing butterfly pairs; 14,553 added butterfly×region units; 670 contributing hosts.",
+      "key_statistic": "Exact shared-host pair×region units 62,473→141,885 (+127.1%); 920/986 pairs gain new regions; 52.3% of novel pair×region units are between butterfly families. 58.9% of added butterfly×region units are supported by a single introduced host.",
+      "sources": [
+        "provenance/reviewer_defenses/results/butterfly_resource_overlap_resilience_v0.1.json"
+      ],
+      "boundary": "Shared-resource geography is potential co-use, not realized competition. Removal scenarios measure network dependency, not demographic effects or site-level management outcomes."
+    },
     {
       "id": "C1",
       "claim": "Anthropogenic redistribution of host plants broadly expands butterfly resource geography, while family-level diet breadth has little relationship to proportional gain.",
@@ -160,7 +182,10 @@
     "The near-zero diet-breadth slope is an artifact of Poaceae-feeding butterflies.",
     "Introduced host redistribution is beneficial for butterfly fitness.",
     "The study supports retaining invasive plants for butterfly conservation.",
-    "Resource-envelope expansion demonstrates successful colonization, persistence or population growth."
+    "Resource-envelope expansion demonstrates successful colonization, persistence or population growth.",
+    "Plant globalization increased realized interspecific competition among butterflies.",
+    "Higher shared-host geography proves competitive exclusion or reduced butterfly fitness.",
+    "The host-removal stress test predicts the demographic effect of local invasive-plant removal."
   ],
   "required_language": {
     "resource_geography": "Use reconstructed or potential resource opportunity, not realized butterfly range.",
@@ -177,14 +202,17 @@
     "diet_breadth_equivalence": "Use 'little relationship', 'near-zero point estimate', or 'largely independently'. State that the 49,999-bootstrap 95% CI is -0.111 to 0.128 and that a post-hoc ±0.10 TOST is narrowly inconclusive (p=0.078). Do not claim an exact zero effect or demonstrated ±0.10 equivalence.",
     "host_contribution_concentration": "Describe the decomposition as contribution-weighted and unit-preserving: 14,553 added butterfly×WGSRPD3 units are divided among contributing hosts. Species-level and genus-level concentration are descriptive main results; they identify which resources generate reconstructed opportunity, not why those plants were redistributed. Human-use categories of leading hosts may be mentioned only as an illustrative hypothesis; do not claim that agricultural use causes the concentration.",
     "poaceae_sensitivity": "Poaceae users may be described as contributing substantial absolute added geography, but the sensitivity shows they do not generate the near-zero diet-breadth slope. Do not infer that Poaceae redistribution caused butterfly range expansion.",
-    "novelty_gap": "Frame the gap as the mirror image of consumer niche expansion: prior work shows that broader host use can accompany consumer range expansion, host ranges can constrain consumers, introduced hosts can matter regionally, and introductions can homogenize interaction networks. Here host identities are held fixed analytically and the geography of those partners is allowed to change, quantifying the consumer-specific opportunity created by partner redistribution. Avoid unsupported 'first ever' wording.",
-    "importance": "Emphasize that moving interaction partners can reorganize consumer opportunity even when taxonomic interaction breadth is held fixed analytically. Static/native resource templates and specialist-generalist labels can therefore miss a distinct pathway of anthropogenic biogeographic change.",
+    "novelty_gap": "Frame the gap as whether globalization of one trophic level changes the structure of consumer resource space even when interaction identities are fixed. Prior work documents floral and interaction-network homogenization; this study tests resource-envelope homogenization and shared-resource exposure for consumers.",
+    "importance": "Emphasize the dual ecological consequence of partner redistribution: resource release for individual consumers and homogenization/shared-resource exposure at the community level.",
     "butterfly_anchor": "The manuscript must present butterflies as the biological subject, not merely as a demonstration system. Lead Discussion with what host redistribution changes about butterfly larval-host specialization and range opportunity; reserve cross-taxon generalization for the final implications section. The breadth of expansion across the five major butterfly families may be used descriptively to show the pattern is not confined to one lineage. Hesperiidae and Pieridae may be used as concrete examples that families with median host-family breadth of one still show widespread resource expansion.",
     "crop_host_sensitivity": "Describe WCVP introduced distributions as wild non-native records rather than cultivated acreage. Report crop exclusion only as a sensitivity: exact-binomial exclusion leaves +47.0% aggregate expansion and the conservative genus-expanded stress test +46.0%; do not revive within-butterfly portfolio-architecture claims.",
     "ruderal_non_crop_interpretation": "It is allowed to state that crop exclusion shows the pattern is broader than cultivated crop hosts and that disturbance-associated naturalization, pasture/turf, roadside/ruderal and escaped plants are plausible contributors. Do not quantify a 'weed effect' or claim that the residual 46–47% is caused by weeds, because non-crop hosts were not exhaustively classified by use class, habitat or introduction pathway.",
     "conservation_implication": "It is allowed to argue that risk assessment, restoration and invasive-plant removal should consider interaction-partner geography and current consumer dependence. Explicitly state that resource envelopes measure availability rather than host quality or fitness, do not recommend retaining invasive plants on the basis of this study, and note that WGSRPD3 is too coarse to support site-specific management decisions without locality-level validation.",
     "invasion_ecology": "Frame alien plants as redistributed interaction partners whose geography can propagate through pre-existing trophic links. Do not equate increased resource geography with a net positive invasion impact.",
-    "abstract_conclusion": "Do not say globalization responses depend on both interaction breadth and partner geography, because the primary result shows little relationship between family-level diet breadth and proportional gain. Use wording such as 'depend on partner geography, not only on interaction breadth.'"
+    "abstract_conclusion": "Do not say globalization responses depend on both interaction breadth and partner geography, because the primary result shows little relationship between family-level diet breadth and proportional gain. Use wording such as 'depend on partner geography, not only on interaction breadth.'",
+    "resource_homogenization": "Report both the large raw increase in resource similarity and the conservative fixed-margin null. State that most raw homogenization is expected from the amount of opportunity added, while the observed arrangement adds a modest but statistically resolved excess.",
+    "competition_exposure": "Use 'potential resource sharing', 'resource co-use' or 'competition exposure'. Do not claim realized competition without local abundance, host biomass, performance or demographic data. Resource filtering/co-occurrence is an explicit alternative.",
+    "removal_stress": "Describe targeted host removal as a structural dependency/redundancy scenario. Because hosts are ranked by observed contribution, do not present targeted-versus-random loss as an independent causal management test."
   },
   "figure_claim_mapping": {
     "Figure_1": [
@@ -195,7 +223,8 @@
       "C2"
     ],
     "Figure_3": [
-      "C1"
+      "C0",
+      "C0b"
     ],
     "Supplementary_Figure_S1": [
       "C4",
@@ -241,10 +270,13 @@
     "diet_breadth_equivalence": "complete; rho=0.008, bootstrap 95% CI -0.111 to 0.128; ±0.10 TOST p=0.078, so exact equivalence is not claimed",
     "figure_visual_audit": "Figure 1 three-panel redesign and Figure 3 regional-heterogeneity wording manually inspected; final Supplementary Figure S1 uses 'Primary' rather than version-history wording.",
     "poaceae_host_guild_sensitivity": "complete; excluding all 58 Poaceae users leaves rho=0.026 (n=181), and excluding 34 one-family Poaceae specialists leaves rho=0.013 (n=205)",
-    "novelty_framing": "complete; the manuscript positions partner redistribution as a distinct global-change pathway separating interaction breadth from partner geography, and links the butterfly result to invasion ecology without claiming a positive fitness effect of alien plants.",
+    "novelty_framing": "complete on ecological reframe branch; title/Abstract/Discussion center simultaneous resource release and homogenization rather than the specialist-generalist metric.",
     "butterfly_identity": "complete; title, Abstract, Results and Discussion retain butterfly-specific questions and results, with cross-taxon generalization confined to the final implications section.",
     "crop_host_sensitivity": "complete; compact Supplementary Table S7 reports expansion, expanded-species fraction, breadth–expansion rho and the number of host species accounting for half of added credit; structural portfolio panel omitted.",
     "ruderal_non_crop_interpretation": "complete as a bounded Discussion interpretation; supported by crop exclusion, WCVP introduced-status semantics and alien-plant literature, without adding a new causal or quantitative weed claim.",
-    "conservation_framing": "complete; Discussion distinguishes availability from fitness and derives an interaction-aware management implication without recommending retention of invasive plants."
+    "conservation_framing": "complete; Discussion distinguishes availability from fitness and derives an interaction-aware management implication without recommending retention of invasive plants.",
+    "resource_homogenization": "complete; regional Jaccard 0.277→0.462, fixed-margin p=0.002; butterfly resource-envelope Jaccard 0.222→0.328, fixed-margin p=0.002.",
+    "shared_resource_exposure": "complete; exact shared-host pair×region units +127.1%; 920/986 host-sharing pairs gain new regions; competition language bounded to potential exposure.",
+    "removal_stress": "complete as post-hoc structural scenario; 58.9% of added units single-host-supported; targeted top-38 removal loses 39.9% of added opportunity."
   }
 }

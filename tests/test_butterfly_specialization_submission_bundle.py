@@ -39,7 +39,7 @@ def test_blinded_v02_manuscript_has_geb_front_matter_and_limits():
 
     running = re.search(r"^\*\*Running title:\*\*\s*(.+)$", text, re.MULTILINE)
     assert running is not None
-    assert running.group(1).strip() == "Host redistribution and resource gain"
+    assert running.group(1).strip() == "Plant globalization and resource niches"
     assert len(running.group(1).strip()) < 40
 
     abstract_start = text.index("## Abstract")
@@ -93,8 +93,8 @@ def test_blinded_v02_manuscript_removes_identity_and_internal_history():
 
 def test_v02_title_page_cover_letter_and_checklist_are_synchronized():
     expected_title = (
-        "Anthropogenic host redistribution expands butterfly resource geography "
-        "across the specialization spectrum"
+        "Plant globalization expands and homogenizes "
+        "butterfly larval-resource geography"
     )
     title_page = (
         ROOT / "manuscript" / "butterfly_specialization_geb_title_page_template_v0.2.md"
@@ -208,6 +208,19 @@ def test_initial_submission_preflight_defers_public_archive_tasks():
     deferred = "\n".join(result["deferred_until_publication"]).lower()
 
     assert result["ready_for_initial_submission"] is False
+    # Only declarations / final author-facing work may block initial submission.
+    # Scientific, citation, anonymity, S9 source-ZIP and reproducibility issues
+    # must not be silently bundled under a generic "pending" status.
+    expected_human_blockers = {
+        "title-page author/affiliation/contact placeholders remain",
+        "CRediT contribution placeholders remain",
+        "acknowledgements placeholder remains",
+        "funding placeholder remains",
+        "conflict-of-interest placeholder remains",
+        "cover-letter corresponding-author placeholders remain",
+    }
+    assert set(result["blockers"]) == expected_human_blockers, result["blockers"]
+    assert "S9 source-data addendum is documented and provisioned in anonymous review artifact" in result["complete"]
     assert "title-page author/affiliation/contact placeholders remain" in result["blockers"]
     assert "credit contribution placeholders remain" in blockers
     assert "cover-letter corresponding-author placeholders remain" in result["blockers"]
@@ -274,3 +287,35 @@ def test_gbif_archival_download_total_and_si_title_are_final():
     assert "290 records used in the frozen analysis were no longer returned" in manuscript
     assert supplement.splitlines()[0] == "# Supplementary Information — butterfly resource geography"
     assert "v0.2" not in supplement.splitlines()[0]
+
+
+def test_s9_review_source_archive_is_listed_anonymized_and_packaged():
+    """A published S9 supplementary claim needs its actual source-data ZIP in review."""
+    root=ROOT
+    supplement=(root/"manuscript/butterfly_specialization_supplement_v0.2.md").read_text(encoding="utf-8")
+    blinded=(root/"manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md").read_text(encoding="utf-8")
+    renderer=(root/"scripts/render_butterfly_specialization_blinded_manuscript.py").read_text(encoding="utf-8")
+    manifest=json.loads((root/"manuscript/geb_initial_submission_manifest_v0.1.json").read_text(encoding="utf-8"))
+    workflow=(root/".github/workflows/build-anonymous-review-bundle.yml").read_text(encoding="utf-8")
+    assert "## Supplementary Table S9." in supplement
+    assert "Table S9 source-data and reproducibility addendum" in blinded
+    assert "Table S9 source-data and reproducibility addendum" in renderer
+    entry=[r for r in manifest["submission_files"] if r.get("generated_artifact")=="bce_clarke_anonymous_s9_reproducibility_v01.zip"]
+    assert len(entry)==1
+    assert entry[0]["order"]==6
+    assert "actions/download-artifact@v4" in workflow
+    assert "bce-clarke-anonymous-s9-review-addendum-v01" in workflow
+    assert "unzip -t dist/bce_clarke_anonymous_s9_reproducibility_v01.zip" in workflow
+    assert "(cd dist && sha256sum bce_clarke_anonymous_s9_reproducibility_v01.zip >> ANONYMOUS_BUNDLE_SHA256)" in workflow
+    assert "(cd dist && sha256sum -c ANONYMOUS_BUNDLE_SHA256)" in workflow
+
+    word_flow=(root/".github/workflows/build-blinded-review-docx.yml").read_text(encoding="utf-8")
+    support_docx="butterfly_specialization_GEB_supporting_information.docx"
+    si_entry=[r for r in manifest["submission_files"] if r.get("order")==4]
+    assert len(si_entry)==1
+    assert si_entry[0]["generated_artifact"]==support_docx
+    assert "scripts/build_butterfly_supporting_information_docx.py" in word_flow
+    assert f"dist/{support_docx}" in word_flow
+    assert "dist/SHA256SUMS" in word_flow
+
+

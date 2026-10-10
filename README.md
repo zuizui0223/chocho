@@ -1,27 +1,26 @@
-# chocho — Butterfly resource geography under host redistribution
+# chocho — Butterfly resource geography under plant globalization
 
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
-> **Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum**
+> **Plant globalization expands and homogenizes butterfly larval-resource geography**
 
 Target journal: *Global Ecology and Biogeography*.
 
 ## Scientific result
 
-The paper's butterfly-specific advance is to separate **larval host breadth** from **butterfly resource geography**. Previous work has linked butterfly diet breadth to consumer ranges, host distributions to consumer constraints, introduced plants to regional responses, and species introductions to biotic or interaction-network homogenization. This study asks the missing resource-side question: how much does moving already-known host plants change where a butterfly has access to resources?
+The paper asks whether plant globalization changes only the **amount** of butterfly larval-resource opportunity or also its **community structure**. Known butterfly–host identities are held fixed while host geography changes from native-only to contemporary distributions.
 
-The design holds known host identities fixed analytically and contrasts a native-host resource envelope with the envelope obtained after introduced host ranges are retained. The difference therefore isolates the geographic contribution of partner redistribution without requiring a change in recorded diet breadth.
+The current v0.2 evidence supports four linked ecological results:
 
-The current v0.2 claim map supports the following manuscript-order results:
+1. Introduced host ranges expand reconstructed resource opportunity for **206/239 butterflies**, increasing aggregate butterfly × WGSRPD3 coverage by **54.9%**.
+2. Plant redistribution **homogenizes resource geography**: mean Jaccard similarity among regional butterfly resource assemblages rises from **0.277 to 0.462 (+66.8%)**, and mean overlap among butterfly resource envelopes rises from **0.222 to 0.328 (+47.4%)**. Both exceed conservative fixed-margin null expectations (**p = 0.002**).
+3. Exact shared-host geography expands from **62,473 to 141,885 butterfly-pair × region units (+127.1%)**; **920/986** host-sharing butterfly pairs gain new shared-resource regions. This is potential resource co-use, not observed competition.
+4. A secondary occurrence analysis recovers **66/115** outside-native butterfly × region observations, linking some reconstructed resource opportunity to contemporary presence.
 
-1. Introduced host ranges expand reconstructed resource opportunity for **206/239 butterflies**, increasing aggregate butterfly × WGSRPD3 coverage by **54.9%**. Expansion occurs in every diet-breadth class and in **83.5–90.2%** of species within each of the five major butterfly families represented by at least 10 species.
-2. The **14,553 added butterfly × region units are strongly uneven across host plants**: 670 host species contribute, the top 10 account for 25.1%, the top 50 for 57.0%, and 38 species account for half.
-3. Host-family breadth has **little relationship to proportional expansion** (Spearman rho = 0.008; 49,999-bootstrap 95% CI -0.111 to 0.128). Removing all 58 butterflies with any Poaceae host leaves rho = 0.026 (n = 181), so redistributed grasses do not generate the weak diet-breadth slope. A strict post-hoc ±0.10 equivalence diagnostic remains narrowly inconclusive, so the paper does not claim an exact zero effect. FAO crop-host exclusion leaves the aggregate increase at **47.0%** under exact-binomial removal and **46.0%** under an intentionally over-conservative genus-expanded rule, with rho remaining near zero (**0.052–0.057**) and **37–38 host species** still accounting for half of added opportunity.
-4. In a secondary climate-stratified panel, introduced-host geography recovers **66/115 outside-native butterfly × region observations**, exceeding region-matched structural expectations and surviving species-level sensitivity checks.
-5. Within-butterfly portfolio-concentration gradients are largely explained by resolved host-species richness and are retained only as Supplementary structural diagnostics.
-6. Climate-associated filtering remains visible within contemporary resource opportunity, while the pre-specified prediction that broader diets weaken that filtering is **not supported** and remains imprecisely estimated.
+Added opportunity remains concentrated among host plants (38/670 species account for half), yet **58.9%** of added butterfly × region units are supported by only one contributing introduced host. Diet breadth is retained as a secondary modifier: family-level host breadth has little relationship to proportional expansion (rho = 0.008; bootstrap 95% CI -0.111 to 0.128).
 
-See `manuscript/butterfly_specialization_claim_map_v0.2.json` for the exact claim boundaries and source receipts.
+See `manuscript/butterfly_specialization_claim_map_v0.2.json` for exact claim boundaries, especially the distinction between resource sharing and realized competition.
+
 
 ## Repository boundary
 

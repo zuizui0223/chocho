@@ -16,11 +16,12 @@ This directory contains the submission-facing paper package and its scientific-c
 
 ## v0.2 evidence order
 
-1. introduced host distributions broadly expand butterfly resource geography (+54.9% aggregate species × region coverage), across every diet-breadth class and 83.5–90.2% of species in each major butterfly family; FAO crop-host exclusion retains +47.0% to +46.0% aggregate expansion under exact and deliberately over-conservative genus-expanded rules;
-2. added opportunity is strongly uneven across host plants: 38/670 species or 25/431 genera account for half of the 14,553 added butterfly × region units;
-3. proportional expansion has little relationship to family-level diet breadth (rho = 0.008; bootstrap 95% CI -0.111 to 0.128), while strict ±0.10 equivalence remains narrowly inconclusive;
-4. introduced host geography recovers butterfly occurrences beyond structural-overlap expectations and survives species-cluster and leave-one-out tests;
-5. within-butterfly portfolio-concentration gradients are retained only as Supplementary structural diagnostics; climate-associated filtering remains secondary and the pre-specified host-breadth release prediction is unsupported and imprecise.
+1. introduced host distributions expand butterfly resource geography (+54.9% aggregate butterfly × region coverage);
+2. regional butterfly resource assemblages become more similar (mean Jaccard 0.277→0.462) and butterfly resource envelopes overlap more (0.222→0.328), both beyond fixed-margin expectations;
+3. exact shared-host geography increases by 127.1%, creating broader potential resource co-use across butterfly lineages without demonstrating realized competition;
+4. added opportunity is concentrated among host plants but often non-redundant: 38/670 hosts account for half of fractional credit and 58.9% of added butterfly × region units are supported by a single introduced host;
+5. introduced host geography recovers contemporary butterfly occurrences beyond structural-overlap expectations; diet-breadth, phylogenetic, crop and climate analyses define secondary inference boundaries.
+
 
 ## Figures
 
@@ -28,10 +29,10 @@ The v0.2 manuscript uses three main figures plus one supplementary figure genera
 
 1. resource expansion across the specialization spectrum, the weak diet-breadth gradient, and cumulative concentration of added opportunity across host species and genera;
 2. secondary occurrence validation on the climate-stratified panel, structural-overlap nulls and leave-one-species-out robustness;
-3. ceiling and regional robustness of the specialization–expansion relationship;
+3. regional resource homogenization, butterfly resource-envelope overlap and exact shared-host geography;
 4. Supplementary Figure S1: climate filtering, geographic matching and effect-size precision.
 
-Host-contribution concentration is a main descriptive result. Within-butterfly portfolio architecture, network-prominence and matched-host attribution diagnostics are retained in the supplement and Discussion rather than the headline.
+Resource homogenization and exact shared-host exposure are main ecological results. Host-contribution concentration remains a main descriptive result; within-butterfly portfolio architecture, network-prominence and matched-host attribution diagnostics remain secondary.
 
 ## Previous v0.1 package
 
@@ -42,6 +43,6 @@ Submission-facing files remain independent of precursor-project history. Detaile
 
 ## Initial submission versus public archive
 
-For initial double-anonymous review, use the CI-built anonymous data-and-code ZIP as supplementary review material. The initial-submission gate is `scripts/submission_preflight.py`; it intentionally does not require a public DOI, public release tag or external reviewer URL.
+For initial double-anonymous review, download **both the main blinded DOCX and the separate Supporting Information DOCX** from the same GEB review-DOCX CI artifact. The Supporting Information DOCX is generated from `butterfly_specialization_supplement_v0.2.md` and contains native editable tables S1–S9; upload it separately. Then use the CI-built anonymous data-and-code ZIP as supplementary review material. Supplementary Table S9 also has a separate anonymous accepted-host crosswalk and null-model reproducibility ZIP; attach that ZIP alongside the main review archive. The S9 analysis is a Europe-derived, post-hoc source-knowledge sensitivity, not a correction to the frozen 239-species resource estimate. The initial-submission gate is `scripts/submission_preflight.py`; it intentionally does not require a public DOI, public release tag or external reviewer URL.
 
 The later public archival release remains governed by `scripts/release_preflight.py`.

@@ -7,11 +7,13 @@ from pathlib import Path
 
 
 LEGACY_RUNNING_TITLE = "Host redistribution and specialization"
-V02_RUNNING_TITLE = "Host redistribution and resource gain"
+V02_RUNNING_TITLE = "Plant globalization and resource niches"
 
 ANON_DATA_CODE = """## Data and Code Availability
 
 For double-anonymous peer review, the analysis code, frozen scientific protocols, de-identified result receipts and figure-source files needed to reproduce the reported analyses are supplied with this submission as an anonymized supplementary review archive.
+
+A separate anonymized Table S9 source-data and reproducibility addendum accompanies that archive, containing BCE/Clarke-derived candidate host-association records, WCVP taxon crosswalks and geographic/null-model sensitivity outputs. These are source-dependent literature summaries, not new independent field feeding observations.
 
 The large external datasets are obtained from their original providers (LepTraits, HOSTS, WCVP, GBIF, CHELSA and WGSRPD) using the versions, identifiers and query rules described in the Methods. The secondary occurrence validation used 53,434 GBIF occurrence records. An exact-ID archival download requested those same records (https://doi.org/10.15468/dl.pp5nc9); GBIF returned 53,144 records, indicating that 290 records used in the frozen analysis were no longer returned by GBIF at archival download time.
 
@@ -39,6 +41,7 @@ def render_blinded(text: str) -> str:
             if (
                 "Human redistribution of host plants expands butterfly resource geography" in title
                 or "Anthropogenic host redistribution expands butterfly resource geography" in title
+                or "Plant globalization expands and homogenizes butterfly larval-resource geography" in title
             )
             else LEGACY_RUNNING_TITLE
         )

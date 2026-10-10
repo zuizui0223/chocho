@@ -1,52 +1,40 @@
 # GEB initial-submission procedure
 
-Checked against the current *Global Ecology and Biogeography* author guidelines on 2026-10-02.
+Checked against the current [Global Ecology and Biogeography author guidelines](https://onlinelibrary.wiley.com/page/journal/14668238/homepage/forauthors.html) on **2026-10-10**, and aligned with `manuscript/geb_initial_submission_manifest_v0.1.json`.
 
-## What is required for initial peer review
+## Journal-facing requirements
 
-GEB uses double-anonymous review. The initial submission therefore separates the identifying title page from the blinded main manuscript.
+GEB offers free-format initial submission, but requires a **structured abstract**, **double-anonymous** review materials, a **separate identifying title page**, a **separately uploaded PDF cover letter**, and **supporting information in separate files**. The blinded main text must contain a Data and Code Availability Statement and continuous line numbering. Data and code must be available to reviewers; a stable public archive is required before publication. An anonymous source/data/code ZIP uploaded directly as supplementary review material is the chosen peer-review access route here.
 
-The journal requires data and code supporting the paper to be accessible during peer review. A stable public repository is required for publication, but peer-review access may be provided through supplementary materials. This repository therefore uses the already-tested anonymous review bundle as a file uploaded directly with the submission, rather than requiring an external anonymous reviewer URL.
+Do not put author names, identifying document properties, public repository URLs or identifying GitHub Actions URLs in files provided to anonymous reviewers. The separate title page and cover letter are identifying files handled by the journal editorial process.
 
 ## GBIF occurrence DOI — complete
 
-The 53,434 occurrence records used in the secondary occurrence validation were originally retrieved through the GBIF occurrence search API, so the historical API retrieval has no automatic DOI. The exact-record GBIF occurrence download has been created: **https://doi.org/10.15468/dl.pp5nc9** (download key `0008693-260928105237408`).
+The 53,434 frozen occurrence records were retrieved through the GBIF search API. An exact-ID archival download was requested and assigned [DOI 10.15468/dl.pp5nc9](https://doi.org/10.15468/dl.pp5nc9), download key `0008693-260928105237408`. GBIF returned 53,144 records on archival download, **290 fewer than the frozen analysis set**. This is disclosed in the blinded and unblinded Data and Code Availability sections. The DOI is **not an outstanding initial-submission blocker**.
 
-This DOI is recorded in both manuscript surfaces and cites the external occurrence data actually used; it is distinct from the public DOI for this study's code/reproducibility archive, which remains deferred until publication.
+## Six files to upload at initial submission
 
-## Upload order
+The authoritative six-item file inventory is `manuscript/geb_initial_submission_manifest_v0.1.json`.
 
-1. **Blinded main manuscript** — use the line-numbered DOCX produced by `.github/workflows/build-blinded-review-docx.yml`. Confirm that the document properties and visible text contain no author identity.
-2. **Identifying title page** — fill `manuscript/butterfly_specialization_geb_title_page_template_v0.2.md` with the final author list, affiliations, emails, ORCIDs, one corresponding author, CRediT contributions, acknowledgements, funding and conflict-of-interest statement.
-3. **Cover letter** — fill the corresponding-author signature in `manuscript/butterfly_specialization_geb_cover_letter_v0.2.md` and upload it separately as a PDF.
-4. **Supporting Information** — upload `manuscript/butterfly_specialization_supplement_v0.2.md` in the portal's supporting-information slot after rendering to the desired submission format.
-5. **Anonymous data-and-code review supplement** — upload the CI artifact `butterfly_specialization_anonymous_review_bundle.zip` produced by `.github/workflows/build-anonymous-review-bundle.yml`. Treat this as supplementary review material/data-code review archive.
+1. **Blinded main manuscript DOCX.** Use `butterfly_specialization_GEB_blinded_review.docx` from the latest successful `build-blinded-review-docx.yml` job for the final PR head. It has continuous line numbers and must be checked for authorship metadata.
+2. **Identifying title page.** Complete `manuscript/butterfly_specialization_geb_title_page_template_v0.2.md` with approved authors, affiliations, emails, relevant ORCIDs, exactly one corresponding author, CRediT, acknowledgements, funding and conflict-of-interest disclosures. Convert into the submission system's accepted editable file format.
+3. **Identifying cover letter PDF.** Complete `manuscript/butterfly_specialization_geb_cover_letter_v0.2.md`, especially the corresponding-author signature block; export separately to PDF. GEB asks for a journal-interest paragraph under 250 words.
+4. **Editable Supporting Information DOCX.** Upload `butterfly_specialization_GEB_supporting_information.docx` from the **same exact-head blinded review job**. It contains Tables S1–S9, rendered as 12 native Word tables; do not upload Markdown source in its place. The build checks its anonymous properties and page-extracted table text.
+5. **Primary anonymized reproducibility ZIP.** Upload `butterfly_specialization_anonymous_review_bundle.zip` from the successful exact-head `build-anonymous-review-bundle.yml` workflow as supplementary peer-review material.
+6. **Separate Table S9 anonymous source-addendum ZIP.** Upload `bce_clarke_anonymous_s9_reproducibility_v01.zip` from that **same workflow artifact**. It contains the candidate BCE/Clarke source links, WCVP taxonomic crosswalk and Level1 null-model sensitivity, with checksums. Do not merge or silently omit it.
 
-Do **not** expose the public GitHub repository in the blinded manuscript or anonymous bundle.
+**Figures:** The manuscript review builder embeds the main figures; the figure workflow also outputs PDF/PNG versions of three main figures and one supplementary figure. Upload the independent figure files only as required by the live submission portal; this does not replace any of the six manifest items.
 
-## Not required before the initial submission
+## Exact-head quality gate
 
-The following can be completed after peer review but before publication/public release:
+1. Complete author-specific information and obtain all coauthors' approval before submission.
+2. Run `python scripts/submission_preflight.py`. With the frozen scientific inputs, expected remaining blockers concern author list/affiliations/emails/ORCIDs, corresponding-author signature, CRediT roles, acknowledgements, funding and conflicts; the GBIF DOI and S9 supporting ZIP are already complete.
+3. Verify the final PR **head SHA** and require success at **that SHA** for the paper tests, blinded DOCX build, manuscript figures and anonymous-review-bundle workflows. If any file on the branch changes, re-check new exact-head artifacts rather than relying on an older green run.
+4. Download and **retain locally** the review DOCX, Supporting DOCX, figure files and **both** anonymous ZIPs with checksums. GitHub Actions artifacts are configured to expire after **30 days**. Upload files themselves rather than identifying links to GitHub.
+5. Inspect visible anonymity, accessibility, figure numbering and rendered Word tables; confirm upload slots and the journal portal's current prompts manually. CI cannot approve authorship or submit to the journal.
 
-- choosing and applying the public archive licence;
-- depositing the stable public data/code archive;
-- inserting the persistent public archive DOI;
-- creating/tagging the public `v1.0.0-butterfly` release.
+## Scientific freeze and later publication
 
-These remain requirements of the public/release workflow and are checked separately by `scripts/release_preflight.py`.
+The paper addresses reconstructed *potential* butterfly larval-resource geography, not observed competition, demographic rescue or butterfly community homogenization. Do not convert post-hoc exploratory link-identity, temporal or larval-performance results into confirmatory main-paper claims just to strengthen the submission. No additional scientific test is required to clear the existing submission gate.
 
-## Initial-submission gate
-
-Run:
-
-```bash
-python scripts/submission_preflight.py
-```
-
-This gate intentionally checks the journal-facing initial submission rather than the later public archival release. With the current repository state, the expected remaining blockers are the exact-record GBIF occurrence-download DOI plus author-specific metadata and declarations.
-
-After filling those items, rebuild the blinded DOCX and anonymous review bundle on the exact commit to be submitted and require all submission workflows to pass.
-
-## Scientific freeze
-
-No additional ecological analysis is required for submission. Do not reopen the unsupported climate-release hypothesis, the within-butterfly portfolio architecture, or response-driven predictor searches merely to clear submission metadata.
+Public repository deposit, stable public archive DOI, licence and `v1.0.0-butterfly` release/tag can be completed before publication, as documented in `docs/RELEASE_PROCEDURE.md` and `scripts/release_preflight.py`. This later release gate is separate from initial peer-review submission.

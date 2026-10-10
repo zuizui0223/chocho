@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_butterfly_resource_homogenization_v0.1",
+  "status": "SUCCESS_POSTHOC_RESOURCE_ASSEMBLAGE_HOMOGENIZATION",
+  "source_workflow_run": 37612135885,
+  "artifact_id": 11478935973,
+  "panel": {
+    "butterflies": 239,
+    "active_wgsrpd3_regions": 355,
+    "pairwise_region_comparisons": 62835,
+    "added_butterfly_x_region_units": 14553
+  },
+  "regional_resource_assemblage_similarity": {
+    "mean_pairwise_jaccard_native": 0.27698189773361664,
+    "mean_pairwise_jaccard_contemporary": 0.4620834004986041,
+    "relative_change": 0.6682801449465341,
+    "fixed_margin_null_median": 0.4534762210314019,
+    "fixed_margin_null_ci95": [
+      0.4533297299321847,
+      0.4536272462493615
+    ],
+    "p_greater_or_equal": 0.002
+  },
+  "butterfly_resource_geography_overlap": {
+    "pairs": 28441,
+    "mean_jaccard_native": 0.22237325689920187,
+    "mean_jaccard_contemporary": 0.3278808188864098,
+    "relative_change": 0.47446155827556535,
+    "fixed_margin_null_median": 0.32145344025121375,
+    "fixed_margin_null_ci95": [
+      0.3213554748617432,
+      0.3215590548107064
+    ],
+    "p_greater_or_equal": 0.002
+  },
+  "host_contribution_structure": {
+    "half_credit_hosts": 38,
+    "half_credit_share": 0.5056624499965091,
+    "half_credit_hosts_used_by_2plus_butterfly_families": 26,
+    "fraction_half_credit_from_2plus_family_hosts": 0.715332647035578,
+    "mean_region_jaccard_native": 0.27698189773361664,
+    "mean_region_jaccard_top38_only": 0.40581779437917886,
+    "mean_region_jaccard_remaining_hosts_only": 0.40358080132730945
+  },
+  "null_preserves": [
+    "each butterfly's number of added WGSRPD3 regions",
+    "each WGSRPD3 region's number of added butterfly resource opportunities",
+    "native butterfly×region resource incidences as structural exclusions"
+  ],
+  "claim_boundary": "Post-hoc analysis of reconstructed larval-resource opportunity. Homogenization is potential resource-assemblage similarity, not realized butterfly community homogenization. The fixed-margin excess is statistically resolved but small relative to the raw similarity increase, so most raw homogenization reflects the amount and regional distribution of added resource opportunity."
+}

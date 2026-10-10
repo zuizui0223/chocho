@@ -17,10 +17,10 @@ ANON_BUNDLE_WORKFLOW = ".github/workflows/build-anonymous-review-bundle.yml"
 ANON_BUNDLE_BUILDER = "scripts/build_anonymous_review_bundle.py"
 
 EXPECTED_TITLE = (
-    "Anthropogenic host redistribution expands butterfly resource geography "
-    "across the specialization spectrum"
+    "Plant globalization expands and homogenizes "
+    "butterfly larval-resource geography"
 )
-EXPECTED_RUNNING_TITLE = "Host redistribution and resource gain"
+EXPECTED_RUNNING_TITLE = "Plant globalization and resource niches"
 
 
 def words(text: str) -> int:
@@ -156,6 +156,44 @@ def inspect_initial_submission(root: Path = ROOT) -> dict[str, object]:
             complete.append(f"submission asset exists: {path}")
         else:
             blockers.append(f"submission asset missing: {path}")
+
+    si_workflow_file = root / ".github/workflows/build-blinded-review-docx.yml"
+    si_builder_file = root / "scripts/build_butterfly_supporting_information_docx.py"
+    if not si_workflow_file.is_file() or not si_builder_file.is_file():
+        blockers.append("editable Supporting Information Word builder or workflow missing")
+    else:
+        word_pipeline=si_workflow_file.read_text(encoding="utf-8")
+        si_manifest=root / "manuscript/geb_initial_submission_manifest_v0.1.json"
+        rows=json.loads(si_manifest.read_text(encoding="utf-8")).get("submission_files",[]) if si_manifest.is_file() else []
+        source_file=next((r for r in rows if r.get("order")==4),None)
+        if (not source_file or
+            source_file.get("generated_artifact")!="butterfly_specialization_GEB_supporting_information.docx" or
+            "--input-md manuscript/butterfly_specialization_supplement_v0.2.md" not in word_pipeline or
+            "dist/butterfly_specialization_GEB_supporting_information.docx" not in word_pipeline):
+            blockers.append("Supporting Information DOCX not mapped and generated from final supplement")
+        else:
+            complete.append("Supporting Information DOCX S1-S9 rendered separately from editable source")
+
+    supplement_text = (root / SUPPLEMENT).read_text(encoding="utf-8")
+    if "## Supplementary Table S9." in supplement_text:
+        workflow = (root / ANON_BUNDLE_WORKFLOW).read_text(encoding="utf-8")
+        manifest_path = root / "manuscript/geb_initial_submission_manifest_v0.1.json"
+        if not manifest_path.is_file():
+            blockers.append("S9 source-data submission manifest is missing")
+        else:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            s9_files = [
+                row for row in manifest.get("submission_files", [])
+                if row.get("generated_artifact") == "bce_clarke_anonymous_s9_reproducibility_v01.zip"
+            ]
+            if len(s9_files) != 1:
+                blockers.append("S9 separate anonymous source-data archive is absent from submission manifest")
+            elif "bce_clarke_anonymous_s9_reproducibility_v01.zip" not in workflow or "actions/download-artifact@v4" not in workflow:
+                blockers.append("S9 source-data ZIP is not provisioned by anonymous review workflow")
+            elif "Table S9 source-data and reproducibility addendum" not in blinded:
+                blockers.append("blinded data/code statement omits the separate S9 addendum")
+            else:
+                complete.append("S9 source-data addendum is documented and provisioned in anonymous review artifact")
 
     # A public DOI, public repository release/tag and external anonymous reviewer URL
     # are intentionally NOT initial-submission blockers. GEB permits data/code access

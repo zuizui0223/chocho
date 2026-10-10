@@ -46,8 +46,8 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     )
 
     expected_title = (
-        "Anthropogenic host redistribution expands butterfly resource geography "
-        "across the specialization spectrum"
+        "Plant globalization expands and homogenizes "
+        "butterfly larval-resource geography"
     )
     assert manuscript.splitlines()[0] == f"# {expected_title}"
     assert claim_map["title"] == expected_title
@@ -85,24 +85,20 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     ]
     assert reference_keys == sorted(reference_keys, key=str.casefold)
 
-    # The conceptual contribution must remain explicit in the current manuscript.
+    # The ecological contribution must remain explicit in the current manuscript.
     for literal in (
-        "butterfly-specific resource envelope",
-        "Taxonomic interaction breadth",
-        "Resource geography",
-        "Realized butterfly geography",
-        "Host identities were held fixed between the two envelopes",
-        "resource-side biogeography of butterfly specialization under globalization",
-        "Implications for invasion ecology, conservation and global-change biogeography",
-        "availability**, not host quality or fitness",
-        "which host it specializes on and how that host has been redistributed",
-        "interaction-aware management problem",
-        "depend on partner geography, not only on interaction breadth",
-        "coarse WGSRPD3 regional resolution used here",
-        "require locality-level validation before informing site-specific removal decisions",
-        "Braga, M. P. 2023",
-        "Yoon, S. & Read, Q. D. 2016",
-        "Abdala-Roberts, L.",
+        "resource release and resource homogenization",
+        "Plant globalization homogenizes regional resource assemblages",
+        "potential interspecific resource-sharing exposure",
+        "potential resource co-use, not realized competition",
+        "Exact shared-host butterfly-pair × region units increased",
+        "58.9%",
+        "resource filtering",
+        "interspecific resource competition",
+        "coarse global stress test",
+        "Nakadai et al. 2018",
+        "Braga 2023",
+        "Yoon & Read 2016",
     ):
         assert literal in manuscript
 
@@ -183,15 +179,16 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["recovered_units"] == 44
     assert occurrence["leave_one_out"]["pyrgus_communis_excluded"]["outside_units"] == 93
 
-    # Current main Results order: expansion/concentration -> diet breadth -> occurrence.
+    # Current main Results order: expansion -> homogenization -> shared exposure -> occurrence.
     result_headings = [
-        "### 3.1 Human redistribution broadly expands butterfly resource geography",
-        "### 3.2 Taxonomic diet breadth poorly predicts proportional resource gain",
-        "### 3.3 Added resource geography aligns with contemporary butterfly occurrence",
+        "### 3.1 Plant globalization expands butterfly resource geography through uneven host contributions",
+        "### 3.2 Plant globalization homogenizes regional resource assemblages and butterfly resource geography",
+        "### 3.3 Introduced hosts expand shared-resource exposure and create a low-redundancy resource network",
+        "### 3.4 Added resource geography aligns with contemporary butterfly occurrence",
     ]
     positions = [manuscript.index(h) for h in result_headings]
     assert positions == sorted(positions)
-    assert "### 3.4 Secondary climate analysis" not in manuscript
+    assert "### 3.5 Secondary climate analysis" not in manuscript
     assert "### 4.3 Resource opportunity is filtered before realization" not in manuscript
 
     supplement = (
@@ -200,6 +197,17 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     assert "## Supplementary Methods S1. Climate filtering within contemporary resource opportunity" in supplement
     assert "## Supplementary Table S5. Climate-distance sensitivity and effect-size precision" in supplement
     assert "## Supplementary Table S7. Crop-host exclusion sensitivity" in supplement
+    assert "## Supplementary Table S8. Resource homogenization, shared-resource exposure and host-removal stress" in supplement
+    assert "## Supplementary Table S9. Host-interaction knowledge sensitivity and resource homogenization" in supplement
+    assert "Clarke, H. E. 2024. A checklist of European butterfly larval foodplants." in manuscript
+    assert "https://doi.org/10.1002/ece3.10834" in manuscript
+    assert "10.1002/ece3.10834" in supplement
+    assert "54.9%" in supplement
+    assert "50.1%" in supplement
+    assert "+0.003616" in supplement
+    assert "+0.003436" in supplement
+    assert "one-direction source-completeness sensitivity" in supplement
+    assert "not a globally corrected effect estimate" in supplement
     assert "47.0%" in supplement
     assert "46.0%" in supplement
     assert "| 0.052 | 38 |" in supplement
@@ -210,11 +218,12 @@ def test_current_v02_manuscript_bundle_is_internally_consistent():
     for literal in (
         "**Figure 1. Anthropogenic host redistribution expands butterfly resource geography across specialization classes and through concentrated host contributions.**",
         "**Figure 2. Introduced host geography recovers butterfly occurrences beyond structural overlap expectations.**",
-        "**Figure 3. Finite-support diet-breadth associations remain weak while regional associations are heterogeneous.**",
+        "**Figure 3. Plant globalization homogenizes butterfly resource geography and increases shared-resource exposure.**",
         "**Supplementary Figure S1. Climate-associated filtering persists after geographic controls, whereas the predicted host-breadth release is unsupported.**",
     ):
         assert literal in manuscript
     assert claim_map["figure_claim_mapping"]["Figure_1"] == ["C1", "C1b"]
+    assert claim_map["figure_claim_mapping"]["Figure_3"] == ["C0", "C0b"]
 
     # Submission-facing text must not retain development/review-history language.
     lowered = manuscript.lower()
@@ -240,6 +249,8 @@ def test_current_v02_claim_map_preserves_layered_inference_boundaries():
     claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.2.json")
     claims = {row["id"]: row for row in claim_map["claims"]}
 
+    assert "homogenizes regional butterfly resource assemblages" in claims["C0"]["claim"]
+    assert "share exact resources" in claims["C0b"]["claim"]
     assert "little relationship" in claims["C1"]["claim"]
     assert claims["C1b"]["status"].startswith("post-hoc descriptive decomposition")
     assert claims["C1b"]["allowed_use"].startswith(
@@ -254,24 +265,25 @@ def test_current_v02_claim_map_preserves_layered_inference_boundaries():
     assert "unit-preserving" in language["host_contribution_concentration"]
     assert "fixed Brownian" in language["phylogeny"]
     assert "Discussion/SI" in language["host_prominence"]
+    assert "fixed-margin" in language["resource_homogenization"]
+    assert "realized competition" in language["competition_exposure"]
+    assert "structural dependency/redundancy" in language["removal_stress"]
 
 
-def test_ruderal_interpretation_is_bounded():
+def test_invasion_and_competition_interpretation_is_bounded():
     manuscript = (
         ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
     ).read_text(encoding="utf-8")
     claim_map = _json("manuscript/butterfly_specialization_claim_map_v0.2.json")
 
-    assert "the pattern was not reducible to crops" in manuscript.lower()
-    assert "roadside/ruderal" in manuscript
-    assert "disturbance and propagule pressure" in manuscript
-    assert "cannot be partitioned quantitatively into weeds" in manuscript
-    assert "Lázaro-Lobo & Ervin 2019" in manuscript
-    assert "van Kleunen et al. 2018" in manuscript
-    assert "caused by weeds" not in manuscript.lower()
-    boundary = claim_map["required_language"]["ruderal_non_crop_interpretation"]
-    assert "Do not quantify a 'weed effect'" in boundary
-
+    assert "do **not** demonstrate stronger competition" in manuscript
+    assert "resource filtering" in manuscript
+    assert "local abundance and performance" in manuscript.lower()
+    assert "ecological traps" in manuscript
+    assert "not an argument for retaining invasive plants" in manuscript
+    assert "site-level management" in manuscript
+    assert "realized competition" in claim_map["required_language"]["competition_exposure"]
+    assert "structural dependency/redundancy" in claim_map["required_language"]["removal_stress"]
 
 def test_submission_citations_cover_figures_supplement_and_external_data():
     manuscript = (
@@ -289,6 +301,7 @@ def test_submission_citations_cover_figures_supplement_and_external_data():
         "Fig. 2b",
         "Fig. 3a",
         "Fig. 3b",
+        "Fig. 3c",
         "Fig. S1",
         "Supplementary Table S1",
         "Supplementary Table S2",
@@ -297,6 +310,8 @@ def test_submission_citations_cover_figures_supplement_and_external_data():
         "Supplementary Table S5",
         "Supplementary Table S6",
         "Supplementary Table S7",
+        "Supplementary Table S8",
+        "Supplementary Table S9",
         "(GBIF.org 2026)",
         "(Karger et al. 2017, 2021)",
     ):
@@ -306,3 +321,16 @@ def test_submission_citations_cover_figures_supplement_and_external_data():
     assert "## References" in manuscript
     assert "secondary in v0.2" not in supplement
     assert "shown as Fig. S1" in supplement
+
+
+def test_host_fallback_is_population_specific_and_not_a_demographic_estimate():
+    manuscript = (
+        ROOT / "manuscript" / "butterfly_specialization_ecology_v0.2.md"
+    ).read_text(encoding="utf-8")
+    assert "mapped host redundancy does not ensure functional fallback" in manuscript
+    assert "Singer & Parmesan 2018" in manuscript
+    assert "Haan et al. 2021" in manuscript
+    assert "although ancestral *Collinsia* remained locally available" in manuscript
+    assert "The targeted-removal contrast is structural, not causal" in manuscript
+    assert "Singer, M. C. & Parmesan, C. 2018." in manuscript
+    assert "Haan, N. L., Bowers, M. D. & Bakker, J. D. 2021." in manuscript

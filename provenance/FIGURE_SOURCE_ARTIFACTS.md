@@ -10,7 +10,7 @@ Current figure-source tables include:
 - `data/frozen/figure_sources/occurrence_resource_validation_species.csv`
 - `data/frozen/figure_sources/climate_distance_sensitivity_species.csv`
 
-Current figure-relevant receipts include the host-contribution concentration, matched/host-bias diagnostics, occurrence null/robustness, ceiling/regional sensitivity and climate-effect JSON files under `provenance/reviewer_defenses/results/`.
+Current figure-relevant receipts include host-contribution concentration, resource homogenization, shared-resource overlap/resilience, occurrence null/robustness and climate-effect JSON files under `provenance/reviewer_defenses/results/`.
 
 ## Historical v0.1 reconstruction sources
 

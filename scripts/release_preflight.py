@@ -16,8 +16,8 @@ CURRENT_TITLE_PAGE = "manuscript/butterfly_specialization_geb_title_page_templat
 CURRENT_BLINDED = "manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md"
 CURRENT_CLAIM_MAP = "manuscript/butterfly_specialization_claim_map_v0.2.json"
 EXPECTED_TITLE = (
-    "Anthropogenic host redistribution expands butterfly resource geography "
-    "across the specialization spectrum"
+    "Plant globalization expands and homogenizes "
+    "butterfly larval-resource geography"
 )
 
 
