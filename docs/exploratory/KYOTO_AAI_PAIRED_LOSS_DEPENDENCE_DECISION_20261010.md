@@ -1,5 +1,7 @@
 # 京都アゲハ2種・AAI試験：欠測が葉ペア内で集中することを原データで確認
 
+> **Follow-up source-format correction (2026-10-10):** All seven original paired joint losses are in source groups with simple `l.id` records; 11 other source groups have comma-composite IDs. Full-cohort baseline initial leaf area is smaller in joint-loss groups (6.09 versus 9.17; source-strain conditional p=0.0057), but within the 19 *single-ID source groups* it is 6.09 versus 6.82 and the same source-strain conditional test is **p=0.2207**. This is an exploratory, posthoc necessary confounding check; **do not claim leaf size caused joint loss**, nor use the whole-cohort p-value alone. See [final stop decision](KYOTO_AAI_PRETREATMENT_ATTRITION_FINAL_STOP_20261010.md). The overlap signal is a paired observation pattern, **not** an identified plant-chemical mechanism.
+
 **2026-10-10 | 実際に実行した新しい原データ監査・探索的統計診断 | 新しい植物化学生態学の因果効果は未発見**
 
 ## 何がデータで識別できたか
