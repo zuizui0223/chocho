@@ -1,0 +1,31 @@
+name: butterfly shared Plantago original feeding source audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/SHARED_HOST_PAIR_FIELD_EVIDENCE_GATE_V01.json"
+      - "scripts/audit_shared_host_pair_globi_evidence.py"
+      - "tests/test_shared_host_pair_globi_evidence.py"
+      - ".github/workflows/shared-host-pair-globi-evidence.yml"
+permissions:
+  contents: read
+jobs:
+  field-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest==8.3.4
+      - name: Check exact larval stage, source, plant and taxonomic filters
+        run: python -m pytest -q tests/test_shared_host_pair_globi_evidence.py
+      - name: Ask independent GloBI for candidate observation-level sources
+        run: python scripts/audit_shared_host_pair_globi_evidence.py --receipt results/shared_host_pair_field_evidence_gate_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shared-host-butterfly-gloBI-source-gate
+          path: results/shared_host_pair_field_evidence_gate_v01.json
+          retention-days: 30
