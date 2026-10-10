@@ -1,0 +1,33 @@
+name: independent nettle butterfly delayed parasitoid feasibility
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/NETTLE_DELAYED_PARASITOID_PREDICTION_PROTOCOL_V01.json"
+      - "scripts/audit_nettle_lagged_enemy_support.py"
+      - "tests/test_nettle_lagged_enemy_support.py"
+      - ".github/workflows/nettle-delayed-enemy-support.yml"
+permissions:
+  contents: read
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original raw source chronology integrity
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_nettle_lagged_enemy_support.py
+      - name: Count actual prior-occasion exposure and valid parasitism records
+        run: |
+          python scripts/audit_nettle_lagged_enemy_support.py --receipt results/nettle_lagged_enemy_support_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: original-nettle-lagged-enemy-support-v01
+          path: results/nettle_lagged_enemy_support_v01.json
+          retention-days: 30
