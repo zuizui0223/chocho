@@ -1,0 +1,76 @@
+{
+  "schema": "chocho_kyoto_competition_nonresource_mechanism_protocol_v01",
+  "created": "2026-10-10",
+  "status": "EXPERIMENT_PROPOSAL_FROZEN_BEFORE_ANY_NEW_EXPERIMENTAL_RESPONSE; NO EFFECT ESTIMATED",
+  "primary_question": "Does the introduced butterfly Sericinus montela suppress native Atrophaneura alcinous via a food-quantity-independent change in the shared native host Aristolochia debilis, direct interference, or both?",
+  "key_published_evidence": {
+    "reference": "Hashimoto & Ohgushi 2023 Ecology and Evolution doi:10.1002/ece3.10164",
+    "finding": "S. montela initial density lowers A. alcinous survival and delays development while final food remaining is not correspondingly decreased; potential plant quality or direct interference mechanism left unresolved",
+    "prior_controls": "2017 regrown leaves after past herbivory did not reduce measured larval growth; separate AAI chemical application in 2023 did not affect short-term feeding/growth",
+    "research_novelty_not_claimed": [
+      "nonnative butterfly harm",
+      "asymmetric interspecific competition",
+      "plant regrowth",
+      "sequence of herbivore attack",
+      "induced defense chemistry",
+      "shared host parasitoid interactions"
+    ],
+    "independent_pilot_source": "Original Figshare 23170898 validated: 30 cages, 15 randomized initial density combinations × two cages, 690 larval cage-date observations (=23 per cage), 120 terminal ordinal plant-remaining observations (=4 plants per cage, NOT four dates)."
+  },
+  "primary_design": {
+    "experimental_unit": "independently randomized, individually tracked potted A. debilis plant/enclosure; donor larvae within plants never counted as independent plants",
+    "phase1": "Donor-exposure preconditioning, donor removed BEFORE recipient assay. Randomize original host plants into four matched-target-treatment histories.",
+    "history_arms": [
+      "no-donor sham handling of undamaged plant",
+      "standardized mechanical herbivory matching the leaf-area removed from donor plants",
+      "Sericinus montela early-instar donor feeding with independently measured damage",
+      "Atrophaneura alcinous donor feeding with independently measured damage"
+    ],
+    "damage_matching": "Prespecify a modest biologically feasible leaf-area-loss band from a BLINDED pilot. Explicitly measure tissue loss and accessible live food at recipient placement and throughout recipient feeding, not only one initial census. Matching must not be achieved by selecting plants after knowing recipient outcomes.",
+    "recipient_assay": "After donor removal, transfer independent newly hatched recipient larvae onto assigned plants in standardized no-contact individual enclosures. Pilot first with focal A. alcinous, then replicate on S. montela as recipient and independently across source populations.",
+    "short_window_control": "Pre-specify early post-donor window (e.g. 24h) versus a delayed window after regrowth if feasible; duration selected before any recipient outcome and measured by plant stage, not optimized later.",
+    "outcomes": [
+      "Proportion reaching pupation per initial recipient cohort",
+      "Successful adult eclosion including zeroes",
+      "Development time; competing risks of death versus pupation",
+      "Edible biomass trajectory and leaf age",
+      "Plant chemical/nutrition profile measured independently, not chosen as posthoc significant marker"
+    ],
+    "baseline": "Sham and mechanical handling matched to distinguish reduced leaf amount, generic wounding and species-specific prior feeding",
+    "primary_estimand": "E[adult_eclosion | recipient=A.alcinous, S.montela preconditioning] − E[adult_eclosion | recipient=A.alcinous, damage-matched mechanical control], with original randomized plant as unit",
+    "secondary_estimand": "[Sm-conditioned − mechanical for A.alcinous] − [Sm-conditioned − mechanical for S.montela], if both recipient species and independent plants are replicated",
+    "interpretation": "Negative primary effect despite matched accessible food is evidence for a history-mediated effect, not automatically induced defense chemistry; donor residues, microbes or handling could mediate it.",
+    "statistical_analysis": "Raw treatment-specific plant-level viable adult successes per assigned larvae, predeclared hierarchical binomial count model with independent plant randomization and population/assay batch structure. Report absolute risks and CIs. No pseudo-replication of larvae and no conditioning on survivors.",
+    "no_claims": [
+      "plant globalization benefit from consumer invasion",
+      "plant-defense molecule causality without chemical manipulation",
+      "adaptive evolutionary change",
+      "demographic rescue from pupation alone"
+    ]
+  },
+  "stage2_mechanistic_discrimination": {
+    "trigger": "Phase1 reveals a predeclared nonzero Sm-conditioning versus matched-mechanical effect on A.alcinous across independent experimental blocks",
+    "plant_tissue_cross_over": "Randomize a separate clean-recipient assay to equal edible tissue from Sm-preconditioned versus control plants under identical container handling; checks whether effect follows consumed tissue rather than physical co-presence",
+    "physical_contact_test": "Separately randomize live Sm presence in shared arena versus barrier-separated presence, with replenished equal accessible food and sham control, while verifying real contacts rather than treating segregation as infection control",
+    "chemical_or_microbe_target": "Mechanism-specific molecular/metabolite/microbial comparisons require separate measurement, contamination and manipulation controls. Correlation with an untargeted chemical feature alone does not prove mediating cause.",
+    "interpretation": "Only a positive tissue-associated effect in competitor-free recipient trials supports a plant/tissue-associated pathway. Only a direct-contact manipulation identifies contact-dependent interference. A mixture can coexist."
+  },
+  "falsification_and_stop": [
+    "If apparent suppression disappears after matching edible biomass and leaf developmental stage, classify as resource-quantity/quality-context effect, not donor-history mechanism.",
+    "If Sm and generic mechanical damage have the same effects, do not claim Sm-specific induction.",
+    "If historical conditioning has no effect but live direct-contact treatment does, prioritize behavioral interference instead of a plant-mediated process.",
+    "If no independently replicated adult eclosion or pupation outcome, do not claim demographic suppression.",
+    "If plant species or site lineage not replicated, restrict claim to A.debilis in focal experimental population.",
+    "No posthoc redefinition of conditioning interval, herbivore dose, endpoint or leaf-chemistry marker after seeing outcome."
+  ],
+  "sources": [
+    "Hashimoto & Ohgushi 2017 doi:10.1007/s10144-016-0568-8",
+    "Hashimoto & Ohgushi 2023 doi:10.1002/ece3.10164",
+    "Hashimoto & Ohgushi 2012 ESJ59 P1-196A (temporal regrowth hypothesis already stated)",
+    "Erb et al. 2011 doi:10.1111/j.1365-2745.2010.01757.x (arrival sequence prior art)",
+    "Park et al. 2025 doi:10.1002/ece3.71175 (related A.contorta/Sericinus VOC-parasitoid mechanism, not proof in A.debilis)"
+  ],
+  "experimental_feasibility": "Do not set numerical independent plant sample size until a blinded independent-plant mortality/variance pilot and host material availability audit. Check ethical, collecting, quarantine and invasive butterfly containment permissions prior to any rearing, transfers, or releases.",
+  "bibliographic_limit": "Even a positive one-system result is a mechanistic completion of a known case, not a general or Nature-class law about botanical invasions.",
+  "gEB_PR38_untouched": true
+}
