@@ -1,0 +1,38 @@
+name: exploratory monarch experience-to-performance source audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - exploration/realized-host-window-v01
+    paths:
+      - "docs/exploratory/EXPERIENCE_PERFORMANCE_SOURCE_GATE_PROTOCOL_V01.json"
+      - "scripts/audit_experience_performance_sources.py"
+      - "tests/test_experience_performance_sources.py"
+      - ".github/workflows/experience-performance-source-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run source identity and conceptual tests
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_experience_performance_sources.py
+      - name: Attempt exact original source files and record status
+        run: |
+          python scripts/audit_experience_performance_sources.py --receipt results/experience_performance_source_access_v01.json
+      - name: Upload source-byte access receipt only
+        uses: actions/upload-artifact@v4
+        with:
+          name: experience-performance-source-access-v01
+          path: results/experience_performance_source_access_v01.json
+          retention-days: 30
