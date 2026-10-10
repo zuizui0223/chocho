@@ -1,0 +1,48 @@
+{
+  "schema": "chocho_kyoto_temporal_resource_regrowth_gate_v01",
+  "date": "2026-10-10",
+  "state": "FROZEN_BEFORE_FIGSHARE_ROW_LEVEL_SOURCE_INSPECTION",
+  "source": {
+    "paper": "Hashimoto & Ohgushi (2023) Ecology and Evolution, doi:10.1002/ece3.10164",
+    "data": "Figshare article 23170898, doi:10.6084/m9.figshare.23170898",
+    "species": [
+      "Atrophaneura alcinous (native butterfly in Japan)",
+      "Sericinus montela (introduced butterfly in Japan)"
+    ],
+    "shared_native_host": "Aristolochia debilis (native host plant)",
+    "past_studies": [
+      "Hashimoto & Ohgushi 2017, Population Ecology, doi:10.1007/s10144-016-0568-8, regrowth and repeated herbivory",
+      "Hashimoto & Ohgushi 2023, Ecol Evol, doi:10.1002/ece3.10164, competitor density, 2.6x food demand and asymmetric survival",
+      "Hashimoto & Ohgushi 2012 ESJ59 poster, temporal/spatial plant regeneration already hypothesized"
+    ]
+  },
+  "distinct_hypothesis": "At equal total supplied edible host biomass, does timing of plant regrowth (resource continuity versus an early or late pulse) modify or reverse the asymmetric effect of one butterfly species on the other's successfully emerged adult offspring?",
+  "preexisting_data_gate": {
+    "original_files": [
+      "Hashimoto_and_Ohgushi_2023_larvaldata.csv",
+      "Hashimoto_and_Ohgushi_2023_plantdata.csv"
+    ],
+    "required": [
+      "experimental plant or cage ID",
+      "two-species starting larval densities per cage",
+      "repeated date/order",
+      "plant defoliation or measured live biomass over time",
+      "larval survival/time to pupation",
+      "experimental resource-replenishment or regrowth-timing assignment"
+    ],
+    "interpretation": [
+      "If repeated biomass curves exist without randomized timing, source supports only descriptive feasibility, not causal manipulation of resource pulses",
+      "If stage-specific larval survival is observed, time-specific correlation with regrowth remains potential reverse causation because food demand causes defoliation",
+      "A plant-accessory effect by species identity is prior art and cannot be called new"
+    ],
+    "source_stop": "Without random or quasi-exogenous regrowth timing with matched cumulative edible biomass, do not infer plant temporal compensation as causal competition mechanism from reanalysis."
+  },
+  "future_experiment": {
+    "design": "2 focal butterfly species × species-specific competitor presence/density × plant supply timing under matched total edible biomass, with predeclared pulse regime and alternative continuous-supply/sham handling controls",
+    "response": "flight-capable adult production and developmental time per original focal cohort, including deaths and pupal failure",
+    "replicate": "independently randomized plant/enclosure, with populations/years and maternal families separately represented",
+    "mechanism": "Disentangle regrowth/leaf age/plant quality from amount; experimental timing effect ≠ introduced-plant origin",
+    "novelty": "A dynamic interaction-mediated butterfly effect at equal season-total edible host resource would differ from 2017 host regrowth and 2023 static competitor density studies, if genuinely independent manipulation and replication demonstrate it."
+  },
+  "gEB_PR38_untouched": true
+}
