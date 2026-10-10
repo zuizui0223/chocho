@@ -1,0 +1,32 @@
+name: Kyoto source-only larval instar demand audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_kyoto_stage_demand_structure.py"
+      - "tests/test_kyoto_stage_demand_structure.py"
+      - ".github/workflows/kyoto-original-stage-demand-audit.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test source and instar chronology without biological outcomes
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_kyoto_stage_demand_structure.py
+      - name: Inspect original cage-level instar onset and report source availability only
+        run: |
+          python scripts/audit_kyoto_stage_demand_structure.py --receipt results/kyoto_original_instar_source_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-original-instar-source-structure-v01
+          path: results/kyoto_original_instar_source_v01.json
+          retention-days: 30
