@@ -12,8 +12,8 @@ from urllib.request import Request,urlopen
 
 URL="https://ndownloader.figshare.com/files/41146991"
 MD5="0e9ff924e4ae38cb78529ec540887c42"
-COLUMNS=["plot.no","treat.no","s.density","a.density","date","day",
-         "total.s","total.a","s1","s2","s3","s4","s5",
+COLUMNS=["plot.no","treat.no","s.density","a.density","date",
+         "total.s","total.a","day","s1","s2","s3","s4","s5",
          "spp","sp","cumul.sp","a1","a2","a3","a4","a5",
          "app","ap","cumul.ap"]
 
