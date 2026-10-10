@@ -79,6 +79,45 @@ def fisher_two_sided_pair_dependence(n, n_a_loss, n_c_loss, both_loss):
     return min(1.0,sum(chance(x) for x in possible if chance(x)<=observed+1e-14))
 
 
+def conditional_strain_overlap_tail(pair_groups):
+    """Exact null distribution of both-loss overlap, fixed source-strain margins.
+
+    Given the original leaf count and AAI/control loss totals in each recorded
+    strain, permute which leaf within that strain carries control loss; the
+    hypergeometric distributions convolve across recorded source strata.
+    This is a POSTHOC observational clustering diagnostic, not an AAI effect.
+    """
+    dist={0:1.0}
+    expected=0.0
+    observed=0
+    per_stratum={}
+    for strain,pairs in sorted(pair_groups.items()):
+        n=len(pairs)
+        lost_a=sum(p["a"]["loss"]=="1" for p in pairs)
+        lost_c=sum(p["c"]["loss"]=="1" for p in pairs)
+        both=sum(p["a"]["loss"]=="1" and p["c"]["loss"]=="1" for p in pairs)
+        observed+=both
+        expected+=lost_a*lost_c/n
+        lo=max(0,lost_a+lost_c-n)
+        hi=min(lost_a,lost_c)
+        probs={k:(math.comb(lost_a,k)*math.comb(n-lost_a,lost_c-k)/math.comb(n,lost_c))
+               for k in range(lo,hi+1)}
+        new=defaultdict(float)
+        for a,pa in dist.items():
+            for k,pk in probs.items():
+                new[a+k]+=pa*pk
+        dist=dict(new)
+        per_stratum[strain]={"leaf_pairs":n,"AAI_loss":lost_a,
+                             "control_loss":lost_c,"observed_both_loss":both,
+                             "expected_both_loss_under_strain_fixed_null":lost_a*lost_c/n}
+    return {"observed_joint_loss_pairs":observed,
+            "expected_joint_loss_pairs_under_strain_fixed_null":expected,
+            "stratified_exact_one_sided_co_loss_tail_probability":min(1.0,sum(p for k,p in dist.items() if k>=observed)),
+            "probability_distribution_of_joint_loss_pairs":{str(k):v for k,v in sorted(dist.items())},
+            "per_source_strain":per_stratum,
+            "causal_plant_leaf_quality_identified":False}
+
+
 def leaf_strain_concordance(raw):
     """Count confounding by the authors' source strain/butterfly cohort labels."""
     rows=list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
@@ -95,11 +134,13 @@ def leaf_strain_concordance(raw):
         both_lost_same_strain=sum(a["a"]["strain"]==a["c"]["strain"]
                                   and a["a"]["loss"]==a["c"]["loss"]=="1" for a in sub)
         strain_by_leaf=defaultdict(lambda:{"leaf_pairs":0,"both_lost_pairs":0,"one_lost_pairs":0,"neither_lost_pairs":0})
+        source_pair_groups=defaultdict(list)
         for pair in sub:
             # Comparability cannot be inferred if the two larvae are in different
             # original 'strain' cohorts (one S. montela source leaf case).
             key=pair["a"]["strain"] if pair["a"]["strain"]==pair["c"]["strain"] else "MIXED_SOURCE"
             item=strain_by_leaf[key]
+            source_pair_groups[key].append(pair)
             item["leaf_pairs"]+=1
             a_loss=int(pair["a"]["loss"])
             c_loss=int(pair["c"]["loss"])
@@ -107,6 +148,7 @@ def leaf_strain_concordance(raw):
             elif a_loss or c_loss:item["one_lost_pairs"]+=1
             else:item["neither_lost_pairs"]+=1
         result[SPECIES[species]]={
+            "strain_fixed_exact_joint_loss_null":conditional_strain_overlap_tail(source_pair_groups),
             "distinct_recorded_strain_labels":len(strain_by_leaf),
             "source_strain_breakdown":dict(sorted(strain_by_leaf.items())),
             "leaf_pairs_sharing_same_recorded_strain":same,
