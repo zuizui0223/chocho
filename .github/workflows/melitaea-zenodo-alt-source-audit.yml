@@ -1,0 +1,32 @@
+name: independent Melitaea Zenodo alternative source audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_melitaea_zenodo_alt_source.py"
+      - "tests/test_melitaea_zenodo_alt_source.py"
+      - ".github/workflows/melitaea-zenodo-alt-source-audit.yml"
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate fail-closed independent source checker
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_melitaea_zenodo_alt_source.py
+      - name: Retrieve and verify original Zenodo release without ecological model
+        run: |
+          python scripts/audit_melitaea_zenodo_alt_source.py --receipt results/melitaea_zenodo_alt_source_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: independent-melitaea-zenodo-source-inventory
+          path: results/melitaea_zenodo_alt_source_v01.json
+          retention-days: 30
