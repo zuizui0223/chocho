@@ -1,0 +1,54 @@
+{
+  "schema": "chocho_nettle_enemy_realization_source_gate_v01",
+  "date": "2026-10-10",
+  "status": "FROZEN_BEFORE_FIGSHARE_RAW_DATA_ACCESS",
+  "source": {
+    "paper": "Audusseau et al. (2021) Oikos, DOI 10.1111/oik.07953",
+    "data_doi": "10.17045/STHLMUNI.14260211",
+    "api": "https://api.figshare.com/v2/articles/14260211",
+    "expected_dataset_subject": "Four nettle-feeding butterfly species, 19 Swedish sites, two years 2017–2018, 6,777 collected larvae",
+    "expected_files": [
+      "Audusseau_etal_2021_rawData_RewiringInteractionsNettlefeedingButterflies.xlsx",
+      "batch_monitoring CSV",
+      "First_observation_Ar.levana CSV"
+    ],
+    "publication_reported_parasitoid_deaths": 1508,
+    "publication_reported_parasitoid_species": 11
+  },
+  "scientific_question": "Can detailed empirical butterfly–parasitoid outcomes calibrate the distinction between coarse host-linked opportunity and realized enemy-linked demographic quality, without repeating the 2021 paper?",
+  "published_prior_art": [
+    "The paper already tested butterfly assemblage presence, larval abundance, within-season phenology, latitudinal gradients, time since Araschnia levana establishment and parasitoid-sharing effects",
+    "A separate 2020 study already analysed parasitoid-host phenological overlap, including Phobocampe confusa",
+    "This is a native nettle (Urtica dioica) system with butterfly range expansion, NOT host-plant introduction, so it cannot test anthropogenic botanical redistribution."
+  ],
+  "source_gate": {
+    "required": [
+      "reachable original Figshare article metadata",
+      "file identifiers and checksums, source license",
+      "open raw batch monitoring tables with egg/larval sample size, death causes, named parasitoids, site, date and butterfly species",
+      "genuine observation denominators and consistent units"
+    ],
+    "if_source_available": "inventory schema and quality only; do not fit outcomes until any distinct estimand is frozen and mapped against 2021 article and all coanalyses",
+    "if_incomplete": "STOP; keep publication metadata only"
+  },
+  "biological_scope": {
+    "in_chocho_239": [
+      "Aglais urticae",
+      "Araschnia levana",
+      "Vanessa atalanta"
+    ],
+    "outside_frozen_metrics": [
+      "Aglais io"
+    ],
+    "unknown_introduced_botanical_status": "The focal Urtica dioica is the resident nettle host in the Swedish study; no experimental exotic-host factor",
+    "not_observed": [
+      "butterfly populations on novel introduced host plants",
+      "host plant species variation within sites",
+      "randomized heterospecific donor addition",
+      "randomized enemy exclusion",
+      "independent recruitment through mating and fecundity"
+    ]
+  },
+  "novelty_gate": "No claim of new butterfly parasitoid indirect-interaction discovery from refitting existing 2021 model. A new prediction requires an independently specified heldout-site/year test not already published, robust to climate/site confounding, and explicit labeling as a secondary published-data analysis; population fitness or botanical invasion remains unidentifiable.",
+  "gEB_PR38_untouched": true
+}
