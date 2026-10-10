@@ -94,8 +94,12 @@ native_fates.csv
 plant_id,larva_id,species,fate
 
 resource_visits.csv
-plant_id,observation_datetime,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2
+plant_id,observation_datetime,native_larvae_alive_n,native_late_instar_alive_n,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2,present_leaf_age_class,added_leaf_age_class
 ```
+
+**Source-grounded stage targeting:** Hashimoto & Ohgushi (2023), Table 1, measured dry-leaf consumption of **21.66 mg (instars 1–2) versus 1,003.23 mg (instars 3–5)** for `Atrophaneura`, and **1.88 versus 394.25 mg** for `Sericinus`. Those are cumulative measured consumption amounts, **not** measured standing leaf supply minima. A food clamp must be checked during 3rd–5th instars (and earlier), with the `food_floor_cm2` calibrated by a separate blinded edible leaf area/instar demand pilot. One constant floor selected at random or inferred from final leaf classes is invalid.
+
+The analysis-ready longitudinal export now includes `native_larvae_alive_n` and `native_late_instar_alive_n` (count of **living native 3rd–5th instars**, not all assigned larvae or survivors at the end). A skipped observation is not a zero. When all native caterpillars died before late instars, later "no food shortage detected" is uninformative about earlier shortage. `present_leaf_age_class` must be `young`, `mature`, `mixed`, `none` or `unknown`; `added_leaf_age_class` must be supplied whenever fresh leaf area was added. Added young tissue and resident mature tissue can have different quality even if accessible cm² is equal. All of these are **postrandomization diagnostics**, never criteria for excluding cages from intention-to-treat comparisons.
 
 **Before animals enter cages:** `native_initial_n` is the originally assigned focal cohort size; `food_floor_cm2` is a **positive, prospectively selected accessible-leaf-area target**, fixed within each randomization block; `expected_n_resource_visits` is a preset sampling schedule, the same for all four treatments in a block. The condition `food_clamp` is the *randomized strategy*, not a post-hoc indicator that a measured threshold happened to be achieved.
 
@@ -117,5 +121,7 @@ python scripts/analyze_kyoto_food_clamp_outcomes.py \
 This writes per-arm cage counts, initial cohort denominators, adult success, attrition bounds, prospectively logged leaf access and intervention, and the **natural** and **clamped** competitor effects *separately*, along with their interaction. Block bootstrap intervals are withheld if there are fewer than three distinct independent source blocks; three is a computational minimum for output, **not** a statistically adequate sample-size recommendation. Report independent cage sample size and feasibility pilot precision separately. The model does not automatically declare that the resource clamp succeeded: a clamp's effect on fresh tissue quality, humidity or labor remains a potential alternative mechanism.
 
 Code quality check: [GitHub Actions outcome-contract tests](https://github.com/zuizui0223/chocho/actions/workflows/kyoto-food-clamp-outcome-contract.yml) use **synthetic ledger fixtures only**, strictly for input, randomization and attrition integrity. They are not field observations, simulations of ecological effects or evidence of hypothesis confirmation.
+
+**Audit reporting:** The script outputs arm-specific living-late-instar visit counts, late-instar food-floor breaches, missing late-stage area measurements, and added foliage leaf-age classes. Comparisons based only on cages where third instars survived would condition on post-treatment survival and can manufacture apparent support for the food-shortage hypothesis. Interpret the clamp's nutritional composition and sham treatment separately. Stage-specific measures are missing in the 2023 source and cannot be reconstructed from its four final plant ratings.
 
 **Do not calculate interaction or confidence intervals from the 2023 experiment by substituting its four terminal plant scores; it did not contain these randomized treatment arms.**
