@@ -1,0 +1,32 @@
+name: Kyoto butterfly causal identifiability source audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_kyoto_competition_identifiability.py"
+      - "tests/test_kyoto_competition_identifiability.py"
+      - ".github/workflows/kyoto-butterfly-design-identifiability.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test historical experiment cage versus endpoint-plant design
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_kyoto_competition_identifiability.py
+      - name: Audit actual MD5-identical cage time series and four final plant records
+        run: |
+          python scripts/audit_kyoto_competition_identifiability.py --receipt results/kyoto_butterfly_identifiability_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-original-experiment-causal-identifiability-v01
+          path: results/kyoto_butterfly_identifiability_v01.json
+          retention-days: 30
