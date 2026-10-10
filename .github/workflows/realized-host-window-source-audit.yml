@@ -1,0 +1,39 @@
+name: exploratory butterfly phenological source gate
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - exploration/realized-host-window-v01
+    paths:
+      - "docs/exploratory/REALIZED_HOST_WINDOW_PROTOCOL_V01.json"
+      - "scripts/audit_realized_host_window_source.py"
+      - "tests/test_realized_host_window_source.py"
+      - ".github/workflows/realized-host-window-source-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check fail-closed source gate invariants
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_realized_host_window_source.py
+      - name: Attempt original Dryad source-byte retrieval
+        run: |
+          python scripts/audit_realized_host_window_source.py --receipt source_audit/REALIZED_HOST_WINDOW_SOURCE_ACCESS_V01.json
+          cat source_audit/REALIZED_HOST_WINDOW_SOURCE_ACCESS_V01.json
+      - name: Preserve audit receipt, not an ecological estimate
+        uses: actions/upload-artifact@v4
+        with:
+          name: exploratory-realized-host-window-source-access-v01
+          path: source_audit/REALIZED_HOST_WINDOW_SOURCE_ACCESS_V01.json
+          retention-days: 30
