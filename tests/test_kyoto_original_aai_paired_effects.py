@@ -24,7 +24,7 @@ def sample():
     return left.getvalue().encode(),right.getvalue().encode()
 
 def test_paired_source_identity_and_losses():
-    leaves,rows,mismatch=m.parse(*sample())
+    leaves,rows,mismatch,quality=m.parse(*sample())
     assert len(rows)==120 and len(leaves)==60 and mismatch==[]
     pairs=[val for (sp,lid),val in leaves.items() if sp=="a"]
     assert sum(p["a"]["loss"]==0 and p["c"]["loss"]==0 for p in pairs)==29
@@ -44,7 +44,7 @@ def test_leaf_area_join_identity_failure():
 def test_original_side_typo_flagged_but_identity_kept():
     a,b=sample()
     b=b.replace(b"a-0,r,a",b"a-0,l,a",1)
-    leaves,rows,mismatch=m.parse(a,b)
+    leaves,rows,mismatch,quality=m.parse(a,b)
     assert len(mismatch)==1
     assert mismatch[0]["larval_half_label"]=="r"
     assert len(leaves)==60
