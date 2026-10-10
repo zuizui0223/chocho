@@ -68,6 +68,7 @@ def audit(larval,plant):
     time_count=Counter()
     density_count=Counter()
     pooled_initial=Counter()
+    endpoint_plant_category_counts=Counter()
     for cage,rows in larva_plots.items():
         ref=rows[0]
         sr,ar=int(num(ref["s.density"])),int(num(ref["a.density"]))
@@ -88,9 +89,13 @@ def audit(larval,plant):
         pooled_initial["Sericinus"]+=sr
         pooled_initial["Atrophaneura"]+=ar
         for i in range(1,5):
-            # Four different potted plants measured at a shared FINAL endpoint.
-            # Neither column suffix nor column order is a time/date index.
-            num(pr[f"defoliation.{i}"])
+            # Four different potted plants at one FINAL endpoint, not four dates.
+            # Source values are VISUAL ORDINAL BINS (e.g. '>75'), not
+            # independently measured continuous percentage or live biomass.
+            level=str(pr[f"defoliation.{i}"]).strip()
+            if not level or len(level)>30:
+                raise ValueError("invalid recorded ordinal remaining-food category")
+            endpoint_plant_category_counts[level]+=1
 
     if len(treatment_counter)!=15 or any(c!=2 for c in treatment_counter.values()):
         raise ValueError("not exactly 15 density combinations x two cage replicates")
@@ -116,6 +121,9 @@ def audit(larval,plant):
           "names":[f"defoliation.{i}" for i in range(1,5)],
           "meaning":"four separate potted plants within EACH cage measured at final endpoint; NOT FOUR TEMPORAL ASSESSMENTS",
           "n_temporal_plant_biomass_measurements":0,
+          "original_data_are_ordinal_remaining_food_categories":True,
+          "observed_plant_category_counts":dict(sorted(endpoint_plant_category_counts.items())),
+          "endpoint_plants_total":sum(endpoint_plant_category_counts.values()),
           "independently_manipulated_host_regrowth_timing":False,
           "temporal_plant_quality_or_induced_defence_measured":False
        },
