@@ -1,5 +1,5 @@
 {
-  "schema": "chocho_kyoto_food_access_factorial_analysis_contract_v01",
+  "schema": "chocho_kyoto_food_access_factorial_analysis_contract_v02",
   "created": "2026-10-10",
   "status": "PREEXPERIMENT_DATA_AND_ANALYSIS_CONTRACT_NO_FIELD_DATA",
   "scientific_question": "At fixed initially assigned native larvae, does randomized adequate access to edible host foliage change the effect of introduced Sericinus presence on adult production in native Atrophaneura?",
@@ -12,7 +12,7 @@
     "allocation": "existing randomized plant_id, block_id, treatment, competitor_present, food_clamp CSV with all four arms per block",
     "assignments": "plant_id,block_id,treatment,competitor_present,food_clamp,native_initial_n,competitor_initial_n,food_floor_cm2,expected_n_resource_visits; one row/cage",
     "fates": "plant_id,larva_id,species,fate; one row per initially assigned native larva, including deaths and censoring",
-    "resource": "plant_id,observation_datetime,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2; one row for every scheduled plant visit; missing access must be blank rather than zero"
+    "resource": "plant_id,observation_datetime,native_larvae_alive_n,native_late_instar_alive_n,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2,present_leaf_age_class,added_leaf_age_class; time-offset ISO timestamps, native_late is living 3rd–5th instars, source leaf class young/mature/mixed/none/unknown"
   },
   "fates": {
     "known_success": "flight_capable_adult",
@@ -37,7 +37,10 @@
     "Clamp achieved a real and reportable food access contrast under competitor presence; do not subset to plants where the clamp worked",
     "Report floor breach and observed supplementation by randomized arm; clamp quality confounding requires separate controls",
     "At least 3 truly independent source blocks before any block-bootstrap interval; otherwise report point contrast only",
-    "Do not infer food quantity's unique mediated causal effect from a total supplementation intervention"
+    "Do not infer food quantity's unique mediated causal effect from a total supplementation intervention",
+    "At scheduled resource visits, independently count native living larvae and living 3rd–5th instar larvae; late <= alive <= initially assigned, and no sorting by whether late-stage survivors remain.",
+    "Report per-treatment number of living 3rd–5th-instar observations, missing leaf area among these, and proportion below prospectively established access floor; a zero-late-survivor cage is not evidence that food was sufficient.",
+    "Report fresh added leaf age class independently of accessible leaf quantity; a significant food-supplementation effect may be driven by leaf quality or handling."
   ],
   "bootstrap": "2,000 bootstrap resamples of whole source blocks with replacement, fixed seed 20261010, 95% percentile CI; this is a procedural plan, not power-guaranteeing significance",
   "randomization": "Use pre-existing randomized assignment, do not reassign after observing larvae",
@@ -49,5 +52,22 @@
     "unidentified": "If clamp never changes access or there are inadequate independent replicate plants, no claim about transient shortage."
   },
   "paper_boundary": "Causal mechanism in an invaded butterfly system feeding on native Aristolochia, NOT the separate chocho human-redistributed host-plant GEB paper",
-  "GEB_pr38_untouched": true
+  "GEB_pr38_untouched": true,
+  "source_stage_specific_consumption": {
+    "article": "Hashimoto & Ohgushi 2023, Ecology and Evolution, Table 1, DOI 10.1002/ece3.10164",
+    "units": "mg leaf dry mass consumed per larva over indicated stage interval, original experimental reference not a minimum leaf standing crop threshold",
+    "atrophaneura_alcinous": {
+      "instars_1_to_2": 21.66,
+      "instars_3_to_5": 1003.23,
+      "all_instars": 1024.89
+    },
+    "sericinus_montela": {
+      "instars_1_to_2": 1.88,
+      "instars_3_to_5": 394.25,
+      "all_instars": 396.13
+    },
+    "implication": "Predefine food-access monitoring in BOTH early and 3rd–5th instars; most cumulative consumption occurs late. Source mass cannot simply be converted to minimum accessible fresh leaf area without independent calibration."
+  },
+  "revised_reason": "The previous concise resource ledger lacked living instar data, so stage-specific resource shortages could not be checked despite 3rd–5th instar demand dominating cumulative feeding.",
+  "endpoint_interpretation": "Primary experimental effect remains assigned food-access strategy × assigned competitor exposure; late-instar accessibility is a post-treatment manipulation diagnostic, NOT a conditioning variable for the primary ITT effect."
 }
