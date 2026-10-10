@@ -6,7 +6,7 @@
   "motivation": "Increased Sericinus density suppresses Atrophaneura survival despite no corresponding reduction in FINAL visual leaf-remaining scores; transient food shortage not measured.",
   "source_limit": "Original Figshare 23170898 has 30 cages, 690 cage-day larval rows, and 120 FINAL ordinal leaf scores (four plants in each cage); no sequential edible biomass measurements or independent food-clamp factor.",
   "primary_question": "Can maintaining an independently quantified edible Aristolochia supply through critical instars eliminate the negative effect of Sericinus on Atrophaneura, compared with natural regrowth conditions?",
-  "randomization_unit": "Whole potted host plant/enclosure, not larvae and not plant leaves",
+  "randomization_unit": "One independent complete cage/enclosure and ALL potted host plants within it; historical plant_id column in software represents whole randomized cage, NOT each terminal plant pot.",
   "recipient": "Fixed initially allocated cohort of Atrophaneura alcinous neonates in each cage",
   "factors": {
     "competitor": [
@@ -31,7 +31,9 @@
     "Track actual accessible leaf area and leaf age over development",
     "Observe microclimate and live butterfly contact",
     "Obtain all permits for nonnative butterfly handling and containment",
-    "No release or translocation into open habitats"
+    "No release or translocation into open habitats",
+    "Where resources permit, provide same-age extra foliage to all arms, with randomized physical edibility/access and matched sham barrier handling to decouple the arrival of fresh leaves from their accessibility.",
+    "Treat whole multi-plant cage as randomized unit; do not multiply sample size by counting four nested potted host plants."
   ],
   "outcome": "Number of flight-capable adult A. alcinous individuals per originally assigned native larval cohort, including zeros",
   "primary_estimand": "(Y_CLAMP_COMPETITOR-Y_CLAMP_NO_COMPETITOR) - (Y_NATURAL_COMPETITOR-Y_NATURAL_NO_COMPETITOR)",
@@ -55,5 +57,28 @@
     "2012 ESJ poster already proposed temporal resource regeneration",
     "2023 study tested two-species density and final food quantity but not experimentally controlled time-resolved accessible food"
   ],
-  "GEB_PR38_untouched": true
+  "GEB_PR38_untouched": true,
+  "source_stage_demand_reference": {
+    "citation": "Hashimoto and Ohgushi (2023) Table 1; original PDF https://www.ecology.kyoto-u.ac.jp/~ohgushi/ja/achievements/PDF/Ohgushi271.pdf",
+    "units": "leaf mg dry mass consumed per individual, from early versus late instar intervals; not directly current leaf standing crop or minimum leaf area",
+    "atrophaneura_mg_dry_mass": {
+      "instars_1_2": 21.66,
+      "instars_3_5": 1003.23,
+      "whole_larva": 1024.89
+    },
+    "sericinus_mg_dry_mass": {
+      "instars_1_2": 1.88,
+      "instars_3_5": 394.25,
+      "whole_larva": 396.13
+    },
+    "previously_audited_kyoto_stages": "23 of 24 Atrophaneura-occupied cages reached observed 3rd-5th instars; earliest observed late stage day 3 in 3, day 5 in 14, day 7 in 6; observational interval not exact molt date",
+    "required": "Begin accessible-leaf measurements before day 3 in new synchronized pilot, then monitor 3rd–5th instars through pupation; calibrate dry-mass-to-area and within-instar demand independently"
+  },
+  "quality_separating_control": {
+    "physical_proposal": "Where feasible, place equivalent same-source, same-age additional Aristolochia foliage into ALL cages. In natural-food arms hold that extra foliage behind a food-inaccessible, airflow-matched mesh barrier; in supported-food arms make it accessible, with otherwise comparable foliage handling and positioning. Record leaf chemistry/age and sham material separately.",
+    "purpose": "Keep introduction of fresh leaf volatiles, time of handling and external supplementary leaf source as similar as possible; contrast ACCESS to added edible leaves, not merely arrival of young leaves. A barrier itself can change behavior and humidity, so controlled microclimate observations and barrier sham remain mandatory.",
+    "change_to_existing_arms": "Four 2x2 arms retained. Access to matched-age supplemented foliage is the food clamp factor; both levels receive comparable foliage and handling. No third posthoc arm chosen by outcomes.",
+    "limitation": "Even this design cannot prove all benefits originate in mass alone: larval movement/available surface, barrier-induced geometry and tissue physiology remain candidate causal mechanisms.",
+    "critical": "The published 30 cages contained four plants each; independent assignment must be per WHOLE CAGE, not each of four nested potted plants."
+  }
 }
