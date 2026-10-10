@@ -15,6 +15,12 @@ META_URL="https://ndownloader.figshare.com/files/29157876"
 META_MD5="107ce0df69d9157adabf9572fd94da92"
 RESIDENT=["Aglais urticae","Aglais io"]
 NEWCOMER="Araschnia levana"
+SPECIES_CODES={"au":"Aglais urticae","aio":"Aglais io","alev":"Araschnia levana","va":"Vanessa atalanta"}
+def normalized_species(v):
+    value=str(v or "").strip().lower()
+    if value not in SPECIES_CODES:
+        raise ValueError("unrecognized original butterfly taxon code: "+value)
+    return SPECIES_CODES[value]
 REQUIRED={"year","week_ISO","BMS_id","butterfly_species","nb_larvae_in_lab",
           "larvae_Sturmia_bella","pupae_Sturmia_bella",
           "county","presence_alev","lat4326","instar_rond","total_larvae"}
@@ -50,9 +56,12 @@ def source_report(rows):
     timekeys=collections.defaultdict(list)
     counters=collections.Counter()
     names=set()
+    sites_per_year=collections.defaultdict(set)
+    site_counties=collections.defaultdict(set)
     for r in rows:
-        sp=r["butterfly_species"].strip()
-        species[sp]+=1
+        original_code=r["butterfly_species"].strip().lower()
+        sp=normalized_species(original_code)
+        species[original_code]+=1
         for k in ("year","week_ISO","nb_larvae_in_lab","larvae_Sturmia_bella",
                   "pupae_Sturmia_bella","presence_alev","total_larvae","lat4326","instar_rond"):
             if not str(r.get(k) or "").strip() or str(r[k]).strip().lower() in ("na","nan"):
@@ -68,6 +77,8 @@ def source_report(rows):
             continue
         timekeys[(id_,year,week)].append((sp,n,lar,pup))
         names.add(id_)
+        sites_per_year[year].add(id_)
+        site_counties[id_].add(r["county"].strip())
         if sp in RESIDENT:
             counters["resident_batches"]+=1
             if n is None or n<=0 or lar is None or pup is None or lar<0 or pup<0 or lar+pup>n:
@@ -124,7 +135,13 @@ def source_report(rows):
     }
     return {"schema":"chocho_nettle_delayed_enemy_source_support_v01",
             "batch_rows":len(rows),"butterfly_species_labels":dict(species),
-            "sites":len(names),"unique_site_year_week":len(timekeys),
+            "sites":len(names),
+            "original_BMS_id_values":sorted(names),
+            "original_BMS_id_count_by_year":{str(k):len(v) for k,v in sites_per_year.items()},
+            "county_codes_by_original_BMS_id":{k:sorted(v) for k,v in sorted(site_counties.items())},
+            "published_paper_site_count":19,
+            "source_code_site_count_mismatch":len(names)!=19,
+            "unique_site_year_week":len(timekeys),
             "missing_value_counts":dict(missing),
             "count_integrity":dict(counters),
             "site_week_gaps":dict(visited),
