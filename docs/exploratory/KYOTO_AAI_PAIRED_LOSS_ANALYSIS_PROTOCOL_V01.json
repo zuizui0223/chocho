@@ -1,0 +1,17 @@
+{
+  "schema": "chocho_kyoto_original_aai_assigned_24h_loss_analysis_v01",
+  "created": "2026-10-10",
+  "status": "FROZEN_AFTER_MARGIN_COUNTS_AND_COMPLETE_PAIRS_KNOWN_BEFORE_COMPUTING_PAIRED_ATTRITION_TEST_AND_CONFIDENCE_INTERVAL",
+  "source": "Hashimoto & Ohgushi 2023 DOI 10.1002/ece3.10164; Figshare 23170898; original larva file 41146985 MD5 982d4931da306a7ff8e8d550cffe5246",
+  "prior_known": "Per A.alcinous 30 matched leaves with 30 AAI and 30 controls; 13 loss=1 AAI, 8 loss=1 control; 16 both measured; S.montela zero losses across 30 leaves.",
+  "question": "Is source author-coded postassignment loss=1 different between AAI and control within original paired leaves, and with what precision? Does this undercut an 'AAI no effect' equivalence narrative?",
+  "unit": "original paired-source-leaf unit as encoded by l.id, with separate AAI/control halves and source butterfly species",
+  "outcome": "Author loss=1 event; originally described haphazard larval death, without reliable clinical/toxic cause. NOT independently verified AAI poisoning.",
+  "primary_effect": "Within-species paired risk difference: fraction loss in AAI halves minus fraction loss in control halves, including both lost and neither lost source-leaf pairs.",
+  "secondary": "For discordant original leaves, exact two-sided McNemar p=2*BinomialTail(min(AAI-only loss, control-only loss), n_discordant,0.5), capped 1.0. Do not use Fisher/unpaired model.",
+  "uncertainty": "9999 source-leaf nonparametric bootstrap draws within butterfly species, fixed seed 20261010; interval is descriptive, not causal toxicity evidence.",
+  "source_quality": "AAI 30 µg applied to half leaf versus ethanol other half, random assignment within pair; published one larva-vs-leaf-half label mismatch a4 must not be silently fixed. Original ID+plant+treatment agree.",
+  "hypothesis_boundary": "No test of 24h growth equality can override selective loss, and interval including zero does not prove equivalent leaf quality. Intention-to-treat adult fitness, mixtures and induced chemistry are unmeasured.",
+  "decision": "Report all cell counts, paired risk difference, exact p and CI for each species irrespective of significance; no effect tuning, no biological equivalence margin chosen from outcomes. Distinguish haphazard deaths from a proven toxic mortality endpoint.",
+  "GEB_PR38_untouched": true
+}
