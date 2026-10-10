@@ -66,6 +66,43 @@ def exact_mcnemar(n_a_only:int,n_c_only:int):
     numerator=sum(math.comb(n,j) for j in range(k+1))
     return min(1.0,2.0*numerator/(2**n))
 
+def fisher_two_sided_pair_dependence(n, n_a_loss, n_c_loss, both_loss):
+    """Exploratory Fisher exact test of within-original-leaf loss dependence.
+
+    Not a treatment-effect test; conditioned on the original AAI/control margins.
+    """
+    possible=range(max(0,n_a_loss+n_c_loss-n),min(n_a_loss,n_c_loss)+1)
+    denom=math.comb(n,n_c_loss)
+    def chance(x):
+        return math.comb(n_a_loss,x)*math.comb(n-n_a_loss,n_c_loss-x)/denom
+    observed=chance(both_loss)
+    return min(1.0,sum(chance(x) for x in possible if chance(x)<=observed+1e-14))
+
+
+def leaf_strain_concordance(raw):
+    """Count confounding by the authors' source strain/butterfly cohort labels."""
+    rows=list(csv.DictReader(io.StringIO(raw.decode("utf-8-sig"))))
+    leaves=defaultdict(dict)
+    for r in rows:
+        leaves[(r["species"],r["l.id"])][r["treatment"]]=r
+    result={}
+    for species in ("a","s"):
+        sub=[v for (sp,_),v in leaves.items() if sp==species]
+        if any(set(k)!={"a","c"} for k in sub):
+            raise ValueError("source leaf pair missing in strain metadata")
+        same=sum(a["a"]["strain"]==a["c"]["strain"] for a in sub)
+        dual=sum(a["a"]["loss"]==a["c"]["loss"]=="1" for a in sub)
+        both_lost_same_strain=sum(a["a"]["strain"]==a["c"]["strain"]
+                                  and a["a"]["loss"]==a["c"]["loss"]=="1" for a in sub)
+        result[SPECIES[species]]={
+            "leaf_pairs_sharing_same_recorded_strain":same,
+            "total_leaf_pairs":len(sub),
+            "both_lost_leaf_pairs":dual,
+            "both_lost_sharing_same_strain":both_lost_same_strain,
+            "interpretation":"Strain concordance may proxy family/batch history; cannot identify whether leaf chemistry, family or handling caused paired losses."}
+    return result
+
+
 def bootstrap_paired_risk_difference(pairs,seed,draws=BOOT):
     rng=random.Random(seed)
     n=len(pairs)
@@ -83,6 +120,8 @@ def summarize_pair_data(raw):
             "source_md5":SOURCE_MD5,
             "source_sha256":hashlib.sha256(raw).hexdigest(),
             "original_butterflies":sum(2*len(v) for v in cohort.values()),
+            "exploratory_after_margin_inspection":True,
+            "strain_pair_concordance":leaf_strain_concordance(raw),
             "species":{},
             "source_loss_is_haphazard_death_not_proven_AAI_toxicity":True,
             "new_biological_mechanism_estimated":False,
@@ -112,6 +151,10 @@ def summarize_pair_data(raw):
             "paired_leaf_bootstrap_95ci":bootstrap_paired_risk_difference(pairs,SEED+index*1701),
             "discordant_original_leaves":aa+cc,
             "paired_exact_mcnemar_two_sided_p":exact_mcnemar(aa,cc),
+            "observed_both_loss":both,
+            "expected_both_loss_if_halves_independent_conditional_margins":loss_a*loss_c/n,
+            "within_leaf_loss_association_odds_ratio":((both*neither)/(aa*cc)) if aa*cc else None,
+            "exploratory_fisher_exact_within_leaf_loss_dependence_two_sided_p":fisher_two_sided_pair_dependence(n,loss_a,loss_c,both),
             "biological_cause_of_loss_identified":False,
             "interpretation":"Loss imbalance and uncertainty require reporting; no significant McNemar signal is proof of no toxicity or no other host-quality response."}
     return output
