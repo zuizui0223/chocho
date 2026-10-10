@@ -70,3 +70,23 @@ def test_strain_concordance_is_a_recorded_confounder_not_leaf_mechanism():
     assert out["strain_pair_concordance"]["Atrophaneura alcinous"]["leaf_pairs_sharing_same_recorded_strain"]==30
     assert out["exploratory_after_margin_inspection"] is True
     assert out["species"]["Atrophaneura alcinous"]["biological_cause_of_loss_identified"] is False
+
+def test_stratified_exact_overlap_single_stratum_reproduces_unstratified_null():
+    # 30 source leaves, AAI=13 losses, control=8 losses, joint=7.
+    pairs=[]
+    for i in range(30):
+        aa=i<13
+        cc=(i<7 or i==13)
+        pairs.append({"a":{"loss":"1" if aa else "0"},
+                      "c":{"loss":"1" if cc else "0"}})
+    x=m.conditional_strain_overlap_tail({"one_original_strain":pairs})
+    assert x["observed_joint_loss_pairs"]==7
+    assert abs(x["expected_joint_loss_pairs_under_strain_fixed_null"]-(13*8/30))<1e-12
+    assert abs(x["stratified_exact_one_sided_co_loss_tail_probability"]-0.005204064634349492)<1e-12
+
+def test_stratification_preserves_original_source_margins_and_no_causal_claim():
+    outcome=m.summarize_pair_data(fake())
+    for species in ("Atrophaneura alcinous","Sericinus montela"):
+        s=outcome["strain_pair_concordance"][species]["strain_fixed_exact_joint_loss_null"]
+        assert abs(sum(s["probability_distribution_of_joint_loss_pairs"].values())-1)<1e-10
+        assert s["causal_plant_leaf_quality_identified"] is False
