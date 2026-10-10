@@ -35,8 +35,12 @@ def fixture(nblocks=3,with_unknown=True):
             for i in range(2):
                 visits.append({"plant_id":plant,
                                "observation_datetime":f"2026-10-{10+i:02d}T11:00:00+09:00",
+                               "native_larvae_alive_n":"2",
+                               "native_late_instar_alive_n":str(i*2),
                                "accessible_leaf_area_cm2":"25" if clamp or not competitor else "12",
-                               "fresh_leaf_area_added_cm2":"5" if clamp else "0"})
+                               "fresh_leaf_area_added_cm2":"5" if clamp else "0",
+                               "present_leaf_age_class":"mature",
+                               "added_leaf_age_class":"young" if clamp else ""})
     return alloc,info,fates,visits
 
 def test_itt_interaction_uses_all_initial_larvae_and_source_blocks():
@@ -67,6 +71,9 @@ def test_missing_resource_access_is_not_zero_and_scheduled_visits_are_required()
     d[0]["accessible_leaf_area_cm2"]=""
     x=m.analyze(a,b,c,d)
     assert x["per_arm"]["NATURAL_NO_COMPETITOR"]["missing_food_measurements"]==1
+    assert x["per_arm"]["NATURAL_NO_COMPETITOR"]["observed_late_instar_food_visits"]==3
+    assert x["per_arm"]["NATURAL_COMPETITOR"]["late_instar_visits_below_food_floor"]==3
+    assert x["per_arm"]["CLAMP_COMPETITOR"]["supplemented_leaf_age_classes"]=={"young":6}
     d.pop()
     with pytest.raises(ValueError,match="scheduled resource visits"):
         m.analyze(a,b,c,d)
@@ -81,3 +88,34 @@ def test_biomass_afterward_cannot_define_a_treatment():
     b[0]["food_clamp"]="1"
     with pytest.raises(ValueError,match="treatment/block mismatch"):
         m.analyze(a,b,c,d)
+
+def test_late_instar_count_cannot_exceed_total_alive_or_initial():
+    a,b,c,d=fixture()
+    d[1]["native_late_instar_alive_n"]="3"
+    with pytest.raises(ValueError,match="late-instar count"):
+        m.analyze(a,b,c,d)
+
+def test_positive_supplement_must_have_age_class():
+    a,b,c,d=fixture()
+    target=next(row for row in d if row["fresh_leaf_area_added_cm2"]=="5")
+    target["added_leaf_age_class"]=""
+    with pytest.raises(ValueError,match="added_leaf_age_class"):
+        m.analyze(a,b,c,d)
+
+def test_late_instar_food_observation_missing_is_not_interpreted_as_zero():
+    a,b,c,d=fixture()
+    d[1]["accessible_leaf_area_cm2"]=""
+    x=m.analyze(a,b,c,d)
+    natural=x["per_arm"]["NATURAL_NO_COMPETITOR"]
+    assert natural["late_instar_food_measurement_missing"]==1
+    assert natural["observed_late_instar_food_visits"]==2
+    assert x["n_independent_plants"]==12
+
+def test_no_late_instar_survivors_does_not_prove_adequate_food():
+    a,b,c,d=fixture()
+    for row in d:
+        row["native_late_instar_alive_n"]="0"
+    x=m.analyze(a,b,c,d)
+    assert x["per_arm"]["CLAMP_COMPETITOR"]["observed_late_instar_food_visits"]==0
+    assert x["per_arm"]["CLAMP_COMPETITOR"]["late_instar_fraction_below_food_floor"] is None
+    assert x["ITT_missing_as_fail_interaction"]==1.0
