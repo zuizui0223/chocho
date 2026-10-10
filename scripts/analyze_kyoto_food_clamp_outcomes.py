@@ -30,7 +30,10 @@ OUTCOME_VALUES={SUCCESS}|FAIL|UNKNOWN
 FATE_COLS=["plant_id","larva_id","species","fate"]
 INFO_COLS=["plant_id","block_id","treatment","competitor_present","food_clamp",
            "native_initial_n","competitor_initial_n","food_floor_cm2","expected_n_resource_visits"]
-RESOURCE_COLS=["plant_id","observation_datetime","accessible_leaf_area_cm2","fresh_leaf_area_added_cm2"]
+RESOURCE_COLS=["plant_id","observation_datetime","native_larvae_alive_n",
+               "native_late_instar_alive_n","accessible_leaf_area_cm2",
+               "fresh_leaf_area_added_cm2","present_leaf_age_class","added_leaf_age_class"]
+LEAF_AGES={"young","mature","mixed","none","unknown"}
 
 def csv_source(p:Path,cols:list[str]):
     with p.open(encoding="utf-8-sig",newline="") as fh:
@@ -133,6 +136,12 @@ def fate_tally(plants,fates):
     return out
 
 def resource_tally(plants,visits):
+    """Diagnostic of accessible food, never a postrandomization eligibility rule.
+
+    Late instars refer to living 3rd–5th instar recipient caterpillars at a visit.
+    A visit with zero late-instar survivors CANNOT prove absence of a former
+    resource bottleneck; it remains in assigned intention-to-treat units.
+    """
     byplant=defaultdict(list)
     seen=set()
     for r in visits:
@@ -145,28 +154,52 @@ def resource_tally(plants,visits):
         key=(plant,dt.isoformat())
         if key in seen:raise ValueError("duplicate scheduled plant occasion")
         seen.add(key)
+        alive=nonnegative_int(r["native_larvae_alive_n"],"native_larvae_alive_n")
+        late=nonnegative_int(r["native_late_instar_alive_n"],"native_late_instar_alive_n")
+        if late>alive or alive>plants[plant]["native_initial_n"]:
+            raise ValueError(f"{plant}: late-instar count exceeds living/initial larvae")
         area=finite_nonnegative(r["accessible_leaf_area_cm2"],"accessible_leaf_area_cm2",True)
         added=finite_nonnegative(r["fresh_leaf_area_added_cm2"],"fresh_leaf_area_added_cm2",True)
-        byplant[plant].append((dt,area,added))
+        current_age=r["present_leaf_age_class"].strip().lower()
+        add_age=r["added_leaf_age_class"].strip().lower()
+        if current_age not in LEAF_AGES:
+            raise ValueError("present_leaf_age_class must be young/mature/mixed/none/unknown")
+        if add_age and add_age not in LEAF_AGES:
+            raise ValueError("invalid added_leaf_age_class")
+        if added is not None and added>0 and not add_age:
+            raise ValueError("positive food addition without added_leaf_age_class")
+        byplant[plant].append({
+            "dt":dt,"area":area,"added":added,"alive":alive,"late":late,
+            "current_age":current_age,"added_age":add_age
+        })
     out={}
     for plant,p in plants.items():
-        rows=sorted(byplant.get(plant,[]))
+        rows=sorted(byplant.get(plant,[]),key=lambda r:r["dt"])
         if len(rows)!=p["expected_n_resource_visits"]:
             raise ValueError(f"{plant}: missing extra/fewer scheduled resource visits")
-        observed=[a for _,a,_ in rows if a is not None]
-        supplemented=[v for _,_,v in rows if v is not None]
+        observed=[r for r in rows if r["area"] is not None]
+        late_rows=[r for r in rows if r["late"]>0]
+        late_observed=[r for r in late_rows if r["area"] is not None]
+        supplemented=[r for r in rows if r["added"] is not None]
+        added_ages=Counter(r["added_age"] for r in rows if r["added"] is not None and r["added"]>0)
+        below=lambda collection:sum(r["area"]<p["food_floor_cm2"] for r in collection)
         out[plant]={
             "scheduled_visits":len(rows),
             "n_observed_accessible_area":len(observed),
             "missing_accessible_area":len(rows)-len(observed),
-            "visits_below_preset_floor":sum(v<p["food_floor_cm2"] for v in observed),
-            "fraction_below_floor_observed":(
-                sum(v<p["food_floor_cm2"] for v in observed)/len(observed) if observed else None
-            ),
-            "total_added_fresh_leaf_area_cm2":sum(supplemented),
+            "visits_below_preset_floor":below(observed),
+            "fraction_below_floor_observed":below(observed)/len(observed) if observed else None,
+            "n_visits_with_living_late_instars":len(late_rows),
+            "late_instar_access_observed_visits":len(late_observed),
+            "late_instar_below_floor_visits":below(late_observed),
+            "late_instar_missing_food_measurements":len(late_rows)-len(late_observed),
+            "late_instar_fraction_below_floor":below(late_observed)/len(late_observed) if late_observed else None,
+            "total_added_fresh_leaf_area_cm2":sum(r["added"] for r in supplemented),
+            "added_leaf_age_class_counts":dict(added_ages),
             "missing_added_area":len(rows)-len(supplemented)
         }
     return out
+
 
 def block_differences(plants,blocks,stats,key="lower_bound"):
     vals=[]
@@ -228,6 +261,10 @@ def analyze(allocation,info,fates,visits):
         obs=sum(quality[p]["n_observed_accessible_area"] for p in ids)
         below=sum(quality[p]["visits_below_preset_floor"] for p in ids)
         additions=sum(quality[p]["total_added_fresh_leaf_area_cm2"] for p in ids)
+        late_n=sum(quality[p]["late_instar_access_observed_visits"] for p in ids)
+        late_below=sum(quality[p]["late_instar_below_floor_visits"] for p in ids)
+        add_ages=Counter()
+        for p in ids:add_ages.update(quality[p]["added_leaf_age_class_counts"])
         perarm[arm]={
             "independent_cages":len(ids),"original_focal_larvae":assigned,
             "successful_flight_capable_adults":succ,"unknown_fate":missing,
@@ -236,6 +273,12 @@ def analyze(allocation,info,fates,visits):
             "observed_food_visits":obs,"visits_below_food_floor":below,
             "fraction_observed_below_floor":below/obs if obs else None,
             "missing_food_measurements":sum(quality[p]["missing_accessible_area"] for p in ids),
+            "visits_with_living_3to5_instar_larvae":sum(quality[p]["n_visits_with_living_late_instars"] for p in ids),
+            "observed_late_instar_food_visits":late_n,
+            "late_instar_visits_below_food_floor":late_below,
+            "late_instar_fraction_below_food_floor":late_below/late_n if late_n else None,
+            "late_instar_food_measurement_missing":sum(quality[p]["late_instar_missing_food_measurements"] for p in ids),
+            "supplemented_leaf_age_classes":dict(add_ages),
             "total_added_fresh_leaf_area_cm2":additions,
         }
     lower=sum(z["interaction"] for z in effect)/len(effect)
@@ -243,7 +286,7 @@ def analyze(allocation,info,fates,visits):
     worst_case_upper=sum(z["worst_case_upper"] for z in uncertainty)/len(uncertainty)
     complete=all(ends[p]["outcome_unknown"]==0 for p in plants)
     return {
-        "schema":"chocho_kyoto_food_clamp_outcomes_v01",
+        "schema":"chocho_kyoto_food_clamp_outcomes_v02",
         "randomization_unit":"whole plant/enclosure",
         "n_independent_plants":len(plants),"n_blocks":len(blocks),
         "per_arm":perarm,
@@ -255,7 +298,7 @@ def analyze(allocation,info,fates,visits):
         "worst_case_attrition_bounds_by_block":uncertainty,
         "independent_block_bootstrap_95ci_for_missing_as_fail":bootstrap(effect),
         "all_native_cohort_fates_known":complete,
-        "resource_manipulation_achieved":"NOT_AUTOMATICALLY_IDENTIFIABLE_FROM_SOURCE_LEDGER; inspect arm contrasts and tissue quality",
+        "resource_manipulation_achieved":"NOT_AUTOMATICALLY_IDENTIFIABLE_FROM_SOURCE_LEDGER; inspect late-instar arm contrasts, previous starvation/death, and tissue age; never select a subset of successful clamps",
         "ITT_vs_mechanism":"Randomized clamp is a bundled food-access/tissue-quality/handling strategy; a positive interaction does not identify food mass as the sole mediator; do not condition primary estimates on achieved post-treatment supply",
         "does_not_condition_on_supplement_success":True,
         "nonresource_mechanism_causally_identified":False,
