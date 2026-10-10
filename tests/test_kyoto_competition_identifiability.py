@@ -59,7 +59,9 @@ def test_duplicate_day_cannot_create_extra_replicate():
     larval,plants=build()
     rows=larval.decode().splitlines()
     first=rows[1].split(",")
-    rows[2]=rows[2].replace(","+rows[2].split(",")[5]+",",","+first[5]+",",1)
+    second=rows[2].split(",")
+    second[5]=first[5] # modify the exact day column, never string-replace treatment codes
+    rows[2]=",".join(second)
     try:
         mod.audit(("\n".join(rows)+"\n").encode(),plants)
     except ValueError as err:
