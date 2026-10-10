@@ -54,9 +54,9 @@ def decode(raw):
     n=0
     for r in reader:
         n+=1
-        key=(r["Patch"].strip(),r["Year"].strip())
-        if not all(key) or key in records:
-            raise ValueError("duplicate or empty Patch x Year key")
+        patch=r["Patch"].strip()
+        if not patch or not r["Year"].strip():
+            raise ValueError("empty Patch or Year key")
         try:
             year=int(r["Year"])
             occ=int(r["Occupancy"])
@@ -64,9 +64,12 @@ def decode(raw):
             vs=int(r["Vs"])
         except (ValueError,TypeError) as e:
             raise ValueError("missing or noninteger year, occupancy, or host cover") from e
+        key=(patch,year)
+        if key in records:
+            raise ValueError("duplicate Patch x Year key")
         if occ not in (0,1) or pl not in (0,1,2,3) or vs not in (0,1,2,3):
             raise ValueError("unexpected host/occupancy category")
-        records[(key[0],year)]={"patch":key[0],"year":year,"network":r["Network"].strip(),
+        records[key]={"patch":patch,"year":year,"network":r["Network"].strip(),
                                 "occupancy":occ,"pl":pl,"vs":vs}
     return records,n
 
