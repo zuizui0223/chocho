@@ -1,0 +1,57 @@
+{
+  "schema": "chocho_nettle_delayed_enemy_feedback_v01",
+  "date": "2026-10-10",
+  "freeze_state": "FROZEN_BEFORE_INSPECTION_OF_ROW_LEVEL_PARASITOID_COUNTS_OR_PREDICTIVE_OUTCOMES",
+  "source": {
+    "article": "Audusseau et al. 2021 Oikos 10.1111/oik.07953",
+    "original_data": "Figshare DOI 10.17045/STHLMUNI.14260211, article 14260211, Audusseau_etal2021_batch_monitoring.csv, file ID 29157873",
+    "source_md5": "5e861203477ce8d2ae3efdfacc7436fc",
+    "source_csv_delimiter": ";",
+    "known_source_n_batches": 1080,
+    "published_source_scope": "2017-2018, 19 sites, 6,777 larvae, 1,508 reported parasitism"
+  },
+  "question": "Can recent preceding Araschnia levana presence at a site explain a resident butterfly's subsequent Sturmia bella parasitism beyond contemporaneous co-occurrence, phenology, butterfly density, county and year?",
+  "focal_species": [
+    "Aglais urticae",
+    "Aglais io"
+  ],
+  "introduced_herbivore": "Araschnia levana (northward range expanding in Sweden, using the existing resident Urtica dioica host)",
+  "parasitoid": "Sturmia bella (microtype eggs on nettle leaves, can be acquired after sampling through lab-supplied local leaves)",
+  "baseline": "Same-batch larval instar, resident species, year, county, study week and week squared, latitude, contemporaneous Araschnia presence, log1p(current total observed larvae), log1p(previous site-week total observed larvae), elapsed survey weeks.",
+  "incremental_predictor": "binary Araschnia levana observed at the immediately previous survey occasion within 1–3 weeks in the SAME site and SAME year (excluding current and future rows); if prior encounter absent because no sampling, exclude not impute zero",
+  "primary_outcome": "Within the collected resident-butterfly larvae from each sampled batch, observed reared Sturmia bella emerging during larval or pupal stages (sum corresponding count fields only if non-overlapping per protocol source; total ≤ nb_larvae_in_lab). Observation proxy for parasitoid attack, NOT demonstrated in-field transmission or viable adult recruitment.",
+  "time_alignment": "Within each site BMS_id × year, aggregate source batches into site×ISO-week observations. Use actual Araschnia levana butterfly species presence/abundance rather than a recipient's parasite outcome to define exposure. Require previous sampled week gap 1–3, never connect across years.",
+  "primary_evaluation": "Leave-one-original-site (BMS_id) out across both years, train on other sites; mean heldout binomial logloss per original butterfly larva; report baseline minus lag-augmented logloss; site-cluster bootstrap CI 2000 draws, seed 20261010. Validates prediction transport between sampled sites, not time-forward causal effects.",
+  "requirements": {
+    "min_sites": 10,
+    "min_lagged_presence_batches": 30,
+    "min_lagged_absence_batches": 30,
+    "min_distinct_sites_in_both_presence_groups": 5,
+    "min_parasitized_larvae_each_group": 10,
+    "min_discordant_prev_yes_current_no": 15,
+    "min_discordant_prev_no_current_yes": 15,
+    "min_sampled_time_gaps_1to3weeks": true,
+    "source_sturmia_species_count_consistency": "sum of original two resident butterflies close to published 39 and 105, with transparent mismatches"
+  },
+  "sensitivity": [
+    "Same source years independently (2017 / 2018) for sign consistency; no threshold tuning",
+    "Southern counties only (Araschnia established) to assess latitude confounding; interpret only if sufficient sites and events",
+    "Within-sites permutation of lagged Araschnia exposure restricted to study year / broad season for diagnostic, NOT causal randomization",
+    "Future Araschnia presence as a negative-control lead on identical eligible rows if sufficient; future lead is NOT a valid forward prediction"
+  ],
+  "success": "Added lag exposure improves leave-one-site-out logloss (positive), 95% site-bootstrap lower bound >0, positive improvement in BOTH years, southern-only sign positive and lead-negative-control smaller than the past effect. This is an exploratory predictive association, not a preregistered prospective species introduction intervention.",
+  "failure": "Otherwise STOP lagged enemy-feedback branch: do not retune delay windows, parasite taxa, subset years, host butterflies or penalty to rescue sign.",
+  "prior_art": [
+    "Audusseau 2021 already tested concurrent other-butterfly presence, abundance, week, county, year and years since colonization.",
+    "Audusseau et al. 2020 Insects 11:478 already tested host–Phobocampe confusa phenological overlap.",
+    "Site-collected Urtica supplied during rearing could expose larvae to Sturmia bella microtype eggs, so timing of the observed infection is not guaranteed to precede field capture."
+  ],
+  "limitations": [
+    "Study concerns expanding butterfly on a native nettle, NOT redistribution of nonnative larval host plants",
+    "A lagged association could reflect season, climate, sampling effort, common site traits, parasitoid developmental time or field-to-laboratory transmission",
+    "No randomized earlier Araschnia addition/removal; no pathogen/parasitoid causal indirect competition claim",
+    "No adult flight-capable recruitment or mating outcomes",
+    "Count larvae within batch are correlated; site bootstrap not individual larvae"
+  ],
+  "GEB_PR38_untouched": true
+}
