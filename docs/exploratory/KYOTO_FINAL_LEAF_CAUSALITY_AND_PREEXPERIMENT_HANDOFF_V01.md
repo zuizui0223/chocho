@@ -60,6 +60,8 @@ The updated `KYOTO_FOOD_CLAMP_ANALYSIS_CONTRACT_V01.json` and `scripts/analyze_k
 
 A useful sham where feasible is to add *the same age and provenance of leaf material* in all four arms, making the additional leaves inaccessible behind matched perforated barriers in the natural-food arms and accessible in the clamp arms. This partially equalizes fresh-leaf arrival, odors and handling, but could still modify plant microclimate or larval movement; monitor those directly. The true experimental unit is one **entire cage** even when it contains multiple potted plants. The CSV column `plant_id` is a legacy name for that randomized cage ID.
 
+> **2026-10-10 independent-study update:** Jang et al. (2026), DOI [10.5141/jee.26.017](https://doi.org/10.5141/jee.26.017), studied these **same two butterfly species** on a DIFFERENT host plant (*Aristolochia contorta*) in South Korea. Strong opposite light/microhabitat associations and only **5 both-species out of 875 original ramet observations** are reported. This is **published observational prior art**, not a novel effect of chocho and not causal evidence that competition caused spatial partition. Their printed quadrat denominator has an internal **255 versus 215** conflict requiring author confirmation; see [source-audited published-count decision](SWALLOWTAIL_2026_MICROHABITAT_AND_RESOURCE_LEGACY_DECISION_V01.md) and [reproducible arithmetic audit](https://github.com/zuizui0223/chocho/actions/runs/38045210348). A Kyoto test should now measure **actual co-use opportunity before manipulating payoff** and balance light within experimental blocks. **No edits to GEB PR #38.**
+
 ## 3. Executable new randomized comparison
 
 Freeze a **2×2** factorial assignment before any recipient larvae enter cages:
