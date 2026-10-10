@@ -1,0 +1,38 @@
+{
+  "schema": "chocho_aai_original_split_leaf_robustness_v01",
+  "created": "2026-10-10",
+  "status": "FROZEN_AFTER_SOURCE_STRUCTURE_AND_LOSS_COUNTS_KNOWN_BEFORE_REANALYSED_GROWTH_CONSUMPTION_EFFECTS",
+  "question": "Does the original split-leaf AAI test estimate a sufficiently narrow short-term effect to exclude biologically meaningful differences in 24-hour 3rd-instar growth/consumption, when paired leaves and unobserved fates are respected?",
+  "source": "Hashimoto Ohgushi 2023 Figshare 23170898, original larval CSV md5 982d4931da306a7ff8e8d550cffe5246; leafarea md5 ebe8c2404d9a13b73f08c16ecb9ddc22",
+  "prior_known_inventory": {
+    "larvae": 120,
+    "paired_source_leaves": 60,
+    "design": "30 split leaves per butterfly species, 60 larvae of each species with 30 AAI and 30 control",
+    "original_atrophaneura_loss": {
+      "AAI": 13,
+      "control": 8
+    },
+    "original_sericinus_loss": {
+      "AAI": 0,
+      "control": 0
+    },
+    "complete_source_composite_id_matches": 119,
+    "discrepant_record": "a4 original leaf half side r,l in larvae table versus r,r in leaf area; leaf ID and larva ID agree"
+  },
+  "estimand": "Within EACH species separately, average (AAI − control) normalized 24h growth and consumption for leaves with both caterpillars documented and loss=0, each original leaf contributes once; complete-pair analysis is selected on post-assignment survival.",
+  "growth_ratio": "(day1.mass − initial.mass) / initial.mass per larva",
+  "consumption_ratio": "consumed.leaf.area / initial.mass per larva (units inherited from authors; not a true calibrated assimilation efficiency)",
+  "unpaired_sensitivity": "Report AAI minus control all-observed means with independent source leaf-cluster bootstrapped confidence interval. Distinguish from complete-pair contrast. No posthoc trimming of negative growth.",
+  "bootstrap": "9999 within-species resamples of leaf IDs with replacement, seed 20261010, repeat for each endpoint; 95% empirical percentile interval.",
+  "fate_reporting": "Report all 120 original assigned larvae and 21 original loss=1 codes, in both treatment groups. These are author 'haphazardly dead' losses excluded in original analysis; NOT independently diagnosed toxicological mortality and cannot be treated as random missing at will.",
+  "equivalence": "No equivalence/absence-of-effect claim merely because interval contains zero; no biological equivalence margin fixed independently of outcomes. State CI and original prior art.",
+  "eligibility": "Source CSV MD5, one unique h.id in each table, treatment/leaf ID match through h.id, two treated/control records per source leaf, one species per leaf; do not force the single original half-label typo to exact-match.",
+  "not_identified": [
+    "Multi-compound Aristolochia feeding blend effects",
+    "induced defenses after Sericinus feeding",
+    "recipient larval recruitment/adult emergence",
+    "competitor direct interference",
+    "effect on introduced host plant range"
+  ],
+  "GEB_PR38_untouched": true
+}
