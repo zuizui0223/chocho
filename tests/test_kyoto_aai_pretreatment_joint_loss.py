@@ -72,3 +72,12 @@ def test_original_pretreatment_positive_only():
     except ValueError as e:
         assert "PRETREATMENT" in str(e)
     else:raise AssertionError("nonsensical baseline leaf area accepted")
+
+def test_single_source_ID_is_a_confounding_check_not_new_finding():
+    larva,area=source()
+    rows,ids,_=m.parse(larva,area)
+    # Artificial fixture has only one composite ID; this should fail closed
+    # rather than quietly treating it as the original 19/11 source mix.
+    try:m.single_original_leaf_id_area_sensitivity(rows,seed=42,draws=99)
+    except ValueError as e:assert "single-ID 19" in str(e)
+    else:raise AssertionError("unsupported original source ID stratification accepted")
