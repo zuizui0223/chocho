@@ -1,0 +1,44 @@
+{
+  "schema": "chocho_kyoto_aai_baseline_correlates_of_joint_loss_v01",
+  "date": "2026-10-10",
+  "status": "EXPLORATORY_CONDITIONED_ON_PREVIOUSLY_OBSERVED_POSTASSIGNMENT_JOINT_LOSS; FROZEN_BEFORE_READING_PREASSIGNMENT_AREA_MASS_AND_COMPOSITE_LEAF_ASSOCIATIONS",
+  "question": "Are the seven A.alcinous source-leaf blocks in which both larvae were lost systematically different in PRETREATMENT leaf surface area, larval initial mass, or use of composite multi-ID leaf material, after conditioning on original source strain?",
+  "source": {
+    "published": "Hashimoto Ohgushi 2023 Ecol Evol 10.1002/ece3.10164",
+    "data": "https://doi.org/10.6084/m9.figshare.23170898",
+    "larvae": {
+      "url": "https://ndownloader.figshare.com/files/41146985",
+      "md5": "982d4931da306a7ff8e8d550cffe5246"
+    },
+    "leafarea": {
+      "url": "https://ndownloader.figshare.com/files/41146988",
+      "md5": "ebe8c2404d9a13b73f08c16ecb9ddc22"
+    }
+  },
+  "unit": "30 recorded A.alcinous l.id source-block pairs, with separately recorded AAI/control original initial leaf areas and initial larval weights, original strain shared within pair",
+  "frozen_covariates": [
+    "mean pretreatment leaf-half area per source pair",
+    "mean log initial caterpillar body mass per source pair",
+    "binary original composite l.id containing comma (multiple source components represented by one l.id)"
+  ],
+  "outcome": "Both AAI and control larva coded loss=1 in original source, n=7 of 30. Do not call this AAI lethality or new competition mechanism.",
+  "statistics": "Within each original strain, permute observed both-loss indicator across the original source leaf pairs keeping number jointly lost in each strain fixed. For continuous covariates compare unconditional original-group mean difference and within-strain fixed-label randomization p two-sided by absolute difference, 9999 seeded Monte Carlo draws. For composite ID binary, same stratum-restricted permutation and difference in proportions. Report all three, no selection of favorable sign.",
+  "seed": 20261010,
+  "multiple_test_policy": "Three hypotheses exploratory. Report unadjusted p and Holm-adjusted p; never claim confirmatory significance because predictors were selected after prior coloss discovery.",
+  "source_integrity": [
+    "Exact MD5 verification of both original data files",
+    "join by h.id and require matching l.id + treatment, flag one known l.or.r discrepancy without silently repairing",
+    "original 30 leaf pairs and original 4 A.alcinous strain groups, each with both treatment halves",
+    "retain all original larvae including loss=1, no conditioning on observed 24h growth",
+    "do not compare final measured leaf area, which is post-exposure and outcome-dependent"
+  ],
+  "stop": "If none of the three PRETREATMENT features predicts both-loss after restricting original source strain, no further endogenous posthoc variable scans. If one does, still observational association cannot disentangle plant quality, initial mass, sampling/batch handling, or microenvironment.",
+  "not_measured": [
+    "leaf AAI concentration after application",
+    "multicomponent Aristolochia chemistry",
+    "true source leaf molecular genetics",
+    "randomized plant conditioning by Sericinus",
+    "flight-capable adults"
+  ],
+  "GEB_PR38_untouched": true
+}
