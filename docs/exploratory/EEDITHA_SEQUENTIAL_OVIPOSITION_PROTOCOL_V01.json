@@ -1,0 +1,66 @@
+{
+  "schema": "chocho_eeditha_sequential_oviposition_protocol_v01",
+  "created_on": "2026-10-10",
+  "status": "PREDECLARED_BEFORE_SOURCE_DOWNLOAD_AND_OUTCOME_MODEL",
+  "scientific_goal": "Probe short-term behavioral path dependence in host choice; not multi-generational or evolutionary hysteresis.",
+  "source": {
+    "article": "Haan et al. (2021), Scientific Reports, doi:10.1038/s41598-020-80413-y",
+    "independent_archive": "Zenodo record 4318182, dryad:10.5061/dryad.612jm642h",
+    "file": "oviposition.csv",
+    "url": "https://zenodo.org/records/4318182/files/oviposition.csv?download=1",
+    "expected_md5": "6d9770cce9cacfccd98f7d19c67d0ec5",
+    "rows_unverified": true
+  },
+  "ecology": {
+    "native_hosts": [
+      "Castilleja hispida",
+      "Castilleja levisecta"
+    ],
+    "adopted_exotic_host": "Plantago lanceolata",
+    "choice_counts": "CAHI.cl,CALE.cl,PLLA.cl",
+    "egg_counts": "CAHI.eggs,CALE.eggs,PLLA.eggs,other.eggs",
+    "repeated_group": "matriline",
+    "sequence": "choice.number and date",
+    "prior_art": "Original publication already finds temporal changes in oviposition preference; do not claim that discovering temporal association itself is novel."
+  },
+  "eligibility": {
+    "sequential_trial": "a current row with at least one Plantago and at least one Castilleja offered, current recorded host eggs >0, and a preceding egg-producing trial in the same matriline",
+    "nonzero_eggs_needed_for_lag": true,
+    "nonnegative_offer_and_egg_counts": true,
+    "must_have_two_or_more_distinct_matrilines": true,
+    "minimum_eligible_trials_for_fit": 25,
+    "minimum_eligible_matrilines_for_fit": 8,
+    "minimum_eligible_positive_and_negative_choices_each": 5,
+    "label": "1 if Plantago receives strictly more eggs than both Castilleja species combined in the current mixed-offer trial, else 0",
+    "ties_and_other_eggs": "Plantago strictly exceeds native total; other eggs excluded from binary label; test sensitivity exclusion if other eggs are nonzero"
+  },
+  "prediction": {
+    "baseline_features": [
+      "log1p(PLLA.cl)",
+      "log1p(CAHI.cl+CALE.cl)",
+      "days_since_minimum_observation_date",
+      "choice.number"
+    ],
+    "incremental_feature": "Plantago egg share of all named-host eggs on the immediately preceding egg-positive trial in the same matriline (not plant availability on that trial)",
+    "model": "StandardScaler + LogisticRegression(C=1.0, max_iter=2000, solver=lbfgs, no hyperparameter tuning)",
+    "validation": "Leave-one-matriline-out; held-out score calculated on eligible trials, prior behavioral observation available chronologically",
+    "primary_statistic": "mean held-out baseline log loss minus history-augmented log loss, unweighted per trial",
+    "uncertainty": "cluster bootstrap resampling matrilines (2000 draws, fixed seed 20261010), not individual eggs",
+    "secondary": "Brier skill difference and host-choice class balance",
+    "negative_control": "On rows with a next egg-positive trial, replace lag feature with next-trial Plantago share; future-choice predictive skill as stable-matriline/trait confounding diagnostic only. It is not a valid prospective model."
+  },
+  "claim_gate": {
+    "positive_pilot": "primary held-out improvement >0 with matriline bootstrap 95% interval excluding 0, plus the past-choice predictor exceeding future-choice diagnostic on identical rows, and effect not concentrated in one matriline",
+    "if_not_passed": "no evidence for predictive behavioral carryover under this exploratory design",
+    "even_if_passed": "association only: cannot attribute to memory, evolution, historical exotic-host exposure, or demographic trapping",
+    "next_step": "experimental controlled host-sequence exposure, balanced mothers/populations, plus subsequent oviposition and offspring adult emergence after controlled host loss"
+  },
+  "stop": [
+    "No exact MD5 match: stop",
+    "Unclear identity of matriline/trials or .cl meaning: treat interpretation as provisional",
+    "Too few eligible groups/events: report nonestimable",
+    "No rearing cohort or host-removal variable: do not estimate adult recruitment/fallback",
+    "Original paper already documented temporal preference: do not rebrand as new scientific discovery"
+  ],
+  "main_GEB_PR38": "unchanged"
+}
