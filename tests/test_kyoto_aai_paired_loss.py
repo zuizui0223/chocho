@@ -60,3 +60,13 @@ def test_paired_bootstrap_is_reproducible():
     b=m.bootstrap_paired_risk_difference(pairs,20261010,draws=599)
     assert a==b
     assert a[0] <= (6-1)/30 <= a[1]
+
+def test_fisher_exact_paired_loss_dependence_not_treatment_effect():
+    assert abs(m.fisher_two_sided_pair_dependence(30,13,8,7)-0.009357543450496972)<1e-12
+    assert abs(m.fisher_two_sided_pair_dependence(30,0,0,0)-1)<1e-12
+
+def test_strain_concordance_is_a_recorded_confounder_not_leaf_mechanism():
+    out=m.summarize_pair_data(fake())
+    assert out["strain_pair_concordance"]["Atrophaneura alcinous"]["leaf_pairs_sharing_same_recorded_strain"]==30
+    assert out["exploratory_after_margin_inspection"] is True
+    assert out["species"]["Atrophaneura alcinous"]["biological_cause_of_loss_identified"] is False
