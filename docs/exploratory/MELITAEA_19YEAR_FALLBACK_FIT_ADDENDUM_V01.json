@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_melitaea_dynamic_fallback_fit_v01",
+  "created": "2026-10-10",
+  "status": "SET_AFTER_SOURCE_AND_CELL_COUNTS_INSPECTED_BEFORE_ADJUSTED_MODEL_RESULTS",
+  "source": "Schulz et al. 2020 independent Zenodo 4987060 MD5=69122a1d82b1fb970fb6638b02da3db4",
+  "known_support": {
+    "records": 74065,
+    "patches": 4902,
+    "years": "1999-2018",
+    "risk_set": 10061,
+    "decline_high": 730,
+    "decline_low": 163,
+    "next_nonoccupancy_high": 262,
+    "next_nonoccupancy_low": 68
+  },
+  "question": "Does Veronica decline × Plantago backup status add out-of-year predictive value for next-year local nonoccupancy conditional on current/previous host levels and butterfly abundance?",
+  "outcome": "nest_count(t+1)==0 among nest_count(t)>0, same patch and consecutive t-1,t,t+1 years",
+  "baseline": [
+    "log1p(population_t)",
+    "plantago_t",
+    "veronica_t",
+    "plantago_tminus1",
+    "veronica_tminus1",
+    "veronica_decline",
+    "plantago_high",
+    "year_minus_2009",
+    "squared_year_minus_2009",
+    "log1p(patch_area)",
+    "patch_x",
+    "patch_y",
+    "grazing_presence_t",
+    "grazing_intensity_t",
+    "plantago_dry_t",
+    "veronica_dry_t"
+  ],
+  "increment": "veronica_decline * plantago_high",
+  "processing": "SimpleImputer(add_indicator=True, strategy=median) then StandardScaler then LogisticRegression(C=1.0, solver=lbfgs,max_iter=1000); train-only preprocessing",
+  "validation": "leave-one-calendar-year-t-out; paired heldout logloss and Brier baseline minus increment",
+  "uncertainty": "2000 fixed-seed cluster bootstraps of heldout paired loss differences by full patch and separately full year; independent egg counts not samples",
+  "criterion": "Both patch and year bootstrap 95% lower bounds greater than zero, overall improvement positive and at least 12 of 18 years positive; otherwise FAIL predictive novelty gate.",
+  "confounding": "observational association only; static hosts vs dynamic accessibility, spatial connectivity and parasitoids not fully controlled",
+  "no_claims": [
+    "not causal host-removal rescue",
+    "not invasive plant impact",
+    "not historical host-use hysteresis",
+    "not adult fitness"
+  ],
+  "prior_art": "Schulz 2020 already reports two-host occupancy advantage; Opedal 2020 already reports extinction versus both host abundances.",
+  "GEB_PR38_unchanged": true
+}
