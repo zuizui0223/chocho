@@ -1,0 +1,19 @@
+{
+  "schema": "chocho_aai_source_strain_adjusted_coloss_v01",
+  "created": "2026-10-10",
+  "status": "POSTHOC_SENSITIVITY_ADDED_AFTER_OBSERVING_WITHIN_LEAF_LOSS_DEPENDENCE; NOT_INDEPENDENT_CONFIRMATION",
+  "source": "Hashimoto & Ohgushi 2023 original 120-larva 24h AAI split-leaf experimental table, Figshare 41146985, checksum verified",
+  "previous_audited_observations": "30 A.alcinous source leaf pairs; both loss=7, neither loss=16, AAI-only loss=6, control-only loss=1. Authors' strain label same for both halves in all 30 A.alcinous leaf pairs; four recorded source strain categories.",
+  "question": "Does observed coincidence of larval loss within a source leaf persist after conditioning on shared original butterfly strain/batch labels, or can source-cohort heterogeneity explain it?",
+  "null": "Within original source-strain groups, AAI-half and control-half author-coded loss indicators are independently assigned across leaf IDs conditional on the number of losses of each half in that same source group.",
+  "estimator": "Exact convolution of stratum-wise hypergeometric overlap count distributions. Fixed stratum source leaf n, AAI-loss count and control-loss count. Compare observed total both-loss leaf pairs to the exact one-sided tail Pr(overlap>=observed), plus expected both-loss in each stratum.",
+  "scope": "Secondary post-hoc sensitivity of dependence between two haphazard-loss indicators; not a causal AAI toxicity effect, not mechanistic leaf chemistry, not biological co-occurrence experiment.",
+  "quality_rules": [
+    "No grouping invented from outcomes; use exact author strain string that was recorded before original assay outcomes.",
+    "Count native A.alcinous only for primary diagnostic; Sericinus has zero source-coded losses.",
+    "Do not remove leaf pairs with both deaths or assume losses independent.",
+    "Report unstratified Fisher exact and conditional source-strain results; do not select whichever is significant.",
+    "Cannot separate leaf handling, same maternal family, insect vigor, plant source or shared experimental contamination."
+  ],
+  "GEB_PR38_untouched": true
+}
