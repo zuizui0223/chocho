@@ -1,0 +1,33 @@
+name: independent 19-year Melitaea host-change support
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/MELITAEA_19YEAR_DYNAMIC_FALLBACK_PROTOCOL_V01.json"
+      - "scripts/audit_melitaea_19year_fallback_support.py"
+      - "tests/test_melitaea_19year_fallback_support.py"
+      - ".github/workflows/melitaea-19year-fallback-support.yml"
+permissions:
+  contents: read
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test holdout chronology and source codes
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_melitaea_19year_fallback_support.py
+      - name: Count observational host-decline support from MD5-exact source
+        run: |
+          python scripts/audit_melitaea_19year_fallback_support.py --receipt results/melitaea_19year_host_fallback_support_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: melitaea-19year-host-decline-feasibility
+          path: results/melitaea_19year_host_fallback_support_v01.json
+          retention-days: 30
