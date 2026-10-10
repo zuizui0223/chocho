@@ -58,6 +58,11 @@ def audit_text(raw:bytes,url:str):
        "reported_short_test_duration":"six days" in t or "6 days" in t,
        "reported_temperature_24_C":"24°c" in t or "24 °c" in t or "24° c" in t or "24 c" in t,
        "reported_leaf_replenishment":"50%" in t and "replaced" in t,
+       "leaf_AAI_age1_July_83point80":"83.80" in t,
+       "leaf_AAI_age2_July_7point61":"7.61" in t,
+       "leaf_AAI_age3_July_2point26":"2.26" in t,
+       "published_Sericinus_age_by_season_F8point952":"8.952" in t,
+       "published_seasonal_leaf_CN_F270point727":"270.727" in t,
     }
     return {"status":"AUTHOR_SOURCE_ARTICLE_VERIFIED" if all(gate.values()) else "RETRIEVED_SOURCE_NOT_FULLY_MATCHED",
             "matched_checks":gate,"source_url":url,
@@ -104,7 +109,9 @@ def run():
                "AAI_July_age_year1_leaf_ng_per_mg":83.80,
                "AAI_July_age_year2_leaf_ng_per_mg":7.61,
                "AAI_July_age_year3_leaf_ng_per_mg":2.26,
-               "statistical_age_by_season_interaction_for_Sericinus_RGR_F":8.952
+               "statistical_age_by_season_interaction_for_Sericinus_RGR_F":8.952,
+               "statistical_season_effect_for_host_leaf_C_N_F":270.727,
+               "numeric_values_gate_against_live_retrieved_fulltext":True
             },
             "metadata_facts_not_new_discovery":True,
             "available_2026_Korean_same_ramet_original_data":False,
