@@ -40,7 +40,6 @@ def test_static_area_coordinates_join_schema():
 def test_group_bootstrap_deterministic():
     dif=np.array([-0.1,0.2,0.3,-0.05])
     groups=["x","x","y","z"]
-    a=mod.cluster_interval(dif,groups,20261010,draws_not_defined) if False else None
     x=mod.cluster_interval(dif,groups,seed=20261010,iterations=50)
     y=mod.cluster_interval(dif,groups,seed=20261010,iterations=50)
     assert x==y and x[0]<=x[1]
