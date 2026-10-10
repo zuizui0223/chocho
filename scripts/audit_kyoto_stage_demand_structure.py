@@ -62,6 +62,10 @@ def analyze(raw):
             "source_first_A_stage_columns":{k:first[k] for k in ("a1","a2","a3","a4","a5","app","ap","cumul.ap","total.a")},
             "source_last_A_stage_columns":{k:last[k] for k in ("a1","a2","a3","a4","a5","app","ap","cumul.ap","total.a")}
         })
+    late_onsets=Counter(str(row["first_late_A_instar_observed_day"])
+                        for row in samples if row["first_late_A_instar_observed_day"] is not None)
+    pup_onsets=Counter(str(row["first_A_pupation_observed_day"])
+                       for row in samples if row["first_A_pupation_observed_day"] is not None)
     return {
         "schema":"chocho_kyoto_stage_demand_source_only_v01",
         "original_DOI":"10.1002/ece3.10164",
@@ -71,6 +75,8 @@ def analyze(raw):
         "n_original_cage_date_rows":len(lines),
         "non_numeric_fields_excluding_date":dict(nonnumeric),
         "instar_support":dict(early_late_support),
+        "first_observed_3rd_to_5th_instar_day_distribution":dict(sorted(late_onsets.items(),key=lambda kv:float(kv[0]))),
+        "first_observed_pupation_day_distribution":dict(sorted(pup_onsets.items(),key=lambda kv:float(kv[0]))),
         "per_cage_stage_onsets":samples,
         "resource_access_or_quality_observed_at_stage":False,
         "new_butterfly_survival_effect_estimated":False,
