@@ -93,6 +93,47 @@ def original_toy_required_or():
                     "neither":542,"S_only":204,"A_only":124,"both":5}},
             "conditional_model_cannot_equate_these_implied_ORs_to_published_adjusted_effects":True}
 
+def site_intercept_noncompetition_counterexample():
+    """Show why published light slopes do NOT identify site sorting.
+
+    The two hypothetical groups are the PREVIOUS invented sun/shade classes,
+    *reinterpreted as arbitrary source groups with their own species intercepts*.
+    Set a common illustrative RLI=50 to compute site intercepts; published
+    within-site light ORs remain OR_S and OR_A in both groups, but unobserved
+    site intercept differences can reproduce the previous exact four margins.
+    These are not Korean site data and must never be treated as fitted effects.
+    """
+    toy=[
+      {"hypothetical_source_group":"group_1_NOT_KOREA","N":400,"S":200,"A":5,"both":3},
+      {"hypothetical_source_group":"group_2_NOT_KOREA","N":475,"S":9,"A":124,"both":2}
+    ]
+    rows=[]
+    for item in toy:
+        n=item["N"]
+        ps=item["S"]/n
+        pa=item["A"]/n
+        alpha_s=logit(ps)-math.log(OR_S)*50
+        alpha_a=logit(pa)-math.log(OR_A)*50
+        expected=n*ps*pa
+        rows.append({**item,"illustrative_shared_RLI":50,
+                     "group_intercept_for_reported_OR_S":alpha_s,
+                     "group_intercept_for_reported_OR_A":alpha_a,
+                     "expected_both_under_conditional_independence":expected})
+    sum_expected=sum(row["expected_both_under_conditional_independence"] for row in rows)
+    assert 4.8<sum_expected<5
+    return {
+       "kind":"HYPOTHETICAL_SITE_INTERCEPT_COUNTEREXAMPLE_NOT_FITTED_FIELD_MODEL",
+       "group_model":"Within each group logistic(theta_species_group + log(reported OR species)*RLI), species independent conditional on group and RLI; group intercepts unrestricted.",
+       "groups":rows,
+       "expected_both_in_model":sum_expected,
+       "printed_2026_original_margins_exactly_reproduced_in_hypothetical_realization":{
+           "N":875,"S":209,"A":129,"both":5},
+       "proof":"Allowing source-group-specific intercepts even with the SAME reported light coefficients can yield expected overlap≈5. Light slope coefficients plus pooled incidence margins do not restrict unobserved site intercepts.",
+       "not_a_verified_Korean_site_distribution":True,
+       "not_a_causal_competition_effect":True
+    }
+
+
 def evaluate():
     # Grid-restricted two-endpoint simulation. A numerical minimum here is NOT
     # a theorem that all arbitrary x histograms have their optimum at endpoints.
@@ -112,6 +153,7 @@ def evaluate():
       "previous_toy_OR_requirement":original_toy_required_or(),
       "rigorous_EXPECTED_overlap_lower_bound_under_common_intercept_assumption":lower,
       "two_RLI_endpoint_distribution_grid_0_to_100_numerical_minimum":minimum,
+      "unrestricted_source_group_intercepts_counterexample":site_intercept_noncompetition_counterexample(),
       "two_endpoint_grid_resolution_sunny_fraction":1/2000,
       "observed_five_is_not_proof_that_expected_mean_is_five":True,
       "observed_five_can_be_sampling_variation_even_with_higher_mean":True,
