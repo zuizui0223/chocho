@@ -1,0 +1,113 @@
+{
+  "schema": "chocho_melitaea_two_host_fallback_feasibility_v01",
+  "created_on": "2026-10-10",
+  "status": "FROZEN_BEFORE_RAW_DATA_EVENT_COUNTS",
+  "goal": "Test whether high abundance of remaining host attenuates butterfly local extinction after decline of a different host, beyond host abundance and ordinary spatial differences.",
+  "source": {
+    "doi": "10.5061/dryad.905qfttrg",
+    "citation": "DiLeo et al. 2024 demography and environment modulate genetic-diversity extinction risk",
+    "version": "2024-07-25 version 3",
+    "expected_archive": "DiLeo_et_al_DRYAD_ver3.zip",
+    "expected_in_zip": "empirical_models/data/RAWDATA/fall_survey_2004_2013.csv",
+    "source_rows_from_readme": 36704,
+    "expected_columns": [
+      "Patch",
+      "Year",
+      "Network",
+      "Area",
+      "Occupancy",
+      "Nest_count",
+      "Pl",
+      "Vs",
+      "Pl_dry",
+      "Vs_dry"
+    ],
+    "download_options": [
+      "https://datadryad.org/api/v2/datasets/doi%3A10.5061%2Fdryad.905qfttrg/download",
+      "https://datadryad.org/downloads/file_stream/3349312"
+    ],
+    "no_verified_bytes_yet": true
+  },
+  "botany": {
+    "species": [
+      "Plantago lanceolata",
+      "Veronica spicata"
+    ],
+    "botanical_status": "both established hosts in Åland, not an introduced-versus-native pair",
+    "cover_unit": "0-3 observer ordinal per plant; not comparable edible biomass or per-capita larval quality"
+  },
+  "preexisting_evidence": [
+    {
+      "doi": "10.1002/ecy.3186",
+      "claim": "Opedal et al. (2020) already modeled 19 years of butterfly extinction and colonization with both host abundances plus connectivity; botanical quantity effects are prior art."
+    },
+    {
+      "doi": "10.1086/321985",
+      "claim": "Hanski and Singer (2001) already linked colonization to host use and landscape host composition; matching preference is prior art."
+    },
+    {
+      "doi": "10.1038/s41467-026-73236-4",
+      "claim": "Plant richness and butterfly diet specialization associations do not establish local functional fallback."
+    }
+  ],
+  "panel": {
+    "key": [
+      "Patch",
+      "Year"
+    ],
+    "select": "one autumn record per Patch × Year; any unresolved duplicates fail source gate",
+    "t_definition": "current autumn year t",
+    "tminus1_definition": "previous autumn t-1 with exact-year continuity",
+    "tplus1_definition": "next autumn t+1 with exact-year continuity",
+    "risk_set": "occupied(t)=1 and all three survey years observed; transition of hosts t-1 to t predates subsequent extinction at t+1",
+    "response": "Extinct_{t+1}=1 if Occupancy(t+1)=0; else 0",
+    "source_limit": "non-detection is not proven local extinction"
+  },
+  "events": {
+    "focal_host": "Veronica spicata",
+    "decline": "Vs(t-1)>=1 and Vs(t)<Vs(t-1)",
+    "backup_high": "Pl(t)>=2",
+    "backup_low": "Pl(t)<=1",
+    "comparison": "within focal-host decline events, high versus low contemporary backup availability",
+    "negative_control": "compare stable/nondeclining focal host cases using same backup strata"
+  },
+  "feasibility_gate": {
+    "min_decline_events_each_backup_stratum": 40,
+    "min_unique_patches_each_stratum": 30,
+    "min_networks_each_stratum": 5,
+    "min_years_each_stratum": 3,
+    "min_next_year_extinctions_total": 20,
+    "require_columns": [
+      "Patch",
+      "Year",
+      "Network",
+      "Area",
+      "Occupancy",
+      "Nest_count",
+      "Pl",
+      "Vs"
+    ],
+    "no_effect_if_gate_fails": true
+  },
+  "inference_if_pass": {
+    "primary": "difference in heldout network-block predictive logloss: base includes current Pl, Vs, Area, Nest_count and year; augmented adds decline×backup interaction; no tuning after effect inspection",
+    "secondary": "observed extinction risk contrast with network bootstrap CI within decline stratum; compare stable host reference",
+    "confounds": [
+      "spatially varying plant composition",
+      "drought and current edible plant stage",
+      "patch connectivity",
+      "survivor selection from requiring occupied t",
+      "field detection"
+    ],
+    "boundaries": [
+      "not causal host removal",
+      "not global host invasion",
+      "not historical genetic or maternal hysteresis",
+      "many patch-years are not independent populations",
+      "host cover scores are ordinal, not true equal biomass"
+    ],
+    "stop": "If few independent real declines or no comparator overlap, close the observational fallback route rather than regressions and cut-off searches."
+  },
+  "publication_decision": "one existing one-species time series cannot establish a general causal butterfly ecological rule without independent replicated systems or experimental loss",
+  "GEB_PR38_unchanged": true
+}
