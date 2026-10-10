@@ -1,0 +1,12 @@
+{
+  "schema": "chocho_kyoto_aai_single_source_id_leaf_area_robustness_v01",
+  "date": "2026-10-10",
+  "status": "TRANSPARENT_POSTHOC_CONFOUNDING_CHECK_AFTER_FULL_COHORT_BASELINE_RESULT; CHECK_DEFINED_BEFORE_SINGLE_ONLY_AREA_CONTRAST",
+  "motivation": "All 7 dual-loss blocks have single (not comma-composite) source leaf IDs; 11 of 30 original sources have composite IDs and larger baseline area might mechanically follow source composition. The full-cohort mean area difference may be driven by this source format.",
+  "question": "Among original 19 SINGLE-ID A.alcinous paired original source groups only, is initial half-leaf area still different between blocks where both originally assigned caterpillars were author-coded lost and other blocks, conditionally on original source strain?",
+  "comparison": "7 dual-loss single-ID source pairs versus 12 other single-ID pairs (verified already); do not use multi-ID pairs in sensitivity; preserve original source group as unit",
+  "statistic": "Difference in pretreatment half-leaf mean area; Monte Carlo 9999 two-sided randomization tests shuffling dual-loss labels within source-strain only with exact count fixed per stratum. Report absolute group means and differences. Do not interpret as causal, independent preregistration, or evidence of equal leaf chemistry.",
+  "policy": "One transparently selected robustness check because composite source label structurally confounds measured area. No threshold search, no further outcome-driven subset analysis after this check.",
+  "sources": "Original Figshare author files 41146985 MD5 982d4931da306a7ff8e8d550cffe5246 and 41146988 MD5 ebe8c2404d9a13b73f08c16ecb9ddc22",
+  "GEB_PR38_untouched": true
+}
