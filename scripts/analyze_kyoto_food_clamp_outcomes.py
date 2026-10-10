@@ -175,7 +175,10 @@ def block_differences(plants,blocks,stats,key="lower_bound"):
                       sum(r["treatment"]==arm for r in rs) for arm in ARMS}
         val=(means["CLAMP_COMPETITOR"]-means["CLAMP_NO_COMPETITOR"] -
              means["NATURAL_COMPETITOR"]+means["NATURAL_NO_COMPETITOR"])
-        vals.append({"block_id":block,"interaction":val,"arm_risks":means})
+        vals.append({"block_id":block,"interaction":val,
+                     "natural_competitor_effect":means["NATURAL_COMPETITOR"]-means["NATURAL_NO_COMPETITOR"],
+                     "clamped_competitor_effect":means["CLAMP_COMPETITOR"]-means["CLAMP_NO_COMPETITOR"],
+                     "arm_risks":means})
     return vals
 
 def interaction_missing_bounds(plants,blocks,ends):
@@ -246,11 +249,14 @@ def analyze(allocation,info,fates,visits):
         "per_arm":perarm,
         "block_level_lower_bound_interactions":effect,
         "ITT_missing_as_fail_interaction":lower,
+        "natural_competitor_effect_missing_as_fail":sum(z["natural_competitor_effect"] for z in effect)/len(effect),
+        "clamped_competitor_effect_missing_as_fail":sum(z["clamped_competitor_effect"] for z in effect)/len(effect),
         "true_worst_case_attrition_interaction_bounds":[worst_case_lower,worst_case_upper],
         "worst_case_attrition_bounds_by_block":uncertainty,
         "independent_block_bootstrap_95ci_for_missing_as_fail":bootstrap(effect),
         "all_native_cohort_fates_known":complete,
         "resource_manipulation_achieved":"NOT_AUTOMATICALLY_IDENTIFIABLE_FROM_SOURCE_LEDGER; inspect arm contrasts and tissue quality",
+        "ITT_vs_mechanism":"Randomized clamp is a bundled food-access/tissue-quality/handling strategy; a positive interaction does not identify food mass as the sole mediator; do not condition primary estimates on achieved post-treatment supply",
         "does_not_condition_on_supplement_success":True,
         "nonresource_mechanism_causally_identified":False,
         "host_plant_intro_not_tested":True,
