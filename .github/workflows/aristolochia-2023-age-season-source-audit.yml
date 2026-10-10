@@ -1,0 +1,32 @@
+name: source audit of independent 2023 aristolochia age-season butterfly quality study
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_aristolochia_age_season_prior_art.py"
+      - "tests/test_aristolochia_age_season_prior_art.py"
+      - ".github/workflows/aristolochia-2023-age-season-source-audit.yml"
+permissions:
+  contents: read
+jobs:
+  publisher:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate fulltext source gate and avoid inventing individual biological records
+        run: |
+          python -m pip install "pytest==8.3.4"
+          python -m pytest -q tests/test_aristolochia_age_season_prior_art.py
+      - name: Check original public Frontiers and Europe PMC fulltext
+        run: |
+          python scripts/audit_aristolochia_age_season_prior_art.py --receipt results/aristolochia_2023_age_season_source_gate_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aristolochia-age-season-2023-publisher-source-gate
+          path: results/aristolochia_2023_age_season_source_gate_v01.json
+          retention-days: 30
