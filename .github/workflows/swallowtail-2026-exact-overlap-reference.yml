@@ -1,0 +1,33 @@
+name: 2026 butterfly ramet and quadrat exact overlap references
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/SWALLOWTAIL_MICROSITE_OVERLAP_NULL_PROTOCOL_20261010.json"
+      - "scripts/analyze_2026_swallowtail_overlap_nulls.py"
+      - "tests/test_2026_swallowtail_overlap_nulls.py"
+      - ".github/workflows/swallowtail-2026-exact-overlap-reference.yml"
+permissions:
+  contents: read
+jobs:
+  source_and_null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify exact margins, conditional stratification and no causal claim
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_2026_swallowtail_overlap_nulls.py
+      - name: Evaluate exact published-table reference tails and hypothetical habitat counterexample
+        run: |
+          python scripts/analyze_2026_swallowtail_overlap_nulls.py --receipt results/swallowtail_2026_exact_overlap_reference_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swallowtail-2026-exact-overlap-reference-no-raw-data
+          path: results/swallowtail_2026_exact_overlap_reference_v01.json
+          retention-days: 30
