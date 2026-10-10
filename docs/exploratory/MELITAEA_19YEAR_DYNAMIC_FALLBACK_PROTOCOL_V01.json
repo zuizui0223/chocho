@@ -1,0 +1,79 @@
+{
+  "schema": "chocho_melitaea_19year_dynamic_fallback_protocol_v01",
+  "created_on": "2026-10-10",
+  "status": "FROZEN_BEFORE_ROW_LEVEL_OUTCOME_OR_HOST_CHANGE_TABLE_INSPECTION",
+  "source": {
+    "publication": "Schulz, Vanhatalo & Saastamoinen (2020), Ecography, DOI 10.1111/ecog.04799",
+    "dataset_doi": "10.5061/dryad.ksn02v707",
+    "zenodo_url": "https://zenodo.org/records/4987060",
+    "zenodo_file": "ECOG-04799.zip",
+    "exact_md5": "69122a1d82b1fb970fb6638b02da3db4",
+    "table": "data/survey_data.tsv",
+    "expected_data_rows": "Approximately 74,065 lines including header; exact count to be audited",
+    "columns_to_inspect": [
+      "year",
+      "patch",
+      "population",
+      "plantago",
+      "veronica",
+      "plantago_dry",
+      "veronica_dry",
+      "grazing_presence",
+      "grazing_intensity",
+      "previous_population"
+    ],
+    "separate_from": "DiLeo et al. 2024 Dryad 10.5061/dryad.905qfttrg; not the same records, source version, column definitions or reference."
+  },
+  "prior_art": [
+    "Schulz et al. 2020 already showed plant abundance and both-host presence predict butterfly occupancy/abundance; not new.",
+    "Opedal et al. 2020 Ecology 10.1002/ecy.3186 already modeled colonization/extinction responses of M. cinxia and a parasitoid to the two host plants, climate/connectivity.",
+    "Hanski & Singer 2001 already examined host association in colonization. Thus a basic high-plantago/low extinction association is prior art."
+  ],
+  "question": "When local abundance of Veronica decreases, does Plantago availability at the end of the decline predict the next-year persistence of already-occupied Melitaea populations beyond static amounts and previous population size?",
+  "comparison": {
+    "time": "three strictly consecutive annual autumn patch surveys t−1,t,t+1; host decline measured t−1→t; next-year occupancy measured at t+1",
+    "risk_set": "observed population(t)>0 and all three years documented; no imputing missing years as zero",
+    "primary_focal_host": "Veronica spicata",
+    "backup_host": "Plantago lanceolata",
+    "decline": "veronica(t)<veronica(t−1) and veronica(t−1)>0",
+    "high_backup": "plantago(t)>=2 if source states 0–3 ordinal cover; only define after original file codebook confirms",
+    "low_backup": "plantago(t)<=1 (if source uses ordinal cover)",
+    "outcome": "population(t+1)==0 (observational non-detection, not proven extinction)",
+    "analyzed_unit": "patch-year triple clustered by patch and calendar year",
+    "negative_control": "If data are feasible, holdout comparison within nondeclining Veronica patches; do not treat this as a random treatment."
+  },
+  "source_gate": {
+    "required": "Archive MD5 matches and original text table is exactly present; source README confirms measurement codes, missingness and date interpretation.",
+    "stop_if": [
+      "Plantago or Veronica are not valid 0-3 ordinal scores",
+      "population zero is not consistent with non-occupancy or survey missingness ambiguous",
+      "patch-year not unique or cannot be deduplicated by original documented procedure",
+      "too few intact consecutive autumn survey triples",
+      "less than 40 decline exposures in each backup stratum",
+      "less than 30 unique patches in either stratum",
+      "less than 3 independent calendar years per stratum",
+      "less than 20 next-year zero outcomes across decline strata",
+      "population connectivity and time-dependent confounding cannot be represented adequately for model-based generalization"
+    ],
+    "report_even_if_fail": [
+      "archive checksum",
+      "actual source codebook and column names",
+      "missingness by column",
+      "year and patch support",
+      "risk-set sizes and decline events in four cells",
+      "number of next-year absences"
+    ]
+  },
+  "statistics_if_source_gate_passes": {
+    "baseline": "current + lagged host plant level (both hosts), log1p(current nest count), year effects, site area, site coordinates/connectivity if available, grazing/host desiccation if unambiguously measured",
+    "added_term": "prespecified Veronica-decline indicator × binary Plantago backup level, with main decline and backup terms; fit on all occupied risk-set triples, NOT decline-only rows",
+    "method": "regularized binary prediction model with same covariates, frozen penalty by blind study metadata (no outcome-tuned hyperparameters)",
+    "holdout": "leave-one-calendar-year-out, with optional geographically blocked check if reliable positions and enough sites",
+    "primary_statistic": "held-out cross-entropy improvement, base minus augmented; no claim from in-sample interaction p-value alone",
+    "minimum_relevance": "95% patch-/year-cluster uncertainty excluding zero with positive improvement and no single year driving the sign, subject to effective temporal replication; effects describe predictive moderation, not causal backup",
+    "secondary": "absolute next-year occupancy probabilities for held-out high/low Plantago and decline/stable strata with uncertainty",
+    "strong_claim_stop": "Do not call the direction an evolutionary memory or invasion consequence: no randomized host loss, no introduced-host comparison, no maternal lineages and possible dispersal between patches."
+  },
+  "GEB_PR38": "untouched",
+  "decision": "Data exploration remains unpublished mechanism pilot until independent effect, novelty and robustness are checked."
+}
