@@ -81,7 +81,21 @@ def source_report(rows):
         site_counties[id_].add(r["county"].strip())
         if sp in RESIDENT:
             counters["resident_batches"]+=1
-            if n is None or n<=0 or lar is None or pup is None or lar<0 or pup<0 or lar+pup>n:
+            if n is None:
+                counters["resident_missing_denominator"]+=1
+                counters["resident_invalid_outcome"]+=1
+            elif n==0:
+                counters["resident_zero_larvae"]+=1
+                if any(k not in (None,0) for k in (lar,pup)):
+                    counters["resident_invalid_outcome"]+=1
+            elif n<0:
+                counters["resident_negative_denominator"]+=1
+                counters["resident_invalid_outcome"]+=1
+            elif lar is None or pup is None:
+                counters["resident_missing_species_outcome"]+=1
+                counters["resident_invalid_outcome"]+=1
+            elif lar<0 or pup<0 or lar+pup>n:
+                counters["resident_conflicting_or_out_of_bounds_outcome"]+=1
                 counters["resident_invalid_outcome"]+=1
             else:
                 counters["resident_larvae"]+=n
@@ -132,6 +146,8 @@ def source_report(rows):
         "at_least_15_prev_present_now_absent":results.get("previous_1_current_0",{}).get("n_batches",0)>=15,
         "at_least_15_prev_absent_now_present":results.get("previous_0_current_1",{}).get("n_batches",0)>=15,
         "no_invalid_resident_outcomes":counters["resident_invalid_outcome"]==0,
+        "at_least_5_distinct_sites_prev_yes_now_no":results.get("previous_1_current_0",{}).get("n_sites",0)>=5,
+        "published_19_site_design_resolved":len(names)==19,
     }
     return {"schema":"chocho_nettle_delayed_enemy_source_support_v01",
             "batch_rows":len(rows),"butterfly_species_labels":dict(species),
