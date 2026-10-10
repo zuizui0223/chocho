@@ -94,7 +94,21 @@ def leaf_strain_concordance(raw):
         dual=sum(a["a"]["loss"]==a["c"]["loss"]=="1" for a in sub)
         both_lost_same_strain=sum(a["a"]["strain"]==a["c"]["strain"]
                                   and a["a"]["loss"]==a["c"]["loss"]=="1" for a in sub)
+        strain_by_leaf=defaultdict(lambda:{"leaf_pairs":0,"both_lost_pairs":0,"one_lost_pairs":0,"neither_lost_pairs":0})
+        for pair in sub:
+            # Comparability cannot be inferred if the two larvae are in different
+            # original 'strain' cohorts (one S. montela source leaf case).
+            key=pair["a"]["strain"] if pair["a"]["strain"]==pair["c"]["strain"] else "MIXED_SOURCE"
+            item=strain_by_leaf[key]
+            item["leaf_pairs"]+=1
+            a_loss=int(pair["a"]["loss"])
+            c_loss=int(pair["c"]["loss"])
+            if a_loss and c_loss:item["both_lost_pairs"]+=1
+            elif a_loss or c_loss:item["one_lost_pairs"]+=1
+            else:item["neither_lost_pairs"]+=1
         result[SPECIES[species]]={
+            "distinct_recorded_strain_labels":len(strain_by_leaf),
+            "source_strain_breakdown":dict(sorted(strain_by_leaf.items())),
             "leaf_pairs_sharing_same_recorded_strain":same,
             "total_leaf_pairs":len(sub),
             "both_lost_leaf_pairs":dual,
