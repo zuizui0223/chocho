@@ -1,0 +1,82 @@
+{
+  "schema": "chocho_realized_host_window_protocol_v01",
+  "created_on": "2026-10-10",
+  "status": "EXPLORATORY_FROZEN_BEFORE_ROW_LEVEL_SOURCE_ACCESS_AND_MODEL_FIT",
+  "study": "Anthocharis cardamines temporal complementarity",
+  "independent_source": {
+    "doi": "10.5061/dryad.jp328r6",
+    "publication_doi": "10.1111/oik.05720",
+    "study_years": [
+      2010,
+      2011,
+      2012,
+      2013
+    ],
+    "reported_regions": 3,
+    "reported_hosts": [
+      "Arabis hirsuta",
+      "Cardamine pratensis",
+      "Arabis glabra",
+      "Arabidopsis thaliana",
+      "Thlaspi caerulescens",
+      "Capsella bursa-pastoris"
+    ],
+    "archive_files": [
+      "Plant phenology in the field.txt",
+      "Sampling site areas.txt"
+    ],
+    "byte_verified": false,
+    "row_schema_verified": false,
+    "source_retrieval": "landing_page_verified; original file stream 403; no outcome fitted",
+    "prior_art": "Species and individual phenological synchrony predicts egg placement already demonstrated in the original 2018 study."
+  },
+  "chocho_bridge": {
+    "species": "Anthocharis cardamines",
+    "host_species_resolved": 11,
+    "native_WGSRPD3_units": 162,
+    "contemporary_WGSRPD3_units": 272,
+    "added_WGSRPD3_units": 110,
+    "interpretation": "independent global static reference only; zero empirical local colonization/fitness validation"
+  },
+  "nontrivial_scientific_question": "At equal contemporaneous host supply, host identity, site and seasonal effort, does staggering of the suitable reproductive windows across host species predict independently observed egg placement and its temporal continuity in held-out site-years?",
+  "candidate_outcome": "egg count per examined host plant with observed zero counts and effort denominator; not mechanically calculated opportunity",
+  "primary_unit": "site-year-week or plant observation nested within site-year cluster",
+  "raw_source_gate": {
+    "require": [
+      "original byte-stream and record checksum",
+      "source column names and exact stage codebook",
+      "dated host-level observations",
+      "zero-egg hosts as well as egg-positive hosts",
+      "documented sampling denominator/exposure per host and date",
+      "identifiable regions and site-year repeat units",
+      "at least 2 host species on overlapping surveyed dates",
+      "independent or explicitly limited definition of flight period"
+    ],
+    "fail_closed": true
+  },
+  "primary_model": {
+    "baseline": "observed eggs given total contemporaneous plant availability, site/region, season and host taxon",
+    "increment": "prespecified cross-host stage/phenology dispersion, conditional on contemporaneously stage-suitable plant abundance",
+    "contrast": "out-of-sample site-year-blocked predictive log score; improvement from increment beyond baseline",
+    "biological_endpoint": "observed egg counts; do not infer larval survival"
+  },
+  "secondary_checks": [
+    "host-family-stratified sensitivity if feasible",
+    "region signs and leave-one-region-out",
+    "host-taxonomy leave-one-out",
+    "sampling-effort sensitivity",
+    "stage-code threshold fixed before outcome model and if not definable label exploratory",
+    "site-year block bootstrap, not plant-row bootstrap"
+  ],
+  "stop_rules": [
+    "Original raw file inaccessible or incomplete -> report SOURCE_ACCESS_BLOCKED",
+    "No explicit zero-egg sampled plants -> no egg-selection probability",
+    "Phenology codebook cannot be mapped without egg outcomes -> stop confirmatory effect",
+    "No independent adult-flight windows -> restrict inference to surveyed egg dates",
+    "Not enough independent site-year clusters or too little phenological variation -> no stable inference",
+    "No held-out predictive improvement or one region drives all signs -> no insurance claim",
+    "Do not infer adult survival, demographic rescue, genetic host shifting, or alien-host causal effects"
+  ],
+  "future_experiment": "crossed host-stage synchrony × introduced-host removal with matched supply and site/population replication, maternal choices and individual eclosion outcomes",
+  "submission_isolation": "do not change main, paper/ecological-resource-homogenization-v01 or PR #38"
+}
