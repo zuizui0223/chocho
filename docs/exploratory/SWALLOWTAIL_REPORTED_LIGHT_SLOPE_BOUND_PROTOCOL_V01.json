@@ -1,0 +1,38 @@
+{
+  "schema": "chocho_swallowtail_2026_reported_light_slope_conditional_bound_v01",
+  "date": "2026-10-10",
+  "status": "PRECALCULATION_FROZEN_ANALYTICAL_STRESS_TEST",
+  "question": "Does the specific two-light-stratum noncompetition counterexample from the previous overlap audit use light responses quantitatively compatible with the published light odds-ratio coefficients, and can a single-common-intercept light-only model generate 5 EXPECTED ramet co-presences?",
+  "source": {
+    "paper": "Jang et al. 2026 DOI 10.5141/jee.26.017",
+    "reported_relative_light_or_per_one_percent_point_as_previously_transcribed": {
+      "Sericinus_montela": 1.009,
+      "Atrophaneura_alcinous": 0.979
+    },
+    "previous_printed_2026_aggregates": {
+      "N_ramets": 875,
+      "S_positive": 209,
+      "A_positive": 129,
+      "both_positive": 5
+    },
+    "data_quality": "Paper's ORs are adjusted published associations; their exact model level is not the same as a ramet-level probability model. Journal live full text currently blocked in browser, so treat original OR coefficients as provisional previously transcribed numbers pending verification against authors' accessible PDF.",
+    "source_of_2024_thesis": "2024 Seoul National University master's thesis by Jae Yeon Jang concerns the SAME system and is not independent replication."
+  },
+  "model_conditions": [
+    "RLI x in [0,100] literal percentage points",
+    "Only light covariate with logistic(p_S(x))=alpha_S+ln(1.009)*x, logistic(p_A(x))=alpha_A+ln(0.979)*x",
+    "One common intercept alpha per butterfly across all study ramets, no site/month intercepts, interactions or random effects",
+    "Species outcomes independent conditional on the same measured x for expectation calculations",
+    "Marginal expected species frequencies constrained to S=209/875, A=129/875; not assuming the original raw light histogram known",
+    "No correction of paper's quadrat 255 vs 215 discrepancy; this model uses internally consistent RAMET counts only"
+  ],
+  "quantities": [
+    "Implied per-percentage-point light ORs of the previous invented 400 sunny 475 shady two-stratum toy, using conditional species occurrence proportions in each class across x=0 and x=100",
+    "Rigorous lower bound on expected co-use for ANY distribution of 875 ramets' x values under the common-intercept S logistic slope: 129 * logistic(logit(209/875)-100*ln(1.009))",
+    "Numerical minimum EXPECTED co-use over two-class mixtures of light x=0 and 100, optimizing fraction of x=100 hosts and intercepts to match observed marginal expected S,A numbers; this is a restricted two-point stress test NOT a proven unrestricted optimum",
+    "Sensitivity to alternate plausible OR values from any published 95% intervals if exact source confirmed; do not claim formal uncertainty interval from unverified OR confidence bounds"
+  ],
+  "interpreting_results": "Mathematical incompatibility under a deliberately restricted fitted-slope and single-intercept model DOES NOT prove actual interspecific competition. Other microhabitat covariates, site/month baseline heterogeneity, nonlinear habitat selection, detection, species behavior and dataset level differences remain. Observed 5 can occur stochastically even if mean expected >5.",
+  "stop": "Do not optimize invented niche classes until they mimic the observed co-use and then call the tuned example independent field evidence. Do not assert the toy class counts are Korean observations. Do not validate paper coefficients against unavailable original ramet records.",
+  "GEB_PR38_untouched": true
+}
