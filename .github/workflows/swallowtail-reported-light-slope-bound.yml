@@ -1,0 +1,33 @@
+name: swallowtail paper light coefficient counterexample audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/SWALLOWTAIL_REPORTED_LIGHT_SLOPE_BOUND_PROTOCOL_V01.json"
+      - "scripts/check_swallowtail_reported_light_slope_bound.py"
+      - "tests/test_swallowtail_reported_light_slope_bound.py"
+      - ".github/workflows/swallowtail-reported-light-slope-bound.yml"
+permissions:
+  contents: read
+jobs:
+  mathematical_reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate assumptions and rigorous mean bound
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_swallowtail_reported_light_slope_bound.py
+      - name: Compute model-conditional light slope and marginal overlap expectations
+        run: |
+          python scripts/check_swallowtail_reported_light_slope_bound.py --receipt results/swallowtail_light_only_or_bound_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swallowtail-original-adjusted-OR-conditional-bound-v01
+          path: results/swallowtail_light_only_or_bound_v01.json
+          retention-days: 30
