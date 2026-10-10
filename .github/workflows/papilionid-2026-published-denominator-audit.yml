@@ -1,0 +1,32 @@
+name: 2026 swallowtail niche study published count integrity
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_2026_swallowtail_microhabitat_published_counts.py"
+      - "tests/test_2026_swallowtail_microhabitat_published_counts.py"
+      - ".github/workflows/papilionid-2026-published-denominator-audit.yml"
+permissions:
+  contents: read
+jobs:
+  publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test publication-only numerator and denominator consistency
+        run: |
+          python -m pip install "pytest==8.3.4"
+          python -m pytest -q tests/test_2026_swallowtail_microhabitat_published_counts.py
+      - name: Record print-only count discrepancy and ecological interpretation boundary
+        run: |
+          python scripts/audit_2026_swallowtail_microhabitat_published_counts.py --receipt results/swallowtail_2026_published_denominator_receipt_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: swallowtail-2026-publication-count-consistency-v01
+          path: results/swallowtail_2026_published_denominator_receipt_v01.json
+          retention-days: 30
