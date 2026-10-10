@@ -90,20 +90,38 @@ def two_strata_habitat_counterexample():
     reconstruction of the unshared Korean field observations.
     """
     rows=[
-        {"hypothetical_microhabitat":"sunny","N":400,"S":200,"A":5},
-        {"hypothetical_microhabitat":"shady","N":475,"S":9,"A":124},
+        {"hypothetical_microhabitat":"sunny","N":400,"S":200,"A":5,"both":3},
+        {"hypothetical_microhabitat":"shady","N":475,"S":9,"A":124,"both":2},
     ]
     total={"N":sum(r["N"] for r in rows),
            "S":sum(r["S"] for r in rows),
            "A":sum(r["A"] for r in rows)}
     expected=sum(r["S"]*r["A"]/r["N"] for r in rows)
+    derived=[]
+    for r in rows:
+        b=r["both"]
+        if not 0<=b<=min(r["S"],r["A"]):
+            raise ValueError("hypothetical stratum impossible")
+        v={"neither":r["N"]-r["S"]-r["A"]+b,
+           "S_only":r["S"]-b,
+           "A_only":r["A"]-b,
+           "both":b}
+        if any(x<0 for x in v.values()):
+            raise ValueError("hypothetical negative contingency cell")
+        derived.append({**r,"contingency_cells":v,
+                        "within_stratum_independence_expected_both":r["S"]*r["A"]/r["N"]})
+    observed_full={k:sum(q["contingency_cells"][k] for q in derived)
+                   for k in ("neither","S_only","A_only","both")}
+    if observed_full!={"neither":542,"S_only":204,"A_only":124,"both":5}:
+        raise ValueError("constructive example no longer reproduces ALL printed ramet cells")
     return {
         "kind":"HYPOTHETICAL_CONSTRUCTIVE_COUNTEREXAMPLE_NOT_OBSERVED_DATA",
-        "strata":[{**r,"expected_both_under_within_stratum_independence":r["S"]*r["A"]/r["N"]} for r in rows],
+        "strata":derived,
         "total_margins":total,
+        "all_printed_presence_categories_exactly_reproduced":observed_full,
         "expected_overlap_from_environmental_sorting_alone":expected,
         "observed_paper_overlap":5,
-        "proof_scope":"The printed global margins + overlap cannot alone distinguish competitive exclusion from environmental sorting. This hypothetical example is not estimated Korean light strata."
+        "proof_scope":"The exact four-category observed published ramet count table can be reproduced by a hypothetical sun/shade mixture whose within-stratum overlaps (3 vs expectation 2.50; 2 vs 2.35) are near independent. These are invented demonstration strata and not estimated Korean light measurements."
     }
 
 def analyze(source=PUBLICATION):
