@@ -20,6 +20,18 @@
     {
       "study": "Steward et al. 2022 Evolution 10.1111/evo.14608",
       "already_established": "Novel lethal host can elicit heritable, sex-linked oviposition preference in Pieris macdunnoughii."
+    },
+    {
+      "study": "Jones & Agrawal 2019 Oikos 10.1111/oik.06001",
+      "already_established": "Randomized previous oviposition experience changes monarch preferences; both choice hosts are native Asclepias incarnata subspecies. Independent larval performance experiment and no experimentally removed adopted host."
+    },
+    {
+      "study": "Gowri & Monteiro 2024 Ann NY Acad Sci 10.1111/nyas.15090",
+      "already_established": "Five-generation artificial odor experience plus withdrawal demonstrated limited parental acquired preference; not native/introduced host composition or viable offspring following removal."
+    },
+    {
+      "study": "Singer & Parmesan 2019 Evolutionary Applications 10.1111/eva.12775",
+      "already_established": "Novel host switch, environmental reversal and population reversion documented; not experimentally randomized past host availability and current equal-food removal in independent lineages."
     }
   ],
   "species_gate": "At least two independent butterfly species with laboratory-feasible documented development on both a locally ancestral and introduced plant. Do NOT use lethally unsuitable novel hosts for multigeneration propagation.",
@@ -32,10 +44,11 @@
       "Two generations with both native and introduced hosts, matched initial total edible biomass"
     ],
     "carryover_control": "A common standardized pre-assay adult holding period across history arms; randomize plant pot and tester placement",
-    "assay_design": "Within each randomized history arm, randomly assign replicated lines to current mixed-host condition or introduced-host-loss condition",
+    "assay_design": "Within each randomized history group, randomize replicated lineages to three current-resource arms (retention, compensated loss and uncompensated loss); record baseline and actual edible biomass. The compensated comparison isolates host composition at equal total biomass.",
     "current_arms": [
-      "Retention: 50% native and 50% established introduced food biomass",
-      "Loss: 100% native host biomass (replace introduced biomass with native biomass, keeping total edible biomass constant)"
+      "retention: equal native and introduced edible biomass; sum B",
+      "compensated loss: introduced host absent but replacement native edible biomass supplied; sum B",
+      "uncompensated loss: introduced host absent with no native replacement; total edible biomass B/2"
     ],
     "controls": [
       "plant developmental stage and phenotype",
@@ -47,10 +60,11 @@
       "maternal nutritional history and larval rearing crowding",
       "host transplants handled/shammed consistently"
     ],
-    "avoid": "Do not select only surviving mothers and call treatment effects survival-independent; retain initial assigned lines and attrition denominators"
+    "avoid": "Do not select only surviving mothers and call treatment effects survival-independent; retain initial assigned lines and attrition denominators",
+    "biomass_guardrail": "B is edible/accessibly presented plant mass measured by repeated observation throughout larval development; initial planted biomass alone is insufficient if species differ in growth or depletion. Replace/sham plants under predeclared schedule, conceal treatment assignment from scorers."
   },
   "measurements": {
-    "primary": "Number of flight-capable adults produced per initially assigned mated female within fixed follow-up period; zero after entire-lineage extinction counts as zero",
+    "primary": "Count flight-capable adult eclosions per assigned initial mated female, including complete zero outcomes; no adult presence-only proxy.",
     "secondary": [
       "probability of ancestral-host oviposition within first 48h",
       "eggs per accessible native biomass",
@@ -60,10 +74,11 @@
       "after-loss rebound in next generation if feasible"
     ],
     "unit": "maternal lineage nested in population and species, not eggs; plant and enclosure are treatment units where shared",
-    "timing": "History generations G1-G2 and prospective offspring G3-G4 as feasible, without post-hoc interval selection"
+    "timing": "History generations G1-G2 and prospective offspring G3-G4 as feasible, without post-hoc interval selection",
+    "mediation_secondary": "Predeclare ancestry oviposition within first 48h and offspring stage survival as descriptive candidate mediators; do not infer mediation by correlating post-treatment choice with survival without intervention."
   },
   "estimand": {
-    "primary": "(E[Y | history=adopted,loss] - E[Y | history=adopted,retain]) - (E[Y | history=native,loss] - E[Y | history=native,retain])",
+    "primary": "(E[Y | past_mixed,compensated_loss] - E[Y | past_mixed,retention]) - (E[Y | past_native,compensated_loss] - E[Y | past_native,retention]); randomly assigned experimental history × present host-composition interaction at matched total edible biomass B",
     "interpretation": "Intention-to-treat causal interaction of randomized experimental history and randomized current composition, not a retrospective natural invasion effect",
     "fit": "Prespecified negative-binomial/hurdle mixed model after a variance/zero audit blinded to treatment outcome; report raw means and population-stratified contrasts irrespective of significance",
     "robustness": [
@@ -75,7 +90,8 @@
     "null": "No history×loss interaction under matched current edible biomass",
     "positive": "Introduced-host history worsens viable offspring recovery after removal even though usable native biomass is held constant, consistently across independent populations and ideally both species",
     "opposite": "Retained fallback or increased capacity following exposure is equally informative",
-    "mechanism_limits": "A 1–2-generation history effect can reflect learning or maternal carryover; do not claim heritable evolutionary change unless multigeneration common garden, pedigrees and/or reciprocal crosses identify inheritance."
+    "mechanism_limits": "A 1–2-generation history effect can reflect learning or maternal carryover; do not claim heritable evolutionary change unless multigeneration common garden, pedigrees and/or reciprocal crosses identify inheritance.",
+    "secondary_resource_shortage": "(E[Y | past_mixed,uncompensated_loss] - E[Y | past_mixed,compensated_loss]) - (E[Y | past_native,uncompensated_loss] - E[Y | past_native,compensated_loss]); distinguish shortage-dependent vulnerability from composition/history response."
   },
   "feasibility_milestones": [
     "Confirm local native and introduced plants produce viable adult butterflies in multiple species",
@@ -90,7 +106,10 @@
     "If treatment pot-stage or total edible biomass differs systematically, cannot attribute effect to history or functional fallback",
     "If >1 species is not feasible, interpretation restricted to focal species",
     "No cohort outcomes -> no demographic inference",
-    "No retrospective claim from short-term within-female egg-choice series"
+    "No retrospective claim from short-term within-female egg-choice series",
+    "If one treatment has preferential plant decay/depletion or unbalanced edible biomass, the equal-supply comparison is not interpretable; report measured supply and abandon hysteresis claim.",
+    "Sex-linked heritable novel-host preference and odor-history withdrawal are published prior art; do not label behavioral memory or withdrawal effect alone a novel finding."
   ],
-  "linked_pilot": "docs/exploratory/EEDITHA_SEQUENTIAL_OVIPOSITION_DECISION_V01.md; exploratory short-term lag model failed the predictive gate"
+  "linked_pilot": "docs/exploratory/EEDITHA_SEQUENTIAL_OVIPOSITION_DECISION_V01.md; exploratory short-term lag model failed the predictive gate",
+  "analysis_revision": "v02: separate host composition from amount of remaining food; no data inspected or fitted"
 }
