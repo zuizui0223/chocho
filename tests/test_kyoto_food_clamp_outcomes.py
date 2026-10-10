@@ -45,7 +45,8 @@ def fixture(nblocks=3,with_unknown=True):
 
 def test_itt_interaction_uses_all_initial_larvae_and_source_blocks():
     x=m.analyze(*fixture())
-    assert x["n_independent_plants"]==12
+    assert x["n_independent_cages"]==12
+    assert x["randomization_unit"]=="whole cage/enclosure, including all its potted plants"
     assert x["n_blocks"]==3
     assert x["ITT_missing_as_fail_interaction"]==1.0
     assert x["true_worst_case_attrition_interaction_bounds"]==[1.0-1/6,1.0]
@@ -109,7 +110,7 @@ def test_late_instar_food_observation_missing_is_not_interpreted_as_zero():
     natural=x["per_arm"]["NATURAL_NO_COMPETITOR"]
     assert natural["late_instar_food_measurement_missing"]==1
     assert natural["observed_late_instar_food_visits"]==2
-    assert x["n_independent_plants"]==12
+    assert x["n_independent_cages"]==12
 
 def test_no_late_instar_survivors_does_not_prove_adequate_food():
     a,b,c,d=fixture()
