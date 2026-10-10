@@ -48,6 +48,14 @@ def test_environmental_sorting_nonidentifiability_constructive_example():
     assert math.isclose(x["expected_overlap_from_environmental_sorting_alone"],200*5/400+9*124/475)
     assert 4.8<x["expected_overlap_from_environmental_sorting_alone"]<5
     assert x["kind"].startswith("HYPOTHETICAL")
+    assert x["all_printed_presence_categories_exactly_reproduced"]=={
+        "neither":542,"S_only":204,"A_only":124,"both":5
+    }
+    sunny,shady=x["strata"]
+    assert sunny["contingency_cells"]=={"neither":198,"S_only":197,"A_only":2,"both":3}
+    assert shady["contingency_cells"]=={"neither":344,"S_only":7,"A_only":122,"both":2}
+    assert abs(sunny["both"]-sunny["within_stratum_independence_expected_both"])<=.5
+    assert abs(shady["both"]-shady["within_stratum_independence_expected_both"])<=.5
     assert "not estimated Korean" in x["proof_scope"]
 
 def test_no_collapsing_print_only_sums_into_competition_results():
