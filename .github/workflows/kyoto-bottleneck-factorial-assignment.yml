@@ -1,0 +1,37 @@
+name: validate randomized Kyoto food bottleneck study design
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/randomize_kyoto_bottleneck_factorial.py"
+      - "tests/test_randomize_kyoto_bottleneck_factorial.py"
+      - "docs/exploratory/KYOTO_HIDDEN_RESOURCE_BOTTLENECK_FACTORIAL_V01.json"
+      - "docs/exploratory/KYOTO_HIDDEN_BOTTLENECK_FIELD_SCHEMA_V01.md"
+      - ".github/workflows/kyoto-bottleneck-factorial-assignment.yml"
+permissions:
+  contents: read
+jobs:
+  design-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test blocked assignment, full inventory and no outcome allocation
+        run: |
+          python -m pip install "pytest==8.3.4"
+          python -m pytest -q tests/test_randomize_kyoto_bottleneck_factorial.py
+      - name: Check machine-readable protocol and field contract are source-isolated
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("docs/exploratory/KYOTO_HIDDEN_RESOURCE_BOTTLENECK_FACTORIAL_V01.json").read_text())
+          assert len(p["cells"])==4
+          assert p["status"]=="PROPOSED_AND_NOT_RUN"
+          assert p["GEB_PR38_untouched"] is True
+          print("Procedure validated; no butterflies or experimental data were generated.")
+          PY
