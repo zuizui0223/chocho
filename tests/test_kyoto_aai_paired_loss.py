@@ -11,14 +11,14 @@ spec.loader.exec_module(m)
 
 def fake():
     buf=io.StringIO()
-    keys=["h.id","l.id","species","treatment","loss"]
+    keys=["h.id","l.id","species","treatment","loss","strain"]
     w=csv.DictWriter(buf,fieldnames=keys)
     w.writeheader()
     for s in ["a","s"]:
         for i in range(30):
             for t in ["a","c"]:
                 w.writerow({"h.id":f"{s}_{i}_{t}","l.id":f"{s}_{i}","species":s,
-                             "treatment":t,
+                             "treatment":t, "strain":f"family_{s}_{i}",
                              "loss":1 if s=="a" and i<6 and t=="a" else 0})
     return buf.getvalue().encode()
 
