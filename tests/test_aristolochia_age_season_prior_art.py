@@ -11,7 +11,8 @@ spec.loader.exec_module(s)
 TEXT=("10.3389/fpls.2023.1145363 Sericinus montela Spodoptera exigua "
       "Aristolochia contorta 1st-year July September C/N "
       "aristolochic acid 1 aristolochic acid 2 "
-      "six days 24°C leaf area 50% leaves replaced")
+      "six days 24°C leaf area 50% leaves replaced "
+      "83.80 7.61 2.26 8.952 270.727")
 
 def test_fulltext_xml_without_individual_data_inference():
     xml=("<article><front><article-meta><article-title>"
