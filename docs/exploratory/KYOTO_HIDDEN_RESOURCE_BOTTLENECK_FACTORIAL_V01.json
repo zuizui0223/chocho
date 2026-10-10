@@ -1,0 +1,59 @@
+{
+  "schema": "chocho_kyoto_hidden_food_shortage_factorial_v01",
+  "created_on": "2026-10-10",
+  "status": "PROPOSED_AND_NOT_RUN",
+  "reference": "Hashimoto & Ohgushi 2023, doi:10.1002/ece3.10164",
+  "motivation": "Increased Sericinus density suppresses Atrophaneura survival despite no corresponding reduction in FINAL visual leaf-remaining scores; transient food shortage not measured.",
+  "source_limit": "Original Figshare 23170898 has 30 cages, 690 cage-day larval rows, and 120 FINAL ordinal leaf scores (four plants in each cage); no sequential edible biomass measurements or independent food-clamp factor.",
+  "primary_question": "Can maintaining an independently quantified edible Aristolochia supply through critical instars eliminate the negative effect of Sericinus on Atrophaneura, compared with natural regrowth conditions?",
+  "randomization_unit": "Whole potted host plant/enclosure, not larvae and not plant leaves",
+  "recipient": "Fixed initially allocated cohort of Atrophaneura alcinous neonates in each cage",
+  "factors": {
+    "competitor": [
+      "Sericinus montela absent",
+      "Sericinus montela present at pre-pilot-fixed density"
+    ],
+    "food_access": [
+      "Natural food supply",
+      "Feedback-supported edible biomass target via fresh Aristolochia material, with sham handling in all cells"
+    ]
+  },
+  "cells": [
+    "NATURAL_NO_COMPETITOR",
+    "NATURAL_COMPETITOR",
+    "CLAMP_NO_COMPETITOR",
+    "CLAMP_COMPETITOR"
+  ],
+  "constraints": [
+    "Fixed original native-larva cohort",
+    "Synchronize instars",
+    "Block by plant material source, date and independent butterfly family",
+    "Track actual accessible leaf area and leaf age over development",
+    "Observe microclimate and live butterfly contact",
+    "Obtain all permits for nonnative butterfly handling and containment",
+    "No release or translocation into open habitats"
+  ],
+  "outcome": "Number of flight-capable adult A. alcinous individuals per originally assigned native larval cohort, including zeros",
+  "primary_estimand": "(Y_CLAMP_COMPETITOR-Y_CLAMP_NO_COMPETITOR) - (Y_NATURAL_COMPETITOR-Y_NATURAL_NO_COMPETITOR)",
+  "secondary": [
+    "Natural and clamped competitor contrasts separately",
+    "Daily live edible leaf mass/area per instar",
+    "Days spent below prospectively fixed leaf availability threshold",
+    "Pupation and development time",
+    "Observed physical contacts"
+  ],
+  "analysis": "Report treatment absolute risks and randomization-unit clustered uncertainty, with source-block effects; sample size from a blinded pilot variance rather than the 30 published cages.",
+  "decisions": [
+    "If equal-food clamp does not produce exposure contrast, test is uninformative",
+    "If negative competitor effect vanishes with food access, consistent with hidden transient competition but supplementation also changes leaf quality/handling",
+    "If suppression persists despite verified food access, independently test donor conditioning and direct physical interference",
+    "Do not call plant defensive chemistry causal without independent chemistry manipulation",
+    "No proof of botanical plant invasion, because here the invader is the butterfly"
+  ],
+  "comparison_to_prior_art": [
+    "2017 study tested post-herbivory regrowth",
+    "2012 ESJ poster already proposed temporal resource regeneration",
+    "2023 study tested two-species density and final food quantity but not experimentally controlled time-resolved accessible food"
+  ],
+  "GEB_PR38_untouched": true
+}
