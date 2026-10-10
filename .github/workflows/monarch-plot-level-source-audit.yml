@@ -1,0 +1,32 @@
+name: posthoc monarch plot-level survival uncertainty
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "scripts/audit_monarch_plot_level_survival_uncertainty.py"
+      - "tests/test_monarch_plot_level_survival_uncertainty.py"
+      - ".github/workflows/monarch-plot-level-source-audit.yml"
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original-hash and independent-plot logic
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_monarch_plot_level_survival_uncertainty.py
+      - name: Generate posthoc original-data cluster uncertainty receipt
+        run: |
+          python scripts/audit_monarch_plot_level_survival_uncertainty.py --receipt results/monarch_plot_level_uncertainty_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: monarch-original-plot-level-survival-robustness-v01
+          path: results/monarch_plot_level_uncertainty_v01.json
+          retention-days: 30
