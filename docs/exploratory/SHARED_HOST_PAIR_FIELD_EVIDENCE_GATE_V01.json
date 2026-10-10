@@ -1,0 +1,37 @@
+{
+  "schema": "chocho_shared_host_pair_field_evidence_gate_v01",
+  "date": "2026-10-10",
+  "status": "FROZEN_BEFORE_NEW_GLOBI_RESPONSE",
+  "question": "Are there independent, location- and date-stamped original observations of larvae of Junonia coenia and Anartia jatrophae feeding on exact introduced Plantago lanceolata, supporting a local pathogen bridge candidate?",
+  "species": [
+    "Junonia coenia",
+    "Anartia jatrophae"
+  ],
+  "plant": "Plantago lanceolata",
+  "source": "GloBI interaction.csv, interactionType=eats, includeObservations=true",
+  "query_rule": "2 pages per species at 256 observations per page; report capped/failed; save raw page SHA256 for reproducibility",
+  "strict_required": [
+    "exact butterfly binomial",
+    "target Plantago lanceolata species not genus",
+    "explicit larval/caterpillar stage",
+    "valid dated event and actual coordinates",
+    "source-provenance not derived from global HOSTS compilation",
+    "original record or study citation identifiable"
+  ],
+  "first_pass_output": "Total GloBI rows, plant exact matches, explicit larval exact matches, georeferenced dated exact matches and source IDs; independent original source verification separately required",
+  "stops": [
+    "No source -> do not infer field co-use",
+    "One species absent -> no present evidence for candidate heterospecific bridge",
+    "Any capped query -> do not claim exhaustive negative evidence",
+    "Geographic intersection at WGSRPD3 or state scale is insufficient for contemporaneous same-plant use",
+    "GloBI eats type alone without explicit larval stage is insufficient"
+  ],
+  "not_measured": [
+    "same individual plant feeding",
+    "infectious donor",
+    "recipient acquired virus",
+    "adult recruitment",
+    "pathogen spillover"
+  ],
+  "GEB_PR38_unchanged": true
+}
