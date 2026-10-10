@@ -138,6 +138,45 @@ def randomization_test(rows,seed=SEED,draws=DRAWS):
             "exploratory_not_independent_pre_registration":True,
             "plant_chemical_or_handling_cause_identified":False}
 
+def single_original_leaf_id_area_sensitivity(rows,seed=SEED,draws=DRAWS):
+    """Explicit posthoc confounding check, never primary confirmation.
+
+    String-composite source IDs can represent heterogeneous provided foliage;
+    source semantics are not independently reconstructed from raw codes.
+    """
+    single=[r for r in rows if not r["composite_multi_leaf_id"]]
+    if len(single)!=19 or sum(r["both_lost"] for r in single)!=7:
+        raise ValueError("unexpected original single-ID 19 source pairs with seven co-loss")
+    strata=defaultdict(list)
+    for ix,r in enumerate(single):strata[r["strain"]].append(ix)
+    fixed={k:sum(single[i]["both_lost"] for i in ix) for k,ix in strata.items()}
+    name="initial_half_leaf_area_mean"
+    obs=contrast(single,name)
+    rng=random.Random(seed)
+    extreme=0
+    for _ in range(draws):
+        assigned=[0]*len(single)
+        for k,ix in sorted(strata.items()):
+            for chosen in rng.sample(ix,fixed[k]):assigned[chosen]=1
+        delta=contrast(single,name,assigned)
+        extreme+=int(abs(delta)>=abs(obs)-1e-12)
+    yes=[r[name] for r in single if r["both_lost"]]
+    other=[r[name] for r in single if not r["both_lost"]]
+    return {
+        "n_single_ID_source_pairs":len(single),
+        "n_co_loss_single_ID_pairs":len(yes),
+        "n_non_co_loss_single_ID_pairs":len(other),
+        "co_loss_mean_pre_exposure_area":sum(yes)/len(yes),
+        "other_mean_pre_exposure_area":sum(other)/len(other),
+        "co_loss_minus_other_initial_area_difference":obs,
+        "source_strain_fixed_two_sided_randomization_p":(extreme+1)/(draws+1),
+        "permutation_draws":draws,
+        "posthoc_single_ID_confounding_sensitivity":True,
+        "not_an_independent_confirmation":True,
+        "causal_mortality_factor_identified":False
+    }
+
+
 def main():
     arg=argparse.ArgumentParser()
     arg.add_argument("--receipt",type=Path,required=True)
@@ -154,6 +193,7 @@ def main():
          "original_composite_leaf_id_counts":leafids,
          "original_leaf_side_discrepancy":mismatch,
          "source_pretreatment_factors":randomization_test(rows),
+         "single_ID_leaf_area_posthoc_robustness":single_original_leaf_id_area_sensitivity(rows),
          "GEB_PR38_untouched":True}
     a.receipt.parent.mkdir(parents=True,exist_ok=True)
     a.receipt.write_text(json.dumps(obj,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
