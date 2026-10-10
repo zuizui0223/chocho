@@ -1,0 +1,26 @@
+{
+  "schema": "chocho_swallowtail_encounter_null_20261010_v01",
+  "date": "2026-10-10",
+  "stage": "FROZEN_BEFORE_COMPUTING_EXACT_NULL_TAILS",
+  "source": "Jang et al. 2026 J Ecol Environ DOI 10.5141/jee.26.017; printed quadrat/ramet tables transcribed in scripts/audit_2026_swallowtail_microhabitat_published_counts.py",
+  "question": "How much lower is simultaneous host use by two butterflies than the reference expected from their marginal presence rates, and can unobserved light strata explain the deficit without direct biological exclusion?",
+  "source_quality": "Publication's 255-quadrat method/header conflicts with its 215 site and month counts. Site/month calculations CONDITIONAL on consistent 215 counts; original raw quadrat/ramet rows unavailable.",
+  "analyses": [
+    "Ramet-level fixed-margin exact overlap: N=875, Sericinus presence=209, Atrophaneura presence=129, co-presence=5. Exact one-sided hypergeometric tail P(X<=5), central null 95% reference interval and observed/expected. This is a deliberately simplistic independence reference, NOT ecological proof of competition.",
+    "Four site-specific fixed-margin exact co-occurrence distributions: source table site AY/CJ/JM/PT; expected overlap sum(site marginal products / site denominator), convolution of site hypergeom distributions, one-sided tail P(total <=11), central null interval.",
+    "Five month-specific fixed-margin exact distributions; expected overlap sum(month marginal products / month denominator), convolution, one-sided tail P(total <=11). These and site nulls use alternative stratifications of SAME published quadrat table, not independent confirmation.",
+    "Mathematically constructive two-stratum sun/shade example reproducing 875, 209, 129 marginal numbers and ~5 expected overlaps with conditional independence within sunlight classes; numbers are hypothetical and cannot be presented as observed study-specific light strata."
+  ],
+  "counterexample_frozen": {
+    "hypothetical_sun_n": 400,
+    "hypothetical_shade_n": 475,
+    "hypothetical_sun_S": 200,
+    "hypothetical_shade_S": 9,
+    "hypothetical_sun_A": 5,
+    "hypothetical_shade_A": 124
+  },
+  "null_assumptions": "Condition on published marginal numbers, exchange species identities among same observation units within each stratum, ignoring plant identity, light, quadrat nested visits, phenology and detection differences. Survey placement was targeted where larvae were found, not random.",
+  "safety_interpretation": "Even tiny fixed-margin reference p values do NOT show competition/avoidance. They show marginal overlap cannot be described as unconditional random mixing; environmental sorting alone is compatible. No causal effect estimated.",
+  "decision": "If published source internally inconsistent, label 215 as conditional denominator; never repair article as factual error before author confirmation. Reject a novel manuscript based on unconditional overlap scarcity alone.",
+  "GEB_PR38_untouched": true
+}
