@@ -44,12 +44,34 @@ def summarize(larva,leaf):
     leaf_keys=[(r["h.id"],r["l.id"],r["l.or.r"],r["treatment"]) for r in b]
     if len(set(larva_keys))!=len(a) or len(set(leaf_keys))!=len(b):
         raise ValueError("row compound IDs not unique")
+    unmatched_larva=[r for r in a if (r["h.id"],r["l.id"],r["l.or.r"],r["treatment"]) not in set(leaf_keys)]
+    unmatched_leaf=[r for r in b if (r["h.id"],r["l.id"],r["l.or.r"],r["treatment"]) not in set(larva_keys)]
+    by_hid_a={r["h.id"]:r for r in a}
+    by_hid_b={r["h.id"]:r for r in b}
+    if set(by_hid_a)!=set(by_hid_b):
+        raise ValueError("original larval and leaf identifiers do not align one-to-one")
+    species_by_leaf=defaultdict(set)
+    arms_by_leaf=defaultdict(set)
+    for r in a:
+        species_by_leaf[r["l.id"]].add(r["species"])
+        arms_by_leaf[r["l.id"]].add(r["treatment"])
+    losses=Counter((r["species"],r["treatment"],r["loss"]) for r in a)
+    species_treatment=Counter((r["species"],r["treatment"]) for r in a)
+    leaf_design={"leaf_ids":len(species_by_leaf),
+                 "two_treatments_per_leaf":sum(arms=={"a","c"} for arms in arms_by_leaf.values()),
+                 "one_species_per_leaf":sum(len(sps)==1 for sps in species_by_leaf.values()),
+                 "multiple_species_per_leaf":sum(len(sps)>1 for sps in species_by_leaf.values())}
     return {"schema":"chocho_kyoto_aai_paired_leaf_source_inventory_v01",
         "source":"Hashimoto and Ohgushi 2023, Figshare 23170898, not independent experiment",
         "source_sha256":{"larvae":hashlib.sha256(larva).hexdigest(),"leafarea":hashlib.sha256(leaf).hexdigest()},
         "source_md5":{name:v[1] for name,v in FILES.items()},
         "larvae":t1,"leafarea":t2,
         "matching_row_keys":len(set(larva_keys)&set(leaf_keys)),
+        "unmatched_larva_keys":unmatched_larva,
+        "unmatched_leaf_keys":unmatched_leaf,
+        "leaf_paired_design":leaf_design,
+        "species_treatment_counts":{"|".join(k):v for k,v in species_treatment.items()},
+        "species_treatment_loss_codes":{"|".join(k):v for k,v in losses.items()},
         "source_effect_estimated":False,"can_reject_all_plant_quality_mechanisms":False,
         "GEB_PR38_unchanged":True}
 def main():
