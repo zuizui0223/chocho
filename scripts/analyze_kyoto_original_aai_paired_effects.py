@@ -51,6 +51,8 @@ def parse(larva,leaf):
     leaves=defaultdict(dict)
     observed=[]
     half_label_mismatch=[]
+    recorded_leaf_area_notes=defaultdict(Counter)
+    zero_leaf_areas=defaultdict(Counter)
     for ident,row in A.items():
         food=B[ident]
         if row["l.id"]!=food["l.id"] or row["treatment"]!=food["treatment"]:
@@ -65,6 +67,9 @@ def parse(larva,leaf):
         t=row["treatment"]
         if sp not in SPECIES or t not in ("a","c"):
             raise ValueError("unexpected butterfly or treatment")
+        recorded_leaf_area_notes[sp][food.get("note","").strip()]+=1
+        if food.get("consumed.leaf.area","").strip() in ("0","0.0","0.000"):
+            zero_leaf_areas[sp][t]+=1
         loss=row["loss"]
         if loss not in ("0","1"):
             raise ValueError("unexpected author loss code")
@@ -89,7 +94,9 @@ def parse(larva,leaf):
             raise ValueError(f"not original split-leaf AAI-control pair {species} {leaf_id}")
     if len(leaves)!=60:
         raise ValueError("not the expected 60 paired leaves")
-    return leaves,observed,half_label_mismatch
+    quality={"recorded_leaf_area_notes":{SPECIES[k]:dict(v) for k,v in recorded_leaf_area_notes.items()},
+             "exact_zero_consumption_by_treatment":{SPECIES[k]:dict(v) for k,v in zero_leaf_areas.items()}}
+    return leaves,observed,half_label_mismatch,quality
 
 def estimate(vals,metric,complete_pairs_only):
     diffs=[]
@@ -121,7 +128,7 @@ def bootstrap(pairs,metric,complete_only,seed,draws=N_BOOT):
     return [effects[int(.025*n)],effects[int(.975*n)]]
 
 def analyse(original_larva,original_leaf):
-    leaves,rows,half_label_mismatch=parse(original_larva,original_leaf)
+    leaves,rows,half_label_mismatch,quality=parse(original_larva,original_leaf)
     bysp=defaultdict(list)
     for (sp,lid),pair in sorted(leaves.items()):
         bysp[sp].append(pair)
@@ -132,6 +139,7 @@ def analyse(original_larva,original_leaf):
             "n_original_individuals":len(rows),
             "n_original_leaf_pair_blocks":len(leaves),
             "original_leaf_half_label_discrepancies":half_label_mismatch,
+            "original_recorded_leaf_area_quality":quality,
             "species":{},
             "new_biological_effect_established":False,
             "can_rule_out_all_compound_blends":False,
