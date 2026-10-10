@@ -47,9 +47,9 @@ In each population, measure at the same time:
 - Plant stage, tissues actually accessible, nitrogen/chemistry proxies, enemies, microclimate and seasonal synchrony.
 - Follow host removal in a randomized treatment at the **replicate site or enclosed population**, paired with a sham-retention control. Do not remove invasive plants in natural habitats merely to run this test without site permissions and management safeguards.
 
-### Phase C — causal history test
+### Phase C — randomized host removal, with exposure history as an observational modifier
 
-Primary outcome: population-level **change in viable adult production per female/initial cohort after experimental loss of the adopted host**, comparing historically exposed and less-exposed populations that have the same available native hosts. The estimand is the **exposure-history × removal interaction**, estimated with species and population structure; interval estimates and predicted absolute adult output are mandatory.
+Primary outcome: population-level **change in viable adult production per female/initial cohort after experimental loss of the adopted host**, comparing historically exposed and less-exposed populations that have the same available native hosts. The estimand is the **exposure-history × randomized-removal interaction**, estimated with species and population structure; interval estimates and predicted absolute adult output are mandatory. **Removal can be randomized, but past host exposure cannot be retroactively randomized**: the interaction estimates differential responses to removal conditional on measured history, not a causal effect of past exposure. A stronger mechanistic test would randomize replicated lineages to prolonged exposure/no exposure in a common garden, then cross that treatment with subsequent removal.
 
 A positive-history association with oviposition preferences but no adult-output loss supports *behavioral history dependence*, not a demographic trap. Persisting quality deficits after standardized common-garden generations provide evidence **consistent with** a heritable component, but genomic/adoption-history inference needs additional tests. A negative post-removal interaction is not automatically adaptation: management, microhabitats, parasites and dispersal alternatives must be assessed.
 
