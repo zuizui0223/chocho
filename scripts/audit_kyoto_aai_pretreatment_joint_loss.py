@@ -95,6 +95,15 @@ def randomization_test(rows,seed=SEED,draws=DRAWS):
     for ix,row in enumerate(rows):strata[row["strain"]].append(ix)
     fixed={s:sum(rows[i]["both_lost"] for i in idx) for s,idx in strata.items()}
     stats={name:contrast(rows,name) for name in STATS}
+    grouped_descriptive={
+        name:{
+            "n_joint_loss":sum(bool(r["both_lost"]) for r in rows),
+            "n_other":sum(not bool(r["both_lost"]) for r in rows),
+            "joint_loss_mean":sum(r[name] for r in rows if r["both_lost"])/sum(r["both_lost"] for r in rows),
+            "other_mean":sum(r[name] for r in rows if not r["both_lost"])/sum(not r["both_lost"] for r in rows)
+        }
+        for name in STATS
+    }
     extreme={name:0 for name in STATS}
     rng=random.Random(seed)
     for _ in range(draws):
@@ -112,7 +121,13 @@ def randomization_test(rows,seed=SEED,draws=DRAWS):
     for k,name in enumerate(sorted_p):
         prev=max(prev,min(1.0,(len(STATS)-k)*pvals[name]))
         adj[name]=prev
-    return {"statistics":[{"pretreatment_feature":n,
+    return {"original_composite_id_by_joint_loss":{
+                "composite_joint_loss":sum(bool(r["composite_multi_leaf_id"]) and bool(r["both_lost"]) for r in rows),
+                "composite_other":sum(bool(r["composite_multi_leaf_id"]) and not bool(r["both_lost"]) for r in rows),
+                "single_joint_loss":sum(not bool(r["composite_multi_leaf_id"]) and bool(r["both_lost"]) for r in rows),
+                "single_other":sum(not bool(r["composite_multi_leaf_id"]) and not bool(r["both_lost"]) for r in rows)},
+            "statistics":[{"pretreatment_feature":n,
+                            "source_group_descriptive":grouped_descriptive[n],
                             "both_lost_minus_other_source_leaf_mean_difference":stats[n],
                             "conditional_strain_fixed_permutation_two_sided_p":pvals[n],
                             "holms_multiplicity_adjusted_p":adj[n]}
