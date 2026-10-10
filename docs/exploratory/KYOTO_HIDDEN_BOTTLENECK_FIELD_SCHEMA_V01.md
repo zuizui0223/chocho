@@ -78,3 +78,44 @@ Allowed primary `fate`: `flight_capable_adult`, `adult_nonflight`, `dead_immatur
 The MD5-exact 2023 Kyoto paper source has 30 cages × 23 larval observational dates and 120 **end-of-trial ordinal defoliation scores** for four different plants per cage; it has **zero repeated measurements of edible mass/area or randomized food replenishment**. The 2012 ESJ poster and 2017 plant-regrowth experiment establish temporal availability and plant response as prior hypotheses. The new experiment is an independent causal intervention, not a reanalysis of 2023 cage ratings.
 
 **All records here are schemas only. No live animals have been allocated, observed or handled through this repository workflow. GEB PR #38 remains untouched.**
+
+## G. Validated four-file outcome analysis contract (2026-10-10 extension)
+
+The original longer-form ledgers above are a field collection template. For a **future real experiment**, the analysis tool expects four small, locked and consistently keyed exports in this exact order. Export *without editing treatment assignments after outcome inspection*:
+
+```text
+randomized_plants.csv
+plant_id,block_id,treatment,competitor_present,food_clamp,random_seed,design_version
+
+trial_assignments.csv
+plant_id,block_id,treatment,competitor_present,food_clamp,native_initial_n,competitor_initial_n,food_floor_cm2,expected_n_resource_visits
+
+native_fates.csv
+plant_id,larva_id,species,fate
+
+resource_visits.csv
+plant_id,observation_datetime,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2
+```
+
+**Before animals enter cages:** `native_initial_n` is the originally assigned focal cohort size; `food_floor_cm2` is a **positive, prospectively selected accessible-leaf-area target**, fixed within each randomization block; `expected_n_resource_visits` is a preset sampling schedule, the same for all four treatments in a block. The condition `food_clamp` is the *randomized strategy*, not a post-hoc indicator that a measured threshold happened to be achieved.
+
+For `resource_visits.csv`, a date must be ISO 8601 with an explicit timezone offset (example structure `YYYY-MM-DDTHH:MM:SS+09:00`). Missing leaf-area observations remain **empty cells**, never replaced with 0. A missing visit is a protocol violation to audit, not permission to delete the affected cage. A biologically present leaf area of zero is numerically `0`, not blank. Where supplemented foliage is supplied, record its measured area separately from the contemporaneously accessible area.
+
+For `native_fates.csv`, permitted `species` is `Atrophaneura alcinous`. Every originally assigned focal larva requires its own unique `larva_id` and one fate: `flight_capable_adult`, `adult_nonflight`, `dead_immature`, `pupa_no_adult`, `lost_to_followup`, or `other_documented`. Unknown outcomes remain in the randomized denominator; the tool produces **true worst-case interaction bounds** accounting for positive and negative arms of the difference-in-differences. A complete-fate dataset is preferable. Any missing cohort member is an input failure rather than a complete-case exclusion.
+
+After valid original data exist, run:
+
+```bash
+python scripts/analyze_kyoto_food_clamp_outcomes.py \
+  --allocation randomized_plants.csv \
+  --assignments trial_assignments.csv \
+  --fates native_fates.csv \
+  --resource resource_visits.csv \
+  --receipt results/kyoto_food_clamp_trial_v01.json
+```
+
+This writes per-arm cage counts, initial cohort denominators, adult success, attrition bounds, prospectively logged leaf access and intervention, and the **natural** and **clamped** competitor effects *separately*, along with their interaction. Block bootstrap intervals are withheld if there are fewer than three distinct independent source blocks; three is a computational minimum for output, **not** a statistically adequate sample-size recommendation. Report independent cage sample size and feasibility pilot precision separately. The model does not automatically declare that the resource clamp succeeded: a clamp's effect on fresh tissue quality, humidity or labor remains a potential alternative mechanism.
+
+Code quality check: [GitHub Actions outcome-contract tests](https://github.com/zuizui0223/chocho/actions/workflows/kyoto-food-clamp-outcome-contract.yml) use **synthetic ledger fixtures only**, strictly for input, randomization and attrition integrity. They are not field observations, simulations of ecological effects or evidence of hypothesis confirmation.
+
+**Do not calculate interaction or confidence intervals from the 2023 experiment by substituting its four terminal plant scores; it did not contain these randomized treatment arms.**
