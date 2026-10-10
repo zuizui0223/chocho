@@ -59,7 +59,7 @@ def test_constrained_randomization_reproducible_and_holm_valid():
 
 def test_source_half_labels_are_not_silently_reconciled():
     a,b=source()
-    b=b.replace(b"a4,r,r",b"a4,WRONG",1)
+    b=b.replace(b"s0,s.0,a,r,6.0",b"s0,s.0,a,WRONG,6.0",1) # a new, second mismatch
     try:m.parse(a,b)
     except ValueError as e:
         assert "discrepancy" in str(e)
