@@ -1,0 +1,53 @@
+{
+  "schema": "chocho_experience_performance_source_gate_v01",
+  "created_on": "2026-10-10",
+  "status": "FROZEN_BEFORE_ARCHIVE_BYTES_AND_RESULT",
+  "research_question": "Does experimentally altered maternal host choice translate into a change in survival-weighted offspring production under two available diets, with documented independent cohorts and biological limits?",
+  "original_source": "Jones & Agrawal 2019 Oikos doi:10.1111/oik.06001; Dryad doi:10.5061/dryad.8hd6764",
+  "source_urls": {
+    "oviposition_experience.xlsx": "https://datadryad.org/downloads/file_stream/81836",
+    "caterpillar_performance.xlsx": "https://datadryad.org/downloads/file_stream/81832"
+  },
+  "published_prior_art": {
+    "learning": "24-hour prior experience manipulated experimentally; learned preference reversal ALREADY PUBLISHED",
+    "quality": "A. incarnata subsp. pulchra had lower larval pupation success ~22% than A. incarnata subsp. incarnata ~43%; published Fisher p≈0.17 for four diets; difference not firmly established",
+    "botanical_origin": "Both target Asclepias incarnata subspecies are native; this is a mechanistic control, NOT a native vs introduced host comparison.",
+    "population": "No host-removal, multi-generation host-dependence or post-loss adult recruitment outcome in this experiment",
+    "related_prior_art": "Gowri & Monteiro 2024 DOI 10.1111/nyas.15090 tested odor preference across five generations and removal; acquired preference disappeared after stimulus withdrawal. Odor manipulation is NOT actual host replacement."
+  },
+  "source_access_gate": {
+    "min_expected_file_size_bytes": 7000,
+    "max_size_bytes": 500000,
+    "requires_binary_xlsx_magic": "PK\\u0003\\u0004",
+    "requires_both_files": true,
+    "requires_user_or_run_access_to_actual_original_files": true,
+    "manuscript_pr38": "untouched"
+  },
+  "analysis_gate": {
+    "require_choice_file": [
+      "mated female ID",
+      "randomized previous experience category",
+      "post-treatment choice egg counts on each of two plant taxa",
+      "replication and batch/source"
+    ],
+    "require_performance_file": [
+      "larval plant taxon",
+      "original number assigned at hatch",
+      "survived to pupation (or tracked status for all assigned)"
+    ],
+    "sample_units": "female (choice) and larva nested by clutch (performance), separate non-paired cohorts",
+    "estimand": "Expected pupae per 100 eggs assigned to a host by each experience arm, holding observed diet-specific pupation probabilities fixed; Δ=(p_exp-p_control)×(q_alternative-q_preferred)",
+    "bootstrap": "Resample female IDs for preference and independently larval clutches for quality; if clutch unavailable, do not claim narrow intervals using larvae as independent units",
+    "positive": "Interval for the conditional cross-stage proxy excludes zero and positive direction; descriptive source-conditional proxy, not observed viable adult or demographic rescue",
+    "negative": "CI spans zero or sign opposite; no robust increase in proxy",
+    "stop": [
+      "No source bytes -> SOURCE_ACCESS_BLOCKED",
+      "No randomized exposure ID or group assignment -> no causal choice estimate",
+      "Pupation lacks full denominator -> no performance proxy",
+      "Different plant taxa / rearing contexts between experiments -> no cross-stage linkage",
+      "No same larvae as laid eggs -> cross-stage proxy only",
+      "No introduced-host exposure or removal -> no statement about plant globalization/hysteresis"
+    ]
+  },
+  "independent_publication_requirement": "Cross-species/individual-tracking experimental history×host-loss adult recruitment after matched current food supplies; numerical proxy alone cannot establish ecological generality."
+}
