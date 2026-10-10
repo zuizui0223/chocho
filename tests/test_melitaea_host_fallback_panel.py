@@ -43,3 +43,16 @@ def test_duplicate_patch_year_fails_loudly():
         assert "duplicate" in str(err)
     else:
         raise AssertionError("duplicate key not rejected")
+
+
+def test_original_archive_zip_path_is_required_and_decodable():
+    import io, zipfile
+    raw=("Patch,Year,Network,Area,Occupancy,Nest_count,Pl,Vs\\n"
+         "p1,2006,n,1,1,2,3,1\\n").encode()
+    mem=io.BytesIO()
+    with zipfile.ZipFile(mem,"w") as z:
+        z.writestr("archive/"+m.NAME,raw)
+    got,name=m.unpack_archive(mem.getvalue())
+    assert got==raw and name.endswith(m.NAME)
+    decoded,n=m.decode(got)
+    assert n==1 and decoded[("p1",2006)]["vs"]==1
