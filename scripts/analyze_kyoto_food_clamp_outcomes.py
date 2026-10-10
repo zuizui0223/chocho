@@ -178,6 +178,27 @@ def block_differences(plants,blocks,stats,key="lower_bound"):
         vals.append({"block_id":block,"interaction":val,"arm_risks":means})
     return vals
 
+def interaction_missing_bounds(plants,blocks,ends):
+    """True worst-case bounds on the interaction, accounting for +/- arms.
+
+    Merely subtracting an all-unknown-as-success contrast is NOT an upper
+    bound when arms have opposite signs in a difference-in-differences.
+    """
+    output=[]
+    for block,rs in sorted(blocks.items()):
+        lower={arm:sum(ends[r["plant_id"]]["lower_bound"] for r in rs if r["treatment"]==arm)/
+                   sum(r["treatment"]==arm for r in rs) for arm in ARMS}
+        upper={arm:sum(ends[r["plant_id"]]["upper_bound"] for r in rs if r["treatment"]==arm)/
+                   sum(r["treatment"]==arm for r in rs) for arm in ARMS}
+        lo=(lower["CLAMP_COMPETITOR"]+lower["NATURAL_NO_COMPETITOR"]
+            -upper["CLAMP_NO_COMPETITOR"]-upper["NATURAL_COMPETITOR"])
+        hi=(upper["CLAMP_COMPETITOR"]+upper["NATURAL_NO_COMPETITOR"]
+            -lower["CLAMP_NO_COMPETITOR"]-lower["NATURAL_COMPETITOR"])
+        if lo>hi:raise RuntimeError("invalid attrition bounds")
+        output.append({"block_id":block,"worst_case_lower":lo,"worst_case_upper":hi})
+    return output
+
+
 def bootstrap(vals,seed=20261010,draws=2000):
     if len(vals)<3:
         return None
@@ -194,7 +215,7 @@ def analyze(allocation,info,fates,visits):
     ends=fate_tally(plants,fates)
     quality=resource_tally(plants,visits)
     effect=block_differences(plants,blocks,ends,"lower_bound")
-    upper=block_differences(plants,blocks,ends,"upper_bound")
+    uncertainty=interaction_missing_bounds(plants,blocks,ends)
     perarm={}
     for arm in ARMS:
         ids=[plant for plant,r in plants.items() if r["treatment"]==arm]
@@ -215,7 +236,8 @@ def analyze(allocation,info,fates,visits):
             "total_added_fresh_leaf_area_cm2":additions,
         }
     lower=sum(z["interaction"] for z in effect)/len(effect)
-    upper=sum(z["interaction"] for z in upper)/len(upper)
+    worst_case_lower=sum(z["worst_case_lower"] for z in uncertainty)/len(uncertainty)
+    worst_case_upper=sum(z["worst_case_upper"] for z in uncertainty)/len(uncertainty)
     complete=all(ends[p]["outcome_unknown"]==0 for p in plants)
     return {
         "schema":"chocho_kyoto_food_clamp_outcomes_v01",
@@ -223,9 +245,10 @@ def analyze(allocation,info,fates,visits):
         "n_independent_plants":len(plants),"n_blocks":len(blocks),
         "per_arm":perarm,
         "block_level_lower_bound_interactions":effect,
-        "ITT_lower_missing_as_fail_interaction":lower,
-        "ITT_upper_missing_as_success_interaction":upper,
-        "independent_block_bootstrap_95ci_for_lower_bound":bootstrap(effect),
+        "ITT_missing_as_fail_interaction":lower,
+        "true_worst_case_attrition_interaction_bounds":[worst_case_lower,worst_case_upper],
+        "worst_case_attrition_bounds_by_block":uncertainty,
+        "independent_block_bootstrap_95ci_for_missing_as_fail":bootstrap(effect),
         "all_native_cohort_fates_known":complete,
         "resource_manipulation_achieved":"NOT_AUTOMATICALLY_IDENTIFIABLE_FROM_SOURCE_LEDGER; inspect arm contrasts and tissue quality",
         "does_not_condition_on_supplement_success":True,
