@@ -32,7 +32,9 @@ def test_frozen_source_lengths_and_matching_rows():
 
 def test_missing_pair_duplicate_rejected():
     a,b=mock()
-    b=b.replace(b"h1,",b"h0,",1)
+    rows=b.splitlines()
+    rows[2]=rows[1]
+    b=b"\n".join(rows)+b"\n"
     try:
         m.summarize(a,b)
     except ValueError as ex:
