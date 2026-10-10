@@ -1,0 +1,33 @@
+name: Kyoto AAI original baseline joint-loss diagnostic
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/KYOTO_AAI_BASELINE_LEAF_DEATH_SENSITIVITY_PROTOCOL_V01.json"
+      - "scripts/audit_kyoto_aai_pretreatment_joint_loss.py"
+      - "tests/test_kyoto_aai_pretreatment_joint_loss.py"
+      - ".github/workflows/kyoto-aai-original-baseline-joint-loss.yml"
+permissions:
+  contents: read
+jobs:
+  provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit source pair and permutation contract
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_kyoto_aai_pretreatment_joint_loss.py
+      - name: Audit pre-exposure leaf size, initial larval mass, and composite source labels
+        run: |
+          python scripts/audit_kyoto_aai_pretreatment_joint_loss.py --receipt results/kyoto_aai_pretreatment_joint_loss_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-aai-pretreatment-joint-loss-audit
+          path: results/kyoto_aai_pretreatment_joint_loss_v01.json
+          retention-days: 30
