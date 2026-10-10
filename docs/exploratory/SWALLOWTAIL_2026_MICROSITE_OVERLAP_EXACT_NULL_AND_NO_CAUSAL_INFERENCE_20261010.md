@@ -39,6 +39,16 @@ We explicitly constructed a **hypothetical** (NOT from the paper's source record
 | Shady | 475 | 9 | 124 | 9×124/475 = 2.35 |
 | **Total** | **875** | **209** | **129** | **4.85** |
 
+**Stronger constructive check: replicate the paper's entire four-cell contingency table exactly, not only its margins or an approximate overlap expectation.** Choose one possible integer realization in the same **hypothetical** two light strata:
+
+| Invented sunlight class | Neither observed | S only | A only | Both observed |
+| --- | ---: | ---: | ---: | ---: |
+| Sunny (400) | 198 | 197 | 2 | **3** |
+| Shady (475) | 344 | 7 | 122 | **2** |
+| **Total** | **542** | **204** | **124** | **5** |
+
+These are **exactly the four observed category totals published by Jang et al. (2026)**. Within each invented stratum the co-occurrence of 3 versus independence expectation 2.50 and 2 versus 2.35 is entirely compatible with the no-competition independence example. Thus **even exact agreement with all four published contingency cells cannot exclude environmental sorting as a sufficient explanation**. This example is a constructive mathematical demonstration and **is NOT a reconstruction of Korean ramet-level irradiance**; no actual light strata were retrieved.
+
 Thus **expected co-occurrence of ≈4.85** appears while the globally pooled naïve independence expectation is **30.81** and observed Korean overlap is **5**. This toy counterexample **does not fit, verify or even estimate the actual light classes in Korea**; it rigorously demonstrates that the published pooled margins, even with a large formal random-placement deficit, **cannot identify competition versus environmental sorting**.
 
 A light/leaf-quality axis causing both habitat choice and larval presence is biologically plausible from the 2026 published study itself (relative light ORs in opposite directions), but whether it explains all five actual co-records remains untested.
@@ -55,6 +65,6 @@ A light/leaf-quality axis causing both habitat choice and larval presence is bio
 
 - Frozen independent mathematical question: `SWALLOWTAIL_MICROSITE_OVERLAP_NULL_PROTOCOL_20261010.json`.
 - Complete Python script: `scripts/analyze_2026_swallowtail_overlap_nulls.py`; original printed-count fixture in `scripts/audit_2026_swallowtail_microhabitat_published_counts.py`.
-- [GitHub Actions run 38056433447](https://github.com/zuizui0223/chocho/actions/runs/38056433447): **5/5 exact-math and biological-limit tests passed**, JSON receipt uploaded.
+- [GitHub Actions run 38056591090](https://github.com/zuizui0223/chocho/actions/runs/38056591090): **5 mathematical/source-limit tests**, including a constructive check that **all four** published ramet totals are exactly reproduced by hypothetical light strata; JSON receipt uploaded.
 - **No new biological/causal effect claimed**. This is a valuable mathematical check revealing that published aggregate segregation is underdetermined, not proof of competition and not a second empirical replication.
 - **STOP** optimizing null assumptions to claim a strong interspecific interaction on published count margins. Without matched actual light and time observations, a causal comparison is not identified. Keep GEB submission PR #38 isolated.
