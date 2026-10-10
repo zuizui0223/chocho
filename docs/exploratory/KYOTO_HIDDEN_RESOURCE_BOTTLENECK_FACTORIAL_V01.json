@@ -75,10 +75,50 @@
     "required": "Begin accessible-leaf measurements before day 3 in new synchronized pilot, then monitor 3rd–5th instars through pupation; calibrate dry-mass-to-area and within-instar demand independently"
   },
   "quality_separating_control": {
-    "physical_proposal": "Where feasible, place equivalent same-source, same-age additional Aristolochia foliage into ALL cages. In natural-food arms hold that extra foliage behind a food-inaccessible, airflow-matched mesh barrier; in supported-food arms make it accessible, with otherwise comparable foliage handling and positioning. Record leaf chemistry/age and sham material separately.",
+    "physical_proposal": "Where feasible, supply SAME donor plant age/source (not just leaf age), same leaf node and collection day of additional Aristolochia foliage into ALL cages. Natural access arms get inaccessible matched sham foliage, supported arms get edible matching foliage. Record plant age, leaf position, plant nutrient and AAI/AAII measurements. Keep barrier and microclimate effects controlled.",
     "purpose": "Keep introduction of fresh leaf volatiles, time of handling and external supplementary leaf source as similar as possible; contrast ACCESS to added edible leaves, not merely arrival of young leaves. A barrier itself can change behavior and humidity, so controlled microclimate observations and barrier sham remain mandatory.",
     "change_to_existing_arms": "Four 2x2 arms retained. Access to matched-age supplemented foliage is the food clamp factor; both levels receive comparable foliage and handling. No third posthoc arm chosen by outcomes.",
     "limitation": "Even this design cannot prove all benefits originate in mass alone: larval movement/available surface, barrier-induced geometry and tissue physiology remain candidate causal mechanisms.",
     "critical": "The published 30 cages contained four plants each; independent assignment must be per WHOLE CAGE, not each of four nested potted plants."
-  }
+  },
+  "independent_prior_art_plant_age_quality_2023": {
+    "citation": "Jeong et al. 2023 Frontiers in Plant Science DOI 10.3389/fpls.2023.1145363, source fulltext independently verified from Europe PMC PMC10265686",
+    "host": "Aristolochia contorta (Korea), NOT Aristolochia debilis (Japan)",
+    "plant_ontogenetic_year_groups": [
+      1,
+      2,
+      3
+    ],
+    "fixed_leaf_position": "5th–7th leaf from uppermost leaf, i.e. plant ontogenetic age is distinct from within-shoot leaf developmental age",
+    "study_seasons": [
+      "July",
+      "September"
+    ],
+    "feeding_trial": {
+      "butterfly": "Sericinus montela",
+      "duration_days": 6,
+      "starting_instar": 2,
+      "temperature_C": 24,
+      "leaf_supply": "Leaves replaced whenever more than 50 percent consumed",
+      "individuals_per_plant_age_season_cell_initially": 20
+    },
+    "reported_plant_biochemistry": {
+      "leaf_AAI_July_year1_ng_per_mg": 83.8,
+      "leaf_AAI_July_year2_ng_per_mg": 7.61,
+      "leaf_AAI_July_year3_ng_per_mg": 2.26,
+      "leaf_C_to_N_season_ANOVA_F": 270.727
+    },
+    "prior_known_butterfly_performance": {
+      "Sericinus_RGR_age_by_season_ANOVA_F": 8.952,
+      "interpretation": "Relative growth varies with whole-plant age and sampling season even under replenished leaves; single-species previously published result. AAI concentration is correlated with plant age and is not independently randomized to prove the growth mechanism."
+    },
+    "caution": "Differences in whole-plant age and within-shoot leaf stage are distinct dimensions. Assaying only added_leaf_age_class and accessible biomass cannot match whole-plant provenance, season and nutritional traits."
+  },
+  "minimum_leaf_quality_control_extension": [
+    "For each whole-cage arm assign fresh host foliage from balanced, separately labeled donor PLANTS across treatments; do not use 'fresh leaves' as a synonym for a common quality treatment.",
+    "Record donor host PLANT ontogenetic planting year or age class when knowable, as distinct from POSITION/developmental age of its sampled leaves; if unknown, mark unknown and block by measured provenance/source rather than fabricating age.",
+    "Prespecify donor leaf position (e.g. corresponding nodes) and date, laboratory drying/fresh-mass calibration, and independently quantify C/N or leaf nitrogen in a blinded subset of original supplied foliage.",
+    "Where permits/assays allow, quantify AAI and AAII by specified validated procedures but do not assume Korean A. contorta 37-fold chemistry range applies to Japanese A. debilis.",
+    "Balance donor PLANT/source/age, leaf position, collection time and sham manipulation between resource-access arms. If balance fails, interpret observed survival differences as bundled foliage supply/quality effects."
+  ]
 }
