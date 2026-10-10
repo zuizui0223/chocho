@@ -20,6 +20,17 @@ NAME="empirical_models/data/RAWDATA/fall_survey_2004_2013.csv"
 COLS={"Patch","Year","Network","Area","Occupancy","Nest_count","Pl","Vs"}
 MAX=25_000_000
 
+def unpack_archive(data):
+    if len(data)>MAX or not zipfile.is_zipfile(io.BytesIO(data)):
+        raise ValueError("non-zip or oversized original archive")
+    with zipfile.ZipFile(io.BytesIO(data)) as z:
+        match=[s for s in z.namelist() if s.endswith(NAME)]
+        if len(match)!=1:
+            raise ValueError("exact source CSV not present exactly once")
+        raw=z.read(match[0])
+    return raw,match[0]
+
+
 def acquire(opener=urlopen):
     attempts=[]
     for url in URLS:
@@ -28,17 +39,13 @@ def acquire(opener=urlopen):
             with opener(req,timeout=30) as r:
                 data=r.read(MAX+1)
                 status=getattr(r,"status",None)
-            if len(data)>MAX or not zipfile.is_zipfile(io.BytesIO(data)):
-                attempts.append({"url":url,"http_status":status,"error":"non-zip or oversized"})
+            try:
+                raw,found=unpack_archive(data)
+            except ValueError as e:
+                attempts.append({"url":url,"http_status":status,"error":str(e)})
                 continue
-            with zipfile.ZipFile(io.BytesIO(data)) as z:
-                match=[s for s in z.namelist() if s.endswith(NAME)]
-                if len(match)!=1:
-                    attempts.append({"url":url,"error":"exact source CSV not present exactly once"})
-                    continue
-                raw=z.read(match[0])
             return raw,{"archive_url":url,"archive_sha256":hashlib.sha256(data).hexdigest(),
-                        "file_sha256":hashlib.sha256(raw).hexdigest(),"file_in_zip":match[0]},attempts
+                        "file_sha256":hashlib.sha256(raw).hexdigest(),"file_in_zip":found},attempts
         except HTTPError as e:
             attempts.append({"url":url,"http_status":e.code,"error":"HTTP access denied"})
         except (URLError,TimeoutError,OSError,zipfile.BadZipFile) as e:
@@ -110,8 +117,16 @@ def count_events(records):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--receipt",type=Path,required=True)
+    ap.add_argument("--archive",type=Path,help="Original unmodified DiLeo v3 ZIP acquired from its official data repository; no guessed CSV or substitute.")
     args=ap.parse_args()
-    raw, provenance, attempts=acquire()
+    if args.archive:
+        data=args.archive.read_bytes()
+        raw,found=unpack_archive(data)
+        provenance={"archive_path_provided":str(args.archive),"archive_sha256":hashlib.sha256(data).hexdigest(),
+                    "file_in_zip":found,"file_sha256":hashlib.sha256(raw).hexdigest()}
+        attempts=[]
+    else:
+        raw, provenance, attempts=acquire()
     receipt={"schema":"chocho_melitaea_host_fallback_source_gate_v01",
              "source_doi":"10.5061/dryad.905qfttrg",
              "attempts":attempts,"source_verified":raw is not None,
