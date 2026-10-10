@@ -1,0 +1,33 @@
+name: butterfly parasitoid published source inventory
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/NETTLE_PARASITOID_REALIZATION_SOURCE_GATE_V01.json"
+      - "scripts/audit_nettle_parasitoid_figshare_source.py"
+      - "tests/test_nettle_parasitoid_figshare_source.py"
+      - ".github/workflows/audusseau-parasitoid-source-inventory.yml"
+permissions:
+  contents: read
+jobs:
+  provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify source and inferential constraints
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_nettle_parasitoid_figshare_source.py
+      - name: Inspect original raw files without estimating published effects
+        run: |
+          python scripts/audit_nettle_parasitoid_figshare_source.py --receipt results/nettle_parasitoid_source_inventory_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nettle-parasitoid-original-source-inventory-v01
+          path: results/nettle_parasitoid_source_inventory_v01.json
+          retention-days: 30
