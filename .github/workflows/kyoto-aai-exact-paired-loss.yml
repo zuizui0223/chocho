@@ -1,0 +1,33 @@
+name: Kyoto original AAI exact paired death-source audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/realized-host-window-v01]
+    paths:
+      - "docs/exploratory/KYOTO_AAI_PAIRED_LOSS_ANALYSIS_PROTOCOL_V01.json"
+      - "scripts/analyze_kyoto_aai_paired_loss.py"
+      - "tests/test_kyoto_aai_paired_loss.py"
+      - ".github/workflows/kyoto-aai-exact-paired-loss.yml"
+permissions:
+  contents: read
+jobs:
+  paired-loss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test independent paired-leaf randomization integrity
+        run: |
+          python -m pip install pytest==8.3.4
+          python -m pytest -q tests/test_kyoto_aai_paired_loss.py
+      - name: Calculate original source exact paired loss contrasts
+        run: |
+          python scripts/analyze_kyoto_aai_paired_loss.py --receipt results/kyoto_original_aai_paired_loss_v01.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-original-AII-paired-loss-audit
+          path: results/kyoto_original_aai_paired_loss_v01.json
+          retention-days: 30
