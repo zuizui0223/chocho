@@ -11,8 +11,8 @@ These unusually valuable observations could, conditional on sufficient genuine p
 ## Executed fixed feasibility attempt
 
 - Protocol: `MELITAEA_TWO_HOST_FALLBACK_PROTOCOL_V01.json`, committed before inspecting original event counts.
-- Audit: `scripts/audit_melitaea_host_fallback_panel.py`; CI https://github.com/zuizui0223/chocho/actions/runs/38014231040.
-- **3 software tests passed** in the exact fixed gate run, after correcting an initial duplicate-year validation bug. All audit controls are source identity and time-order integrity checks, not scientific evidence.
+- Audit: `scripts/audit_melitaea_host_fallback_panel.py`; latest validated CI https://github.com/zuizui0223/chocho/actions/runs/38014340894.
+- **4 software tests passed** in the latest [exact-head audit](https://github.com/zuizui0223/chocho/actions/runs/38014340894), including source ZIP-path validation, duplicate patch-year rejection, exposure/outcome ordering and fail-closed HTTP access. An earlier audit exposed and led to correction of a duplicate-year key bug, and an intermediate synthetic fixture used incorrectly escaped newlines; both were repaired before this green receipt. These are software integrity checks, **not biological results**.
 - Official Dryad v2 `/download`: **HTTP 401**; official version 3 direct file stream: **HTTP 403**. Neither original archive nor any of its 36,704 rows was obtained in the runner.
 - As a consequence, `source_verified=false`, `effect_estimated=false`. Number of host declines, distinct patches, independent networks, year balance and conditional next-year extinction differences **remain unknown**.
 - The audit script now additionally accepts an actual unchanged published version 3 ZIP as a local `--archive` argument, hashes it, requires the exact `empirical_models/data/RAWDATA/fall_survey_2004_2013.csv` path and validates time order and support before effect fitting. An automatically generated or synthetic CSV is not a substitute.
