@@ -50,10 +50,17 @@ def parse(larva,leaf):
     if set(A)!=set(B):raise ValueError("larval and leafarea ID sets inconsistent")
     leaves=defaultdict(dict)
     observed=[]
+    half_label_mismatch=[]
     for ident,row in A.items():
         food=B[ident]
         if row["l.id"]!=food["l.id"] or row["treatment"]!=food["treatment"]:
             raise ValueError("larval and leaf treatment/source identity differ")
+        if row["l.or.r"]!=food["l.or.r"]:
+            half_label_mismatch.append({
+                "h.id":ident, "l.id":row["l.id"],
+                "larval_half_label":row["l.or.r"],
+                "leaf_area_half_label":food["l.or.r"]
+            })
         sp=row["species"]
         t=row["treatment"]
         if sp not in SPECIES or t not in ("a","c"):
@@ -82,7 +89,7 @@ def parse(larva,leaf):
             raise ValueError(f"not original split-leaf AAI-control pair {species} {leaf_id}")
     if len(leaves)!=60:
         raise ValueError("not the expected 60 paired leaves")
-    return leaves,observed
+    return leaves,observed,half_label_mismatch
 
 def estimate(vals,metric,complete_pairs_only):
     diffs=[]
@@ -114,7 +121,7 @@ def bootstrap(pairs,metric,complete_only,seed,draws=N_BOOT):
     return [effects[int(.025*n)],effects[int(.975*n)]]
 
 def analyse(original_larva,original_leaf):
-    leaves,rows=parse(original_larva,original_leaf)
+    leaves,rows,half_label_mismatch=parse(original_larva,original_leaf)
     bysp=defaultdict(list)
     for (sp,lid),pair in sorted(leaves.items()):
         bysp[sp].append(pair)
@@ -124,6 +131,7 @@ def analyse(original_larva,original_leaf):
             "methods":"Published 24h AAI single-compound split-leaf assay, NOT independent replication",
             "n_original_individuals":len(rows),
             "n_original_leaf_pair_blocks":len(leaves),
+            "original_leaf_half_label_discrepancies":half_label_mismatch,
             "species":{},
             "new_biological_effect_established":False,
             "can_rule_out_all_compound_blends":False,
