@@ -1,0 +1,53 @@
+{
+  "schema": "chocho_kyoto_food_access_factorial_analysis_contract_v01",
+  "created": "2026-10-10",
+  "status": "PREEXPERIMENT_DATA_AND_ANALYSIS_CONTRACT_NO_FIELD_DATA",
+  "scientific_question": "At fixed initially assigned native larvae, does randomized adequate access to edible host foliage change the effect of introduced Sericinus presence on adult production in native Atrophaneura?",
+  "source": "Hashimoto and Ohgushi 2023, Ecol Evol 10.1002/ece3.10164",
+  "design": "2x2 competitor present/absent x food-supply support/natural, whole independent plant/enclosure randomization in complete treatment-balanced source blocks",
+  "endpoint": "flight-capable native adults per initially assigned native neonates",
+  "estimand": "equal-weight mean over blocks of (clamp+competitor − clamp alone) − (natural+competitor − natural alone), with cage-level proportions as response",
+  "mechanistic_problem": "Final food-remaining ratings are post-outcome and may increase because early native butterfly death stops feeding. Clamp can alter tissue quality and handling, not just biomass.",
+  "data_contract": {
+    "allocation": "existing randomized plant_id, block_id, treatment, competitor_present, food_clamp CSV with all four arms per block",
+    "assignments": "plant_id,block_id,treatment,competitor_present,food_clamp,native_initial_n,competitor_initial_n,food_floor_cm2,expected_n_resource_visits; one row/cage",
+    "fates": "plant_id,larva_id,species,fate; one row per initially assigned native larva, including deaths and censoring",
+    "resource": "plant_id,observation_datetime,accessible_leaf_area_cm2,fresh_leaf_area_added_cm2; one row for every scheduled plant visit; missing access must be blank rather than zero"
+  },
+  "fates": {
+    "known_success": "flight_capable_adult",
+    "known_failure": [
+      "adult_nonflight",
+      "dead_immature",
+      "pupa_no_adult"
+    ],
+    "unknown": [
+      "lost_to_followup",
+      "other_documented"
+    ],
+    "unknown_bounds": "Lower success=known successful adults / initial count; upper=(known successful + unknown outcomes)/initial count; no dropping uncertain denominators"
+  },
+  "quality_gates": [
+    "Treatment allocation hash and independent plant/cage IDs match across inputs",
+    "No animal outcome is used to define eligibility or treatment",
+    "Every originally assigned native larva has a fate record",
+    "All four treatments present and balanced within each predeclared block",
+    "Resource visits equal to prespecified expected_n_resource_visits within each cage",
+    "Missing resource accessibility remains unknown, never converted to zero",
+    "Clamp achieved a real and reportable food access contrast under competitor presence; do not subset to plants where the clamp worked",
+    "Report floor breach and observed supplementation by randomized arm; clamp quality confounding requires separate controls",
+    "At least 3 truly independent source blocks before any block-bootstrap interval; otherwise report point contrast only",
+    "Do not infer food quantity's unique mediated causal effect from a total supplementation intervention"
+  ],
+  "bootstrap": "2,000 bootstrap resamples of whole source blocks with replacement, fixed seed 20261010, 95% percentile CI; this is a procedural plan, not power-guaranteeing significance",
+  "randomization": "Use pre-existing randomized assignment, do not reassign after observing larvae",
+  "sensitivity": "Lower/upper ITT outcome bounds from censoring and a fully documented primary complete-fates contrast; cannot drop attrition post-hoc",
+  "interpretation": {
+    "positive": "Supplying accessible edible foliage weakens competitor harm. Compatible with temporary shortage but tissue chemistry or handling remains possible.",
+    "null": "No supported moderation; interpret only if the clamp created a real between-arm supply contrast and independent replication sufficed.",
+    "negative": "Supplying foliage worsens competition difference; cannot call protective food access without quality controls.",
+    "unidentified": "If clamp never changes access or there are inadequate independent replicate plants, no claim about transient shortage."
+  },
+  "paper_boundary": "Causal mechanism in an invaded butterfly system feeding on native Aristolochia, NOT the separate chocho human-redistributed host-plant GEB paper",
+  "GEB_pr38_untouched": true
+}
