@@ -1,0 +1,48 @@
+{
+  "status": "VERIFIED_BOUNDED_LARVAL_SCREEN_WITH_TARGETED_HOST_COMPLETENESS_DIAGNOSTIC",
+  "date": "2026-10-11",
+  "screen_execution": {"run": 38124300207, "commit": "cb5f886092e549e2a8e5532946767c3506a8cae5", "artifact": 11696716253, "sha256": "0ab5cd892d45b8c54acb32b9e92cca27e7d373500bbe71c352c25a88c642bf0c"},
+  "linked_source_execution": {"run": 38124848902, "commit": "635c943ae2545155b77a3eb1fd1b4babc7b8697e", "artifact": 11696319284, "sha256": "70a461de45945e1abae9c0208e78badcb2c29f52006c663372301c59d42cd1e8", "full_tests_passed": 101},
+  "sample": {"fixed_prior_panel_species": 32, "complete_species": 28, "capped_oldest_1000_species": ["Neptis sappho", "Papilio polytes", "Pieris brassicae"], "unresolved_species_not_an_absence": ["Pyrgus communis"], "downloaded": 6428, "excluded_obscured_private": 1062, "eligible_larval_records": 5366, "native_resource_records": 4699, "no_known_host_mapped_records": 33, "unmapped_records": 512, "introduced_only_candidate_records": 122, "candidate_species": 6, "candidate_species_region_combinations": 12, "known_coordinate_accuracy_le_10km_candidates": 92},
+  "independent_audit": {"method": "Separate per-polygon vectorized covers scan and independently rebuilt host-native-contemporary unions; no acquisition/null engine imports", "records_checked": 5366, "mapping_or_resource_classification_disagreements": 0, "local_tests_passed_including_offline_audit": 105},
+  "candidate_groups": [
+    {"species":"Dryas iulia","region":"FLA","records":68},
+    {"species":"Dryas iulia","region":"MLY","records":23},
+    {"species":"Colobura dirce","region":"TRT","records":7},
+    {"species":"Colobura dirce","region":"VEN","records":1},
+    {"species":"Nacaduba biocellata","region":"SOA","records":6},
+    {"species":"Nacaduba biocellata","region":"WAU","records":3},
+    {"species":"Nacaduba biocellata","region":"NTA","records":1},
+    {"species":"Papilio polytes","region":"MRN","records":6},
+    {"species":"Pieris brassicae","region":"CLC","records":4},
+    {"species":"Pieris brassicae","region":"ASS","records":1},
+    {"species":"Pieris brassicae","region":"AGW","records":1},
+    {"species":"Brephidium exilis","region":"HAW","records":1}
+  ],
+  "targeted_native_host_supplement": {
+    "status":"PURPOSIVE_TWO_LINK_SENSITIVITY_NOT_A_GLOBAL_CORRECTION",
+    "supplements":[
+      {"butterfly":"Nacaduba biocellata","host":"Acacia aneura","native_regions":["NSW","NTA","QLD","SOA","WAU"],"host_source":"https://collections.museumsvictoria.com.au/species/11366","range_source":"https://powo.science.kew.org/taxon/469715-1","native_cells_before":50,"native_cells_after":55,"added_cells_before":81,"added_cells_after":76},
+      {"butterfly":"Dryas iulia","host":"Passiflora multiflora","native_regions":["BAH","CUB","DOM","FLA","HAI","LEE","PUE"],"host_source":"https://www.floridamuseum.ufl.edu/wildflowers/butterfly/julia/","range_source":"https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:675237-1","native_cells_before":45,"native_cells_after":46,"added_cells_before":94,"added_cells_after":93}
+    ],
+    "larval_candidate_records_reclassified_as_native_resource":78,
+    "reclassified_candidate_species_regions":[["Dryas iulia","FLA"],["Nacaduba biocellata","NTA"],["Nacaduba biocellata","SOA"],["Nacaduba biocellata","WAU"]],
+    "remaining_candidate_records":44,
+    "prior_32_species_occurrence_summary":{"recovered_before":66,"outside_native_before":115,"recovered_after":60,"outside_native_after":109},
+    "boundary":"Two targeted documented host links and their current native-range lists are added to a separate reconstruction; their other introduced ranges are not added. This is not a global correction, population-dependence estimate or unbiased error rate. Native regional occurrence does not establish local use at every larval point. Frozen source data and manuscript are not overwritten."
+  },
+  "linked_feeding_case": {
+    "butterfly":"Dryas iulia","host_label":"Passiflora suberosa","frozen_accepted_plant_id":"2560211","region":"MLY","location":"Kuala Lumpur, Malaysia",
+    "larval_observations":[361335797,363585138,363586114],"linked_plant_observation":363586246,
+    "dates":["2026-05-14","2026-05-21"],"independent_sites":1,
+    "label":"L2_OBSERVER_REPORTED_FEEDING_PROVISIONAL_PLANT_ID",
+    "plant_quality_grade":"needs_id","exact_host_identification_independently_confirmed":false,
+    "boundary":"Same-plant linked cluster, not three independent sites or generations. The observer explicitly reports feeding and the named host matches the fixed introduced host link; the plant ID remains provisional. Photographs show a larva on a damaged leaf but do not establish development completion."
+  },
+  "genus_only_cases":[{"observation":17789987,"butterfly":"Papilio polytes","host":"Citrus","rank":"genus"},{"observation":146491774,"butterfly":"Colobura dirce","host":"Cecropia","rank":"genus"}],
+  "published_case_alignment": {
+    "NZ_Pieris_Tropaeolum":{"region":"NZS","butterfly":"Pieris brassicae","host":"Tropaeolum majus","matches_fixed_link_and_introduced_only_region":true,"doi":"10.1371/journal.pone.0236791","boundary":"Published repeated breeding, eggs and larvae, followed by deliberate eradication; not a newly discovered population or natural persistence failure."},
+    "Thailand_Dryas":{"region":"THA","only_frozen_mapped_host":"Passiflora edulis","published_larval_host":"Passiflora foetida","published_host_missing_from_fixed_link_set":true,"doi":"10.1371/journal.pone.0104076","boundary":"Geographic match does not verify the fixed predicted host. Butterfly transport and releases are an additional human-mediated route, not plant-only causation."}
+  },
+  "overall_boundary":"Larvae are not automatically feeding-host records or successful breeding. Bounded oldest-first queries, source errors, clustering, native-host omissions and uncertain host identification prevent a population-level success rate. Revisit the occurrence-validation interpretation before treating journal preparation as solely author-metadata work."
+}
