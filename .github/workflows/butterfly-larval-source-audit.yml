@@ -1,0 +1,66 @@
+name: Butterfly larval source audit
+
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths: [.github/workflows/butterfly-larval-source-audit.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: hosts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preserve references and retrieve bounded primary sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, json, concurrent.futures, urllib.request
+          from pathlib import Path
+          out=Path('results');out.mkdir()
+          p=Path('hosts/resource.csv')
+          rows=list(csv.DictReader(p.open(encoding='utf-8-sig',newline='')))
+          focal={'Danaus plexippus','Pieris brassicae','Papilio demoleus'}
+          selected=[r for r in rows if (r.get('Insect Genus','').strip()+' '+r.get('Insect Species','').strip()) in focal]
+          (out/'HOSTS_focal_rows.json').write_text(json.dumps(selected,indent=2,ensure_ascii=False))
+          summary={'source_commit':'808e0b869f9ec1adf8efff87cf6a395adda103e0','raw_csv_sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'raw_csv_git_blob_sha1':hashlib.sha1(('blob '+str(p.stat().st_size)+'\0').encode()+p.read_bytes()).hexdigest(),'row_count':len(rows),'focal_row_count':len(selected),'columns':list(rows[0]) if rows else []}
+          (out/'HOSTS_source_audit.json').write_text(json.dumps(summary,indent=2))
+          if Path('hosts/manifest.json').exists(): (out/'HOSTS_manifest.json').write_bytes(Path('hosts/manifest.json').read_bytes())
+          urls={
+            'neves2001.pdf':'https://repositorio.uac.pt/bitstream/10400.3/150/1/pp17_24_Neves_et_al_18A.pdf',
+            'phillips2020_s004.xlsx':'https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0236791.s004&type=supplementary',
+            'cuba2015.pdf':'https://journals.flvc.org/troplep/article/download/89747/86082/116584'
+          }
+          def acquire(item):
+            name,url=item
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (research source verification)'})
+              with urllib.request.urlopen(req,timeout=75) as response:
+                data=response.read(); final=response.url; mime=response.headers.get('Content-Type')
+              valid=data.startswith(b'%PDF') if name.endswith('.pdf') else data.startswith(b'PK')
+              if not valid: raise ValueError('Unexpected file signature; not retained as a valid source')
+              (out/name).write_bytes(data)
+              return {'name':name,'url':url,'final_url':final,'content_type':mime,'size_bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'status':'retrieved'}
+            except Exception as e:return {'name':name,'url':url,'status':'unavailable','error':str(e)}
+          with concurrent.futures.ThreadPoolExecutor(3) as pool: manifest=list(pool.map(acquire,urls.items()))
+          (out/'primary_source_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps({'hosts':summary,'sources':manifest},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-larval-source-audit-20261011
+          path: results/
+          retention-days: 7
