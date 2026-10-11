@@ -1,0 +1,222 @@
+{
+  "schema": "chocho_butterfly_geographic_introduction_redundancy_null_v0.1",
+  "status": "POSTHOC_SPATIAL_CONFIGURATION_FIXED_MARGIN_NULL_WITH_OVERLAP_DECOMPOSITION",
+  "randomizations": 199,
+  "seed": 20261011,
+  "burn_sweeps_per_edge": 15,
+  "between_replica_sweeps_per_edge": 3,
+  "null": "Swap introduced host-plant x WGSRPD3 incidences ONLY within the same WCVP plant family and WGSRPD level1 region. Conserve the number of introduced WGSRPD3 units per plant within level1 and number of introduced same-family plant taxa per WGSRPD3 region. Native ranges remain fixed and cannot receive introduced edges. Known butterfly-host identities, host species counts, and recorded host prominence are fixed.",
+  "baseline": {
+    "all_239": {
+      "species": 239,
+      "expanded_species": 206,
+      "native_units": 26530,
+      "added_units": 14553,
+      "single_host_added_units": 8574,
+      "introduced_host_region_incidences": 75346,
+      "introduced_incidences_already_covered_by_native_hosts": 46387,
+      "duplicated_introduced_incidences_outside_native_resource": 14406,
+      "single_host_share": 0.5891568748711606,
+      "mean_species_single_share": 0.6797099319427641
+    },
+    "adequate_191": {
+      "species": 191,
+      "expanded_species": 191,
+      "native_units": 24439,
+      "added_units": 13529,
+      "single_host_added_units": 7733,
+      "introduced_host_region_incidences": 73748,
+      "introduced_incidences_already_covered_by_native_hosts": 46096,
+      "duplicated_introduced_incidences_outside_native_resource": 14123,
+      "single_host_share": 0.5715869613423017,
+      "mean_species_single_share": 0.6607801019862506
+    },
+    "rich_hosts_80": {
+      "species": 80,
+      "expanded_species": 80,
+      "native_units": 12853,
+      "added_units": 6224,
+      "single_host_added_units": 2823,
+      "introduced_host_region_incidences": 55308,
+      "introduced_incidences_already_covered_by_native_hosts": 39000,
+      "duplicated_introduced_incidences_outside_native_resource": 10084,
+      "single_host_share": 0.4535668380462725,
+      "mean_species_single_share": 0.5049318153222426
+    }
+  },
+  "comparison": {
+    "all_239": {
+      "added_units": {
+        "observed": 14553,
+        "null_median": 15490,
+        "null_q025": 15402.75,
+        "null_q975": 15572.65,
+        "difference_from_null_median": -937,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      },
+      "single_host_share": {
+        "observed": 0.5891568748711606,
+        "null_median": 0.592460651596606,
+        "null_q025": 0.5874681631791826,
+        "null_q975": 0.5972466946287164,
+        "difference_from_null_median": -0.003303776725445351,
+        "p_observed_ge_null": 0.875,
+        "p_observed_le_null": 0.13
+      },
+      "mean_species_single_share": {
+        "observed": 0.6797099319427641,
+        "null_median": 0.6870535125242277,
+        "null_q025": 0.6833475464858327,
+        "null_q975": 0.6921403463650819,
+        "difference_from_null_median": -0.007343580581463671,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      },
+      "introduced_incidences_already_covered_by_native_hosts": {
+        "observed": 46387,
+        "null_median": 45097,
+        "null_q025": 45002.9,
+        "null_q975": 45201.1,
+        "difference_from_null_median": 1290,
+        "p_observed_ge_null": 0.005,
+        "p_observed_le_null": 1
+      },
+      "duplicated_introduced_incidences_outside_native_resource": {
+        "observed": 14406,
+        "null_median": 14757,
+        "null_q025": 14663.25,
+        "null_q975": 14864.6,
+        "difference_from_null_median": -351,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      }
+    },
+    "adequate_191": {
+      "added_units": {
+        "observed": 13529,
+        "null_median": 14445,
+        "null_q025": 14357.8,
+        "null_q975": 14532.45,
+        "difference_from_null_median": -916,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      },
+      "single_host_share": {
+        "observed": 0.5715869613423017,
+        "null_median": 0.5759126106194691,
+        "null_q025": 0.5708863468546974,
+        "null_q975": 0.5813924146244168,
+        "difference_from_null_median": -0.004325649277167387,
+        "p_observed_ge_null": 0.96,
+        "p_observed_le_null": 0.045
+      },
+      "mean_species_single_share": {
+        "observed": 0.6607801019862506,
+        "null_median": 0.6686942742097436,
+        "null_q025": 0.6645185317545668,
+        "null_q975": 0.6736599591996253,
+        "difference_from_null_median": -0.007914172223492999,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      },
+      "introduced_incidences_already_covered_by_native_hosts": {
+        "observed": 46096,
+        "null_median": 44820,
+        "null_q025": 44726.95,
+        "null_q975": 44927.4,
+        "difference_from_null_median": 1276,
+        "p_observed_ge_null": 0.005,
+        "p_observed_le_null": 1
+      },
+      "duplicated_introduced_incidences_outside_native_resource": {
+        "observed": 14123,
+        "null_median": 14475,
+        "null_q025": 14389.75,
+        "null_q975": 14587.55,
+        "difference_from_null_median": -352,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      }
+    },
+    "rich_hosts_80": {
+      "added_units": {
+        "observed": 6224,
+        "null_median": 6681,
+        "null_q025": 6631.75,
+        "null_q975": 6742.05,
+        "difference_from_null_median": -457,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      },
+      "single_host_share": {
+        "observed": 0.4535668380462725,
+        "null_median": 0.45379784688995217,
+        "null_q025": 0.44672064158100133,
+        "null_q975": 0.46259870278553444,
+        "difference_from_null_median": -0.00023100884367965868,
+        "p_observed_ge_null": 0.525,
+        "p_observed_le_null": 0.48
+      },
+      "mean_species_single_share": {
+        "observed": 0.5049318153222426,
+        "null_median": 0.5102672599373894,
+        "null_q025": 0.5026107108536728,
+        "null_q975": 0.5185118646198628,
+        "difference_from_null_median": -0.005335444615146789,
+        "p_observed_ge_null": 0.915,
+        "p_observed_le_null": 0.09
+      },
+      "introduced_incidences_already_covered_by_native_hosts": {
+        "observed": 39000,
+        "null_median": 38247,
+        "null_q025": 38158.85,
+        "null_q975": 38342.35,
+        "difference_from_null_median": 753,
+        "p_observed_ge_null": 0.005,
+        "p_observed_le_null": 1
+      },
+      "duplicated_introduced_incidences_outside_native_resource": {
+        "observed": 10084,
+        "null_median": 10381,
+        "null_q025": 10301.7,
+        "null_q975": 10464.3,
+        "difference_from_null_median": -297,
+        "p_observed_ge_null": 1,
+        "p_observed_le_null": 0.005
+      }
+    }
+  },
+  "decomposition_identity": "Introduced host x region incidences = already-native host-covered incidences + introduced-host duplicate incidences outside the native envelope + newly added butterfly x region units.",
+  "mixing": {
+    "introduced_edges_in_fixed_HOSTS_WCVP_pool": 74055,
+    "edges_in_eligible_blocks": 72065,
+    "eligible_block_count": 792,
+    "total_family_continent_blocks": 1228,
+    "attempted_swaps": 44103780,
+    "accepted_swaps": 7536378,
+    "accepted_fraction": 0.1708782784604857,
+    "median_accepted_swaps_between_replicates": 36937,
+    "example_changed_original_edge_counts": [
+      {
+        "replicate": 1,
+        "number_original_introduction_edges_changed": 29044
+      },
+      {
+        "replicate": 100,
+        "number_original_introduction_edges_changed": 29142
+      },
+      {
+        "replicate": 199,
+        "number_original_introduction_edges_changed": 29027
+      }
+    ],
+    "invariants_confirmed": true
+  },
+  "claim_boundary": "These are reconstructed plant ranges at coarse WGSRPD3 scale, not local butterfly host use, survival, or persistence. The null preserves marginal introduction counts within plant family and continent, not fine-scale climate matching, geographic contiguity, or sampling intensity. Test is exploratory post-hoc and excludes nulls that reassign butterfly host identities.",
+  "source_workflow_run_id": 38112574884,
+  "source_job_id": 114391014246,
+  "execution_sha": "d0437c8cf857c4bd7823195789b4d5bb8778b58e",
+  "frozen_submission_sha": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "interpretation": "The observed deficit of novel butterfly resource geography comes from an excess of introductions in regions that already support at least one native known host. Overlap among introduced hosts outside those native envelopes is actually lower than the continent x plant-family fixed-margin null, not higher. These are spatial structural effects, not realized larval host use or plant introductions causing population expansion."
+}
