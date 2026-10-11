@@ -1,5 +1,7 @@
 # Kyoto nondepletion paradox — evidence, causal ambiguity, and executable next experiment
 
+> **2026-10-11 living pupae and diapause correction:** A prior Japanese experiment by Takagi & Miyashita (2008), using the **same butterfly taxon** under the combination `Byasa alcinous` and *a different host* `Aristolochia kaempferi`, showed that tough host leaves alter larval survival, duration **and pupal diapause**. Therefore a pupa that has not emerged by a short census must NOT be labeled dead. The updated actual-outcome analysis rejects ambiguous `pupa_no_adult`, distinguishes living `diapause_alive`, pending live pupae and confirmed dead pupae, and reports outcome bounds and diapause separately. This is a **previously published** mechanism, not proof that *Sericinus* induces diapause in Kyoto. See [full biology, implementation and experimental decision](KYOTO_HOST_QUALITY_DIAPAUSE_AS_THIRD_FILTER_DECISION_20261011.md) and [15-test CI](https://github.com/zuizui0223/chocho/actions/runs/38107459855).
+
 **Date:** 2026-10-10. **Status:** SOURCE-AUDITED FACT + EXPERIMENTAL AND ANALYSIS CONTRACT; NO NEW BUTTERFLY BIOLOGICAL EFFECT.  
 **Scientific isolation:** exploratory branch only; GEB submission PR #38 unchanged.
 
