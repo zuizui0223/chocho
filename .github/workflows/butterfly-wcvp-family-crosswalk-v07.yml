@@ -38,7 +38,7 @@ jobs:
           tab <- get("wcvp_names", envir=e)
           stopifnot(all(c("plant_name_id","taxon_name","taxon_rank","taxon_status","family") %in% names(tab)))
           ids <- unique(as.character(cand$accepted_plant_name_id))
-          extra <- c("2799915","321867","2723957","2723971","2724178","3287406","252903","321867","2524232","2903676")
+          extra <- c("2799915","252903","321867","2723957","2723971","2724178","3287406","2724157","2917278","2954483")
           ids <- sort(unique(c(ids, extra)))
           target <- tab[as.character(tab$plant_name_id) %in% ids,
                         c("plant_name_id","taxon_name","taxon_rank","taxon_status","family"),drop=FALSE]
