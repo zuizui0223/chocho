@@ -1,0 +1,87 @@
+name: BCE Clarke reconciled inputs v05
+
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths: [.github/workflows/bce-clarke-reconciled-inputs-v05.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-ranges:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore exact anonymous S9 source archive
+        uses: actions/download-artifact@v4
+        with:
+          name: anonymous-review-bundle
+          path: restore
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38010712381
+      - name: Verify and recover the same candidate IDs
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,json,csv
+          files=list(Path('restore').rglob('bce_clarke_anonymous_s9_reproducibility_v01.zip'))
+          assert len(files)==1,files
+          with zipfile.ZipFile(files[0]) as z:
+              data=z.read('inputs/bce_accepted_species_host_edges.json')
+          assert hashlib.sha256(data).hexdigest()=='f46d18703fe5cc8d97699af6f084f652a704e46b0f9e8c68e32dd70decc32c53'
+          j=json.loads(data)
+          ids=sorted({str(r['accepted_plant_name_id']) for s in j['per_butterfly'] for r in s['details'] if r['match_status']=='ACCEPTED_ID_ABSENT_FROM_FROZEN_HOSTS_FOR_BUTTERFLY'})
+          assert len(ids)==679,len(ids)
+          Path('out').mkdir()
+          Path('out/bce_accepted_species_host_edges.json').write_bytes(data)
+          with Path('out/candidate_ids.csv').open('w',newline='') as f:
+              w=csv.writer(f);w.writerow(['accepted_plant_name_id']);w.writerows((v,) for v in ids)
+          print('Verified',len(ids),'S9 candidate plant IDs')
+          PY
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: source_wcvp
+      - name: Extract extant nondoubtful distributions from fixed WCVP bytes
+        run: |
+          set -euo pipefail
+          test "$(git hash-object source_wcvp/data/wcvp_distributions.rda)" = 60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a
+          Rscript - <<'RS'
+          e <- new.env(parent=emptyenv())
+          load('source_wcvp/data/wcvp_distributions.rda',envir=e)
+          d <- get('wcvp_distributions',envir=e)
+          ids <- as.character(read.csv('out/candidate_ids.csv')$accepted_plant_name_id)
+          rows <- d[as.character(d$plant_name_id) %in% ids, c('plant_name_id','area_code_l3','introduced','extinct','location_doubtful'),drop=FALSE]
+          rows$plant_name_id <- as.character(rows$plant_name_id)
+          rows$area_code_l3 <- as.character(rows$area_code_l3)
+          rows <- rows[order(rows$plant_name_id,rows$area_code_l3),,drop=FALSE]
+          write.csv(rows,'out/bce_candidate_distributions_raw.csv',row.names=FALSE,na='')
+          cat('Requested',length(ids),'IDs; source rows',nrow(rows),'\n')
+          RS
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in Path('out').glob('*') if p.is_file()}
+          Path('out/source_receipt.json').write_text(json.dumps({'WCVP_commit':'65bed76bae9d644ccb6ad200c05f9f5071d89e05','WCVP_distribution_git_blob':'60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a','source_s9_run':38010712381,'files_sha256':hashes},indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-bce-clarke-reconciled-inputs-v05-20261011
+          path: out/
+          retention-days: 30
