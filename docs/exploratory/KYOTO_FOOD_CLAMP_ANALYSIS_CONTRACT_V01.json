@@ -1,9 +1,9 @@
 {
-  "schema": "chocho_kyoto_food_access_factorial_analysis_contract_v02",
+  "schema": "chocho_kyoto_food_access_factorial_analysis_contract_v03",
   "created": "2026-10-10",
   "status": "PREEXPERIMENT_DATA_AND_ANALYSIS_CONTRACT_NO_FIELD_DATA",
   "scientific_question": "At fixed initially assigned native larvae, does randomized adequate access to edible host foliage change the effect of introduced Sericinus presence on adult production in native Atrophaneura?",
-  "source": "Hashimoto and Ohgushi 2023, Ecol Evol 10.1002/ece3.10164",
+  "source": "Hashimoto and Ohgushi 2023, Ecol Evol 10.1002/ece3.10164; Takagi and Miyashita 2008 DOI 10.1603/0013-8746(2008)101[392:HPQIDI]2.0.CO;2",
   "design": "2x2 competitor present/absent x food-supply support/natural, whole independent plant/enclosure randomization in complete treatment-balanced source blocks",
   "endpoint": "flight-capable native adults per initially assigned native neonates",
   "estimand": "equal-weight mean over blocks of (clamp+competitor − clamp alone) − (natural+competitor − natural alone), with cage-level proportions as response",
@@ -19,13 +19,18 @@
     "known_failure": [
       "adult_nonflight",
       "dead_immature",
-      "pupa_no_adult"
+      "pupa_confirmed_dead"
     ],
     "unknown": [
       "lost_to_followup",
       "other_documented"
     ],
-    "unknown_bounds": "Lower success=known successful adults / initial count; upper=(known successful + unknown outcomes)/initial count; no dropping uncertain denominators"
+    "unknown_bounds": "Lower possible lifetime flight-capable adults = observed flight-capable adults / original larvae; upper includes original assigned larvae still alive in pupal diapause, other alive nonemerged pupae and truly unobserved followup. Diapause is NOT a confirmed failure or observed adult.",
+    "pending_live_pupa": [
+      "diapause_alive",
+      "pupa_alive_pending_emergence"
+    ],
+    "previous_unsafe_code_rejected": "pupa_no_adult is ambiguous because it may be a living diapausing pupa; software rejects it in favor of confirmed death or pending live pupa"
   },
   "quality_gates": [
     "Treatment allocation hash and independent plant/cage IDs match across inputs",
@@ -40,7 +45,10 @@
     "Do not infer food quantity's unique mediated causal effect from a total supplementation intervention",
     "At scheduled resource visits, independently count native living larvae and living 3rd–5th instar larvae; late <= alive <= initially assigned, and no sorting by whether late-stage survivors remain.",
     "Report per-treatment number of living 3rd–5th-instar observations, missing leaf area among these, and proportion below prospectively established access floor; a zero-late-survivor cage is not evidence that food was sufficient.",
-    "Report fresh added leaf age class independently of accessible leaf quantity; a significant food-supplementation effect may be driven by leaf quality or handling."
+    "Report fresh added leaf age class independently of accessible leaf quantity; a significant food-supplementation effect may be driven by leaf quality or handling.",
+    "Predefine seasonal photoperiod, temperature, census duration, diapause diagnostic and overwinter followup in each block; guard against differential observation horizons across arms.",
+    "Never mark a live diapausing pupa as dead or as a permanently unsuccessful adult; report alive pupae in each arm and use partial-identification bounds for ultimate adult viability.",
+    "A treatment effect on early adult eclosion may represent shifted emergence timing rather than reduced survival; examine adult timing and diapause separately."
   ],
   "bootstrap": "2,000 bootstrap resamples of whole source blocks with replacement, fixed seed 20261010, 95% percentile CI; this is a procedural plan, not power-guaranteeing significance",
   "randomization": "Use pre-existing randomized assignment, do not reassign after observing larvae",
@@ -69,5 +77,14 @@
     "implication": "Predefine food-access monitoring in BOTH early and 3rd–5th instars; most cumulative consumption occurs late. Source mass cannot simply be converted to minimum accessible fresh leaf area without independent calibration."
   },
   "revised_reason": "The previous concise resource ledger lacked living instar data, so stage-specific resource shortages could not be checked despite 3rd–5th instar demand dominating cumulative feeding.",
-  "endpoint_interpretation": "Primary experimental effect remains assigned food-access strategy × assigned competitor exposure; late-instar accessibility is a post-treatment manipulation diagnostic, NOT a conditioning variable for the primary ITT effect."
+  "endpoint_interpretation": "Primary experimental effect remains assigned food-access strategy × assigned competitor exposure; late-instar accessibility is a post-treatment manipulation diagnostic, NOT a conditioning variable for the primary ITT effect.",
+  "life_history_prior_art": {
+    "paper": "Takagi & Miyashita (2008), Host Plant Quality Influences Diapause Induction of Byasa alcinous, DOI 10.1603/0013-8746(2008)101[392:HPQIDI]2.0.CO;2",
+    "taxonomic_identity": "Byasa alcinous is a recognized taxonomic synonym/combination of Atrophaneura alcinous (NCBI Taxonomy 85299).",
+    "key_difference": "2008 used A. kaempferi from a Chiba mountain population, not A. debilis from Kyoto cages; cannot assume magnitude/generalizability.",
+    "experimental_conditions": "20°C, 16:8 L:D photoperiod, 3 independent source mothers; randomized larvae to soft vs tough A. kaempferi leaves; duration, early survival, and diapause scored.",
+    "published_results": "Hard leaves reduce early survival and prolong larvae; almost every pupated larva from tough leaves entered diapause (all but one); not a new effect.",
+    "measurement_boundary": "Diapausing pupa alive is NOT a confirmed immature death, nor a failure to ever produce an adult. A fixed 30d adult window detects early emergence but cannot infer lifetime adult output unless overwintering and later emergence monitored."
+  },
+  "primary_estimand_adjudication": "Predefine a standardized adult follow-up horizon before trial. Count flight-capable adults by that date separately from known live diapausing and other nonemerged pupae; report lower and upper eventual adult-capable proportion bounds, and categorical diapause probability per original cohort. Overwinter and recheck pupae using predefined conditions to resolve eventual adult success. Unknown fate or living pupa remains unresolved, not known mortality."
 }
