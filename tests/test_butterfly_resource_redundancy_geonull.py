@@ -44,8 +44,11 @@ def test_resource_singletons_only_count_cells_outside_native_union():
     summary, species_metrics = NS["geographic_resources"](
         species, hosts, native, introductions, group
     )
-    assert species_metrics["butterfly_A"] == (1, 2, 1)
-    assert species_metrics["butterfly_B"] == (0, 1, 1)
+    assert species_metrics["butterfly_A"] == (1, 2, 1, 3, 0, 1)
+    assert species_metrics["butterfly_B"] == (0, 1, 1, 1, 0, 0)
+    assert summary["both"]["introduced_host_region_incidences"] == 4
+    assert summary["both"]["introduced_incidences_already_covered_by_native_hosts"] == 0
+    assert summary["both"]["duplicated_introduced_incidences_outside_native_resource"] == 1
     assert summary["both"]["added_units"] == 3
     assert summary["both"]["single_host_added_units"] == 2
     assert summary["both"]["single_host_share"] == 2 / 3
