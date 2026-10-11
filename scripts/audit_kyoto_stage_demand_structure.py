@@ -78,6 +78,25 @@ def analyze(raw):
         "first_observed_3rd_to_5th_instar_day_distribution":dict(sorted(late_onsets.items(),key=lambda kv:float(kv[0]))),
         "first_observed_pupation_day_distribution":dict(sorted(pup_onsets.items(),key=lambda kv:float(kv[0]))),
         "per_cage_stage_onsets":samples,
+        "life_history_process_identifiability":{
+            "cage_counts_per_stated_instar_stages_1_to_5":all(f"a{i}" in COLUMNS for i in range(1,6)),
+            "cage_level_pupation_times_observed":all(k in COLUMNS for k in ("ap","cumul.ap")),
+            "individual_larva_id_present":("larva_id" in COLUMNS or "h.id" in COLUMNS),
+            "sixth_instar_or_observed_extra_molt_field_present":any(
+                k in COLUMNS for k in ("a6","extra_molt","molt_count","ecdysis_sequence")
+            ),
+            "cannibalism_direct_observation_field_present":any(
+                k in COLUMNS for k in ("cannibalism","cannibalism_confirmed","predator_larva_id")
+            ),
+            "disease_cause_of_death_field_present":any(
+                k in COLUMNS for k in ("disease","disease_confirmed","death_cause")
+            ),
+            "pupal_diapause_observation_field_present":any(
+                k in COLUMNS for k in ("diapause","diapause_alive","pupal_diapause")
+            ),
+            "adult_eclosion_record_present":any(k in COLUMNS for k in ("adult_emergence","eclosed","flight_capable_adult")),
+            "interpretation":"Instar 1–5 counts per CAGE do not reveal individual sixth instar, extra ecdysis, cannibalism, disease, diapause, or postdiapause flight. They cannot adjudicate the Nakahara et al 2020 conspecific density×food life-history mechanisms or their mediation of the 2023 heterospecific effect."
+        },
         "resource_access_or_quality_observed_at_stage":False,
         "new_butterfly_survival_effect_estimated":False,
         "GEB_PR38_unchanged":True
