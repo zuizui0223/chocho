@@ -1,0 +1,121 @@
+{
+  "schema": "chocho_climate_conditioned_resource_geography_verified_receipt_20261011",
+  "status": "COMPLETED_EXPLORATORY_CLIMATE_NULL_WITH_INDEPENDENT_NUMERICAL_CHECK",
+  "execution": {
+    "workflow_run_id": 38114331740,
+    "job_id": 114396102659,
+    "execution_sha": "d14eedb4239fa269e888be5701984712a59b72d9",
+    "artifact_id": 11692453601,
+    "artifact_name": "chocho-climate-conditioned-geonull-20261011",
+    "artifact_sha256": "2ec1749445d382246324c74a661ecbd7065eb75cb6f1024cf340cac42b765eb5",
+    "full_result_json_path_in_artifact": "climate-null/climate_geonull_result.json",
+    "full_result_json_sha256": "30ea62cfc8bad716b21c214937e12dbfcfe08cacaa0b1da544d979543d2eacb1",
+    "raw_traces": "climate-null/*_trace.json; four chains, each 199 sampled matrices",
+    "fixed_submission_sha_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895"
+  },
+  "design": {
+    "primary_panel": "adequate_191",
+    "primary_endpoint": "B: introduced host incidences in butterfly resource regions already covered by at least one native known host",
+    "primary_null": "climate_3x3_primary",
+    "constraints": "Butterfly-host identities and all native host ranges fixed. Introduced host-region double-edge switches preserve plant-family richness per region and each plant's number of introduced regions within continent and regional BIO1/BIO12 quantile stratum.",
+    "quantile_bins": "Within each WGSRPD1 continent, classify regional BIO1 and BIO12 independently into two or three quantile bins. Equal values are not split. Missing-climate regions are uniquely frozen in every new model.",
+    "not_used_for_stratification": "Butterfly presence, fitted niche-mismatch, occurrence effort, or observed ecological response",
+    "sample_consistency_warning": "Resolved host species >= recorded host families is a minimum taxonomy consistency criterion, not proof of complete host-use records.",
+    "posthoc": true
+  },
+  "climate_input": {
+    "source_artifact_id": 10919985332,
+    "source_archive_sha256": "198dc927df3e34a06d7b383ad399bab5437819483759f19f085b65a827f6d50a",
+    "csv_sha256": "0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2",
+    "csv_rows": 5300,
+    "unique_valid_regions": 365,
+    "regions_in_lookup": 369,
+    "missing_climate_regions": ["ANT", "BOU", "HMD", "SSA"],
+    "introduced_plant_region_edges": 74055,
+    "introduced_edges_without_climate": 0,
+    "valid_extraction_points_per_region": 16,
+    "conflicting_region_vectors": 0
+  },
+  "accounting": {
+    "identity": "T = B + D + U; holds per butterfly and for every randomized panel",
+    "T": "introduced known-host x butterfly x WGSRPD3 incidences",
+    "B": "introduced incidences in regions already covered by at least one native known host",
+    "D": "extra introduced-host incidences beyond the first in each new region outside the native resource envelope",
+    "U": "unique newly added butterfly x WGSRPD3 resource cells",
+    "interpretation": "These are static regional range incidences, not observed local resource use or historical arrival events."
+  },
+  "baseline": {
+    "all_239": {"species":239,"T":75346,"B":46387,"D":14406,"U":14553,"single_host_units":8574,"single_host_share":0.5891568748711606},
+    "adequate_191": {"species":191,"T":73748,"B":46096,"D":14123,"U":13529,"single_host_units":7733,"single_host_share":0.5715869613423017},
+    "rich_hosts_80": {"species":80,"T":55308,"B":39000,"D":10084,"U":6224,"single_host_units":2823,"single_host_share":0.4535668380462725}
+  },
+  "primary_panel_models": {
+    "matched_support_no_climate": {
+      "seed":2026101101,"replicas":199,"burn_sweeps":15,"gap_sweeps":3,
+      "B_null_mean":44818.502512562816,"B_null_q025":44706.0,"B_null_q975":44926.3,"B_observed_excess":1277.4974874371837,"B_p_upper":0.005,
+      "U_null_mean":14447.412060301507,"U_observed_minus_null":-918.4120603015072,"U_p_lower":0.005,
+      "D_null_mean":14482.085427135678,"D_observed_minus_null":-359.0854271356784,"D_p_lower":0.005,
+      "single_host_share_null_mean":0.5759645609165889,"single_host_share_p_upper":0.93,
+      "B_lag1_autocorrelation":0.10366244006210731,"B_AR1_effective_samples_approx":161.6175090796811
+    },
+    "climate_2x2": {
+      "seed":2026101102,"replicas":199,"burn_sweeps":15,"gap_sweeps":3,
+      "B_null_mean":45409.46733668342,"B_null_q025":45314.75,"B_null_q975":45503.2,"B_observed_excess":686.5326633165823,"B_p_upper":0.005,
+      "U_null_mean":14012.1608040201,"U_observed_minus_null":-483.16080402010084,"U_p_lower":0.005,
+      "D_null_mean":14326.371859296483,"D_observed_minus_null":-203.3718592964833,"D_p_lower":0.005,
+      "single_host_share_null_mean":0.5709889647118405,"single_host_share_p_upper":0.385,
+      "B_lag1_autocorrelation":0.18753414991922662,"B_AR1_effective_samples_approx":136.1482566013542
+    },
+    "climate_3x3_primary": {
+      "seed":2026101103,"replicas":199,"burn_sweeps":15,"gap_sweeps":3,
+      "B_null_mean":45729.51256281407,"B_null_q025":45652.95,"B_null_q975":45805.15,"B_observed_excess":366.48743718593323,"B_p_upper":0.005,
+      "U_null_mean":13823.190954773869,"U_null_q025":13769.65,"U_null_q975":13873.5,"U_observed_minus_null":-294.1909547738687,"U_p_lower":0.005,
+      "D_null_mean":14195.29648241206,"D_observed_minus_null":-72.29648241206087,"D_p_lower":0.04,
+      "single_host_share_null_mean":0.5732098875147423,"single_host_share_null_q025":0.5690953365818042,"single_host_share_null_q975":0.5775479916518532,"single_host_share_p_upper":0.81,
+      "B_lag1_autocorrelation":0.15644335776720408,"B_AR1_effective_samples_approx":145.1586631345577,
+      "accepted_swaps":4085853,"attempted_swaps":40901796,"eligible_edges":66833,"focal_host_edges":30373,
+      "changed_focal_host_edges_at_replicates_1_100_199":[6056,6045,6103]
+    },
+    "climate_3x3_longer_mixing": {
+      "seed":2026101104,"replicas":199,"burn_sweeps":30,"gap_sweeps":6,
+      "B_null_mean":45725.020100502516,"B_null_q025":45637.95,"B_null_q975":45806.1,"B_observed_excess":370.97989949748444,"B_p_upper":0.005,
+      "U_null_mean":13823.954773869347,"U_observed_minus_null":-294.95477386934726,"U_p_lower":0.005,
+      "D_null_mean":14199.02512562814,"D_observed_minus_null":-76.02512562814081,"D_p_lower":0.045,
+      "single_host_share_null_mean":0.5730287161882667,"single_host_share_p_upper":0.74,
+      "B_lag1_autocorrelation":0.22644099757770902,"B_AR1_effective_samples_approx":125.51622278289187,
+      "accepted_swaps":8175284,"attempted_swaps":81803592,"eligible_edges":66833,"focal_host_edges":30373,
+      "changed_focal_host_edges_at_replicates_1_100_199":[6062,5946,6064]
+    }
+  },
+  "secondary_panels_primary_climate_model": {
+    "all_239": {"B_null_mean":46013.68341708543,"B_null_q025":45935.0,"B_null_q975":46093.1,"B_observed_excess":373.3165829145728,"B_p_upper":0.005,"U_null_mean":14855.989949748744,"U_p_lower":0.005,"D_null_mean":14476.326633165829,"single_host_share_null_mean":0.5902804,"single_host_share_p_upper":0.75},
+    "rich_hosts_80": {"B_null_mean":38768.04522613066,"B_null_q025":38709.6,"B_null_q975":38829.35,"B_observed_excess":231.95477386934363,"B_p_upper":0.005,"U_null_mean":6371.251256281407,"U_p_lower":0.005,"D_null_mean":10168.70351758794,"single_host_share_null_mean":0.4521256758589939,"single_host_share_p_upper":0.365}
+  },
+  "interpretation": {
+    "primary_B_excess_attenuation_fraction":0.7131208156650453,
+    "attenuation_definition":"1 - (B_observed - climate_3x3_B_null_mean) / (B_observed - matched_support_no_climate_B_null_mean)",
+    "not_causal_mediation":true,
+    "residual_effect_size":"Primary B excess is 366.49 / 73,748 incidences = about 0.497 percentage points. It is statistically resolved within this constrained null but small in absolute incidence share.",
+    "added_geography":"In the primary 191-species panel, U=13,529 vs climate-null mean 13,823.19: about 2.13% fewer new resource cells than expected, compared with 6.36% under the no-climate benchmark.",
+    "single_host_redundancy":"No positive excess of pooled single-host new-resource share was detected in either climate resolution or the independent-seed sensitivity. This is not evidence of an exact zero effect.",
+    "headline":"Coarse climate conditioning strongly attenuates, but does not eliminate, the excess alignment of introduced known hosts with butterflies' pre-existing native-host resource geography."
+  },
+  "independent_validation": {
+    "status":"PASS_INDEPENDENT_SPARSE_MATRIX_AND_TRACE_AUDIT",
+    "method":"Independently read accepted interactions and native/contemporary distributions and reconstructed T/B/D/U with SciPy integer sparse matrix products, without importing the geographic-null engine.",
+    "baseline_panels_verified":3,
+    "panel_replicates_verified":2388,
+    "trace_checks":"Recomputed all model/panel mean, 2.5-97.5 percentile and upper/lower +1 Monte Carlo p values; checked T=B+D+U in every panel-replicate."
+  },
+  "test_evidence": {
+    "original_execution_actual":"86 passed, 1 failed, 1 skipped; the failing test was tests/test_repository_layout.py::test_active_protocol_and_result_surfaces_are_whitelisted. The original workflow piped pytest to tee and incorrectly reported success. Do not cite its success badge as all-suite success.",
+    "repair":"Moved three dated post-hoc notes from docs/exploratory into provenance/reviewer_defenses/notes without weakening the active-protocol whitelist. Added an explicit-Bash/pipefail verification workflow, installed optional review dependencies, and fixed the climate workflow's pipeline and fail-fast behavior.",
+    "verified_full_suite_run_id":38115148981,
+    "verified_full_suite_sha":"32891e207081c9c9e61144af24765afcfa4d5d0a",
+    "verified_full_suite_artifact_id":11693142294,
+    "verified_full_suite_result":"89 passed in 4.56s",
+    "climate_workflow_failfast_fix_sha":"c2d988460615c750097d41df26863363e940642e",
+    "scientific_outputs_changed_by_repair":false
+  },
+  "limits":"Post-hoc same-data analysis. Regional BIO1/BIO12 medians and quantile bins do not control seasonality, within-region climate variation, fine geographic contiguity, human introduction routes or recording effort. Attenuation is not a causal climate-effect percentage. No demographic benefit, local larval use, adaptation or colonization timing is demonstrated. Samples are from constrained swap chains; p resolution is 0.005 per chain, AR1 ESS is approximate, and numerical replication is not independent biological validation."
+}
