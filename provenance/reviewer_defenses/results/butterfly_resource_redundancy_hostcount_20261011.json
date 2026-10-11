@@ -1,0 +1,112 @@
+{
+  "schema": "chocho_butterfly_resource_redundancy_hostcount_20261011",
+  "status": "EXPLORATORY_POSTHOC_DIAGNOSTIC_NOT_MANUSCRIPT_PRIMARY",
+  "source_frozen_commit": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "n_species": 191,
+  "filter": "introduced_added_units > 0 and host_taxonomy_lower_bound_adequate == True",
+  "marginal_spearman_family_breadth_vs_multiple_host_fraction": 0.3730510474391473,
+  "exact_host_species_count_adjusted_rank_correlation": -0.00041154985111599223,
+  "exact_host_species_count_group_permutations": 9999,
+  "permutation_seed": 20261011,
+  "permutation_p_two_sided": 0.9954,
+  "permutation_null_q025": -0.16514212882546012,
+  "permutation_null_q975": 0.16703623074072516,
+  "host_count_bins": [
+    {
+      "host_species_group": "1-2",
+      "species": 32,
+      "added_units": 1874,
+      "single_host_added_units": 1653,
+      "single_host_added_share": 0.8820704375667022,
+      "species_with_ge90pct_single_host_added_units": 24
+    },
+    {
+      "host_species_group": "3-4",
+      "species": 37,
+      "added_units": 2035,
+      "single_host_added_units": 1426,
+      "single_host_added_share": 0.7007371007371007,
+      "species_with_ge90pct_single_host_added_units": 19
+    },
+    {
+      "host_species_group": "5-9",
+      "species": 42,
+      "added_units": 3396,
+      "single_host_added_units": 1831,
+      "single_host_added_share": 0.5391637220259128,
+      "species_with_ge90pct_single_host_added_units": 8
+    },
+    {
+      "host_species_group": "10+",
+      "species": 80,
+      "added_units": 6224,
+      "single_host_added_units": 2823,
+      "single_host_added_share": 0.4535668380462725,
+      "species_with_ge90pct_single_host_added_units": 8
+    }
+  ],
+  "rich_host_ge10_species_bootstrap_replicates": 10000,
+  "rich_host_ge10_species_bootstrap_q025": 0.40752465658398124,
+  "rich_host_ge10_species_bootstrap_q975": 0.5009126742730914,
+  "n_informative_species": 158,
+  "examples_rich_hosts_high_single": [
+    {
+      "species": "Thorybes bathyllus",
+      "recorded_host_species": 12,
+      "recorded_host_families": 2,
+      "added_units": 56,
+      "fraction_single_host_added_units": 0.9821428571428571
+    },
+    {
+      "species": "Apodemia mormo",
+      "recorded_host_species": 17,
+      "recorded_host_families": 2,
+      "added_units": 52,
+      "fraction_single_host_added_units": 1
+    },
+    {
+      "species": "Troides aeacus",
+      "recorded_host_species": 12,
+      "recorded_host_families": 1,
+      "added_units": 43,
+      "fraction_single_host_added_units": 0.9767441860465116
+    },
+    {
+      "species": "Graphium doson",
+      "recorded_host_species": 14,
+      "recorded_host_families": 5,
+      "added_units": 30,
+      "fraction_single_host_added_units": 0.9
+    },
+    {
+      "species": "Erynnis juvenalis",
+      "recorded_host_species": 11,
+      "recorded_host_families": 2,
+      "added_units": 26,
+      "fraction_single_host_added_units": 0.9615384615384616
+    },
+    {
+      "species": "Erynnis horatius",
+      "recorded_host_species": 13,
+      "recorded_host_families": 1,
+      "added_units": 25,
+      "fraction_single_host_added_units": 1
+    },
+    {
+      "species": "Danaus gilippus",
+      "recorded_host_species": 17,
+      "recorded_host_families": 1,
+      "added_units": 16,
+      "fraction_single_host_added_units": 1
+    },
+    {
+      "species": "Erynnis persius",
+      "recorded_host_species": 10,
+      "recorded_host_families": 2,
+      "added_units": 10,
+      "fraction_single_host_added_units": 0.9
+    }
+  ],
+  "interpretation": "Geographic host redundancy in newly added resource regions is mainly linked to resolved host species count. Taxonomic host-family breadth has no detected independent rank association when exact host count is held fixed; wide recorded species-level diets do not ensure redundancy in introduced resource geography.",
+  "claim_boundary": "Host plant WGSRPD3 presence is not site-level local resource supply, larval success, competition, or persistence. The frozen HOSTS/WCVP records can undercount hosts; no phylogenetic control, prior preregistration, or matched-geographic null is applied. No zero-effect or causal claim."
+}
