@@ -145,3 +145,36 @@ One row per **donor plant × harvested leaf batch**, nested within each **whole-
 Even if matched `A. debilis` foliage is provided throughout the high-demand 3rd–5th instars, the 2×2 contrast still identifies an intervention of **access to matched donor tissue** rather than a pure mathematical effect of edible biomass grams alone: barriers, foraging area, residual plant state, light and unmeasured defense traits are alternative pathways.
 
 **Data gate:** Never use Korean `A. contorta` numeric AAI concentrations as values for *A. debilis*. Nor treat 20 larvae per cell or six-day specialist growth as independent wild-population fitness evidence. This study did not simultaneously test *A. alcinous* against *S. montela*, and neither a joint competition mechanism nor flight-capable adult recruitment is identified by it.
+
+## I. Host quality can change diapause, not just survival — confirmed 2008 prior art
+
+**Source:** Takagi & Miyashita (2008), *Host Plant Quality Influences Diapause Induction of Byasa alcinous*, *Annals of the Entomological Society of America* 101:392–396, DOI [10.1603/0013-8746(2008)101[392:HPQIDI]2.0.CO;2](https://academic.oup.com/aesa/article/101/2/392/8474). NCBI Taxonomy 85299 lists *Atrophaneura alcinous* as a homotypic combination of *Byasa alcinous*; this is the **same butterfly taxon**, not a study of a different species. The experiment used a **Chiba mountain population** and ***Aristolochia kaempferi*** (NOT the Kyoto native *A. debilis*) at 20 °C and 16:8 light:dark. Soft-versus-tough host leaf treatments changed early survival, larval duration and pupal **diapause** under controlled conditions; nearly all pupae from the tough-leaf treatment entered diapause. Human mowing altered young-versus-old host leaf abundance at the monitored site. These outcomes were **published in 2008** and cannot be claimed as a newly discovered butterfly mechanism or transferred automatically to the Kyoto source population.
+
+**Biological consequence for the current trial:** a pupa still alive but in diapause at the end of a four-week experiment cannot be called `pupa_no_adult` and treated as dead. The same treatment can decrease *short-term adult emergence* while leaving eventual postdiapause adult emergence unresolved; early adult abundance, diapause occurrence, and adult production after winter are distinct ecological endpoints. Moreover, relative leaf toughness, tissue age and larval developmental delay must be measured independently before attributing changed pupal fate to a unique chemical signal.
+
+**Revised accepted `native_fates.csv` codes** (each originally assigned neonate retains one terminal/current state):
+
+| `fate` | Biological interpretation in analysis |
+| --- | --- |
+| `flight_capable_adult` | Confirmed successfully emerged flying adult |
+| `adult_nonflight` | Emerged but confirmed unable to fly under predefined criteria |
+| `dead_immature` | Confirmed mortality before/at pupation |
+| `pupa_confirmed_dead` | Documented pupal death, NOT merely no adult by an arbitrary census date |
+| **`diapause_alive`** | **Pupa alive and in diapause**, adult emergence pending; keep in original cohort |
+| **`pupa_alive_pending_emergence`** | Living pupa, diapause status not yet resolved |
+| `lost_to_followup` | Actual unobserved condition |
+| `other_documented` | Other explicit condition requiring review |
+
+**Previous `pupa_no_adult` is now REJECTED** as ambiguous. The code distinguishes confirmed deaths from still-living pupae, and counts the latter as **pending eventual adult outcomes**, contributing to uncertainty bounds but never to confirmed mortality.
+
+Before randomization, register one **common within-block pupal/adult observation cutoff**, a predefined way to recognize diapause with uncertainty noted, and what happens to pupae requiring overwintering. Use a supplementary **per-assigned-larva follow-up ledger** in addition to the simple fate export:
+
+```csv
+plant_id,larva_id,pupation_datetime,pupa_alive_at_census,diapause_diagnosis,diagnosis_method,diagnosis_datetime,followup_census_datetime,emergence_datetime,adult_flight_test_date,adult_flight_capable,death_confirmation_datetime,last_seen_datetime,followup_unknown_reason
+```
+
+Record `diapause_diagnosis` as `diapause`, `non_diapause`, or `unresolved`, not based solely on failure to emerge by a date. Dates must include time zone. A second trial after overwintering, if permitted and logistically feasible, can determine actual emergence for pupae initially scored `diapause_alive`; analysis must retain original randomized treatment, plant/cage ID, source family and denominator.
+
+The main 2×2 interaction at a **fixed early census date** is only a treatment effect on *adult appearance by that date*. A valid interpretation as *eventual adult reproductive success* requires sufficiently complete postdiapause follow-up. Otherwise only **lower/upper possible eventual adult success fractions**, plus separately reported percentages in diapause, are warranted. Even when the pupal fate codes are correct, a diapause shift is not automatically an adaptive evolutionary response without a fitness advantage in the relevant seasonal environment.
+
+**Source and code boundaries:** the 2008 PDF/article did not provide original individual-level rows in this continuation, and the current code tests use synthetic data integrity fixtures only. They provide no evidence that *S. montela* induces diapause in the Kyoto butterfly population. The GEB global host-plant manuscript remains separate.
