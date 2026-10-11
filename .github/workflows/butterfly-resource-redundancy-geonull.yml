@@ -1,0 +1,86 @@
+name: Butterfly geographic resource redundancy null
+
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - "scripts/analyze_butterfly_resource_redundancy_geonull.py"
+      - "tests/test_butterfly_resource_redundancy_geonull.py"
+      - ".github/workflows/butterfly-resource-redundancy-geonull.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  geographic-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Validate previous exact-host-count and new swap invariants
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_butterfly_resource_redundancy_hostcount.py tests/test_butterfly_resource_redundancy_geonull.py
+
+      - name: Restore fixed resource descriptors
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Check out exact HOSTS source
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+
+      - name: Check out exact WCVP source
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Reconstruct fixed butterfly-host-plant geographic sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Run continent x plant-family fixed-margin geography null
+        run: |
+          python scripts/analyze_butterfly_resource_redundancy_geonull.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --expansion-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level1-lookup-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --permutations 199 \
+            --seed 20261011 \
+            --burn-sweeps 15 \
+            --gap-sweeps 3 \
+            --output-json results/resource-redundancy/geographic_fixed_margin_null.json \
+            | tee results/resource-redundancy-console.json
+
+      - name: Upload isolated post-hoc receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-geographic-redundancy-null-20261011
+          path: |
+            results/resource-redundancy/
+            results/resource-redundancy-console.json
+          retention-days: 30
