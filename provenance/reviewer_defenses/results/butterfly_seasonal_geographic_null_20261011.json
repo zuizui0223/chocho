@@ -1,0 +1,29 @@
+{
+  "status": "COMPLETED_EXPLORATORY_POSTHOC_SEASONAL_GEOGRAPHIC_SENSITIVITY",
+  "execution_commit": "d9387319a0c174616f4c2eb83538f69adc051890",
+  "workflow_run": 38123136476,
+  "primary_panel_species": 191,
+  "introduced_host_butterfly_region_incidences": 73748,
+  "observed_overlap_with_native_host_envelope": 46096,
+  "observed_unique_added_resource_units": 13529,
+  "replicas_per_model": 199,
+  "primary_endpoint": "B: introduced host-by-butterfly-by-region incidences inside the fixed native-known-host resource envelope",
+  "models": {
+    "baseline": {"B_null_mean": 45720.75879396985, "B_excess": 375.24120603015035, "B_excess_percentage_points": 0.5088154336797612, "B_p_upper": 0.005, "B_null_95_range": [45652.95, 45795.15], "U_null_mean": 13823.100502512563, "U_difference": -294.10050251256325, "U_deficit_percent": 2.127602, "U_p_lower": 0.005, "last_changed_focal_host_edges": 6083, "artifact_id": 11696391025},
+    "seasonal": {"B_null_mean": 45935.0703517588, "B_excess": 160.9296482412028, "B_excess_percentage_points": 0.2182156102419087, "B_p_upper": 0.005, "B_null_95_range": [45884.95, 45977.25], "U_null_mean": 13657.64824120603, "U_difference": -128.64824120603043, "U_deficit_percent": 0.941950, "U_p_lower": 0.005, "last_changed_focal_host_edges": 3321, "artifact_id": 11695987872},
+    "geographic": {"B_null_mean": 46020.61809045226, "B_excess": 75.38190954773745, "B_excess_percentage_points": 0.10221553065539057, "B_p_upper": 0.005, "B_null_95_range": [45977.95, 46064.05], "U_null_mean": 13636.879396984925, "U_difference": -107.87939698492482, "U_deficit_percent": 0.791086, "U_p_lower": 0.005, "last_changed_focal_host_edges": 2713, "artifact_id": 11696660491},
+    "combined": {"B_null_mean": 46045.29145728643, "B_excess": 50.70854271356802, "B_excess_percentage_points": 0.06875921070885721, "B_p_upper": 0.005, "B_null_95_range": [46007.9, 46077.05], "U_null_mean": 13588.874371859296, "U_difference": -59.874371859295934, "U_deficit_percent": 0.440613, "U_p_lower": 0.005, "last_changed_focal_host_edges": 1768, "artifact_id": 11696605601},
+    "combined_long": {"B_null_mean": 46045.31658291457, "B_excess": 50.68341708542721, "B_excess_percentage_points": 0.06872514113661009, "B_p_upper": 0.005, "B_null_95_range": [46013.0, 46076.0], "U_null_mean": 13589.587939698493, "U_difference": -60.587939698492846, "U_deficit_percent": 0.445841, "U_p_lower": 0.005, "last_changed_focal_host_edges": 1737, "artifact_id": 11696126560}
+  },
+  "attenuation_of_B_excess_from_matched_baseline_to_combined": 0.8648641409880405,
+  "constraints": {
+    "common": "Known butterfly-host links and all native ranges fixed; introduction row/column margins within plant family x continent x BIO1/BIO12 tertiles conserved.",
+    "seasonal": "Additional within-continent median splits of BIO7 annual temperature range and BIO15 precipitation seasonality; not phenology.",
+    "geographic": "Additional official WGSRPD level2 subcontinental membership; not exact-distance matching.",
+    "combined": "Both added conditions. Second seed doubles burn-in and sample spacing."
+  },
+  "input_guard": {"climate_regions": 365, "lookup_regions": 369, "frozen_regions": ["ANT", "BOU", "CPI", "HMD", "SSA"], "CPI_reason": "Stored BIO12 equals 65535: possible encoding ceiling, not proven nodata. Retain its records but freeze individually in all models and exclude it from all cutpoint calibration.", "CPI_introduction_edges_retained": 30, "CPI_focal_host_introduction_edges_retained": 12},
+  "combined_mixing": {"region_blocks": 246, "single_region_blocks": 175, "all_introduced_edges": 74055, "focal_host_edges_all239": 30373, "edges_in_eligible_blocks": 33901, "accepted_swaps": 1160067, "accepted_swaps_longer_chain": 2319023, "invariants_verified": true, "caution": "Only about 5.8% of all focal-host introduction edges differ from their observed positions at the final checkpoint. Tight constraints reduce the inferential scope; agreement of seeds does not prove complete mixing."},
+  "verification": {"local_full_tests": "95 passed", "all_five_exact_head_workflow_jobs": "success; 95 passed in each full-suite log", "input_digests": "all five source files matched", "artifact_digests": "all five downloaded ZIP SHA256 values matched GitHub metadata", "independent_audit": "Separate SciPy integer sparse matrix baseline reconstruction and NumPy checks of all stored means, quantiles and Monte Carlo tails", "panel_replicate_accounting_identities_checked": 2985},
+  "claim_boundary": "The tested residual remains positive but is very small. Nested-null attenuation is not causal climate mediation; finer constraints partly freeze the randomization space. No conclusion about local larval use, host quality, phenological synchrony, population persistence or biological absence of effects. Do not promote the residual to the manuscript's principal novelty; the +54.9% descriptive expansion is unchanged."
+}
