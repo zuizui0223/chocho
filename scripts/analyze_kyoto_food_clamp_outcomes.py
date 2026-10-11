@@ -24,9 +24,10 @@ ARMS={
     "CLAMP_COMPETITOR":(1,1),
 }
 SUCCESS="flight_capable_adult"
-FAIL={"adult_nonflight","dead_immature","pupa_no_adult"}
+FAIL={"adult_nonflight","dead_immature","pupa_confirmed_dead"}
 UNKNOWN={"lost_to_followup","other_documented"}
-OUTCOME_VALUES={SUCCESS}|FAIL|UNKNOWN
+PENDING={"diapause_alive","pupa_alive_pending_emergence"}
+OUTCOME_VALUES={SUCCESS}|FAIL|UNKNOWN|PENDING
 FATE_COLS=["plant_id","larva_id","species","fate"]
 INFO_COLS=["plant_id","block_id","treatment","competitor_present","food_clamp",
            "native_initial_n","competitor_initial_n","food_floor_cm2","expected_n_resource_visits"]
@@ -114,6 +115,8 @@ def fate_tally(plants,fates):
         larvaids.add(id_)
         if r["species"]!="Atrophaneura alcinous":
             raise ValueError("primary ledger must contain only originally assigned native recipients")
+        if r["fate"]=="pupa_no_adult":
+            raise ValueError("ambiguous pupa_no_adult: distinguish live diapause from confirmed dead pupa")
         if r["fate"] not in OUTCOME_VALUES:
             raise ValueError("unknown outcome code")
         byplant[plant].append(r["fate"])
@@ -125,10 +128,17 @@ def fate_tally(plants,fates):
         counts=Counter(vals)
         n=p["native_initial_n"]
         success=counts[SUCCESS]
-        uncertain=sum(counts[k] for k in UNKNOWN)
+        unresolved_other=sum(counts[k] for k in UNKNOWN)
+        living_diapause=counts["diapause_alive"]
+        living_other_pupa=counts["pupa_alive_pending_emergence"]
+        uncertain=unresolved_other+living_diapause+living_other_pupa
         out[plant]={
             "n_initial":n,"known_adult_success":success,
+            "confirmed_dead_or_nonflight":sum(counts[k] for k in FAIL),
             "known_failure":sum(counts[k] for k in FAIL),
+            "living_diapausing_pupae":living_diapause,
+            "other_living_pupae_pending_emergence":living_other_pupa,
+            "unresolved_followup_or_other":unresolved_other,
             "outcome_unknown":uncertain,
             "lower_bound":success/n,
             "upper_bound":(success+uncertain)/n,
@@ -258,6 +268,9 @@ def analyze(allocation,info,fates,visits):
         succ=sum(ends[p]["known_adult_success"] for p in ids)
         assigned=sum(ends[p]["n_initial"] for p in ids)
         missing=sum(ends[p]["outcome_unknown"] for p in ids)
+        diapausing=sum(ends[p]["living_diapausing_pupae"] for p in ids)
+        alive_other=sum(ends[p]["other_living_pupae_pending_emergence"] for p in ids)
+        followup_unknown=sum(ends[p]["unresolved_followup_or_other"] for p in ids)
         obs=sum(quality[p]["n_observed_accessible_area"] for p in ids)
         below=sum(quality[p]["visits_below_preset_floor"] for p in ids)
         additions=sum(quality[p]["total_added_fresh_leaf_area_cm2"] for p in ids)
@@ -268,6 +281,10 @@ def analyze(allocation,info,fates,visits):
         perarm[arm]={
             "independent_cages":len(ids),"original_focal_larvae":assigned,
             "successful_flight_capable_adults":succ,"unknown_fate":missing,
+            "living_diapausing_pupae":diapausing,
+            "other_living_pupae_pending_emergence":alive_other,
+            "unresolved_followup_or_other":followup_unknown,
+            "observed_diapausing_fraction_of_initial_cohort":diapausing/assigned,
             "lower_bound_success":succ/assigned,
             "upper_bound_success":(succ+missing)/assigned,
             "observed_food_visits":obs,"visits_below_food_floor":below,
@@ -286,7 +303,7 @@ def analyze(allocation,info,fates,visits):
     worst_case_upper=sum(z["worst_case_upper"] for z in uncertainty)/len(uncertainty)
     complete=all(ends[p]["outcome_unknown"]==0 for p in plants)
     return {
-        "schema":"chocho_kyoto_food_clamp_outcomes_v02",
+        "schema":"chocho_kyoto_food_clamp_outcomes_v03",
         "randomization_unit":"whole cage/enclosure, including all its potted plants",
         "plant_id_input_semantics":"legacy CSV heading plant_id means whole independently randomized cage ID, NOT a nested pot within a cage",
         "n_independent_cages":len(plants),"n_blocks":len(blocks),
@@ -299,8 +316,10 @@ def analyze(allocation,info,fates,visits):
         "worst_case_attrition_bounds_by_block":uncertainty,
         "independent_block_bootstrap_95ci_for_missing_as_fail":bootstrap(effect),
         "all_native_cohort_fates_known":complete,
+        "all_adult_emergence_status_resolved":complete,
+        "pupal_diapause_accounting":"Living diapause or living nonemerged pupae are NOT confirmed failures: counted only as unresolved potential adult emergence for success bounds; do not equate absence of flight-capable adult at finite follow-up with death.",
         "resource_manipulation_achieved":"NOT_AUTOMATICALLY_IDENTIFIABLE_FROM_SOURCE_LEDGER; inspect late-instar arm contrasts, previous starvation/death, and tissue age; never select a subset of successful clamps",
-        "ITT_vs_mechanism":"Randomized clamp is a bundled food-access/tissue-quality/handling strategy; a positive interaction does not identify food mass as the sole mediator; do not condition primary estimates on achieved post-treatment supply",
+        "ITT_vs_mechanism":"Randomized clamp is a bundled food-access/tissue-quality/handling strategy; a positive interaction does not identify food mass as the sole mediator; do not condition primary estimates on achieved post-treatment supply. Report short-window adult emergence, diapause, and longer follow-up as distinct endpoints.",
         "does_not_condition_on_supplement_success":True,
         "nonresource_mechanism_causally_identified":False,
         "host_plant_intro_not_tested":True,
