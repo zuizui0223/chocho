@@ -1,0 +1,93 @@
+name: Butterfly hybrid marker source audit
+
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths: [.github/workflows/butterfly-hybrid-marker-source-audit.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Check pinned source bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object _external/HOSTS/resource.csv)" = 06749c04bd5b7a754d6f7717a31c01c51357cae8
+          test "$(git hash-object _external/WCVP/data/wcvp_names.rda)" = fa567a7e0e5c0962207b79dee7a62c64e915421a
+          test "$(git hash-object _external/WCVP/data/wcvp_distributions.rda)" = 60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a
+          mkdir -p results/hybrid-source
+          sha256sum _external/HOSTS/resource.csv _external/WCVP/data/wcvp_names.rda _external/WCVP/data/wcvp_distributions.rda > results/hybrid-source/raw_source_sha256.txt
+      - name: Export candidate universe without assigning new host links
+        shell: Rscript {0}
+        run: |
+          out <- 'results/hybrid-source'
+          e <- new.env()
+          load('_external/WCVP/data/wcvp_names.rda', envir=e)
+          load('_external/WCVP/data/wcvp_distributions.rda', envir=e)
+          nm <- e$wcvp_names
+          ds <- e$wcvp_distributions
+          h <- read.csv('_external/HOSTS/resource.csv', stringsAsFactors=FALSE, check.names=FALSE, na.strings='')
+          stopifnot(nrow(h)==140485)
+          clean <- function(x) trimws(ifelse(is.na(x), '', as.character(x)))
+          key <- function(x) trimws(gsub('[[:space:]]+', ' ', gsub('\u00d7', '', as.character(x), fixed=TRUE)))
+          hg <- clean(h[['Hostplant Genus']]); hs <- clean(h[['Hostplant Species']])
+          ig <- clean(h[['Insect Genus']]); isp <- clean(h[['Insect Species']])
+          keep <- nzchar(hg) & nzchar(hs) & nzchar(ig) & nzchar(isp)
+          links <- data.frame(source_row=which(keep), insect_species=paste(ig[keep],isp[keep]), input_host_name=paste(hg[keep],hs[keep]), stringsAsFactors=FALSE)
+          write.csv(links,file.path(out,'raw_hosts_links.csv'),row.names=FALSE,na='')
+          all_host_names <- sort(unique(paste(hg[nzchar(hg)&nzchar(hs)],hs[nzchar(hg)&nzchar(hs)])))
+          write.csv(data.frame(input_host_name=all_host_names),file.path(out,'all_raw_host_names.csv'),row.names=FALSE)
+          rank_ok <- tolower(clean(nm$taxon_rank))=='species'
+          names_key <- key(nm$taxon_name)
+          select <- rank_ok & names_key %in% key(all_host_names)
+          cols <- c('plant_name_id','taxon_rank','taxon_status','family','taxon_name','accepted_plant_name_id')
+          cand <- nm[select,cols,drop=FALSE]
+          cand$plant_name_id <- clean(cand$plant_name_id)
+          cand$accepted_plant_name_id <- clean(cand$accepted_plant_name_id)
+          missing <- !nzchar(cand$accepted_plant_name_id) & tolower(clean(cand$taxon_status))=='accepted'
+          cand$accepted_plant_name_id[missing] <- cand$plant_name_id[missing]
+          ai <- match(cand$accepted_plant_name_id,as.character(nm$plant_name_id))
+          cand$accepted_name <- as.character(nm$taxon_name[ai])
+          cand$accepted_family <- as.character(nm$family[ai])
+          cand$accepted_rank <- as.character(nm$taxon_rank[ai])
+          cand$accepted_status <- as.character(nm$taxon_status[ai])
+          write.csv(cand,file.path(out,'wcvp_species_name_candidates.csv'),row.names=FALSE,na='',fileEncoding='UTF-8')
+          ids <- unique(cand$accepted_plant_name_id[nzchar(cand$accepted_plant_name_id)])
+          dcols <- c('plant_name_id','area_code_l3','introduced','extinct','location_doubtful')
+          dist <- ds[as.character(ds$plant_name_id) %in% ids,dcols,drop=FALSE]
+          dist$plant_name_id <- as.character(dist$plant_name_id)
+          write.csv(dist,file.path(out,'candidate_distributions.csv'),row.names=FALSE,na='')
+          stats <- data.frame(metric=c('raw_HOSTS_rows','raw_complete_link_rows','raw_unique_host_names','WCVP_all_name_rows','WCVP_candidate_name_rows','WCVP_candidate_accepted_IDs','candidate_distribution_rows'),value=c(nrow(h),nrow(links),length(all_host_names),nrow(nm),nrow(cand),length(ids),nrow(dist)))
+          write.csv(stats,file.path(out,'source_counts.csv'),row.names=FALSE)
+          print(stats)
+      - name: Hash derived inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd results/hybrid-source
+          sha256sum *.csv raw_source_sha256.txt > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-hybrid-marker-global-inputs-20261011
+          path: results/hybrid-source/
+          retention-days: 30
