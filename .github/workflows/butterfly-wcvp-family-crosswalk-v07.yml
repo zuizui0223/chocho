@@ -1,0 +1,59 @@
+name: v07 pinned WCVP family crosswalk
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths: [.github/workflows/butterfly-wcvp-family-crosswalk-v07.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - uses: actions/download-artifact@v4
+        with:
+          name: chocho-bce-clarke-reconciled-inputs-v05-20261011
+          repository: zuizui0223/chocho
+          run-id: 38147019178
+          github-token: ${{ github.token }}
+          path: pinned
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: fixed-wcvp
+      - name: Export exactly pinned taxon IDs and botanical family
+        shell: bash
+        run: |
+          mkdir -p evidence
+          Rscript - <<'RS'
+          cand <- read.csv("pinned/candidate_ids.csv", stringsAsFactors=FALSE)
+          stopifnot(identical(names(cand), "accepted_plant_name_id"))
+          e <- new.env(parent=emptyenv())
+          load("fixed-wcvp/data/wcvp_names.rda", envir=e)
+          tab <- get("wcvp_names", envir=e)
+          stopifnot(all(c("plant_name_id","taxon_name","taxon_rank","taxon_status","family") %in% names(tab)))
+          ids <- unique(as.character(cand$accepted_plant_name_id))
+          extra <- c("2799915","321867","2723957","2723971","2724178","3287406","252903","321867","2524232","2903676")
+          ids <- sort(unique(c(ids, extra)))
+          target <- tab[as.character(tab$plant_name_id) %in% ids,
+                        c("plant_name_id","taxon_name","taxon_rank","taxon_status","family"),drop=FALSE]
+          target$plant_name_id <- as.character(target$plant_name_id)
+          if (anyDuplicated(target$plant_name_id)) stop("Duplicate WCVP plant_name_id")
+          missing <- setdiff(ids,target$plant_name_id)
+          if (length(missing)) stop(paste("IDs missing",paste(missing,collapse=",")))
+          if(anyNA(target$family) || any(!nzchar(as.character(target$family))))stop("Missing family")
+          write.csv(target,"evidence/wcvp_id_family_v07.csv",row.names=FALSE,na="")
+          writeLines(c(paste("wcvp_commit","65bed76bae9d644ccb6ad200c05f9f5071d89e05"),paste("ids",length(ids)),paste("rows",nrow(target))),"evidence/receipt.txt")
+          print(table(target$taxon_rank))
+          RS
+          sha256sum pinned/candidate_ids.csv evidence/* > evidence/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-v07-exact-wcvp-family
+          path: evidence/
+          retention-days: 30
