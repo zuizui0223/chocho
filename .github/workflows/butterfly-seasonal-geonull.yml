@@ -1,0 +1,97 @@
+name: Butterfly seasonal geographic null
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths:
+      - scripts/analyze_butterfly_resource_seasonal_geonull.py
+      - tests/test_butterfly_resource_seasonal_geonull.py
+      - .github/workflows/butterfly-seasonal-geonull.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  seasonal-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        model: [baseline, seasonal, geographic, combined, combined_long]
+    env:
+      PYTHONHASHSEED: '0'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install and test full repository
+        run: |
+          set -euo pipefail
+          python -m pip install -e '.[test,analysis]' 'python-docx>=1.1,<2'
+          mkdir -p results
+          python -m pytest -q 2>&1 | tee results/full_tests.txt
+      - name: Restore exact host distribution reconstruction
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-climate-conditioned-geonull-20261011
+          path: inputs/previous
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38114331740
+      - name: Restore exact climate extraction
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: inputs/climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+      - name: Restore pinned official WGSRPD geography
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-seasonal-source-bundle-20261011
+          path: inputs/geography
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38122649272
+      - name: Verify input digests
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          expected = {
+            'inputs/previous/native/insect_host_accepted.csv':'0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9',
+            'inputs/previous/native/native_extant_nondoubtful_wgsrpd3.csv':'c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558',
+            'inputs/previous/contemporary/extant_nondoubtful_wgsrpd3.csv':'55d06cdd2b80002ba1f057dcd57e409ce5688ac802d37e62166e0bd7e67856a6',
+            'inputs/climate/unit_climate_crossfit.csv':'0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2',
+            'inputs/geography/level3.geojson':'c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840'
+          }
+          for name,digest in expected.items():
+              assert hashlib.sha256(Path(name).read_bytes()).hexdigest() == digest, name
+          print('All five input digests match')
+          PY
+      - name: Execute seasonal and geographic sensitivity
+        run: |
+          set -euo pipefail
+          python scripts/analyze_butterfly_resource_seasonal_geonull.py \
+            --model '${{ matrix.model }}' \
+            --climate-csv inputs/climate/unit_climate_crossfit.csv \
+            --level3-geojson inputs/geography/level3.geojson \
+            --insect-host-csv inputs/previous/native/insect_host_accepted.csv \
+            --native-csv inputs/previous/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv inputs/previous/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --previous-result inputs/previous/climate-null/climate_geonull_result.json \
+            --output-dir results --replicas 199 | tee results/console.txt
+          git rev-parse HEAD > results/EXECUTION_SHA
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-seasonal-geonull-${{ matrix.model }}-20261011
+          path: results/
+          retention-days: 30
