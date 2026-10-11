@@ -41,6 +41,15 @@ def test_exact_original_schema_and_stage_onset():
     assert r["per_cage_stage_onsets"][0]["first_late_A_instar_observed_day"]==4
     assert r["new_butterfly_survival_effect_estimated"] is False
     assert r["resource_access_or_quality_observed_at_stage"] is False
+    ident=r["life_history_process_identifiability"]
+    assert ident["cage_counts_per_stated_instar_stages_1_to_5"] is True
+    assert ident["cage_level_pupation_times_observed"] is True
+    for key in ("individual_larva_id_present","sixth_instar_or_observed_extra_molt_field_present",
+                "cannibalism_direct_observation_field_present",
+                "disease_cause_of_death_field_present","pupal_diapause_observation_field_present",
+                "adult_eclosion_record_present"):
+        assert ident[key] is False
+
 
 def test_original_source_checksum_rejects_replaced_rows():
     try:m.analyze(synthetic_source())
