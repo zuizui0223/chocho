@@ -166,5 +166,5 @@ def test_residual_undecided_pupa_bounds_preserve_directional_interaction_uncerta
     result=m.analyze(allocation,assignment,fates,visits)
     low,high=result["true_worst_case_attrition_interaction_bounds"]
     assert low<=result["ITT_missing_as_fail_interaction"]<=high
-    assert high-low==1/6
+    assert high-low==pytest.approx(1/6)
     assert result["pupal_diapause_accounting"].startswith("Living diapause")
