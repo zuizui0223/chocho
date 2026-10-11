@@ -1,0 +1,46 @@
+name: Butterfly climate result verification
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - .github/workflows/butterfly-climate-result-verification.yml
+      - tests/**
+      - provenance/reviewer_defenses/notes/**
+      - scripts/verify_butterfly_climate_result.py
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install full optional test environment
+        run: python -m pip install -e '.[test,analysis,review]'
+      - name: Check that piped failures propagate
+        run: |
+          set +e
+          bash -o pipefail -c 'python -c "raise SystemExit(7)" | cat'
+          code=$?
+          set -e
+          test "$code" -eq 7
+          echo 'Pipeline failure propagation verified'
+      - name: Full test suite with explicit failure propagation
+        run: |
+          set -o pipefail
+          python -m pytest -q 2>&1 | tee full_suite_verified.txt
+      - name: Preserve actual test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-climate-full-suite-verified
+          path: full_suite_verified.txt
+          retention-days: 30
