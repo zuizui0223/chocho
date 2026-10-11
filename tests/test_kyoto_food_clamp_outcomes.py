@@ -120,3 +120,51 @@ def test_no_late_instar_survivors_does_not_prove_adequate_food():
     assert x["per_arm"]["CLAMP_COMPETITOR"]["observed_late_instar_food_visits"]==0
     assert x["per_arm"]["CLAMP_COMPETITOR"]["late_instar_fraction_below_food_floor"] is None
     assert x["ITT_missing_as_fail_interaction"]==1.0
+
+def test_live_diapausing_pupa_is_not_misclassified_as_dead():
+    allocation,assignment,fates,visits=fixture(with_unknown=False)
+    target=next(r for r in fates if r["plant_id"].endswith("CLAMP_COMPETITOR"))
+    target["fate"]="diapause_alive"
+    result=m.analyze(allocation,assignment,fates,visits)
+    arm=result["per_arm"]["CLAMP_COMPETITOR"]
+    assert arm["living_diapausing_pupae"]==1
+    assert arm["observed_diapausing_fraction_of_initial_cohort"]==1/6
+    assert arm["successful_flight_capable_adults"]==5
+    assert arm["unknown_fate"]==1
+    assert arm["unresolved_followup_or_other"]==0
+    assert result["all_adult_emergence_status_resolved"] is False
+
+def test_remaining_live_non_emerged_pupa_is_outcome_pending():
+    allocation,assignment,fates,visits=fixture(with_unknown=False)
+    target=next(r for r in fates if r["plant_id"].endswith("NATURAL_COMPETITOR"))
+    target["fate"]="pupa_alive_pending_emergence"
+    result=m.analyze(allocation,assignment,fates,visits)
+    arm=result["per_arm"]["NATURAL_COMPETITOR"]
+    assert arm["other_living_pupae_pending_emergence"]==1
+    assert arm["upper_bound_success"]==1/6
+    assert arm["lower_bound_success"]==0
+
+def test_original_ambiguous_pupa_no_adult_is_explicitly_rejected():
+    allocation,assignment,fates,visits=fixture(with_unknown=False)
+    fates[0]["fate"]="pupa_no_adult"
+    with pytest.raises(ValueError,match="ambiguous pupa_no_adult"):
+        m.analyze(allocation,assignment,fates,visits)
+
+def test_confirmed_dead_pupa_is_not_diapause_or_unresolved():
+    allocation,assignment,fates,visits=fixture(with_unknown=False)
+    fates[0]["fate"]="pupa_confirmed_dead"
+    result=m.analyze(allocation,assignment,fates,visits)
+    arm=result["per_arm"]["NATURAL_NO_COMPETITOR"]
+    assert arm["living_diapausing_pupae"]==0
+    assert arm["unknown_fate"]==0
+    assert arm["lower_bound_success"]==arm["upper_bound_success"]
+    assert result["all_adult_emergence_status_resolved"] is True
+
+def test_residual_undecided_pupa_bounds_preserve_directional_interaction_uncertainty():
+    allocation,assignment,fates,visits=fixture(with_unknown=False)
+    fates[0]["fate"]="diapause_alive"
+    result=m.analyze(allocation,assignment,fates,visits)
+    low,high=result["true_worst_case_attrition_interaction_bounds"]
+    assert low<=result["ITT_missing_as_fail_interaction"]<=high
+    assert high-low==1/6
+    assert result["pupal_diapause_accounting"].startswith("Living diapause")
