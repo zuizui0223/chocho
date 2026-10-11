@@ -93,13 +93,26 @@ def geographic_resources(species, species_hosts, native, introduced, selected):
         for h in species_hosts.get(sp, set()):
             n_union.update(native.get(h, set()))
         counts = Counter()
+        introduced_incidences = 0
+        already_native_incidences = 0
         for h in species_hosts.get(sp, set()):
             for r in introduced.get(h, set()):
-                if r not in n_union:
+                introduced_incidences += 1
+                if r in n_union:
+                    already_native_incidences += 1
+                else:
                     counts[r] += 1
         units = len(counts)
         singles = sum(v == 1 for v in counts.values())
-        metrics[sp] = (len(n_union), units, singles)
+        introduced_host_duplicates = (
+            introduced_incidences - already_native_incidences - units
+        )
+        if introduced_host_duplicates < 0:
+            raise RuntimeError("Invalid introduced-host overlap decomposition")
+        metrics[sp] = (
+            len(n_union), units, singles, introduced_incidences,
+            already_native_incidences, introduced_host_duplicates,
+        )
 
     summaries = {}
     for name, members in selected.items():
@@ -113,6 +126,9 @@ def geographic_resources(species, species_hosts, native, introduced, selected):
             "native_units": sum(v[0] for v in vals),
             "added_units": total,
             "single_host_added_units": single,
+            "introduced_host_region_incidences": sum(v[3] for v in vals),
+            "introduced_incidences_already_covered_by_native_hosts": sum(v[4] for v in vals),
+            "duplicated_introduced_incidences_outside_native_resource": sum(v[5] for v in vals),
             "single_host_share": single / total if total else None,
             "mean_species_single_share": (
                 sum(v[2] / v[1] for v in expanded) / len(expanded)
@@ -259,7 +275,20 @@ def analyze(
         if introduced[h] & native.get(h, set()):
             raise RuntimeError("Introduced edge collides with native range: " + h)
 
-    metrics = ("added_units", "single_host_share", "mean_species_single_share")
+    for tag, actual in observed.items():
+        for sample in vals[tag]:
+            if sample["introduced_host_region_incidences"] != actual["introduced_host_region_incidences"]:
+                raise RuntimeError("Introduced host x region marginal drift for " + tag)
+            if (sample["introduced_incidences_already_covered_by_native_hosts"] +
+                sample["duplicated_introduced_incidences_outside_native_resource"] +
+                sample["added_units"] != sample["introduced_host_region_incidences"]):
+                raise RuntimeError("Decomposition does not balance for " + tag)
+
+    metrics = (
+        "added_units", "single_host_share", "mean_species_single_share",
+        "introduced_incidences_already_covered_by_native_hosts",
+        "duplicated_introduced_incidences_outside_native_resource",
+    )
     comparisons = {
         tag: {key: summarize_metric(observed[tag], vals[tag], key) for key in metrics}
         for tag in selected
@@ -267,7 +296,7 @@ def analyze(
 
     return {
         "schema": "chocho_butterfly_geographic_introduction_redundancy_null_v0.1",
-        "status": "POSTHOC_SPATIAL_CONFIGURATION_FIXED_MARGIN_NULL",
+        "status": "POSTHOC_SPATIAL_CONFIGURATION_FIXED_MARGIN_NULL_WITH_OVERLAP_DECOMPOSITION",
         "randomizations": randomizations,
         "seed": seed,
         "burn_sweeps_per_edge": burn_sweeps,
@@ -282,6 +311,7 @@ def analyze(
         ),
         "baseline": observed,
         "comparison": comparisons,
+        "decomposition_identity": "Introduced host x region incidences = already-native host-covered incidences + introduced-host duplicate incidences outside the native envelope + newly added butterfly x region units.",
         "mixing": {
             "introduced_edges_in_fixed_HOSTS_WCVP_pool": total_edges,
             "edges_in_eligible_blocks": movable_edges,
