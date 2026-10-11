@@ -1,0 +1,29 @@
+{
+  "status": "EXPLORATORY_POSTHOC_SPECIFICATION_BEFORE_THIS_EXTENSION_RESULTS",
+  "date": "2026-10-11",
+  "question": "Does the small native-host-envelope overlap excess remaining after mean climate conditioning persist after seasonal climate proxies and subcontinental introduction geography are held fixed?",
+  "source_analysis_commit": "21ba0127185ef334dc64d1e4e9e9355ea4b59663",
+  "input_artifacts": {"host_distribution_and_previous_results": 11692453601, "regional_climate": 10919985332},
+  "tdwg_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+  "primary_panel": "191 butterflies with positive observed expansion and the minimum host-taxonomy consistency filter; not a complete-host-record panel",
+  "sensitivity_panels": ["all 239 butterflies", "80 filtered butterflies with >=10 recorded hosts"],
+  "primary_endpoint": "Observed minus null mean introduced host-by-butterfly-by-region incidences inside the fixed native-known-host resource envelope (B)",
+  "secondary_endpoints": ["unique newly resource-covered butterfly x region units U", "introduced-host overlap D outside native envelopes", "single-recorded-host share"],
+  "common_conditions": ["butterfly-host identities", "all native host ranges", "same WCVP plant family", "within-continent BIO1 x BIO12 tertiles", "plant and regional introduction margins within every allowed block"],
+  "additional_conditions": {
+    "seasonal": "within-continent medians of BIO7 annual temperature range and BIO15 precipitation seasonality; not plant phenology",
+    "geographic": "official WGSRPD level2 subcontinental region; not exact physical-distance matching",
+    "combined_primary": "both seasonal and geographic conditions"
+  },
+  "input_guard": "Any stored climate variable exactly equal to 65535 is flagged as a possible encoding ceiling, not asserted to be missing. Such regions and missing-climate regions are retained but frozen individually in EVERY comparison model and omitted from cutpoint calibration. No imputation or removal of host records.",
+  "replicas_each": 199,
+  "models": [
+    {"name":"baseline","seed":2026101121,"burn":15,"gap":3},
+    {"name":"seasonal","seed":2026101122,"burn":15,"gap":3},
+    {"name":"geographic","seed":2026101123,"burn":15,"gap":3},
+    {"name":"combined","seed":2026101124,"burn":15,"gap":3},
+    {"name":"combined_long","seed":2026101125,"burn":30,"gap":6}
+  ],
+  "required_checks": ["unchanged observed T=B+D+U counts", "preserved within-block margins", "native-range exclusions", "movement of focal host edges", "autocorrelation and first/second-half means", "separate-seed agreement", "full repository tests"],
+  "interpretation_boundary": "Nested nulls change the randomization space. Attenuation is not causal climate mediation. Null-like results do not prove no biological mechanism. Tight blocks may limit identifiability; report focal-edge movement beside residuals. No local larval use, fitness, phenological synchrony or demographic stability claim. The GEB PR #38 remains untouched."
+}
