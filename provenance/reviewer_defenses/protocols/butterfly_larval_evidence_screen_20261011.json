@@ -1,0 +1,20 @@
+{
+  "status": "EXPLORATORY_POSTHOC_SCREEN_SPECIFIED_BEFORE_INATURALIST_QUERY_RESULTS",
+  "date": "2026-10-11",
+  "base_commit": "5b97d3eba88a29e6fa129dfbf242fc096fb7868f",
+  "question": "Do publicly annotated larvae occur in regions classified as newly resource-covered by introduced already-known hosts? Which such records additionally identify actual larval feeding, and which apparent resource releases disappear after native-host omissions are checked?",
+  "panel": "All 32 species in the frozen occurrence_resource_validation_species.csv; no outcome-based choice among these species.",
+  "provider": "iNaturalist public v1 API",
+  "window": ["2010-01-01", "2026-10-11"],
+  "filters": {"quality_grade": "research", "captive": false, "term_id": 1, "term_value_id": 6, "geo": true, "photos": true},
+  "retrieval": "At most five pages of 200 observations per species, ascending observation ID. A capped sample is explicitly oldest-first and non-random. No absence, detection rate, or population frequency inference is allowed from a capped or empty result.",
+  "taxonomy": "Accept only one exact species scientific name or one explicit exact matched scientific synonym returned by the provider; otherwise hold the species and record the ambiguity. Subspecies whose ancestor list contains that species taxon are eligible.",
+  "geography": "Map un-obscured public points to the pinned WGSRPD3 polygons. Ambiguous boundary assignments remain unassigned. Unknown coordinate accuracy is not upgraded to known precision. A <=10 km accuracy flag is descriptive, not proof that the full uncertainty disk lies in one polygon.",
+  "resource_categories": ["native_host_mapped", "introduced_only_in_frozen_hosts", "no_known_host_mapped", "unmapped"],
+  "evidence_levels": {"L1": "Larval presence only, not host use or breeding completion.", "L2": "Separate primary observation or study explicitly identifies larval feeding and the host taxon in the region.", "L3": "Development completion or repeated local generations supported separately; neither L1 nor L2 alone establishes persistent populations."},
+  "source_completeness_guard": "Before treating introduced-only as ecological dependence, check published native host alternatives. The frozen host graph is not a complete realized diet.",
+  "case_study_status": "Targeted literature searches, including Nacaduba biocellata, Neptis sappho, and Pieris brassicae, have already begun. Such selected case evidence is not a representative validation sample.",
+  "inference": "Descriptive positive evidence only. No formal test against null absence, no causal colonization claim, no extrapolation from 32 species to the 239-species panel.",
+  "source_archives": {"host_geography_artifact": 11692453601, "geometry_artifact": 11696095645},
+  "submission_policy": "Do not change GEB PR #38 or silently revise its fixed estimates. Persist all additions on analysis/larval-evidence-20261011."
+}
