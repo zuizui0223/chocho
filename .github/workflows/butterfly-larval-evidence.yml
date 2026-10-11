@@ -1,0 +1,61 @@
+name: Butterfly larval evidence screen
+on:
+  push:
+    branches: [analysis/larval-evidence-20261011]
+    paths:
+      - scripts/acquire_butterfly_larval_evidence.py
+      - tests/test_butterfly_larval_evidence.py
+      - .github/workflows/butterfly-larval-evidence.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  larval-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Full tests with pipeline failure propagation
+        run: |
+          set -euo pipefail
+          mkdir -p results
+          python -m pip install -e '.[test,analysis]'
+          python -m pytest -q | tee results/full_tests.txt
+      - name: Restore exact native and introduced host ranges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-climate-conditioned-geonull-20261011
+          path: inputs/hosts
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38114331740
+      - name: Restore pinned official WGSRPD polygons
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-seasonal-source-bundle-20261011
+          path: inputs/geography
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38122649272
+      - name: Save source identities
+        run: |
+          sha256sum inputs/hosts/native/insect_host_accepted.csv inputs/hosts/native/native_extant_nondoubtful_wgsrpd3.csv inputs/hosts/contemporary/extant_nondoubtful_wgsrpd3.csv inputs/geography/level3.geojson > results/input_sha256.txt
+          git rev-parse HEAD > results/analysis_commit.txt
+      - name: Query annotated larvae and classify resource geography
+        run: |
+          set -euo pipefail
+          python scripts/acquire_butterfly_larval_evidence.py --sources inputs/hosts --geometry inputs/geography/level3.geojson --output-dir results/larval | tee results/retrieval_log.txt
+      - name: Retain audit including partial source failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-larval-evidence-20261011
+          path: results/
+          retention-days: 30
