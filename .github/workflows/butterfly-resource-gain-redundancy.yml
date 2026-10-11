@@ -1,0 +1,43 @@
+name: Butterfly resource gain-redundancy frozen check
+
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - "scripts/analyze_butterfly_resource_gain_redundancy.py"
+      - ".github/workflows/butterfly-resource-gain-redundancy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-frozen-association:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Recompute the 191-species rank diagnostic from frozen figure CSVs
+        run: |
+          python scripts/analyze_butterfly_resource_gain_redundancy.py \
+            --permutations 9999 \
+            --seed 20261011 \
+            --output-json /tmp/gain_redundancy.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          current = json.loads(Path("/tmp/gain_redundancy.json").read_text())
+          frozen = json.loads(Path("provenance/reviewer_defenses/results/butterfly_resource_gain_redundancy_20261011.json").read_text())
+          assert current["species"] == 191
+          for key in current["endpoints"]:
+              for metric in ("marginal_spearman", "exact_host_species_count_adjusted_rank_correlation",
+                             "null_q025", "null_q975", "permutation_p_two_sided"):
+                  got = current["endpoints"][key][metric]
+                  expected = frozen["endpoints"][key][metric]
+                  assert abs(got - expected) < 1e-10, (key, metric, got, expected)
+          print("Frozen 191-species gain-redundancy correlation and null checks passed")
+          PY
