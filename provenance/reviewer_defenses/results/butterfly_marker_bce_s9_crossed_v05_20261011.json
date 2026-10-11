@@ -1,0 +1,34 @@
+{
+  "status": "VERIFIED_CROSSED_MARKER_AND_FIXED_BCE_CLARKE_S9_V05",
+  "fixed_butterflies": 239,
+  "fixed_Jaccard_regions": 355,
+  "candidate_BCE_accepted_ID_links": 1027,
+  "candidate_BCE_butterflies": 81,
+  "candidate_BCE_plant_IDs": 679,
+  "candidate_links_already_recovered_by_marker": 0,
+  "shared_plant_ID_ranges_checked": 415,
+  "variants": {
+    "literal": {"native": 26530, "contemporary": 41083, "added": 14553, "expansion_percent": 54.854881266490764, "expanded_butterflies": 206, "regional_native_Jaccard": 0.27698189773362025, "regional_contemporary_Jaccard": 0.4620834004986046},
+    "marker": {"native": 26533, "contemporary": 41191, "added": 14658, "expansion_percent": 55.24441261824897, "expanded_butterflies": 206, "regional_native_Jaccard": 0.2770190676784974, "regional_contemporary_Jaccard": 0.46320712765566024},
+    "literal_bce": {"native": 29852, "contemporary": 44819, "added": 14967, "expansion_percent": 50.13734423154227, "expanded_butterflies": 213, "regional_native_Jaccard": 0.29937937134813963, "regional_contemporary_Jaccard": 0.4850609467184312},
+    "marker_bce": {"native": 29855, "contemporary": 44927, "added": 15072, "expansion_percent": 50.48400602914085, "expanded_butterflies": 213, "regional_native_Jaccard": 0.2994127065567452, "regional_contemporary_Jaccard": 0.48608761651419985}
+  },
+  "null": {
+    "engine": "Unmodified v04 fixed_margin_chain: butterfly and region margins, butterfly-by-continent additions, native structural exclusions",
+    "replicas_per_chain": 499,
+    "seeds": [20261011, 20261012],
+    "primary_regional_observed_minus_null_mean": {"literal": 0.003617165573133463, "marker": 0.003594217613806, "literal_bce": 0.0034389907, "marker_bce": 0.0034144054758554754},
+    "marker_bce_second_seed_excess": 0.0034165977571314343,
+    "all_eight_upper_tail_p": 0.002,
+    "marker_bce_primary_lag1": 0.5153394888819185,
+    "marker_bce_primary_approximate_AR1_ESS": 159.59829254259492,
+    "limit": "Constrained Markov-chain states, not independent field replicates. p=0.002 is the +1 resolution floor. Legacy S9 observations were reproduced, but the proposal schedule follows v04 rather than the legacy S9 schedule."
+  },
+  "marker_to_marker_bce": {"absent_to_added": 1817, "added_to_native": 1403, "absent_to_native": 1919, "net_added_change": 414, "species_with_added_to_native_changes": 61, "fraction_old_added_reclassified": 0.0957156501569109},
+  "selected_case_checks": {"cells": [["Danaus plexippus", "AZO"], ["Pieris brassicae", "NZS"], ["Papilio demoleus", "CUB"]], "all_remain_introduced_only_in_four_scenarios": true, "new_field_evidence_collected": 0},
+  "source_acquisition": {"workflow_run": 38147019178, "commit": "46d6793544d150013c189e8f1ca8c5b8fc1e7d89", "artifact": 11705192851, "sha256": "70e471beb9bfc74b2f61bfaea0efc92b8a13f874bb3fac918361e5e047bfbb31"},
+  "verification": {"local_tests": "153 passed; no failures or skips", "independent_observational_metrics": 68, "species_host_and_region_set_checks": 3824, "legacy_S9_species_vectors": 239, "null_trace_rows": 3992, "null_summary_metrics": 160, "independently_checked_snapshots": 24, "unaugmented_v04_traces_reproduced": 4},
+  "boundary": "European source-conditioned sensitivity, not corrected globally representative host truth or independent field validation. Accepted plant IDs are not necessarily species. No observed butterfly colonization, competition or fitness inferred.",
+  "integration": "Complete code, input CSVs, traces, verifier and cumulative patch are in the verified v05 download; this result receipt does not mean the accumulated local code was merged into GitHub.",
+  "submission_head_not_modified": "88209b8a215ac1bc9c4c5e67622fa104179c8895"
+}
