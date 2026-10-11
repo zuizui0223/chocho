@@ -1,0 +1,39 @@
+name: Butterfly seasonal source bundle
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths: [.github/workflows/butterfly-seasonal-source-bundle.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _tdwg
+      - name: Preserve exact source without git metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          git archive --format=zip HEAD > output/analysis_source.zip
+          cp _tdwg/geojson/level3.geojson output/level3.geojson
+          cp '_tdwg/109-488-1-ED/2nd Edition/tblLevel3.txt' output/tblLevel3.txt
+          git rev-parse HEAD > output/ANALYSIS_SHA
+          git -C _tdwg rev-parse HEAD > output/TDWG_SHA
+          cd output
+          sha256sum analysis_source.zip level3.geojson tblLevel3.txt > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-seasonal-source-bundle-20261011
+          path: output/
+          retention-days: 30
