@@ -1,0 +1,88 @@
+{
+  "status": "COMPLETED_POSTHOC_UNIQUE_HYBRID_MARKER_GLOBAL_SENSITIVITY",
+  "date": "2026-10-11",
+  "frozen_submission_sha": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "source_execution": {
+    "run": 38128030712,
+    "head": "a3eb4693f7a71d1ed756a6b188c4cc69ab52712a",
+    "artifact_id": 11697114593,
+    "artifact_sha256": "ca92cbe98e8e76996c66b61249da0dc8402c31d3d1873e161909547bbe463b51",
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+  },
+  "method": "Add only previously unmatched named species binomials that differ from pinned WCVP by Unicode multiplication marker, with one unambiguous accepted-ID target. Preserve exact matches and original target-ID policy, including explicit Artificial Hybrid IDs and species synonyms resolving to forms. No fuzzy matching, parent-form substitution, cultivar parsing or ambiguous-name assignment.",
+  "source_scope": {
+    "raw_HOSTS_rows": 140485,
+    "raw_complete_link_rows": 86826,
+    "raw_unique_host_names": 11795,
+    "WCVP_all_name_rows": 1431677,
+    "WCVP_candidate_name_rows": 12801,
+    "candidate_distribution_rows": 285857
+  },
+  "baseline_reproduction": {
+    "all_53449_original_name_insect_accepted_ID_links_equal": true,
+    "native_host_region_edges_equal": 148254,
+    "contemporary_host_region_edges_equal": 222384,
+    "all_239_species_metrics_equal": true
+  },
+  "reconciliation": {
+    "global_raw_host_names_rescued": 63,
+    "global_new_unique_insect_host_ID_links": 452,
+    "global_rescued_raw_link_rows": 550,
+    "exact_names_retained": 9367,
+    "ambiguous_exact_names_left_unchanged": 1345,
+    "remaining_unmatched_names": 1019,
+    "unresolved_marker_candidate_names_not_assigned": 1,
+    "focal_raw_names_rescued": 12,
+    "focal_new_unique_host_ID_links": 23,
+    "focal_new_distinct_host_taxa": 10,
+    "focal_species_with_new_host_IDs": 13,
+    "focal_species_with_changed_added_geography": 6,
+    "new_focal_links_by_plant_family": {"Brassicaceae": 2, "Magnoliaceae": 1, "Iridaceae": 1, "Rutaceae": 17, "Salicaceae": 1, "Rosaceae": 1}
+  },
+  "all_239": {
+    "before": {"expanded_species": 206, "native_units": 26530, "contemporary_units": 41083, "added_units": 14553, "aggregate_expansion_percent": 54.854881266490764, "single_host_ID_added_units": 8574, "single_host_ID_share": 0.5891568748711606, "host_ID_links": 2596},
+    "after": {"expanded_species": 206, "native_units": 26533, "contemporary_units": 41191, "added_units": 14658, "aggregate_expansion_percent": 55.24441261824897, "single_host_ID_added_units": 8534, "single_host_ID_share": 0.5822076681675535, "host_ID_links": 2619},
+    "aggregate_expansion_change_percentage_points": 0.3895313517582082,
+    "net_added_resource_cells_change": 105
+  },
+  "species_examples_added_regions": {
+    "Papilio demoleus": [83,99],
+    "Papilio machaon": [91,97],
+    "Papilio memnon": [56,93],
+    "Papilio polytes": [75,98],
+    "Papilio zelicaon": [83,108],
+    "Phalanta phalantha": [80,78]
+  },
+  "cell_transitions": {"absent_to_added": 107, "added_to_native": 2, "absent_to_native": 1, "unchanged_added_single_host_ID_to_multiple": 65, "unchanged_added_multiple_to_single": 0},
+  "reassigned_cells": [
+    {"species":"Phalanta phalantha","regions":["NET","RUW"],"before":"introduced_only","after":"native_host_available"},
+    {"species":"Pyrgus centaureae","regions":["ABT"],"before":"absent","after":"native_host_available"}
+  ],
+  "rank_caution": {
+    "original_host_ID_links_by_target_rank": {"Species":2544,"Subspecies":30,"Variety":20,"Form":2},
+    "new_host_ID_links_by_target_rank": {"Species":15,"Form":8},
+    "counts_are_taxonomic_IDs_not_always_independent_species": true,
+    "within_existing_cell_species_prefix_grouping": {"before_single_species_group_units":8581,"after_single_species_group_units":8605,"before_share":0.5896378753521611,"after_share":0.5870514394869696},
+    "species_grouping_rule": "Collapse exact canonical species prefixes within already supported cells only. Do not transfer feeding to unrecorded forms or inherit parent-species ranges."
+  },
+  "accepted_species_only_sensitivity": {
+    "rule": "Additionally require canonical target rank Species and status Accepted; this is stricter than the original pipeline, so report separately.",
+    "global_rescued_names": 36,
+    "new_focal_links": 13,
+    "native_units": 26533,
+    "contemporary_units": 41178,
+    "added_units": 14645,
+    "aggregate_expansion_percent": 55.19541702785211
+  },
+  "CUB_Papilio_demoleus": {"before_known_host_IDs":6,"after_known_host_IDs":10,"before_resource_class":"added","after_resource_class":"added","note":"The previously discussed single-lemon alias alone gives seven; the all-marker sensitivity adds other Citrus IDs, including two forms. Ten must not be presented as ten distinct species. Field collection host remains Citrus sp., not retrospectively identified lemon."},
+  "verification": {
+    "full_v03_package_tests_local": "135 passed",
+    "separate_pandas_name_join": "63 rescued names and 452 added insect-host ID links match",
+    "independent_SciPy_integer_incidence_reconstruction": "All primary and three fixed-panel sensitivity totals match before/after; 87,713 species-region matrix cells at each version checked.",
+    "all_110_changed_cell_classifications_match": true,
+    "code_and_tests": "Full local v03 package and incremental patch. This receipt does not imply those local classifier files were merged into the remote branch."
+  },
+  "decision": "Global positive expansion is maintained (54.8549 to 55.2444 percent), but several Papilio maps change materially. Keep the old 54.9 percent labeled as the frozen literal-name reconstruction. Do not insert corrected 55.2 percent into a manuscript whose figures and nulls still use old inputs.",
+  "limitations": "This is taxonomic data reconciliation, not new field evidence, host switching, fitness, demographic persistence or causal range expansion. HOSTS biological-record quality and unrecorded hosts remain unverified. Ecological null tests were not rerun with the revised host identities. The frozen 239-species sample was not reselected."
+}
