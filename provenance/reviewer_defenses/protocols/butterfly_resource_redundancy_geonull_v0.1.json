@@ -1,0 +1,55 @@
+{
+  "schema": "chocho_butterfly_geographic_host_redundancy_null_protocol_v0.1",
+  "created_on": "2026-10-11",
+  "status": "POSTHOC_EXPLORATORY_PROTOCOL_FROZEN_BEFORE_FIRST_SPATIAL_NULL_RESULT",
+  "input_paper_sha": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "branch": "analysis/resource-redundancy-20261011",
+  "source_artifact": {
+    "repository": "zuizui0223/TTF",
+    "workflow_run_id": 36222306369,
+    "name": "butterfly-resource-envelope-pilot-v01"
+  },
+  "source_commits": {
+    "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+  },
+  "question": "Are regions newly reachable through introduced already-recorded hosts unusually concentrated on one host plant per butterfly compared with the family- and continent-constrained spatial arrangement of observed introductions?",
+  "unit": "Butterfly species x WGSRPD3 region previously uncovered by any of that butterfly's native host regions",
+  "focal_panel": {
+    "all": 239,
+    "adequate_expanding": 191,
+    "rich_host_adequate_expanding": 80
+  },
+  "exact_preservation": [
+    "All butterfly-host accepted plant identities and HOSTS recording prominence",
+    "All native WCVP plant regions (structural exclusions)",
+    "Each introduced plant's number of occupied WGSRPD3 regions within each WGSRPD level1 continent",
+    "Each WGSRPD3 region's introduced plant count within each WCVP botanical family"
+  ],
+  "procedure": "Constrained double-edge swaps of introduced (plant, region) incidence, within WCVP family x WGSRPD level1 block, with no non-native additions to plant-native cells and no duplicate incidences.",
+  "primary_endpoint": "Pooled butterfly x newly added region share supported by exactly one documented introduced host among the 191 adequate-record focal butterflies",
+  "secondary_endpoints": [
+    "Same share in the 80 species with >=10 documented hosts",
+    "Mean within-butterfly share among butterflies with any added regions",
+    "Full 239-butterfly panel reconstructed as an audit",
+    "Aggregate added butterfly x region counts (to diagnose null non-equivalence)"
+  ],
+  "initial_randomizations": 199,
+  "seed": 20261011,
+  "burn_sweeps": 15,
+  "replica_gap_sweeps": 3,
+  "reporting": [
+    "Observed, null median, null 2.5-97.5 percentiles",
+    "Upper and lower Monte Carlo p values with +1 correction",
+    "Fraction of introduced plant x region edges eligible for swapping",
+    "Accepted swap count, acceptance rate, and number of edges displaced from their observed locations",
+    "Whether observed aggregate added region counts differ materially from the null"
+  ],
+  "interpretation": {
+    "higher_than_null": "Spatial segregation of already documented hosts beyond preserved family-by-region abundance and each host's continent-level introduction prevalence is supported as an exploratory geographic association.",
+    "lower_than_null": "Spatial colocation of hosts beyond marginal introduction counts is supported.",
+    "null_like": "The high raw share can be explained by the constrained geometry; do not claim unexpectedly poor geographic redundancy.",
+    "weak_mixing": "If the null moves very few observed edges or accepts very few swaps, treat p values as inconclusive rather than evidence."
+  },
+  "limitations": "No causal interpretation, no local host use or fitness measurement, no phenology, no climate suitability matching or within-continent range contiguity. All tests are retrospective and the HOSTS catalog may be incomplete."
+}
