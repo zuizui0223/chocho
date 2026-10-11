@@ -1,0 +1,22 @@
+{
+  "status": "PASS_FROZEN_CSV_CONSISTENCY_AUDIT_NOT_ORIGINAL_RASTER_REVALIDATION",
+  "archive_artifact_id": 10919985332,
+  "archive_sha256_expected_and_observed": "198dc927df3e34a06d7b383ad399bab5437819483759f19f085b65a827f6d50a",
+  "unit_climate_crossfit_csv_sha256": "0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2",
+  "csv_rows": 5300,
+  "unique_valid_regional_climate_vectors": 365,
+  "regions_in_frozen_level1_lookup": 369,
+  "regions_without_climate": ["ANT", "BOU", "HMD", "SSA"],
+  "valid_points_per_region_minimum": 16,
+  "valid_points_per_region_median": 16,
+  "duplicate_region_value_conflicts": 0,
+  "climate_stratification": {
+    "continent_only_matched_support_blocks": 13,
+    "temperature_precipitation_2x2_blocks": 40,
+    "temperature_precipitation_3x3_blocks": 81,
+    "single_region_blocks_3x3_including_missing": 19
+  },
+  "raw_value_note": "Values are the stored CHELSA raster-unit values. Positive affine scale/offset conversion does not change the mathematical quantile partition. BIO12 raw maximum is 65535 for CPI; no ad hoc deletion or substitution was applied. This audit checks the frozen extraction, not pixel-level validity or raster metadata.",
+  "method": "Downloaded the exact Actions ZIP into the working environment, verified its SHA256 against GitHub metadata, independently read the CSV, collapsed species-repeated regional vectors, checked conflicts and compared coverage with the frozen WGSRPD1 lookup.",
+  "limitation": "This is not a re-extraction of original raster pixels. Climate matching uses two regional median variables and coarse quantile classes; seasonality, within-region climate variation and full climatic equivalence are not controlled."
+}
