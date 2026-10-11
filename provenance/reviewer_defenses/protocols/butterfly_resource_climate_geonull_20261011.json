@@ -1,0 +1,43 @@
+{
+  "schema": "chocho_climate_geonull_protocol_20261011",
+  "status": "POSTHOC_DESIGN_BEFORE_FIRST_CLIMATE_NULL_RESULT_NOT_PREREGISTERED",
+  "source_analysis_head": "3347b50e60cc51bbad854d05420ed466e4e80ba5",
+  "frozen_submission_head": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "question": "Does the excess of introduced known-host incidences inside butterfly native resource envelopes survive coarse regional temperature and precipitation conditioning?",
+  "climate_artifact": {
+    "repository": "zuizui0223/TTF",
+    "run_id": 36270581743,
+    "artifact_id": 10919985332,
+    "artifact_name": "butterfly-climate-release-postgate-independent-result-v01",
+    "artifact_digest": "sha256:198dc927df3e34a06d7b383ad399bab5437819483759f19f085b65a827f6d50a",
+    "csv_name": "unit_climate_crossfit.csv",
+    "variables_used": ["bio1", "bio12"],
+    "variables_explicitly_unused": ["butterfly_observed", "observed_unit_split", "climate_mismatch_to_train_niche", "other_pilot_record_effort"],
+    "extraction": "Previously frozen CHELSA regional medians at up to 16 deterministic polygon-interior points; deduplicate identical region values across butterfly-specific rows. No new raster extraction."
+  },
+  "fixed_sources": {
+    "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "WGSRPD": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "primary_panel": "191 previously expanded butterflies passing the frozen host-species-count >= host-family-count minimum consistency criterion. This criterion is NOT evidence of complete local host recording.",
+  "secondary_panels": ["all 239 butterflies", "80 of the 191 with >=10 resolved hosts"],
+  "primary_endpoint": "introduced_incidences_already_covered_by_native_hosts; upper-tail excess, with total introduced host x butterfly x region incidences held fixed",
+  "secondary_endpoints": ["added_units", "duplicated_introduced_incidences_outside_native_resource", "single_host_share", "mean_species_single_share"],
+  "null_design": "Reuse the validated double-edge-switch engine. Plant family, native plant ranges, butterfly-host identities, host region degree, and plant-family richness per region remain fixed. Each host's within-continent climate-bin introduction counts are now also fixed.",
+  "climate_bins": "Compute separate empirical BIO1 and BIO12 quantiles within WGSRPD1, using each valid region once; use 3x3 bins as primary and 2x2 bins as sensitivity. Ties are never split. Bins contain coarse climate variation, not equivalent climates.",
+  "missing_climate": "Freeze each missing-climate region in its own unique block in ALL new models; do not drop or impute regions. Report missing region and introduction-edge coverage.",
+  "chains": [
+    {"name":"matched_support_no_climate", "bins":0, "seed":2026101101, "replicas":199, "burn_sweeps":15, "gap_sweeps":3},
+    {"name":"climate_2x2", "bins":2, "seed":2026101102, "replicas":199, "burn_sweeps":15, "gap_sweeps":3},
+    {"name":"climate_3x3_primary", "bins":3, "seed":2026101103, "replicas":199, "burn_sweeps":15, "gap_sweeps":3},
+    {"name":"climate_3x3_longer_mixing", "bins":3, "seed":2026101104, "replicas":199, "burn_sweeps":30, "gap_sweeps":6}
+  ],
+  "quality_checks": ["exact prior per-panel native/added/single/decomposition reproduction", "native union checked for every butterfly", "fixed margins verified at chain end", "decomposition and incidence total checked every sample", "focal and whole-pool changed edges", "lag-1 autocorrelation and approximate AR1 ESS, not a proof of convergence", "independent 3x3 seed with doubled mixing"],
+  "interpretation": {
+    "persists": "Residual alignment after these coarse climate controls is supported; do not conclude climate, spatial structure or human introduction routes have been excluded.",
+    "attenuates": "The initial excess is sensitive to climate-related constraints. Attenuation is not a causal mediation percentage.",
+    "weak_mixing_or_high_missingness": "Report limited identification; do not turn a constrained or frozen null into positive evidence."
+  },
+  "limits": "Retrospective same-data exploration. Coarse regions, regional median climate, incomplete HOSTS, and no local larval performance, biomass, seasonality, spatial-contiguity control or observation-effort correction. No inference of demographic benefit, adaptation, climate causation, or confirmed population response."
+}
