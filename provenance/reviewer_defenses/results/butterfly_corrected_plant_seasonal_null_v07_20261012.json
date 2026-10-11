@@ -1,0 +1,85 @@
+{
+  "schema": "chocho_corrected_plant_level_seasonal_geo_null_v07",
+  "date": "2026-10-12",
+  "status": "POSTHOC_EXPLORATORY_NOT_FROZEN_SUBMISSION",
+  "submission_head_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "botanical_source": "Pinned WCVP 65bed76bae9d644ccb6ad200c05f9f5071d89e05; 689 botanical family IDs via https://github.com/zuizui0223/chocho/actions/runs/38150410940",
+  "design": "Four source portfolios evaluated using the same botanical pool and plant family x mean climate (BIO1 BIO12) x seasonal climate proxies (BIO7 BIO15) x WGSRPD2 geography fixed-margin double-edge swap chains. Frozen plant-native extents and all butterfly host identities within each scenario.",
+  "panels": {
+    "global_239": 239,
+    "adequate_frozen_191": 191,
+    "host_rich_frozen_80": 80
+  },
+  "plant_pool": {
+    "taxon_ids": 9280,
+    "introduced_plant_region_edges": 78751,
+    "eligible_swappable_edges": 36439,
+    "total_blocks": 13136,
+    "swappable_blocks": 2144
+  },
+  "seeds": {
+    "20261012": {
+      "draws": 199,
+      "burn": 15,
+      "gap": 3,
+      "accepted_swaps": 1237297,
+      "final_fraction_focal_edges_changed": 0.06143907095964219
+    },
+    "20261013": {
+      "draws": 199,
+      "burn": 30,
+      "gap": 6,
+      "accepted_swaps": 2474312,
+      "final_fraction_focal_edges_changed": 0.062092956346611564
+    }
+  },
+  "primary_panel_observed_minus_null_native_overlap_fraction_percentage_points": {
+    "literal": [
+      0.07527331292247474,
+      0.07262270020166328
+    ],
+    "marker": [
+      0.07709384652460072,
+      0.07470479626670024
+    ],
+    "literal_bce": [
+      0.09882700755577956,
+      0.09896594685304683
+    ],
+    "marker_bce": [
+      0.0993772946281335,
+      0.09974863689410363
+    ]
+  },
+  "paired_marker_bce_versus_marker": {
+    "observed_B_fraction_change_percentage_points": 4.761542590490542,
+    "null_mean_B_fraction_change_percentage_points": [
+      4.739259142387001,
+      4.736498749863138
+    ],
+    "excess_change_percentage_points": [
+      0.02228344810354041,
+      0.025043840627404085
+    ],
+    "p_upper": [
+      0.09,
+      0.075
+    ]
+  },
+  "novel_cells_comparison": {
+    "all_239_marker": 14658,
+    "all_239_marker_bce": 15072,
+    "adequate_191_marker": 13634,
+    "adequate_191_marker_bce": 13302
+  },
+  "verification": {
+    "parent_suite_passed": 169,
+    "new_v07_tests_passed": 4,
+    "independent_scipy_panel_summaries": 12,
+    "accounting_identities": 4776,
+    "null_statistics_checked": 960,
+    "self_contained_zip_sha256": "2f00b7004304e348b94dd767d309528a6f97acf25c176ed5a1eb888b869a9626"
+  },
+  "interpretation": "Positive but very small conditional geographic excess of native-resource overlap, ca. 0.07–0.10 percentage points; most of apparent change when BCE sources are added is expected from expanded documented host links and not statistically resolved as a new spatial sorting effect.",
+  "claim_boundary": "Post-hoc. Null retains severe mobility restrictions (~6% focal plant introduction edges displaced at final checkpoint) and correlated chains. Does not measure realized larval host use, fitness, butterfly demographic colonization, seasonally suitable tissues, or source-complete ecology. No change to GEB submission PR #38 or journal materials."
+}
