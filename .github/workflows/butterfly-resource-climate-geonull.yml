@@ -18,6 +18,9 @@ jobs:
   climate-null:
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    defaults:
+      run:
+        shell: bash
     env:
       PYTHONHASHSEED: "0"
     steps:
@@ -27,12 +30,13 @@ jobs:
           python-version: "3.12"
       - name: Install test dependencies
         run: |
-          python -m pip install -e '.[test,analysis]'
+          python -m pip install -e '.[test,analysis,review]'
           mkdir -p results/climate-null
       - name: Full repository tests
         id: full-tests
-        continue-on-error: true
-        run: python -m pytest -q 2>&1 | tee results/full_repository_tests.txt
+        run: |
+          set -o pipefail
+          python -m pytest -q 2>&1 | tee results/full_repository_tests.txt
       - name: Require climate and fixed-margin tests
         run: |
           python -m pytest -q tests/test_butterfly_resource_climate_geonull.py tests/test_butterfly_resource_redundancy_geonull.py tests/test_butterfly_resource_redundancy_hostcount.py
