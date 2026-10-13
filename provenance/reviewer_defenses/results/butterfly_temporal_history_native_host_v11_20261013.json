@@ -1,0 +1,138 @@
+{
+  "schema": "chocho_temporal_literature_native_host_v11_20261013",
+  "date_jst": "2026-10-13",
+  "status": "POSTHOC_TARGETED_HISTORICAL_AUDIT_NOT_INDEPENDENT_COLONIZATION_TEST",
+  "submission_head_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "fixed_v10_candidate_population": {
+    "species_by_region": 26,
+    "retained_gbif_occurrences": 215,
+    "literature_historical": 8,
+    "literature_historical_records": 182,
+    "taxon_identity_hold": 1,
+    "taxon_identity_hold_records": 5,
+    "not_audited": 17,
+    "not_audited_records": 28
+  },
+  "additional_documented_since_v10": [
+    {
+      "species": "Troides aeacus",
+      "region": "WHM",
+      "first_retained_gbif_year": 2018,
+      "published_by": 2011,
+      "source": "https://doi.org/10.18473/lepi.v65i2.a5",
+      "observed_stage": "wild larva and rearing on Aristolochia dilatata"
+    },
+    {
+      "species": "Melanitis leda",
+      "region": "MRN",
+      "first_retained_gbif_year": 2020,
+      "published_by": 1942,
+      "original_historical_report_year": 1911,
+      "source": "https://hbs.bishopmuseum.org/pubs-online/pdf/b172p30-38.pdf",
+      "observed_stage": "original historical account says larvae reared from maize on Guam"
+    },
+    {
+      "species": "Papilio polytes",
+      "region": "MRN",
+      "first_retained_gbif_year": 2024,
+      "published_by": 1989,
+      "source": "https://micronesica.org/volumes/22",
+      "observed_stage": "Guam species common and local hosts/parasitoid control documented"
+    },
+    {
+      "species": "Pieris brassicae",
+      "region": "CLC",
+      "first_retained_gbif_year": 2026,
+      "published_by": 2014,
+      "source": "https://doi.org/10.4067/S0718-34292014000300015",
+      "locality": "Valparaiso (inside fixed CLC)"
+    },
+    {
+      "species": "Pieris brassicae",
+      "region": "CLS",
+      "first_retained_gbif_year": 2026,
+      "published_by": 2014,
+      "source": "https://doi.org/10.4067/S0718-34292014000300015",
+      "locality": "Valdivia (inside fixed CLS)"
+    }
+  ],
+  "previous_v10_three_historical": [
+    [
+      "Dryas iulia",
+      "THA",
+      "2014 article records 2007 history"
+    ],
+    [
+      "Dryas iulia",
+      "MLY",
+      "2014 paper known wild presence"
+    ],
+    [
+      "Historis acheronta",
+      "BZS",
+      "2011 regional checklist"
+    ]
+  ],
+  "WCVP_native_host": {
+    "name": "Aristolochia dilatata",
+    "accepted_plant_name_id": "2651355",
+    "wcvp_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "pinned_source_run": "https://github.com/zuizui0223/chocho/actions/runs/38399833118",
+    "region": "WHM",
+    "native": true,
+    "extant": true,
+    "doubtful": false,
+    "Troides_HOSTS_link_missing": true,
+    "original_class": "introduced_only",
+    "reconciled_class": "native_host_present",
+    "all_four_source_conditions_agree": true
+  },
+  "single_link_sensitivity_global_239": {
+    "literal": {
+      "native_before": 26530,
+      "native_after": 26531,
+      "contemporary_before_and_after": 41083,
+      "added_before": 14553,
+      "added_after": 14552
+    },
+    "marker": {
+      "native_before": 26533,
+      "native_after": 26534,
+      "contemporary_before_and_after": 41191,
+      "added_before": 14658,
+      "added_after": 14657
+    },
+    "literal_bce": {
+      "native_before": 29852,
+      "native_after": 29853,
+      "contemporary_before_and_after": 44819,
+      "added_before": 14967,
+      "added_after": 14966
+    },
+    "marker_bce": {
+      "native_before": 29855,
+      "native_after": 29856,
+      "contemporary_before_and_after": 44927,
+      "added_before": 15072,
+      "added_after": 15071
+    }
+  },
+  "historical_407_postonly_region_classes": {
+    "native_before": 358,
+    "native_after": 359,
+    "introduced_only_before": 26,
+    "introduced_only_after": 25,
+    "uncovered_before_and_after": 23
+  },
+  "verification": {
+    "frozen_v10_source_reused": true,
+    "regression_tests": 5,
+    "all_passed": true,
+    "independent_audit_pass": true,
+    "geometry_regions_checked": 4,
+    "zip_extraction_checksums_pass": true,
+    "zip_reextracted_tests_pass": true,
+    "zip_sha256": "95def5e9c8b6eaa943efa29dcc4c3de7a019ba6901b60d54a5adb1594995e958"
+  },
+  "claim_boundary": "Retrospectively selected eight historical cases; published-by date is an upper bound not first arrival. No independently verified novel colonization; seventeen candidates not fully audited and one species-ID hold. Frozen GBIF life stages not retained. The Troides host link is documented in published literature but this only corrects potential native resource classification, not observed cohort success across all WHM."
+}
