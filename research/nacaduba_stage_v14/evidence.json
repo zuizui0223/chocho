@@ -1,0 +1,131 @@
+{
+  "version": "2026-10-14",
+  "analysis_type": "source_bounded_historical_and_life_stage_audit",
+  "focal_butterfly": "Nacaduba biocellata",
+  "historical_documentation": {
+    "acacia_singapore_first_official_year": 1890,
+    "butterfly_singapore_earliest_retrospective_photo": 2004,
+    "butterfly_public_species_checklist_year": 2008,
+    "larval_host_rearing_documentation_year": 2010,
+    "source_plant": "https://doi.org/10.1177/194008291500800116",
+    "source_photo": "https://butterflycircle.blogspot.com/2014/01/butterflies-galore-two-spotted-line-blue.html",
+    "source_checklist": "https://butterflycircle.blogspot.com/2008/02/new-lycaenidae-species-for-singapore_10.html",
+    "source_larvae": "https://butterflycircle.blogspot.com/2010/01/life-history-of-two-spotted-line-blue.html",
+    "documentation_lag_not_biological_lag": true
+  },
+  "singapore_rearing_day_ranges": [
+    {
+      "stage": "egg",
+      "min": 2,
+      "max": 2.5,
+      "requires_floral_resource": false
+    },
+    {
+      "stage": "instar1",
+      "min": 2,
+      "max": 2,
+      "requires_floral_resource": true
+    },
+    {
+      "stage": "instar2",
+      "min": 2,
+      "max": 2,
+      "requires_floral_resource": true
+    },
+    {
+      "stage": "instar3",
+      "min": 2.5,
+      "max": 3,
+      "requires_floral_resource": true
+    },
+    {
+      "stage": "instar4",
+      "min": 3,
+      "max": 4,
+      "requires_floral_resource": true
+    },
+    {
+      "stage": "prepupa",
+      "min": 1,
+      "max": 1,
+      "requires_floral_resource": false
+    },
+    {
+      "stage": "pupa",
+      "min": 5,
+      "max": 5,
+      "requires_floral_resource": false
+    }
+  ],
+  "host_evidence": [
+    {
+      "plant": "Acacia plectocarpa",
+      "region": "WAU",
+      "family": "Fabaceae",
+      "mimosoid": true,
+      "evidence": "wild_larvae_on_flowering_branches_then_reared",
+      "field_host": true,
+      "food_part": "flowers",
+      "source": "https://doi.org/10.18195/issn.0312-3162.30(2).2015.073-097",
+      "note": "Two larvae collected 2011-05-16; adults 2011-05-25 and 2011-05-29. Not a full egg-to-adult duration."
+    },
+    {
+      "plant": "Acacia auriculiformis",
+      "region": "MLY",
+      "family": "Fabaceae",
+      "mimosoid": true,
+      "evidence": "wild_immatures_on_flowering_tree_then_reared",
+      "field_host": true,
+      "food_part": "buds_and_flowers",
+      "source": "https://butterflycircle.blogspot.com/2010/01/life-history-of-two-spotted-line-blue.html",
+      "note": "Over 20 mixed-stage immatures, not a survival-rate denominator; introduced in Singapore."
+    },
+    {
+      "plant": "Pithecellobium dulce",
+      "region": "THA",
+      "family": "Fabaceae",
+      "mimosoid": true,
+      "evidence": "published_local_host_and_bred_adult",
+      "field_host": true,
+      "food_part": "unverified",
+      "source": "https://yutaka.it-n.jp/lyc4/81285001.html",
+      "note": "Thai baliensis; host noted in Jennarongsak 2026 and bred adult dated 2025-01-22; no wild survival rate."
+    },
+    {
+      "plant": "Acacia mangium",
+      "region": "MLY",
+      "family": "Fabaceae",
+      "mimosoid": true,
+      "evidence": "feeding_in_captivity_only",
+      "field_host": false,
+      "food_part": "flower_buds",
+      "source": "https://butterflycircle.blogspot.com/2010/01/life-history-of-two-spotted-line-blue.html",
+      "note": "Do not present as field larval host."
+    },
+    {
+      "plant": "Vachellia farnesiana",
+      "region": "HOSTS_global",
+      "family": "Fabaceae",
+      "mimosoid": true,
+      "evidence": "database_host_relation_only",
+      "field_host": false,
+      "food_part": "unverified",
+      "source": "https://github.com/globalbioticinteractions/HOSTS",
+      "note": "Original host ID 2452405 is not field documentation in THA or MLY."
+    }
+  ],
+  "v13_source_sensitivity": {
+    "original": {
+      "native": 50,
+      "contemporary": 131,
+      "introduced_only_added": 81
+    },
+    "add_two_locally_documented_field_host_species_to_global_association": {
+      "native": 54,
+      "contemporary": 157,
+      "introduced_only_added": 103
+    },
+    "scope": "This is a what-if global projection of locally reported host use and DOES NOT validate these hosts in the newly covered regions."
+  },
+  "methodological_boundary": "No host-plant flowering phenology time series, local establishment times, wild egg-to-adult cohort survival or causal effects. Plant-first and butterfly-first records are distinct documentation clocks."
+}
