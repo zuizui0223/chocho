@@ -1,0 +1,63 @@
+name: v11 Native Aristolochia source check
+
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths:
+      - ".github/workflows/butterfly-v11-native-plant-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-wcvp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: wcvp-source
+      - name: Inspect explicitly named botanical hosts in pinned WCVP
+        run: |
+          mkdir -p outputs
+          Rscript - <<'RS'
+          e <- new.env(parent=emptyenv())
+          load('wcvp-source/data/wcvp_names.rda', envir=e)
+          load('wcvp-source/data/wcvp_distributions.rda', envir=e)
+          n <- get('wcvp_names', envir=e)
+          d <- get('wcvp_distributions', envir=e)
+          stopifnot(all(c('taxon_name','taxon_rank','taxon_status','plant_name_id') %in% names(n)))
+          stopifnot(all(c('plant_name_id','area_code_l3','introduced','extinct','location_doubtful') %in% names(d)))
+          targets <- c('Aristolochia dilatata','Triphasia trifoliata')
+          nn <- n[n$taxon_name %in% targets,,drop=FALSE]
+          if(!nrow(nn))stop('No botanical names found')
+          cols <- intersect(c('taxon_name','plant_name_id','accepted_plant_name_id','taxon_rank','taxon_status','family'),names(nn))
+          write.csv(nn[,cols,drop=FALSE],'outputs/fixed_names.csv',row.names=FALSE)
+          names_before <- unique(as.character(nn$plant_name_id))
+          if('accepted_plant_name_id' %in% names(nn))
+            names_before <- unique(c(names_before,as.character(nn$accepted_plant_name_id)))
+          dd <- d[as.character(d$plant_name_id) %in% names_before,,drop=FALSE]
+          if(!nrow(dd))stop('No distribution data for requested taxa')
+          write.csv(dd,'outputs/distributions.csv',row.names=FALSE)
+          whm <- dd[dd$area_code_l3 == 'WHM',,drop=FALSE]
+          print(nn[,cols,drop=FALSE])
+          print(whm)
+          if(!any(nn$taxon_name == 'Aristolochia dilatata'))stop('No A dilatata')
+          writeLines(c('wcvp_sha=65bed76bae9d644ccb6ad200c05f9f5071d89e05',
+                       paste0('matched_name_rows=',nrow(nn)),
+                       paste0('matched_distribution_rows=',nrow(dd)),
+                       paste0('WHM_rows=',nrow(whm))), 'outputs/source_readme.txt')
+          RS
+          sha256sum outputs/*.csv outputs/*.txt > outputs/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-v11-pinned-native-host-check
+          path: outputs/
+          retention-days: 30
