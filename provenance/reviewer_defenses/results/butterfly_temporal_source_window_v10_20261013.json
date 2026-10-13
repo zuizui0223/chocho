@@ -1,0 +1,98 @@
+{
+  "schema": "chocho_temporal_source_window_v10_20261013",
+  "date": "2026-10-13",
+  "status": "POSTHOC_RECORDING_PROCESS_AUDIT_NO_BIOLOGICAL_ESTABLISHMENT_HINDCAST",
+  "submission_pr38_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "input_sampling": {
+    "GBIF_rows": 53434,
+    "WGSRPD3_mapped_rows": 48728,
+    "focal_butterfly_species_mapped": 31,
+    "original_nominated": 32,
+    "butterfly_by_region_cells": 1081,
+    "species_with_exact_1800_row_cap": 28
+  },
+  "time_split": {
+    "pre_2018_recorded_cells": 674,
+    "first_retained_detection_2018_to_2026_cells": 407,
+    "cells_from_four_species_with_no_early_archive_records": 129
+  },
+  "firstyear_source_ties": {
+    "iNaturalist_only": 278,
+    "mixed_iNaturalist_and_other": 29,
+    "other_only": 100,
+    "iNaturalist_GBIF_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+    "prior_arbitrary_one_row_attribution_293_is_not_used": true
+  },
+  "corrected_host_map_407_classes": {
+    "native": 358,
+    "introduced_only": 26,
+    "no_documented_host": 23,
+    "introduced_only_single_year": 17
+  },
+  "stringent_candidate_definition": "introduced-only resource, >=2 retained years, >=5 records, >=10 pre-2018 OTHER focal butterfly records in that region",
+  "stringent_four": [
+    {
+      "species": "Dryas iulia",
+      "region": "THA",
+      "retained_first_year": 2022,
+      "records": 6,
+      "other_early_records": 153,
+      "classification": "historically_documented_before_2018",
+      "source_doi": "10.1371/journal.pone.0104076",
+      "recorded_since_by_literature": 2007
+    },
+    {
+      "species": "Dryas iulia",
+      "region": "MLY",
+      "retained_first_year": 2019,
+      "records": 126,
+      "other_early_records": 89,
+      "classification": "historically_documented_before_2018",
+      "source_doi": "10.1371/journal.pone.0104076",
+      "publication_upper_bound": 2014
+    },
+    {
+      "species": "Historis acheronta",
+      "region": "BZS",
+      "retained_first_year": 2020,
+      "records": 9,
+      "other_early_records": 147,
+      "classification": "historically_documented_before_2018",
+      "source_doi": "10.1590/S1676-06032011000300022",
+      "publication_upper_bound": 2011,
+      "geographic_validation": "Rio Grande do Sul Maquine within pinned BZS WGSRPD3 geometry"
+    },
+    {
+      "species": "Pyrgus communis",
+      "region": "TEN",
+      "retained_first_year": 2021,
+      "records": 5,
+      "other_early_records": 24,
+      "classification": "TAXONOMIC_IDENTITY_HOLD",
+      "source": "https://www.tnvalleynaba.org/butterflies-of-tennessee/skipper-hesperiidae/common-checkered-skipper-pyrgus-communis/",
+      "reason": "P communis and P albescens not reliably distinguished in field; no retained identifying voucher"
+    }
+  ],
+  "stringent_four_confirmed_new_colonizations": 0,
+  "claims_boundary": "None confirmed does not mean no new colonization occurred. Literature review concentrated on 4 of 26; 1 taxonomic hold and 22 unreviewed. No retrospective predictive rate can be inferred.",
+  "negative_control": {
+    "early_cells_also_recorded_later": 582,
+    "pre_sample_event_retention": 0.5,
+    "replicates": 999,
+    "median_false_post_period_first_detections": 85,
+    "simulation_95pct_quantiles": [
+      70,
+      99
+    ],
+    "original_observed_post_only": 407,
+    "median_after_thinning": 492
+  },
+  "validation": {
+    "regression_tests_passed": 7,
+    "independent_shapely_mapped_events": 48728,
+    "original_region_units": 1081,
+    "four_host_source_conditions_verified": true,
+    "source_year_tie_count_verified": true
+  },
+  "limitations": "First stored GBIF event year is not establishment; iNaturalist provider attribution references dataset ID and event year. WCVP host presences are static, with no local introduction timing. No confirmed host-larval survival, reproduction or butterfly population dynamics. Sampling capped at 1800 for 28 species; 2026 incomplete."
+}
