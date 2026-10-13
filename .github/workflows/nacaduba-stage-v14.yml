@@ -1,0 +1,42 @@
+name: Nacaduba flower-stage source audit v14
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - 'research/nacaduba_stage_v14/**'
+      - '.github/workflows/nacaduba-stage-v14.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run source and overclaim guard tests
+        working-directory: research/nacaduba_stage_v14
+        run: python -m unittest discover -s . -p 'test_audit.py' -v
+      - name: Independently regenerate source-ledger arithmetic output
+        working-directory: research/nacaduba_stage_v14
+        run: |
+          python analyze.py > v14_recomputed.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('v14_recomputed.json').read_text())
+          assert d['estimated_biological_arrival_lag_years'] is None
+          assert d['flower_phenology_effect'] is None
+          assert d['larval_floral_feeding_days']==[9.5,11]
+          assert d['source_hypothetical_resource_delta']=={'native':4,'contemporary':26,'introduced_only_added':22}
+          print('Source stage and scope verified.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nacaduba-v14-stage-arithmetic-verified
+          path: research/nacaduba_stage_v14/v14_recomputed.json
+          retention-days: 30
