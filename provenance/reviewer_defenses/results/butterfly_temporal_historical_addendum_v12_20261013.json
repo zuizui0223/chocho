@@ -1,0 +1,66 @@
+{
+  "schema": "chocho_temporal_historical_addendum_v12_20261013",
+  "date": "2026-10-13",
+  "status": "RETROSPECTIVE_SELECTED_HISTORICAL_RECORD_AUDIT_NOT_COLONIZATION_HINDCAST",
+  "frozen_submission_sha_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "panel": "26 source-stable introduced-only post-2017 GBIF first-retained cells from v11; same 215 archived occurrence rows, unchanged host classification",
+  "summary": {
+    "historically_documented_cells": 12,
+    "historically_documented_occurrence_records": 188,
+    "pre2018_published_sources": 11,
+    "pre2018_event_but_post2018_verified_source": 1,
+    "taxonomic_hold_cells": 1,
+    "taxonomic_hold_occurrence_records": 5,
+    "not_audited_cells": 13,
+    "not_audited_occurrence_records": 22,
+    "new_breeding_confirmations_in_v12": 0,
+    "historical_straggler_cases": 1
+  },
+  "new_source_audits": [
+    {
+      "species": "Papilio memnon",
+      "region": "AND",
+      "archived_first_year": 2025,
+      "source_year": 1931,
+      "stage": "HISTORICAL_STRAGGLER_NOT_ESTABLISHED",
+      "source": "https://censusindia.gov.in/nada/index.php/catalog/32394/download/35575/40153_1931_REP.pdf",
+      "note": "Evans 1931 Andaman and Nicobar butterfly list reports P. memnon agenor as stragglers on Andamans; neither contemporary native-host absence nor reproductive colonization is independently resolved."
+    },
+    {
+      "species": "Pyrgus communis",
+      "region": "MSO",
+      "archived_first_year": 2019,
+      "source_year": 2010,
+      "stage": "HISTORICAL_SPECIES_LOCALITY_REPORT_ONLY",
+      "source": "https://www.butterfliesandmoths.org/blogs/829/new-boone-county-missouri-records",
+      "note": "Jan 6 2010 Boone County Missouri listing of P. communis; no larval survival or local breeding cohort."
+    },
+    {
+      "species": "Pyrgus communis",
+      "region": "MIN",
+      "archived_first_year": 2024,
+      "source_year": 2014,
+      "stage": "HISTORICAL_STATE_SPECIES_ACCOUNT_NO_VOUCHER",
+      "source": "https://www.lrl.mn.gov/docs/2015/other/150681/PFEISref_2/MDNR%202014b.pdf",
+      "note": "Minnesota DNR 2014 comparison names communis as another locally occurring species, but not a source date-specific sighting or voucher."
+    },
+    {
+      "species": "Pyrgus communis",
+      "region": "WDC",
+      "archived_first_year": 2025,
+      "observed_event_year": 2017,
+      "verification_year": 2021,
+      "stage": "RETROSPECTIVELY_VERIFIED_EARLY_EVENT",
+      "source": "https://www.butterfliesandmoths.org/explore-data?region=45223",
+      "source_record": "1144419",
+      "note": "BAMONA observation date 2017-10-01, verification date 2021-11-30; original event earlier than cutoff, source confirmation later. No breeding claim and GBIF provenance independence unverified."
+    }
+  ],
+  "validation": {
+    "v11_tests_fresh": 5,
+    "v12_tests_fresh": 4,
+    "independent_v12_csv_audit": "passed",
+    "verified_zip_sha256": "0152c5a5d7f9d51ec3d64b804b3bf815ea38d288c45170e92a4382246e62870f"
+  },
+  "interpretive_boundary": "An old occurrence can represent a straggler rather than a breeding population. This deliberately selected audit does not estimate false-detection rates, regional colonization times, host-following lags or globally representative biological effects. Source independence from GBIF samples has not been established."
+}
