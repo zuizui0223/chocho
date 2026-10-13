@@ -1,0 +1,45 @@
+name: Nacaduba provenance flowering audit v15
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - "research/nacaduba_stage_v15/**"
+      - ".github/workflows/nacaduba-provenance-v15.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-checked:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Confirm transcribed primary tables match local audited source bytes
+        working-directory: research/nacaduba_stage_v15
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "4a71c31156e8ad2e4ebd36cc85d17020af1e1529cdf7b9411c92b9071725ae52  data/clones_kato2012_table4_table5.csv" | sha256sum -c
+          echo "cadf799c8a6f14cce5e0c30eaea5a82f06c85cf3fba159981a60b227aead7d46  data/ramets_kato2012_table7.csv" | sha256sum -c
+      - name: Recompute flowering and enforce biology scope
+        working-directory: research/nacaduba_stage_v15
+        run: |
+          python -m unittest discover -s . -p 'test_audit.py' -v
+          python audit.py > v15_computed.json
+          python - <<'PY'
+          import json
+          x=json.load(open('v15_computed.json'))
+          assert x['study_site']=="Iriomote cultivated clones, not Singapore"
+          assert x['butterfly_flowering_mismatch_effect'] is None
+          assert x['source_discrepancy']['2009_max_in_table7_10day_bins']==13
+          print("v15 evidence and interpretation guards passed")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nacaduba-v15-provenance-flowering-calculation
+          path: research/nacaduba_stage_v15/v15_computed.json
+          retention-days: 30
