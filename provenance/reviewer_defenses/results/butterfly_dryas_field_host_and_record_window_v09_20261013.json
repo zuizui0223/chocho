@@ -1,0 +1,101 @@
+{
+  "schema": "chocho_dryas_iulia_stage_and_record_window_v09_20261013",
+  "date": "2026-10-13",
+  "status": "TARGETED_POSTHOC_PRIMARY_LITERATURE_AND_FROZEN_GEOGRAPHY_DIAGNOSTIC",
+  "frozen_submission_head_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "frozen_source_WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+  "frozen_source_HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+  "focal": "Dryas iulia",
+  "global_239_resource_baseline": {
+    "native": 29855,
+    "contemporary": 44927,
+    "introduced_only": 15072
+  },
+  "regional": "WGSRPD3 Thailand THA; Malaya MLY includes Singapore",
+  "primary_sources": {
+    "Burg_2014": "https://doi.org/10.1371/journal.pone.0104076",
+    "ButterflyCircle_life_history": "https://butterflycircle.blogspot.com/2021/12/life-history-of-julia-heliconian.html",
+    "adult_nectar_host_review": "https://www.butterfliesandmoths.org/species/Dryas-iulia"
+  },
+  "regional_results": {
+    "THA": {
+      "original_known_host_plant_names": [
+        "Passiflora edulis"
+      ],
+      "count_before": 1,
+      "count_after_adding_reported_foetida": 2,
+      "locally_reported_larval_host": "Passiflora foetida",
+      "new_host_accepted_plant_id": "2559676",
+      "introduced_in_frozen_WCVP": true,
+      "regional_resource_class_before_and_after": "introduced_only",
+      "literature_larval_host_evidence_note": "Burg et al 2014 cite Les Day personal communication; no voucher-linked larval cohort"
+    },
+    "MLY": {
+      "original_known_host_count": 4,
+      "original_contains_P_suberosa_id": "2560211",
+      "introduced_in_frozen_WCVP": true,
+      "regional_resource_class_before_and_after": "introduced_only",
+      "life_history_note": "ButterflyCircle depicts local oviposition, larval feeding and development to eclosion, but does not document untreated field cohort survival; blog original 2021 with later dated captions."
+    }
+  },
+  "scenarios_one_butterfly": {
+    "frozen": {
+      "native": 45,
+      "current": 139,
+      "added": 94
+    },
+    "add_P_foetida": {
+      "native": 47,
+      "current": 170,
+      "added": 123
+    },
+    "remove_unverified_larval_Lantana_camara": {
+      "native": 42,
+      "current": 129,
+      "added": 87
+    },
+    "both": {
+      "native": 46,
+      "current": 163,
+      "added": 117
+    }
+  },
+  "frozen_gbif": {
+    "THA": 6,
+    "MLY": 126,
+    "retained_life_stage": false,
+    "THA_first_saved_year": 2022,
+    "MLY_first_saved_year": 2019,
+    "THA_published_early_field_report_year": 2007,
+    "THA_report_to_archived_sample_first_year_difference": 15,
+    "THA_year_counts": {
+      "2022": 1,
+      "2024": 1,
+      "2025": 1,
+      "2026": 3
+    },
+    "MLY_year_counts": {
+      "2019": 7,
+      "2022": 13,
+      "2024": 13,
+      "2025": 35,
+      "2026": 58
+    }
+  },
+  "queue": {
+    "previous_source_stable_literature_pending": 37,
+    "now_newly_reviewed": 2,
+    "remaining_unaudited": 35,
+    "remaining_unreviewed_occurrence_records": 440,
+    "biological_colonization_validation_rate_estimated": false
+  },
+  "checks": {
+    "parent_v06_full_suite_passed": 169,
+    "new_v09_test_count": 6,
+    "verified_zip_reextract_tests": 6,
+    "independent_pandas_numpy_verification": true,
+    "files_in_zip": 24,
+    "verified_archive_sha256": "6bdef58eac544d7a870c1aa7b720633aaf60ed9552cfbc9503568a1d0c38f9b1"
+  },
+  "limitations": "Literature observation date to first retained GBIF year is a RECORDING WINDOW DIFFERENCE, not a biological invasion lag. Local wild larval-use sources vary in individual voucher detail. Lantana removal is a QUESTIONED LINK sensitivity only. Scenario is one cherry-picked butterfly not globally representative. Existing 239-species conclusions and paper are untouched."
+}
