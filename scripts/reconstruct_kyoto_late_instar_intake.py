@@ -59,11 +59,15 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
             ]
             for day, recs in raw_by_day.items() if len(recs) > 1
         }
-        if collisions:
+        if collisions and not all(source.number(rec["no.individuals"]) == 10
+                                  for rec in by_id[ident]):
             raise ValueError(
                 "duplicate identity/calendar-day records require original-code reconciliation: "
                 + json.dumps({"id": ident, "dates": collisions})
             )
+        # The mass analysis excludes the original founder group; duplicate
+        # stage-transition snapshots within that group are preserved, never
+        # interpreted as two independent feeding intervals.
     group_ids = [
         ident for ident, group in by_id.items()
         if group[0]["stage"] == "1"
@@ -72,6 +76,14 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
     if len(group_ids) != 1:
         raise ValueError("not exactly one verified 10-neonate founder group")
     founder = group_ids[0]
+    founder_duplicate_dates = {
+        day.isoformat(): [
+            {"stage": r["stage"], "taken": r.get("taken", ""), "given": r.get("given", "")}
+            for r in by_id[founder] if date(r) == day
+        ]
+        for day in sorted({date(r) for r in by_id[founder]})
+        if sum(date(r) == day for r in by_id[founder]) > 1
+    }
     hatch_date = date(by_id[founder][0])
     individual_ids = sorted(ident for ident, rr in by_id.items()
                             if ident != founder and ident.startswith(founder)
@@ -164,6 +176,7 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
         "status": "SOURCE_DESCRIBED_LAB_CONSUMPTION_RECONSTRUCTION_NOT_COMPETITION",
         "species": species,
         "source_trial_founder_id": founder,
+        "founder_group_same_day_stage_transitions": founder_duplicate_dates,
         "founder_neonate_group_start": hatch_date.isoformat(),
         "n_single_larva_ids": len(individual_ids),
         "n_pupa_coded_ids": n_completed,
