@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -107,3 +108,28 @@ def test_no_source_gate_no_promotion():
     with pytest.raises(ValueError, match="Table 1"):
         mod.analyze({"status": "SOURCE_RECONSTRUCTED_DESCRIPTIVE_ONLY",
                      "per_species": x, "source_identity": {}})
+
+
+def test_published_source_reproduction_receipt_arithmetic_and_claim_limits():
+    receipt_path = BASE.parent / "provenance/reviewer_defenses/results/kyoto_matched_age_intake_shape_20261014.json"
+    x = json.loads(receipt_path.read_text(encoding="utf-8"))
+    c = x["comparison"]
+    av = list(c["A_equal_larva_profile_by_age"].values())
+    sv = list(c["S_equal_larva_profile_by_age"].values())
+    assert c["complete_case_A"] == 9 and c["complete_case_S"] == 9
+    assert sum(av) == pytest.approx(1.0)
+    assert sum(sv) == pytest.approx(1.0)
+    overlap = sum(min(a, b) for a, b in zip(av, sv))
+    assert overlap == pytest.approx(c["temporal_overlap"])
+    assert 1 - overlap == pytest.approx(c["total_variation"])
+    assert sum(av[:3]) - sum(sv[:3]) == pytest.approx(c["early_share_A_minus_S"])
+    assert c["toy_k_A_over_k_S_open_interval"][0] == pytest.approx(
+        c["S_early_share"] / c["A_early_share"]
+    )
+    assert c["toy_k_A_over_k_S_open_interval"][1] == pytest.approx(
+        (1 - c["S_early_share"]) / (1 - c["A_early_share"])
+    )
+    assert x["source"]["individual_a_source_md5"] == "08c2bcfb9a896f7eb89bebd74153f769"
+    assert x["source"]["individual_s_source_md5"] == "174f0bd6ba056bcd49b348427da9f749"
+    assert x["status"].startswith("SOURCE_REPRODUCED_EXPLORATORY")
+    assert x["claim_boundary"] and any("no" in str(z).lower() for z in x["claim_boundary"])
