@@ -30,7 +30,7 @@ from pathlib import Path
 import numpy as np
 
 from randomize_kyoto_four_arm_greenhouse_bibd import (
-    ALLOCATION_COLUMNS, ARMS, DESIGN, B, R, LAMBDA, counts,
+    ALLOCATION_COLUMNS, ARMS, DESIGN, B, R, LAMBDA, counts, assign,
 )
 
 ASSIGNMENT_COLUMNS = [
@@ -102,6 +102,19 @@ def validate_assignment(allocation: list[dict], info: list[dict]) -> dict:
         original[r["cage_id"]] = r
     if not counts(original.values())["complete_v4_b8_k3_r6_lambda4"]:
         raise ValueError("Original assignment is not a connected balanced BIBD")
+    # Balance alone is not auditability: a visually balanced but retrospectively
+    # swapped assignment has the same incidence matrix. Replay the declared
+    # random seed against the original greenhouse/cage inventory and reject it.
+    replay = assign(
+        [{"cage_id": r["cage_id"], "greenhouse_id": r["greenhouse_id"]}
+         for r in original.values()],
+        seed=int(allocation[0]["random_seed"]),
+    )
+    for expected in replay:
+        stored = original[expected["cage_id"]]
+        if any(str(stored[k]) != str(expected[k]) for k in ALLOCATION_COLUMNS):
+            raise ValueError("Randomization seed replay mismatch: original cage assignment changed")
+
     if len(info) != len(original):
         raise ValueError("Missing randomized whole cage cannot be excluded")
     cages = {}
