@@ -86,7 +86,7 @@ def test_primary_information_and_24_cage_comparison():
     assert .6/.75==pytest.approx(.8)
     assert (0.6/.75)**.5==pytest.approx(.8944271909999159)
     assert 30-(10+3)==17
-    assert set(C.sum(axis=0))==pytest.approx({0.}) if False else True
+    assert C.sum(axis=0)==pytest.approx(np.zeros(4))
 
 
 @pytest.mark.parametrize("bad", [
