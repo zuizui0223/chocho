@@ -6,6 +6,8 @@ on:
     paths:
       - "scripts/audit_kyoto_original_matched_density_pupation_timeline.py"
       - "tests/test_kyoto_original_matched_density_pupation_timeline.py"
+      - "scripts/verify_kyoto_original_native_timeline_receipt.py"
+      - "provenance/reviewer_defenses/results/kyoto_original_2012_matched_native_timeline_20261014.json"
       - ".github/workflows/kyoto-original-matched-density-pupation.yml"
 permissions:
   contents: read
@@ -26,6 +28,11 @@ jobs:
         run: |
           python scripts/audit_kyoto_original_matched_density_pupation_timeline.py \
             --receipt results/kyoto_original_2012_matched_A_pupation_timeline_v01.json
+      - name: Replay-check ORIGINAL author data against frozen scientific numbers
+        run: |
+          python scripts/verify_kyoto_original_native_timeline_receipt.py \
+            --original results/kyoto_original_2012_matched_A_pupation_timeline_v01.json \
+            --frozen provenance/reviewer_defenses/results/kyoto_original_2012_matched_native_timeline_20261014.json
       - name: Archive original-source descriptive receipt with explicit noncausal scope
         uses: actions/upload-artifact@v4
         with:
