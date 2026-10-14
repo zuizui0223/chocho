@@ -8,6 +8,8 @@ on:
       - "tests/test_kyoto_calendar_demand_identifiability.py"
       - "scripts/reconstruct_kyoto_late_instar_intake.py"
       - "tests/test_kyoto_late_instar_intake.py"
+      - "scripts/analyze_kyoto_matched_age_intake_shape.py"
+      - "tests/test_kyoto_matched_age_intake_shape.py"
       - ".github/workflows/kyoto-two-species-calendar-source.yml"
 permissions:
   contents: read
@@ -23,7 +25,7 @@ jobs:
       - name: Offline parser controls
         run: |
           python -m pip install pytest==8.3.4
-          python -m pytest -q tests/test_kyoto_calendar_demand_identifiability.py tests/test_kyoto_late_instar_intake.py
+          python -m pytest -q tests/test_kyoto_calendar_demand_identifiability.py tests/test_kyoto_late_instar_intake.py tests/test_kyoto_matched_age_intake_shape.py
       - name: Source-verifiable date, feeding-sheet, and co-occurring instar audit
         run: |
           python scripts/audit_kyoto_calendar_demand_identifiability.py \
@@ -32,6 +34,10 @@ jobs:
         run: |
           python scripts/reconstruct_kyoto_late_instar_intake.py \
             --receipt results/kyoto_late_instar_intake_v01.json
+      - name: Compare only common biological ages with individual-normalized intake
+        run: |
+          python scripts/analyze_kyoto_matched_age_intake_shape.py \
+            --receipt results/kyoto_matched_age_intake_shape_v01.json
       - name: Keep the exact source provenance and decision
         uses: actions/upload-artifact@v4
         with:
@@ -39,4 +45,5 @@ jobs:
           path: |
             results/kyoto_two_species_dated_source_v01.json
             results/kyoto_late_instar_intake_v01.json
+            results/kyoto_matched_age_intake_shape_v01.json
           retention-days: 30
