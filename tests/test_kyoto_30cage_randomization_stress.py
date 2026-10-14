@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import math
 import sys
 from pathlib import Path
@@ -115,3 +116,30 @@ def test_design_outcomes_are_distinct_from_known_zero_average_heterogeneity():
     ]
     assert min(local) < 0 < max(local)
     assert x["not_butterfly_sampling_power_or_validity_estimate"]
+
+
+def test_github_original_five_scenario_calibration_receipt_is_reproducible():
+    frozen_path = (ROOT / "provenance/reviewer_defenses/results/"
+                   "kyoto_30cage_synthetic_randomization_calibration_20261014.json")
+    receipt = json.loads(frozen_path.read_text(encoding="utf-8"))
+    assert receipt["status"] == "REPRODUCED_GITHUB_ACTIONS_HYPOTHETICAL_ONLY_ZERO_ANIMAL_RESULTS"
+    assert receipt["evidence"]["number_of_randomizations_per_scenario"] == 256
+    assert not receipt["methodological_warning"]["p_values_calculated"]
+    assert not receipt["methodological_warning"]["fisher_sharp_no_effects_test_valid_for_weak_no_interaction_claim"]
+    assert receipt["biological_limits"]["new_larval_survival_records"] == 0
+    assert receipt["biological_limits"]["new_flight_capable_adult_records"] == 0
+    assert receipt["biological_limits"]["main_GEB_and_PR38_untouched"]
+    for archived in receipt["scenario_results"]:
+        actual = model.calibrate(archived["label"],n_randomizations=256,seed=20261014)
+        for old, new in (
+            ("true_average_interaction",
+             "truth_known_only_because_potential_outcomes_are_invented"),
+            ("mean_greenhouse_adjusted","mean_greenhouse_adjusted_primary"),
+            ("adjusted_bias","adjusted_bias_relative_to_hypothetical_finite_population_D"),
+            ("adjusted_rmse","adjusted_root_mean_squared_error"),
+            ("unblocked_rmse","raw_root_mean_squared_error"),
+            ("mean_model_se","mean_model_based_cage_SE"),
+            ("nominal_model_interval_coverage",
+             "fraction_nominal_model_t_intervals_cover_hypothetical_fixed_population_D"),
+        ):
+            assert archived[old] == pytest.approx(actual[new],abs=1e-8)
