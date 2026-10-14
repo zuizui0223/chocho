@@ -1,0 +1,86 @@
+{
+  "schema": "chocho_kyoto_30cage_synthetic_randomization_calibration_receipt_v01",
+  "date": "2026-10-14",
+  "status": "REPRODUCED_GITHUB_ACTIONS_HYPOTHETICAL_ONLY_ZERO_ANIMAL_RESULTS",
+  "evidence": {
+    "github_workflow_run": 38525162751,
+    "job_id": 115723695025,
+    "tested_commit": "6516e285badb55e827774e43af190e1408a7d298",
+    "test_suite": "31 source-independent software tests passed",
+    "script": "scripts/calibrate_kyoto_30cage_randomization.py",
+    "source_data_used": "None: deterministic 30-cage synthetic potential rates (not original butterfly records)",
+    "randomization_scheme": "10 greenhouses x 3 cages, balanced 7/8/8/7 arms, complementary omission classes, all layers randomized",
+    "number_of_randomizations_per_scenario": 256,
+    "seed": 20261014
+  },
+  "scenario_results": [
+    {
+      "label": "global_no_effects",
+      "true_average_interaction": 0,
+      "mean_greenhouse_adjusted": -0.0035191406250002313,
+      "adjusted_bias": -0.0035191406250002313,
+      "adjusted_rmse": 0.026977783828782232,
+      "unblocked_rmse": 0.03459009947500635,
+      "mean_model_se": 0.025369229526308972,
+      "nominal_model_interval_coverage": 0.9375
+    },
+    {
+      "label": "nonzero_main_effects_without_interaction",
+      "true_average_interaction": 0,
+      "mean_greenhouse_adjusted": -0.003519140625000226,
+      "adjusted_bias": -0.003519140625000226,
+      "adjusted_rmse": 0.02697778382878222,
+      "unblocked_rmse": 0.034590099475006346,
+      "mean_model_se": 0.025369229526308972,
+      "nominal_model_interval_coverage": 0.9375
+    },
+    {
+      "label": "greenhouse_varying_main_effects_without_interaction",
+      "true_average_interaction": 0,
+      "mean_greenhouse_adjusted": 0.00031915555632160906,
+      "adjusted_bias": 0.0003191555563216146,
+      "adjusted_rmse": 0.05483111720481667,
+      "unblocked_rmse": 0.06505843498525961,
+      "mean_model_se": 0.06295939013273735,
+      "nominal_model_interval_coverage": 0.96875
+    },
+    {
+      "label": "opposing_greenhouse_interactions_zero_average",
+      "true_average_interaction": 0,
+      "mean_greenhouse_adjusted": 0.0017551199712024248,
+      "adjusted_bias": 0.0017551199712024358,
+      "adjusted_rmse": 0.07764480613175753,
+      "unblocked_rmse": 0.08715976415214594,
+      "mean_model_se": 0.10275940200647043,
+      "nominal_model_interval_coverage": 0.9921875
+    },
+    {
+      "label": "hypothetical_positive_resource_rescue",
+      "true_average_interaction": 0.15,
+      "mean_greenhouse_adjusted": 0.14648085937499974,
+      "adjusted_bias": -0.0035191406250002777,
+      "adjusted_rmse": 0.026977783828782236,
+      "unblocked_rmse": 0.03459009947500635,
+      "mean_model_se": 0.025369229526308972,
+      "nominal_model_interval_coverage": 0.9375
+    }
+  ],
+  "methodological_warning": {
+    "null_of_no_main_effects_equals_null_of_zero_interaction": false,
+    "fisher_sharp_no_effects_test_valid_for_weak_no_interaction_claim": false,
+    "p_values_calculated": false,
+    "true_population_interaction_known_only_in_synthetic_design": true,
+    "model_based_interval_coverage_in_simulation_not_empirical_validity_guarantee": true,
+    "inferential_robustness_under_unobserved_greenhouse_effects_not_proven": true
+  },
+  "biological_limits": {
+    "new_larval_survival_records": 0,
+    "new_flight_capable_adult_records": 0,
+    "leaf_quality_donor_pilot_not_conducted": true,
+    "current_10_greenhouse_capacity_not_verified": true,
+    "greenhouse_maternal_families_independent_not_verified": true,
+    "nonnative_butterfly_containment_permission_not_verified": true,
+    "host_plant_invasive": false,
+    "main_GEB_and_PR38_untouched": true
+  }
+}

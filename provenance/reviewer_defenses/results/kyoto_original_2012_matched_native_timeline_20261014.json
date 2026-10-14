@@ -1,0 +1,162 @@
+{
+  "schema": "chocho_kyoto_original_2012_native_density_matched_timeline_receipt_v01",
+  "dated": "2026-10-14",
+  "status": "MD5_VERIFIED_POSTHOC_SOURCE_DESCRIPTIVE_NO_NEW_ANIMAL_EXPERIMENT",
+  "provenance": {
+    "publication_doi": "10.1002/ece3.10164",
+    "original_dataset_doi": "10.6084/m9.figshare.23170898",
+    "figshare_file_id": 41146991,
+    "original_file_md5": "0e9ff924e4ae38cb78529ec540887c42",
+    "independent_source_run": "https://github.com/zuizui0223/chocho/actions/runs/38565381822",
+    "independent_original_cages": 30,
+    "cage_repeated_censuses": 690,
+    "greenhouse_id_present_in_csv": false,
+    "original_butterfly_individual_id_present_in_cage_series": false
+  },
+  "stage_accounting": {
+    "source_rows_with_all_stage_values_numeric": 690,
+    "native_total_a_equals_stages_plus_cumul_ap": 685,
+    "introduced_total_s_equals_stages_plus_cumul_sp": 688,
+    "source_rows_where_native_total_plus_cumul_exceeds_original_cohort": 85,
+    "native_total_a_and_cumul_ap_can_not_be_treated_as_disjoint": true,
+    "exact_A_matched_density_cages": 16,
+    "day_7_15_21_matched_cage_by_census_rows": 48,
+    "all_48_early_rows_total_equals_stages_plus_cumulative": true,
+    "all_48_early_rows_cumulative_pupae_zero": true
+  },
+  "originally_published_density_treatment_structure": {
+    "exact_matched_native_A_initial_counts": [
+      2,
+      3,
+      4,
+      6
+    ],
+    "lower_and_higher_S_by_A": {
+      "2": [
+        2,
+        6
+      ],
+      "3": [
+        1,
+        9
+      ],
+      "4": [
+        0,
+        4
+      ],
+      "6": [
+        2,
+        6
+      ]
+    },
+    "cages_per_combination": 2,
+    "treatment_groups_used": 8,
+    "independently_randomized_cages_used": 16,
+    "exact_greenhouse_block_matched": false
+  },
+  "day_comparisons": [
+    {
+      "day": 7,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.08333333333333333,
+      "pupation_fraction_high_S_minus_low_S": 0,
+      "raw_by_original_A": [
+        0.25,
+        0,
+        -0.5,
+        -0.08333333333333333
+      ]
+    },
+    {
+      "day": 15,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.3333333333333333,
+      "pupation_fraction_high_S_minus_low_S": 0,
+      "raw_by_original_A": [
+        0.25,
+        -0.3333333333333333,
+        -0.75,
+        -0.5
+      ]
+    },
+    {
+      "day": 21,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.4166666666666667,
+      "pupation_fraction_high_S_minus_low_S": 0,
+      "raw_by_original_A": [
+        0,
+        -0.3333333333333333,
+        -0.75,
+        -0.5833333333333334
+      ]
+    },
+    {
+      "day": 29,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.4583333333333333,
+      "pupation_fraction_high_S_minus_low_S": -0.34375,
+      "raw_by_original_A": [
+        0,
+        -0.5,
+        -0.75,
+        -0.5833333333333334
+      ]
+    },
+    {
+      "day": 42,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.3854166666666667,
+      "pupation_fraction_high_S_minus_low_S": -0.4479166666666667,
+      "raw_by_original_A": [
+        0,
+        -0.5,
+        -0.625,
+        -0.4166666666666667
+      ]
+    },
+    {
+      "day": 46,
+      "raw_total_a_fraction_high_S_minus_low_S": -0.3854166666666667,
+      "pupation_fraction_high_S_minus_low_S": -0.3854166666666667,
+      "raw_by_original_A": [
+        0,
+        -0.5,
+        -0.625,
+        -0.4166666666666667
+      ],
+      "explicitly_posthoc_sensitivity": true
+    }
+  ],
+  "source_cumulative_pupation_decreases_at_last_census": [
+    {
+      "cage": "3",
+      "species": "Sericinus montela",
+      "day": 48,
+      "previous": 4,
+      "current": 3
+    },
+    {
+      "cage": "20",
+      "species": "Atrophaneura alcinous",
+      "day": 48,
+      "previous": 2,
+      "current": 1
+    }
+  ],
+  "other_source_stage_accounting_exceptions": {
+    "native_stage_vs_total_mismatches": 5,
+    "introduced_stage_vs_total_mismatches": 2,
+    "native_early_exception_cage": "1",
+    "native_early_exception_day": 21,
+    "native_early_exception_part_of_matched_strata": false
+  },
+  "inferential_boundary": [
+    "Newly computed patterns are retrospective temporal decompositions of already published asymmetric butterfly density effects, not a second experiment or independently replicated discovery",
+    "Original total.a and cumul.ap overlap and must not be summed to identify larval deaths",
+    "The day7–21 source total.a disparity occurs before any cumulative pupation in all matched original cages; it suggests a pre-pupation reduction in recorded cohort accounting, not a directly observed cause or death time",
+    "Same initial native count does not fix total larval density because introduced S count is changed",
+    "Only two whole cages per original density combination; there are no greenhouse identifiers to stratify retrospective tests",
+    "Cumulative pupation is not flight-capable adult production and both original day48 decline anomalies remain unrepaired",
+    "No contemporary time-resolved edible plant tissue, plant quality or direct contact recorded",
+    "No p-values, confidence intervals or causal mediator claims from post hoc daily source contrasts"
+  ],
+  "next_pilot_decision": "Begin continuous true edible young/mature Aristolochia monitoring before day3; document focal A larval disappearance/confirmed mortality throughout day7–21 as well as day21–42 pupation, living diapause and actual adult flight. Test source-family/greenhouse variation before any powered trial.",
+  "new_butterfly_experimental_results": false,
+  "main_GEB_and_PR38_untouched": true
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "chocho_kyoto_all_30_greenhouse_information_receipt_v01",
+  "date": "2026-10-14",
+  "reference_published_prior_art": "Hashimoto & Ohgushi 2023 DOI 10.1002/ece3.10164 (30 cages in 10 greenhouses of three cages each in 2012)",
+  "state": "SOURCE_GROUNDED_STATISTICAL_DESIGN_ONLY_NOT_EMPIRICAL_BUTTERFLY_EFFECT",
+  "original_physical_cage_setup_currently_available": false,
+  "comparison": {
+    "eight_greenhouse_exact_BIBD": {
+      "greenhouses": 8,
+      "cages_per_greenhouse": 3,
+      "whole_cages": 24,
+      "arm_counts": [
+        6,
+        6,
+        6,
+        6
+      ],
+      "same_greenhouse_arm_pair_cooccurrences": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "primary_variance_times_cage_sigma2": 0.75,
+      "residual_df": 13
+    },
+    "ten_greenhouse_near_BIBD": {
+      "greenhouses": 10,
+      "cages_per_greenhouse": 3,
+      "whole_cages": 30,
+      "arm_counts": [
+        7,
+        8,
+        8,
+        7
+      ],
+      "complementary_optimal_arm_counts": [
+        8,
+        7,
+        7,
+        8
+      ],
+      "arm_pair_cooccurrence_sorted": [
+        4,
+        5,
+        5,
+        5,
+        5,
+        6
+      ],
+      "primary_variance_times_cage_sigma2": 0.6,
+      "residual_df": 17,
+      "each_competitor_level_total": 15,
+      "each_food_access_level_total": 15
+    }
+  },
+  "contrast": "(SUPPORTED_ADD_S−SUPPORTED_NONE)−(NATURAL_ADD_S−NATURAL_NONE)",
+  "coefficients_in_ARM_order": [
+    1,
+    -1,
+    -1,
+    1
+  ],
+  "scope_of_optimality": "exact exhaustive comparison of the six combinations of two arms omitted three times and two arms omitted twice; NOT a global optimality claim under arbitrary cage restrictions",
+  "six_nearly_balanced_pattern_variance_multipliers_sorted": [
+    0.6,
+    0.6,
+    0.6060606060606061,
+    0.6060606060606061,
+    0.6060606060606061,
+    0.6060606060606061
+  ],
+  "two_optimal_three_omission_sets": [
+    [
+      "NATURAL_NONE",
+      "SUPPORTED_ADD_S"
+    ],
+    [
+      "NATURAL_ADD_S",
+      "SUPPORTED_NONE"
+    ]
+  ],
+  "variance_reduction_fraction_vs_24cage": 0.20000000000000007,
+  "standard_error_ratio_vs_24cage": 0.8944271909999159,
+  "hypothetical_cage_residual_SD": 0.2,
+  "hypothetical_tcritical_df13": 2.1603686564610127,
+  "hypothetical_tcritical_df17": 2.1098155778331806,
+  "hypothetical_95pct_halfwidth_24cage": 0.37418682760697874,
+  "hypothetical_95pct_halfwidth_30cage": 0.3268512238606755,
+  "interval_halfwidth_reduction_fraction": 0.12650259243230622,
+  "biological_causal_limitations": [
+    "No new 4-arm food intervention or flight-capable adult outcome measured",
+    "Cage-level independent homoscedastic Gaussian residuals and greenhouse additive effects are ASSUMPTIONS for t intervals",
+    "2012 greenhouses are not assumed available in 2026",
+    "Maternal source and donor quality independence not measured",
+    "Host leaf stage, moisture, chemistry and larval contacts are not isolated by a resource-support intervention",
+    "No power calculation from empirical residual variance exists",
+    "The original host plant is native Aristolochia debilis; the exotic is the butterfly not the host plant"
+  ],
+  "no_animal_outcomes_in_this_receipt": true,
+  "no_current_greenhouse_inventory": true,
+  "no_legal_or_facility_permissions_asserted": true,
+  "GEB_main_and_PR38_unchanged": true
+}
