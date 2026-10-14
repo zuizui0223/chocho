@@ -325,6 +325,30 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         }
     if not pairs:
         raise ValueError("Original source contains no exact-native-density comparison")
+    # Independently audit that the 16 source-matched A-density cages have
+    # honest early cohort-count accounting, with no early pupation.
+    matched_early_source_counts=Counter()
+    matched_ids=set()
+    for p in pairs.values():
+        matched_ids.update(p["source_cage_ids_lower_S"])
+        matched_ids.update(p["source_cage_ids_higher_S"])
+    for cid in sorted(matched_ids):
+        by_day={_integer(row["day"],"day"):row for row in cages[cid]}
+        for day in (7,15,21):
+            matched_early_source_counts["whole_cage_x_early_census_rows"]+=1
+            source=by_day[day]
+            current_stages=sum(
+                _integer(source[col],col)
+                for col in ([f"a{j}" for j in range(1,6)]+["app","ap"])
+            )
+            cum_pup=_integer(source["cumul.ap"],"cumul.ap")
+            raw_total=_integer(source["total.a"],"total.a")
+            matched_early_source_counts["source_total_equals_stage_count_plus_pupation"]+=int(
+                raw_total==current_stages+cum_pup
+            )
+            matched_early_source_counts["no_A_pupa_already_recorded"]+=int(cum_pup==0)
+    if len(matched_ids)!=16:
+        raise ValueError("Fixed-native-density original source should include 16 whole cages")
     summaries={}
     for planned in actual_cutoffs:
         diffs=[pair["by_day"][planned]["higher_minus_lower_S"] for pair in pairs.values()]
@@ -381,6 +405,9 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
             "S":last_census_S_anomalous,
         },
         "source_stage_total_and_cumulative_reconciliation":stage_reconciliation,
+        "matched_exact_native_density_early_cage_count":len(matched_ids),
+        "matched_density_day7_15_21_source_accounting":dict(matched_early_source_counts),
+        "matched_early_source_coverage_gate_not_mechanism_proof":True,
         "source_cage_records":cage_data,
         "warnings":[
             "Pupation success and its calendar progression, NOT adult eclosion, adult recruitment or confirmed individual death times",
