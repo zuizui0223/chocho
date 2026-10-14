@@ -40,7 +40,7 @@ def _integer(cell, description: str) -> int:
     return int(val)
 
 
-def _load(raw: bytes, *, checksum: str = MD5) -> dict[str, list[dict]]:
+def _load(raw: bytes, *, checksum: str = MD5) -> tuple[dict[str, list[dict]], list[dict]]:
     if hashlib.md5(raw).hexdigest() != checksum:
         raise ValueError("Original Figshare MD5 mismatch")
     reader = csv.DictReader(io.StringIO(raw.decode("utf-8-sig")))
@@ -51,6 +51,7 @@ def _load(raw: bytes, *, checksum: str = MD5) -> dict[str, list[dict]]:
         raise ValueError("Expected 690 original repeated cage-by-date rows")
     cages: dict[str, list[dict]] = defaultdict(list)
     combinations=Counter()
+    anomalies=[]
     for row in rows:
         cage=row["plot.no"]
         if not cage:
@@ -83,30 +84,49 @@ def _load(raw: bytes, *, checksum: str = MD5) -> dict[str, list[dict]]:
             cumulative_s=_integer(row["cumul.sp"],"cum introduced pupae")
             if total_a>a or total_s>s:
                 raise ValueError("Observed larvae exceed original initial assignment")
-            if not previous_a<=cumulative_a<=a:
-                raise ValueError(
-                    "Native A cumulative pupation dropped or exceeded starting cohort: "
-                    f"source_cage={cid},day={row['day']},A_initial={a},S_initial={s},"
-                    f"A_previous_pupae={previous_a},A_now_pupae={cumulative_a}"
-                )
-            # Original introduced S cumulative column is not a required
-            # variable for the native A pupation-time estimand. Preserve any
-            # anomalous decreases in a separate source-quality receipt; never
-            # silently modify, smooth, carry forward, or drop original rows.
-            if cumulative_s>s:
-                raise ValueError(
-                    f"S cumulative pupation exceeds initial assigned source cohort: "
-                    f"cage={cid},day={row['day']},observed={cumulative_s},initial={s}"
-                )
+            for species, current, previous, start in (
+                ("A",cumulative_a,previous_a,a),
+                ("S",cumulative_s,previous_s,s),
+            ):
+                if current<previous or current>start:
+                    anomalies.append({
+                        "source_cage_id":cid,
+                        "species":species,
+                        "day":_integer(row["day"], "day"),
+                        "previous_cumulative_pupation":previous,
+                        "current_source_cumulative_pupation":current,
+                        "initial_assigned_larvae":start,
+                        "anomaly_kind":(
+                            "source_cumulative_decreased" if current<previous
+                            else "source_cumulative_exceeds_initial"
+                        ),
+                        "correction_performed":False,
+                    })
             previous_a,previous_s=cumulative_a,cumulative_s
         cages[cid]=ordered
     if len(combinations)!=15 or any(n!=2 for n in combinations.values()):
         raise ValueError("Original 15 randomized density combinations x 2 whole cages required")
-    return cages
+    return cages, anomalies
 
 
 def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
-    cages=_load(raw,checksum=checksum)
+    cages, anomalies=_load(raw,checksum=checksum)
+    early_native_anomalies=[
+        item for item in anomalies if item["species"]=="A" and item["day"]<=42
+    ]
+    if early_native_anomalies:
+        # No post hoc repair, no selecting clean cages, no treatment comparisons.
+        return {
+            "schema":"chocho_kyoto_2012_matched_A_density_pupation_timeline_v01",
+            "status":"EARLY_NATIVE_CUMULATIVE_SOURCE_INCONSISTENCY_STOP",
+            "publication_DOI":DOI,"original_source_md5":checksum,
+            "source_data_quality_anomalies":anomalies,
+            "early_native_source_anomalies":early_native_anomalies,
+            "whole_cages":len(cages),"cage_x_visit_original_rows":690,
+            "pupation_timing_contrasts_withheld":True,
+            "new_butterfly_intervention_or_fitness_observations":False,
+            "GEB_PR38_untouched":True,
+        }
     cage_data={}
     original_grid=sorted({
         _integer(row["day"],"day") for rows in cages.values() for row in rows
@@ -117,7 +137,12 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         if not candidates:
             raise ValueError("Source starts later than specified observation window")
         actual_cutoffs[str(planned_day)]=max(candidates)
-    actual_cutoffs["original_final"]=original_grid[-1]
+    # Original authors show the near-final day-42 stage/spatial snapshot.
+    # Do NOT use the source's later terminal records as "cumulative" if
+    # there are documented decreases at day 48.
+    last_original_day=original_grid[-1]
+    last_census_native_anomalous=any(x["species"]=="A" for x in anomalies)
+    last_census_S_anomalous=any(x["species"]=="S" for x in anomalies)
 
     for cid, rows in cages.items():
         first=rows[0]
@@ -204,28 +229,15 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         for planned, values in row["outcomes"].items()
         if values["initial_minus_visible_larvae_minus_cumulative_pupae"]<0
     ]
-    s_cumulative_declines=[]
-    for cid, rows in sorted(cages.items()):
-        previous=-1
-        for r in rows:
-            value=_integer(r["cumul.sp"],"source cumulative S pupae")
-            if value<previous:
-                s_cumulative_declines.append({
-                    "source_cage_id":cid,
-                    "current_day":_integer(r["day"],"day"),
-                    "previous_cumulative_S":previous,
-                    "current_cumulative_S":value,
-                    "original_initial_S":_integer(rows[0]["s.density"],"initial S"),
-                })
-            previous=value
     original_terminal_rates={
-        "A":sum(row["outcomes"]["original_final"]["recorded_cumulative_pupae"]
-                for row in cage_data.values())/
-            sum(row["initial_A"] for row in cage_data.values()),
+        "A":(
+            None if last_census_native_anomalous else
+            sum(_integer(cages[cid][-1]["cumul.ap"],"cum A pupae") for cid in cages)/
+            sum(_integer(cages[cid][0]["a.density"],"initial A") for cid in cages)
+        ),
         "S":(
-            None if s_cumulative_declines else
-            sum(_integer(cages[cid][-1]["cumul.sp"],"cum S pupae")
-                for cid in cages)/
+            None if last_census_S_anomalous else
+            sum(_integer(cages[cid][-1]["cumul.sp"],"cum S pupae") for cid in cages)/
             sum(_integer(cages[cid][0]["s.density"],"initial S") for cid in cages)
         ),
     }
@@ -242,14 +254,21 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         "planned_days_and_actual_source_days":actual_cutoffs,
         "native_density_matched_strata":pairs,
         "equal_native_stratum_weight_summary_by_day":summaries,
-        "source_total_pupation_probability_by_species":original_terminal_rates,
-        "introduced_S_cumulative_pupation_decreases_from_original":s_cumulative_declines,
-        "introduced_S_terminal_pupation_summary_withheld_if_inconsistent":bool(s_cumulative_declines),
+        "source_last_census_day":last_original_day,
+        "source_total_terminal_pupation_fraction_if_consistent":original_terminal_rates,
+        "source_data_quality_anomalies":anomalies,
+        "source_A_day_42_or_earlier_cumulative_verified":True,
+        "source_cumulative_anomaly_counts_by_species":dict(Counter(x["species"] for x in anomalies)),
+        "terminal_fraction_withheld_for_species_with_cumulative_anomaly":{
+            "A":last_census_native_anomalous,
+            "S":last_census_S_anomalous,
+        },
         "all_observed_cage_cutoff_negative_unaccounted_residuals":negative_residuals,
         "source_cage_records":cage_data,
         "warnings":[
             "Pupation success and its calendar progression, NOT adult eclosion, adult recruitment or confirmed individual death times",
-            "Introduced S cumulative pupation in source may decrease: retain every anomaly as source quality, withhold species-level S terminal summary",
+            "Source A and S cumulative columns can decrease after the author's day-42 window; retain all raw anomaly rows, withhold their terminal summary",
+            "Only author's prelisted day-7/15/21/29/42 or last preceding source census is used in stage chronology",
             "The same 2023 source paper has already reported density effects on final pupation survival and developmental time",
             "Post hoc S high vs S low matched A comparisons use the ORIGINAL density design: total larval headcount also differs",
             "Only 2 whole cages per original density cell; greenhouse IDs and maternal lineage IDs absent from original Figshare CSV",
