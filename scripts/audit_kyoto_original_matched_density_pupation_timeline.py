@@ -153,7 +153,7 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
                 })
     return {
         "counts":dict(result),
-        "examples_not_selected_by_treatment_or_outcome":illustrative,
+        "illustrative_overlapping_count_examples_not_an_inference_sample":illustrative,
         "safety_interpretation":(
             "Do NOT interpret initial_A minus total.a minus cumul.ap as "
             "confirmed deaths: total.a and stage/cumulative pupal counts may "
@@ -191,6 +191,15 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         if not candidates:
             raise ValueError("Source starts later than specified observation window")
         actual_cutoffs[str(planned_day)]=max(candidates)
+    # Extra late day 46 is a POSTHOC sensitivity, not a primary checkpoint.
+    # If the native cumulative outcome is already inconsistent by that day,
+    # withhold the whole sensitivity rather than dropping "bad" cages.
+    day46_available=46 in original_grid
+    day46_source_valid=day46_available and not any(
+        a["species"]=="A" and a["day"]<=46 for a in anomalies
+    )
+    if not day46_source_valid:
+        actual_cutoffs.pop("46",None)
     # Original authors show the near-final day-42 stage/spatial snapshot.
     # Do NOT use the source's later terminal records as "cumulative" if
     # there are documented decreases at day 48.
@@ -299,7 +308,8 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         "cage_x_visit_original_rows":sum(len(x) for x in cages.values()),
         "original_census_day_grid":original_grid,
         "planned_days_and_actual_source_days":actual_cutoffs,
-        "last_clean_preterminal_day_46_is_posthoc_sensitivity_only":True,
+        "last_clean_preterminal_day_46_is_posthoc_sensitivity_only":day46_source_valid,
+        "posthoc_day46_withheld_if_native_cumulative_invalid_or_unavailable":not day46_source_valid,
         "native_density_matched_strata":pairs,
         "equal_native_stratum_weight_summary_by_day":summaries,
         "source_last_census_day":last_original_day,
