@@ -68,7 +68,55 @@ D_stage =
 
 **STOP:** 法的・施設上の飼育/輸送/封じ込め確認がとれない場合、または孵化後の初期死亡・不明個体が多すぎて給餌可否の判定ができない場合。野外への放飼は行わない。
 
-## 4. 既存のPR #40への影響
+## 4. 実際のパイロットデータがそろった場合の監査
+
+`scripts/audit_kyoto_leaf_stage_pilot.py` は本研究に特化した**観測記録の整合性確認**であり、生きた蝶を操作せず、標本測定値を生成せず、統計的な生態学的発見を判定しない。
+
+3つの実測CSVを使う。実際のデータがない現在はこの監査を**フィールドで実行済みとはしない**。コードのテストに使うCSV行は100%人工的な整合性フィクスチャである。
+
+**`leaf_calibration.csv`** — 1行は本当に採集・乾燥測定した葉バッチ：
+
+```csv
+donor_plant_id,leaf_batch_id,host_species,leaf_stage,sample_date,shoot_node,whole_plant_age_years,leaf_area_cm2,fresh_mass_g,dry_mass_g
+```
+
+- `host_species` は `Aristolochia debilis`、`leaf_stage` は `young`／`mature` のみ。株年齢の真値が不明なら空欄、架空の植え付け年で埋めない。
+- 同じ株から両葉齢を取って**株内ペア**にし、鮮重・乾重・葉面積から葉齢別の乾物比および単位面積当たり乾重を、**ドナー株を等重み**として集計する。何枚もの葉を同じ株から採って独立株数を水増ししない。
+- `dry_mass_g > fresh_mass_g` や同一バッチIDの重複、日付不明、葉齢不明は入力エラー。2株以上で若葉・成熟葉がともに採取できて初めて**構造的なペア較正が可能**と判定する。ただし2株で充分な統計的精度があるという意味ではない。
+
+**`feeding_assay.csv`** — 1行は独立に割付したカップ／密閉飼育容器：
+
+```csv
+cup_id,source_block_id,maternal_family_id,species,instar_class,assigned_leaf_stage,source_donor_plant_id,assay_leaf_batch_id,initial_larvae_n,alive_end_n,observation_minutes,feeding_confirmed
+```
+
+- `species` は `Atrophaneura alcinous`／`Sericinus montela`、`instar_class` は `L1`（主）／`L3`（追加）。
+- カップは一度しか数えず、同じ母系のカップを別母系とみなさない。母系とドナー株は別々の識別子。
+- `feeding_confirmed` は `yes`／`no`／`unknown`。**unknown は no の分母へ入れない**。`no` は予め確保した観測の機会に食痕を確認できないという操作上の分類で、真の長期拒食の証明ではない。
+- 葉較正のバッチは乾燥後摂食させられないので、`assay_leaf_batch_id` は**新しい供給用生葉**のIDとし、同じ株 `source_donor_plant_id` にある較正情報へ結びつける。較正に使って破壊したバッチと同一視しない。
+- 主な4セル（2蝶種×L1×若葉/成熟葉）に各々別の母系2以上＋別ドナー2以上の実記録が存在するかを構造チェックするが、これは**確認的な生態効果判定、十分な検出力を意味しない**。
+
+**`facility_inventory.csv`** — いま**実際に使える**温室ごとに1行：
+
+```csv
+greenhouse_id,eligible_whole_cages
+```
+
+- 値は、その時点で無作為化に必要な飼育・封じ込め・給餌条件を満たした**ケージ全体の数**であり鉢数や幼虫数ではない。
+- 4または6処理の**温室内完全ブロック**を作れる数をそれぞれ `sum(floor(cages_in_greenhouse / 4))`、`sum(floor(cages_in_greenhouse / 6))` で報告。温室効果を無視して単に30ケージを寄せ集めた統計反復にはしない。
+- 2012年論文の温室3ケージを10棟に割った構造は、この関数では4・6処理の温室内完全ブロック数がどちらもゼロになる。しかし**現在の設備が2012年と同じかどうかは未確認**である。
+
+```bash
+python scripts/audit_kyoto_leaf_stage_pilot.py \
+  --leaf-calibration leaf_calibration.csv \
+  --feeding-assay feeding_assay.csv \
+  --facility-inventory facility_inventory.csv \
+  --receipt results/kyoto_leaf_stage_pilot_v01.json
+```
+
+出力は生の行を推測・補完せず、観測した母系・株の数、葉齢別乾物換算、カップで確認された食痕、unknown数、独立温室容量、ファイルのSHA256を出す。レコードがなければ実測の差は**不明**であり、0%や100%と捏造しない。葉の自然乾燥を差し引いた真正の摂食量、個体群の定着、飛翔成虫までの機能を計算するものでもない。
+
+## 5. 既存のPR #40への影響
 
 1. **4処理（S追加×葉へのアクセス補充）を最初の候補として維持**。新しい若葉率実験は、Phase 0–1 を越えた場合だけ比較検討する未実施の独立案。
 2. 6処理の同種追加を本実験に採用するには、焦点Aと追加Aを生涯追跡して区別できることを別パイロットで実証する。できないなら**6処理は中止し4処理に縮小**する。追加同種の個体数一致は食草需要一致ではない。
