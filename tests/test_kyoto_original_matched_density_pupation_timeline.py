@@ -101,7 +101,7 @@ def test_monotonic_cumulative_pupation_is_enforced():
     writer.writeheader()
     writer.writerows(stream)
     bad=fh.getvalue().encode()
-    with pytest.raises(ValueError,match="Cumulative pupation dropped"):
+    with pytest.raises(ValueError,match="cumulative pupation dropped"):
         m.analyze_source(bad,checksum=hashlib.md5(bad).hexdigest())
 
 
