@@ -74,7 +74,7 @@ def test_only_exact_native_density_strata_are_compared_without_regression_fabric
         assert pair["lower_S_initial_n"]<pair["higher_S_initial_n"]
         assert len(pair["source_cage_ids_lower_S"])==2
         assert len(pair["source_cage_ids_higher_S"])==2
-    assert x["equal_native_stratum_weight_summary_by_day"]["original_final"][
+    assert x["equal_native_stratum_weight_summary_by_day"]["42"][
         "number_of_source_matched_A_density_strata"
     ]==4
     assert "p_values" not in x
