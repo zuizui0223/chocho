@@ -118,6 +118,8 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
     """
     result=Counter()
     illustrative=[]
+    native_mismatches=[]
+    introduced_mismatches=[]
     for cid, rows in sorted(cages.items()):
         prior_total_a=prior_total_s=None
         for row in rows:
@@ -155,6 +157,20 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
             result["introduced_total_equals_current_all_stages_plus_cumulative_pupae"]+=int(
                 total_s==introduced_all+pupa_s
             )
+            if total_a!=native_all+pupa_a:
+                native_mismatches.append({
+                    "source_cage_id":cid,"day":_integer(row["day"],"day"),
+                    "raw_total_a":total_a,"current_a_stages_including_current_pupae":native_all,
+                    "raw_cumul_ap":pupa_a,
+                    "difference_raw_total_minus_stages_minus_cumul":total_a-native_all-pupa_a,
+                })
+            if total_s!=introduced_all+pupa_s:
+                introduced_mismatches.append({
+                    "source_cage_id":cid,"day":_integer(row["day"],"day"),
+                    "raw_total_s":total_s,"current_s_stages_including_current_pupae":introduced_all,
+                    "raw_cumul_sp":pupa_s,
+                    "difference_raw_total_minus_stages_minus_cumul":total_s-introduced_all-pupa_s,
+                })
             if prior_total_a is not None and total_a>prior_total_a:
                 result["native_total_increases_between_censuses"]+=1
             if prior_total_s is not None and total_s>prior_total_s:
@@ -175,6 +191,8 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
                 })
     return {
         "counts":dict(result),
+        "native_total_minus_stage_plus_cumulative_exception_rows":native_mismatches,
+        "introduced_total_minus_stage_plus_cumulative_exception_rows":introduced_mismatches,
         "illustrative_overlapping_count_examples_not_an_inference_sample":illustrative,
         "safety_interpretation":(
             "Do NOT interpret initial_A minus total.a minus cumul.ap as "
