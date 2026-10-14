@@ -1,0 +1,104 @@
+{
+  "schema": "chocho_kyoto_six_arm_causal_estimand_contract_v02",
+  "created_on": "2026-10-14",
+  "status": "PRE_FIELD_DESIGN_REVISION_NOT_PUBLIC_PREREGISTRATION",
+  "publication_context": "Independent follow-up to Hashimoto and Ohgushi 2023 Ecology and Evolution DOI 10.1002/ece3.10164",
+  "experiment_executed": false,
+  "source_host_plant": {
+    "species": "Aristolochia debilis",
+    "native_in_Japan": true
+  },
+  "focal_butterfly": "Atrophaneura alcinous",
+  "added_butterflies": [
+    "Atrophaneura alcinous",
+    "Sericinus montela"
+  ],
+  "randomization_unit": "WHOLE independent cage containing all host plants",
+  "original_focal_cohort_cannot_be_augmented_postassignment": true,
+  "treatments": {
+    "NATURAL_NONE": [
+      0,
+      "none"
+    ],
+    "NATURAL_ADD_A": [
+      0,
+      "A"
+    ],
+    "NATURAL_ADD_S": [
+      0,
+      "S"
+    ],
+    "SUPPORTED_NONE": [
+      1,
+      "none"
+    ],
+    "SUPPORTED_ADD_A": [
+      1,
+      "A"
+    ],
+    "SUPPORTED_ADD_S": [
+      1,
+      "S"
+    ]
+  },
+  "primary": {
+    "id": "S_competitor_x_food",
+    "label": "Does randomized edible food support modify the TOTAL effect of adding Sericinus?",
+    "coefficients": {
+      "SUPPORTED_ADD_S": 1,
+      "SUPPORTED_NONE": -1,
+      "NATURAL_ADD_S": -1,
+      "NATURAL_NONE": 1
+    },
+    "response": "flight-capable A adults / all originally assigned focal A larvae; block-equal cage risk contrasts",
+    "interpretation": "Assigned food-support strategy x total invader addition, NOT biomass-only mediator or direct interaction",
+    "primary_selected_before_any_new_field_outcomes": true
+  },
+  "key_secondary": {
+    "id": "identity_x_food_secondary",
+    "label": "Does food support modify the contrast between equal-headcount added S and A?",
+    "coefficients": {
+      "SUPPORTED_ADD_S": 1,
+      "SUPPORTED_ADD_A": -1,
+      "NATURAL_ADD_S": -1,
+      "NATURAL_ADD_A": 1
+    },
+    "interpretation": "Extra species assignment bundled with different species-specific consumption; NOT identified direct interference"
+  },
+  "other_secondary": [
+    "S_competitor_natural",
+    "S_competitor_supported",
+    "A_competitor_natural",
+    "A_competitor_supported",
+    "identity_natural_S_minus_A",
+    "identity_supported_S_minus_A",
+    "A_competitor_x_food"
+  ],
+  "planning": {
+    "theoretical_precision_only": true,
+    "pilot_block_variance_observed": false,
+    "field_animal_authorizations_obtained": false,
+    "separate_pilot_required": true,
+    "min_blocks_to_display_reference_interval": 10,
+    "no_claim_that_ten_blocks_is_adequate": true,
+    "donor_host_plant_quality_and_age_balanced_required": true
+  },
+  "outcomes": {
+    "flight_capable_adult": "observed success",
+    "dead_immature": "confirmed failure",
+    "pupa_confirmed_dead": "confirmed failure",
+    "adult_nonflight": "failure of flight-capable endpoint",
+    "diapause_alive": "unknown eventual adult emergence, not death",
+    "pupa_alive_pending_emergence": "unknown eventual adult emergence, not death",
+    "lost_to_followup": "unknown",
+    "other_documented": "unknown"
+  },
+  "negative_controls": [
+    "True experiment lacks prior source-catapult of 2012 mixed-cage endpoints to new treatments",
+    "Postrandomization observed edible leaf area never determines inclusion",
+    "Focal native A larvae never pooled with added A",
+    "Additional A and S headcount parity does not mean equal food consumption",
+    "Plant-quality and contact-pathway mediation remain unidentified from support strategy alone"
+  ],
+  "main_GEB_manuscript_unchanged": true
+}
