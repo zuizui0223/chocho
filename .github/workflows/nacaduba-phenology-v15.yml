@@ -1,0 +1,47 @@
+name: Butterfly flower provenance and stand phenology v15
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - 'research/nacaduba_stage_v15/**'
+      - '.github/workflows/nacaduba-phenology-v15.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run all in-folder source audits without external dependencies
+        working-directory: research/nacaduba_stage_v15
+        run: python -m unittest discover -s . -p 'test_*.py' -v
+      - name: Recompute both source summaries with explicit butterflies not measured
+        working-directory: research/nacaduba_stage_v15
+        run: |
+          python audit.py > iriomote_clones.json
+          python analyze.py > peninsular_malaysia_monthly.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          i=json.loads(Path('iriomote_clones.json').read_text())
+          m=json.loads(Path('peninsular_malaysia_monthly.json').read_text())
+          assert i['butterfly_flowering_mismatch_effect'] is None
+          assert m['joint_singapore_butterfly_plant_pheno_effect'] is None
+          assert [v['thai_only_10day_bins'] for v in i['years']]==[9,6,8]
+          assert m['reported_months']==23 and m['omitted_month']==['1989-02']
+          assert m['max']['intensity_percent']==85.6 and m['min']['intensity_percent']==0.6
+          print('Plant-only analyses verified; no fabricated butterfly-phenology association.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nacaduba-v15-iriomote-and-malaysia-plant-audits
+          path: |
+            research/nacaduba_stage_v15/iriomote_clones.json
+            research/nacaduba_stage_v15/peninsular_malaysia_monthly.json
+          retention-days: 30
