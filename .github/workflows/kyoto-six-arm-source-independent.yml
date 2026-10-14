@@ -9,6 +9,8 @@ on:
       - "scripts/analyze_kyoto_six_arm_identity_food.py"
       - "tests/test_kyoto_six_arm_randomization.py"
       - "tests/test_kyoto_six_arm_identity_food.py"
+      - "scripts/plan_kyoto_six_arm_precision_sensitivity.py"
+      - "tests/test_kyoto_six_arm_precision_sensitivity.py"
       - ".github/workflows/kyoto-six-arm-source-independent.yml"
 
 permissions:
@@ -29,4 +31,10 @@ jobs:
         run: |
           python -m pytest -q \
             tests/test_kyoto_six_arm_randomization.py \
-            tests/test_kyoto_six_arm_identity_food.py
+            tests/test_kyoto_six_arm_identity_food.py \
+            tests/test_kyoto_six_arm_precision_sensitivity.py
+      - name: Write hypothetical precision scenarios for pre-pilot budget check
+        run: |
+          python scripts/plan_kyoto_six_arm_precision_sensitivity.py \
+            --receipt results/kyoto_six_arm_hypothetical_precision.json
+          test -s results/kyoto_six_arm_hypothetical_precision.json
