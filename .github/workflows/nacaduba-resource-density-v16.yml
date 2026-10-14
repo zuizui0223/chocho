@@ -1,0 +1,45 @@
+name: Butterfly flowering density v16
+on:
+  push:
+    branches:
+      - analysis/resource-redundancy-20261011
+    paths:
+      - 'research/nacaduba_stage_v16/**'
+      - '.github/workflows/nacaduba-resource-density-v16.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-locked-gate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recheck parent plant flowering transcription
+        working-directory: research/nacaduba_stage_v15
+        run: python -m unittest discover -s . -p 'test_*.py' -v
+      - name: V16 controlled source portfolio and density threshold tests
+        working-directory: research/nacaduba_stage_v16
+        run: python -m unittest discover -s . -p 'test_*.py' -v
+      - name: Recompute observed and exact combinatorial comparison
+        run: |
+          python research/nacaduba_stage_v16/audit.py > research/nacaduba_stage_v16/checked_summary.json
+          python - <<'PY'
+          import json
+          p='research/nacaduba_stage_v16/checked_summary.json'
+          d=json.load(open(p))
+          assert d['full_calendar_binyears']==57
+          assert d['g_matched_size_subsets_as_extreme']==1
+          assert d['seven_clone_matched_portfolios_complete']==2184
+          assert [d['concurrent_flowering_proxy'][k]['at_least_5'] for k in ('all','g_plus_h','three_clones')]==[40,29,0]
+          assert d['butterfly_larval_success_effect'] is None
+          print('Source-derived quantitative gate check complete, no butterfly-survival attribution.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nacaduba-v16-source-locked-calendars-density
+          path: research/nacaduba_stage_v16/checked_summary.json
+          retention-days: 30
