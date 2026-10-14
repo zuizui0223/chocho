@@ -91,6 +91,9 @@ def test_30_cage_primary_it_treatment_design_and_information():
     assert result["raw_intention_to_treat_arm_mean_difference_in_differences"]==pytest.approx(.4)
     assert fit["model_based_standard_error_given_homoscedastic_cage_residuals"]==pytest.approx(0,abs=1e-9)
     assert fit["nominal_t17_95pct_interval_under_cage_error_assumptions"]==pytest.approx([.4,.4])
+    assert result["cage_heteroscedasticity_HC3_sensitivity_only"]["hc3_cage_level_primary_SE"]==pytest.approx(0,abs=1e-9)
+    assert result["ten_greenhouse_delete_one_jackknife_SE_descriptive_only"]==pytest.approx(0,abs=1e-9)
+    assert result["jackknife_SE_is_NOT_randomization_exact_or_power_evidence"]
     assert result["no_postrandomization_food_or_survivor_selection"]
     assert result["status"]=="FUTURE_AUTHENTIC_FIELD_DATA_REQUIRED_NO_BUTTERFLY_RESULTS"
 
@@ -191,3 +194,19 @@ def test_observed_count_still_30_not_thirty_larvae():
     assert sum(x["original_randomized_whole_cages"] for x in r["per_arm_original_cohort_outcomes"].values())==30
     assert sum(x["confirmed_flight_capable_focal_A_adults"] for x in r["per_arm_original_cohort_outcomes"].values())>0
     assert not r["greenhouse_specific_treatment_effects_not_identifiable_with_one_cage_per_cell"] is False
+
+
+def test_heterogeneous_synthetic_cage_outcome_exposes_both_sensitivity_diagnostics():
+    a,b,c,d=fixture()
+    target=next(row for row in a if row["treatment"]=="NATURAL_ADD_S")
+    source_cage=target["cage_id"]
+    extra=next(row for row in c if row["cage_id"]==source_cage
+               and row["cohort_role"]=="focal" and row["fate"]=="dead_immature")
+    extra["fate"]="flight_capable_adult"
+    r=m.analyze(a,b,c,d)
+    hc3=r["cage_heteroscedasticity_HC3_sensitivity_only"]
+    assert hc3["hc3_cage_level_primary_SE"]>0
+    assert 0 < hc3["max_hat_leverage"] < 1
+    assert hc3["NOT_greenhouse_cluster_robust_or_validated_biological_inference"]
+    assert r["ten_greenhouse_delete_one_jackknife_SE_descriptive_only"]>0
+    assert r["jackknife_SE_is_NOT_randomization_exact_or_power_evidence"]
