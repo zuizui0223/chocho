@@ -87,22 +87,41 @@ def test_original_source_identity_fails_closed():
         m.analyze_source(fake_source()+b"x")
 
 
-def test_monotonic_cumulative_pupation_is_enforced():
+def _with_fake_native_pupation_drop(day_before: int, day_after: int):
     raw=fake_source()
     stream=list(csv.DictReader(io.StringIO(raw.decode())))
     first=stream[0]
     for row in stream:
-        if row["plot.no"]==first["plot.no"] and int(row["day"])==45:
-            row["cumul.ap"]="3"
-        if row["plot.no"]==first["plot.no"] and int(row["day"])==43:
+        if row["plot.no"]==first["plot.no"] and int(row["day"])==day_before:
             row["cumul.ap"]="4"
+        if row["plot.no"]==first["plot.no"] and int(row["day"])==day_after:
+            row["cumul.ap"]="3"
     fh=io.StringIO()
     writer=csv.DictWriter(fh,fieldnames=m.COLUMNS)
     writer.writeheader()
     writer.writerows(stream)
-    bad=fh.getvalue().encode()
-    with pytest.raises(ValueError,match="cumulative pupation dropped"):
-        m.analyze_source(bad,checksum=hashlib.md5(bad).hexdigest())
+    return fh.getvalue().encode()
+
+
+def test_early_nonmonotone_native_cumulative_pupation_stops_inference_without_repair():
+    bad=_with_fake_native_pupation_drop(39,41)
+    out=m.analyze_source(bad,checksum=hashlib.md5(bad).hexdigest())
+    assert out["status"]=="EARLY_NATIVE_CUMULATIVE_SOURCE_INCONSISTENCY_STOP"
+    assert out["pupation_timing_contrasts_withheld"]
+    assert out["early_native_source_anomalies"]
+    assert out["early_native_source_anomalies"][0]["day"]==41
+    assert out["early_native_source_anomalies"][0]["correction_performed"] is False
+    assert "native_density_matched_strata" not in out
+
+
+def test_late_unnatural_drop_is_disclosed_without_fabricated_final_pupation():
+    bad=_with_fake_native_pupation_drop(43,45)
+    out=m.analyze_source(bad,checksum=hashlib.md5(bad).hexdigest())
+    assert out["source_A_day_42_or_earlier_cumulative_verified"] is True
+    assert out["terminal_fraction_withheld_for_species_with_cumulative_anomaly"]["A"]
+    assert out["source_total_terminal_pupation_fraction_if_consistent"]["A"] is None
+    assert out["source_data_quality_anomalies"]
+    assert out["source_data_quality_anomalies"][0]["day"]==45
 
 
 def test_source_has_no_current_host_biomass_or_adult_flight_claim():
