@@ -82,7 +82,7 @@ def test_redundant_row_excludes_both_adjacent_intervals():
 def test_duplicate_day_must_fail():
     rows = synthetic()
     rows[-1]["date"] = rows[-2]["date"]
-    with pytest.raises(ValueError, match="duplicate identity/date"):
+    with pytest.raises(ValueError, match="duplicate identity/calendar-day"):
         kyoto.reconstruct(rows, species="A")
 
 
