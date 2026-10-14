@@ -12,6 +12,8 @@ on:
       - "scripts/plan_kyoto_six_arm_precision_sensitivity.py"
       - "tests/test_kyoto_six_arm_precision_sensitivity.py"
       - "tests/test_kyoto_six_arm_claim_contract.py"
+      - "scripts/audit_kyoto_leaf_stage_pilot.py"
+      - "tests/test_kyoto_leaf_stage_pilot.py"
       - "docs/exploratory/KYOTO_SIX_ARM_PRIMARY_SECONDARY_CONTRACT_V02.json"
       - ".github/workflows/kyoto-six-arm-source-independent.yml"
 
@@ -35,7 +37,8 @@ jobs:
             tests/test_kyoto_six_arm_randomization.py \
             tests/test_kyoto_six_arm_identity_food.py \
             tests/test_kyoto_six_arm_precision_sensitivity.py \
-            tests/test_kyoto_six_arm_claim_contract.py
+            tests/test_kyoto_six_arm_claim_contract.py \
+            tests/test_kyoto_leaf_stage_pilot.py
       - name: Write hypothetical precision scenarios for pre-pilot budget check
         run: |
           python scripts/plan_kyoto_six_arm_precision_sensitivity.py \
