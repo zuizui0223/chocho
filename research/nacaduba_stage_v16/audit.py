@@ -66,7 +66,7 @@ def audit():
   triples=[]
   for n in (1,2,3):
     triples=[comb for comb in itertools.combinations(masks,n)
-             if sum((0 for _ in []),0)==0 and _union(comb,masks)==total]
+             if _union(comb,masks)==total]
     if triples:break
   def flowering_density(subset):
     values=[sum(bool(m&(1<<t)) for cid,m in ramet_masks if cid in subset) for t in range(108)]
