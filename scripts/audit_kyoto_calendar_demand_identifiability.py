@@ -13,6 +13,7 @@ import hashlib
 import io
 import json
 import statistics
+from datetime import datetime
 from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -171,6 +172,10 @@ def summarize_food(columns: list[str], rows: list[dict[str, str]]) -> dict:
     dates: Counter[str] = Counter()
     no_individuals: Counter[str] = Counter()
     memo: Counter[str] = Counter()
+    stages: Counter[str] = Counter()
+    stage_by_group_size: Counter[str] = Counter()
+    first_dates: dict[str, tuple[str, str]] = {}
+    records_by_id: dict[str, list[dict[str, str]]] = defaultdict(list)
     incomplete = Counter()
     for row in rows:
         ident = str(row["id"] or "").strip()
@@ -179,22 +184,58 @@ def summarize_food(columns: list[str], rows: list[dict[str, str]]) -> dict:
             raise ValueError("food-demand observation without larva/group ID or date")
         ids[ident].add(date)
         dates[date] += 1
+        records_by_id[ident].append(row)
+        stage = str(row.get("stage") or "").strip()
+        stages[stage or "blank"] += 1
+        if "stage" in columns and not stage:
+            incomplete["missing_stage"] += 1
         number_group = number(row["no.individuals"])
         if number_group is None or number_group <= 0 or not number_group.is_integer():
             incomplete["invalid_group_size"] += 1
         else:
             no_individuals[str(int(number_group))] += 1
+            stage_by_group_size[f"{stage or 'blank'}|n={int(number_group)}"] += 1
         for field in ("taken", "given", "mass"):
             if number(row[field]) is None:
                 incomplete[f"missing_or_non_numeric_{field}"] += 1
         memo[(row.get("memo") or "").strip().lower() or "blank"] += 1
+    for ident, seq in sorted(records_by_id.items()):
+        try:
+            ordered = sorted(seq, key=lambda row: datetime.strptime(row["date"], "%Y/%m/%d"))
+        except ValueError:
+            ordered = sorted(seq, key=lambda row: row["date"])
+        first_dates[ident] = (
+            str(ordered[0]["date"]), str(ordered[0].get("stage", ""))
+        )
+    duplicates = {
+        ident: [date for date, n in Counter(row["date"] for row in seq).items() if n > 1]
+        for ident, seq in records_by_id.items()
+        if any(n > 1 for n in Counter(row["date"] for row in seq).values())
+    }
+    formatted_dates = []
+    for date in dates:
+        try:
+            formatted_dates.append(datetime.strptime(date, "%Y/%m/%d").date())
+        except ValueError:
+            try:
+                formatted_dates.append(datetime.fromisoformat(date).date())
+            except ValueError:
+                incomplete["invalid_date"] += 1
     return {
         "raw_rows": len(rows),
         "raw_columns": columns,
         "unique_food_trial_ids": len(ids),
         "distinct_observation_dates": len(dates),
         "dates_with_most_rows": dates.most_common(3),
-        "date_range_lexical_only": [min(dates), max(dates)],
+        "date_range_iso": (
+            [min(formatted_dates).isoformat(), max(formatted_dates).isoformat()]
+            if len(formatted_dates) == len(dates) else None
+        ),
+        "distinct_trial_start_dates": dict(Counter(pair[0] for pair in first_dates.values())),
+        "stage_code_counts": dict(stages),
+        "stage_by_group_size_counts": dict(stage_by_group_size),
+        "per_trial_first_date_and_stage": dict(first_dates),
+        "duplicate_ID_date_rows": duplicates,
         "group_size_counts": dict(sorted(no_individuals.items())),
         "memo_counts": dict(memo.most_common(12)),
         "data_quality": dict(sorted(incomplete.items())),
@@ -204,12 +245,13 @@ def summarize_food(columns: list[str], rows: list[dict[str, str]]) -> dict:
             for row in rows[:2]
         ],
         "boundary": (
-            "Given/taken wet leaf mass and dated trial records can identify "
-            "candidate laboratory demand chronology, but are NOT interpretable "
-            "as daily consumed edible dry biomass until source handling, plant "
-            "water loss, duplicates/redudant memos, trial alignment and "
-            "observation intervals are audited. No mixed-cage leaf supply "
-            "chronology is in this original food-demand dataset."
+            "Source-paper Section 2.2 specifies 2-day leaves given then removed, "
+            "converted individually from fresh to dry mass before subtracting. "
+            "A valid consumption curve requires previous-given/current-taken "
+            "pairing, mixed group-to-individual handling, source unit checks, "
+            "unambiguous stage assignment and explicit censoring of redundant "
+            "rows. These isolated 2016 food assays are not the 2012 mixed-cage "
+            "food availability series and do not identify timing causality."
         ),
     }
 
