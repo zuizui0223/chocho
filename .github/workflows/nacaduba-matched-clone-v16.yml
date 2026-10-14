@@ -1,0 +1,40 @@
+name: Nacaduba matched clone robustness v16
+on:
+  push:
+    branches: [analysis/resource-redundancy-20261011]
+    paths:
+      - 'research/nacaduba_stage_v16/**'
+      - '.github/workflows/nacaduba-matched-clone-v16.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recompute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact finite clone-source relabeling audit
+        run: |
+          python research/nacaduba_stage_v16/matched_clone_null.py > v16_source_clone_null.json
+          python - <<'PY'
+          import json
+          d=json.load(open('v16_source_clone_null.json'))
+          assert d['unique_flowering_tenday_bins_by_season']==[9,6,8]
+          assert d['count_matched_groups']==2520
+          assert d['count_groups_at_least_observed']==1
+          assert d['matched_group_score_second_highest']==10
+          assert d['all_year_flowering_conditioned_groups']==15
+          assert d['all_year_flowering_conditioned_ge_observed']==1
+          assert d['causal_genotype_effect'] is None
+          assert d['butterfly_breeding_survival_effect'] is None
+          print('v16 exact clone-null test passed; butterfly causality not inferred')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-nacaduba-exact-clone-null-v16
+          path: v16_source_clone_null.json
+          retention-days: 30
