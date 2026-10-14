@@ -6,14 +6,17 @@ originally assigned additional A or S larvae have separate mandatory fates.
 Unknown and living-diapause pupae stay in denominators and are neither coded as
 confirmed death nor automatically as eventual flight-capable adults.
 
-Primary planned contrast:
+Primary planned contrast (original 2023 biological puzzle):
+  (SUPPORTED_ADD_S - SUPPORTED_NONE) -
+  (NATURAL_ADD_S   - NATURAL_NONE)
+
+Key secondary contrast (is any rescue specific to the added species?):
   (SUPPORTED_ADD_S - SUPPORTED_ADD_A) -
   (NATURAL_ADD_S   - NATURAL_ADD_A)
 
-This identifies a food-support-strategy x added-identity difference in TOTAL
-interventions at a fixed ADDED HEADCOUNT, not a pure plant-chemistry or direct
-heterospecific interference effect. Added A eats more per larva than added S
-in the original 2023 trials: equal headcount is not equal consumption.
+Both estimate effects of assigned TREATMENT STRATEGIES, not pure leaf biomass
+or direct heterospecific interference. Added A eats more per larva than
+added S in the original 2023 trials: equal headcount is not equal feeding.
 """
 from __future__ import annotations
 
@@ -54,7 +57,7 @@ NAME_S = "Sericinus montela"
 
 # Within-block contrast coefficients.
 COEFFS = {
-    "primary_identity_x_food": {
+    "identity_x_food_secondary": {
         "SUPPORTED_ADD_S": +1, "SUPPORTED_ADD_A": -1,
         "NATURAL_ADD_S": -1, "NATURAL_ADD_A": +1,
     },
@@ -73,7 +76,7 @@ COEFFS = {
         "NATURAL_ADD_A": -1, "NATURAL_NONE": +1,
     },
 }
-PRIMARY = "primary_identity_x_food"
+PRIMARY = "S_competitor_x_food"
 
 
 def csv_rows(path: Path, columns: list[str]) -> list[dict[str, str]]:
@@ -442,6 +445,15 @@ def analyze(allocation: list[dict], info: list[dict], fates: list[dict],
         "extra_larvae_have_same_HEADCOUNT_not_same_consumption": True,
         "primary_treatments_are_intention_to_treat": True,
         "primary_DOES_NOT_condition_on_achieved_food_availability": True,
+        "primary_scientific_question": (
+            "Does assigned food support alleviate the TOTAL intervention effect "
+            "of adding Sericinus to the original Atrophaneura recipient cohort?"
+        ),
+        "secondary_scientific_question": (
+            "Is any support modification different when the same number "
+            "of added larvae are conspecific Atrophaneura instead?"
+        ),
+        "conspecific_vs_heterospecific_identity_not_consumption_matched": True,
         "resource_shortage_vs_quality_vs_direct_effect_disentangled": False,
         "living_diapausing_pupae_are_not_dead": True,
         "consumer_species_introduced_host_plant_is_native": True,
