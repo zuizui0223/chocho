@@ -35,8 +35,13 @@ def fresh_g_to_dry_mg(fresh_g: float) -> float:
         raise ValueError("fresh leaf wet mass must be finite, nonnegative grams")
     if fresh_g == 0:
         return 0.0
-    fresh_mg = fresh_g * 1000
-    return math.exp(DRY_CONVERSION_INTERCEPT + DRY_CONVERSION_SLOPE * math.log(fresh_mg))
+    # Both fresh and dry masses in the published log-log calibration are
+    # expressed in grams; return dry milligrams only AFTER conversion.
+    # Converting fresh grams to mg before applying a 0.90 exponent creates
+    # an erroneous factor of 1000**0.10 (~1.995) in the inferred mass.
+    return 1000.0 * math.exp(
+        DRY_CONVERSION_INTERCEPT + DRY_CONVERSION_SLOPE * math.log(fresh_g)
+    )
 
 
 def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
@@ -186,6 +191,10 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
         "published_table1_late_dry_mg_per_larva": original_published,
         "mean_usable_observed_late_dry_mg": observed_mean,
         "mean_relative_to_published_reference": observed_mean / original_published if observed_mean else None,
+        "table1_dry_intake_within_2pct": (
+            abs(observed_mean / original_published - 1) <= 0.02
+            if observed_mean else False
+        ),
         "median_day_since_hatch_half_observed_late_intake": (
             statistics.median(x["day_since_hatch_reaching_half_own_tracked_late_intake"]
                               for x in summaries) if summaries else None
@@ -228,7 +237,7 @@ def audit():
     return {
         "schema": "chocho_kyoto_late_instar_intake_reconstruction_v01",
         "source": "Hashimoto & Ohgushi (2023) Figshare 23170898 and paper section 2.2",
-        "mass_conversion": "dry mg = exp(-1.48 + 0.90 ln(fresh mg))",
+        "mass_conversion": "dry mg = 1000 * exp(-1.48 + 0.90 ln(fresh g))",
         "source_identity": provenance,
         "per_species": results,
         "calendar_start_date_difference_days_A_minus_S": (
