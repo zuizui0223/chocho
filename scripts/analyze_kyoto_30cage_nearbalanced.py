@@ -20,6 +20,8 @@ import csv
 import hashlib
 import json
 import math
+
+import numpy as np
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -111,6 +113,44 @@ def check_assignment(allocation: list[dict], info: list[dict]) -> dict:
     return cages
 
 
+def heteroscedastic_cage_sensitivity(cages: dict, outcomes: dict, adjusted: dict) -> dict:
+    """HC3 cage-level sandwich sensitivity, NOT a small-sample exact CI.
+
+    With fixed greenhouse intercepts, a correctly coded covariance calculation
+    must use the same exact unit-level contrast weights as the primary fit.
+    This does not handle correlated treatment responses among greenhouses or
+    prove significance with only 10 original site blocks.
+    """
+    original=sorted(cages.values(),key=lambda r:(r["greenhouse_id"],r["cage_id"]))
+    gh=sorted({row["greenhouse_id"] for row in original})
+    other=[arm for arm in ARMS if arm!="NATURAL_NONE"]
+    X=np.array([
+        [int(r["greenhouse_id"]==block) for block in gh] +
+        [int(r["treatment"]==arm) for arm in other]
+        for r in original
+    ],dtype=float)
+    y=np.array([outcomes[r["cage_id"]]["focal_adult_low"] for r in original],dtype=float)
+    xtxi=np.linalg.inv(X.T@X)
+    beta=np.linalg.lstsq(X,y,rcond=None)[0]
+    errors=y-X@beta
+    leverages=np.einsum("ij,jk,ik->i",X,xtxi,X)
+    if np.any(leverages>=1-1e-10) or np.any(leverages<0):
+        raise ValueError("Unsupported leverage for HC3 in small incomplete block model")
+    exact_weights=np.array([
+        adjusted["whole_cage_linear_contrast_weights"][r["cage_id"]]
+        for r in original
+    ])
+    variance=float(np.sum((exact_weights*errors/(1-leverages))**2))
+    if variance < 0 or not math.isfinite(variance):
+        raise ValueError("Numerical problem in HC3 variance calculation")
+    return {
+        "hc3_cage_level_primary_SE":math.sqrt(variance),
+        "max_hat_leverage":float(max(leverages)),
+        "small_sample_cage_heteroscedasticity_sensitivity_only":True,
+        "NOT_greenhouse_cluster_robust_or_validated_biological_inference":True,
+    }
+
+
 def analyze(allocation: list[dict], info: list[dict],
             fates: list[dict], foliage: list[dict]) -> dict:
     cages = check_assignment(allocation, info)
@@ -172,6 +212,15 @@ def analyze(allocation: list[dict], info: list[dict],
                 "greenhouse_adjusted_observed_adult_contrast"
             ],
         })
+    reduced_estimates=[
+        row["adjusted_primary_for_descriptive_sensitivity"] for row in omitted
+    ]
+    delete_mean=sum(reduced_estimates)/len(reduced_estimates)
+    gh_jackknife_se=math.sqrt(
+        (len(reduced_estimates)-1)/len(reduced_estimates) *
+        sum((value-delete_mean)**2 for value in reduced_estimates)
+    )
+    hc3=heteroscedastic_cage_sensitivity(cages,outcomes,adjusted)
     return {
         "schema": "chocho_kyoto_30cage_nearbalanced_original_focal_adults_v01",
         "status": "FUTURE_AUTHENTIC_FIELD_DATA_REQUIRED_NO_BUTTERFLY_RESULTS",
@@ -180,6 +229,9 @@ def analyze(allocation: list[dict], info: list[dict],
         "primary_estimand": PRIMARY,
         "raw_intention_to_treat_arm_mean_difference_in_differences": raw_primary,
         "primary_greenhouse_fixed_effect_adjusted": adjusted,
+        "cage_heteroscedasticity_HC3_sensitivity_only":hc3,
+        "ten_greenhouse_delete_one_jackknife_SE_descriptive_only":gh_jackknife_se,
+        "jackknife_SE_is_NOT_randomization_exact_or_power_evidence":True,
         "per_arm_original_cohort_outcomes": by_arm,
         "leave_one_greenhouse_out_description_only": omitted,
         "original_focal_A_count_present_in_all_randomized_cages": True,
