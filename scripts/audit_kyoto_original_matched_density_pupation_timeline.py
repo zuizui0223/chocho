@@ -25,7 +25,7 @@ COLUMNS = (
     "total.a","day","s1","s2","s3","s4","s5","spp","sp",
     "cumul.sp","a1","a2","a3","a4","a5","app","ap","cumul.ap",
 )
-CHECK_DAYS=(7,15,21,29,42)
+CHECK_DAYS=(7,15,21,29,42,46)
 DOI="10.1002/ece3.10164"
 
 
@@ -109,6 +109,59 @@ def _load(raw: bytes, *, checksum: str = MD5) -> tuple[dict[str, list[dict]], li
     return cages, anomalies
 
 
+
+def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
+    """Audit whether total.a is already an aggregate of recorded stages.
+
+    Do not add total.a to cumulative pupae and call the difference mortality.
+    The author's original column names may not be disjoint event states.
+    """
+    result=Counter()
+    illustrative=[]
+    for cid, rows in sorted(cages.items()):
+        for row in rows:
+            result["source_cage_by_day_rows"]+=1
+            keys=[f"a{x}" for x in range(1,6)]+["app","ap"]
+            keys_s=[f"s{x}" for x in range(1,6)]+["spp","sp"]
+            try:
+                stages=[_integer(row[k],k) for k in keys]
+                stages_s=[_integer(row[k],k) for k in keys_s]
+            except ValueError:
+                result["non_numeric_instars_or_pupal_stages"]+=1
+                continue
+            total_a=_integer(row["total.a"],"total.a")
+            total_s=_integer(row["total.s"],"total.s")
+            pupa_a=_integer(row["cumul.ap"],"cumul.ap")
+            pupa_s=_integer(row["cumul.sp"],"cumul.sp")
+            initial_a=_integer(row["a.density"],"a.density")
+            initial_s=_integer(row["s.density"],"s.density")
+            native_all=sum(stages)
+            introduced_all=sum(stages_s)
+            result["valid_stage_reconciliation_rows"]+=1
+            result["native_total_exactly_equals_instars_plus_prepupae_plus_current_pupae"]+=int(total_a==native_all)
+            result["introduced_total_exactly_equals_instars_plus_prepupae_plus_current_pupae"]+=int(total_s==introduced_all)
+            result["native_total_equals_instars_plus_prepupae_without_current_pupae"]+=int(total_a==native_all-stages[-1])
+            result["introduced_total_equals_instars_plus_prepupae_without_current_pupae"]+=int(total_s==introduced_all-stages_s[-1])
+            result["native_total_plus_cumulative_pupae_exceeds_original_assigned"]+=int(total_a+pupa_a>initial_a)
+            result["introduced_total_plus_cumulative_pupae_exceeds_original_assigned"]+=int(total_s+pupa_s>initial_s)
+            if len(illustrative)<8 and (_integer(row["day"],"day") in (29,42,48)) and total_a+pupa_a>initial_a:
+                illustrative.append({
+                    "original_cage_id":cid, "day":_integer(row["day"],"day"),
+                    "initial_A":initial_a, "total_a":total_a,
+                    "stage_1to5_plus_prepupa_plus_current_pupa":native_all,
+                    "cumulative_pupa_a":pupa_a,
+                })
+    return {
+        "counts":dict(result),
+        "examples_not_selected_by_treatment_or_outcome":illustrative,
+        "safety_interpretation":(
+            "Do NOT interpret initial_A minus total.a minus cumul.ap as "
+            "confirmed deaths: total.a and stage/cumulative pupal counts may "
+            "overlap. Validate exact source field semantics independently."
+        ),
+    }
+
+
 def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
     cages, anomalies=_load(raw,checksum=checksum)
     early_native_anomalies=[
@@ -128,6 +181,7 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
             "GEB_PR38_untouched":True,
         }
     cage_data={}
+    stage_reconciliation=_source_stage_count_reconciliation(cages)
     original_grid=sorted({
         _integer(row["day"],"day") for rows in cages.values() for row in rows
     })
@@ -154,16 +208,15 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
             row=visits[actual]
             pup=_integer(row["cumul.ap"],"cumulative A pupae")
             visible=_integer(row["total.a"],"current A larvae")
-            # The unaccounted quantity is descriptive only: visible larvae
-            # may be incompletely detected; pupa fate and census counts are
-            # not unique individuals followed to an adult.
-            residual=a-visible-pup
             outcomes[planned]={
                 "observed_day":actual,
                 "recorded_cumulative_pupae":pup,
                 "pupation_fraction_of_initial_A":pup/a if a>0 else None,
-                "living_A_larvae_observed":visible,
-                "initial_minus_visible_larvae_minus_cumulative_pupae":residual,
+                "raw_total_a_column":visible,
+                "instar_1to5_count":sum(_integer(row[f"a{j}"],f"a{j}") for j in range(1,6)),
+                "prepupa_count":_integer(row["app"],"app"),
+                "pupae_present_count":_integer(row["ap"],"ap"),
+                "do_not_add_total_a_to_cumulative_pupae":True,
             }
         cage_data[cid]={
             "initial_A":a,"initial_S":s,
@@ -223,12 +276,6 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
             "all_source_matched_differences":diffs,
         }
 
-    negative_residuals=[
-        (cid, planned, values["initial_minus_visible_larvae_minus_cumulative_pupae"])
-        for cid, row in cage_data.items()
-        for planned, values in row["outcomes"].items()
-        if values["initial_minus_visible_larvae_minus_cumulative_pupae"]<0
-    ]
     original_terminal_rates={
         "A":(
             None if last_census_native_anomalous else
@@ -252,6 +299,7 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         "cage_x_visit_original_rows":sum(len(x) for x in cages.values()),
         "original_census_day_grid":original_grid,
         "planned_days_and_actual_source_days":actual_cutoffs,
+        "last_clean_preterminal_day_46_is_posthoc_sensitivity_only":True,
         "native_density_matched_strata":pairs,
         "equal_native_stratum_weight_summary_by_day":summaries,
         "source_last_census_day":last_original_day,
@@ -263,16 +311,17 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
             "A":last_census_native_anomalous,
             "S":last_census_S_anomalous,
         },
-        "all_observed_cage_cutoff_negative_unaccounted_residuals":negative_residuals,
+        "source_stage_total_and_cumulative_reconciliation":stage_reconciliation,
         "source_cage_records":cage_data,
         "warnings":[
             "Pupation success and its calendar progression, NOT adult eclosion, adult recruitment or confirmed individual death times",
             "Source A and S cumulative columns can decrease after the author's day-42 window; retain all raw anomaly rows, withhold their terminal summary",
-            "Only author's prelisted day-7/15/21/29/42 or last preceding source census is used in stage chronology",
+            "Author's prelisted days 7/15/21/29/42 are the main descriptive source checkpoints; day 46 is explicitly posthoc, before anomalous day 48",
             "The same 2023 source paper has already reported density effects on final pupation survival and developmental time",
             "Post hoc S high vs S low matched A comparisons use the ORIGINAL density design: total larval headcount also differs",
             "Only 2 whole cages per original density cell; greenhouse IDs and maternal lineage IDs absent from original Figshare CSV",
             "Stage counts are cage-level censuses, not individually tagged event times",
+            "The raw total.a field and cumul.ap are potentially overlapping; NEVER subtract both to declare confirmed deaths",
             "No repeated host edible young/mature leaf supply, host age, quality, or timed resource clamp in original file",
             "Differences at early day windows can reflect pupation timing, eventual survival or censoring; do not label mortality onset",
             "An original larva not currently visible or cumulatively pupated is not necessarily confirmed dead",
