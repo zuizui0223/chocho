@@ -78,21 +78,21 @@ def fixture(nblocks=3, with_unknown=False):
     return allocation, assignments, fates, resources
 
 
-def test_primary_identity_by_food_interaction_and_all_secondary_contrasts():
+def test_primary_invasive_competitor_food_rescue_and_secondary_identity_contrast():
     z = m.analyze(*fixture())
     assert z["n_randomized_cages"] == 18
     assert z["n_source_blocks"] == 3
-    assert z["primary_planned_estimand"] == "primary_identity_x_food"
-    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(0.5)
+    assert z["primary_planned_estimand"] == "S_competitor_x_food"
+    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(0.75)
     assert z["other_planned_contrasts"]["identity_natural_S_minus_A"] == pytest.approx(-0.25)
     assert z["other_planned_contrasts"]["identity_supported_S_minus_A"] == pytest.approx(+0.25)
     assert z["other_planned_contrasts"]["S_competitor_natural"] == pytest.approx(-0.75)
     assert z["other_planned_contrasts"]["S_competitor_supported"] == pytest.approx(0)
     assert z["other_planned_contrasts"]["A_competitor_natural"] == pytest.approx(-0.5)
     assert z["other_planned_contrasts"]["A_competitor_supported"] == pytest.approx(-0.25)
-    assert z["other_planned_contrasts"]["S_competitor_x_food"] == pytest.approx(+0.75)
+    assert z["other_planned_contrasts"]["identity_x_food_secondary"] == pytest.approx(+0.5)
     assert z["other_planned_contrasts"]["A_competitor_x_food"] == pytest.approx(+0.25)
-    assert z["worst_case_eventual_emergence_attrition_intervals"][m.PRIMARY] == pytest.approx([.5, .5])
+    assert z["worst_case_eventual_emergence_attrition_intervals"][m.PRIMARY] == pytest.approx([.75, .75])
     assert z["independent_block_bootstrap_primary_interval_if_10plus_blocks"] is None
     assert z["resource_shortage_vs_quality_vs_direct_effect_disentangled"] is False
     assert z["extra_larvae_have_same_HEADCOUNT_not_same_consumption"] is True
@@ -157,7 +157,7 @@ def test_postrandomization_resource_measurement_is_not_a_selection_rule():
         if row["cage_id"].endswith("SUPPORTED_ADD_S"):
             row["accessible_leaf_area_cm2"] = "0"
     z = m.analyze(a,b,c,d)
-    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(0.5)
+    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(0.75)
     assert z["per_arm"]["SUPPORTED_ADD_S"]["late_focal_food_floor_breach_visits"] == 6
     assert z["primary_DOES_NOT_condition_on_achieved_food_availability"]
 
@@ -168,10 +168,13 @@ def test_missing_live_diapause_fate_bounds_do_not_equal_mortality():
     assert z["per_arm"]["NATURAL_ADD_A"]["living_diapausing_focal_pupae"] == 1
     assert z["per_arm"]["NATURAL_ADD_A"]["unresolved_focal_fates"] == 1
     assert z["per_arm"]["NATURAL_ADD_A"]["verified_flight_capable_adults"] == 3
-    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(.5)
+    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(.75)
     lo, hi = z["worst_case_eventual_emergence_attrition_intervals"][m.PRIMARY]
-    assert lo == pytest.approx(.5)
-    assert hi == pytest.approx(.5 + 1/12)
+    assert lo == pytest.approx(.75)
+    assert hi == pytest.approx(.75)
+    identity_lo, identity_hi = z["worst_case_eventual_emergence_attrition_intervals"]["identity_x_food_secondary"]
+    assert identity_lo == pytest.approx(.5)
+    assert identity_hi == pytest.approx(.5 + 1/12)
     assert not z["all_original_focal_fates_resolved"]
     assert z["living_diapausing_pupae_are_not_dead"]
 
@@ -181,10 +184,13 @@ def test_unknown_in_negative_coefficient_arm_reduces_worst_case_lower():
     target = next(x for x in c if x["larva_id"] == "B0-SUPPORTED_ADD_A:FOCAL:0")
     target["fate"] = "pupa_alive_pending_emergence"
     z = m.analyze(a,b,c,d)
-    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(.5 + 1/12)
+    assert z["primary_observed_flight_capable_adult_risk_difference"] == pytest.approx(.75)
     lo, hi = z["worst_case_eventual_emergence_attrition_intervals"][m.PRIMARY]
-    assert lo == pytest.approx(.5)
-    assert hi == pytest.approx(.5 + 1/12)
+    assert lo == pytest.approx(.75)
+    assert hi == pytest.approx(.75)
+    identity_lo, identity_hi = z["worst_case_eventual_emergence_attrition_intervals"]["identity_x_food_secondary"]
+    assert identity_lo == pytest.approx(.5)
+    assert identity_hi == pytest.approx(.5 + 1/12)
 
 
 def test_invalid_extra_species_and_unresolved_pupa_code_fail():
@@ -223,7 +229,7 @@ def test_missing_block_cannot_be_rescued_by_flattening_cages():
 def test_bootstrap_available_only_for_at_least_ten_independent_blocks():
     z = m.analyze(*fixture(nblocks=10))
     assert z["n_source_blocks"] == 10
-    assert z["independent_block_bootstrap_primary_interval_if_10plus_blocks"] == pytest.approx([0.5, 0.5])
+    assert z["independent_block_bootstrap_primary_interval_if_10plus_blocks"] == pytest.approx([0.75, 0.75])
     assert z["n_randomized_cages"] == 60
 
 
@@ -233,3 +239,16 @@ def test_true_cage_zero_and_missing_area_not_confused():
     z = m.analyze(a,b,c,d)
     assert z["per_arm"]["NATURAL_NONE"]["missing_leaf_area_visits"] == 0
     assert z["per_arm"]["NATURAL_NONE"]["late_focal_food_floor_breach_visits"] == 6
+
+
+def test_food_rescue_zero_with_equal_food_response_but_identity_response_still_possible():
+    # Keep posthoc synthetic scenarios distinct: both additions can be equally
+    # rescued by access to foliage; this cannot be described as species identity.
+    risks = {
+        "NATURAL_NONE": .8, "NATURAL_ADD_A": .4, "NATURAL_ADD_S": .4,
+        "SUPPORTED_NONE": .8, "SUPPORTED_ADD_A": .8, "SUPPORTED_ADD_S": .8,
+    }
+    contrasts = m._contrasts(risks)
+    assert contrasts["S_competitor_x_food"] == pytest.approx(.4)
+    assert contrasts["identity_x_food_secondary"] == pytest.approx(0)
+    # A nonzero total invader rescue does not imply identity-specific relief.
