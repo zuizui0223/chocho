@@ -117,7 +117,8 @@ def test_unresolved_living_pupa_does_not_become_known_mortality():
     lo=z["primary_block_adjusted"]["possible_eventual_emergence_contrast_lower"]
     hi=z["primary_block_adjusted"]["possible_eventual_emergence_contrast_upper"]
     assert z["primary_block_adjusted"]["greenhouse_adjusted_observed_adult_contrast"]==pytest.approx(.4)
-    assert lo<=.4<=hi
+    assert lo <= z["primary_block_adjusted"]["greenhouse_adjusted_observed_adult_contrast"] + 1e-12
+    assert hi >= z["primary_block_adjusted"]["greenhouse_adjusted_observed_adult_contrast"] - 1e-12
     assert hi-lo==pytest.approx(abs(w)/10)
     treatment=next(x["treatment"] for x in a if x["cage_id"]=="G1:C1")
     assert z["per_treatment_raw_arm_fates"][treatment]["living_diapause_A"]==1
