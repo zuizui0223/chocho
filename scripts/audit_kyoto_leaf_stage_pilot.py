@@ -225,6 +225,8 @@ def facility_audit(rows: list[dict[str, str]]) -> dict:
         "greenhouses_supporting_at_least_six_cages": sum(v >= 6 for v in cap.values()),
         "greenhouse_local_complete_four_arm_blocks_capacity": sum(v // 4 for v in cap.values()),
         "greenhouse_local_complete_six_arm_blocks_capacity": sum(v // 6 for v in cap.values()),
+        "four_arm_complete_greenhouse_block_structurally_available": sum(v // 4 for v in cap.values()) >= 1,
+        "six_arm_complete_greenhouse_block_structurally_available": sum(v // 6 for v in cap.values()) >= 1,
         "greenhouse_incomplete_block_design_not_analyzed_here": True,
         "not_a_claim_about_facility_currently_available_without_real_inventory": True,
     }
@@ -251,6 +253,12 @@ def audit(leaf, assay, facilities):
             "screening variables, NOT independently observed adult reproduction. "
             "Maternal families/donor plants and future cage/greenhouse structure "
             "must be replicated beyond this structural gate."
+        ),
+        "four_arm_within_greenhouse_design_requires_redesign_or_more_capacity": (
+            f["greenhouse_local_complete_four_arm_blocks_capacity"] == 0
+        ),
+        "six_arm_within_greenhouse_design_requires_redesign_or_more_capacity": (
+            f["greenhouse_local_complete_six_arm_blocks_capacity"] == 0
         ),
         "true_demographic_fitness_response_estimated": False,
         "preliminary_2023_neonate_study_reproduced": False,
