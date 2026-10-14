@@ -1,0 +1,52 @@
+name: Kyoto six-arm identity and food source-independent checks
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [experiment/kyoto-six-arm-identity-food-v01]
+    paths:
+      - "scripts/randomize_kyoto_six_arm_identity_food.py"
+      - "scripts/analyze_kyoto_six_arm_identity_food.py"
+      - "tests/test_kyoto_six_arm_randomization.py"
+      - "tests/test_kyoto_six_arm_identity_food.py"
+      - "scripts/plan_kyoto_six_arm_precision_sensitivity.py"
+      - "tests/test_kyoto_six_arm_precision_sensitivity.py"
+      - "tests/test_kyoto_six_arm_claim_contract.py"
+      - "scripts/audit_kyoto_leaf_stage_pilot.py"
+      - "tests/test_kyoto_leaf_stage_pilot.py"
+      - "docs/exploratory/KYOTO_SIX_ARM_PRIMARY_SECONDARY_CONTRACT_V02.json"
+      - ".github/workflows/kyoto-six-arm-source-independent.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  six-arm-source-independent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install offline validation dependency only
+        run: python -m pip install pytest==8.3.4
+      - name: Verify six-arm randomization, cohort semantics and contrast bounds
+        run: |
+          python -m pytest -q \
+            tests/test_kyoto_six_arm_randomization.py \
+            tests/test_kyoto_six_arm_identity_food.py \
+            tests/test_kyoto_six_arm_precision_sensitivity.py \
+            tests/test_kyoto_six_arm_claim_contract.py \
+            tests/test_kyoto_leaf_stage_pilot.py
+      - name: Write hypothetical precision scenarios for pre-pilot budget check
+        run: |
+          python scripts/plan_kyoto_six_arm_precision_sensitivity.py \
+            --receipt results/kyoto_six_arm_hypothetical_precision.json
+          test -s results/kyoto_six_arm_hypothetical_precision.json
+      - name: Upload HYPOTHETICAL precision sensitivities only
+        uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-illustrative-precision-NOT-power
+          path: results/kyoto_six_arm_hypothetical_precision.json
+          retention-days: 30
