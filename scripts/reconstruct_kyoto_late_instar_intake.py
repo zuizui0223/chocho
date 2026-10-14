@@ -187,6 +187,7 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
         "n_pupa_coded_ids": n_completed,
         "n_individuals_with_positive_usable_intake": len(summaries),
         "n_intervals_included": len(events),
+        "interval_events": events,  # source-matched events for separate age-alignment audit
         "skipped_adjacent_pairs": dict(skipped),
         "published_table1_late_dry_mg_per_larva": original_published,
         "mean_usable_observed_late_dry_mg": observed_mean,
