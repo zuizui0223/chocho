@@ -1,0 +1,118 @@
+{
+  "schema": "butterfly_empirical_host_plant_flowering_v15",
+  "date": "2026-10-14",
+  "status": "POSTHOC_TWO_PLANT_ONLY_PHENOLOGICAL_DATASETS_NO_JOINT_BUTTERFLY_RECRUITMENT_TEST",
+  "frozen_submission_head_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "plant_study1": {
+    "location": "Peninsular Malaysia, planted Acacia auriculiformis near FRIM",
+    "years": "1987-10 to 1989-09",
+    "source": "Ibrahim & Awang 1992, ACIAR Proceedings 37, Table 2",
+    "url": "https://www.aciar.gov.au/sites/default/files/legacy/node/314/pr37_pdf_13254.pdf",
+    "unit": "0-3 flowering crown score summed over 60 trees and divided by 180, times 100; NOT % trees or days",
+    "census_frequency": "about fortnightly",
+    "site_trees": 60,
+    "reported_months": 23,
+    "missing_month": "1989-02",
+    "min": {
+      "year_month": "1989-01",
+      "crown_index_percent": 0.6
+    },
+    "max": {
+      "year_month": "1988-06",
+      "crown_index_percent": 85.6
+    },
+    "range_fold": 142.66666666666666,
+    "mean_percent": 35.87391304347826,
+    "median_percent": 33.8,
+    "category_counts": {
+      "little": 10,
+      "moderate": 11,
+      "heavy": 2
+    },
+    "same_month_january": [
+      {
+        "year": 1988,
+        "value": 65.6
+      },
+      {
+        "year": 1989,
+        "value": 0.6
+      }
+    ],
+    "source_prose_conflict": "The prose misstates January 1988 as 85.6%, Table 2 is 65.6% and June 1988 is 85.6%. Data follow Table 2.",
+    "quantifies_daily_edible_flower_buds": false
+  },
+  "plant_study2": {
+    "location": "Iriomote Island, Japan, cultivated Acacia auriculiformis clones",
+    "years": "2008-2011, 3 April-to-March growing seasons",
+    "source": "Kato et al 2012, Silvae Genetica, Tables 4,5,7",
+    "doi": "10.1515/sg-2012-0029",
+    "n_clones": 23,
+    "n_ramets": 39,
+    "census_interval_days": [
+      3,
+      4
+    ],
+    "units": "10-day flowering onset and duration categories for each clone/ramet",
+    "Thailand_seed_source_g_ramets": 6,
+    "season_yields": [
+      {
+        "season_start_year": 2008,
+        "thai_source_only_10day_bins": 9,
+        "other_source_only_10day_bins": 2,
+        "combined_union_10day_bins": 19
+      },
+      {
+        "season_start_year": 2009,
+        "thai_source_only_10day_bins": 6,
+        "other_source_only_10day_bins": 4,
+        "combined_union_10day_bins": 17
+      },
+      {
+        "season_start_year": 2010,
+        "thai_source_only_10day_bins": 8,
+        "other_source_only_10day_bins": 3,
+        "combined_union_10day_bins": 21
+      }
+    ],
+    "note": "Exclusive 10-day bins are conditional within a particular cultivated set of ramets, not independently inferred feeding windows or causal butterfly effects.",
+    "independent_verified": "JS CSV set union separate from repo audit.py"
+  },
+  "butterfly_source": {
+    "location": "Singapore",
+    "species": "Nacaduba biocellata",
+    "source": "https://butterflycircle.blogspot.com/2010/01/life-history-of-two-spotted-line-blue.html",
+    "larval_bud_flower_feeding_days": [
+      9.5,
+      11
+    ],
+    "egg_to_adult_under_rearing_days": [
+      17.5,
+      19.5
+    ],
+    "matched_with_either_botanical_time_series": false
+  },
+  "identifiability_illustration": {
+    "type": "constructed mathematical example, NOT observed phenology",
+    "monthly_bloom_days_both": 15,
+    "month_days": 30,
+    "required_continuous_days": 10,
+    "valid_start_days_if_bloom_15_days_contiguously": 6,
+    "valid_start_days_if_bloom_15_alternating_days": 0
+  },
+  "not_supported": [
+    "Singapore butterfly flowering correlation",
+    "larval field survival effect",
+    "flower-bud shortage probability",
+    "host-induced colonization lag",
+    "global ecological impact of genotype"
+  ],
+  "verification": {
+    "full_local_archive": "chocho_v15_empirical_flowering_and_identifiability_verified_20261014.zip",
+    "full_archive_sha256": "5c6e53766212cc2643f0ace2a7326cef34a3292aa0c1126cf527480792de1bb2",
+    "local_test_count_passed": 5,
+    "independent_pandas_checker": "all values matched",
+    "unpacked_archive_files_checked": 13,
+    "Github_combined_source_audit_run_id": 38493452996
+  }
+}
