@@ -41,3 +41,20 @@ python -m unittest discover -s . -p 'test_audit.py' -v
 ```
 
 The more extensive downloadable v15 archive includes 9 local regression tests, an independent NumPy auditor, rendered 10-day flowering-season figure (PNG/SVG), full per-ramet audit/mean±SE, primary metadata and checksum manifest. The repository subset reproduces key 10-day coverage from identical, blob-SHA-verified CSV source data. **Neither output changes the frozen GEB submission.**
+
+## Independent Peninsular Malaysia stand-intensity series (Ibrahim & Awang 1992)
+
+A second, complementary plant-only dataset has now been added as `published_monthly_flowering.csv`, `analyze.py` and `test_malaysia_flowering.py`. This is NOT the Iriomote clonal/seed-source study. Source: [Ibrahim & Awang (1992), ACIAR Proceedings 37, printed pp 45–48, Table 2](https://www.aciar.gov.au/sites/default/files/legacy/node/314/pr37_pdf_13254.pdf).
+
+Sixty planted `A. auriculiformis` trees near FRIM (Peninsular Malaysia) were visited approximately fortnightly; the 23 reported monthly scores across Oct 1987–Sep 1989 were normalized **crown flowering intensity**, not percent of trees, buds/day or butterflies. The missing Feb 1989 monthly observation is kept missing, with no interpolation. Independently checked statistics: min **0.6%** (Jan 1989), max **85.6%** (June 1988), median **33.8%**, mean **35.87%** and **10 low, 11 moderate, 2 high** intensity months. January differs substantially across consecutive years (65.6% in 1988 vs 0.6% in 1989) even while the botanical host remained established. The primary narrative has an inconsistent Jan 1988 reference (85.6%) contradicted by the Table 2 value (65.6%); this audit gives priority to Table 2.
+
+The **extra source does not establish** the Singapore butterfly's flowering synchrony. It measures open flower *crown intensity*, not a daily continuity of edible buds, and was measured in another country more than 20 years before the Singapore rearing record. A deliberately constructed 30-day illustration in `analyze.py` shows that 15 consecutive flowering days permit six potential ten-day floral-feeding start days while 15 alternating days permit none, despite the identical monthly rate. This mathematical example is **not** field data, a probability of survival, or evidence of a butterfly response.
+
+A full separately checked source archive with the 1987–1989 time-series PNG/SVG, original climate table, test logs and independent pandas reconstruction was produced on 2026-10-14; SHA256: `5c6e53766212cc2643f0ace2a7326cef34a3292aa0c1126cf527480792de1bb2`. All 5 full-local regression tests and checksums passed after archive extraction.
+
+To run just the new dataset:
+```sh
+cd research/nacaduba_stage_v15
+python analyze.py
+python -m unittest -v test_malaysia_flowering.py
+```
