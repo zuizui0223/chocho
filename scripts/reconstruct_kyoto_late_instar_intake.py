@@ -49,8 +49,21 @@ def reconstruct(rows: list[dict[str, str]], *, species: str) -> dict:
         by_id[row["id"]].append(row)
     for ident in by_id:
         by_id[ident].sort(key=date)
-        if len(set(date(row) for row in by_id[ident])) != len(by_id[ident]):
-            raise ValueError("duplicate identity/date in original mass time series")
+        raw_by_day = defaultdict(list)
+        for record in by_id[ident]:
+            raw_by_day[date(record)].append(record)
+        collisions = {
+            day.isoformat(): [
+                {k: rec.get(k, "") for k in ("date", "stage", "taken", "given", "memo", "no.individuals")}
+                for rec in recs
+            ]
+            for day, recs in raw_by_day.items() if len(recs) > 1
+        }
+        if collisions:
+            raise ValueError(
+                "duplicate identity/calendar-day records require original-code reconciliation: "
+                + json.dumps({"id": ident, "dates": collisions})
+            )
     group_ids = [
         ident for ident, group in by_id.items()
         if group[0]["stage"] == "1"
