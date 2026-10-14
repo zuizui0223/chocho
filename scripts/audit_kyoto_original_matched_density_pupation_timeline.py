@@ -84,7 +84,13 @@ def _load(raw: bytes, *, checksum: str = MD5) -> dict[str, list[dict]]:
             if total_a>a or total_s>s:
                 raise ValueError("Observed larvae exceed original initial assignment")
             if not previous_a<=cumulative_a<=a or not previous_s<=cumulative_s<=s:
-                raise ValueError("Cumulative pupation dropped or exceeded starting cohort")
+                raise ValueError(
+                    "Cumulative pupation dropped or exceeded starting cohort: "
+                    f"source_cage={cid},day={row['day']},A_initial={a},S_initial={s},"
+                    f"A_previous_pupae={previous_a},A_now_pupae={cumulative_a},"
+                    f"S_previous_pupae={previous_s},S_now_pupae={cumulative_s},"
+                    f"A_current_visible_larvae={total_a},S_current_visible_larvae={total_s}"
+                )
             previous_a,previous_s=cumulative_a,cumulative_s
         cages[cid]=ordered
     if len(combinations)!=15 or any(n!=2 for n in combinations.values()):
