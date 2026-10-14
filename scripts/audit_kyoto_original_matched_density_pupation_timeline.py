@@ -119,6 +119,7 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
     result=Counter()
     illustrative=[]
     for cid, rows in sorted(cages.items()):
+        prior_total_a=prior_total_s=None
         for row in rows:
             result["source_cage_by_day_rows"]+=1
             keys=[f"a{x}" for x in range(1,6)]+["app","ap"]
@@ -138,6 +139,27 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
             native_all=sum(stages)
             introduced_all=sum(stages_s)
             result["valid_stage_reconciliation_rows"]+=1
+            # Two potential interpretations of total.*; these are
+            # mutually relevant source-field algebra, NOT new animal events.
+            native_nonpupal=sum(stages[:-1])
+            introduced_nonpupal=sum(stages_s[:-1])
+            result["native_total_equals_current_nonpupal_stages_plus_cumulative_pupae"]+=int(
+                total_a==native_nonpupal+pupa_a
+            )
+            result["introduced_total_equals_current_nonpupal_stages_plus_cumulative_pupae"]+=int(
+                total_s==introduced_nonpupal+pupa_s
+            )
+            result["native_total_equals_current_all_stages_plus_cumulative_pupae"]+=int(
+                total_a==native_all+pupa_a
+            )
+            result["introduced_total_equals_current_all_stages_plus_cumulative_pupae"]+=int(
+                total_s==introduced_all+pupa_s
+            )
+            if prior_total_a is not None and total_a>prior_total_a:
+                result["native_total_increases_between_censuses"]+=1
+            if prior_total_s is not None and total_s>prior_total_s:
+                result["introduced_total_increases_between_censuses"]+=1
+            prior_total_a,prior_total_s=total_a,total_s
             result["native_total_exactly_equals_instars_plus_prepupae_plus_current_pupae"]+=int(total_a==native_all)
             result["introduced_total_exactly_equals_instars_plus_prepupae_plus_current_pupae"]+=int(total_s==introduced_all)
             result["native_total_equals_instars_plus_prepupae_without_current_pupae"]+=int(total_a==native_all-stages[-1])
@@ -156,8 +178,10 @@ def _source_stage_count_reconciliation(cages: dict[str, list[dict]]) -> dict:
         "illustrative_overlapping_count_examples_not_an_inference_sample":illustrative,
         "safety_interpretation":(
             "Do NOT interpret initial_A minus total.a minus cumul.ap as "
-            "confirmed deaths: total.a and stage/cumulative pupal counts may "
-            "overlap. Validate exact source field semantics independently."
+            "confirmed deaths: total.a and stage/cumulative pupal counts overlap. "
+            "Diagnostic equalities assess whether total.a itself includes "
+            "cumulative pupae; even strong algebraic equality does not supply "
+            "adult emergence, mechanisms, or independently tagged death records."
         ),
     }
 
