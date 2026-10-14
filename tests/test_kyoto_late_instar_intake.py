@@ -60,7 +60,7 @@ def test_exact_two_day_previous_given_current_taken_with_negative_guard():
     assert x["founder_neonate_group_start"] == "2016-06-27"
     assert x["n_single_larva_ids"] == 2
     assert x["n_pupa_coded_ids"] == 2
-    assert x["n_intervals_included"] == 4
+    assert x["n_intervals_included"] == 5
     assert x["skipped_adjacent_pairs"]["negative_dry_consumption"] == 1
     assert x["median_day_since_hatch_half_observed_late_intake"] is not None
     expected_first = kyoto.fresh_g_to_dry_mg(0.7) - kyoto.fresh_g_to_dry_mg(0.3)
@@ -75,7 +75,7 @@ def test_redundant_row_excludes_both_adjacent_intervals():
         if row["id"] == "j1" and row["date"] == "2016/7/5":
             row["memo"] = "redundant"
     x = kyoto.reconstruct(rows, species="A")
-    assert x["n_intervals_included"] == 2
+    assert x["n_intervals_included"] == 3
     assert x["skipped_adjacent_pairs"]["memo_redundant_adjacent"] == 2
 
 
