@@ -1,0 +1,101 @@
+{
+  "schema": "chocho_kyoto_matched_biological_age_intake_shape_receipt_v01",
+  "date": "2026-10-14",
+  "status": "SOURCE_REPRODUCED_EXPLORATORY_DESCRIPTIVE_ONE_COHORT_PER_BUTTERFLY_SPECIES",
+  "execution": {
+    "github_actions_run": 38505425377,
+    "source_head_sha": "1b2455b3479c6f05b3db6c9d4d3789c98821ffd1",
+    "raw_artifact_name": "kyoto-two-species-calendar-source-v01",
+    "tests": "original source CI succeeded"
+  },
+  "source": {
+    "doi": "10.6084/m9.figshare.23170898",
+    "individual_a_original_file_id": 41147915,
+    "individual_a_source_md5": "08c2bcfb9a896f7eb89bebd74153f769",
+    "individual_s_original_file_id": 41147924,
+    "individual_s_source_md5": "174f0bd6ba056bcd49b348427da9f749",
+    "source_publication": "Hashimoto & Ohgushi 2023 DOI 10.1002/ece3.10164"
+  },
+  "comparison": {
+    "end_ages_days": [
+      8,
+      10,
+      12,
+      14,
+      16,
+      18
+    ],
+    "complete_case_A": 9,
+    "complete_case_S": 9,
+    "excluded_A_ids": [
+      {
+        "id": "j8",
+        "missing_end_age_days": [
+          8
+        ]
+      }
+    ],
+    "excluded_S_ids": [],
+    "A_equal_larva_profile_by_age": {
+      "8": 0.05956190217038498,
+      "10": 0.03595831468022056,
+      "12": 0.14687534667174224,
+      "14": 0.07867766699266004,
+      "16": 0.24994900856225927,
+      "18": 0.4289777609227329
+    },
+    "S_equal_larva_profile_by_age": {
+      "8": 0.05160052415274082,
+      "10": 0.04685062526381176,
+      "12": 0.11596318281033824,
+      "14": 0.1333545194386625,
+      "16": 0.17214000948765804,
+      "18": 0.4800911388467886
+    },
+    "temporal_overlap": 0.8833174590463506,
+    "total_variation": 0.11668254095364938,
+    "mass_weighted_temporal_overlap": 0.8918871237404606,
+    "center_A_day": 15.420853695728773,
+    "center_S_day": 15.535712562770101,
+    "center_A_minus_S_days": -0.11485886704132753,
+    "early_end_ages": [
+      8,
+      10,
+      12
+    ],
+    "A_early_share": 0.24239556352234776,
+    "S_early_share": 0.21441433222689082,
+    "early_share_A_minus_S": 0.027981231295456932,
+    "individual_loo_early_delta": [
+      0.018428432923585147,
+      0.03436673398818077
+    ],
+    "loo_direction_stable": true,
+    "toy_k_A_over_k_S_open_interval": [
+      0.8845637647453181,
+      1.0369338271374846
+    ]
+  },
+  "alternate_windows": {
+    "8-16": {
+      "overlap": 0.8534789551965236,
+      "center_A_minus_S_days": 0.2137132565400517,
+      "complete_A": 9,
+      "complete_S": 9
+    },
+    "10-18": {
+      "overlap": 0.9028656342369783,
+      "center_A_minus_S_days": -0.03521529178389571,
+      "complete_A": 10,
+      "complete_S": 9
+    }
+  },
+  "claim_boundary": [
+    "The demand age-bin profiles are laboratory intake reconstructions in one original cohort per species; larvae are not independently randomized maternal/field units.",
+    "The primary 8-18 day window is an explicitly post-hoc equal-completeness restriction, not a prespecified ecological threshold or field phenology.",
+    "The k-ratio interval is from an assumed proportional allocation and hypothetical shortage-to-emergence response; 2.6x intake is not a k-ratio.",
+    "No actual food availability was recorded over time in the 2012 mixed cages and no 2016 food supply treatment was assigned.",
+    "Neither adult success, competition-induced sign reversal, nor introduced host-plant effects are established.",
+    "GEB main paper and original frozen source claims not changed."
+  ]
+}
