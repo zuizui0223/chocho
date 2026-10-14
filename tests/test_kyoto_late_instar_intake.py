@@ -66,7 +66,8 @@ def test_exact_two_day_previous_given_current_taken_with_negative_guard():
     expected_first = kyoto.fresh_g_to_dry_mg(0.7) - kyoto.fresh_g_to_dry_mg(0.3)
     assert x["calendar_series"][0]["day_since_founder_group_start"] == 8
     assert x["calendar_series"][0]["sum_dry_mg_across_tracked_individuals"] == pytest.approx(expected_first, abs=1e-5)
-    assert x["status"] == "SOURCE_DESCRIBED_LAB_CONSUMPTION_RECONSTRUCTION_NOT_COMPETITION"\n    assert x["table1_dry_intake_within_2pct"] is False
+    assert x["status"] == "SOURCE_DESCRIBED_LAB_CONSUMPTION_RECONSTRUCTION_NOT_COMPETITION"
+    assert x["table1_dry_intake_within_2pct"] is False
 
 
 def test_redundant_row_excludes_both_adjacent_intervals():
