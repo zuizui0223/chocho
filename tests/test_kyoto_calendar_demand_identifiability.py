@@ -81,7 +81,7 @@ def test_food_dates_and_trial_ids_are_not_mistaken_for_true_dry_food_intake():
     assert out["trial_ids_with_repeated_dates"] == 1
     assert out["group_size_counts"] == {"1": 1, "10": 2}
     assert out["memo_counts"]["redundant"] == 1
-    assert "NOT interpretable" in out["boundary"]
+    assert "previous-given/current-taken" in out["boundary"]
 
 
 def test_food_parse_fails_closed_for_missing_sample_identity():
@@ -96,3 +96,17 @@ def test_food_parse_fails_for_missing_required_field():
     cols = ["id", "date", "given"]
     with pytest.raises(ValueError, match="required published"):
         mod.summarize_food(cols, [{k: "1" for k in cols}])
+
+
+def test_actual_date_parsing_does_not_sort_july_as_before_late_june():
+    cols = [*mod.EXPECTED_FOOD_COLUMNS, "stage"]
+    rows = [
+        {"id": "z", "date": date, "taken": "0.1", "given": "0.3", "mass": "0.03",
+         "no.individuals": "1", "memo": "", "stage": stage}
+        for date, stage in (("2016/7/9", "5"), ("2016/6/27", "1"), ("2016/7/10", "5"))
+    ]
+    out = mod.summarize_food(cols, rows)
+    assert out["date_range_iso"] == ["2016-06-27", "2016-07-10"]
+    assert out["per_trial_first_date_and_stage"]["z"] == ("2016/6/27", "1")
+    assert out["stage_code_counts"] == {"5": 2, "1": 1}
+    assert out["stage_by_group_size_counts"] == {"5|n=1": 2, "1|n=1": 1}
