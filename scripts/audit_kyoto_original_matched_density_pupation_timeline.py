@@ -264,6 +264,7 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
                 "recorded_cumulative_pupae":pup,
                 "pupation_fraction_of_initial_A":pup/a if a>0 else None,
                 "raw_total_a_column":visible,
+                "raw_total_a_fraction_of_original_native_cohort":visible/a if a>0 else None,
                 "instar_1to5_count":sum(_integer(row[f"a{j}"],f"a{j}") for j in range(1,6)),
                 "prepupa_count":_integer(row["app"],"app"),
                 "pupae_present_count":_integer(row["ap"],"ap"),
@@ -291,10 +292,15 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         comparisons={}
         for planned in actual_cutoffs:
             avgs={}
+            total_a_avgs={}
             for s in levels:
                 rr=s_groups[s]
                 avgs[str(s)]=sum(
                     r["outcomes"][planned]["pupation_fraction_of_initial_A"]
+                    for r in rr
+                )/len(rr)
+                total_a_avgs[str(s)]=sum(
+                    r["outcomes"][planned]["raw_total_a_fraction_of_original_native_cohort"]
                     for r in rr
                 )/len(rr)
             comparisons[planned]={
@@ -302,6 +308,11 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
                 "low_S_mean_pupation_fraction":avgs[str(low_s)],
                 "high_S_mean_pupation_fraction":avgs[str(high_s)],
                 "higher_minus_lower_S":avgs[str(high_s)]-avgs[str(low_s)],
+                "low_S_mean_raw_total_A_fraction":total_a_avgs[str(low_s)],
+                "high_S_mean_raw_total_A_fraction":total_a_avgs[str(high_s)],
+                "higher_minus_lower_S_raw_total_A_fraction":(
+                    total_a_avgs[str(high_s)]-total_a_avgs[str(low_s)]
+                ),
             }
         pairs[str(a)]={
             "matched_original_A_neonates_per_cage":a,
@@ -317,8 +328,14 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
     summaries={}
     for planned in actual_cutoffs:
         diffs=[pair["by_day"][planned]["higher_minus_lower_S"] for pair in pairs.values()]
+        total_diffs=[pair["by_day"][planned]["higher_minus_lower_S_raw_total_A_fraction"] for pair in pairs.values()]
         summaries[planned]={
             "actual_census_day":actual_cutoffs[planned],
+            "mean_higher_minus_lower_S_raw_total_A_fraction_across_strata":sum(total_diffs)/len(total_diffs),
+            "source_total_A_fraction_n_strata_high_S_lower":sum(d<0 for d in total_diffs),
+            "source_total_A_fraction_n_strata_high_S_higher":sum(d>0 for d in total_diffs),
+            "source_total_A_fraction_n_strata_tied":sum(d==0 for d in total_diffs),
+            "source_total_A_fraction_stratum_differences":total_diffs,
             "number_of_source_matched_A_density_strata":len(diffs),
             "mean_higher_minus_lower_S_pupation_fraction_across_A_density_strata":sum(diffs)/len(diffs),
             "n_strata_high_S_lower_pupation":sum(d<0 for d in diffs),
@@ -367,6 +384,7 @@ def analyze_source(raw: bytes, *, checksum: str = MD5) -> dict:
         "source_cage_records":cage_data,
         "warnings":[
             "Pupation success and its calendar progression, NOT adult eclosion, adult recruitment or confirmed individual death times",
+            "The total.a comparison is an original-data COHORT ACCOUNTING TALLY, often including pupated animals; it is NOT a pure census of mobile living larvae or confirmed deaths",
             "Source A and S cumulative columns can decrease after the author's day-42 window; retain all raw anomaly rows, withhold their terminal summary",
             "Author's prelisted days 7/15/21/29/42 are the main descriptive source checkpoints; day 46 is explicitly posthoc, before anomalous day 48",
             "The same 2023 source paper has already reported density effects on final pupation survival and developmental time",
