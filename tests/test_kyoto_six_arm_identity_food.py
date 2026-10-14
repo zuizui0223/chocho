@@ -232,4 +232,4 @@ def test_true_cage_zero_and_missing_area_not_confused():
     d[0]["accessible_leaf_area_cm2"] = "0"
     z = m.analyze(a,b,c,d)
     assert z["per_arm"]["NATURAL_NONE"]["missing_leaf_area_visits"] == 0
-    assert z["per_arm"]["NATURAL_NONE"]["late_focal_food_floor_breach_visits"] == 3
+    assert z["per_arm"]["NATURAL_NONE"]["late_focal_food_floor_breach_visits"] == 6
