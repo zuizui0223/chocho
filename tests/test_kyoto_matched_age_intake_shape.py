@@ -114,8 +114,9 @@ def test_published_source_reproduction_receipt_arithmetic_and_claim_limits():
     receipt_path = BASE.parent / "provenance/reviewer_defenses/results/kyoto_matched_age_intake_shape_20261014.json"
     x = json.loads(receipt_path.read_text(encoding="utf-8"))
     c = x["comparison"]
-    av = list(c["A_equal_larva_profile_by_age"].values())
-    sv = list(c["S_equal_larva_profile_by_age"].values())
+    ages = c["end_ages_days"]
+    av = [c["A_equal_larva_profile_by_age"][str(age)] for age in ages]
+    sv = [c["S_equal_larva_profile_by_age"][str(age)] for age in ages]
     assert c["complete_case_A"] == 9 and c["complete_case_S"] == 9
     assert sum(av) == pytest.approx(1.0)
     assert sum(sv) == pytest.approx(1.0)
