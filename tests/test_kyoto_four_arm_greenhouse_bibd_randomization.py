@@ -6,6 +6,7 @@ these synthetic original IDs or individuals is an actual historical record.
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from collections import Counter
 from itertools import combinations
@@ -100,3 +101,25 @@ def test_design_incidence_exact_information_multiplier():
     c=np.array([+1,-1,-1,+1],dtype=float)
     assert c@np.linalg.pinv(information)@c==pytest.approx(.75)
     assert sum(c)==0
+
+
+def test_source_based_design_receipt_math_remains_independently_reproducible():
+    receipt = ROOT / "provenance/reviewer_defenses/results/kyoto_four_arm_greenhouse_bibd_information_20261014.json"
+    x = json.loads(receipt.read_text(encoding="utf-8"))
+    design = x["bibd"]
+    assert x["status"] == "MATHEMATICAL_DESIGN_INFORMATION_NOT_BUTTERFLY_DATA"
+    assert design["independent_greenhouses"] * design["whole_cages_each"] == 24
+    assert design["times_each_treatment_assigned"] * design["treatments"] == 24
+    assert design["greenhouses_per_treatment_pair"] * (design["treatments"] - 1) == (
+        design["times_each_treatment_assigned"] * (design["whole_cages_each"] - 1)
+    )
+    assert x["primary_contrast_variance_multiplier_per_sigma_squared"] == pytest.approx(.75)
+    assert x["extra_variance_fraction_vs_24cage_complete_blocks"] == pytest.approx(.125)
+    assert x["relative_efficiency_vs_24cage_complete_blocks"] == pytest.approx(8/9)
+    assert x["hypothetical_precision"]["model_based_nominal_95pct_halfwidth"] == pytest.approx(
+        2.1603686564610127*.2*(.75**.5)
+    )
+    assert not x["newly_observed_butterfly_effect"]
+    assert not x["current_greenhouse_inventory_provided"]
+    assert not x["source_families_independently_replicated"]
+    assert x["original_GEB_main_unchanged"]
