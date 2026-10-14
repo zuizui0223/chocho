@@ -192,3 +192,25 @@ def test_four_arm_original_cage_status_not_six_arm_retroactive_conversion():
     assert set(x["treatment"] for x in a)==set(fit.ARMS)
     assert not any("ADD_A" in x["treatment"] for x in a)
     assert sum(int(x["focal_a_initial_n"]) for x in b)==240
+
+
+def test_balanced_cage_label_swap_still_fails_original_seed_replay():
+    a,b,c,d=fixture()
+    chosen=[r for r in a if r["greenhouse_id"]=="G1"]
+    assert len(chosen)==3
+    for key in ("treatment","competitor_present","food_support"):
+        chosen[0][key],chosen[1][key]=chosen[1][key],chosen[0][key]
+    # Still three distinct treatments, 6 replicates per arm, all pair
+    # incidences unchanged. Post-hoc reassignments must nevertheless fail.
+    from randomize_kyoto_four_arm_greenhouse_bibd import counts
+    assert counts(a)["complete_v4_b8_k3_r6_lambda4"]
+    with pytest.raises(ValueError,match="seed replay mismatch"):
+        fit.analyze(a,b,c,d)
+
+
+def test_original_recorded_seed_cannot_be_changed_even_with_unchanged_balance():
+    a,b,c,d=fixture()
+    for r in a:
+        r["random_seed"]="99991"
+    with pytest.raises(ValueError,match="seed replay mismatch"):
+        fit.analyze(a,b,c,d)
