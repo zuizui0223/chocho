@@ -1,0 +1,58 @@
+{
+  "schema": "chocho_kyoto_4arm_greenhouse_bibd_information_v01",
+  "date": "2026-10-14",
+  "status": "MATHEMATICAL_DESIGN_INFORMATION_NOT_BUTTERFLY_DATA",
+  "source_2012_design": "Hashimoto & Ohgushi 2023 DOI 10.1002/ece3.10164 reports 10 greenhouses x 3 cages each; present-day facilities unverified",
+  "bibd": {
+    "treatments": 4,
+    "independent_greenhouses": 8,
+    "whole_cages_each": 3,
+    "whole_cages_total": 24,
+    "times_each_treatment_assigned": 6,
+    "omissions_per_treatment": 2,
+    "greenhouses_per_treatment_pair": 4,
+    "pairs": 6,
+    "residual_df_fixed_greenhouse_ols": 13
+  },
+  "contrast_arm_order": [
+    "NATURAL_NONE",
+    "NATURAL_ADD_S",
+    "SUPPORTED_NONE",
+    "SUPPORTED_ADD_S"
+  ],
+  "contrast_coefficients": [
+    1,
+    -1,
+    -1,
+    1
+  ],
+  "treatment_information": {
+    "diagonal": 4,
+    "off_diagonal": -1.3333333333333333,
+    "nonzero_eigenvalue": 5.333333333333333,
+    "rank": 3
+  },
+  "primary_contrast_variance_multiplier_per_sigma_squared": 0.75,
+  "counterfactual_4arm_6complete_blocks_24cages_variance_multiplier": 0.6666666666666666,
+  "extra_variance_fraction_vs_24cage_complete_blocks": 0.125,
+  "relative_efficiency_vs_24cage_complete_blocks": 0.8888888888888888,
+  "hypothetical_precision": {
+    "assumed_cage_residual_SD": 0.2,
+    "source_based_SD_measured": false,
+    "standard_error_for_primary_contrast": 0.17320508075688773,
+    "normality_homoscedastic_independent_cage_error_required": true,
+    "t_0_975_df13": 2.1603686564610127,
+    "model_based_nominal_95pct_halfwidth": 0.37418682760697874,
+    "not_a_power_calculation": true,
+    "not_actual_butterfly_data": true
+  },
+  "source_methods": [
+    "Purdue Statistics STAT514 Lecture Notes Incomplete Block Designs",
+    "Penn State STAT503 Blocking design"
+  ],
+  "newly_observed_butterfly_effect": false,
+  "current_greenhouse_inventory_provided": false,
+  "legal_permits_verified": false,
+  "source_families_independently_replicated": false,
+  "original_GEB_main_unchanged": true
+}
