@@ -11,6 +11,8 @@ on:
       - "tests/test_kyoto_six_arm_identity_food.py"
       - "scripts/plan_kyoto_six_arm_precision_sensitivity.py"
       - "tests/test_kyoto_six_arm_precision_sensitivity.py"
+      - "tests/test_kyoto_six_arm_claim_contract.py"
+      - "docs/exploratory/KYOTO_SIX_ARM_PRIMARY_SECONDARY_CONTRACT_V02.json"
       - ".github/workflows/kyoto-six-arm-source-independent.yml"
 
 permissions:
@@ -32,9 +34,16 @@ jobs:
           python -m pytest -q \
             tests/test_kyoto_six_arm_randomization.py \
             tests/test_kyoto_six_arm_identity_food.py \
-            tests/test_kyoto_six_arm_precision_sensitivity.py
+            tests/test_kyoto_six_arm_precision_sensitivity.py \
+            tests/test_kyoto_six_arm_claim_contract.py
       - name: Write hypothetical precision scenarios for pre-pilot budget check
         run: |
           python scripts/plan_kyoto_six_arm_precision_sensitivity.py \
             --receipt results/kyoto_six_arm_hypothetical_precision.json
           test -s results/kyoto_six_arm_hypothetical_precision.json
+      - name: Upload HYPOTHETICAL precision sensitivities only
+        uses: actions/upload-artifact@v4
+        with:
+          name: kyoto-illustrative-precision-NOT-power
+          path: results/kyoto_six_arm_hypothetical_precision.json
+          retention-days: 30
