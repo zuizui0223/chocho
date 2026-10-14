@@ -1,0 +1,84 @@
+{
+  "schema": "chocho_flowering_coverage_vs_density_v16_20261014",
+  "status": "POSTHOC_EMPIRICAL_PLANT_ONLY_SOURCE_REANALYSIS_NOT_BUTTERFLY_COHORT_EFFECT",
+  "date": "2026-10-14",
+  "frozen_GEB_pr38_head_unchanged": "88209b8a215ac1bc9c4c5e67622fa104179c8895",
+  "Kato_2012_DOI": "10.1515/sg-2012-0029",
+  "pinned_source_git_blob_sha1": {
+    "clones": "47f30f98807f27c3f47f8797731f7e05cc9eca9f",
+    "ramets": "ed8425db6cbc6830249824a2edd41fbfc7ec2db3"
+  },
+  "source": {
+    "clones": 23,
+    "ramets": 39,
+    "seed_sources": 8,
+    "seasons": 3,
+    "total_season_bins": 108,
+    "flowering_binyears": 57,
+    "flowering_ramet_season_events": 79
+  },
+  "groups": {
+    "all": {
+      "ramets": 39,
+      "at_least_one": 57,
+      "at_least_three": 48,
+      "at_least_five": 40,
+      "ramet_decads": 397
+    },
+    "g_plus_h": {
+      "clones": 7,
+      "ramets": 12,
+      "at_least_one": 57,
+      "at_least_three": 42,
+      "at_least_five": 29,
+      "ramet_decads": 249
+    },
+    "three_clone_counterfactual": {
+      "clones": [
+        146,
+        148,
+        152
+      ],
+      "ramets": 5,
+      "at_least_one": 57,
+      "at_least_three": 32,
+      "at_least_five": 0,
+      "ramet_decads": 139
+    }
+  },
+  "source_g_unique_year_counts": [
+    9,
+    6,
+    8
+  ],
+  "source_pairs_covering_entire_3_year_calendar": [
+    [
+      "g",
+      "h"
+    ]
+  ],
+  "restricted_exhaustive": {
+    "four_clones_two_single_two_double": {
+      "possible": 2520,
+      "observed_g_unique_binyears": 23,
+      "equal_or_more_extreme_portfolios": 1
+    },
+    "seven_clones_two_single_five_double": {
+      "possible": 91728,
+      "full_calendar_portfolios": 2184,
+      "full_calendar_fraction": 0.023809523809523808
+    }
+  },
+  "inference": "Exact retrospective portfolio enumerations, no randomized allocation or inferential p values; arbitrary flower-ramet threshold only. Neither flower-bud biomass nor butterfly larval survival, breeding phenology, butterfly abundance or butterfly colonization was measured.",
+  "reproducibility": {
+    "complete_local_v16_zip": "chocho_phenological_resource_density_verified_v16_20261014.zip",
+    "zip_sha256": "9d745cb997b33fa9c9a767c0e75670a38dcb75ef1c5471d5d77025563088f91e",
+    "local_tests_passed": 5,
+    "fresh_extracted_archive_tests_passed": 5,
+    "independent_numpy_check_passed": true,
+    "Github_Action_run": 38499982056,
+    "Github_Action_parent_v15_tests_passed": 10,
+    "Github_Action_v16_tests_passed": 6,
+    "source_code_path": "research/nacaduba_stage_v16/audit.py"
+  }
+}
