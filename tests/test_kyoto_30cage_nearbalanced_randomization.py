@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from collections import Counter
 from itertools import combinations
@@ -124,3 +125,34 @@ def test_reversal_omission_patterns_are_both_randomized_by_seed():
         for seed in range(16)
     }
     assert candidates=={frozenset(mod.POSITIVE_CONTRAST_ARMS),frozenset(mod.NEGATIVE_CONTRAST_ARMS)}
+
+
+def test_frozen_mathematics_receipt_is_not_2023_or_new_ecological_outcome():
+    path=ROOT/"provenance/reviewer_defenses/results/kyoto_30cage_nearbalanced_information_20261014.json"
+    data=json.loads(path.read_text(encoding="utf-8"))
+    assert data["state"]=="SOURCE_GROUNDED_STATISTICAL_DESIGN_ONLY_NOT_EMPIRICAL_BUTTERFLY_EFFECT"
+    comparison=data["comparison"]
+    old=comparison["eight_greenhouse_exact_BIBD"]
+    newer=comparison["ten_greenhouse_near_BIBD"]
+    assert old["whole_cages"]==24
+    assert newer["whole_cages"]==30
+    assert newer["each_competitor_level_total"]==15
+    assert newer["each_food_access_level_total"]==15
+    assert newer["residual_df"]==17
+    assert newer["primary_variance_times_cage_sigma2"]==pytest.approx(.6)
+    assert data["variance_reduction_fraction_vs_24cage"]==pytest.approx(.2)
+    assert data["standard_error_ratio_vs_24cage"]==pytest.approx((.6/.75)**.5)
+    assert data["hypothetical_95pct_halfwidth_30cage"]==pytest.approx(
+        2.1098155778331806*.2*(.6**.5)
+    )
+    assert data["hypothetical_95pct_halfwidth_24cage"]==pytest.approx(
+        2.1603686564610127*.2*(.75**.5)
+    )
+    assert data["hypothetical_95pct_halfwidth_30cage"] < data["hypothetical_95pct_halfwidth_24cage"]
+    assert sorted(data["six_nearly_balanced_pattern_variance_multipliers_sorted"]) == pytest.approx(
+        sorted([.6,.6,20/33,20/33,20/33,20/33])
+    )
+    assert data["no_animal_outcomes_in_this_receipt"]
+    assert data["no_current_greenhouse_inventory"]
+    assert not data["original_physical_cage_setup_currently_available"]
+    assert data["GEB_main_and_PR38_unchanged"]
