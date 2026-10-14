@@ -90,6 +90,8 @@ def test_historical_three_cages_per_greenhouse_cannot_host_four_or_six_complete_
     assert x["greenhouse_local_complete_four_arm_blocks_capacity"] == 0
     assert x["greenhouse_local_complete_six_arm_blocks_capacity"] == 0
     assert x["greenhouses_supporting_at_least_four_cages"] == 0
+    assert not x["four_arm_complete_greenhouse_block_structurally_available"]
+    assert not x["six_arm_complete_greenhouse_block_structurally_available"]
     assert x["greenhouse_incomplete_block_design_not_analyzed_here"]
     # These numbers are a hypothetical inventory matching the historical
     # 2012 layout, NOT confirmation of present-day facility access.
@@ -101,6 +103,8 @@ def test_pilot_structural_gate_is_not_animal_experiment_or_causal_result():
     assert result["true_demographic_fitness_response_estimated"] is False
     assert result["butterflies_reared_by_script"] is False
     assert result["preliminary_2023_neonate_study_reproduced"] is False
+    assert result["four_arm_within_greenhouse_design_requires_redesign_or_more_capacity"]
+    assert result["six_arm_within_greenhouse_design_requires_redesign_or_more_capacity"]
     assert result["GEB_main_unchanged"] is True
 
 
@@ -183,3 +187,17 @@ def test_no_repeat_cups_or_foliage_batches():
     bad[1]["assay_leaf_batch_id"] = bad[0]["assay_leaf_batch_id"]
     with pytest.raises(ValueError, match="unique"):
         m.feeding_assay(bad, m.leaf_calibration(leaves()))
+
+
+def test_real_capacity_rule_distinguishes_four_and_six_cage_greenhouses():
+    x = m.facility_audit([
+        {"greenhouse_id": "G4", "eligible_whole_cages": "4"},
+        {"greenhouse_id": "G5", "eligible_whole_cages": "5"},
+    ])
+    assert x["four_arm_complete_greenhouse_block_structurally_available"]
+    assert not x["six_arm_complete_greenhouse_block_structurally_available"]
+    assert x["greenhouse_local_complete_four_arm_blocks_capacity"] == 2
+    assert x["greenhouse_local_complete_six_arm_blocks_capacity"] == 0
+    x = m.facility_audit([{"greenhouse_id": "G6", "eligible_whole_cages": "6"}])
+    assert x["six_arm_complete_greenhouse_block_structurally_available"]
+    assert x["greenhouse_local_complete_six_arm_blocks_capacity"] == 1
