@@ -1,0 +1,110 @@
+{
+  "title": "V16 matched-clone phenological extension diagnostic: Nacaduba larval-host plant Acacia auriculiformis",
+  "date": "2026-10-14",
+  "source": "Kato et al (2012) Silvae Genetica 61:228-236 doi:10.1515/sg-2012-0029 Tables 4/5/7",
+  "source_branch": "analysis/resource-redundancy-20261011",
+  "original_table_github_blob_shas": {
+    "clones": "47f30f98807f27c3f47f8797731f7e05cc9eca9f",
+    "ramets": "ed8425db6cbc6830249824a2edd41fbfc7ec2db3"
+  },
+  "experiment": {
+    "island": "Iriomote Japan",
+    "species": "Acacia auriculiformis",
+    "clones": 23,
+    "ramets": 39,
+    "seed_sources": 8,
+    "flowering_seasons": [
+      "2008-09",
+      "2009-10",
+      "2010-11"
+    ],
+    "observation_resolution": "10-day flowering bins from 3–4-day observation visits",
+    "source_g": {
+      "provenance": "Thailand",
+      "clones": [
+        "146",
+        "147",
+        "148",
+        "149"
+      ],
+      "ramets": 6,
+      "ramet_counts_per_clone": [
+        1,
+        2,
+        2,
+        1
+      ]
+    }
+  },
+  "observed_source_g_exclusive_flowering_tenday_bins": [
+    9,
+    6,
+    8
+  ],
+  "other_33_exclusive_bins": [
+    2,
+    4,
+    3
+  ],
+  "shared_bins": [
+    8,
+    7,
+    10
+  ],
+  "stand_union_bins": [
+    19,
+    17,
+    21
+  ],
+  "total_unique_by_source_g": 23,
+  "combined_union_total": 57,
+  "exact_finite_label_rarity": {
+    "design": "Choose 2 of 7 single-ramet clones and 2 of 16 double-ramet clones, assess exclusive 10-day flowering category coverage of labelled group vs unlabelled rest",
+    "enumerated_groups": 2520,
+    "observed_score": 23,
+    "null_mean": 1.0103174603174603,
+    "null_median": 0,
+    "null_nearest_95_percentile_range": [
+      0,
+      5
+    ],
+    "null_second_highest_score": 10,
+    "null_max": 23,
+    "groups_ge_observed": 1,
+    "rank_fraction": 0.0003968253968253968,
+    "status": "DESCRIPTIVE_CONDITIONAL_FINITE_LABEL_RARITY_NOT_RANDOMIZED_OR_CAUSAL_P"
+  },
+  "robustness": {
+    "leave_one_g_clone_out_total_exclusive_tenday_bins": {
+      "146": 22,
+      "147": 23,
+      "148": 21,
+      "149": 23
+    },
+    "each_of_3_seasons_has_early_source_g_period_after_any_single_clone_drop": true,
+    "remove_any_single_year_real_group_remains_unique_max": true,
+    "condition_all_6_ramets_flower_each_year": {
+      "n_groupings": 15,
+      "groups_ge_real": 1,
+      "rank_fraction": 0.06666666666666667,
+      "critical_limitation": "Among single-ramet clones only actual source-g clones 146 and 149 flowered all three years, forcing their inclusion in this conditional group comparison."
+    },
+    "correct_2009_prose_table_disagreement_by_clipping_clones_146_149_at_8_tenday_bins": {
+      "source_g_2009_exclusive_unmodified": 6,
+      "after_clip": 23,
+      "three_season_total_unmodified": 23
+    }
+  },
+  "interpretation": "Source-specific within-plant-species phenological heterogeneity is extreme relative to the same sample-size clone mixtures, but the published paper already documented the early source-g flowering. This is additional descriptive quantification, not discovery of a new ecology mechanism. No daily floral bud density, butterfly larval survival, plant genetic effect or colonization delay is identified.",
+  "verification": {
+    "new_regression_tests_passed": 9,
+    "separate_numpy_reimplementation_matches_2520_group_rows": true,
+    "local_zip_reextracted_check_sha256sum_all_files": true,
+    "github_workflow_run": 38506434982,
+    "github_workflow_conclusion": "success",
+    "github_reproduced_numbers": true,
+    "local_bundle": "chocho_v16_balanced_clone_phenology_verified_20261014.zip",
+    "local_bundle_sha256": "f41d6ef21de01aacd343c9ae4dc9b9786d3bc09c0388e00b42b99903db1e45de"
+  },
+  "submission": "GEB PR #38 still pinned to 88209b8a215ac1bc9c4c5e67622fa104179c8895; no paper or figures modified"
+}
