@@ -1,0 +1,35 @@
+name: Monarch original host warming adult eclosion plot audit
+on:
+  workflow_dispatch:
+  push:
+    branches: [exploration/monarch-plotlevel-host-temperature-emergence-v01]
+    paths:
+      - "scripts/reanalyze_original_monarch_plot_host_warming_adults.py"
+      - "tests/test_monarch_plot_host_temperature_emergence.py"
+      - ".github/workflows/monarch-plotlevel-host-temperature-emergence.yml"
+permissions:
+  contents: read
+jobs:
+  original-plot-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install offline parser-test requirement only
+        run: python -m pip install pytest==8.3.4
+      - name: Validate plot-clustered source parser and noncausal constraints
+        run: python -m pytest -q tests/test_monarch_plot_host_temperature_emergence.py
+      - name: Retrieve author-pinned original and bootstrap whole experimental plots
+        run: |
+          python scripts/reanalyze_original_monarch_plot_host_warming_adults.py \
+            --bootstrap-draws 9999 \
+            --receipt results/monarch_host_temperature_plot_eclosion_original_20261015.json
+      - name: Archive original-row provenance and plot-level uncertainty
+        uses: actions/upload-artifact@v4
+        with:
+          name: monarch-plotlevel-original-author-adult-eclosion-NOT-novel
+          path: results/monarch_host_temperature_plot_eclosion_original_20261015.json
+          retention-days: 30
