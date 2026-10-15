@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import importlib.util
 import random
+import sys
 from pathlib import Path
 
 import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
 PATH = ROOT / "scripts/analyze_butterfly_climate_matched_plant_range_null.py"
 spec = importlib.util.spec_from_file_location("climate_plant_null", PATH)
 assert spec and spec.loader
