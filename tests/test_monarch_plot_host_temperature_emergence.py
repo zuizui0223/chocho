@@ -95,21 +95,21 @@ def test_fresh_source_is_checked_by_git_blob_identity():
 def test_original_plots_must_have_all_four_host_oe_plants():
     rows=fake_rows()
     rows[0]["OE_treatment"]="control"
-    with pytest.raises(ValueError,match="Plot missing one host x OE"):
+    with pytest.raises(ValueError,match="eight 30-larva cells mismatch"):
         m.load_original(encode(rows),require_blob=False)
 
 
 def test_original_plant_is_two_nested_larvae_not_two_hosts():
     rows=fake_rows()
     rows[0]["Plant_ID"]="P1-unrelated"
-    with pytest.raises(ValueError,match="four whole plants"):
+    with pytest.raises(ValueError,match="120 plants"):
         m.load_original(encode(rows),require_blob=False)
 
 
 def test_original_temperature_cannot_vary_within_plot():
     rows=fake_rows()
     rows[0]["Temp"]="elevated"
-    with pytest.raises(ValueError,match="Warming randomized at PLOT"):
+    with pytest.raises(ValueError,match="eight 30-larva cells mismatch"):
         m.load_original(encode(rows),require_blob=False)
 
 
@@ -120,7 +120,7 @@ def test_invalid_source_outcomes_or_adult_before_pupation_fail_closed():
         m.load_original(encode(rows),require_blob=False)
     rows=fake_rows()
     rows[0]["Surv_pupa"]="0"
-    with pytest.raises(ValueError,match="Adult with no original pupation"):
+    with pytest.raises(ValueError,match="Recorded original adult with no original pupation"):
         m.load_original(encode(rows),require_blob=False)
 
 
@@ -131,7 +131,7 @@ def test_missing_original_larva_cannot_be_omitted_for_complete_case_fitness():
         m.load_original(encode(rows),require_blob=False)
     rows=fake_rows()
     rows[1]["ID"]=rows[0]["ID"]
-    with pytest.raises(ValueError,match="Duplicate"):
+    with pytest.raises(ValueError,match="duplicate original individual"):
         m.load_original(encode(rows),require_blob=False)
 
 
