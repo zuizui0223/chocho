@@ -132,12 +132,32 @@ The initial [successful plant-family × Level1 range-shuffle run](https://github
 
 The number of added resource cells is not fixed in this plant-level null, which makes the first row a meaningful but bounded comparison. The first two rows disprove the intended simple claim that host redistribution produces *more absolute shared resource geography* than expected by the plant range and link architecture. The third demotes any claim that 58.9% is unexpectedly fragile. The fourth is an **interpretation trap**: a region in which two butterflies already had *different native host plants* may acquire an introduced plant shared by both without either butterfly acquiring any *new resource region*. Therefore its two terms differ in incidence universe. It is a descriptive contrast rather than a clean competition or co-use density estimand.
 
-**Replacement outcome and decomposition under execution (v0.2):**
-- For every **newly opened butterfly×region** cell, count the number of *other* focal butterflies sharing an exact host species in that region. Compare the cell-weighted mean and zero-peer fraction to the plant-level null using an identical denominator. This reproduces the existing observed descriptive mean **5.7126** and zero-peer fraction **0.09895** if reconstructed correctly.
-- Partition the fixed introduced host×butterfly×region incidence budget into (i) incidences falling where the butterfly already had a native-host resource, (ii) incidences supporting novel resource cells, and (iii) *redundant supporting incidences* beyond one per novel cell. This distinguishes **baseline absorption** from **multiple introduced hosts in one new cell**.
-- Check two independent 499-draw chains (20261015, 20261016) with higher swap spacing before promoting any small positive null residual. Species added-cell counts and plant climatic preferences remain **unfixed** in this null.
+**Replacement outcome and decomposition: completed two-chain check (v0.2).**
 
-**Interpretation until those tests return:** Recorded host-resource networks become more shared in the raw reconstruction but *not more than this null in total new shared-host region count*; under the plant-level null the resource opportunities are also fewer, while the apparent relative exposure excess awaits an aligned denominator. Do not change the GEB paper based solely on initial v0.1.
+The [follow-up source workflow](https://github.com/zuizui0223/chocho/actions/runs/38685083853) successfully reconstructed the same HOSTS/WCVP resource data and ran *two independent 499-draw RNG chains*, seed 20261015 and 20261016, with doubled between-draw swap spacing. Unaltered JSON receipts and both chains' diagnostics are frozen at [plant-range structural null v0.2](../../provenance/reviewer_defenses/results/butterfly_plant_range_structural_null_two_chains_v0.2.json). Burn-in changed **31.1%** and **30.7%** of introduced plant×region incidences relative to initial placement, respectively; this checks movement, *not* convergence.
+
+**Key ecological partition and exact accounting identity:**
+
+Let `H` be fixed introduced-host × known-focal-butterfly × region incidences, `A` those incidences already inside the butterfly's *native*-host resource envelope, `N` incidences in newly supported cells, `R` redundant supporting host incidences beyond one per new butterfly×region cell, and `U` unique newly supported butterfly×region cells. By construction, `H = A + N` and `U = N - R`. The plant-level null keeps `H` fixed.
+
+| Quantity | Observed | Null median: seed 20261015 / 20261016 | Direction |
+|---|---:|---:|---|
+| `H`: total candidate incidences | **75,346** | 75,346 / 75,346 | Fixed exactly |
+| `A`: absorbed within native-supported resource cells | **46,387** | 45,301 / 45,298 | **+1,086 / +1,089** more absorbed |
+| `N`: candidate incidences supporting new cells | **28,959** | 30,045 / 30,048 | −1,086 / −1,089 |
+| `R`: extra introduced host support within novel cells | **14,406** | 14,662 / 14,659 | −256 / −253 |
+| `U`: unique added butterfly×region cells | **14,553** | 15,384 / 15,385 | **−831 / −832** (−5.4% vs median) |
+| Mean introduced host supports *per newly added cell* | **1.9899** | 1.9532 / 1.9529 | Small positive difference |
+| Mean other focal host-sharing butterflies *per newly added cell* | **5.7126** | 5.7483 / 5.7472 | Small negative difference |
+| Single-host-backed fraction of new resource cells | **0.5892** | 0.5921 / 0.5920 | No clear unusual deficit or excess |
+
+The first strong unexpected **conditional** result is the *native-envelope absorption surplus*: observed 46,387 vs null about 45,300; observed fraction **61.6%** of the fixed candidate incidence budget versus null **60.1%**, a difference of about **1.4 percentage points**. Both chains place the observed absorption and 5.4%-lower added-cell count outside all 499 respective random draws (nominal one-sided Monte Carlo `p = 0.002` per chain; not two independent 499-permutation hypothesis tests). Multiple exploratory endpoints were inspected, so do not turn this into a prospective global confirmatory p-value.
+
+**Mechanistic decomposition:** Compared with matched plant-range permutations, more introduced host incidences fall within already-native-supported butterfly geography, reducing their ability to open *new* butterfly resource cells. The **lower** absolute redundant incidences within the newly opened cells partly offset, rather than cause, the observed 831–832-cell deficit. This isolates **native-resource saturation/overlap** as the main arithmetic contributor under this null, *not* extraordinarily high introduced-host redundancy.
+
+**Equally important negative results:** 58.9% single-host-backed cells are *not unusually dependent* under this null; the mean number of other focal butterflies sharing exact hosts in newly added cells is slightly **lower**, not higher, than null (~5.713 observed vs ~5.747–5.748). Geographic shared-host pair×region counts increase from native to contemporary, but their absolute additions are **below** plant-range null expectation. Therefore neither “novel opportunity is unusually fragile” nor “more interspecific concentration than expected” is supported as a global ecological effect here.
+
+**Hard inference ceiling:** This source-conditional excess absorption is plausible under common plant/insect climatic and geographic filtering, unequal habitat, historic introduction routes, or unevenly recorded host links. The null preserves plant family×Level1 margins and link identity but *not* plant climatic preferences, butterfly-specific added-row margins, or time since introduction. It cannot assign cause to ecological sorting, local host use, or the success/failure of colonization; confirmation would need a climate-conditioned constraint or independent observed larval-use data. The GEB submission paper remains frozen until the user chooses whether a new biological framing is warranted.
 
 ### Existing literature that bounds novelty
 
@@ -161,7 +181,7 @@ The same plant-range null, now with a **properly aligned butterfly×new-resource
 
 - Observed mean number of **other focal butterflies sharing an exact host per newly added butterfly×region cell** = **5.71257**; null median **5.74938** (95% null interval 5.71275–5.78614), lower-tail exploratory Monte Carlo p=**0.030** (199 draws).
 - Observed fraction with **no other focal butterfly** sharing an exact host = **0.09895**; null median **0.09973**, no clear residual (p=**0.205** lower tail).
-- Therefore the earlier cross-unit ratio 5.4567 vs 5.3013 **must not be interpreted as a positive co-user concentration result**. When units align, the direction is slightly *negative*. The magnitude is small (about **−0.64%** relative to the null mean), and this 199-draw post-hoc result remains exploratory pending independent-chain comparison.
+- Therefore the earlier cross-unit ratio 5.4567 vs 5.3013 **must not be interpreted as a positive co-user concentration result**. When units align, the direction is slightly *negative*. The magnitude is small (about **−0.64%** relative to the null mean), and the completed two-chain 499-draw comparison reproduces the same slight negative direction (nominal p=0.032 and 0.028, before post-hoc/multiplicity cautions).
 
 **Current claim decision:** Reject a global *excess co-user concentration* narrative and the inference that the 58.9% single-host-supported fraction is unusually high. Retain these only as descriptive structural properties. The absolute new opportunity deficit and its partition into native-resource overlap versus added-host redundancy remain the primary candidate for a testable, non-mechanical macroecological result.
 
