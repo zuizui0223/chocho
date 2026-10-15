@@ -21,12 +21,13 @@
     "unknown_condition": "ambient|tropical|control",
     "distinct_host_plants": 120,
     "larvae_per_plant": 2,
-    "temperature_randomization_units": 30,
     "plots_per_temperature": 15,
     "plant_host_by_inoculation_factorial_within_each_plot": true,
     "pupated_in_known_fates": 219,
     "adult_emerged_in_known_fates": 219,
-    "postpupation_loss_among_known_pupae": 0
+    "postpupation_loss_among_known_pupae": 0,
+    "experimental_temperature_plot_units": 30,
+    "original_plot_temperature_assignment_randomized_documented": false
   },
   "eight_cells": [
     {
@@ -128,7 +129,7 @@
     "label": "(tropical minus swamp)_elevated minus (tropical minus swamp)_ambient",
     "bootstrap_seed": 20261015,
     "draws": 9999,
-    "method": "stratified whole-plot bootstrap 15 plots within each of 2 originally randomized temperature arms",
+    "method": "whole experimental-plot bootstrap stratified by assigned ambient/elevated condition; original paper does not explicitly document random placement of plot temperature conditions",
     "missing_assigned_no_observed_adult": {
       "ambient_host_difference": -0.016666666666666666,
       "elevated_host_difference": -0.13333333333333333,
@@ -188,6 +189,7 @@
     "pupa_and_adult_eclosion_not_flight_capability_mating_or_lifetime_recruitment": true,
     "single_original_trial_not_replication_across_butterfly_species": true,
     "not_a_new_confirmatory_fitness_interaction_result": true,
-    "GEB_main_and_pr38_unchanged": true
+    "GEB_main_and_pr38_unchanged": true,
+    "temperature_plot_randomization_not_explicitly_documented_in_authors_methods": true
   }
 }
