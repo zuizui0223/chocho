@@ -153,7 +153,11 @@ def verify_assigned_OE_plot_reproduction(original:dict, manifest:dict) -> dict:
             )
             if not close(audited_value,stored[key]["point"]):
                 raise ValueError(f"Wrong source OE-stratified effect: {case} {key}")
-            bootstrap=audited["paired_whole_plot_bootstrap_95pct"][key]
+            bootstrap_name=(
+                "control_minus_infected" if key=="difference_control_minus_infected"
+                else key
+            )
+            bootstrap=audited["paired_whole_plot_bootstrap_95pct"][bootstrap_name]
             if len(bootstrap)!=2 or any(
                 not close(actual,frozen)
                 for actual,frozen in zip(bootstrap,stored[key]["interval_95"])
