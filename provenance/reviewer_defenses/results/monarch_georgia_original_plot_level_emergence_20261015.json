@@ -1,0 +1,195 @@
+{
+  "schema": "chocho_monarch_plotlevel_adult_eclosion_frozen_receipt_20261015",
+  "source": {
+    "original_publication": "Ragonese et al. 2025 Ecological Entomology DOI 10.1111/een.70010",
+    "original_field_year": 2021,
+    "site": "Athens Georgia USA",
+    "source_repository": "IRagonese/MilkweedWarming2024",
+    "original_commit": "74e3e2cd8079401c9ccd4359f9e39e2d52d1f7d2",
+    "original_csv": "MWwarming_comp_May16.csv",
+    "git_blob_sha1": "e7a625911d8dc9b871a52d7657314a5d05472216",
+    "sha256": "dc7373e28f836c8da6d3a57754d13fbd965bbfa7c6132b7b7d2b90f569e596e2",
+    "verified_action": "https://github.com/zuizui0223/chocho/actions/runs/38680160319"
+  },
+  "data_units": {
+    "original_larvae_assigned": 240,
+    "known_adult_fates": 239,
+    "adult_eclosions": 219,
+    "nonadult_known": 20,
+    "unknown": 1,
+    "unknown_individual_id": "22b",
+    "unknown_condition": "ambient|tropical|control",
+    "distinct_host_plants": 120,
+    "larvae_per_plant": 2,
+    "plots_per_temperature": 15,
+    "plant_host_by_inoculation_factorial_within_each_plot": true,
+    "pupated_in_known_fates": 219,
+    "adult_emerged_in_known_fates": 219,
+    "postpupation_loss_among_known_pupae": 0,
+    "experimental_temperature_plot_units": 30,
+    "original_plot_temperature_assignment_randomized_documented": false
+  },
+  "eight_cells": [
+    {
+      "temp": "ambient",
+      "host": "tropical",
+      "inoc": "infected",
+      "n": 30,
+      "known": 30,
+      "adults": 28,
+      "pupae": 28
+    },
+    {
+      "temp": "ambient",
+      "host": "tropical",
+      "inoc": "control",
+      "n": 30,
+      "known": 29,
+      "adults": 26,
+      "pupae": 26
+    },
+    {
+      "temp": "ambient",
+      "host": "swamp",
+      "inoc": "infected",
+      "n": 30,
+      "known": 30,
+      "adults": 27,
+      "pupae": 27
+    },
+    {
+      "temp": "ambient",
+      "host": "swamp",
+      "inoc": "control",
+      "n": 30,
+      "known": 30,
+      "adults": 28,
+      "pupae": 28
+    },
+    {
+      "temp": "elevated",
+      "host": "tropical",
+      "inoc": "infected",
+      "n": 30,
+      "known": 30,
+      "adults": 28,
+      "pupae": 28
+    },
+    {
+      "temp": "elevated",
+      "host": "tropical",
+      "inoc": "control",
+      "n": 30,
+      "known": 30,
+      "adults": 23,
+      "pupae": 23
+    },
+    {
+      "temp": "elevated",
+      "host": "swamp",
+      "inoc": "infected",
+      "n": 30,
+      "known": 30,
+      "adults": 30,
+      "pupae": 30
+    },
+    {
+      "temp": "elevated",
+      "host": "swamp",
+      "inoc": "control",
+      "n": 30,
+      "known": 30,
+      "adults": 29,
+      "pupae": 29
+    }
+  ],
+  "host_adult_by_temperature": {
+    "ambient_tropical": {
+      "adult": 54,
+      "assigned": 60,
+      "risk": 0.9
+    },
+    "ambient_swamp": {
+      "adult": 55,
+      "assigned": 60,
+      "risk": 0.9166666666666666
+    },
+    "elevated_tropical": {
+      "adult": 51,
+      "assigned": 60,
+      "risk": 0.85
+    },
+    "elevated_swamp": {
+      "adult": 59,
+      "assigned": 60,
+      "risk": 0.9833333333333333
+    }
+  },
+  "plot_paired_host_risk_difference": {
+    "label": "(tropical minus swamp)_elevated minus (tropical minus swamp)_ambient",
+    "bootstrap_seed": 20261015,
+    "draws": 9999,
+    "method": "whole experimental-plot bootstrap stratified by assigned ambient/elevated condition; original paper does not explicitly document random placement of plot temperature conditions",
+    "missing_assigned_no_observed_adult": {
+      "ambient_host_difference": -0.016666666666666666,
+      "elevated_host_difference": -0.13333333333333333,
+      "interaction": -0.11666666666666667,
+      "interaction_bootstrap_95pct": [
+        -0.3,
+        0.05
+      ],
+      "ambient_host_difference_bootstrap_95pct": [
+        -0.16666666666666666,
+        0.15
+      ],
+      "elevated_host_difference_bootstrap_95pct": [
+        -0.21666666666666667,
+        -0.06666666666666667
+      ],
+      "leave_one_original_plot_out_range": [
+        -0.16904761904761906,
+        -0.06190476190476191
+      ]
+    },
+    "missing_possible_one_adult": {
+      "ambient_host_difference": 0,
+      "elevated_host_difference": -0.13333333333333333,
+      "interaction": -0.13333333333333333,
+      "interaction_bootstrap_95pct": [
+        -0.3,
+        0.03333333333333333
+      ],
+      "ambient_host_difference_bootstrap_95pct": [
+        -0.15,
+        0.15
+      ],
+      "elevated_host_difference_bootstrap_95pct": [
+        -0.21666666666666667,
+        -0.06666666666666667
+      ],
+      "leave_one_original_plot_out_range": [
+        -0.1869047619047619,
+        -0.07976190476190476
+      ]
+    }
+  },
+  "published_prior_art": {
+    "report": "Species and experimental warming were already studied as explanatory terms; paper reports interaction z=-1.85 p=0.064 and warm-plot within-host species comparison p=0.028. No new ecological finding asserted.",
+    "botanical_origin_confounded_with_two_plant_species": true,
+    "A_curassavica_nonnative_in_Georgia": true,
+    "A_incarnata_native_in_Georgia": true,
+    "prespecified_treatment_not_natural_host_persistence": true
+  },
+  "no_extrapolation": {
+    "original_chocho_GEB_monarch_known_host_rows_distinct": 40,
+    "original_monarch_host_resource_native_WGSRPD3_regions": 181,
+    "original_monarch_host_resource_contemporary_WGSRPD3_regions": 263,
+    "original_introduced_added_region_count": 82,
+    "same_milkweed_temperate_site_experiment_does_not_measure_fitness_in_82_regions": true,
+    "pupa_and_adult_eclosion_not_flight_capability_mating_or_lifetime_recruitment": true,
+    "single_original_trial_not_replication_across_butterfly_species": true,
+    "not_a_new_confirmatory_fitness_interaction_result": true,
+    "GEB_main_and_pr38_unchanged": true,
+    "temperature_plot_randomization_not_explicitly_documented_in_authors_methods": true
+  }
+}

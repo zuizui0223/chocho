@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import tomllib
 from pathlib import Path
 
 
@@ -61,7 +62,10 @@ def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
 
 def test_shapely_is_explicit_in_clean_test_environment() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'test = ["pytest>=8", "shapely>=2,<3"]' in pyproject
+    test_extras = tomllib.loads(pyproject)["project"]["optional-dependencies"]["test"]
+    assert any(x.startswith("pytest") for x in test_extras)
+    assert any(x.startswith("shapely") for x in test_extras)
+    assert any(x.startswith("scikit-learn") for x in test_extras)
     workflow = (ROOT / ".github/workflows/paper-ci.yml").read_text(encoding="utf-8")
     assert 'python -m pip install -e ".[test]"' in workflow
 
