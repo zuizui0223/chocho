@@ -97,7 +97,7 @@ This is the extension from known **plant-flora homogenization** to the **resourc
 
 ## 2026-10-15 direct follow-up: species-level redundancy is not taxonomic breadth
 
-The frozen figure source \`data/frozen/figure_sources/host_contribution_metrics.csv\` independently supports a **within-species / local-redundancy distinction**:
+The frozen figure source `data/frozen/figure_sources/host_contribution_metrics.csv` independently supports a **within-species / local-redundancy distinction**:
 
 - Across all **206** butterflies with added host-resource regions, the median species-level fraction of new regions supported by exactly one introduced plant host is **68.8%**. This species-unweighted figure differs from the **58.9%** (8,574/14,553) opportunity-unit-weighted number; both denominators are explicitly distinguished.
 - The median single-host fraction declines across resolved host-species portfolio classes: **100%** (1 host, n=14), **98.8%** (2–4 hosts, n=67), **67.6%** (5–9, n=45), **46.5%** (10+, n=80).
