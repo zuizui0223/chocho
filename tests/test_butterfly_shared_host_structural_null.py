@@ -85,6 +85,29 @@ def test_added_cell_exposures_can_differ_from_novel_shared_pair_regions() -> Non
     assert result["introduced_incidences_in_newly_supported_cells"] == 1
     assert result["redundant_introduced_host_incidences_in_new_cells"] == 0
 
+
+def test_shared_host_region_can_increase_without_any_new_resource_cell() -> None:
+    # Important interpretation trap: both species already possess native
+    # larval resources in region 0, via distinct native plants. An introduced
+    # shared host c creates a novel exact shared-host PAIR×REGION, even though
+    # NO butterfly gains a new resource region.
+    import math
+
+    native_host = {"a": 1 << 0, "b": 1 << 0, "c": 0}
+    introduced = {"a": 0, "b": 0, "c": 1 << 0}
+    result = null.site_contribution_stats(
+        [["a", "c"], ["b", "c"]],
+        native_host,
+        introduced,
+        [(0, 1, ["c"], 0)],
+        [1 << 0, 1 << 0],
+    )
+    assert result["added_units"] == 0
+    assert result["novel_exact_shared_pair_regions"] == 1
+    assert result["added_cell_total_other_shared_butterflies"] == 0
+    assert math.isnan(result["shared_pair_units_per_added_unit"])
+    assert math.isnan(result["added_cell_mean_other_shared_butterflies"])
+
 def test_swap_preserves_both_geographic_margins() -> None:
     native = {"a": {0}, "b": {1}, "c": {4}}
     intro_original = {"a": {2}, "b": {3}, "c": {2}}
