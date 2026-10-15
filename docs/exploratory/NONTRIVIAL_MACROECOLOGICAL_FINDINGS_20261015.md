@@ -145,6 +145,26 @@ The number of added resource cells is not fixed in this plant-level null, which 
 - A global 74-network analysis in *Science of the Total Environment* (2024), DOI [10.1016/j.scitotenv.2024.173949](https://doi.org/10.1016/j.scitotenv.2024.173949), examines exotic plants and plant–herbivore network topology; our distinct question is **potential larval resource geography at fixed butterfly–host identities**, with no measured local network topology.
 - Galmán and colleagues (2025), *Ecology Letters*, DOI [10.1111/ele.70196](https://doi.org/10.1111/ele.70196), compare actual herbivory across native and non-native plants. This reinforces that resource presence cannot, by itself, establish realized local usage or successful butterfly development.
 
+## Non-obvious pairwise result: expanding shared-host geography can dilute normalized niche overlap
+
+An independent historical workflow [October 7, source run 37612135885](https://github.com/zuizui0223/chocho/actions/runs/37612135885) computed pairwise Jaccard on **exact host-plant ID × region resource cells** (not on geographic envelope alone). Its original numbers are preserved in [an auditable derived receipt](../../provenance/reviewer_defenses/results/butterfly_exact_host_pairwise_overlap_v0.1.json).
+
+Across the **986 pairs with an exact shared host relationship** (from the same 239-butterfly panel), **616** pairs increased normalized exact-host resource-niche overlap, **366** decreased, and **4** did not change. Of those 986 pairs, **920** gained at least one new exact shared-host × region cell after plant redistribution. By set intersection alone, **at least 920+366−986 = 300 butterfly pairs** must therefore *gain shared-host resource geography while losing normalized pairwise niche similarity*. This is a rigorous lower bound; the exact cross-tab has not been independently extracted, so do not report 300 as an exact observed count.
+
+A complementary descriptive comparison conditions the all-pairs means on the 986 sharing-host pairs, yielding mean Jaccard approximately **0.1163 → 0.1409**, versus all-pairs **0.00403 → 0.00489**. Denominators must be identified: **27,455** pairs have no exact shared host and necessarily contribute zero throughout.
+
+**Ecological significance:** increasing the *number or geography* of resources shared by two consumers does not imply a uniformly increasing *proportion* of their resource niches that is shared. This supports explicit separation of a species-pair opportunity count from niche overlap, although changing normalized denominators explains part of the discordance and no tailored null has yet been used to establish whether the 366 declines are unexpectedly frequent.
+
+## Direct correction of the cross-unit normalization
+
+The same plant-range null, now with a **properly aligned butterfly×new-resource-region denominator**, ran successfully from [source run 38684924181](https://github.com/zuizui0223/chocho/actions/runs/38684924181); its unchanged numbers and source are frozen in [aligned-cell v0.1 result](../../provenance/reviewer_defenses/results/butterfly_added_cell_peer_null_v0.1.json).
+
+- Observed mean number of **other focal butterflies sharing an exact host per newly added butterfly×region cell** = **5.71257**; null median **5.74938** (95% null interval 5.71275–5.78614), lower-tail exploratory Monte Carlo p=**0.030** (199 draws).
+- Observed fraction with **no other focal butterfly** sharing an exact host = **0.09895**; null median **0.09973**, no clear residual (p=**0.205** lower tail).
+- Therefore the earlier cross-unit ratio 5.4567 vs 5.3013 **must not be interpreted as a positive co-user concentration result**. When units align, the direction is slightly *negative*. The magnitude is small (about **−0.64%** relative to the null mean), and this 199-draw post-hoc result remains exploratory pending independent-chain comparison.
+
+**Current claim decision:** Reject a global *excess co-user concentration* narrative and the inference that the 58.9% single-host-supported fraction is unusually high. Retain these only as descriptive structural properties. The absolute new opportunity deficit and its partition into native-resource overlap versus added-host redundancy remain the primary candidate for a testable, non-mechanical macroecological result.
+
 ## What NOT to promote as findings
 
 1. **“More host-plant range = more butterflies.”** Only potential larval resource opportunity is reconstructed; butterfly density, recruitment and conservation benefit were not estimated.
