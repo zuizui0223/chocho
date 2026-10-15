@@ -95,6 +95,30 @@ This is the extension from known **plant-flora homogenization** to the **resourc
 - [region-matched overlap null](../../provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json)
 - [species robustness](../../provenance/reviewer_defenses/results/butterfly_occurrence_species_robustness_v0.1.json)
 
+## 2026-10-15 direct follow-up: species-level redundancy is not taxonomic breadth
+
+The frozen figure source \`data/frozen/figure_sources/host_contribution_metrics.csv\` independently supports a **within-species / local-redundancy distinction**:
+
+- Across all **206** butterflies with added host-resource regions, the median species-level fraction of new regions supported by exactly one introduced plant host is **68.8%**. This species-unweighted figure differs from the **58.9%** (8,574/14,553) opportunity-unit-weighted number; both denominators are explicitly distinguished.
+- The median single-host fraction declines across resolved host-species portfolio classes: **100%** (1 host, n=14), **98.8%** (2–4 hosts, n=67), **67.6%** (5–9, n=45), **46.5%** (10+, n=80).
+- Yet **37/80** butterflies with 10 or more resolved hosts have >50% of added regions supported by only one introduced host. Even requiring **20 or more newly added regions**, it remains **35/78**, and all 78 pass the host-taxonomy adequacy floor. Notable source-conditional examples: *Apodemia mormo* (17 hosts, 52 new regions, 100% singly supported) and *Erynnis horatius* (13, 25, 100%).
+- Exploratory rank correlations of **multiple** host support across these 206 species: with host-family breadth **rho=0.291**, with resolved host-species richness **rho=0.669**. Partial rank correlation of family breadth, conditional on richness, is only **0.015**; also adjusting native geography and added geography yields **0.035**. These numbers are descriptive post-hoc, not corrected phylogenetic or equivalence tests; richness creates a built-in combinatorial opportunity for redundancy.
+- The intuitive interpretation is not “host-rich butterflies are necessarily fragile.” Rather, **recorded host richness is an imperfect predictor of local substitute resources** because candidate hosts may occur in different regions.
+
+**Occurrence cross-check—demoted, not promoted:** In the climate-stratified occurrence data, 23 species have outside-native records, but two have **zero** reconstructed introduced-host gain and hence an **undefined**, not zero, multiple-host fraction. Among the remaining **21**, the simple rank association between multiple-host support and outside-native occurrence recovery is **rho=0.649**; conditioning on resolved host richness, native resource geography and added opportunity drops it to **rho=0.262** (add outside-native count: **0.219**). Shared input geography, small selected sample, no local larval use and observational confounding block a novel establishment claim.
+
+Reproducibility:
+- [Self-contained species-level analysis](../../scripts/analyze_butterfly_species_redundancy.py)
+- [Frozen-data and synthetic tests](../../tests/test_butterfly_species_redundancy.py)
+
+## New structural null: do not confuse a planned contrast with a supported effect
+
+A distinct [plant-range swap null](../../scripts/analyze_butterfly_shared_host_structural_null.py), with [synthetic invariance tests](../../tests/test_butterfly_shared_host_structural_null.py) and a [pinned data-rebuild workflow](../../.github/workflows/butterfly-plant-range-structural-null.yml), randomizes *introduced plant × WGSRPD3 region* incidences **within plant-family × WGSRPD Level1 blocks** while preserving plant introduced-region count within each Level1, plant-family-specific regional richness, native host exclusions and the fixed butterfly–host network.
+
+It recomputes (a) novel exact shared-host butterfly-pair × region units, (b) newly added butterfly × region opportunity, (c) their ratio, and (d) fraction supported by a single introduced host. The model includes a predeclared **mixing/evaluability gate**, and records null medians and intervals only if movement is adequate.
+
+**Essential null boundary:** This plant-level randomization does *not* preserve the number of added regions for each butterfly, nor demonstrate ecologically plausible host introduction routes. It is a post-hoc **structural decomposition**, complementary to—not a replacement for—the already reported butterfly- and region-fixed margin null. **Until the empirical workflow's receipt is checked, there is no positive or negative finding from this new null.**
+
 ## What NOT to promote as findings
 
 1. **“More host-plant range = more butterflies.”** Only potential larval resource opportunity is reconstructed; butterfly density, recruitment and conservation benefit were not estimated.
