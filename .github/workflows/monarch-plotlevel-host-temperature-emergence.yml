@@ -6,6 +6,8 @@ on:
     paths:
       - "scripts/reanalyze_original_monarch_plot_host_warming_adults.py"
       - "tests/test_monarch_plot_host_temperature_emergence.py"
+      - "scripts/verify_original_monarch_plotlevel_frozen_receipt.py"
+      - "provenance/reviewer_defenses/results/monarch_georgia_original_plot_level_emergence_20261015.json"
       - ".github/workflows/monarch-plotlevel-host-temperature-emergence.yml"
 permissions:
   contents: read
@@ -27,6 +29,11 @@ jobs:
           python scripts/reanalyze_original_monarch_plot_host_warming_adults.py \
             --bootstrap-draws 9999 \
             --receipt results/monarch_host_temperature_plot_eclosion_original_20261015.json
+      - name: Independently reproduce all frozen original butterfly and bootstrap numbers
+        run: |
+          python scripts/verify_original_monarch_plotlevel_frozen_receipt.py \
+            --original results/monarch_host_temperature_plot_eclosion_original_20261015.json \
+            --frozen provenance/reviewer_defenses/results/monarch_georgia_original_plot_level_emergence_20261015.json
       - name: Archive original-row provenance and plot-level uncertainty
         uses: actions/upload-artifact@v4
         with:
