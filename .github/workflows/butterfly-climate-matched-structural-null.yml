@@ -1,0 +1,107 @@
+name: butterfly climate-matched plant-range null (exploratory)
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/analyze_butterfly_climate_matched_plant_range_null.py"
+      - "tests/test_butterfly_climate_matched_plant_range_null.py"
+      - ".github/workflows/butterfly-climate-matched-structural-null.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-climate-matched-structural-null-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  climate-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Restore exact 239-butterfly resource descriptors
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Restore exact independent CHELSA WGSRPD3 climate
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: inputs/climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Validate archived climate columns
+        run: |
+          test -s inputs/climate/unit_climate_crossfit.csv
+          python - <<'PY'
+          import csv, hashlib, pathlib
+          f=pathlib.Path("inputs/climate/unit_climate_crossfit.csv")
+          with f.open(newline="",encoding="utf-8") as h:
+              rows=csv.DictReader(h)
+              need={"wgsrpd3_code","climate_sample_points","bio1","bio7","bio12","bio15"}
+              assert need<=set(rows.fieldnames or []), "historical climate schema mismatch"
+              n=sum(1 for _ in rows)
+          assert n>1000, "historical climate input unexpectedly small"
+          print({"climate_rows":n,"sha256":hashlib.sha256(f.read_bytes()).hexdigest()})
+          PY
+
+      - name: Checkout pinned HOSTS source
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+
+      - name: Checkout pinned WCVP source
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Rebuild original WCVP/HOSTS host x region data
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Run conservative climate-stratified plant-range null
+        run: |
+          python scripts/analyze_butterfly_climate_matched_plant_range_null.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --unit-climate-csv inputs/climate/unit_climate_crossfit.csv \
+            --draws 299 \
+            --seeds 20261015 20261016 \
+            --burn-factor 5 \
+            --spacing-factor 2 \
+            --output-json results/climate-matched-structural-null/climate_matched_plant_null_v0.1.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-climate-matched-structural-null-v01
+          path: results/climate-matched-structural-null/*.json
+          if-no-files-found: warn
+          retention-days: 30
