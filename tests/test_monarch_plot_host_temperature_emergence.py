@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import importlib.util
 import io
+import json
 import math
 from pathlib import Path
 
@@ -207,3 +208,33 @@ def test_incomplete_original_inoculation_plot_fails_closed():
     p[next(iter(p))]["host_differences_by_OE_inoculation"].pop("control")
     with pytest.raises(ValueError,match="incomplete"):
         m.oe_stratified_host_temperature_checks(p,draws=256,seed=8)
+
+
+def test_frozen_OE_original_plot_intervals_and_separate_reproductive_cohorts():
+    receipt=json.loads((ROOT/"provenance/reviewer_defenses/results/"
+                        "monarch_OE_strata_and_reproductive_state_gate_20261015.json")
+                       .read_text(encoding="utf-8"))
+    original=receipt["original_Ragonese"]
+    oe=receipt["frozen_OE_contrasts"]
+    migrant=receipt["published_reproductive_state_prior_art"]
+    assert original["n_larvae"]==240
+    assert original["n_original_plots"]==30
+    assert original["n_plants"]==120
+    assert original["temperature_plot_location_random_assignment_not_explicitly_documented"]
+    assert oe["n_resamples"]==9999
+    assert oe["no_OE_diagnosis_based_posttreatment_selection"]
+    for fate_scenario in ("missing_as_no_recorded_adult","missing_as_one_possible_adult"):
+        scenario=oe[fate_scenario]
+        i=scenario["infected"]["point"]
+        c=scenario["control"]["point"]
+        t=scenario["difference_control_minus_infected"]["point"]
+        assert c-i==pytest.approx(t)
+        for value in scenario.values():
+            assert value["interval_95"][0] <= 0 <= value["interval_95"][1]
+    assert migrant["field_diet_experiment"]["caterpillars_at_start"]==349
+    assert migrant["field_diet_experiment"]["adult_eclosions"]==295
+    assert migrant["field_diet_experiment"]["adult_reproductive_status_analyzed"]==263
+    assert migrant["field_diet_experiment"]["adult_reproductively_active"]==97
+    assert migrant["cannot_transfer_reproductive_fraction_to_Ragonese2021_adult_outcomes"]
+    assert migrant["separate_adult_exposure_experiment"]["migratory_completion_measured"] is False
+    assert receipt["main_GEB_PR38_unchanged"]
