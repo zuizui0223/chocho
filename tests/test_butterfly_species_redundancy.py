@@ -78,3 +78,23 @@ def test_frozen_species_results_are_exactly_grounded() -> None:
     assert effects["partial_families_given_host_species"] == pytest.approx(0.015444, abs=1e-6)
     assert effects["partial_families_given_host_species_native_and_added_area"] == pytest.approx(0.035279, abs=1e-6)
     assert effects["partial_host_species_given_families"] == pytest.approx(0.629567, abs=1e-6)
+
+
+def test_occurrence_screen_is_exploratory_not_evidence_of_demography() -> None:
+    rows, _ = audit.read_frozen_rows(
+        ROOT / "data/frozen/figure_sources/host_contribution_metrics.csv"
+    )
+    output = audit.occurrence_diagnostic(
+        rows,
+        ROOT / "data/frozen/figure_sources/occurrence_resource_validation_species.csv",
+    )
+    assert output["panel_species"] == 32
+    assert output["outside_native_species"] == 23
+    assert output["excluded_zero_added_species"] == 2
+    assert output["valid_joint_species"] == 21
+    assert output["outside_native_units"] == 115
+    assert output["recovered_units"] == 66
+    assert output["raw_valid_species_spearman"] == pytest.approx(0.649298, abs=1e-6)
+    assert output["partial_rank_given_host_count_native_and_added_area"] == pytest.approx(0.261610, abs=1e-6)
+    assert output["partial_rank_adding_outside_native_sample_size"] == pytest.approx(0.219446, abs=1e-6)
+    assert "DO_NOT_PROMOTE" in output["decision"]
