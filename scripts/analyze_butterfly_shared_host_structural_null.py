@@ -64,13 +64,22 @@ def site_contribution_stats(
     """Bitmask union counting; unique host×region pairs count only once."""
     added_count = 0
     single_count = 0
+    introduced_incidence_count = 0
+    introduced_absorbed_by_native_count = 0
+    introduced_supporting_new_count = 0
     added_masks: list[int] = []
     for sp, hostlist in enumerate(species_hosts):
         seen = 0
         duplicate = 0
         baseline = native_butterfly[sp]
         for h in hostlist:
-            here = introduced_by_host.get(h, 0) & ~baseline
+            introduced_host = introduced_by_host.get(h, 0)
+            introduced_incidence_count += introduced_host.bit_count()
+            introduced_absorbed_by_native_count += (
+                introduced_host & baseline
+            ).bit_count()
+            here = introduced_host & ~baseline
+            introduced_supporting_new_count += here.bit_count()
             duplicate |= seen & here
             seen |= here
         added_masks.append(seen)
@@ -98,6 +107,26 @@ def site_contribution_stats(
 
     return {
         "added_units": added_count,
+        # This is fixed across shuffled plant ranges: each host keeps its
+        # introduced-region count and its exact focal consumer identities.
+        "introduced_host_butterfly_region_incidences": introduced_incidence_count,
+        # Distinguish candidate host incidences absorbed into native resource
+        # envelopes from true new opportunity (novel butterfly×region cells).
+        "introduced_incidences_in_native_supported_cells": (
+            introduced_absorbed_by_native_count
+        ),
+        "introduced_incidences_in_newly_supported_cells": (
+            introduced_supporting_new_count
+        ),
+        # Multiple introduced plants in the SAME newly added butterfly×region
+        # cell count as additional supporting links, not new resource regions.
+        "redundant_introduced_host_incidences_in_new_cells": (
+            introduced_supporting_new_count - added_count
+        ),
+        "mean_introduced_hosts_per_new_cell": (
+            introduced_supporting_new_count / added_count
+            if added_count else float("nan")
+        ),
         "single_units": single_count,
         "single_fraction": single_count / added_count if added_count else float("nan"),
         "novel_exact_shared_pair_regions": shared_new,
@@ -363,6 +392,17 @@ def run_null(model: dict[str, object], reps: int, seed: int,
             groups, cumulative, native_sets, introduced_sets, step_factor * E, rng
         ))
         ans = evaluate()
+        if (
+            ans["introduced_host_butterfly_region_incidences"]
+            != observed["introduced_host_butterfly_region_incidences"]
+        ):
+            raise ValueError("fixed interaction-degree × host-range count drift")
+        if (
+            ans["introduced_incidences_in_native_supported_cells"]
+            + ans["introduced_incidences_in_newly_supported_cells"]
+            != ans["introduced_host_butterfly_region_incidences"]
+        ):
+            raise ValueError("candidate host-incidence accounting drift")
         for name in null:
             null[name].append(float(ans[name]))
 
