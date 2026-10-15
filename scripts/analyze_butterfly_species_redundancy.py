@@ -229,17 +229,106 @@ def describe(rows: list[dict[str, object]]) -> dict[str, object]:
     }
 
 
+def occurrence_diagnostic(
+    species_rows: list[dict[str, object]], path: Path
+) -> dict[str, object]:
+    """Exploratory reality-check; reject zero-gain imputation and double use.
+
+    Both outcome and predictor are partially derived from the same host
+    geography. The climate-stratified panel is small and non-prospective.
+    """
+    by_name = {str(row["species"]): row for row in species_rows}
+    with path.open(newline="", encoding="utf-8") as handle:
+        entries = list(csv.DictReader(handle))
+    if len({r["species"] for r in entries}) != len(entries):
+        raise ValueError("duplicate occurrence species")
+    informative = [r for r in entries if int(r["observed_outside_native"]) > 0]
+    if any(r["species"] not in by_name for r in informative):
+        raise ValueError("occurrence species missing from resource panel")
+    positive = [
+        r for r in informative
+        if int(by_name[r["species"]]["added"]) > 0
+    ]
+
+    def column(key: str) -> np.ndarray:
+        return np.array(
+            [float(by_name[r["species"]][key]) for r in positive],
+            dtype=float,
+        )
+
+    recovered = np.array(
+        [
+            int(r["outside_native_units_explained_by_introduced_host_ranges"])
+            / int(r["observed_outside_native"])
+            for r in positive
+        ],
+        dtype=float,
+    )
+    multiple = column("multi")
+    host_count = column("host_species")
+    native_size = column("native")
+    added_size = column("added")
+    sample_size = np.array(
+        [int(r["observed_outside_native"]) for r in positive], dtype=float
+    )
+    return {
+        "panel_species": len(entries),
+        "outside_native_species": len(informative),
+        "excluded_zero_added_species": len(informative) - len(positive),
+        "valid_joint_species": len(positive),
+        "outside_native_units": sum(
+            int(r["observed_outside_native"]) for r in informative
+        ),
+        "recovered_units": sum(
+            int(r["outside_native_units_explained_by_introduced_host_ranges"])
+            for r in informative
+        ),
+        "raw_valid_species_spearman": round(
+            spearman(multiple, recovered), 6
+        ),
+        "partial_rank_given_host_count_native_and_added_area": round(
+            partial_rank_correlation(
+                multiple, recovered, (host_count, native_size, added_size)
+            ),
+            6,
+        ),
+        "partial_rank_adding_outside_native_sample_size": round(
+            partial_rank_correlation(
+                multiple, recovered,
+                (host_count, native_size, added_size, sample_size)
+            ),
+            6,
+        ),
+        "decision": (
+            "DO_NOT_PROMOTE_AS_INDEPENDENT_OCCURRENCE_TEST: raw association "
+            "attenuates under descriptive controls; few species, linked "
+            "geographic inputs and post-hoc selection preclude inference "
+            "that redundancy causes butterfly establishment."
+        ),
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--species-csv", type=Path,
         default=Path("data/frozen/figure_sources/host_contribution_metrics.csv"),
     )
+    ap.add_argument(
+        "--occurrence-csv", type=Path,
+        default=Path(
+            "data/frozen/figure_sources/occurrence_resource_validation_species.csv"
+        ),
+    )
     ap.add_argument("--output-json", type=Path, required=True)
     args = ap.parse_args()
     rows, digest = read_frozen_rows(args.species_csv)
     result = describe(rows)
     result["input_sha256"] = digest
+    result["occurrence_screen"] = occurrence_diagnostic(rows, args.occurrence_csv)
+    result["occurrence_input_sha256"] = hashlib.sha256(
+        args.occurrence_csv.read_bytes()
+    ).hexdigest()
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_json.write_text(
         json.dumps(result, indent=2, ensure_ascii=False) + "\n",
