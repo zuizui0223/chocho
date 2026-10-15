@@ -4,13 +4,15 @@
 
 ## Scientific motivation and limits
 
-The global 239-butterfly chocho reconstruction maps **known-host botanical presence**. It does not observe production of adults. An independently conducted published experiment with a plant introduced to the region demonstrates the ecological filter at the relevant fitness endpoint: **host plant species × temperature (with pathogen exposure held in the randomized design)**.
+The global 239-butterfly chocho reconstruction maps **known-host botanical presence**. It does not observe production of adults. An independently conducted published experiment with a plant introduced to the region demonstrates the ecological filter at the relevant fitness endpoint: **host plant species × temperature (with assigned pathogen-inoculation treatments in the factorial experiment)**.
 
 Original article: Ragonese et al. (2025), *Ecological Entomology*, DOI [10.1111/een.70010](https://doi.org/10.1111/een.70010).
 Original source author repository pinned to commit `74e3e2cd8079401c9ccd4359f9e39e2d52d1f7d2`, path `MWwarming_comp_May16.csv`, Git blob SHA-1 `e7a625911d8dc9b871a52d7657314a5d05472216`.
 Site: Athens, Georgia, original **2021 experiment**, 30 plot blocks / half ambient and half heated, **four plant units per plot**, **two monarch larvae per host plant**. Total 240 assigned original larvae, of which 239 have known adult status and one has an unknown fate. Fixed experimental factors: milkweed species `tropical` (*Asclepias curassavica*, cultivated and not native in Georgia) versus `swamp` (*A. incarnata*, native); temperature `ambient` or `elevated`; OE inoculation `infected` versus `control`.
 
 The original paper already reported that host identity interacts with warming in some development/survival contrasts and parasite-tolerance results. A possible posthoc source verification **cannot rebrand this as a new discovered interaction**.
+
+**Randomization documentation caveat:** The accessible article Methods explicitly says that monarch *genetic lineages* were randomly assigned to plants; it documents 30 experimental plots, 15 warmed versus 15 ambient, but **does not clearly state that the plot locations receiving the temperature treatments were themselves randomly assigned**. Accordingly, our two-temperature plot-resampling interval is a **descriptive cluster-aware analysis conditional on the study's experimental layout**, not an exact design-based or randomization-based confidence interval. Possible spatial placement confounding remains.
 
 The study does not randomize native-vs-exotic origin as a replicated multi-species factor: origin and *species* are fully confounded. It neither measures host occurrence in the chocho's 82 introduced-only global monarch resource cells nor proves butterflies are wild-colonizing any of them. The study followed larvae to **adult eclosion**, not flight capability, mating or reproductive offspring.
 
