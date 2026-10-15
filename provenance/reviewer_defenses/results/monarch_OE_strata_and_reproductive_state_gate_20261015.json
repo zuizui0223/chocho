@@ -1,0 +1,114 @@
+{
+  "schema": "chocho_monarch_assigned_OE_host_by_warming_and_reproduction_scope_v01",
+  "date": "2026-10-15",
+  "status": "AUTHOR_ORIGINAL_PLOT_SOURCE_OE_POSTHOC_PLUS_INDEPENDENT_2019_PUBLISHED_PHENOTYPE_NOT_NOVEL",
+  "original_Ragonese": {
+    "paper_doi": "10.1111/een.70010",
+    "field_year": 2021,
+    "author_repo": "IRagonese/MilkweedWarming2024",
+    "pinned_commit": "74e3e2cd8079401c9ccd4359f9e39e2d52d1f7d2",
+    "original_csv": "MWwarming_comp_May16.csv",
+    "source_git_blob": "e7a625911d8dc9b871a52d7657314a5d05472216",
+    "n_larvae": 240,
+    "n_original_plots": 30,
+    "plots_per_temp": 15,
+    "n_plants": 120,
+    "one_original_fate_unknown": true,
+    "adult_eclosion_219_of_known_239": true,
+    "temperature_plot_location_random_assignment_not_explicitly_documented": true,
+    "bootstrap_reproduction_run": "https://github.com/zuizui0223/chocho/actions/runs/38681262873"
+  },
+  "frozen_OE_contrasts": {
+    "infection_var": "OE_treatment assigned infected/control, not post-assay InfectionStatus",
+    "outcome": "assigned larva -> adult eclosion, not mating or flight-capable recruitment",
+    "statistic": "(tropical-swamp adult fraction in elevated plots) - (tropical-swamp fraction in ambient plots)",
+    "unit": "one experimental PlotNum for temperature stratum; all 4 original host×OE plant cells paired",
+    "n_resamples": 9999,
+    "seed": 20261015,
+    "missing_as_no_recorded_adult": {
+      "infected": {
+        "point": -0.1,
+        "interval_95": [
+          -0.30166666666666614,
+          0.1
+        ]
+      },
+      "control": {
+        "point": -0.13333333333333336,
+        "interval_95": [
+          -0.36666666666666664,
+          0.06666666666666668
+        ]
+      },
+      "difference_control_minus_infected": {
+        "point": -0.033333333333333354,
+        "interval_95": [
+          -0.3,
+          0.2333333333333333
+        ]
+      }
+    },
+    "missing_as_one_possible_adult": {
+      "infected": {
+        "point": -0.1,
+        "interval_95": [
+          -0.30166666666666614,
+          0.1
+        ]
+      },
+      "control": {
+        "point": -0.16666666666666669,
+        "interval_95": [
+          -0.39999999999999997,
+          0.03333333333333334
+        ]
+      },
+      "difference_control_minus_infected": {
+        "point": -0.06666666666666668,
+        "interval_95": [
+          -0.33333333333333326,
+          0.19999999999999998
+        ]
+      }
+    },
+    "no_confirmatory_significance_claim": true,
+    "neither_individual_OE_stratum_interaction_CI_excludes_zero": true,
+    "no_OE_diagnosis_based_posttreatment_selection": true
+  },
+  "published_reproductive_state_prior_art": {
+    "article": "Majewska & Altizer 2019 Insects 10(8):253",
+    "article_doi": "10.3390/insects10080253",
+    "full_text": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6724006/",
+    "field_diet_experiment": {
+      "caterpillars_at_start": 349,
+      "adult_eclosions": 295,
+      "adult_emergence_fraction": 0.8452722063037249,
+      "adult_reproductive_status_analyzed": 263,
+      "adult_reproductively_active": 97,
+      "adult_reproductively_active_fraction": 0.3688212927756654,
+      "narrower_adult_subset_than_original_295": true,
+      "number_of_adults_making_migratory_journey_unknown": true,
+      "tropical_larval_diet_increases_reproductive_activity_reported_as_prior_art": true
+    },
+    "separate_adult_exposure_experiment": {
+      "field_caught_migrants_evaluated_reproductively": 438,
+      "reproductive_activity_recorded": 118,
+      "exposure_to_tropical_milkweed_female_egg_development_higher_published": true,
+      "original_male_endpoint_is_mating_and_differs_from_female_egg_maturation": true,
+      "migratory_completion_measured": false,
+      "same_individual_cohort_as_Ragonese2021": false
+    },
+    "cannot_transfer_reproductive_fraction_to_Ragonese2021_adult_outcomes": true
+  },
+  "interpretive_guardrails": [
+    "Adult eclosion is NOT migratory success, adult flight capacity, realized wild colonization, mating or multi-generation reproduction.",
+    "Reproductive activity under fall-like conditions may indicate a switch toward residency, NOT necessarily improved lifetime fitness or successful overwintering.",
+    "No same larval cohort links 2021 Ragonese adult eclosion with 2019 Majewska reproductive status.",
+    "Do NOT multiply 219/239 by 97/263 or interpret 37% as an expected field replacement rate.",
+    "The 2019 adult-exposure and juvenile rearing studies are two separate trials, with different original denominators.",
+    "Host taxonomy and native/exotic origin are confounded for two milkweed species; OE and temperature effects cannot be generalized to all exotic hosts.",
+    "Both publications report the primary biological host physiology findings as prior art. New question requires independent natal-host, season, infection, emergence, reproductive state and migration/mating outcomes.",
+    "No direct assay of wild migrant destination or successful mating-offspring fate available in these sources."
+  ],
+  "main_GEB_PR38_unchanged": true
+}
