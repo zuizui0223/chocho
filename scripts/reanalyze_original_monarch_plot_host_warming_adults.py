@@ -112,7 +112,7 @@ def load_original(raw: bytes, *, require_blob: bool = True) -> tuple[list[dict],
             raise ValueError("Original plot is not four whole plants x two larvae")
         t={row["Temp"] for row in rr}
         if len(t)!=1:
-            raise ValueError("Warming randomized at PLOT level, not mixed within plot")
+            raise ValueError("Warming intervention recorded at PLOT level, not mixed within plot")
         t=next(iter(t))
         temp_count[t]+=1
         treatments=Counter((row["Milkweed"],row["OE_treatment"]) for row in rr)
@@ -138,6 +138,7 @@ def load_original(raw: bytes, *, require_blob: bool = True) -> tuple[list[dict],
         "original_status":dict(by_stage),
         "uncertain_original_larvae":unknown,
         "original_temperature_is_plot_assignment":True,
+        "original_temperature_plot_randomization_documented":False,
         "source_mutation_or_posttreatment_selection":False,
     }
 
@@ -236,7 +237,7 @@ def contrast_by_plot(plots: dict, *, draws:int=9999, seed:int=20261015) -> dict:
             key:[_percentile(v,.025),_percentile(v,.975)]
             for key,v in intervals.items()
         },
-        "bootstrap_resampling_unit":"original field plot, stratified by original randomized ambient/elevated temperature",
+        "bootstrap_resampling_unit":"original field plot, stratified by experimental ambient/elevated assignment (original temperature plot randomization not explicitly documented)",
         "source_temperature_plot_replicates_each":15,
         "draws":draws,"seed":seed,
         "leave_one_whole_plot_out_delta_min":min(leave.values()),
