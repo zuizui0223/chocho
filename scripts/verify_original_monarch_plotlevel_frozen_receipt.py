@@ -39,11 +39,15 @@ def verify(original: dict, frozen: dict) -> dict:
     for key,source in (
         ("original_larvae_assigned","n_original_larvae"),
         ("distinct_host_plants","n_distinct_independent_host_plants"),
-        ("temperature_randomization_units","n_distinct_experimental_plots"),
+        ("experimental_temperature_plot_units","n_distinct_experimental_plots"),
         ("larvae_per_plant","larvae_per_host_plant"),
     ):
         if f[key] != u[source]:
             raise ValueError("Original plant/plot unit of analysis mismatch")
+    if (u["original_temperature_plot_randomization_documented"] or
+            frozen["data_units"]["original_plot_temperature_assignment_randomized_documented"] or
+            not frozen["no_extrapolation"]["temperature_plot_randomization_not_explicitly_documented_in_authors_methods"]):
+        raise ValueError("Undocumented thermal plot allocation cannot be called randomized")
     if set(u["plots_by_temperature"]) != {"ambient", "elevated"} or set(u["plots_by_temperature"].values()) != {15}:
         raise ValueError("Temperature treatment no longer represented by 15 plots")
     for key,source in (
@@ -104,7 +108,7 @@ def verify(original: dict, frozen: dict) -> dict:
         "status":"AUTHOR_BLOB_AND_ALL_EIGHT_CELL_ADULT_FATES_AND_PLOT_BOOTSTRAP_REPRODUCED",
         "experiment_original_year":2021,
         "original_individual_assigned":240,
-        "original_temperature_randomized_plot_units":30,
+        "original_temperature_treatment_plot_units":30,
         "original_distinct_plants":120,
         "unknown_fates_preserved":1,
         "source_published_priors_not_new_biological_effect":True,
