@@ -165,3 +165,45 @@ def test_seed_reproduces_source_plot_bootstrap_without_larval_pseudoreplication(
     assert not any(math.isnan(x) for x in first["stratified_whole_plot_bootstrap_95_intervals"]["interaction"])
     with pytest.raises(ValueError,match="256"):
         m.contrast_by_plot(plots,draws=1)
+
+
+def test_inoculation_strata_share_the_same_plot_resampling_without_pseudoreplication():
+    # Synthetic two larvae per host×inoculation plant in the same plot.
+    p=m.plot_observed_adults(fake_rows(nonzero_main_effects=True),unknown_success=False)
+    a=m.oe_stratified_host_temperature_checks(p,draws=350,seed=20261015)
+    b=m.oe_stratified_host_temperature_checks(p,draws=350,seed=20261015)
+    assert a==b
+    primary=m.contrast_by_plot(p,draws=350,seed=20261015)
+    observed=a["observed_host_by_warming_interaction_by_assigned_OE"]
+    assert (observed["control"]+observed["infected"])/2 == pytest.approx(
+        primary["observed_temperature_by_species_adult_emergence_risk_interaction"]
+    )
+    assert observed["control"]==pytest.approx(observed["infected"])
+    assert a["difference_in_host_warming_interactions_control_minus_infected"]==pytest.approx(0)
+    assert a["original_within_plot_inoculation_factor_preserved"]
+    assert a["posttreatment_diagnosed_infection_not_used_for_selection"]
+    assert a["biological_causal_effect_of_actual_infection_not_identified"]
+
+
+def test_missing_adult_shifts_assigned_control_OE_only():
+    row=fake_rows(one_unknown=True)
+    lo=m.oe_stratified_host_temperature_checks(
+        m.plot_observed_adults(row,unknown_success=False),draws=256,seed=8
+    )
+    hi=m.oe_stratified_host_temperature_checks(
+        m.plot_observed_adults(row,unknown_success=True),draws=256,seed=8
+    )
+    l=lo["observed_host_by_warming_interaction_by_assigned_OE"]
+    h=hi["observed_host_by_warming_interaction_by_assigned_OE"]
+    assert l["infected"]==pytest.approx(h["infected"])
+    assert h["control"]-l["control"]==pytest.approx(-1/30)
+    assert h["control"] != pytest.approx(l["control"])
+    assert len(lo["paired_whole_plot_bootstrap_95pct"])==3
+    assert lo["plot_resampling_units_per_temperature"]==15
+
+
+def test_incomplete_original_inoculation_plot_fails_closed():
+    p=m.plot_observed_adults(fake_rows(),unknown_success=False)
+    p[next(iter(p))]["host_differences_by_OE_inoculation"].pop("control")
+    with pytest.raises(ValueError,match="incomplete"):
+        m.oe_stratified_host_temperature_checks(p,draws=256,seed=8)
