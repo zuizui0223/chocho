@@ -137,7 +137,7 @@ def verify_assigned_OE_plot_reproduction(original:dict, manifest:dict) -> dict:
         # Unlike 2019 adult reproductive status, assigned OE branches share
         # original Ragonese plot IDs, so their 95% intervals must be
         # resampled together within temperature and checked in the source.
-        stored=manifest["frozen_OE_contrasts"][case]
+        stored=manifest["frozen_OE_contrasts"][original_label]
         audited=(original["primary_original_cohort_plot_stratified_missing_fate_bounds"]
                  [original_label]["OE_inoculation_stratified_posthoc_sensitivity"])
         if audited["plot_resampling_units_per_temperature"]!=15 or (
