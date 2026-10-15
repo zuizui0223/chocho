@@ -119,6 +119,32 @@ It recomputes (a) novel exact shared-host butterfly-pair × region units, (b) ne
 
 **Essential null boundary:** This plant-level randomization does *not* preserve the number of added regions for each butterfly, nor demonstrate ecologically plausible host introduction routes. It is a post-hoc **structural decomposition**, complementary to—not a replacement for—the already reported butterfly- and region-fixed margin null. **Until the empirical workflow's receipt is checked, there is no positive or negative finding from this new null.**
 
+## 2026-10-15 empirical plant-range null: result hierarchy changed
+
+The initial [successful plant-family × Level1 range-shuffle run](https://github.com/zuizui0223/chocho/actions/runs/38681928507) is preserved **without modifying its outputs** as [v0.1 frozen result](../../provenance/reviewer_defenses/results/butterfly_plant_range_structural_null_v0.1.json). It used **199** post-hoc swaps-chain draws, seed 20261015, holding recorded butterfly-host links, each plant's introduced range size per Level1, and the number of introduced plants of each family in each WGSRPD3 region. Of 30,373 introduced plant×region incidences, 28,670 belonged to viable swap groups; the burn-in changed 31.1% of total incidences relative to the initial arrangement. *This is a movement check, not proof of sampling convergence.*
+
+| Effect (different geographic opportunity units) | Observed | Structural null median | Central implication |
+|---|---:|---:|---|
+| Newly supported butterfly × region cells | **14,553** | **15,383** (95% null interval 15,311–15,468) | Fewer than expected, 830-unit deficit; one-sided Monte Carlo p=0.005 |
+| New exact shared-host butterfly-pair × region cells | **79,412** | **81,550** (95% interval 81,290–81,821) | Fewer than expected, 2,138-unit deficit; p=0.005 |
+| Fraction of newly supported cells with one introduced supporting host | **0.5892** | **0.5924** (95% interval 0.5875–0.5968) | No resolved unusual single-host dependency; lower-tail p=0.12 |
+| New exact shared-host pair×region / newly supported butterfly×region | **5.4567** | **5.3013** (95% interval 5.2796–5.3186) | Positive post-hoc cross-unit ratio residual; upper-tail p=0.005, **NOT mean co-users per newly added cell** |
+
+The number of added resource cells is not fixed in this plant-level null, which makes the first row a meaningful but bounded comparison. The first two rows disprove the intended simple claim that host redistribution produces *more absolute shared resource geography* than expected by the plant range and link architecture. The third demotes any claim that 58.9% is unexpectedly fragile. The fourth is an **interpretation trap**: a region in which two butterflies already had *different native host plants* may acquire an introduced plant shared by both without either butterfly acquiring any *new resource region*. Therefore its two terms differ in incidence universe. It is a descriptive contrast rather than a clean competition or co-use density estimand.
+
+**Replacement outcome and decomposition under execution (v0.2):**
+- For every **newly opened butterfly×region** cell, count the number of *other* focal butterflies sharing an exact host species in that region. Compare the cell-weighted mean and zero-peer fraction to the plant-level null using an identical denominator. This reproduces the existing observed descriptive mean **5.7126** and zero-peer fraction **0.09895** if reconstructed correctly.
+- Partition the fixed introduced host×butterfly×region incidence budget into (i) incidences falling where the butterfly already had a native-host resource, (ii) incidences supporting novel resource cells, and (iii) *redundant supporting incidences* beyond one per novel cell. This distinguishes **baseline absorption** from **multiple introduced hosts in one new cell**.
+- Check two independent 499-draw chains (20261015, 20261016) with higher swap spacing before promoting any small positive null residual. Species added-cell counts and plant climatic preferences remain **unfixed** in this null.
+
+**Interpretation until those tests return:** Recorded host-resource networks become more shared in the raw reconstruction but *not more than this null in total new shared-host region count*; under the plant-level null the resource opportunities are also fewer, while the apparent relative exposure excess awaits an aligned denominator. Do not change the GEB paper based solely on initial v0.1.
+
+### Existing literature that bounds novelty
+
+- Fricke & Svenning (2020), *Nature*, DOI [10.1038/s41586-020-2640-y](https://doi.org/10.1038/s41586-020-2640-y), had already shown global biogeographic homogenization of **observed plant–frugivore interaction networks**, so we cannot claim ecological interaction homogenization as an entirely new concept.
+- A global 74-network analysis in *Science of the Total Environment* (2024), DOI [10.1016/j.scitotenv.2024.173949](https://doi.org/10.1016/j.scitotenv.2024.173949), examines exotic plants and plant–herbivore network topology; our distinct question is **potential larval resource geography at fixed butterfly–host identities**, with no measured local network topology.
+- Galmán and colleagues (2025), *Ecology Letters*, DOI [10.1111/ele.70196](https://doi.org/10.1111/ele.70196), compare actual herbivory across native and non-native plants. This reinforces that resource presence cannot, by itself, establish realized local usage or successful butterfly development.
+
 ## What NOT to promote as findings
 
 1. **“More host-plant range = more butterflies.”** Only potential larval resource opportunity is reconstructed; butterfly density, recruitment and conservation benefit were not estimated.
