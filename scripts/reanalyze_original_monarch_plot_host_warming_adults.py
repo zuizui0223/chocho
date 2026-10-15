@@ -182,6 +182,13 @@ def plot_observed_adults(records: list[dict], *, unknown_success: bool) -> dict[
             "tropical_adult_risk":v["counts"]["tropical"]/4,
             "swamp_adult_risk":v["counts"]["swamp"]/4,
             "tropical_minus_swamp":(v["counts"]["tropical"]-v["counts"]["swamp"])/4,
+            "host_differences_by_OE_inoculation": {
+                exposure: (
+                    v["counts"][f"tropical|{exposure}"]
+                    - v["counts"][f"swamp|{exposure}"]
+                ) / 2
+                for exposure in INOC
+            },
             "tropical_pupae":v["pupae"]["tropical"],
             "swamp_pupae":v["pupae"]["swamp"],
         }
@@ -247,6 +254,64 @@ def contrast_by_plot(plots: dict, *, draws:int=9999, seed:int=20261015) -> dict:
     }
 
 
+def oe_stratified_host_temperature_checks(
+    plots: dict, *, draws: int = 9999, seed: int = 20261015
+) -> dict:
+    """POSTHOC 3-way diagnostic: bootstrap the original whole plots jointly.
+
+    All 4 host-by-inoculation adult counts come from each original plot; both
+    inoculation levels use the same sampled plot IDs in each draw. Separately
+    re-sampling plants or stratifying on diagnosed infection would be wrong.
+    """
+    if type(draws) is not int or draws < 256:
+        raise ValueError("Need at least 256 plot-cluster sensitivity resamples")
+    if len(plots) != 30:
+        raise ValueError("Only original 30 whole plots can be audited")
+    by_temp=defaultdict(list)
+    for plot in plots.values():
+        if set(plot.get("host_differences_by_OE_inoculation",{})) != set(INOC):
+            raise ValueError("Original within-plot host×OE pairs incomplete")
+        if plot["temp"] not in TEMP:
+            raise ValueError("Unknown original experimental plot temperature")
+        by_temp[plot["temp"]].append(plot["host_differences_by_OE_inoculation"])
+    if any(len(by_temp[t]) != 15 for t in TEMP):
+        raise ValueError("Need 15 original plots at each experimental temperature")
+    def mean(components: list[dict], key: str) -> float:
+        return statistics.mean(x[key] for x in components)
+    def differences(a: list[dict],b: list[dict]) -> dict:
+        d={k:mean(b,k)-mean(a,k) for k in INOC}
+        d["control_minus_infected"]=d["control"]-d["infected"]
+        return d
+    observed=differences(by_temp["ambient"],by_temp["elevated"])
+    rng=random.Random(seed)
+    samples={key:[] for key in (*INOC,"control_minus_infected")}
+    for _ in range(draws):
+        amb=rng.choices(by_temp["ambient"],k=15)
+        ele=rng.choices(by_temp["elevated"],k=15)
+        vals=differences(amb,ele)
+        for key in samples:
+            samples[key].append(vals[key])
+    return {
+        "status":"POSTHOC_OE_ASSIGNMENT_STRATIFIED_SOURCE_DESCRIPTOR_NOT_NEW_FACTORIAL_EFFECT",
+        "observed_host_by_warming_interaction_by_assigned_OE": {
+            k: observed[k] for k in INOC
+        },
+        "difference_in_host_warming_interactions_control_minus_infected":
+            observed["control_minus_infected"],
+        "paired_whole_plot_bootstrap_95pct":{
+            k:[_percentile(v,.025),_percentile(v,.975)]
+            for k,v in samples.items()
+        },
+        "plot_resampling_units_per_temperature":15,
+        "bootstrap_draws":draws,"seed":seed,
+        "original_within_plot_inoculation_factor_preserved":True,
+        "posttreatment_diagnosed_infection_not_used_for_selection":True,
+        "biological_causal_effect_of_actual_infection_not_identified":True,
+        "host_origin_not_a_multispecies_randomized_factor":True,
+        "source_published_2025_host_parasite_warming_effects_prior_art":True,
+    }
+
+
 def run(raw:bytes, *, draws:int=9999, seed:int=20261015, require_blob=True) -> dict:
     records, provenance=load_original(raw,require_blob=require_blob)
     cell=defaultdict(lambda:{"n":0,"known":0,"adult":0,"pupa":0,"unknown":0,"plants":set(),"plots":set()})
@@ -278,6 +343,9 @@ def run(raw:bytes, *, draws:int=9999, seed:int=20261015, require_blob=True) -> d
                                   (True,"missing_as_one_possible_adult")):
         plots=plot_observed_adults(records,unknown_success=unknown_success)
         sensitivity[label]=contrast_by_plot(plots,draws=draws,seed=seed)
+        sensitivity[label]["OE_inoculation_stratified_posthoc_sensitivity"]=(
+            oe_stratified_host_temperature_checks(plots,draws=draws,seed=seed)
+        )
     return {
         "schema":"chocho_monarch_original_plotlevel_adult_eclosion_calibration_v01",
         "status":"PUBLISHED_PRIOR_ART_POSTHOC_DESCRIPTIVE_NO_NEW_BUTTERFLY_FINDING",
