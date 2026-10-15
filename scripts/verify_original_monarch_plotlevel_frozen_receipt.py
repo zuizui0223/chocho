@@ -116,14 +116,84 @@ def verify(original: dict, frozen: dict) -> dict:
     }
 
 
+
+def verify_assigned_OE_plot_reproduction(original:dict, manifest:dict) -> dict:
+    if manifest.get("status") != (
+        "AUTHOR_ORIGINAL_PLOT_SOURCE_OE_POSTHOC_PLUS_INDEPENDENT_2019_PUBLISHED_PHENOTYPE_NOT_NOVEL"
+    ):
+        raise ValueError("Invalid source status for OE and reproductive state comparison")
+    source=manifest["original_Ragonese"]
+    if original["source"]["original_git_blob_sha1"]!=source["source_git_blob"]:
+        raise ValueError("OE manifest original author repository Git source mismatch")
+    if original["source_units"]["n_original_larvae"]!=source["n_larvae"] or (
+        original["source_units"]["n_distinct_experimental_plots"]!=source["n_original_plots"]
+    ):
+        raise ValueError("OE manifest is not on original 30-plot and 240-larva source")
+    if not source["temperature_plot_location_random_assignment_not_explicitly_documented"]:
+        raise ValueError("Unverified temperature randomization cannot be asserted")
+    if not manifest["frozen_OE_contrasts"]["no_OE_diagnosis_based_posttreatment_selection"]:
+        raise ValueError("Post-randomization infection diagnoses cannot define arms")
+    for case, original_label in LABELS.items():
+        # Unlike 2019 adult reproductive status, assigned OE branches share
+        # original Ragonese plot IDs, so their 95% intervals must be
+        # resampled together within temperature and checked in the source.
+        stored=manifest["frozen_OE_contrasts"][case]
+        audited=(original["primary_original_cohort_plot_stratified_missing_fate_bounds"]
+                 [original_label]["OE_inoculation_stratified_posthoc_sensitivity"])
+        if audited["plot_resampling_units_per_temperature"]!=15 or (
+            audited["bootstrap_draws"]!=manifest["frozen_OE_contrasts"]["n_resamples"]
+            or audited["seed"]!=manifest["frozen_OE_contrasts"]["seed"]
+        ):
+            raise ValueError("Original OE plot/seed matching failed")
+        for key in ("infected","control","difference_control_minus_infected"):
+            audited_value=(
+                audited["observed_host_by_warming_interaction_by_assigned_OE"][key]
+                if key!="difference_control_minus_infected"
+                else audited["difference_in_host_warming_interactions_control_minus_infected"]
+            )
+            if not close(audited_value,stored[key]["point"]):
+                raise ValueError(f"Wrong source OE-stratified effect: {case} {key}")
+            bootstrap=audited["paired_whole_plot_bootstrap_95pct"][key]
+            if len(bootstrap)!=2 or any(
+                not close(actual,frozen)
+                for actual,frozen in zip(bootstrap,stored[key]["interval_95"])
+            ):
+                raise ValueError(f"Wrong source OE plot cluster interval: {case} {key}")
+            if not (bootstrap[0]<=0<=bootstrap[1]):
+                raise ValueError("OE interaction interval was promoted to significance")
+    prior=manifest["published_reproductive_state_prior_art"]
+    if prior["article_doi"]!="10.3390/insects10080253" or (
+        prior["field_diet_experiment"]["adult_reproductive_status_analyzed"]
+        ==prior["field_diet_experiment"]["adult_eclosions"]
+    ):
+        raise ValueError("2019 263 analyzed adult subset cannot be merged with 295 emerged")
+    if not prior["cannot_transfer_reproductive_fraction_to_Ragonese2021_adult_outcomes"]:
+        raise ValueError("Cross-source nonlinked reproductive status falsely multiplied")
+    if not manifest["main_GEB_PR38_unchanged"]:
+        raise ValueError("Scientific audit cannot silently revise GEB submission")
+    return {
+        "schema":"chocho_monarch_original_OE_strata_reproduction_gate_verified_v01",
+        "status":"AUTHOR_SOURCE_OE_PLOT_CONTRAST_EXACT_WITH_CROSS_STUDY_ENDPOINT_STOP",
+        "original_BLOB_verified":True,
+        "both_2019_and_2021_sources_cannot_be_multiplied":True,
+        "original_assigned_plot_OE_triple_difference_not_novel":True,
+        "GEB_submission_unmodified":True,
+    }
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--original",required=True,type=Path)
     p.add_argument("--frozen",required=True,type=Path)
+    p.add_argument("--oe-reproductive-manifest",type=Path)
     a=p.parse_args()
     orig=json.loads(a.original.read_text(encoding="utf-8"))
     frozen=json.loads(a.frozen.read_text(encoding="utf-8"))
-    print(json.dumps(verify(orig,frozen),indent=2))
+    results={"original_adult_plot":verify(orig,frozen)}
+    if a.oe_reproductive_manifest is not None:
+        manifest=json.loads(a.oe_reproductive_manifest.read_text(encoding="utf-8"))
+        results["assigned_OE_and_2019_endpoint_stop"]=verify_assigned_OE_plot_reproduction(orig,manifest)
+    print(json.dumps(results,indent=2))
 
 
 if __name__=="__main__":
