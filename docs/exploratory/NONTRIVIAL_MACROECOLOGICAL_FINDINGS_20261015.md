@@ -185,6 +185,37 @@ The same plant-range null, now with a **properly aligned butterfly×new-resource
 
 **Current claim decision:** Reject a global *excess co-user concentration* narrative and the inference that the 58.9% single-host-supported fraction is unusually high. Retain these only as descriptive structural properties. The absolute new opportunity deficit and its partition into native-resource overlap versus added-host redundancy remain the primary candidate for a testable, non-mechanical macroecological result.
 
+## 2026-10-15 climate-conditioned null: residual native-resource absorption survives
+
+**Empirical computation completed:** [GitHub Actions run 38696007445](https://github.com/zuizui0223/chocho/actions/runs/38696007445), with complete original JSON artifact and [compact frozen receipt](../../provenance/reviewer_defenses/results/butterfly_climate_matched_absorption_v0.1.json). The [post-hoc climate protocol](../../provenance/reviewer_defenses/protocols/CLIMATE_CONDITIONED_RESOURCE_ABSORPTION_20261015.md) was committed before this result was examined. This does **not** make the climate analysis prospectively confirmatory.
+
+The source-independent TTF climate run 36270581743 provided CHELSA V2.1 1981–2010 BIO1/7/12/15 region climate vectors. **5,300** repeated species rows resolved to **365 unique regions**, covering **all 365** resource regions with no missing climate; repeated region vectors agreed (climate input SHA256 `0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2`).
+
+Each climate-matched swap retains the exact recorded butterfly–host network, all native host ranges, each plant's introduced-region count **within its continent and climate stratum**, and each destination region's introduced-host count **within plant families**. Two separate seeds each generated 299 serial swap-chain null worlds. All three controls passed predefined climate coverage, viable-edge and swap-movement checks (81–92% of 30,373 introduced plant×region edges in viable groups; burn-in moved ~14–22% of all introduced plant-range edges).
+
+### Key absorption result
+
+`H = 75,346` focal introduced host×butterfly×region incidences, `A_observed = 46,387` incidences already in native-host-supported butterfly resource geography, `U_observed = 14,553` unique newly opened butterfly×region cells.
+
+| Structural null | Median A in two chains | Observed excess of A | Null median U in two chains | Observed U deficit |
+|---|---:|---:|---:|---:|
+| Plant family × Level1 (prior baseline) | 45,301 / 45,298 | **+1,086 / +1,089** | 15,384 / 15,385 | −831 / −832 |
+| Family × Level1 × CHELSA BIO1/BIO12 median bins (2×2) | 45,835 / 45,829 | **+552 / +558** | 14,979 / 14,984 | −426 / −431 |
+| Family × Level1 × BIO1/BIO12 tertile bins (3×3) | 46,099 / 46,096 | **+288 / +291** | 14,817 / 14,813 | −264 / −260 |
+| Family × Level1 × median bins BIO1/7/12/15 (2×2×2×2) | 46,006 / 46,007 | **+381 / +380** | 14,832 / 14,832 | −279 / −279 |
+
+Across all six climate-matched chains, the observation exceeds null absorption and falls below null new-opportunity count. In each 299-draw chain no null sample reached the observed A (nominal one-sided Monte Carlo **p = 0.0033 per chain**, the minimum resolution, **not** a corrected confirmatory inference). Short-lag correlation in the A null draws ranges approximately 0.12–0.25, indicating serial dependence; **the 598 draw rows per mode are not treated as 598 independent random permutations**.
+
+### Ecological interpretation and scope
+
+The earlier apparent `+~1,090` native-envelope absorption is **partly attenuated** when coarse climate categories are preserved; the residual `+288–558` corresponds to about **0.38–0.74 percentage points of H**, compared with ~1.44 points in the original null. Therefore basic climatic sorting is a relevant alternative explanation but does not eliminate the geographic overlap residual in these particular constrained rearrangements.
+
+The **arithmetically distinct** new-resource-area deficit is ~260–431 butterfly×region cells (about 1.8–2.9% of the matched null U median) after climate stratification. In all three climate comparisons, the absolute added shared-host pair×region count also remains *below* structural expectation, and single-host-supported share is close to null; neither exaggerated interspecific concentration nor unusually fragile new opportunity is established.
+
+**Important:** Climate strata are not nested. Comparing their residuals is not a valid estimate of a causal percentage 'explained by climate', or proof that four variables are always more rigorous than two. Regional medians and quartile/tertile matching do not control continuous climate preferences, land-use, plant introduction dates, spatial autocorrelation, phylogeography, sampling bias, or site-level host coexistence.
+
+**Recommended scientific framing:** *Anthropogenic plant redistribution reinforces already available geographic larval-host opportunity more than expected under constrained plant-range and broad climate allocation, while also adding new resource regions.* This is a **potential resource-geography structure**, not colonization, competition, host preference, or demographic benefits. Retain the exploratory status and do not silently replace the separate frozen GEB manuscript.
+
 ## What NOT to promote as findings
 
 1. **“More host-plant range = more butterflies.”** Only potential larval resource opportunity is reconstructed; butterfly density, recruitment and conservation benefit were not estimated.
