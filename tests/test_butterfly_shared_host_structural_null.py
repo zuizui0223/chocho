@@ -28,6 +28,11 @@ def test_exact_shared_host_region_and_single_support_are_distinct() -> None:
     assert x["added_units"] == 2
     assert x["single_units"] == 1
     assert x["single_fraction"] == 0.5
+    assert x["introduced_host_butterfly_region_incidences"] == 3
+    assert x["introduced_incidences_in_native_supported_cells"] == 0
+    assert x["introduced_incidences_in_newly_supported_cells"] == 3
+    assert x["redundant_introduced_host_incidences_in_new_cells"] == 1
+    assert x["mean_introduced_hosts_per_new_cell"] == 1.5
     assert x["novel_exact_shared_pair_regions"] == 1
     assert x["shared_pair_units_per_added_unit"] == 0.5
     assert x["added_cell_total_other_shared_butterflies"] == 2
@@ -75,6 +80,10 @@ def test_added_cell_exposures_can_differ_from_novel_shared_pair_regions() -> Non
     assert result["added_cell_total_other_shared_butterflies"] == 1
     assert result["added_cell_mean_other_shared_butterflies"] == 1
     assert result["added_cell_fraction_without_shared_butterfly"] == 0
+    assert result["introduced_host_butterfly_region_incidences"] == 2
+    assert result["introduced_incidences_in_native_supported_cells"] == 1
+    assert result["introduced_incidences_in_newly_supported_cells"] == 1
+    assert result["redundant_introduced_host_incidences_in_new_cells"] == 0
 
 def test_swap_preserves_both_geographic_margins() -> None:
     native = {"a": {0}, "b": {1}, "c": {4}}
