@@ -56,22 +56,24 @@ jobs:
 
       - name: Run plant-range fixed-degree null and write guarded receipt
         run: |
-          python scripts/analyze_butterfly_shared_host_structural_null.py \
-            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
-            --insect-host-csv results/native/insect_host_accepted.csv \
-            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
-            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
-            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
-            --replicates 199 \
-            --seed 20261015 \
-            --burn-factor 5 \
-            --step-factor 1 \
-            --output-json results/structural-null/plant_range_shared_host_null_v0.1.json
+          for seed in 20261015 20261016; do
+            python scripts/analyze_butterfly_shared_host_structural_null.py \
+              --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+              --insect-host-csv results/native/insect_host_accepted.csv \
+              --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+              --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+              --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+              --replicates 499 \
+              --seed "$seed" \
+              --burn-factor 5 \
+              --step-factor 2 \
+              --output-json "results/structural-null/plant_range_shared_host_null_v0.2_seed${seed}.json"
+          done
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: butterfly-plant-range-structural-null-v01
+          name: butterfly-plant-range-structural-null-v02
           path: results/structural-null/*.json
           if-no-files-found: warn
           retention-days: 30
