@@ -64,6 +64,7 @@ def site_contribution_stats(
     """Bitmask union counting; unique host×region pairs count only once."""
     added_count = 0
     single_count = 0
+    added_masks: list[int] = []
     for sp, hostlist in enumerate(species_hosts):
         seen = 0
         duplicate = 0
@@ -72,15 +73,28 @@ def site_contribution_stats(
             here = introduced_by_host.get(h, 0) & ~baseline
             duplicate |= seen & here
             seen |= here
+        added_masks.append(seen)
         added_count += seen.bit_count()
         single_count += (seen & ~duplicate).bit_count()
 
+    # Same-denominator measure: for every newly gained butterfly × region
+    # cell, count DISTINCT other focal butterflies able to share an exact
+    # host there. A (butterfly_i, butterfly_j, region) pair contributes at
+    # most one exposure even if several plant species are shared.
     shared_new = 0
-    for _, _, common_hosts, baseline in shared_pairs:
+    added_peer_exposures = 0
+    added_with_peers = [0] * len(species_hosts)
+    for i, j, common_hosts, baseline in shared_pairs:
         now = 0
         for h in common_hosts:
             now |= native_by_host.get(h, 0) | introduced_by_host.get(h, 0)
         shared_new += (now & ~baseline).bit_count()
+        exposure_i = now & added_masks[i]
+        exposure_j = now & added_masks[j]
+        added_peer_exposures += exposure_i.bit_count() + exposure_j.bit_count()
+        added_with_peers[i] |= exposure_i
+        added_with_peers[j] |= exposure_j
+    any_peer = sum(x.bit_count() for x in added_with_peers)
 
     return {
         "added_units": added_count,
@@ -89,6 +103,17 @@ def site_contribution_stats(
         "novel_exact_shared_pair_regions": shared_new,
         "shared_pair_units_per_added_unit": (
             shared_new / added_count if added_count else float("nan")
+        ),
+        "added_cell_total_other_shared_butterflies": added_peer_exposures,
+        "added_cell_mean_other_shared_butterflies": (
+            added_peer_exposures / added_count if added_count else float("nan")
+        ),
+        "added_cell_fraction_with_any_shared_butterfly": (
+            any_peer / added_count if added_count else float("nan")
+        ),
+        "added_cell_fraction_without_shared_butterfly": (
+            (added_count - any_peer) / added_count
+            if added_count else float("nan")
         ),
     }
 
@@ -299,6 +324,14 @@ def run_null(model: dict[str, object], reps: int, seed: int,
     if observed["added_units"] != 14553 or observed["single_units"] != 8574 \
         or observed["novel_exact_shared_pair_regions"] != 79412:
         raise ValueError(f"empirical reconstruction drift: {observed}")
+    # Frozen earlier calculation: number of OTHER focal butterflies sharing
+    # exact host plants at each newly added butterfly × region opportunity.
+    if abs(observed["added_cell_mean_other_shared_butterflies"]
+           - 5.712567855424998) > 1e-10:
+        raise ValueError("observed new-resource co-user mean drift")
+    if abs(observed["added_cell_fraction_without_shared_butterfly"]
+           - 0.09894867037724181) > 1e-10:
+        raise ValueError("observed new-resource co-user zero fraction drift")
     baseline_edges = {h: frozenset(cols) for h, cols in introduced_sets.items()}
     burn_attempts = burn_factor * E
     accepted_burn = attempt_range_swaps(
@@ -373,8 +406,11 @@ def run_null(model: dict[str, object], reps: int, seed: int,
         ],
         "interpretation": (
             "Post-hoc plant-family×continent range-shuffle diagnostic. "
-            "Raw and per-added-unit resource sharing are both reported; "
-            "any null excess requires additional independent checks."
+            "The new-cell co-user density and zero-co-user fraction share "
+            "an identical butterfly×region denominator and are preferable "
+            "to the cross-unit shared pair×region / added-cell ratio. "
+            "All results are structural opportunity, not local co-occurrence "
+            "or competitive intensity."
         ),
     }
 
