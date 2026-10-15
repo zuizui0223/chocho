@@ -10,6 +10,10 @@ on:
       - ".github/workflows/butterfly-plant-range-structural-null.yml"
   workflow_dispatch:
 
+concurrency:
+  group: butterfly-plant-range-structural-null-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
   actions: read
