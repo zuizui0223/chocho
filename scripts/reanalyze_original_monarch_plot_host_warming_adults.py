@@ -103,7 +103,7 @@ def load_original(raw: bytes, *, require_blob: bool = True) -> tuple[list[dict],
         source_plots[plot].append(row)
     if (
         len(source_plots)!=30 or len(source_plants)!=120 or len(seen_larvae)!=N_ASSIGNED
-        or any(len(x)!=30 for x in eight_cell.values()) or len(eight_cell)!=8
+        or any(x!=30 for x in eight_cell.values()) or len(eight_cell)!=8
     ):
         raise ValueError("Original 30 plots, 120 plants or eight 30-larva cells mismatch")
     temp_count = Counter()
