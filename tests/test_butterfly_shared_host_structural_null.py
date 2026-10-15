@@ -30,7 +30,51 @@ def test_exact_shared_host_region_and_single_support_are_distinct() -> None:
     assert x["single_fraction"] == 0.5
     assert x["novel_exact_shared_pair_regions"] == 1
     assert x["shared_pair_units_per_added_unit"] == 0.5
+    assert x["added_cell_total_other_shared_butterflies"] == 2
+    assert x["added_cell_mean_other_shared_butterflies"] == 1.0
+    assert x["added_cell_fraction_with_any_shared_butterfly"] == 1.0
+    assert x["added_cell_fraction_without_shared_butterfly"] == 0.0
 
+
+
+def test_no_co_user_when_butterflies_gain_distinct_hosts_in_same_region() -> None:
+    # Both butterflies acquire a plant resource in region 2, but no EXACT
+    # plant is shared. The opportunity envelopes overlap, host use does not.
+    native_host = {"a": 1 << 0, "b": 1 << 1}
+    introduced = {"a": 1 << 2, "b": 1 << 2}
+    result = null.site_contribution_stats(
+        [["a"], ["b"]],
+        native_host,
+        introduced,
+        [],  # no exact shared host pair
+        [1 << 0, 1 << 1],
+    )
+    assert result["added_units"] == 2
+    assert result["single_units"] == 2
+    assert result["novel_exact_shared_pair_regions"] == 0
+    assert result["added_cell_mean_other_shared_butterflies"] == 0
+    assert result["added_cell_fraction_without_shared_butterfly"] == 1
+
+
+def test_added_cell_exposures_can_differ_from_novel_shared_pair_regions() -> None:
+    # Shared host was already accessible to both butterflies in region 0,
+    # and an introduced host from the same pair reaches region 2 where
+    # butterfly 0 has no native resources but butterfly 1 has native
+    # resources through plant b. The pair's new shared-host region counts
+    # once, the newly gained-cell peer exposure counts only butterfly 0.
+    n = {"a": 1 << 0, "b": 1 << 2}
+    c = {"a": 1 << 2, "b": 0}
+    result = null.site_contribution_stats(
+        [["a"], ["a", "b"]],
+        n, c,
+        [(0, 1, ["a"], 1 << 0)],
+        [1 << 0, (1 << 0) | (1 << 2)],
+    )
+    assert result["added_units"] == 1
+    assert result["novel_exact_shared_pair_regions"] == 1
+    assert result["added_cell_total_other_shared_butterflies"] == 1
+    assert result["added_cell_mean_other_shared_butterflies"] == 1
+    assert result["added_cell_fraction_without_shared_butterfly"] == 0
 
 def test_swap_preserves_both_geographic_margins() -> None:
     native = {"a": {0}, "b": {1}, "c": {4}}
