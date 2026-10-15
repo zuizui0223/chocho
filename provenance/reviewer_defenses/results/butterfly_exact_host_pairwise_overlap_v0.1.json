@@ -1,0 +1,32 @@
+{
+  "schema": "chocho_butterfly_pairwise_resource_niche_overlap_v0.1",
+  "status": "HISTORIC_REANALYSIS_OF_PINNED_HOST_X_REGION_OUTPUT",
+  "source_workflow_run": 37612135885,
+  "source_workflow_job": 112761649448,
+  "extracted_on": "2026-10-15",
+  "source_url": "https://github.com/zuizui0223/chocho/actions/runs/37612135885",
+  "definition": "Jaccard between exact accepted plant-ID×WGSRPD3 resource cell sets of two butterfly species, not overlap of their potential geographic envelopes alone",
+  "primary": {
+    "all_butterfly_pairs": 28441,
+    "pairs_with_any_exact_shared_host": 986,
+    "pair_changes_increase": 616,
+    "pair_changes_decrease": 366,
+    "pair_changes_unchanged": 27459,
+    "pairs_with_new_shared_exact_host_region_cells": 920,
+    "mean_jaccard_all_pairs_native": 0.004032155756643721,
+    "mean_jaccard_all_pairs_contemporary": 0.004885117752970855,
+    "mean_jaccard_given_any_host_sharing_native": 0.11630683760111975,
+    "mean_jaccard_given_any_host_sharing_contemporary": 0.1409103793227628
+  },
+  "deduced_lower_bound": {
+    "pairs_with_new_shared_host_locations_AND_decreasing_jaccard_at_least": 300,
+    "logic": "Within the same 986 host-sharing butterfly pairs, at least |A|+|B|-|U| = 920+366-986 = 300 belong to both A (any new shared-host×region cell) and B (declining exact-host×region Jaccard). This is a rigorous intersection bound, not an individually identified cross-tab."
+  },
+  "limits": [
+    "Potential resources computed from recorded host links and plant distributions, not local realized resource use.",
+    "Normalized Jaccard can decrease as total host×region resources increase. This fact cannot identify competition, abundance, host preference or colonization.",
+    "All-butterfly pair means are dominated by 27,455 butterfly pairs without any exact shared host; report the 986 sharing-pair subset.",
+    "No bespoke structural null for pairwise exact host×region Jaccard change has been completed.",
+    "The previously reported unique shared pair×region geography values 62,473→141,885 differ from counts that multiply host×region cells and are not interchangeable."
+  ]
+}
