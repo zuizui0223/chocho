@@ -75,6 +75,14 @@ The remaining overlap could reflect spatial autocorrelation, climatic niches at 
 - **Figure 3:** Butterfly heterogeneity and biological relevance: specialist versus geographic resource-breadth discordance, plus outside-native observed butterfly occurrence recovery against a region-matched structural null. State separate sample sizes and biases.
 - **Supplement:** Native-only versus contemporary reconstructed potential resource-assemblage Jaccard, matched structural null and exact shared-host geography, with negative-result interpretation of fragility and competition claims.
 
+### Rendered exploratory illustration and candidate figure legend
+
+The [source-checked figure renderer](../../scripts/render_butterfly_resource_novelty_figure.py) generates a PNG, an editable vector SVG and a JSON values file in the isolated [exploratory figure workflow](../../.github/workflows/butterfly-resource-novelty-figure.yml). The source integrity test ties the plotted values to existing frozen receipts. The resulting figure is **not yet a GEB main figure**.
+
+**Candidate combined figure legend (not automatically inserted in the manuscript):**
+
+*Figure X. Most introduced larval-host resource incidences overlap geographically with pre-existing butterfly resource opportunity.* **(A)** Of 75,346 introduced accepted-host-plant × focal-butterfly × WGSRPD3-region incidences, 46,387 (61.6%) fall within the butterfly's already native-host-supported geographic resource envelope. A further 14,406 (19.1%) are additional introduced-host incidences in butterfly×region cells already newly supported by at least one introduced plant; one first-support incidence per novel cell yields 14,553 (19.3%) distinct added butterfly×region opportunities. **(B)** Excess native-resource overlap, calculated as observed count minus null median for a plant-family/continent fixed-margin rearrangement, additional coarse CHELSA temperature/precipitation matching, and a numerically qualified 1,500-km geographically tethered rearrangement. **(C)** Deficit in distinct new butterfly×region resource units against the same null constraints (null minus observed). Bars are means of two chain medians and points represent the individual medians (499, 299 and 99 simulated worlds per seed for respective constraints). The local-distance chains passed a separately declared finite simulation-mixing criterion after an earlier less-well-mixed run was rejected. These are descriptive, post-hoc structural opportunity comparisons, not independent confirmatory permutation p-values or evidence of realized plant–larva interactions.
+
 Submission-ready title/abstract and plot storyboard are a *candidate author decision*. Do not change the GEB submission bundle or silently merge PR #43 into PR #38.
 
 ## Source hierarchy and checks
