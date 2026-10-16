@@ -178,8 +178,8 @@ def render(figure_data: dict, out_png: Path, out_svg: Path) -> None:
     fig.legend(
         [b[0] for b in bars],
         [x["label"].replace("\n", " ") for x in parts],
-        loc="upper center", bbox_to_anchor=(0.53, 0.78),
-        ncol=3, frameon=False, fontsize=8.6,
+        loc="upper center", bbox_to_anchor=(0.53, 0.64),
+        ncol=3, frameon=False, fontsize=8.3,
     )
 
     # B-C. Changes in observed-minus-null median across the nested MAIN
@@ -217,11 +217,13 @@ def render(figure_data: dict, out_png: Path, out_svg: Path) -> None:
 
     fig.text(
         0.105, 0.070,
-        "Bars: mean of two simulation-chain medians; points: each chain. "
-        "Models successively add broad climate and 1,500-km locality constraints.\n"
-        "The contrasts are exploratory, post-hoc and conditional on HOSTS/WCVP; "
-        "they do not quantify a causal share explained by climate or distance.",
-        fontsize=8.6, va="center",
+        "Accounting: one introduced-host incidence supplies the first support "
+        "in each newly added butterfly×region cell; any further hosts count as extra supports.\n"
+        "Bars: mean of two simulation-chain medians; points: individual chain medians "
+        "(499 / 299 / 99 sampled worlds per chain across B and C).\n"
+        "All comparisons are exploratory, post-hoc and conditional on HOSTS/WCVP; "
+        "model differences are not causal fractions explained by climate or distance.",
+        fontsize=8.2, va="center",
     )
     out_png.parent.mkdir(parents=True, exist_ok=True)
     out_svg.parent.mkdir(parents=True, exist_ok=True)
