@@ -52,7 +52,7 @@ The short-chain local null (199 serial draws per seed) had lag-1 around 0.78 at 
 
 ### 3. Specialization does not capture geographic novelty well
 
-Across focal butterflies, the association between host-family breadth and proportional introduced resource gain is **rho=0.008 (bootstrap 95% CI −0.111 to 0.128)**. This does **not** prove a mathematically exact zero effect; a predeclared narrow ±0.10 equivalence threshold was not met (approximate TOST p=0.078). Host-family breadth and native geographic resource breadth are only partially correlated (**rho=0.276** full sample). In the more host-taxonomy-adequate 215-species subset, **18 one-family host specialists** nevertheless occupy the top quartile of geographic resource opportunity.
+Across focal butterflies, the association between host-family breadth and proportional introduced resource gain is **rho=0.008 (bootstrap 95% CI −0.111 to 0.128)**. This does **not** prove a mathematically exact zero effect; a post-hoc narrow ±0.10 equivalence margin was not met (approximate TOST p=0.078). Host-family breadth and native geographic resource breadth are only partially correlated (**rho=0.276** full sample). In the more host-taxonomy-adequate 215-species subset, **18 one-family host specialists** nevertheless occupy the top quartile of geographic resource opportunity.
 
 For the introduced-added cells themselves, **8,574/14,553 (58.9%)** are supported by a single introduced host, but the proportion is not unusually high relative to a plant-range null with relevant margins. More host species typically allow more redundant added opportunities; **taxonomic host-family breadth by itself does not capture that spatial portfolio structure**.
 
