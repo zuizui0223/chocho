@@ -216,6 +216,24 @@ The **arithmetically distinct** new-resource-area deficit is ~260–431 butterfl
 
 **Recommended scientific framing:** *Anthropogenic plant redistribution reinforces already available geographic larval-host opportunity more than expected under constrained plant-range and broad climate allocation, while also adding new resource regions.* This is a **potential resource-geography structure**, not colonization, competition, host preference, or demographic benefits. Retain the exploratory status and do not silently replace the separate frozen GEB manuscript.
 
+## Final numerical qualification: 1,500-km climate-and-geography-tethered null
+
+The original spatial null [run 38699068001](https://github.com/zuizui0223/chocho/actions/runs/38699068001) was formally **demoted** because its 199 serial draws had substantial lag-1 autocorrelation (~0.78 for the 1,500-km primary endpoint), only ~9–10 approximate effective observations per seed, and evidence of nonstationarity. The initial spatial null's one-sided `p=0.005` is **not** defensible as an exact permutation p-value.
+
+A **single finite qualification attempt**, with a frozen post-hoc [mixing protocol](../../provenance/reviewer_defenses/protocols/SPATIAL_NULL_EXTENDED_MIXING_GATE_20261015.md), was successful in [run 38700697916](https://github.com/zuizui0223/chocho/actions/runs/38700697916). We used the previously declared 1,500-km original-introduced-footprint-tethered geography plus plant family × Level1 × CHELSA annual-temperature/precipitation classes. Two *new*, independent-seed chains used 30×E burn proposals, 20×E spacing proposals between worlds and 99 recorded worlds each. The chain-specific diagnostic thresholds were satisfied (primary lag-1 = 0.105 and 0.064; approximate ESS = 84.6 and 75.0; early-versus-late quarter and between-chain median checks also pass). This is a **numerical reliability gate**, not prospective ecological hypothesis confirmation or proof of MCMC ergodicity.
+
+The [qualified frozen result](../../provenance/reviewer_defenses/results/butterfly_spatial_null_longchain_qualified_v0.2.json) yields:
+
+| Same fixed 239-butterfly resource reconstruction | Observed | Two null-chain medians | Conditional effect |
+|---|---:|---:|---:|
+| Introduced host×butterfly×region incidences, `H` | 75,346 | 75,346 / 75,346 | Exact conservation |
+| Incidences falling within each butterfly's native resource envelope, `A` | **46,387** | 46,116 / 46,111 | **+271 / +276**, only ~**0.36 percentage points of H** |
+| Distinct added butterfly×region resource cells, `U` | **14,553** | 14,817 / 14,820 | **−264 / −267**, about **1.8% below null** |
+
+This is a **small residual coincidence** under the stated constraints, not evidence that plant transport targeted butterflies or that added hosts are locally used. Unmeasured land use, region topology, plant climatic niches within coarse bins, host-link reporting intensity and local environmental differences remain. Crucially, the null preserves each plant's introduced-area margins but **does not** fix every butterfly's total potential new regions. Independent host-use and field records are needed to infer any demographic ecological mechanism.
+
+**Practical manuscript decision:** Keep the central nontrivial question as *novel vs overlapping resource geography*, but do not inflate the ~0.36-percentage-point spatial deviation into a large biological phenomenon. The 61.6% native overlap and the bookkeeping partition describe how the **candidate host incidence budget** is arranged; they are not a measured proportion of ecological benefit. Do not reuse the invalid short-chain p-values.
+
 ## What NOT to promote as findings
 
 1. **“More host-plant range = more butterflies.”** Only potential larval resource opportunity is reconstructed; butterfly density, recruitment and conservation benefit were not estimated.
@@ -226,38 +244,35 @@ The **arithmetically distinct** new-resource-area deficit is ~260–431 butterfl
 6. **“The global temporal host–larva mismatch is proven.”** WCVP status has no introduction dates or seasonal edible-leaf trajectories. Kyoto's native-host/introduced-butterfly cage system is a distinct mechanistic test bed, not a direct global introduced-host validation.
 7. **“Macro-data identify whether anthropogenic hosts produce self-sustaining butterflies.”** Presence/resource overlap falls short of that stronger demographic question.
 
-## Manuscript storyline if prioritizing non-obvious ecology
+## Single-paper decision: elevate geographic novelty, not a second post-hoc paper
 
-**Title direction (not yet a title decision):** *Widespread opportunity, sparse redundancy: butterfly resource geography under plant globalization*.
+**Recommended question:** *When host plants are redistributed, where do butterflies gain genuinely new potential larval-resource geography, rather than another candidate host in a region they could already exploit?*
 
-**Question 1:** Does taxonomic host specialization capture the geography of larval resource access? **Answer:** weakly and incompletely (A).
+**Working title:** *Geographic novelty and redundancy of butterfly larval-host resources under plant globalization*.
 
-**Question 2:** Do introduced host ranges just enlarge resource geography or reshape who can share which plants, where? **Answer:** both; but margin-controlled homogenization is **small**, whereas exact shared-host exposure broadens considerably (C, D).
+The earlier global plant/consumer network homogenization literature already establishes that introductions alter interaction geography. Our distinction is a **fixed-interaction** butterfly resource reconstruction that partitions 75,346 introduced-host candidate incidences into (a) already-native-covered locations, (b) multiple introduced supports in newly available cells, and (c) 14,553 distinct butterfly×region gains. The additional small overlap beyond constrained nulls is a **secondary** result: it is robust to the named broad climate and spatial rearrangements, but source-conditional and post-hoc.
 
-**Question 3:** Does expanded opportunity mean diverse backup resources or ecological establishment? **Answer:** often single-host-backed (E); it exceeds geometric expectations for contemporary butterfly occurrence in a limited panel (F), but breeding and demographic effectiveness remain unresolved.
+The companion [single-paper author draft](BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md) contains one candidate English title, ~200-word abstract, biological questions, Results order, Discussion and appropriate inferential limits. **It is an alternative to the existing GEB presentation, not an extra manuscript to submit in parallel.** Author approval is needed before revising PR #38.
 
-**Cross-cutting descriptor:** Plant network prominence and inventory composition organize resource changes more plausibly than a simple specialist/generalist dichotomy, but their ecological versus observational origins remain unresolved (B).
+### Revised figure sequence
 
-### Figure priorities
+- **Fig 1 — resource accounting and analysis scale.** Show **239 butterflies, 365 WGSRPD3 regions and H=75,346 host×butterfly×region candidate incidences**; partition `H=A+R+U` (46,387 / 14,406 / 14,553), explaining that U is one first supporting incidence per distinct new butterfly×region cell.
+- **Fig 2 — matched expectations with effect sizes.** Plot observed-minus-null native resource absorption and null-minus-observed new regions under plant-family/continent margins, + climate, and + numerically qualified 1,500-km geography. Use two visible chain-specific medians, and explicitly label post-hoc status. The [reproducible renderer](../../scripts/render_butterfly_resource_novelty_figure.py) and its [input-integrity test](../../tests/test_butterfly_resource_novelty_figure.py) create the combined exploratory evidence illustration.
+- **Fig 3 — ecological heterogeneity and external check.** Taxonomic host-family count versus native resource geography (18 geographically wide one-family specialists in the more adequately documented subset), plus the secondary occurrence panel (66/115 outside-native butterfly presence cells aligned with resource gain vs region-matched structural null median 49). Mark 32 selected species, 23 informative for the occurrence summary, sampling and host-use ambiguity.
+- **Supplement — other potential-resource structure.** Native/current resource-assemblage Jaccard 0.277→0.462 versus fixed-margin null 0.453, with small continental excess ~0.0036. Keep exact shared-host co-opportunity and 58.9% single-host support **descriptive**; neither excess competitive concentration nor excess fragility is supported by the corresponding plant-range null. Explain the >=300 pair discordance between new exact-host sharing geography and declining normalized host×region niche overlap.
 
-- **Fig A — two dimensions:** butterfly host-family count versus native geographic resource breadth, highlighting the 18 one-family/high-resource butterflies, with the 0.008 expansion slope and CI explicitly labelled as a different estimand.
-- **Fig B — observed vs null:** regional resource Jaccard before/after alongside fixed-margin and continent-constrained medians; label the **+0.003616 residual**, rather than graphically inflating raw +66.8%.
-- **Fig C — shared versus vulnerable opportunity:** exact shared-host pair × region gain, between-family fraction, and 58.9% single-host-added cells; show these as **structural**, not null-validated mechanisms.
-- **Fig D — external reality check:** species-level occurrence recovery vs region-matched null, with 23-species variation, confidence/uncertainty and clear failure examples.
+These are exploratory storyboards, **not silent replacements** for the frozen GEB Figures 1–3.
 
-These are **figure storyboards**, not instructions to silently replace already frozen GEB Figures 1–3.
+### Stop rule and reviewer priorities
 
-## High-value next tests and decision criteria
+The next high-value evidence is **independent host inventory completeness or verified local larval use**, not a search for new significance across dozens of habitat covariates. The BCE host-list augmentation already showed that resource-envelope numbers change with additional literature-derived host associations (relative global expansion 54.9%→50.1%), but the new **native-resource absorption residual has not been rerun under a globally representative alternative host inventory**. State this as a source-dependence limitation.
 
-1. **Strongest feasible macroecological test:** strengthen butterfly occurrence corroboration across independent species/regions with predeclared GBIF effort and sampling filters, rather than continue to count new host-area cells. Predeclare species-held-out sensitivity and report both recovered and unrecovered occurrences. A disappearing region-adjusted excess would demote the “resource opportunity tracks realized geography” argument.
-2. **Crucial structural counterfactual:** preserve host-plant redistribution intensity, geographic opportunity margins and butterfly-host network degree while perturbing which shared hosts are placed where. Then test whether the **+127.1% shared-resource exposure** or **58.9% single-host support** exceeds a corresponding null; until then, do not call either an “excess”.
-3. **Biological mechanism beyond these maps:** independent observations of larval acceptance, young/mature leaf availability, phenology, survival and completed adult emergence can establish the filter between host presence and butterfly production. Treat this as a targeted case-study/field hypothesis, not a result from the global static panel.
-
-**Stop rule:** Do not generate an unlimited list of post-hoc predictors to obtain larger effects. Prefer a few controls that can *invalidate* the most important claims.
+The spatial null controls climate classes and polygon representative-point proximity, **not** elevation, fine-scale land use or introduction timing. Changing those one by one in the same data in pursuit of a lower p-value would not identify a mechanism. A direct field or host-rearing comparison is required to tell whether an extra mapped host region produces additional butterflies, and therefore lies beyond this paper's evidence.
 
 ## External position and interpretation limit
 
-- [Yang et al. (2021), *The global loss of floristic uniqueness*](https://doi.org/10.1038/s41467-021-27603-y) already demonstrates global *plant* homogenization. The distinct proposed contribution here is the rearrangement of **butterfly larval-resource geography under fixed host links**.
-- [Singer & Parmesan (2018), *Lethal trap created by adaptive evolutionary response to an exotic resource*](https://doi.org/10.1038/s41586-018-0074-6) establishes in one system that an introduced host can support larvae yet create management-sensitive dependence; it cannot validate worldwide ecological traps from mapped host occurrences.
+- [Fricke & Svenning (2020), *Nature*](https://doi.org/10.1038/s41586-020-2640-y): introduced species homogenize observed plant–frugivore network interactions; this topic is **not** an unoccupied novelty gap.
+- [Araújo et al. (2024), *Science of the Total Environment*](https://doi.org/10.1016/j.scitotenv.2024.173949): exotic plants and land use alter some aspects of observed plant–herbivore network structure; our mapped larval-resource geography is a **different response variable**, not an observed interaction network.
+- [Singer & Parmesan (2018), *Nature*](https://doi.org/10.1038/s41586-018-0074-6): a single butterfly/introduced-host case informs hypotheses about ecological traps and dependence but **does not** demonstrate worldwide trap effects from host maps.
 
-**Recommended claim ceiling:** *Potential butterfly resource opportunity becomes more widely shared yet frequently relies on single introduced hosts. Partial alignment with observed butterfly occurrences supports its relevance, but population establishment and ecological outcomes remain outside the global estimand.*
+**Recommended final claim ceiling:** *Introduced host distributions frequently overlap resource geography already supported by recorded native larval hosts, and the observed configuration adds modestly fewer new butterfly×region resource units than carefully specified climate- and spatially constrained alternative configurations. This is not a demonstration of realized host use, demographic success or human-caused evolutionary specialization.*
