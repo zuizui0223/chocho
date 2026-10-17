@@ -171,6 +171,7 @@ def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
         "BUTTERFLY_RESOURCE_HOMOGENIZATION_ECOLOGY_V01.md",
         "NONTRIVIAL_MACROECOLOGICAL_FINDINGS_20261015.md",
         "BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md",
+        "ANONYMOUS_RESOURCE_NOVELTY_ARCHIVE_README_20261017.md",
         "BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md",
         "butterfly_resource_homogenization_ecology_v0.1.md",
         "butterfly_anthropogenic_resource_expansion_protocol_v0.1.json",
