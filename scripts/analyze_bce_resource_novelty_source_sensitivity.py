@@ -80,17 +80,18 @@ def load_candidate_host_links(path: Path) -> tuple[dict[str, set[str]], dict[str
     nlinks = sum(len(x) for x in additions.values())
     unique_plants = len(set().union(*additions.values()))
     if (
-        len(matched) != 92 or len(additions) != 81
+        len(matched) != 83 or obj.get("verified_butterflies") != 83 or len(additions) != 81
         or nlinks != 1027 or nrows != 1027 or unique_plants != 679
     ):
         raise ValueError(
-            f"archived source scope drift 92/81/1027/679: "
+            f"archived source scope drift verified-83/added-81/1027/679: "
             f"{len(matched)}/{len(additions)}/{nlinks}/{unique_plants}"
         )
     meta = {
         "bce_accepted_edges_sha256": sha,
         "source_schema": SOURCE_SCHEMA,
-        "source_exact_butterfly_matches": len(matched),
+        "source_exact_butterfly_matches": 92,
+        "source_verified_butterfly_foodplant_pages": len(matched),
         "butterflies_with_candidate_hosts": len(additions),
         "candidate_additional_host_links": nlinks,
         "unique_additional_accepted_hosts": unique_plants,
@@ -98,7 +99,7 @@ def load_candidate_host_links(path: Path) -> tuple[dict[str, set[str]], dict[str
         "source_workflow_run": 37795847333,
         "source_workflow_artifact_id": 11557274784,
     }
-    return additions, {**meta, "BCE_exact_butterflies": sorted(matched)}
+    return additions, {**meta, "BCE_verified_foodplant_butterflies": sorted(matched)}
 
 
 def host_geography(path: Path) -> dict[str, set[str]]:
@@ -223,7 +224,7 @@ def analyze(
     base_species = {}
     augmented_species = {}
     by_sp = []
-    source_species = set(source["BCE_exact_butterflies"])
+    source_species = set(source["BCE_verified_foodplant_butterflies"])
     for sp in sorted(metric_by_sp):
         ids = hosts_by_sp[sp]
         b = count_species_opportunity(ids, baseline_native, baseline_contemporary)
@@ -249,7 +250,7 @@ def analyze(
         rec = {
             "species": sp,
             "BCE_candidate_host_links_added": len(candidate.get(sp, set())),
-            "BCE_matched": sp in source_species,
+            "BCE_foodplant_evidence_page": sp in source_species,
             "base_native": b["native"],
             "base_added": b["added"],
             "augmented_native": a["native"],
@@ -289,7 +290,7 @@ def analyze(
         "schema":"chocho_butterfly_bce_host_inventory_resource_novelty_v0.1",
         "status":"SUCCESS_POSTHOC_EUROPE_BIASED_INVENTORY_SENSITIVITY_NOT_SPATIAL_NULL",
         "source": {
-            **{k:v for k,v in source.items() if k!="BCE_exact_butterflies"},
+            **{k:v for k,v in source.items() if k!="BCE_verified_foodplant_butterflies"},
             "primary_resource_baseline": "frozen HOSTS/WCVP 239 butterflies; 365 recorded resource regions",
             "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
             "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
@@ -310,7 +311,7 @@ def analyze(
         },
         "subgroups": {
             "81_BCE_candidate_augmented_butterflies":subset_aggregates(changed_species),
-            "92_BCE_exact_binomial_matches":subset_aggregates(matched),
+            "83_BCE_verified_foodplant_species":subset_aggregates(matched),
             "158_unmodified_host_inventory_butterflies":subset_aggregates(unaffected),
         },
         "affected_butterflies_sorted": [
