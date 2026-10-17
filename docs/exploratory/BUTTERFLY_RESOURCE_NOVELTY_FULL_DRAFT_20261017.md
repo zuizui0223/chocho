@@ -20,7 +20,7 @@
 
 **Main conclusions:** Potential larval-host redistribution often overlaps pre-existing regional opportunity. More importantly, which places qualify as *new* depends strongly on recorded host relations; mapped supply does not establish realized local feeding, colonization or fitness.
 
-**Keywords:** biogeography, butterflies, host records, introduced plants, larval resources, resource novelty, species interactions, specialization
+**Keywords:** biogeography, butterflies, host records, introduced plants, larval resources, resource novelty, specialization, species interactions
 
 ---
 
