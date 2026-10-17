@@ -75,14 +75,19 @@ def render(source: dict, png: Path, svg: Path) -> None:
     ]
     fig, ax = plt.subplots(figsize=(12.4, 5.9))
     fig.subplots_adjust(left=0.13, right=0.94, top=0.73, bottom=0.19)
+    # Reuse matplotlib's default category colors in BOTH source scenarios.
+    # Without an explicit category mapping, barh advances the default patch
+    # cycler separately in each row and the legend becomes misleading.
+    category_palette = plt.rcParams["axes.prop_cycle"].by_key()["color"]
     handles = []
     for idx, case in enumerate(source["scenarios"]):
         y = 1 - idx
         cursor = 0.0
         H = case["H"]
-        for key, label in categories:
+        for category_index, (key, label) in enumerate(categories):
             percent = 100*case[key]/H
-            bar=ax.barh(y, percent, left=cursor, height=0.41)
+            bar=ax.barh(y, percent, left=cursor, height=0.41,
+                        color=category_palette[category_index])
             if not handles or len(handles) < 3 and idx==0:
                 handles.append(bar[0])
             ax.text(
