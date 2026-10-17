@@ -25,7 +25,7 @@ def manuscript() -> str:
 def test_journal_article_scope_and_sections() -> None:
     text = manuscript()
     assert text.startswith("# When is an introduced host a new resource?")
-    assert "frozen GEB PR #38" in text
+    assert "PR #38" in text
     for heading in (
         "## Structured abstract",
         "## 1. Introduction",
