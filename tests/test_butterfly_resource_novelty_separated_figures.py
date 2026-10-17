@@ -51,7 +51,7 @@ def test_separated_supplementary_figure_has_all_two_seed_nulls() -> None:
     assert [x["u_deficit"] for x in supp["controls"]]==[
         [831,832], [426,431], [264,267]
     ]
-    assert "not a causal" in supp["claim_boundary"]
+    assert "nor causal variance partition" in supp["claim_boundary"]
     assert "post-hoc" in supp["claim_boundary"].lower()
 
 
