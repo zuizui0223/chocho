@@ -158,10 +158,10 @@ def render(data:dict,png:Path,svg:Path)->None:
     a.set_title("A  |  Native resource breadth",loc="left",fontsize=11,pad=12)
     a.set_xlabel("Number of recorded host-plant families")
     a.set_ylabel("Native host-resource WGSRPD3 units (log scale)")
-    a.text(.045,.98,
+    a.text(.98,.98,
         f"Spearman ρ = {data['host_family_vs_native_resource_spearman']:.3f}\n"
         "18 one-family high-resource species\nin the adequately resolved subset (n=215)",
-        transform=a.transAxes,ha="left",va="top",fontsize=9.1,
+        transform=a.transAxes,ha="right",va="top",fontsize=9.1,
         bbox={"facecolor":"white","alpha":.8,"edgecolor":"none"})
     b.scatter(xr[~eligible],gain[~eligible],s=20,alpha=.25,marker="x")
     b.scatter(xr[eligible],gain[eligible],s=20,alpha=.49)
@@ -188,8 +188,6 @@ def render(data:dict,png:Path,svg:Path)->None:
     c.set_ylim(0,85)
     c.set_ylabel("Outside-native butterfly × region occurrence units")
     c.set_title("C  |  Presence is not larval host use",loc="left",fontsize=11,pad=12)
-    c.text(.06,.94,"23 informative butterflies\nof 32 in the separate panel",
-           transform=c.transAxes,ha="left",va="top",fontsize=9)
     for ax in axs:
         ax.spines[["right","top"]].set_visible(False)
         ax.grid(axis="y",alpha=.12)
@@ -198,7 +196,7 @@ def render(data:dict,png:Path,svg:Path)->None:
         "A–B: visual jitter only; correlations use actual numeric counts. Hollow points mark geographically broad one-family species.",
         fontsize=9.2)
     fig.text(.073,.075,
-        "C: 66 of 115 occurrence units overlap introduced-host opportunity; matched null 49 (95% interval 43–56).",
+        "C: 66 of 115 outside-native occurrence units (23 informative of 32 butterflies); matched null 49 (95% interval 43–56).",
         fontsize=9.2)
     fig.text(.073,.031,
         "Potential resource geography ≠ observed butterfly density, local larval feeding, successful recruitment or causal range expansion.",
