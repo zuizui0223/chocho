@@ -28,7 +28,7 @@ This explicitly concerns *resource geography*, not observed plant–larva edges 
 
 **Methods:** We joined accepted host–butterfly associations to native and contemporary plant regions and partitioned introduced host×butterfly×region incidences into native-supported, multiply introduced-supported and uniquely new butterfly×region resources. Plant-range nulls preserved host links, plant-family and regional margins, climate bins and local proximity. A separately curated European checklist added 1,027 candidate host links to 81 butterfly species.
 
-**Results:** Of 75,346 introduced-host candidate incidences, 46,387 (61.6%) occurred inside butterfly native-host resource envelopes; 14,406 (19.1%) added support within new cells, leaving 14,553 distinct regional opportunities (19.3%). Under a numerically qualified 1,500-km climate-matched null, native-resource overlap exceeded expectation by just 271–276 incidences (0.36 percentage points). Host-list augmentation changed the native-overlap share to 65.5% and uniquely new share to 14.5%. Among 81 augmented butterflies, only 3,225 of 6,445 resource cells classified as new under either catalogue agreed between catalogues (Jaccard 0.500), despite a net increase of only 414 cells.
+**Results:** Of 75,346 introduced-host candidate incidences, 46,387 (61.6%) occurred inside butterfly native-host resource envelopes; 14,406 (19.1%) provided additional support within new cells and only 14,553 (19.3%) uniquely opened regional opportunity. Augmenting 81 butterfly host inventories with European literature associations shifted the native-overlap fraction to 65.5%. Critically, only 3,225 of 6,445 butterfly×region cells called *new* under either catalogue agreed between catalogues (Jaccard 0.500), although their aggregate number changed by only 414. An original-HOSTS climate- and 1,500-km-distance-matched exploratory null retained a small native-overlap excess (271–276 candidate incidences; 0.36 percentage points).
 
 **Main conclusions:** Potential larval-host redistribution often overlaps pre-existing regional opportunity. More importantly, which places qualify as *new* depends strongly on recorded host relations; mapped supply does not establish realized local feeding, colonization or fitness.
 
@@ -52,23 +52,7 @@ where `H=75,346` introduced host×butterfly×region incidences, `A=46,387` incid
 
 The last two terms are not independent: highly overlapping introduced plants can supply multiple supporting incidences within one new cell. None of these counts measures edible plant biomass, insect acceptance or reproductive success.
 
-### 2. Introduced ranges are more likely to coincide with native-resource geography than the constrained structural null would predict — but only slightly
-
-The initial null preserves planted-host degree and continental plant-family region margins. Of the fixed 75,346 candidate incidences, observed native-envelope overlap is **46,387**, versus **45,301/45,298** in two 499-draw null chains (**+1,086/+1,089**).
-
-CHELSA temperature/precipitation-bin matching reduces the excess to **+552/+558**. A more stringent *locally tethered* comparison (1,500 km, original introduced host footprint, the same plant-family × continent × 2×2 climate bins, two independent longer chains) retains **+271/+276**, or **+0.36 percentage points** of the fixed candidate incidence budget. Independent-chain simulation diagnostic thresholds were satisfied: autocorrelation lag-1 ≈ 0.06–0.10; estimated ESS ≈ 75–85 for the primary A response; chain median difference 5 units. Distinct new resource additions remain **−264/−267** lower than the respective null medians (**14,817/14,820**).
-
-These are **small conditional differences** in a coarse mapped resource system and **have not been re-estimated under the augmented BCE host inventory**. The inventory-sensitivity change in the native-overlap share (+3.98 percentage points) is numerically much larger than the original-inventory local-null excess (~0.36 percentage points), but they are different contrasts and must not be compared as if they were exchangeable effect estimates. Long-chain numerical qualification does not convert a post-hoc comparison into a confirmatory permutation test or into identification of climate, geography or introduction mechanisms.
-
-The short-chain local null (199 serial draws per seed) had lag-1 around 0.78 at 1,500 km and ESS ≈ 9–10, and its nominal p-values were rejected as evidentially unreliable. The longer-chain sensitivity was run once with a finite frozen mixing gate; results were stable, not chosen by repeated threshold fishing.
-
-### 3. Specialization does not capture geographic novelty well
-
-Across focal butterflies, the association between host-family breadth and proportional introduced resource gain is **rho=0.008 (bootstrap 95% CI −0.111 to 0.128)**. This does **not** prove a mathematically exact zero effect; a post-hoc narrow ±0.10 equivalence margin was not met (approximate TOST p=0.078). Host-family breadth and native geographic resource breadth are only partially correlated (**rho=0.276** full sample). In the more host-taxonomy-adequate 215-species subset, **18 one-family host specialists** nevertheless occupy the top quartile of geographic resource opportunity.
-
-For the introduced-added cells themselves, **8,574/14,553 (58.9%)** are supported by a single introduced host, but the proportion is not unusually high relative to a plant-range null with relevant margins. More host species typically allow more redundant added opportunities; **taxonomic host-family breadth by itself does not capture that spatial portfolio structure**.
-
-### 4. Host-inventory completeness materially changes what counts as new opportunity
+### 2. Host-inventory completeness materially changes what counts as new opportunity
 
 In a **source-completeness sensitivity**, we re-used the previously archived BCE-derived version of Clarke (2024) rather than newly selecting host taxa by result. The source had 92 exact matching butterfly names, 83 with source foodplant records, and 1,027 *candidate* additional accepted-WCVP-ID larval-host associations for 81 focal butterflies (679 plant species). Candidate relations were added **together** to the frozen HOSTS list and the original WCVP v13 native/contemporary plant maps were rebuilt. The original 239-species baseline reproduced exactly.
 
@@ -87,6 +71,22 @@ Species cases make the ecological interpretation concrete without supplying inde
 
 The source sensitivity is **Europe-biased and only one-directional**, and BCE/Clarke evidence comes from documented European feeding/oviposition records, not independent worldwide larvae sampled at every WCVP locality. It cannot establish a globally corrected 65.5% or demonstrate that the earlier small *conditional spatial-null* excess remains after the added host links. Its importance is instead to quantify a real constraint on the **interpretation and completeness** of host-resource geography.
 
+### 3. Introduced ranges are more likely to coincide with native-resource geography than the constrained structural null would predict — but only slightly
+
+The initial null preserves planted-host degree and continental plant-family region margins. Of the fixed 75,346 candidate incidences, observed native-envelope overlap is **46,387**, versus **45,301/45,298** in two 499-draw null chains (**+1,086/+1,089**).
+
+CHELSA temperature/precipitation-bin matching reduces the excess to **+552/+558**. A more stringent *locally tethered* comparison (1,500 km, original introduced host footprint, the same plant-family × continent × 2×2 climate bins, two independent longer chains) retains **+271/+276**, or **+0.36 percentage points** of the fixed candidate incidence budget. Independent-chain simulation diagnostic thresholds were satisfied: autocorrelation lag-1 ≈ 0.06–0.10; estimated ESS ≈ 75–85 for the primary A response; chain median difference 5 units. Distinct new resource additions remain **−264/−267** lower than the respective null medians (**14,817/14,820**).
+
+These are **small conditional differences** in a coarse mapped resource system and **have not been re-estimated under the augmented BCE host inventory**. The inventory-sensitivity change in the native-overlap share (+3.98 percentage points) is numerically much larger than the original-inventory local-null excess (~0.36 percentage points), but they are different contrasts and must not be compared as if they were exchangeable effect estimates. Long-chain numerical qualification does not convert a post-hoc comparison into a confirmatory permutation test or into identification of climate, geography or introduction mechanisms.
+
+The short-chain local null (199 serial draws per seed) had lag-1 around 0.78 at 1,500 km and ESS ≈ 9–10, and its nominal p-values were rejected as evidentially unreliable. The longer-chain sensitivity was run once with a finite frozen mixing gate; results were stable, not chosen by repeated threshold fishing.
+
+### 4. Specialization does not capture geographic novelty well
+
+Across focal butterflies, the association between host-family breadth and proportional introduced resource gain is **rho=0.008 (bootstrap 95% CI −0.111 to 0.128)**. This does **not** prove a mathematically exact zero effect; a post-hoc narrow ±0.10 equivalence margin was not met (approximate TOST p=0.078). Host-family breadth and native geographic resource breadth are only partially correlated (**rho=0.276** full sample). In the more host-taxonomy-adequate 215-species subset, **18 one-family host specialists** nevertheless occupy the top quartile of geographic resource opportunity.
+
+For the introduced-added cells themselves, **8,574/14,553 (58.9%)** are supported by a single introduced host, but the proportion is not unusually high relative to a plant-range null with relevant margins. More host species typically allow more redundant added opportunities; **taxonomic host-family breadth by itself does not capture that spatial portfolio structure**.
+
 ### 5. Evidence that resource opportunity is biologically relevant is partial, and conservation claims are deliberately bounded
 
 A **secondary, non-prospective** 32-species climate-stratified GBIF panel included **115** butterfly outside-native resource-region occurrence units from 23 informative species; **66** coincided with introduced host-resource gains versus a geography/region-matched null median **49**. Species sensitivity and uneven GBIF coverage warrant careful reporting; the result is **not** proof of introduced-host larval use or successful colonization.
@@ -103,10 +103,12 @@ The remaining overlap could reflect spatial autocorrelation, climatic niches at 
 
 ## Final figure story (proposed, *not* currently adopted in submission)
 
-- **Figure 1:** Global analysis overview, exact 239/365/75,346 scope and the **A+R+U** resource novelty accounting. Native, added and contemporary species×region totals shown as scale, not as headline inference.
-- **Figure 2:** Reconstructed observed-minus-null native-resource absorption and new-cell deficit under plant-family/continent, plus climate, plus qualified 1,500-km locality controls. Show each chain separately; source receipts and the method's ESS/gates in caption. This figure should make the decreasing residual visible rather than exaggerate a small effect.
-- **Figure 3:** Butterfly heterogeneity and biological relevance: specialist versus geographic resource-breadth discordance, plus outside-native observed butterfly occurrence recovery against a region-matched structural null. State separate sample sizes and biases.
-- **Supplement:** Source-inventory comparison **H=A+R+U** for frozen HOSTS and augmented European BCE/Clarke host records, including the 1,817 newly identified cells and 1,403 reclassified native cells; plus regional assemblage Jaccard and matched null, with negative-result interpretation of fragility and competition claims.
+- **Figure 1 — geographic opportunity is not the same as unique regional gain:** Introduced host×butterfly×region incidence budget (H=75,346), already-native-supported overlap A, extra supports of newly opened cells R and first supports of U=14,553 novel butterfly×region cells. Present all 239 butterflies and 365 WGSRPD3 regions, and the originally reconstructed 26,530→41,083 native/contemporary species×region opportunities as context rather than the novelty claim.
+- **Figure 2 — the geographic identities of mapped new resources depend on known host links:** Show the audited [81-butterfly source-turnover figure](../../scripts/render_bce_added_resource_identity_turnover_figure.py), with per-species old/new gain and 3,225 retained / 1,403 reclassified native / 1,817 newly supplied cells. The union of source-classified new cells is 6,445 and the source-agreement Jaccard is **0.5004**. Note the 158 unchanged inventories and that this is **catalogue disagreement**, not observed biological range turnover.
+- **Figure 3 — what potential resource opportunity can and cannot predict:** Regional resource breadth against butterfly host-family diet breadth, and the independent secondary occurrence validation (66/115 outside-native butterfly×region presence cells recovered versus a region-matched null median 49). Report 239 species for source reconstruction versus the distinct 32-species GBIF panel with 23 informative species; no local larval host use or establishment inferred.
+- **Supplementary figures — small constrained structural nulls and other resource network patterns:** Show observed-minus-null native-overlap incidence excess after plant-family/continent, CHELSA 2×2 climate and numerically qualified 1,500-km spatial constraints; conditional on original HOSTS and **not confirmed under BCE augmentation**. Supply originally observed regional resource-assemblage Jaccard 0.277→0.462 versus continent-matched residual ~0.0036, and raw exact shared-host geography. An additional source-composition figure compares H=75,346 versus H=103,349 and their **different denominators**.
+
+This order makes *geographic novelty and its dependence on host records* the primary biological question. The small post-hoc spatial-null residual is a secondary qualification, **not a lead discovery**. These are author-review candidates, not silent replacements for the existing GEB submission Figures 1–3.
 
 ### Rendered exploratory illustration and candidate figure legend
 
