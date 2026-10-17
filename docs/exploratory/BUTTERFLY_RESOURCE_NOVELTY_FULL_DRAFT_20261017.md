@@ -42,7 +42,7 @@ The host-inventory and increasingly strict plant-range null analyses were develo
 
 We organized the analysis around three related but non-equivalent quantities. **Taxonomic interaction breadth** describes which kinds of larval hosts a butterfly uses, measured here as host-family richness. **Resource geography** describes where those known hosts occur, represented by the union of their geographic distributions. **Realized butterfly geography** describes where the butterfly is actually observed. Human redistribution enters between the first two quantities: moving a known host can alter a butterfly's resource geography without changing its taxonomic interaction breadth.
 
-We therefore reconstructed each butterfly's resource geography under native-only and contemporary host distributions and measured the difference as anthropogenic resource gain. We then asked whether redistribution changes the **structure** of resource space: similarity among regional butterfly resource assemblages, overlap among butterfly resource envelopes, and the geography over which butterfly pairs share exact host species. Host-family breadth was retained as a secondary modifier of proportional gain, and contemporary butterfly occurrences provided a secondary check on realization of the added opportunity.
+We reconstructed the native-only and contemporary resource geography of each butterfly and then distinguished the volume of introduced host supply from its distinct new butterfly×region opportunities. We compared this accounting under the original and independently supplemented host inventories, including the regional identities of apparently new resource cells. Taxonomic host-family breadth, a secondary contemporary occurrence check, and the previously explored resource-assemblage similarity were retained as supporting ecological context, rather than interchangeable measures of resource novelty.
 
 The LepTraits-derived descriptor panel contained 339 species (Shirey et al. 2022). Resource analyses used 239 species with positive host-family breadth and at least one reconstructed native host-resource WGSRPD3 unit. A conservative subset of 215 species also required the number of resolved host species to equal or exceed LepTraits host-family count. A separate 32-species panel was used for occurrence validation and climate analysis; it had been selected to balance the subsequent climate test, not optimized for validation. Twenty-four species passed the climate quality criteria.
 
@@ -56,7 +56,7 @@ For each butterfly, the **native resource envelope** was the union of WGSRPD lev
 
 As a crop-host sensitivity, we repeated the reconstruction after excluding host taxa listed in the FAO Indicative Crop Classification, first by exact botanical binomial and then with an intentionally over-conservative rule that also excluded all congeners when the FAO list specified a crop as spp. Host-family breadth was kept fixed as the specialization predictor; only the reconstructed resource envelopes and host contributions were recalculated (Supplementary Table S7).
 
-We calculated native and contemporary resource breadth, introduced-added units, the contemporary/native ratio, log resource expansion, and the introduced share of contemporary geography. In a post-hoc descriptive decomposition, each butterfly × WGSRPD3 unit newly added by introduced host distributions contributed one unit of credit divided equally among the host species that added that unit. Credits therefore summed exactly to the aggregate number of added butterfly × region units. We summarized the concentration of those credits across host plants using cumulative top-k shares, the Gini coefficient and the inverse-Herfindahl effective contributor number. As a taxonomic sensitivity, contributing plant species were first collapsed to unique genera within each butterfly × region unit and the unit credit was then divided equally among those genera. This decomposition is explicitly contribution-weighted: a plant can accumulate credit by being used by more focal butterflies, by adding more geographic units, or both. We therefore use it to describe which resources generate the reconstructed opportunity, not as a sample of independent plant-level effects.
+We calculated native and contemporary resource breadth, newly accessible butterfly×region units, the contemporary/native ratio and log proportional expansion. The established fractional host-contribution analysis—allocating one unit of added-region credit equally among contributing plant hosts—was retained as a supporting description of which plants account for mapped expansion (original Supplementary Table S6), not a separately tested driver of host-region novelty.
 
 ### 2.3 Counting overlapping and geographically novel introduced host supply
 
@@ -88,11 +88,11 @@ We separately inspected the 32-species GBIF climate panel for butterfly×region 
 
 ## 3. Results
 
-### 3.1 | Widespread larval-resource increase masks considerable overlap
+### 3.1 | Introduced host supply is not equivalent to distinct new butterfly-resource regions
 
-**Panel scope:** 239 butterflies; 365 geographically delineated regions; fixed HOSTS records and WCVP v13 native/introduced statuses; 670 plant species supply at least one distinct new resource unit.
+The focal reconstruction comprised 239 butterflies across 365 geographically delineated regions under fixed HOSTS associations and WCVP v13 native/introduced statuses. In the original analysis, 670 accepted host plant species contributed at least one distinct new butterfly×region cell.
 
-Observed native butterfly×region resource cells **26,530**; contemporary **41,083**, an increase of **14,553 (+54.9%)**. Species gaining any extra region: **206/239 (86.2%)**. These are the scale and context, **not** the lead surprise.
+Observed native butterfly×region resource cells **26,530**; contemporary **41,083**, an increase of **14,553 (+54.9%)**. Species gaining any extra region: **206/239 (86.2%)**. These values establish the scale of the mapped opportunity; the subsequent incidence decomposition distinguishes regional novelty from repeated host supply.
 
 To unpack the geographic novelty of candidate introduced host distribution:
 
@@ -104,7 +104,7 @@ where `H=75,346` introduced host×butterfly×region incidences, `A=46,387` incid
 
 The last two terms are not independent: highly overlapping introduced plants can supply multiple supporting incidences within one new cell. None of these counts measures edible plant biomass, insect acceptance or reproductive success.
 
-### 3.2 | Host-inventory completeness materially changes what counts as new opportunity
+### 3.2 | Additional larval-host evidence reclassifies regional resource novelty
 
 In a **source-completeness sensitivity**, we re-used the previously archived BCE-derived version of Clarke (2024) rather than newly selecting host taxa by result. The source had 92 exact matching butterfly names, 83 with source foodplant records, and 1,027 *candidate* additional accepted-WCVP-ID larval-host associations for 81 focal butterflies (679 plant species). Candidate relations were added **together** to the frozen HOSTS list and the original WCVP v13 native/contemporary plant maps were rebuilt. The original 239-species baseline reproduced exactly.
 
@@ -123,7 +123,7 @@ Species cases make the ecological interpretation concrete without supplying inde
 
 The source sensitivity is **Europe-biased and only one-directional**, and BCE/Clarke evidence comes from documented European feeding/oviposition records, not independent worldwide larvae sampled at every WCVP locality. It cannot establish a globally corrected 65.5% or demonstrate that the earlier small *conditional spatial-null* excess remains after the added host links. Its importance is instead to quantify a real constraint on the **interpretation and completeness** of host-resource geography.
 
-### 3.3 | Introduced ranges are more likely to coincide with native-resource geography than the constrained structural null would predict — but only slightly
+### 3.3 | Excess native-resource overlap is small under geographically constrained nulls
 
 The initial null preserves planted-host degree and continental plant-family region margins. Of the fixed 75,346 candidate incidences, observed native-envelope overlap is **46,387**, versus **45,301/45,298** in two 499-draw null chains (**+1,086/+1,089**).
 
@@ -133,13 +133,13 @@ These are **small conditional differences** in a coarse mapped resource system a
 
 The short-chain local null (199 serial draws per seed) had lag-1 around 0.78 at 1,500 km and ESS ≈ 9–10, and its nominal p-values were rejected as evidentially unreliable. The longer-chain sensitivity was run once with a finite frozen mixing gate; results were stable, not chosen by repeated threshold fishing.
 
-### 3.4 | Specialization does not capture geographic novelty well
+### 3.4 | Host-family breadth poorly captures proportional resource gains
 
 Across focal butterflies, the association between host-family breadth and proportional introduced resource gain is **rho=0.008 (bootstrap 95% CI −0.111 to 0.128)**. This does **not** prove a mathematically exact zero effect; a post-hoc narrow ±0.10 equivalence margin was not met (approximate TOST p=0.078). Host-family breadth and native geographic resource breadth are only partially correlated (**rho=0.276** full sample). In the more host-taxonomy-adequate 215-species subset, **18 one-family host specialists** nevertheless occupy the top quartile of geographic resource opportunity.
 
 For the introduced-added cells themselves, **8,574/14,553 (58.9%)** are supported by a single introduced host, but the proportion is not unusually high relative to a plant-range null with relevant margins. More host species typically allow more redundant added opportunities; **taxonomic host-family breadth by itself does not capture that spatial portfolio structure**.
 
-### 3.5 | Evidence that resource opportunity is biologically relevant is partial, and conservation claims are deliberately bounded
+### 3.5 | Secondary butterfly occurrences support only partial resource relevance
 
 A **secondary, non-prospective** 32-species climate-stratified GBIF panel included **115** butterfly outside-native resource-region occurrence units from 23 informative species; **66** coincided with introduced host-resource gains versus a geography/region-matched null median **49**. Species sensitivity and uneven GBIF coverage warrant careful reporting; the result is **not** proof of introduced-host larval use or successful colonization.
 
