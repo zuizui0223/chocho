@@ -16,6 +16,23 @@ A defensible summary is:
 
 This is the extension from known **plant-flora homogenization** to the **resource layer experienced by butterfly consumers**, not a claim that realized butterfly communities became homogenized.
 
+## 2026-10-17 host-list source-completeness challenge: revised evidence priority
+
+A **new source-pinned reconstruction** [run 38988757959](https://github.com/zuizui0223/chocho/actions/runs/38988757959) applied the *exact previously archived*, evidence-filtered European BCE/Clarke (2024) accepted-host candidate relationships to the same frozen WCVP and HOSTS host-geographic sidecars. It revalidated the original **239 butterflies, 26,530 native cells, 41,083 contemporary cells, 14,553 added resource cells and H=75,346 candidate introduced-host incidences** and independently reproduced the prior Supplementary Table S9 totals after augmenting all 1,027 candidate host links (81 butterflies, 679 WCVP accepted plant IDs). The [new audited receipt](../../provenance/reviewer_defenses/results/butterfly_bce_resource_novelty_inventory_sensitivity_v0.1.json) and [fixed analysis protocol](../../provenance/reviewer_defenses/protocols/BCE_CLARKE_RESOURCE_NOVELTY_SENSITIVITY_20261017.md) establish this as a **source-completeness sensitivity, not a novel biological null**.
+
+| Fixed resource accounting, 239 species | HOSTS original | BCE-augmented partial list |
+|---|---:|---:|
+| Candidate introduced accepted-host × butterfly × region incidences, `H` | 75,346 | 103,349 |
+| Already native-resource-supported incidences, `A` | **46,387 (61.6%)** | **67,740 (65.5%)** |
+| Redundant extra supports within newly opened cells, `R` | 14,406 (19.1%) | 20,642 (20.0%) |
+| Distinct newly opened butterfly×region cells, `U` | **14,553 (19.3%)** | **14,967 (14.5%)** |
+
+The candidate denominator **H itself changes** (more known host species), so 65.5% is **not an independent global biological prevalence estimate** or a precise new "true" ecological fraction. It is an example of the uncertainty induced by adding European literature-derived accepted-WCVP candidate host links. The **+3.98 percentage point descriptive inventory shift** in A/H is on a much larger numerical scale than the **+~0.36 point old-source conditional spatial-null excess**, but these compare *different interventions and estimands*. In particular **the spatial null was not rerun after the host-list augmentation**. Do not call the ~0.36-point excess inventory-robust on that basis.
+
+The net number of new cells changes by only **+414**, concealing substantial *cancellation*: **1,817** newly added butterfly×region cells versus **1,403** formerly introduced-added cells now reclassified to the *native* resource envelope. Among 81 augmented butterfly species, the introduced-added area count rises for **36**, falls for **35** and remains unchanged for **10**. This is a nontrivial *measurement/interpretation* lesson: geographic novelty of potential resource supply is strongly conditional on which known larval hosts define the baseline.
+
+**Revised claim hierarchy:** (1) Resource presence is not equivalent to novel opportunity; the A+R+U decomposition is source-conditional but reproducible. (2) Catalogue incompleteness demonstrably changes the partition while sometimes cancelling in aggregate. (3) Small climate- and locality-constrained spatial overlap residuals remain exploratorily interesting **only for the frozen original HOSTS graph**, not a robust globally causal ecological mechanism. (4) Local feeding, larval development and demographic fitness remain unknown. **Do not promote the source sensitivity to a second stand-alone ecology paper or silently overwrite the GEB manuscript.**
+
 ## Evidence hierarchy: results worth highlighting
 
 ### A. The usual specialist/generalist axis does not encode geographic resource specialization
@@ -265,7 +282,7 @@ These are exploratory storyboards, **not silent replacements** for the frozen GE
 
 ### Stop rule and reviewer priorities
 
-The next high-value evidence is **independent host inventory completeness or verified local larval use**, not a search for new significance across dozens of habitat covariates. The BCE host-list augmentation already showed that resource-envelope numbers change with additional literature-derived host associations (relative global expansion 54.9%→50.1%), but the new **native-resource absorption residual has not been rerun under a globally representative alternative host inventory**. State this as a source-dependence limitation.
+The partial **independent-host-inventory sensitivity has now been completed** with a Europe-derived BCE/Clarke checklist, but globally representative completeness and verified local larval use remain unmeasured; do not search for new significance across dozens of habitat covariates. The BCE host-list augmentation already showed that resource-envelope numbers change with additional literature-derived host associations (relative global expansion 54.9%→50.1%), but the new **native-resource absorption residual has not been rerun under a globally representative alternative host inventory**. State this as a source-dependence limitation.
 
 The spatial null controls climate classes and polygon representative-point proximity, **not** elevation, fine-scale land use or introduction timing. Changing those one by one in the same data in pursuit of a lower p-value would not identify a mechanism. A direct field or host-rearing comparison is required to tell whether an extra mapped host region produces additional butterflies, and therefore lies beyond this paper's evidence.
 
