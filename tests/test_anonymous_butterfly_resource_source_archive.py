@@ -72,6 +72,6 @@ def test_readme_declares_missing_provider_licence_and_no_demographic_inference()
     assert "not" in r.lower()
     assert "python RUN_ME.py" in r
     assert "0.5004" in r
-    assert "the BCE evidence is European and partial" in r
+    assert "the bce evidence is european and partial" in r.lower()
     assert "not a representative independent worldwide host inventory" in r
     assert "not a dated introduction" in r or "not dated" in r
