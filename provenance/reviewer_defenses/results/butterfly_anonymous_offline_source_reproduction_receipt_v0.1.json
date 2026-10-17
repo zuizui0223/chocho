@@ -1,0 +1,65 @@
+{
+  "schema": "chocho_butterfly_anonymous_offline_source_review_receipt_v0.1",
+  "status": "PASS_AUTHOR_ONLY_OFFLINE_REPLICATION_NOT_LICENSE_APPROVED_FOR_DISTRIBUTION",
+  "actions": {
+    "run_id": 39006554609,
+    "conclusion": "success",
+    "source_head_sha": "d53e04fb361701265139ba77b8bca56689da6532",
+    "artifact_id": 12090584135,
+    "artifact_name": "butterfly-author-anonymous-offline-source-replication-v01",
+    "source_run_url": "https://github.com/zuizui0223/chocho/actions/runs/39006554609"
+  },
+  "source": {
+    "code_builder": "scripts/build_anonymous_butterfly_novelty_source_archive.py",
+    "offline_reanalysis_script": "scripts/anonymous_resource_novelty_offline_runner.py",
+    "workflow": ".github/workflows/butterfly-anonymous-offline-resource-source.yml",
+    "instructions": "docs/exploratory/ANONYMOUS_RESOURCE_NOVELTY_ARCHIVE_README_20261017.md",
+    "annotated_scope": "Focal 239 butterfly panel. Analysis-ready, source-derived full accepted HOSTS/WCVP native and contemporary plant×WGSRPD3 sidecars and additional BCE/Clarke accepted-plant IDs; frozen CHELSA climate crossfit and exact original TDWG boundary data; optional original HOSTS MCMC draw series.",
+    "primary_input_source_hashes": {
+      "s1_descriptors": "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc",
+      "bce_accepted_host_ids": "f46d18703fe5cc8d97699af6f084f652a704e46b0f9e8c68e32dd70decc32c53",
+      "chelsa_region_crossfit": "0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2",
+      "wgsrpd_polygon": "c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840",
+      "original_mcmc_source": "22c60accba86b576aa6ddc9f46ca7dd4d2003e2e81f1ba333ef41da5dbabbb91"
+    },
+    "archive": {
+      "inner_archive_name": "butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip",
+      "bytes": 3255228,
+      "sha256": "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323",
+      "inner_members": 29,
+      "sha256_protected_nonmanifest_members": 28
+    }
+  },
+  "independently_reproduced": {
+    "source_zip_extracted_to_fresh_folder": true,
+    "command": "python RUN_ME.py",
+    "exit_status": "0",
+    "original_HOSTS": {
+      "H": 75346,
+      "A": 46387,
+      "R": 14406,
+      "U": 14553
+    },
+    "partial_BCE_Clarke": {
+      "H": 103349,
+      "A": 67740,
+      "R": 20642,
+      "U": 14967
+    },
+    "geographic_identity_81": {
+      "intersection": 3225,
+      "union": 6445,
+      "jaccard": 0.5003878975950349,
+      "csv_species": 81
+    },
+    "hashed_input_and_code_members": 28,
+    "direct_identifier_scan": "PASS; checks include known author handle, name, email patterns, but manual privacy review is still required"
+  },
+  "claim_ceiling": [
+    "Offline reproduction of analytic sidecars, not regeneration of raw WCVP or HOSTS bulk providers; upstream R reconstruction scripts and external pinned source IDs included.",
+    "Only original HOSTS climate/local-range null full 2×99 MCMC series is included, not a BCE-source-aware local-null reanalysis.",
+    "This source archive is designed for author internal review; no third-party redistribution licence has been cleared by this run. The exact TDWG/Kew-derived geometry licence remains ambiguous.",
+    "Code/dataset account-handle checks do not guarantee a completely double-blinded manuscript package until a human edits all document metadata and submission files.",
+    "Regional potential larval-host presence and catalogue agreement do not test butterfly feeding, reproduction, colonization or ecological competition."
+  ]
+}
