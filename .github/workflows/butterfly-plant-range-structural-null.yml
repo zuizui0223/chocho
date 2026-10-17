@@ -1,0 +1,83 @@
+name: butterfly plant-range structural null (exploratory)
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/analyze_butterfly_shared_host_structural_null.py"
+      - "tests/test_butterfly_shared_host_structural_null.py"
+      - ".github/workflows/butterfly-plant-range-structural-null.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-plant-range-structural-null-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  structural-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Restore pinned S1 resource-descriptor artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Checkout pinned HOSTS source
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Checkout pinned WCVP source
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Rebuild butterfly host x region records from pinned sources
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Run plant-range fixed-degree null and write guarded receipt
+        run: |
+          for seed in 20261015 20261016; do
+            python scripts/analyze_butterfly_shared_host_structural_null.py \
+              --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+              --insect-host-csv results/native/insect_host_accepted.csv \
+              --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+              --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+              --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+              --replicates 499 \
+              --seed "$seed" \
+              --burn-factor 5 \
+              --step-factor 2 \
+              --output-json "results/structural-null/plant_range_shared_host_null_v0.2_seed${seed}.json"
+          done
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-plant-range-structural-null-v02
+          path: results/structural-null/*.json
+          if-no-files-found: warn
+          retention-days: 30

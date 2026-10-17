@@ -1,0 +1,197 @@
+name: butterfly anonymous offline resource-data reproducibility (review only)
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/anonymous_resource_novelty_offline_runner.py"
+      - "scripts/build_anonymous_butterfly_novelty_source_archive.py"
+      - "tests/test_anonymous_butterfly_resource_source_archive.py"
+      - "docs/exploratory/ANONYMOUS_RESOURCE_NOVELTY_ARCHIVE_README_20261017.md"
+      - ".github/workflows/butterfly-anonymous-offline-resource-source.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-anonymous-source-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  reconstruct-and-blind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Unit-test blinding and immutable source identities
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_anonymous_butterfly_resource_source_archive.py
+
+      - name: Restore independent CHELSA WGSRPD region climate vectors
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: _retrieval/climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Restore evidence-filtered BCE/Clarke host candidate ID crosswalk
+        uses: actions/download-artifact@v4
+        with:
+          name: bce-clarke-anonymous-s9-review-addendum-v01
+          path: _retrieval/bce
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37795847333
+
+      - name: Restore full qualified original HOSTS spatial-null MCMC draws
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-spatial-local-longchain-v02
+          path: _retrieval/local-null
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38700697916
+
+      - name: Checkout pinned independent WCVP v13 provider
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _upstream/WCVP
+
+      - name: Checkout pinned independent HOSTS accepted interactions
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _upstream/HOSTS
+
+      - name: Checkout official fixed WGSRPD Level3 polygon geometry
+        uses: actions/checkout@v7
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _upstream/WGSRPD
+
+      - name: Authenticate crosswalk and prepare source-only anonymous inputs
+        run: |
+          set -euo pipefail
+          mkdir -p _source_stage/inputs/{bce,original}
+          cp data/frozen/figure_sources/s1_resource_descriptors.csv _source_stage/inputs/s1_resource_descriptors.csv
+          cp data/frozen/figure_sources/anthropogenic_species_metrics.csv _source_stage/inputs/anthropogenic_species_metrics.csv
+          cp data/frozen/wgsrpd3_level1_lookup_v0.1.json _source_stage/inputs/level1_lookup.json
+          cp _retrieval/climate/unit_climate_crossfit.csv _source_stage/inputs/unit_climate_crossfit.csv
+          cp _upstream/WGSRPD/geojson/level3.geojson _source_stage/inputs/level3.geojson
+          echo "168d02efee9ece4c8841120be5a8cba712c1a02cb7cff9568ce251dc922bd7ab  _retrieval/bce/bce_clarke_anonymous_s9_reproducibility_v01.zip" | sha256sum -c -
+          unzip -p _retrieval/bce/bce_clarke_anonymous_s9_reproducibility_v01.zip \
+            inputs/bce_accepted_species_host_edges.json \
+            > _source_stage/inputs/bce/accepted_host_edges.json
+          echo "f46d18703fe5cc8d97699af6f084f652a704e46b0f9e8c68e32dd70decc32c53  _source_stage/inputs/bce/accepted_host_edges.json" | sha256sum -c -
+          echo "22c60accba86b576aa6ddc9f46ca7dd4d2003e2e81f1ba333ef41da5dbabbb91  _retrieval/local-null/qualifying_spatial_null_v0.2.json" | sha256sum -c -
+          python - <<'PY'
+          import json,csv,pathlib
+          r=pathlib.Path("_source_stage/inputs/bce")
+          j=json.loads((r/"accepted_host_edges.json").read_text(encoding="utf-8"))
+          ids=sorted({
+              str(detail["accepted_plant_name_id"])
+              for sp in j["per_butterfly"]
+              for detail in sp["details"]
+              if detail["match_status"]=="ACCEPTED_ID_ABSENT_FROM_FROZEN_HOSTS_FOR_BUTTERFLY"
+          })
+          assert len(ids)==679
+          with (r/"accepted_plant_ids.csv").open("w",newline="") as f:
+              w=csv.writer(f);w.writerow(["accepted_plant_name_id"])
+              w.writerows([[s] for s in ids])
+          print({"BCE_candidate_plants_reconciled":len(ids)})
+          PY
+
+      - name: Reconstruct full accepted-HOSTS native and introduced plant sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _upstream/WCVP _upstream/HOSTS \
+            _source_stage/inputs/original _source_stage/inputs/original
+
+      - name: Reconstruct BCE accepted-plant ranges using same pinned WCVP
+        run: |
+          Rscript scripts/build_bce_additional_wcvp_ranges.R \
+            _upstream/WCVP \
+            _source_stage/inputs/bce/accepted_plant_ids.csv \
+            _source_stage/inputs/bce
+
+      - name: Build deterministic anonymised, SHA-pinned offline source ZIP
+        run: |
+          python scripts/build_anonymous_butterfly_novelty_source_archive.py \
+            --repo-root . \
+            --input-dir _source_stage/inputs \
+            --qualified-spatial-null-json _retrieval/local-null/qualifying_spatial_null_v0.2.json \
+            --output-zip dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip
+          unzip -t dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip
+
+      - name: Test complete source ZIP from scratch with no network
+        run: |
+          mkdir -p _validate_anonymous_source
+          cd _validate_anonymous_source
+          unzip -q ../dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip
+          python RUN_ME.py > complete_reproduction_stdout.json
+          test -s reproduced/reconstructed_resource_novelty.json
+          test -s reproduced/source_turnover_81_butterflies.csv
+          python - <<'PY'
+          import csv,json,pathlib
+          d=json.loads(pathlib.Path("reproduced/reconstructed_resource_novelty.json").read_text())
+          assert d["status"]=="PASS_OFFLINE_EXACT_SOURCE_RECONSTRUCTION"
+          assert d["original_HOSTS"]["candidate_incidences_H"]==75346
+          assert d["original_HOSTS"]["native_absorbed_A"]==46387
+          assert d["BCE_partial_augmented"]["candidate_incidences_H"]==103349
+          assert d["BCE_partial_augmented"]["native_absorbed_A"]==67740
+          assert abs(d["81_augmented_butterflies"]["jaccard"]-3225/6445)<1e-12
+          with open("reproduced/source_turnover_81_butterflies.csv",newline="") as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==81
+          print({"status":"PASS_FULL_OFFLINE_RECONSTRUCTION",
+                 "original_H":75346,"augmented_H":103349,
+                 "Jaccard_81":d["81_augmented_butterflies"]["jaccard"],
+                 "reviewer_species_rows":len(rows)})
+          PY
+
+      - name: Final direct identifier redaction and output integrity audit
+        run: |
+          python - <<'PY'
+          import zipfile,json,hashlib,pathlib
+          path=pathlib.Path("dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip")
+          with zipfile.ZipFile(path) as z:
+              assert z.testzip() is None
+              mf=json.loads(z.read("SOURCE_MANIFEST.json"))
+              audit=json.loads(z.read("ANONYMITY_AUDIT.json"))
+              assert audit["status"]=="PASS_STATIC_DIRECT_IDENTIFIER_SCAN"
+              assert len(mf["sha256"]) >= 25
+              assert all(hashlib.sha256(z.read(k)).hexdigest()==v for k,v in mf["sha256"].items())
+              assert not any(b"zuizui0223" in z.read(k).lower() for k in z.namelist())
+              print({"status":"PASS_DETERMINISTIC_MANIFEST_AND_IDENTIFYING_HANDLE_GATE",
+                     "source_members":len(z.namelist()),"archive_sha256":hashlib.sha256(path.read_bytes()).hexdigest()})
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          path: |
+            dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip
+            _validate_anonymous_source/reproduced/reconstructed_resource_novelty.json
+            _validate_anonymous_source/reproduced/source_turnover_81_butterflies.csv
+          retention-days: 30
+          if-no-files-found: warn

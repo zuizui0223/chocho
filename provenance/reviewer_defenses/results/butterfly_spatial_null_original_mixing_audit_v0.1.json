@@ -1,0 +1,81 @@
+{
+  "schema": "chocho_spatial_local_null_initial_mixing_audit_v0.1",
+  "status": "NUMERIC_QUALIFICATION_FAILED_ORIGINAL_P_VALUES_WITHHELD",
+  "source": {
+    "run_id": 38699068001,
+    "job_id": 116302560309,
+    "artifact_id": 11955451937,
+    "artifact_name": "butterfly-geographically-local-null-v01",
+    "source_head": "60d6aa440f18da9fec7d5c94b1ea07a10b5b2667",
+    "url": "https://github.com/zuizui0223/chocho/actions/runs/38699068001"
+  },
+  "methods": "Computed from 199-sample native-resource-absorption timeseries in the original artifact. IACT is 1+2 sum of successive positive paired empirical autocorrelation coefficients, stopped at the first nonpositive pair, truncated before N/2. ESS=N/IACT is an approximation, not evidence of true stationarity. Early-late drift compares means of first and last 49 draws.",
+  "calipers": {
+    "750": [
+      {
+        "seed": 20261015,
+        "lag1": 0.7913634718392176,
+        "ESS_approx": 10.3359,
+        "first_quarter_mean": 46301.2653,
+        "last_quarter_mean": 46291.6122,
+        "drift": -9.6531,
+        "observed_minus_null_median": 99
+      },
+      {
+        "seed": 20261016,
+        "lag1": 0.8516724638080542,
+        "ESS_approx": 9.6515,
+        "first_quarter_mean": 46314.2653,
+        "last_quarter_mean": 46286.2857,
+        "drift": -27.9796,
+        "observed_minus_null_median": 94
+      }
+    ],
+    "1500": [
+      {
+        "seed": 20261015,
+        "lag1": 0.7804707927288027,
+        "ESS_approx": 9.5621,
+        "first_quarter_mean": 46163.2041,
+        "last_quarter_mean": 46128.7755,
+        "drift": -34.4286,
+        "observed_minus_null_median": 255
+      },
+      {
+        "seed": 20261016,
+        "lag1": 0.7790541495726538,
+        "ESS_approx": 9.2663,
+        "first_quarter_mean": 46172.7347,
+        "last_quarter_mean": 46128.4898,
+        "drift": -44.2449,
+        "observed_minus_null_median": 245
+      }
+    ],
+    "3000": [
+      {
+        "seed": 20261015,
+        "lag1": 0.5845504893657144,
+        "ESS_approx": 32.8501,
+        "first_quarter_mean": 45978.551,
+        "last_quarter_mean": 45952.7347,
+        "drift": -25.8163,
+        "observed_minus_null_median": 424
+      },
+      {
+        "seed": 20261016,
+        "lag1": 0.8034627276647025,
+        "ESS_approx": 8.63,
+        "first_quarter_mean": 46002.9592,
+        "last_quarter_mean": 45950.7347,
+        "drift": -52.2245,
+        "observed_minus_null_median": 437
+      }
+    ]
+  },
+  "decision": "The reported 199 chain samples are too autocorrelated (especially at 750/1500km, effective N only about 9-10 per chain) and the absorption outcome exhibits substantial first-to-last drift. Nominal p=0.005 values in the primary workflow must not be interpreted as valid independent permutation p-values. The observed-vs-null median contrasts are preliminary conditional descriptive results only. One finite extended-MCMC qualification is authorized in protocol SPATIAL_NULL_EXTENDED_MIXING_GATE_20261015.md; if it fails, stop rather than retune.",
+  "limits": [
+    "The ESS estimate is an autocorrelation heuristic and may overstate effective information for nonstationary chains.",
+    "Geographical models condition on coarse polygon representative points and source-specific host records.",
+    "No evidence of butterfly competition, colonization, or local larval fitness."
+  ]
+}

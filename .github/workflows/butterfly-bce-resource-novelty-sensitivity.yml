@@ -1,0 +1,125 @@
+name: butterfly BCE host-inventory resource novelty sensitivity
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/analyze_bce_resource_novelty_source_sensitivity.py"
+      - "scripts/build_bce_additional_wcvp_ranges.R"
+      - "tests/test_bce_resource_novelty_source_sensitivity.py"
+      - ".github/workflows/butterfly-bce-resource-novelty-sensitivity.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-bce-resource-novelty-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Run source-neutral accounting unit checks
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_bce_resource_novelty_source_sensitivity.py
+
+      - name: Restore exact original 239-butterfly resource reconstruction
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Restore independently verified European BCE/Clarke host source
+        uses: actions/download-artifact@v4
+        with:
+          name: bce-clarke-anonymous-s9-review-addendum-v01
+          path: inputs/bce-archive
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 37795847333
+
+      - name: Pin original BCE inner ZIP and accepted host relation bytes
+        run: |
+          set -euo pipefail
+          mkdir -p inputs/bce
+          echo "168d02efee9ece4c8841120be5a8cba712c1a02cb7cff9568ce251dc922bd7ab  inputs/bce-archive/bce_clarke_anonymous_s9_reproducibility_v01.zip" | sha256sum -c -
+          unzip -p inputs/bce-archive/bce_clarke_anonymous_s9_reproducibility_v01.zip \
+            inputs/bce_accepted_species_host_edges.json \
+            > inputs/bce/accepted_host_edges.json
+          echo "f46d18703fe5cc8d97699af6f084f652a704e46b0f9e8c68e32dd70decc32c53  inputs/bce/accepted_host_edges.json" | sha256sum -c -
+          python - <<'PY'
+          import csv,json,pathlib
+          a=json.loads(pathlib.Path("inputs/bce/accepted_host_edges.json").read_text())
+          ids=sorted({
+              str(r["accepted_plant_name_id"])
+              for sp in a["per_butterfly"]
+              for r in sp["details"]
+              if r["match_status"]=="ACCEPTED_ID_ABSENT_FROM_FROZEN_HOSTS_FOR_BUTTERFLY"
+          })
+          assert len(ids)==679
+          with open("inputs/bce/extra_accepted_ids.csv","w",newline="") as f:
+              w=csv.writer(f);w.writerow(["accepted_plant_name_id"])
+              w.writerows([[x] for x in ids])
+          print({"candidate_added_accepted_host_plants":len(ids)})
+          PY
+
+      - name: Checkout fixed HOSTS database
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+
+      - name: Checkout fixed WCVP v13 source
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Rebuild original HOSTS and WCVP native/contemporary sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Rebuild original WCVP ranges only for BCE candidate accepted plants
+        run: |
+          Rscript scripts/build_bce_additional_wcvp_ranges.R \
+            _external/WCVP inputs/bce/extra_accepted_ids.csv results/bce-additional
+
+      - name: Recalculate butterfly native overlap and geographic novelty
+        run: |
+          python scripts/analyze_bce_resource_novelty_source_sensitivity.py \
+            --bce-accepted-edges-json inputs/bce/accepted_host_edges.json \
+            --frozen-species-metrics-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --original-insect-host-csv results/native/insect_host_accepted.csv \
+            --original-native-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --original-contemporary-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --bce-additional-native-csv results/bce-additional/additional_native_wgsrpd3.csv \
+            --bce-additional-contemporary-csv results/bce-additional/additional_contemporary_wgsrpd3.csv \
+            --output-json results/bce-resource-novelty/bce_clarke_resource_novelty_v0.1.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-bce-resource-novelty-sensitivity-v01
+          path: results/bce-resource-novelty/
+          if-no-files-found: warn
+          retention-days: 30

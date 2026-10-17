@@ -1,0 +1,89 @@
+{
+  "status": "EXPLORATORY_PLANT_RANGE_FIXED_DEGREE_NULL",
+  "observed": {
+    "added_units": 14553,
+    "single_units": 8574,
+    "single_fraction": 0.5891568748711606,
+    "novel_exact_shared_pair_regions": 79412,
+    "shared_pair_units_per_added_unit": 5.456744313887171
+  },
+  "total_introduced_edges": 30373,
+  "viable_edges": 28670,
+  "seed": 20261015,
+  "replicates": 199,
+  "burn_proposals": 151865,
+  "burn_accepted": 20284,
+  "changed_fraction_after_burn": 0.3109011292924637,
+  "step_proposals_per_rep": 30373,
+  "step_accepted_min": 3910,
+  "step_accepted_median": 4056,
+  "null_summary": {
+    "added_units": {
+      "observed": 14553,
+      "null_q025": 15310.85,
+      "null_median": 15383,
+      "null_q975": 15468.1,
+      "observed_minus_null_median": -830,
+      "p_ge": 1,
+      "p_le": 0.005
+    },
+    "single_units": {
+      "observed": 8574,
+      "null_q025": 9012.95,
+      "null_median": 9107,
+      "null_q975": 9230.2,
+      "observed_minus_null_median": -533,
+      "p_ge": 1,
+      "p_le": 0.005
+    },
+    "single_fraction": {
+      "observed": 0.5891568748711606,
+      "null_q025": 0.587531191355597,
+      "null_median": 0.5923842772174812,
+      "null_q975": 0.5968182379369906,
+      "observed_minus_null_median": -0.0032274023463205737,
+      "p_ge": 0.885,
+      "p_le": 0.12
+    },
+    "novel_exact_shared_pair_regions": {
+      "observed": 79412,
+      "null_q025": 81289.59999999999,
+      "null_median": 81550,
+      "null_q975": 81820.5,
+      "observed_minus_null_median": -2138,
+      "p_ge": 1,
+      "p_le": 0.005
+    },
+    "shared_pair_units_per_added_unit": {
+      "observed": 5.456744313887171,
+      "null_q025": 5.2796131338192,
+      "null_median": 5.301260395010395,
+      "null_q975": 5.318568460810762,
+      "observed_minus_null_median": 0.15548391887677582,
+      "p_ge": 0.005,
+      "p_le": 1
+    }
+  },
+  "preserves": [
+    "butterfly-host interaction identities and degrees",
+    "introduced geographic cells per plant per WGSRPD Level1",
+    "introduced plant richness per region per plant family",
+    "all native plant occurrences as forbidden introduced cells"
+  ],
+  "does_not_preserve": [
+    "individual butterfly added-resource region count",
+    "realistic plant climate niche or time of introduction",
+    "observed butterfly occupancy, larval success or host phenology"
+  ],
+  "interpretation": "Post-hoc plant-family×continent range-shuffle diagnostic. Raw and per-added-unit resource sharing are both reported; any null excess requires additional independent checks.",
+  "receipt_provenance": {
+    "workflow_run_id": 38681928507,
+    "job_id": 116248174200,
+    "head_sha": "27c1e232ad377907b467713c1466cc307c029fb1",
+    "artifact_id": 11948179232,
+    "source_url": "https://github.com/zuizui0223/chocho/actions/runs/38681928507",
+    "extracted_from": "successful GitHub Actions log JSON; no manual changes to statistics",
+    "scientific_status": "post-hoc exploratory plant-range null (does not fix per-butterfly gain)",
+    "caveat": "shared pair×region / newly added butterfly×region is a cross-unit normalization and not average co-users per newly added cell"
+  }
+}
