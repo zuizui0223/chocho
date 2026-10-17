@@ -9,6 +9,12 @@ from pathlib import Path
 import pytest
 
 ROOT=Path(__file__).resolve().parents[1]
+# The official anonymous GEB snapshot intentionally excludes exploratory
+# counterpart source scripts. Do not let this alternative-only module
+# break packaging of the frozen original paper; run all checks on the
+# complete exploratory branch, and skip here only when its source is absent.
+if not (ROOT/"scripts/render_butterfly_resource_novelty_figure.py").is_file():
+    pytest.skip("Standalone resource novelty renderer excluded from original blinded GEB snapshot", allow_module_level=True)
 sys.path.insert(0,str(ROOT/"scripts"))
 PATH=ROOT/"scripts/render_butterfly_resource_novelty_separated_figures.py"
 spec=importlib.util.spec_from_file_location("separate_novelty_figs",PATH)
