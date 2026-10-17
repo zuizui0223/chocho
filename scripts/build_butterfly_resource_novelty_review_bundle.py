@@ -17,10 +17,11 @@ from pathlib import Path
 CURRENT_DIR = Path(__file__).resolve().parents[1]
 TITLE = "When is an introduced host a new resource?"
 EXPECTED_IMAGES = {
-    "candidate_Fig1_accounting_and_structural_null": "figure_resource_novelty",
+    "candidate_Fig1_geographic_resource_accounting": "figure_main1_geographic_accounting",
     "candidate_Fig2_species_region_source_turnover": "figure_added_resource_identity_turnover",
     "candidate_Fig3_diet_breadth_and_occurrence": "figure3_ecological_context",
     "supporting_FigS1_host_inventory_composition": "figure_bce_inventory_sensitivity",
+    "supporting_FigS2_structural_null_sensitivity": "figure_S2_matched_null_sensitivity",
 }
 
 
@@ -133,7 +134,9 @@ def make_review_zip(
         ("species_turnover","turnover_81_butterflies.csv","derived_data/turnover_81_butterflies.csv"),
         ("species_turnover","turnover_v0.1.json","derived_data/full_81_species_turnover.json"),
         ("context","figure3_context_source_values.json","derived_data/figure3_context_source_values.json"),
-        ("combined","figure_resource_novelty_values.json","derived_data/figure1_null_source_values.json"),
+        ("combined","figure_resource_novelty_values.json","derived_data/archived_combined_accounting_null_source_values.json"),
+        ("combined","figure_main1_geographic_accounting_values.json","derived_data/figure1_accounting_source_values.json"),
+        ("combined","figure_S2_matched_null_sensitivity_values.json","derived_data/figure_S2_null_source_values.json"),
         ("combined","figure_bce_inventory_sensitivity_values.json","derived_data/figure_S1_host_inventory_values.json"),
     ):
         p=sources[source_dir]/file
@@ -153,11 +156,12 @@ def make_review_zip(
         "The original HOSTS-specific 1,500-km climate/geographic null residual "
         "is only 0.36 percentage points and has NOT been recalculated under BCE.\n\n"
         "The three main candidate figures are in figures/: candidate_Fig1, "
-        "candidate_Fig2, candidate_Fig3. The first combined figure also carries "
-        "the supporting structural-null panels and should be split/relaid out "
-        "by the author before actual submission. Supporting FigS1 shows source "
-        "budget compositions. Uncertainty and sample denominators are in the "
-        "legends and evidence receipts. The manuscript is a Markdown author "
+        "candidate_Fig2, candidate_Fig3. Fig1 now exclusively shows the "
+        "resource-incidence accounting, while a distinct supporting FigS2 "
+        "carries the small source-conditional matched-null comparisons. "
+        "Supporting FigS1 shows HOSTS and BCE budget compositions. "
+        "Source-specific units and sample denominators remain explicit "
+        "in all legends and receipts. The manuscript is a Markdown author "
         "review document, not a journal-final typeset/line-numbered PDF.\n\n"
         "The source artifacts were verified from GitHub Actions: "
         "38989771672 (resource accounting), 38992305236 (turnover), "
@@ -165,7 +169,7 @@ def make_review_zip(
         "tables and scripts. This bundle does not create a stable archival DOI.\n"
     )
     files["README_AUTHOR_REVIEW.md"]=readme.encode("utf-8")
-    if len(files)!=1+len(EXPECTED_IMAGES)*2+len(numeric_names)+5+1:
+    if len(files)!=1+len(EXPECTED_IMAGES)*2+len(numeric_names)+7+1:
         raise ValueError("unexpected reviewer package file count")
     hashes={k:{"sha256":sha256(v),"size_bytes":len(v)} for k,v in sorted(files.items())}
     manifest={
