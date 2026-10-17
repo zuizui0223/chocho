@@ -47,14 +47,15 @@ def render(data:dict,png:Path,svg:Path)->None:
             raise ValueError(f"example host-inventory case absent: {name}")
         v=rows[0]
         shift={
-            "Lycaena dispar":(10,5),
-            "Minois dryas":(-18,8),
-            "Thymelicus lineola":(7,-12),
+            "Lycaena dispar":(12,9),
+            "Minois dryas":(-14,-20),
+            "Thymelicus lineola":(12,17),
         }[name]
         ax.scatter([v["base_added"]],[v["augmented_added"]],s=64,
                    facecolors="none",edgecolors="black",linewidths=1.2,zorder=5)
         ax.annotate(name,(v["base_added"],v["augmented_added"]),
-                    textcoords="offset points",xytext=shift,fontsize=9,
+                    textcoords="offset points",xytext=shift,fontsize=8.6,
+                    bbox={"facecolor":"white","edgecolor":"none","alpha":0.75,"pad":1.3},
                     ha="left" if shift[0]>0 else "right")
 
     sizes=[
@@ -87,7 +88,7 @@ def render(data:dict,png:Path,svg:Path)->None:
                  loc="left",pad=12)
     ab.grid(axis="x",alpha=.12)
     ab.set_axisbelow(True)
-    ab.legend(legend,text,bbox_to_anchor=(0,-.20),loc="upper left",
+    ab.legend(legend,text,bbox_to_anchor=(0.01,.985),loc="upper left",
               frameon=False,fontsize=9)
 
     fig.suptitle("The map of 'new' butterfly resources changes with host records",
