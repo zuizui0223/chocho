@@ -54,9 +54,9 @@ jobs:
       - name: Verify exact original resource source SHA and unpack
         run: |
           set -euo pipefail
-          echo "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323  _source/frozen_resource/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip" | sha256sum -c -
+          echo "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323  _source/frozen_resource/dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip" | sha256sum -c -
           mkdir -p _source/data
-          unzip -q _source/frozen_resource/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip -d _source/data
+          unzip -q _source/frozen_resource/dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip -d _source/data
           test -s _source/data/inputs/original/insect_host_accepted.csv
           test -s _source/data/inputs/original/native_extant_nondoubtful_wgsrpd3.csv
           test -s _source/data/inputs/original/extant_nondoubtful_wgsrpd3.csv
