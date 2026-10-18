@@ -1,0 +1,68 @@
+name: butterfly host quality stage-data feasibility audit
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/audit_external_immp_lifestage_schema.py"
+      - "tests/test_external_immp_lifestage_schema.py"
+      - ".github/workflows/butterfly-host-realization-feasibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: butterfly-host-realization-feasibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Test stage, non-survival and source identity gates
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_external_immp_lifestage_schema.py tests/test_host_realization_nonmonotonicity.py
+
+      - name: Fetch the exact September 2026 public CC0 IMMP workbook
+        run: |
+          set -euo pipefail
+          mkdir -p _tmp
+          curl --fail --location --retry 3 --max-time 180 \
+            "https://datadryad.org/api/v2/files/4940620/download" \
+            --output _tmp/Gomes_2026_IMMP_California_2021_22.xlsx
+          echo "d9ed67778e96643ea4414da8971340b9c769a0a0aaaf70871700ecce36016a3d  _tmp/Gomes_2026_IMMP_California_2021_22.xlsx" | sha256sum -c -
+
+      - name: Audit column metadata ONLY (no outcomes or egg/larva survival claim)
+        run: |
+          python scripts/audit_external_immp_lifestage_schema.py \
+            --public-xlsx _tmp/Gomes_2026_IMMP_California_2021_22.xlsx \
+            --output-json results/feasibility/monarch_IMMP_2026_published_stage_schema_v01.json
+          python - <<'PY'
+          import json
+          p="results/feasibility/monarch_IMMP_2026_published_stage_schema_v01.json"
+          s=json.load(open(p,encoding="utf-8"))
+          assert s["source"]["doi"]=="10.5061/dryad.mkkwh718x"
+          assert s["status"]=="OBSERVATIONAL_SCHEMA_AUDIT_ONLY_NO_BUTTERFLY_FITNESS_TEST"
+          assert s["eligibility"]["cohort_linked_egg_to_recruit_survival"]=="NOT_IDENTIFIABLE_FROM_COLUMN_NAMES"
+          assert s["eligibility"]["test_of_negative_butterfly_recruitment"]=="NOT_PERFORMED"
+          print({"status":"PASS_PRE_OUTCOME_FEASIBILITY_GATE",
+            "sheets":[x["worksheet"] for x in s["worksheets"]],
+            "egg_larval_columns_co_recorded":s["eligibility"]["stage_count_columns_exist_in_same_worksheet"]})
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-IMMP-2026-life-stage-feasibility-gate-v01
+          path: results/feasibility/monarch_IMMP_2026_published_stage_schema_v01.json
+          if-no-files-found: warn
+          retention-days: 30
