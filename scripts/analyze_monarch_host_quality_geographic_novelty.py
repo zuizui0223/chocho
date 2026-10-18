@@ -137,11 +137,12 @@ def reconstruct_quality_pilot(
         class_status=next(iter(vals)) if vals else None
         if hid in ids and ids[hid]!=class_status:
             raise ValueError("ambiguous status for same accepted host ID")
+        is_first_row=hid not in ids
         ids[hid]=class_status
         names[hid]=row.get("accepted_name","") or row.get("input_host_name","")
-        if class_status is None:
+        if class_status is None and is_first_row:
             unmatched.append({"accepted_host_id":hid,"plant_name":names[hid]})
-        else:
+        elif class_status is not None:
             matched_by_status[class_status].add(hid)
     main_native=sum_envelope(all_ids,native)
     main_cont=sum_envelope(all_ids,contemp)
