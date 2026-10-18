@@ -100,16 +100,22 @@ def sheet_summaries(path:Path)->list[dict]:
             # Identify candidate headers from early lines by column text,
             # but do not show raw values from outcome rows in the report.
             headers=[]
+            best_score=-1
             for line in preview[:4]:
                 found=sum(
                     bool(pattern.search(txt))
                     for _,txt in line
                     for pattern in VARIABLE_CLASSES.values()
                 )
-                if found>=2 or len(headers)==0 and count>0:
-                    if found >= len([1 for _,c in headers]):
-                        headers=line
-            clean_headers=[x[:90] for _,x in sorted(headers)]
+                if found>best_score:
+                    best_score=found
+                    headers=line
+            # Header-like labels only: redact excessively long and
+            # unstructured cells rather than publishing monitoring records.
+            clean_headers=[
+                x[:90] for _,x in sorted(headers)
+                if len(x)<100 and ("\n" not in x)
+            ]
             candidates={
                 key:[c for c in clean_headers if regex.search(c)]
                 for key,regex in VARIABLE_CLASSES.items()
