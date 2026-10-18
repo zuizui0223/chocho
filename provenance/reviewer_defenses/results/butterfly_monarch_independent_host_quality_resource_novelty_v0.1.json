@@ -1,0 +1,109 @@
+{
+  "schema": "chocho_danaus_plexippus_host_quality_resource_novelty_receipt_v0.1",
+  "status": "QUALIFIED_INDEPENDENT_PUBLISHED_HOST_QUALITY_SOURCE_SENSITIVITY_NOT_REALIZED_FITNESS",
+  "provenance": {
+    "source_workflow_run": 39096026037,
+    "source_artifact_id": 12124721621,
+    "source_git_commit": "e95c5e2cb5b4329093258b4189531077fbd5d3ea",
+    "source_url": "https://github.com/zuizui0223/chocho/actions/runs/39096026037",
+    "script": "scripts/analyze_monarch_host_quality_geographic_novelty.py",
+    "frozen_source_artifact_run": 39006554609,
+    "fossil_HOSTS_and_WCVP_sidecar_source_sha256": "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323",
+    "external_published_study": "Greenstein, Steele and Taylor (2022) PLOS ONE doi:10.1371/journal.pone.0269701",
+    "external_study_S1_appendix": "doi:10.1371/journal.pone.0269701.s001",
+    "external_docx_sha256": "bc19e33823a3e860443b0086af129e39f4218663233fdceeccb6b08a15b3af79",
+    "published_supplement_status_counts": {
+      "H": 34,
+      "L": 42,
+      "N": 33,
+      "U": 18,
+      "total": 127
+    },
+    "published_license": "CC BY 4.0; author/publisher citation and data provenance required"
+  },
+  "species": "Danaus plexippus",
+  "comparison": {
+    "full_original_HOSTS": {
+      "accepted_plant_hosts": 40,
+      "native_resource_regions": 181,
+      "contemporary_resource_regions": 263,
+      "newly_supported_regions": 82
+    },
+    "high_H1_H2_H3": {
+      "accepted_plant_hosts": 23,
+      "native_resource_regions": 152,
+      "contemporary_resource_regions": 253,
+      "newly_supported_regions": 101,
+      "original_82_regions_with_at_least_one_independently_high_class_introduced_host": 78,
+      "original_82_regions_without_high_class_evidence": 4,
+      "newly_classified_regions_that_were_originally_native_supported": 23
+    },
+    "strict_confirmed_high_H3": {
+      "accepted_plant_hosts": 8,
+      "native_resource_regions": 120,
+      "contemporary_resource_regions": 188,
+      "newly_supported_regions": 68,
+      "original_82_regions_with_at_least_one_H3_class_introduced_host": 37,
+      "originally_native_supported_regions_newly_labelled_added_after_H3_filter": 31
+    },
+    "low_L1_L2_L3": {
+      "accepted_plant_hosts": 8,
+      "native_resource_regions": 67,
+      "contemporary_resource_regions": 90,
+      "newly_supported_regions": 23,
+      "original_82_regions_with_at_least_one_low_class_introduced_host": 16
+    },
+    "source_nonhosts_N": {
+      "accepted_plant_hosts": 2,
+      "native_resource_regions": 51,
+      "contemporary_resource_regions": 60,
+      "newly_supported_regions": 9,
+      "original_82_regions_with_at_least_one_source_nonhost_introduced_plant": 2
+    },
+    "unsubstantiated_U": {
+      "accepted_plant_hosts": 2,
+      "native_resource_regions": 41,
+      "contemporary_resource_regions": 42,
+      "newly_supported_regions": 1,
+      "original_82_regions_with_recorded_introduced_support": 0
+    },
+    "no_exact_name_match": {
+      "accepted_plant_hosts": 5,
+      "native_resource_regions": 25,
+      "contemporary_resource_regions": 48,
+      "newly_supported_regions": 23,
+      "original_82_regions_with_unclassified_introduced_support": 9
+    },
+    "performance_high_or_low": {
+      "accepted_plant_hosts": 31,
+      "native_resource_regions": 162,
+      "contemporary_resource_regions": 255,
+      "newly_supported_regions": 93,
+      "original_82_regions_with_high_or_low_introduced_support": 79
+    }
+  },
+  "derived_identities": {
+    "high_source_supported_fixed_added_share": 0.9512195121951219,
+    "strict_H3_supported_fixed_added_share": 0.45121951219512196,
+    "filtered_novel_region_count_change": 19,
+    "high_filtered_new_region_excess_in_original_native_regions": 23,
+    "strict_H3_new_region_excess_in_original_native_regions": 31,
+    "original_HOSTS_species_named_in_source_list": 35,
+    "source_high_H1_H2_H3_coverage_of_40": 0.575
+  },
+  "unmatched_accepted_host_names": [
+    "Gossypium arboreum",
+    "Gomphocarpus semilunatus",
+    "Matelea reticulata",
+    "Orbea variegata",
+    "Pachycarpus grandiflorus"
+  ],
+  "interpretation": [
+    "A functional-quality restriction does NOT monotonically reduce the number of resource cells labelled 'new': removing low/unknown native-baseline host regions changes the denominator and recodes originally native-supported regions as added.",
+    "The original 82-cell fixed-denominator crosswalk shows 78 cells containing at least one introduced host independently classed H1/H2/H3, versus 37 with the strict H3 class; multiple high/low/unknown host categories can coexist in the same region.",
+    "H1/H2/H3 evidence grades are not equal levels of replicated experimental survival, and high classification is NOT demonstrated local larval performance in every WGSRPD3 region.",
+    "The original HOSTS list includes 2 taxa PLOS identifies as source non-hosts, 2 as unsubstantiated, and 5 with no EXACT binomial match; uncertain taxa are NOT classified as bad hosts and require taxonomic/source validation.",
+    "These counts are a single focal butterfly post-hoc quality-mapping sensitivity, NOT a new 239-species population-performance macroecological result.",
+    "No egg allocation, adult movement, observed survivorship, parasite pressure, local recruitment or conservation intervention was estimated from the geography overlay."
+  ]
+}
