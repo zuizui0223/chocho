@@ -1,0 +1,101 @@
+name: butterfly monarch quality-filtered mapped host-resource geography
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/analyze_monarch_host_quality_geographic_novelty.py"
+      - "tests/test_monarch_host_quality_geographic_novelty.py"
+      - ".github/workflows/butterfly-monarch-quality-geography.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: monarch-quality-geo-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  quality-resource-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Prove new source-quality region identity safeguards
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_external_monarch_host_quality_appendix.py tests/test_monarch_host_quality_geographic_novelty.py
+
+      - name: Download and authenticate exact PLOS S1 127-host original publication appendix
+        run: |
+          set -euo pipefail
+          mkdir -p _source/plos
+          curl --fail --silent --show-error --location --retry 2 --max-time 180 \
+            "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0269701.s001&type=supplementary" \
+            --output _source/plos/Greenstein_2022_S1.docx
+          echo "bc19e33823a3e860443b0086af129e39f4218663233fdceeccb6b08a15b3af79  _source/plos/Greenstein_2022_S1.docx" | sha256sum -c -
+
+      - name: Restore independently verified full 239 butterfly HOSTS/WCVP accepted-ID sidecars
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          repository: zuizui0223/chocho
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _source/frozen_resource
+
+      - name: Verify exact original resource source SHA and unpack
+        run: |
+          set -euo pipefail
+          echo "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323  _source/frozen_resource/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip" | sha256sum -c -
+          mkdir -p _source/data
+          unzip -q _source/frozen_resource/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip -d _source/data
+          test -s _source/data/inputs/original/insect_host_accepted.csv
+          test -s _source/data/inputs/original/native_extant_nondoubtful_wgsrpd3.csv
+          test -s _source/data/inputs/original/extant_nondoubtful_wgsrpd3.csv
+
+      - name: Evaluate quality-coded source availability for fixed monarch 82-cell gain
+        run: |
+          python scripts/analyze_monarch_host_quality_geographic_novelty.py \
+            --plos-s1-docx _source/plos/Greenstein_2022_S1.docx \
+            --insect-host-csv _source/data/inputs/original/insect_host_accepted.csv \
+            --native-distribution-csv _source/data/inputs/original/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv _source/data/inputs/original/extant_nondoubtful_wgsrpd3.csv \
+            --output-json results/monarch_quality/quality_filtered_resource_geography_v0.1.json
+          python - <<'PY'
+          import json
+          s=json.load(open("results/monarch_quality/quality_filtered_resource_geography_v0.1.json"))
+          assert s["original_frozen_geography"]=={
+            "accepted_HOSTS_species":40,
+            "native_regions":181,
+            "contemporary_regions":263,
+            "distinct_added_regions":82
+          }
+          assert s["external_performance_source"]["reported_counts"]=={
+            "high":34,"low":42,"non_host":33,"unsubstantiated":18
+          }
+          assert s["status"]=="EXPLORATORY_SOURCE_QUALITY_POTENTIAL_GEOGRAPHY_ONLY"
+          print({"status":"PASS_PUBLISHED_QUALITY_CLASS_OVERLAY_NO_RECRUITMENT",
+            "focal_butterfly":"Danaus plexippus",
+            "known_HOSTS":40,
+            "original_unique_new_regions":82,
+            "high_source_supported_cells_in_original_82":s["classes"]["literature_high_H1_H2_H3"]["original_82_cells_supported_by_any_source_quality_class_introduced_host"],
+            "strict_H3_supported_cells":s["classes"]["literature_confirmed_high_H3_only"]["original_82_cells_supported_by_any_source_quality_class_introduced_host"],
+            "unmatched_original_host_names":s["classes"]["not_exactly_matched_in_published_127_host_review"]["accepted_host_species"],
+            "not_measured":"regional larval success, actual oviposition preference and recruitment"})
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-monarch-high-performance-host-resource-sensitivity-v01
+          path: results/monarch_quality/quality_filtered_resource_geography_v0.1.json
+          retention-days: 30
+          if-no-files-found: warn
