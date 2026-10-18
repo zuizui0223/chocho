@@ -6,6 +6,12 @@ from pathlib import Path
 import pytest
 
 ROOT=Path(__file__).resolve().parents[1]
+# The official double-anonymous submission snapshot intentionally excludes
+# exploratory independently sourced host-quality audit scripts.
+if not (ROOT/"scripts/analyze_monarch_host_quality_geographic_novelty.py").is_file():
+    pytest.skip("Exploratory host-quality audit excluded from frozen original GEB snapshot", allow_module_level=True)
+import sys
+sys.path.insert(0,str(ROOT/"scripts"))
 P=ROOT/"scripts/analyze_monarch_host_quality_geographic_novelty.py"
 spec=importlib.util.spec_from_file_location("monarch_quality",P)
 assert spec and spec.loader
