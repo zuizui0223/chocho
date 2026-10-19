@@ -15,7 +15,7 @@ The naive union of plant occurrences necessarily grows when introduced occurrenc
 
 ## Primary outcome and contrast
 For butterfly i, native region count N, contemporary C and added A=C−N, 365 possible regions:
-- `Y = log(C/N)=log_resource_expansion`. Confirm arithmetic against source.
+- `Y = log((C+1)/(N+1)) = log_resource_expansion` (the frozen source uses +1 smoothing; do not substitute unsmoothed log(C/N)). Confirm arithmetic against source.
 - Estimate the **difference in Y between the two strong disturbance categories**, first unadjusted then controlling: nonlinear native range (`log1p(N)` and its square), `log1p(resolved_host_species)`, `log1p(host_family_count)`, `log(wing_size_proxy)`, voltinism B/M/U, a taxonomic-family fixed effect, and host inventory adequacy indicator. Report actual n, coefficients, finite-sample uncertainty.
 - Fit OLS using all primary eligible species (do not select significant species/regions); genus-cluster sandwich CI and a genus-resampling bootstrap 95% interval. Disturbance affinity is an *association*, not a randomly assigned cause.
 - Declare primary positive directional biological prediction. **No result promoted solely because nominal p<0.05**.
