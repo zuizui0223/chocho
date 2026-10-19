@@ -31,7 +31,7 @@ The initial 2×99-draw diagnostic was rejected as **NOT EVALUABLE** because effe
 | BIO1+BIO12 5–95% | **9,451** | 8,910 / 8,908 | **+541/+543 cells = +3.736/+3.750 pp** | 58.4 / 95.7 |
 | BIO1+BIO12 10–90% | **6,948** | 6,407 / 6,408 | **+541/+540 cells = +3.736/+3.729 pp** | 119.8 / 51.0 |
 
-The observed count exceeded all sampled 199 null draws in each chain (add-one, *serial* MCMC right-tail **0.01 by chain**). This is **NOT an exact, independent-permutation p value**, especially since the null was added after the weaker geographic reference's positive result was known. Do not call it a pre-registered discovery or causal host effect.
+The observed count exceeded all sampled 199 null draws in each chain (add-one, *serial* MCMC right-tail **0.005 per chain** for 199 draws). This is **NOT an exact, independent-permutation p value**, especially since the null was added after the weaker geographic reference's positive result was known. Do not call it a pre-registered discovery or causal host effect.
 
 The stricter null accounts for much of the original +8.28 pp excess: compared with region-uniform expectations, the fixed region-degree/consumer-by-continent margins explain a further ~4.5 pp, **leaving ~3.74 pp source-conditional positive residual**. This distinction is essential for the paper's ecological credibility.
 
@@ -76,7 +76,7 @@ Positivity violation: among butterflies with strong habitat classes and climate 
 
 ## Code and original evidence
 
-- [Source-exact climate macro and climatology reconstruction](../scripts/analyze_butterfly_climate_analog_macro_20261019.py) [correct repository link: scripts/analyze_butterfly_climate_analog_macro_20261019.py].
+- [Source-exact climate macro and climatology reconstruction](https://github.com/zuizui0223/chocho/blob/analysis/global-habitat-filter-20261019/scripts/analyze_butterfly_climate_analog_macro_20261019.py).
 - [Dual-chain fixed-margin structural null](https://github.com/zuizui0223/chocho/blob/analysis/global-habitat-filter-20261019/scripts/analyze_climate_analog_fixedmargin_null_20261019.py).
 - [Climatic biogeography, bias controls and holdout predictions](https://github.com/zuizui0223/chocho/blob/analysis/global-habitat-filter-20261019/scripts/analyze_butterfly_climate_analog_geography_sensitivity_20261019.py).
 - [All three result JSON files, author-only derived (no redistribution of source plants), workflow run 39211273830](https://github.com/zuizui0223/chocho/actions/runs/39211273830).
