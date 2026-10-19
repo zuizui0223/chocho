@@ -196,7 +196,10 @@ def process_one(species,key,geom):
 
 def main(args):
     originals=read_source_keys(args.keys)
-    target=list(originals.items())[:args.max_species]
+    ordered=list(originals.items())
+    if not (0<=args.start_index<96) or args.start_index+args.max_species>96:
+        raise ValueError("Shard must stay within original frozen 96 GBIF taxa")
+    target=ordered[args.start_index:args.start_index+args.max_species]
     geom=source_polygon_map(args.tdwg_geojson)
     totals=Counter()
     audits=[]
@@ -236,6 +239,9 @@ def main(args):
         "original_source":"Exact key/name original GBIF 239-attempt run 39233336804, 96 PARTIAL_FETCH_NOT_ELIGIBLE",
         "start_utc":start,"end_utc":datetime.now(timezone.utc).isoformat(),
         "species_attempted":len(target),
+        "shard_start_index":args.start_index,
+        "shard_end_exclusive":args.start_index+len(target),
+        "original_frozen_96_species":96,
         "complete_species":status["COMPLETE"],
         "not_completed_species":status["PARTIAL_TRANSPORT_NOT_ABSENCE"],
         "regional_basis_count_rows":len(totals),
@@ -257,6 +263,7 @@ if __name__=="__main__":
     parser.add_argument("--output-counts",type=Path,required=True)
     parser.add_argument("--output-manifest",type=Path,required=True)
     parser.add_argument("--max-species",type=int,default=96)
+    parser.add_argument("--start-index",type=int,default=0)
     parser.add_argument("--workers",type=int,default=3)
     args=parser.parse_args()
     if not (1<=args.max_species<=96 and 1<=args.workers<=4):
