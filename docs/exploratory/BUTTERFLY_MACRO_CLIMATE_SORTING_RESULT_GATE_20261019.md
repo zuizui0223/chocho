@@ -53,9 +53,26 @@ For context, the **original HOSTS** conditional network residuals were +0.86–0
 
 [Detailed matched-catalogue macro result and workflow provenance](../../provenance/reviewer_defenses/results/bce_augmented_plant_network_macroclimate_null_20261019.md).
 
+## Further falsification: finer plant climate and local geographic matching (ALL now qualified)
+
+The augmented plant/host-source residual is **strongly sensitive to how precisely introduced plant biogeography is conserved**, even when the exact butterfly–accepted-host graph is fixed. We expanded the comparison to three source SHA-verified stricter plant-side nulls, using exactly the SAME observed 235 eligible butterflies and matching original 234 butterflies (newly eligible *Satyrium pruni* excluded only for fixed-species sensitivity). Both native-host climate windows and all original plant source ranges were unchanged.
+
+| Null model (each holds plant family/continent/region family degrees/host identity fixed) | 235-butterfly residual 5–95% | 235-butterfly residual 10–90% | Same 234 residual 5–95% | Same 234 residual 10–90% |
+| --- | ---: | ---: | ---: | ---: |
+| Previous BIO1/BIO12 **2×2 climate bins**, qualified 2×199 | +0.972–0.977 pp | +1.571–1.599 pp | +0.982–0.993 pp | +1.566–1.592 pp |
+| **BIO1/BIO12 3×3 climate bins**, qualified 2×199 | **+0.387–0.415 pp** | **+0.808–0.819 pp** | **+0.389–0.419 pp** | **+0.809–0.816 pp** |
+| **BIO1/BIO7/BIO12/BIO15 2×2×2×2 climate bins**, qualified 2×199 | **+0.560–0.572 pp** | **+1.029–1.038 pp** | **+0.576–0.586 pp** | **+1.028–1.043 pp** |
+| **BIO1/BIO12 2×2 bins, 1,500km nearest-region geographic swaps and original host-footprint tether**, qualified 2×399 | **+0.344 pp** | **+0.582–0.592 pp** | **+0.349–0.354 pp** | **+0.576–0.594 pp** |
+
+The original 1,500km run on 2×199 draws was NOT considered qualified because matched-234 wide-climate ESS was 29.9885, narrowly below ≥30. An explicitly logged after-diagnostic mixing-only extension on the **unchanged spatial null** to 2×399 draws passed all four numerical ESS, median-agreement, accepted swap and 5% moved-original-footprint checks, with first/full species 235 and fixed-original species 234 both consistent. [Initial three-model run 39227164974](https://github.com/zuizui0223/chocho/actions/runs/39227164974); [399-draw strict spatial verification 39227774146](https://github.com/zuizui0223/chocho/actions/runs/39227774146).
+
+**Ecological interpretation:** The geographic climate alignment of redistributed **potential host resources** is not a trivial mathematical increase in union size. It is nevertheless **mostly plant-side climatic and subcontinental biogeographic sorting**, not a large consumer-specific host-network effect. As plant climate/nearby geography is matched more precisely, the extra residual at 5–95% contracts to **~0.34–0.42 percentage points**. The four-variable and 3×3 bins are alternative conditioning regimes, not a strictly nested additive causal partition. The spatial caliper uses polygon representative points and the original plant footprint, NOT butterfly dispersal capacity, and explores a constrained MCMC reachable space. Tiny residuals can still reflect unmodeled fine plant habitat preferences, unequal WGSRPD cell areas, shared host source ascertainment, spatial autocorrelation and butterfly native-host geography; **no new butterfly selective interaction or demographic improvement has been identified**.
+
+[Complete raw-source-qualified result audit, qualification states, same-234 sensitivity and scientific boundary](../../provenance/reviewer_defenses/results/bce_finer_climate_spatial_macro_null_20261019.md).
+
 ## Publication decision
 This body of evidence offers an ecology-focused macroecological finding **at the layer of potential consumer resources**: global plant redistribution follows broad climatic geography that carries many existing butterfly–host links into analogous environments; additional alignment beyond host-network and plant-family coarse-climatic structure is detectable but quantitatively modest. For a stronger paper, characterize this *dominance of plant-side geography* rather than claiming that globalization selectively increases butterfly fitness, that host specialists benefit more or less, or that invasive plants should be retained.
 
 The original frozen [GEB PR #38](https://github.com/zuizui0223/chocho/pull/38) is unchanged. These new original macro analyses remain in exploratory draft [PR #46](https://github.com/zuizui0223/chocho/pull/46); author review is needed before choosing manuscript integration or an independent follow-up. Input licences and double-anonymous package privacy are not approved for release.
 
-**Explicitly untested:** insect geographic colonisation, oviposition choice, adult recruitment, butterfly range expansion through time, evolutionary climate adaptation, equal WGSRPD3 physical area, finer geographic plant niche conservation, a fully independent globally representative host inventory, and community-level species co-occurrence changes. No novel management intervention is derived.
+**Explicitly untested:** insect geographic colonisation, oviposition choice, adult recruitment, butterfly range expansion through time, evolutionary climate adaptation, equal WGSRPD3 physical area, plant niche heterogeneity below the coarse climate bins and 1,500km spatial caliper, a fully independent globally representative host inventory, and community-level species co-occurrence changes. No novel management intervention is derived.
