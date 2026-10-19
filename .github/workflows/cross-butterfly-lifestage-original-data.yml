@@ -37,8 +37,26 @@ jobs:
           assert not r["source_independence"]["total_recruitment_sign_reversal_identified"]
           print("PASS: all checksums, stage codes, denominators, mother clusters, negative gates")
           PY
+          python -m unittest discover -s tests -p 'test_melitaea_ambiguity_and_crossovers_20261019.py' -v
+          python scripts/analyze_melitaea_ambiguity_and_crossovers_20261019.py --output artifacts/melitaea_ambiguity_and_crossover_sensitivity.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/melitaea_ambiguity_and_crossover_sensitivity.json").read_text())
+          assert r["individual_larvae_n"] == 1680
+          assert r["mothers_n"] == 14
+          assert len(r["ambiguous_records"]) == 4
+          assert r["ambiguity_scenarios_n"] == 16
+          assert abs(r["primary_event_coded"]["mother_equal_weighted_Vs_minus_Pl"] - 45/840) < 1e-7
+          assert abs(r["all_four_ambiguous_coded_not_successful_sensitivity"]["mother_equal_weighted_Vs_minus_Pl"] - 43/840) < 1e-7
+          assert r["partial_identification_crossovers_range"] == [7,8]
+          assert r["independent_larva_null_and_group_dependence_sensitivity"]["fits_same_data"]
+          print("PASS: all 16 ambiguous fates, mother-unit uncertainty and null-clustering sensitivity")
+          PY
       - name: Upload audit receipt only (no raw source in review artifact)
         uses: actions/upload-artifact@v4
         with:
           name: independent-butterfly-lifestage-raw-audit
-          path: artifacts/original_butterfly_lifestage_receipt.json
+          path: |
+            artifacts/original_butterfly_lifestage_receipt.json
+            artifacts/melitaea_ambiguity_and_crossover_sensitivity.json
