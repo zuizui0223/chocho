@@ -1,0 +1,118 @@
+name: BCE-augmented butterfly host-network climatic null
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/bce-augmented-plant-network-climate-null.yml
+      - scripts/analyze_bce_augmented_plant_network_climate_null_20261019.py
+      - data/exploratory/bce_additional_plant_family_gbif_crosswalk_20261019.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  bce-augmented-plant-network-source-qualified-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing project Python dependencies
+        run: python -m pip install -e .
+      - name: Restore pinned original author-only HOSTS WCVP CHELSA plus BCE source archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Check exact outer source archive SHA and inner manifest, then extract
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          root=Path("_retrieval/author_only")
+          expect="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in root.rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==expect]
+          assert len(matches)==1, "Pinned author-only archive missing or SHA changed"
+          target=Path("_retrieval/extracted_source")
+          target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          print("PASS exact source archive SHA and safe archive paths")
+          PY
+      - name: Smoke-check added 679 host families, 235 species, and climate margin swaps
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_bce_augmented_plant_network_climate_null_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --output-json artifacts/bce_augmented_host_network_null_smoke.json \
+            --draws 9 --burn-factor 2 --spacing-factor 1 \
+            --mode plant_family_continent_BIO1_BIO12_2x2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("artifacts/bce_augmented_host_network_null_smoke.json").read_text())
+          assert x["source_scope"]["climate_eligible_butterflies"]==235
+          assert x["source_scope"]["introduced_plant_region_edges"]==37869
+          assert x["provenance"]["extra_host_family_method_counts"]=={
+            "existing_accepted_plant_id":323,
+            "unique_original_HOSTS_genus":304,
+            "GBIF_backbone_checked":52}
+          assert x["observed"]["0.05"]=={
+            "aligned":9949,"evaluable_added":14961,"aligned_fraction":9949/14961}
+          assert x["observed"]["0.1"]=={
+            "aligned":7370,"evaluable_added":14961,"aligned_fraction":7370/14961}
+          assert len(x["modes"])==1
+          assert all(len(c["samples"]["0.05"])==9 for m in x["modes"].values() for c in m["chains"])
+          print("PASS source exact, 52 family mappings, 2 missing climate region cells, 235 species, swapped margins")
+          PY
+      - name: Run independent 2x199 full plant-network climate nulls
+        run: |
+          python scripts/analyze_bce_augmented_plant_network_climate_null_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --output-json artifacts/bce_augmented_plant_network_climate_null_20261019.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          x=json.loads(Path("artifacts/bce_augmented_plant_network_climate_null_20261019.json").read_text())
+          assert x["schema"]=="chocho_239_butterfly_bce_augmented_host_network_climate_null_v0.1"
+          assert x["source_scope"]["total_butterflies"]==239
+          assert x["source_scope"]["climate_eligible_butterflies"]==235
+          assert x["source_scope"]["accepted_extra_host_links"]==1027
+          assert x["source_scope"]["unique_extra_accepted_plant_ids"]==679
+          assert x["source_scope"]["introduced_plant_region_edges"]==37869
+          assert x["source_scope"]["all_239_new_resource_cells"]==14967
+          assert x["source_scope"]["climate_eligible_new_resource_cells"]==14961
+          assert x["source_scope"]["missing_region_codes_by_species"]=={
+              "Coenonympha oedippus":["ANT","HMD"]}
+          assert x["draws_per_chain"]==199
+          assert x["observed"]["0.05"]["aligned"]==9949
+          assert x["observed"]["0.1"]["aligned"]==7370
+          assert len(x["modes"])==2
+          for mode,m in x["modes"].items():
+              assert [c["seed"] for c in m["chains"]]==[20261019,20261020]
+              for c in m["chains"]:
+                  assert len(c["samples"]["0.05"])==199
+                  assert len(c["samples"]["0.1"])==199
+                  assert c["structure"]["viable_edge_fraction"]>=.75
+              for q,y in m["quality"].items():
+                  assert y["qualified"] or m["status"]=="NOT_EVALUABLE_MCMC_QUALITY_GATE"
+              for q,v in m["result"].items():
+                  assert len(v["null_fraction_median_by_chain"])==2
+                  assert all(math.isfinite(z) for z in v["null_fraction_median_by_chain"])
+          print("PASS full source integrity, 2x199 MCMC audit, native/host/plant/continent/climate margins")
+          PY
+      - name: Upload derived macro statistical receipts, NOT raw source geography
+        uses: actions/upload-artifact@v4
+        with:
+          name: BCE-augmented-butterfly-plant-network-null-exploratory-only
+          path: artifacts/bce_augmented_plant_network_climate_null_20261019.json
