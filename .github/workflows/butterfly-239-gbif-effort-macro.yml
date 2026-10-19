@@ -1,0 +1,131 @@
+name: 239 butterfly GBIF observed-region effort matched macroecology
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/butterfly-239-gbif-effort-macro.yml
+      - scripts/acquire_gbif_butterfly_239_region_occurrences_20261019.py
+      - scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-verified-GBIF-239-ecology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install supported current Shapely 2 and analysis numpy
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - name: Restore source pinned accepted butterfly host geography and climate
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/source_zip
+      - name: Check SHA-verified original provider source and safe ZIP extraction
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in Path("_retrieval/source_zip").rglob("*.zip")
+                   if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(matches)==1,"Source archive unavailable or sha drift"
+          target=Path("_retrieval/extracted_source");target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          print("PASS pinned original HOSTS/WCVP/CHELSA/TDWG source SHA")
+          PY
+      - name: Smoke-check GBIF taxonomy API, coordinate record paging and regional mapping
+        run: |
+          mkdir -p artifacts
+          python scripts/acquire_gbif_butterfly_239_region_occurrences_20261019.py \
+            --species-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --level3-geojson _retrieval/extracted_source/inputs/level3.geojson \
+            --output-counts artifacts/gbif_smoke_8_species_counts.csv \
+            --output-manifest artifacts/gbif_smoke_8_species_receipts.json \
+            --max-species 8 --pages-per-window 1 --workers 2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/gbif_smoke_8_species_receipts.json").read_text())
+          assert r["species_total_panel"]==239
+          assert r["species_requested"]==8
+          assert len(r["species_receipts"])==8
+          assert r["queries"]["limit_per_page"]==300
+          assert len(r["queries"]["windows"])==2
+          assert sum(r["species_statuses"].values())==8
+          print("PASS GBIF bounded live source + 8 original focal butterfly taxonomic audit")
+          PY
+      - name: Acquire original 239 butterfly GBIF taxon-matched region-level sample
+        run: |
+          python scripts/acquire_gbif_butterfly_239_region_occurrences_20261019.py \
+            --species-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --level3-geojson _retrieval/extracted_source/inputs/level3.geojson \
+            --output-counts artifacts/gbif_239_species_region_window_basis_counts.csv \
+            --output-manifest artifacts/gbif_239_species_source_receipts.json \
+            --max-species 239 --pages-per-window 2 --workers 3
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/gbif_239_species_source_receipts.json").read_text())
+          assert r["species_requested"]==239
+          assert sum(r["species_statuses"].values())==239
+          assert r["queries"]["max_pages_per_window"]==2
+          assert r["sampling_is_systematic_and_not_random_or_exhaustive"]
+          if r["species_taxon_resolved_and_complete"]<60:
+              raise RuntimeError("TOO_FEW_GBIF_COMPLETED_SPECIES; do not claim macro generalisation")
+          print("PASS 239 attempted species, explicit skipped taxonomy and incomplete species, no fabricated absence")
+          PY
+      - name: Reconstruct original BCE host resource geography and test effort-climate matching
+        run: |
+          python scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --gbif-counts artifacts/gbif_239_species_region_window_basis_counts.csv \
+            --gbif-manifest artifacts/gbif_239_species_source_receipts.json \
+            --null-draws-primary 9999 \
+            --null-draws-sensitivity 999 \
+            --output-json artifacts/gbif_239_effort_climate_host_resource_macro_20261019.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path("artifacts/gbif_239_effort_climate_host_resource_macro_20261019.json").read_text())
+          assert d["schema"]=="chocho_239_butterflies_effort_climate_matched_gbif_presence_macro_v0.1"
+          assert d["GBIF_sample_metadata"]["gbif_species_requested"]==239
+          assert len(d["all_combinations"])==72
+          primary=d["primary"]
+          assert primary["minimum_other_observed_butterfly_species"]==3
+          assert primary["climate_analogue_lower_quantile"]==.05
+          assert primary["strata"]=="level1"
+          assert primary["candidate_region_species_n"]>=primary["candidate_added_host_cells_n"]
+          assert primary["sampled_positive_region_species_n"]>=primary["observed_positives_on_added_host_cells_n"]
+          if primary["status"]=="EXPLORATORY_SAMPLED_PRESENCE_OVERLAP":
+              assert math.isfinite(primary["observed_minus_expected_pp"])
+              assert primary["null_draws"]==9999
+          else:
+              assert primary["status"]=="NOT_IDENTIFIABLE_SAMPLED_SPECIES_OR_REGIONS"
+          print("PASS original plant resources and 239 sampled GBIF species effort-climate association gates")
+          PY
+      - name: Upload only aggregated GBIF butterfly records and model receipts (no raw locations)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-239-butterfly-effort-climate-macro-audit-only
+          if-no-files-found: warn
+          path: |
+            artifacts/gbif_smoke_8_species_receipts.json
+            artifacts/gbif_239_species_region_window_basis_counts.csv
+            artifacts/gbif_239_species_source_receipts.json
+            artifacts/gbif_239_effort_climate_host_resource_macro_20261019.json
