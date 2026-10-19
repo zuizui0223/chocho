@@ -72,7 +72,9 @@ jobs:
           assert x['original_hosts']==518
           assert x['hosts_with_native_records']==517
           assert x['polygon_regions']==369
-          assert x['missing_host_names']==['Brachypodium pinnatum']
+          expected=x['missing_host_names']
+          if isinstance(expected,str): expected=[expected]
+          assert expected==['Brachypodium pinnatum']
           assert x['genetic_response_used'] is False and x['paleoclimate_response_used'] is False
           print('PASS_ORIGINAL_517_WCVP_NATIVE_TAXA_AND_369_POLYGONS')
           PYTHON
