@@ -152,6 +152,14 @@ def _columns(row, family_levels, *, extended_edge=False):
 def model_matrices(rows, all_families, *, y_key="log_expansion", extended_edge=False):
     z = np.array([_columns(r, all_families, extended_edge=extended_edge)
                   for r in rows], dtype=float)
+    # Drop invariant/redundant CONTROL columns only, e.g. the all-adequate
+    # subgroup's inventory-missing dummy. Exposure is NEVER dropped.
+    keep = []
+    for i in range(z.shape[1]):
+        indices = keep + [i]
+        if np.linalg.matrix_rank(z[:,indices]) > len(keep):
+            keep.append(i)
+    z = z[:,keep]
     x = np.array([float(r["exposure"]) for r in rows], dtype=float)[:,None]
     y = np.array([float(r[y_key]) for r in rows], dtype=float)
     return z, np.column_stack([z, x]), y
