@@ -80,7 +80,7 @@ jobs:
           import json
           from pathlib import Path
           r=json.loads(Path("artifacts/butterfly_family_realm_climate_macro_20261019.json").read_text())
-          assert r["status"]=="GLOBAL_SOURCE_QUALIFIED_GROUP_HETEROGENEITY"
+          assert r["status"]=="GLOBAL_SOURCE_QUALIFIED_GROUP_HETEROGENEITY_EXPLORED"
           assert r["mcmc_mode"]=="plant_bio1_bio12_3x3"
           assert len(r["chain_quality"])==2
           assert [c["seed"] for c in r["chain_quality"]]==[20261019,20261020]
