@@ -307,8 +307,15 @@ def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5):
                         {rows[i]["genus"] for i in ii_test})
             train=[rows[i] for i in ii_train]
             test=[rows[i] for i in ii_test]
-            z_train, X_train, y_train = model_matrices(train,families)
-            z_test, X_test, _ = model_matrices(test,families)
+            # For genuine held-out prediction, the exact SAME control columns
+            # must be used in train and test, even when a family occurs only
+            # in the held-out fold. Least squares handles absent train levels
+            # via minimum-norm coefficients; no test-label information leaks.
+            z_train = np.array([_columns(r,families) for r in train],dtype=float)
+            z_test = np.array([_columns(r,families) for r in test],dtype=float)
+            X_train = np.column_stack([z_train,[r["exposure"] for r in train]])
+            X_test = np.column_stack([z_test,[r["exposure"] for r in test]])
+            y_train = np.array([r["log_expansion"] for r in train],dtype=float)
             b0=np.linalg.lstsq(z_train,y_train,rcond=None)[0]
             b1=np.linalg.lstsq(X_train,y_train,rcond=None)[0]
             pred0[ii_test] = z_test @ b0
