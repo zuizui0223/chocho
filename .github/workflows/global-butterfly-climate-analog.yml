@@ -71,8 +71,29 @@ jobs:
                   "EXPLORATORY_ADJUSTED_ASSOCIATION","NOT_EVALUABLE_TRAIT_CLASS_SUPPORT")
           print("PASS original 239 source geography, climate support, thresholds, null denominator, observation boundaries")
           PY
+      - name: Test climate alignment against native-exclusion and region-degree fixed-margin null
+        run: |
+          python scripts/analyze_climate_analog_fixedmargin_null_20261019.py --source-root _retrieval/extracted_source --output-json artifacts/butterfly_climate_analog_fixedmargin_null_20261019.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_climate_analog_fixedmargin_null_20261019.json").read_text())
+          assert r["species_in_graph"]==239 and r["climate_evaluable_species"]==234
+          assert r["source_original_added_units"]==14553 and r["evaluated_added_units"]==14481
+          assert r["result"]["0.05"]["observed"]==9451
+          assert r["result"]["0.1"]["observed"]==6948
+          assert len(r["chains"])==2
+          assert [x["seed"] for x in r["chains"]]==[20261019,20261020]
+          assert all(len(c["full_draw_history"]["0.05"])==99 for c in r["chains"])
+          assert all(len(c["full_draw_history"]["0.1"])==99 for c in r["chains"])
+          if r["status"]!="QUALIFIED_EXPLORATORY_MCMC_STRUCTURAL_NULL":
+              assert any(not v["qualified"] for v in r["quality"].values())
+          print("PASS: source-pinned fixed margins, original regional climate counts, 2×99 audit; significance qualified only if mixing gates pass")
+          PY
       - name: Upload only macro-derived region COUNT results, not raw plant geography
         uses: actions/upload-artifact@v4
         with:
           name: butterfly-climate-analog-macro-exploratory-only
-          path: artifacts/butterfly_climate_analog_macro_20261019.json
+          path: |
+            artifacts/butterfly_climate_analog_macro_20261019.json
+            artifacts/butterfly_climate_analog_fixedmargin_null_20261019.json
