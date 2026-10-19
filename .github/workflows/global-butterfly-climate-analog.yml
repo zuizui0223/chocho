@@ -1,0 +1,78 @@
+name: Global butterfly climate analog opportunity macroecology
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  cli-source-pinned-climate-macro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing project numpy dependency
+        run: python -m pip install -e .
+      - name: Retrieve source-pinned author-only global plant distribution archive (do not redistribute)
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Verify known exact source ZIP SHA256 and safe contents
+        run: |
+          python - <<'PY'
+          import hashlib, zipfile
+          from pathlib import Path
+          root=Path("_retrieval/author_only")
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          candidates=list(root.rglob("*.zip"))
+          matches=[x for x in candidates if hashlib.sha256(x.read_bytes()).hexdigest()==expected]
+          assert len(matches)==1, "AUTHOR_ONLY_SOURCE_ARCHIVE_UNAVAILABLE_OR_SHA_CHANGED: "+str([x.name for x in candidates])
+          p=matches[0]
+          destination=Path("_retrieval/extracted_source")
+          destination.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(p) as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  rel=Path(name)
+                  assert not rel.is_absolute() and ".." not in rel.parts
+              z.extractall(destination)
+          assert (destination/"SOURCE_MANIFEST.json").is_file()
+          print("PASS source ZIP SHA",expected,"members",len(list(destination.rglob("*"))))
+          PY
+      - name: Climate-analogue macroecology across original 239 butterflies
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_butterfly_climate_analog_macro_20261019.py --source-root _retrieval/extracted_source --output-json artifacts/butterfly_climate_analog_macro_20261019.json
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_climate_analog_macro_20261019.json").read_text())
+          assert r["negative_gates"]["confirmatory_ecological_causation"] is False
+          assert r["negative_gates"]["source_archive_redistribution_authorised"] is False
+          for key in ("main_threshold_5_to_95","sensitivity_threshold_10_to_90"):
+              d=r[key];n=d["overview"]["species_with_adequate_native_climate"]
+              assert 1<=n<=239
+              o=d["overview"]["observed_added_climate_analog"]
+              a=d["overview"]["added_cells_all"]
+              e=d["overview"]["within_continent_reference_expected_analog"]
+              assert a>0 and 0<=o<=a and 0<=e<=a
+              assert all(0<=x["observed_added_analog_regions"]<=x["eligible_climate_analog_non_native_regions"] for x in d["species_derived"])
+              assert all(x["native_climate_supported_regions"]>=10 for x in d["species_derived"])
+              assert d["secondary_disturbance_5_region_gate"]["status"] in (
+                  "EXPLORATORY_ADJUSTED_ASSOCIATION","NOT_EVALUABLE_TRAIT_CLASS_SUPPORT")
+          print("PASS original 239 source geography, climate support, thresholds, null denominator, observation boundaries")
+          PY
+      - name: Upload only macro-derived region COUNT results, not raw plant geography
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-climate-analog-macro-exploratory-only
+          path: artifacts/butterfly_climate_analog_macro_20261019.json
