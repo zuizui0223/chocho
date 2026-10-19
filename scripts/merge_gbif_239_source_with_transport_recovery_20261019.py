@@ -50,12 +50,40 @@ def assemble(original_manifest,original_counts,recovery_manifest,recovered_count
         raise ValueError("Recovery not exactly original incomplete 96")
     source_keys={}
     accepted=[]
+    # GBIF's ordinal index is live and can change when more records arrive.
+    # The transport recovery uses the same sample-window ALGORITHM and
+    # page budget; exact original ordinal OFFSET equality is verifiable
+    # only for windows whose original (partial-species) page succeeded.
+    known_original_offsets=[]
+    changed_original_offsets=[]
+    original_count_changed=[]
     for name,row in recovered.items():
         prior=old_species[name]
         key=int(prior["taxon"]["key"])
         if key!=int(row["accepted_species_key"]):
             raise ValueError("GBIF taxon key changed in recovery, nonreproducible taxonomy")
         if row["status"]=="COMPLETE":
+            for w in ("2010_2017","2018_2025"):
+                previous=prior.get("windows",{}).get(w,{})
+                recov=row.get("windows",{}).get(w,{})
+                if not previous.get("complete"):continue
+                old_offsets=previous.get("index_offsets")
+                new_offsets=recov.get("selected_original_page_offsets")
+                if old_offsets is None or new_offsets is None:
+                    raise ValueError("Original recoverable GBIF ordinal audit missing")
+                known_original_offsets.append((name,w))
+                if list(old_offsets)!=list(new_offsets):
+                    changed_original_offsets.append({
+                        "species":name,"year_window":w,
+                        "original_ordinal_offsets":old_offsets,
+                        "recovered_ordinal_offsets":new_offsets
+                    })
+                if int(previous["reported_GBIF_count"])!=int(recov["reported_GBIF_count"]):
+                    original_count_changed.append({
+                        "species":name,"year_window":w,
+                        "original_GBIF_count":int(previous["reported_GBIF_count"]),
+                        "recovered_GBIF_count":int(recov["reported_GBIF_count"])
+                    })
             if set(row["windows"])!={"2010_2017","2018_2025"} or not all(x.get("complete") for x in row["windows"].values()):
                 raise ValueError("Incomplete window called complete")
             accepted.append(name)
@@ -109,6 +137,17 @@ def assemble(original_manifest,original_counts,recovery_manifest,recovered_count
             "no_new_species_outside_initial_239":True,
             "no_ordinal_sample_budget_change":True,
             "recovery_count_drift_is_exposed_in_receipts":True,
+            "originally_completed_windows_with_original_offset_metadata":
+                len(known_original_offsets),
+            "originally_completed_windows_with_index_offset_changes":
+                len(changed_original_offsets),
+            "originally_completed_windows_with_GBIF_count_changes":
+                len(original_count_changed),
+            "ordinal_index_offset_changes":changed_original_offsets,
+            "GBIF_count_changes_in_originally_completed_windows":
+                original_count_changed,
+            "frozen_original_order_reproducible_without_GBIF_Download_DOI":False,
+            "same_source_query_algorithm_not_same_live_index_snapshot":True,
             "no_absence_inferred_from_missing_recovered_taxa":True,
         }
     }
