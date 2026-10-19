@@ -98,22 +98,36 @@ def climate_and_plant_candidates(model,regions,climate):
     return by_sp,classes,index,metadata
 
 
-def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999):
+def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999,
+                  target_species=None, effort_reference_species=None):
     records={x["species"]:x for x in manifest["species_receipts"]}
     species={s for s,r in records.items() if r["status"]=="COMPLETE"}
+    # The source-selected target cohort and observer-effort background are
+    # different populations. A recovered species may be evaluated as a
+    # target without being silently added to the older 135-species effort
+    # proxy; conversely, its own presence must still enter the target outcome.
+    target=set(species) if target_species is None else set(target_species)
+    effort=set(species) if effort_reference_species is None else set(effort_reference_species)
+    if not target<=species or not effort<=species:
+        raise ValueError("Original target/background GBIF source cohort is incomplete")
     bysp,classes,index,clmeta=climate_and_plant_candidates(
         model["model"],regions,model["climate"])
     species&=set(bysp)
+    target &= species
+    effort &= species
     level1=model["model"]["level1"]
-    eligible={s for s in species if bysp[s]["masks"][.05] is not None}
+    eligible={s for s in target if bysp[s]["masks"][.05] is not None}
     results={}
     for source in SOURCES:
         for window in WINDOWS:
             occ=counts[(source,window)]
             observed_by_region=defaultdict(set)
+            effort_by_region=defaultdict(set)
             for (sp,code),c in occ.items():
                 if sp in species and c>0 and code in index:
                     observed_by_region[code].add(sp)
+                    if sp in effort:
+                        effort_by_region[code].add(sp)
             for gate in EFFORT_GATES:
                 for q in QS:
                     for stratification in ("level1","level1_bio1_bio12_2x2"):
@@ -127,8 +141,8 @@ def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999):
                             m=s["masks"][q]
                             for j,code in enumerate(regions):
                                 if native>>j&1 or not m>>j&1:continue
-                                effort=len(observed_by_region.get(code,set())-{sp})
-                                if effort<gate:continue
+                                other_effort=len(effort_by_region.get(code,set())-{sp})
+                                if other_effort<gate:continue
                                 g=str(level1[j])
                                 if stratification!="level1":
                                     g+="|"+str(classes[j])
@@ -169,6 +183,8 @@ def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999):
                             "climate_analogue_lower_quantile":q,
                             "strata":stratification,
                             "source_species_complete":len(species),
+                            "focal_target_species_eligible_for_source":len(target),
+                            "effort_reference_species_eligible_for_source":len(effort),
                             "species_native_climate_eligible":len(mapped_species),
                             "species_with_effort_supported_two_resource_classes":len(eligible_species),
                             "species_with_sampled_positive_in_informative_strata":
@@ -186,7 +202,7 @@ def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999):
                             "observed_minus_expected_pp":100*(totalO-expect)/totalK if totalK else None,
                             "overlap_observed_to_expected_ratio":totalO/expect if expect else None,
                             "sampling_effort_proxy_regions_with_any_other_focal_species":
-                                len([v for v in observed_by_region.values() if v]),
+                                len([v for v in effort_by_region.values() if v]),
                             "null":"Within each species×continent(/coarse-climate) conditioned on observed positive sampled regions and number of added host regions, use hypergeometric uniform placement among focal-other-butterfly effort-supported native-unsupported candidate regions. This is NOT a causal/true-absence test.",
                         }
                         if enough:
@@ -242,6 +258,40 @@ def run(args):
                           nb=args.null_draws_sensitivity,main_n=args.null_draws_primary)
     main_key="all_accepted_bases|pooled|E3|q0.05|level1"
     primary=grouped[main_key]
+    background_reference=None
+    if args.original_gbif_manifest is not None:
+        original=json.loads(args.original_gbif_manifest.read_text(encoding="utf-8"))
+        original_species={r["species"] for r in original["species_receipts"]
+                          if r["status"]=="COMPLETE"}
+        if len(original_species)!=135:
+            raise ValueError("Original GBIF background 135 source cohort has drifted")
+        current_species={r["species"] for r in receipt["species_receipts"]
+                         if r["status"]=="COMPLETE"}
+        if not original_species<=current_species:
+            raise ValueError("Recovered GBIF receipt lost original complete source species")
+        source_args={"model":model,"climate":climate}
+        # 1: source invariable original 135 target+background: must exactly
+        #     reproduce the original 135 study, even in a merged 239 receipt.
+        old=group_results(source_args,regions,receipt,observations,
+            nb=args.null_draws_sensitivity,main_n=args.null_draws_primary,
+            target_species=original_species,effort_reference_species=original_species)
+        old_primary=old[main_key]
+        if (old_primary["sampled_positive_region_species_n"]!=119 or
+            old_primary["observed_positives_on_added_host_cells_n"]!=74 or
+            abs(old_primary["continent_conditional_expected_overlap"]
+                -69.61846219208861)>1e-7):
+            raise ValueError("Original 135-butterfly GBIF ecological baseline changed")
+        # 2: newly completed species are allowed to contribute target GBIF
+        #     presences while keeping the background effort panel unchanged.
+        kept=group_results(source_args,regions,receipt,observations,
+            nb=args.null_draws_sensitivity,main_n=args.null_draws_primary,
+            effort_reference_species=original_species)
+        background_reference={
+            "original_initial135_source_invariant_primary":old_primary,
+            "expanded_targets_fixed_original135_effort_primary":kept[main_key],
+            "expanded_targets_fixed_original135_effort_all_combinations":kept,
+            "interpretation":"Posthoc sampling-denominator diagnostic: an expanded butterfly taxon pool also expands E_-i regional effort proxy; this separates those changes. No detection or colonisation effect is estimated."
+        }
     source_diagnostics={
         "gbif_species_requested":receipt["species_requested"],
         "gbif_resolved_complete":receipt["species_taxon_resolved_and_complete"],
@@ -265,6 +315,7 @@ def run(args):
         "GBIF_sample_metadata":source_diagnostics,
         "primary":primary,
         "all_combinations":grouped,
+        "fixed_original_135_background_diagnostic":background_reference,
         "no_inference_gates":[
             "No true absence: GBIF sample absence is not an ecological detection/non-detection survey",
             "No adult breeding, larval use, egg allocation or butterfly population recruitment",
@@ -286,6 +337,8 @@ if __name__=="__main__":
     p.add_argument("--null-draws-primary",type=int,default=9999)
     p.add_argument("--null-draws-sensitivity",type=int,default=999)
     p.add_argument("--require-all-species",action="store_true")
+    p.add_argument("--original-gbif-manifest",type=Path,
+                   help="Original 135-complete GBIF receipt to separate target taxa from internal effort-panel expansion")
     args=p.parse_args()
     result=run(args)
     args.output_json.parent.mkdir(parents=True,exist_ok=True)
