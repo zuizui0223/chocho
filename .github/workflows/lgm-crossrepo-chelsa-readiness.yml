@@ -1,0 +1,26 @@
+name: chocho feasibility of source-pinned TTF paleo climate artifact access
+on:
+  push:
+    branches: [ecology/lgm-wcvp-native-occurrences-v01]
+    paths: [.github/workflows/lgm-crossrepo-chelsa-readiness.yml]
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: read
+jobs:
+  check-original-chelsa-access-without-unblinding-outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify 6343 0BP support points from pinned TTF archive and historical raster metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ttf-paleoclimate-readiness
+          gh api /repos/zuizui0223/TTF/actions/artifacts/11495066386/zip > /tmp/ttf-support.zip
+          unzip -q /tmp/ttf-support.zip -d /tmp/ttf-paleoclimate-readiness
+          echo 'd0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f  /tmp/ttf-paleoclimate-readiness/wgsrpd3_support_points_v0.1.csv' | sha256sum -c -
+          gh api /repos/zuizui0223/TTF/actions/artifacts/10791389409 --jq '{id: .id, name: .name, size: .size_in_bytes, expired: .expired, digest: .digest}'
+          echo 'PASS_ACCESSIBLE_PINNED_TTF_ORIGINAL_CHELSA_ARCHIVE_METADATA_WITHOUT_LGM_RESULT_OPENED'
