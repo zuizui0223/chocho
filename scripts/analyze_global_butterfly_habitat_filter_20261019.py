@@ -514,6 +514,21 @@ if __name__=="__main__":
         "strict_ceiling_logit_beta":ans["strict_capacity_filled_logit"]["adjusted_coefficient"],
         "strict_edge_adjusted_beta":ans["strict_plus_edge_adjusted"]["adjusted_coefficient"],
         "broad_beta":ans["broad_weak_plus_strong"]["adjusted_coefficient"],
+        "full_sensitivity_effect_sizes":{
+            k:{
+                "n":ans[k]["n"],
+                "beta":ans[k]["adjusted_coefficient"],
+                "genus_cluster_ci":ans[k]["approx_genus_cluster_95ci"],
+                "genus_bootstrap_ci":ans[k].get("genus_bootstrap",{}).get("percentile_95ci"),
+                "wild_null_tail":ans[k]["wild_reduced_genus_signflip"].get(
+                    "two_sided_tail_fraction_not_randomization_p")
+            } for k in (
+                "strict_primary_adjusted","strict_plus_edge_adjusted",
+                "strict_capacity_filled_logit","strict_host_adequate_only",
+                "broad_weak_plus_strong")
+        },
+        "taxonomy_family_stratification":ans["taxonomy_family_stratification"],
+        "leave_largest_genus":ans["leave_largest_genus"],
         "mixed_genus":ans["within_genus_descriptive"],
         "out_of_genus_cv": {
             k:v for k,v in ans["out_of_genus_cv"].items() if k!="individual_repeats"
