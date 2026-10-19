@@ -1,0 +1,72 @@
+{
+  "schema": "chocho_wcvp_native_climate_hindcast_v01",
+  "status": "EXPLORATORY_FIXED_BEFORE_NATIVE_SDM_PREDICTED_LGM_OUTCOMES",
+  "date": "2026-10-19",
+  "question": "How do potential climatic niches of native-screened larval host plants shift between 0BP and 21ka, and for which of their 641 associated insects could a spatially explicit resource-connectivity model become evaluable?",
+  "origin": {
+    "TTF_source_commit": "187e15c6a7b777c119b97b8a43a0d92783ef7c5c",
+    "chocho_native_source_commits": "33c8302d4bb26ef8806afe906073bda5e3377d74",
+    "WCVP_rWCVPdata_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "native_observation_points_sha256": "bf00cbbd49d901da80dcb30e3824c2ae30a427a17ace2b0e935b05f69fd72cd4",
+    "native_WCVP_plant_area_rows_sha256": "8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0",
+    "6343_support_points_sha256": "d0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f",
+    "8_CHELSA_TraCE21k_zip_sha256": "0a797c609d26a185ba08d209a71203a584fa60f1045c4a8c335934372cee30b2",
+    "8_CHELSA_manifest_sha256": "7d82833996006fc1e99b86acb4ea7e80cde29c7f500df739ef48cb9ce145d450"
+  },
+  "inputs": {
+    "native_plant_taxa": 517,
+    "taxa_with_observations": 490,
+    "source_native_observations": 220137,
+    "original_insects": 641,
+    "native_paired_insect_eligible": 392,
+    "nonrandom_GBIF_dates": "2010-01-01 to 2026-10-18",
+    "study_region": "all 369 present-day WCVP geographic TDWG L3 areas, source-fixed 6373 global native land representative climate points",
+    "native_region_does_not_equal_ancient_occupancy": true
+  },
+  "train": {
+    "deterministic_spatial_thin_km": 10,
+    "max_presence_points_per_plant": 200,
+    "minimum_native_presence_points": 30,
+    "minimum_background_support_points_in_current_native_L3": 30,
+    "maximum_background_points": 1000,
+    "background_rule": "source-pinned 0.5 degree WCVP support-point terrestrial proxy inside that plant's current native L3 regions, sampling without replacement up to 1000 deterministic SHA256 priority; not pseudo-absences or complete accessible area",
+    "quadratic_feature_degree": 2,
+    "model": "L2-penalized binomial presence/native-area-background classifier; C=0.3; balanced 1:1 class weights; fixed solver liblinear, max_iter=1000",
+    "validation": "one deterministic spatial-block holdout of 2 degree cells: blocks assigned sorted deterministically in cyclic quintiles; test only if holdout >=5 presences and >=5 background and training at least 20 on both sides; report AUC only as a limited internal bias-risk diagnostic",
+    "global_climate_scaling": "0BP global 6343 valid land representative climates, then same mean/SD applies at 21ka",
+    "frozen_variables": [
+      "bio01",
+      "bio07",
+      "bio12",
+      "bio15"
+    ],
+    "epochs": {
+      "present": "CHELSA_TraCE21K_*_20_V1.0.tif",
+      "LGM": "CHELSA_TraCE21K_*_-190_V1.0.tif"
+    }
+  },
+  "project": {
+    "projection_sites": "6343 source-pinned support points across 369 present WCVP region polygons, not all 1 km raster cells",
+    "response": "relative pseudo-presence logit score; not true plant occupancy probability",
+    "climatic_suitability_threshold": "10th percentile of 0BP fitted native plant presence scores; sensitivity 5th and 15th percentile",
+    "nonanalog_flag": "LGM climate any standardized predictor more than 5% of a modern native-background+presence observed range outside those ranges; report and exclude from 'supported' summary",
+    "species_level_measures": [
+      "0BP climatic suitable fraction on all global support points",
+      "LGM climatic suitable fraction on the same sites",
+      "paired LGM-minus-modern fraction",
+      "LGM novel climate fraction",
+      "modern model spatial test AUC if valid",
+      "individual species N and known native regions"
+    ],
+    "do_not_derive_connectivity": true
+  },
+  "bounds": [
+    "The LGM outputs indicate potential climatic suitability under 21ka CHELSA, never observed LGM plant occupancy",
+    "Native current TDWG level3 remains coarse and may be incorrect for cultivated or taxonomically complex hosts",
+    "Target-group iNaturalist observational effort is nonrandom; 0BP background points are opportunistically selected geographic proxy, not actual absences",
+    "Model does not include dispersal, glaciation barriers, LGM shoreline, competition, host-fidelity, population genetics or migration",
+    "No recalibration after seeing v01 LGM suitability results, no genetic response opened",
+    "Full 641 species remain in the resource support universe even if some plants do not pass modelling qualifications",
+    "Do not merge prior negative v05 biological host-identity results or reinterpret climate analogues as genetic evidence"
+  ]
+}
