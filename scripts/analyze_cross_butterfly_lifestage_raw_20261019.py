@@ -21,10 +21,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "data" / "exploratory" / "realized_host_20261019"
 FILES = {
-    "vanessa/larv.plants.csv": ("0af2cbb249494e11e8dc81a68dcf7bae", 69769, 1154),
-    "vanessa/larv.switched.csv": ("af98d718442e42d56a89d728478ff21e", 33476, 530),
-    "danaus/field_performance.txt": ("5437505ae948d0133927e44d18acc617", 2695, 54),
-    "danaus/lab_performance.txt": ("4e0c3fd3866a9668bab975398a01d708", 1852, 40),
+    "vanessa/larv.plants.csv": ("0af2cbb249494e11e8dc81a68dcf7bae", 69772, 1154),
+    "vanessa/larv.switched.csv": ("af98d718442e42d56a89d728478ff21e", 33479, 530),
+    "danaus/field_performance.txt": ("5437505ae948d0133927e44d18acc617", 2764, 54),
+    "danaus/lab_performance.txt": ("4e0c3fd3866a9668bab975398a01d708", 1911, 40),
     "melitaea/Survival_data.csv": ("373acf78433faddd218bc9d9c427fc9a", 48291, 1680),
 }
 DOI = {
