@@ -37,6 +37,18 @@ COPY_PATHS = (
 # the separate alternative author-review package, never the submitted pack.
 # Review the list if the alternative PR gains further files.
 EXCLUDE_RELATIVE = {
+    Path("docs/exploratory/BUTTERFLY_OPPORTUNITY_TO_RECRUITMENT_NONMONOTONICITY_20261018.md"),
+    Path("docs/exploratory/CROSS_BUTTERFLY_PRIMARY_COHORT_READOUT_20261019.md"),
+    Path("provenance/reviewer_defenses/protocols/BUTTERFLY_HOST_REALIZATION_NONMONOTONICITY_20261018.md"),
+    Path("provenance/reviewer_defenses/protocols/CROSS_SPECIES_REALIZED_HOST_EVIDENCE_GATE_20261019.md"),
+    Path("provenance/reviewer_defenses/results/public_butterfly_larval_data_eligibility_audit_20261019.md"),
+    Path("provenance/reviewer_defenses/results/butterfly_monarch_independent_host_quality_resource_novelty_v0.1.json"),
+    Path("scripts/analyze_monarch_host_quality_geographic_novelty.py"),
+    Path("scripts/analyze_cross_butterfly_lifestage_raw_20261019.py"),
+    Path("scripts/download_exact_cross_butterfly_sources_20261019.py"),
+    Path("src/butterfly_specialization_ecology/host_realization_nonmonotonicity.py"),
+    Path("tests/test_host_realization_nonmonotonicity.py"),
+    Path("tests/test_monarch_host_quality_geographic_novelty.py"),
     Path("docs/exploratory/BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md"),
     Path("docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md"),
     Path("docs/exploratory/NONTRIVIAL_MACROECOLOGICAL_FINDINGS_20261015.md"),
