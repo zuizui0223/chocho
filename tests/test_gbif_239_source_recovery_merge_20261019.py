@@ -76,7 +76,7 @@ def sample_source(recovered_subset=5):
     return original,basecounts,rescue,recovercounts
 
 
-def run_run_assemble(raw,old,rec,added):
+def run_assemble(raw,old,rec,added):
     # Production merge intentionally requires exact source *file paths*,
     # not Python dicts. Build tiny source-shaped CSV fixtures in a sandbox,
     # then test that the actual file-reading merge enforces its contracts.
