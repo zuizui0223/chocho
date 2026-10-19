@@ -131,7 +131,13 @@ def calculate_analog(model,regions,climate,raw_rows,q):
         cap=set(covered)-native
         eligible_analog=cap&analog
         obs=int(len(introduced_clim&analog))
+        native_level1_counts=Counter(model["level1"][i] for i in native_clim)
+        dominant_native_level1=sorted(
+            native_level1_counts.items(),key=lambda kv:(-kv[1],kv[0]))[0][0]
+        native_climate_center_bio1=float(np.mean([annual_temp[i] for i in native_clim]))
+        native_climate_center_bio12=float(np.mean([annual_precip[i] for i in native_clim]))
         expected=0.0
+        by_level1_contribution={}
         reference_var=0.0
         added_by_l1=Counter(model["level1"][i] for i in introduced_clim)
         for group,indices in by_l1.items():
@@ -145,8 +151,18 @@ def calculate_analog(model,regions,climate,raw_rows,q):
             assert 0<=n_add<=M
             p=k/M
             expected+=n_add*p
+            by_level1_contribution[str(group)]={
+                "added":n_add,
+                "observed_analog":len(introduced_clim & analog & set(indices)),
+                "expected_analog":n_add*p,
+                "analogue_candidates":k,
+                "total_candidates":M,
+            }
             if M>1:
                 reference_var+=n_add*p*(1-p)*(M-n_add)/(M-1)
+        assert sum(x["added"] for x in by_level1_contribution.values())==len(introduced_clim)
+        assert sum(x["observed_analog"] for x in by_level1_contribution.values())==obs
+        assert abs(sum(x["expected_analog"] for x in by_level1_contribution.values())-expected)<1e-6
         K=len(eligible_analog)
         A=len(introduced_clim)
         assert obs<=K and obs<=A
@@ -154,12 +170,18 @@ def calculate_analog(model,regions,climate,raw_rows,q):
             "species":raw["species"],"genus":raw["genus"],
             "native_regions":raw["native"],"added_regions":raw["added"],
             "native_climate_supported_regions":len(native_clim),
+            "dominant_native_resource_level1":str(dominant_native_level1),
+            "dominant_native_level1_share":
+                native_level1_counts[dominant_native_level1]/len(native_clim),
+            "native_host_region_mean_bio1":native_climate_center_bio1,
+            "native_host_region_mean_bio12":native_climate_center_bio12,
             "climate_covered_added_regions":A,
             "all_climate_covered_candidate_non_native_regions":len(cap),
             "eligible_climate_analog_non_native_regions":K,
             "observed_added_analog_regions":obs,
             "within_continent_reference_expected_analog_regions":expected,
             "within_continent_reference_variance":reference_var,
+            "by_level1_aggregate_counts":dict(sorted(by_level1_contribution.items())),
             "observed_analog_share_among_added":obs/A if A else None,
             "reference_analog_share_among_added":expected/A if A else None,
             "analog_excess_share":(obs-expected)/A if A else None,
@@ -202,7 +224,30 @@ def summarise_analog(rows,exclusions):
     exp=sum(r["within_continent_reference_expected_analog_regions"] for r in rows)
     delta=[r["analog_excess_share"] for r in usable]
     assert tot_A>0
+    by_continent=defaultdict(lambda:{"added":0,"observed":0,"expected":0.0,"species_with_added":0})
+    for r in rows:
+        for group,z in r["by_level1_aggregate_counts"].items():
+            if not z["added"]:
+                continue
+            x=by_continent[group]
+            x["added"]+=z["added"]
+            x["observed"]+=z["observed_analog"]
+            x["expected"]+=z["expected_analog"]
+            x["species_with_added"]+=1
+    continents={}
+    for group,x in sorted(by_continent.items()):
+        a=x["added"]
+        continents[group]={
+            **x,
+            "observed_fraction":x["observed"]/a,
+            "expected_fraction":x["expected"]/a,
+            "observed_minus_expected_fraction":(x["observed"]-x["expected"])/a,
+        }
+    assert sum(x["added"] for x in continents.values())==tot_A
+    assert sum(x["observed"] for x in continents.values())==obs
+    assert abs(sum(x["expected"] for x in continents.values())-exp)<1e-6
     return {
+        "by_level1_introduced_additions":continents,
         "species_with_adequate_native_climate":len(rows),
         "with_any_introduced_added":len(usable),
         "species_zero_added":len(rows)-len(usable),
