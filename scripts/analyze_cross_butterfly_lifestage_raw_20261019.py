@@ -49,8 +49,11 @@ def csv_records(name: str) -> list[dict[str, str]]:
 
 def _txt_rows(name: str, maxsplit: int, required_header: str):
     lines = exact_bytes(name).splitlines()
-    assert lines[1].strip() == required_header
-    data = [line.split(maxsplit=maxsplit) for line in lines[2:] if line.strip()]
+    # Original plain-text files may include blank lines / variable header spacing.
+    required = required_header.split()
+    matching = [i for i, line in enumerate(lines[:12]) if line.split() == required]
+    assert len(matching) == 1, f"{name}: expected exactly one source header; saw {lines[:7]!r}"
+    data = [line.split(maxsplit=maxsplit) for line in lines[matching[0] + 1:] if line.strip()]
     assert all(len(row) == maxsplit + 1 for row in data), name
     return data
 
