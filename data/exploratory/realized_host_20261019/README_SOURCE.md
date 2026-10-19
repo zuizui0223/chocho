@@ -1,22 +1,31 @@
-# Independent CC0 butterfly larval observations — exploratory only (19 October 2026)
+# Four-butterfly life-stage experiment: source provenance and exact-byte restoration (19 October 2026)
 
-Raw files from published Dryad datasets mirrored by Zenodo, fetched from each archived downloadable text/CSV link on 19 October 2026. Original filenames and raw ASCII bytes are retained *within taxon subdirectories*. All five file sizes and their Zenodo original MD5 are checked by `scripts/analyze_cross_butterfly_lifestage_raw_20261019.py`, which rejects any byte drift.
+This directory and its scripts are **exploratory only**, separate from the frozen Global Ecology and Biogeography v0.2 manuscript PR #38. They reanalyze *published prior-art* observations, not new animal measurements. Sources are public CC0 Zenodo-hosted copies of Dryad deposits. All survival inferences are bound to original source-defined life stages.
 
-| Subfolder / files | Source/DOI | Zenodo version | Checksum in script |
+## Data sources and permissions
+
+| Butterfly/study | Original Dryad DOI | Original frozen Zenodo mirror | Required files |
 | --- | --- | --- | --- |
-| `vanessa/larv.plants.csv`; `vanessa/larv.switched.csv` | Saldivar & Wilson-Rankin (2024), https://doi.org/10.5061/dryad.wdbrv15v5 ; associated article https://doi.org/10.1002/ecs2.4810 | https://zenodo.org/records/10689711 | CC0 |
-| `danaus/field_performance.txt`; `danaus/lab_performance.txt` | Ferreira & Rodrigues (2022), https://doi.org/10.5061/dryad.3bk3j9kk2 ; associated article https://doi.org/10.1002/ece3.7821 | https://zenodo.org/records/7465143 | CC0 |
-| `melitaea/Survival_data.csv` | Verspagen et al. (2020), https://doi.org/10.5061/dryad.kwh70rz2m ; associated article https://doi.org/10.1098/rspb.2020.2577 | https://zenodo.org/records/4279915 | CC0 |
+| *Vanessa cardui*, Saldivar & Wilson-Rankin | https://doi.org/10.5061/dryad.wdbrv15v5 | https://zenodo.org/records/10689711 | `larv.plants.csv` (69,772 original bytes); `larv.switched.csv` (33,479 original bytes) |
+| *Danaus erippus* and *D. gilippus*, Ferreira & Rodrigues | https://doi.org/10.5061/dryad.3bk3j9kk2 | https://zenodo.org/records/7465143 | `field_performance.txt` (2,764 original bytes); `lab_performance.txt` (1,911 original bytes) |
+| *Melitaea cinxia*, Verspagen et al. | https://doi.org/10.5061/dryad.kwh70rz2m | https://zenodo.org/records/4279915 | `Survival_data.csv` (48,291 original bytes) |
 
-Original READMEs are accessible at their published records and were manually cross-checked before defining stages. Copying files here does not imply the authors were part of this analysis or that their original experiments are newly observed results.
+All Zenodo records declare CC0, and their original MD5 hashes and exact original file lengths are preserved in `scripts/download_exact_cross_butterfly_sources_20261019.py` and checked independently in `scripts/analyze_cross_butterfly_lifestage_raw_20261019.py`.
 
-## Critical endpoint boundaries
+**Integrity correction:** The connector's browser-readable **previews** normalize some original byte sequences (notably text BOM/newlines/spacing). They preserve parsed rows but FAILED original source MD5. Four such browser-previews were deliberately **removed** from this branch. **Do not treat a missing downloaded source file as inaccessible or silently use previews.** Only Melitaea `Survival_data.csv` is source-byte-identical in git. The exact other four original files are acquired at workflow/runtime from their frozen Zenodo URLs, verified byte count and MD5, then used for statistical calculations. Neither the GitHub preview nor downloaded generated JSON should be called an original source archive. Do not disable the fail-closed checksum checks.
 
-- *Vanessa cardui*: 1,684 individual records, all `status=2` (README calls this death), but original article reports 4 reaching pupation / 2 forming pupae. The raw fate code does not independently identify pupation/adult emergence. Use recorded longevity only, and never estimate pupation from the CSV's all-dead code.
-- *Danaus erippus*, *D. gilippus*: 40 lab larval assignments with survival and developmental time; developmental means use **survivors only**. The 54 *D. erippus* field entries are early-instar presence/survival under bagging vs open exposure. Native Asclepias and exotic Calotropis were in separate sites, so no causal cross-host field effect; 4 grazing-related NA must be kept.
-- *Melitaea cinxia*: 1,680 larval assignments in exactly 14 maternal families × 4 day temperatures (28,30,32,34°C) × 2 host plants × 15 larvae, with death (`Dead=3`) versus *reaching diapause* (`Dead=0`). Not adult emergence. Four `Dead=0` rows have non-NA `Time2=4`, contrary to the README's interval-time convention. The original `Dead` column remains unchanged and exceptions are exposed in the result.
-- The ~239-butterfly geographic HOSTS/WCVP estimate is independent of these original experimental outcomes; the latter are **not** a global adult recruitment or land-cover/plant-introduction time series.
+To reproduce with internet for original bytes:
+```sh
+python scripts/download_exact_cross_butterfly_sources_20261019.py
+python scripts/analyze_cross_butterfly_lifestage_raw_20261019.py --output /tmp/original_lifestage_receipt.json
+```
+Once exact originals have been fetched, the second command is entirely offline and standard-library-only. The associated GitHub Actions workflow regenerates a checksum-verified JSON *audit receipt* and uploads the receipt alone, not the four original external data files.
 
-Run `python scripts/analyze_cross_butterfly_lifestage_raw_20261019.py --output /tmp/larval_audit.json` offline, without libraries other than Python standard library. The exploration-only workflow checks source MD5/row counts, non-fabrication, fatal value ranges and writes a machine-readable artifact.
+## Endpoints: no fabricated adult production
 
-This directory is ONLY for the isolated exploratory branch; it is not the frozen GEB manuscript data-and-code supplementary review bundle. If the branch is ever merged into the v0.2 manuscript branch, the anonymous review staging EXCLUDE_RELATIVE list must first be updated and CI must confirm these exploratory files cannot leak into the original double-anonymous submission.
+- *Vanessa*: 1,684 rows (1,154 plant-trial; 530 diet-switch) and **all have `status=2`**, while original publication describes four individuals reaching the pupation phase and two completing the chrysalis. The CSV contains no independently identifiable individual pupation successes; analyze event times only, not a fitted 0% or positive pupation rate. Five species codes in first dataset, three in switch dataset; different larval sources.
+- *Danaus*: 40 lab assignments split two butterfly taxa×two hosts×10, and 54 early-instar field assignments with four unknown outcomes due to cattle. Report mean development time *survivors only*; native Asclepias and exotic Calotropis are **different field sites** so host identity and location are confounded in the field and bagging may alter microclimate.
+- *Melitaea*: `Dead=3` = larva died; `Dead=0` = survived **to diapause**, not adult. Source design is 14 families × 4 **day** temperatures × 2 hosts × 15 larvae; 15 °C nights were used in source experiment. Four `Dead=0` rows have unexpected numeric `Time2=4` and are flagged without silently recoding.
+- Do not pool early-instar field presence, lab survival, larval death time and diapause arrival as the same demographic endpoint.
+- No complete same-cohort **oviposition diversion × host-specific survival × adult offspring** panel across these studies. Neither nonmonotone butterfly population output nor causal effects of introduced host geography has been demonstrated.
+- The `chocho` 239-species potential host-resource geography panel has exact named links for *Danaus gilippus* (16 introduced-added units) and *Vanessa cardui* (78), not the other two species. These global counts **cannot** be scaled by the source studies' lab survival proportions to obtain realized recruitment.
