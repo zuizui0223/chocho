@@ -1,0 +1,213 @@
+name: GBIF original 135 plus 4x24 incomplete taxa recovery macro
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/gbif-239-disjoint24-recovery-and-macro.yml
+      - scripts/merge_gbif_partial96_shard_receipts_20261019.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover-exact-original-96-in-disjoint-shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - shard: 0
+            start: 0
+          - shard: 1
+            start: 24
+          - shard: 2
+            start: 48
+          - shard: 3
+            start: 72
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install library for source-frozen TDWG polygon mapping
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - name: Retrieve original host/TDWG source from pinned author-only CI
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: input/source_zip
+      - name: Check frozen source sha and extract original TDWG region geometry
+        run: |
+          python - <<'PY'
+          import hashlib, zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          p=[x for x in Path("input/source_zip").rglob("*.zip")
+             if hashlib.sha256(x.read_bytes()).hexdigest()==expected]
+          assert len(p)==1
+          target=Path("input/source");target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(p[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"inputs/level3.geojson").is_file()
+          print("PASS exact original TDWG source archive SHA")
+          PY
+      - name: Fetch EXACT frozen original 24 taxa's two 300-record ordinal page windows, 75-record transport chunks
+        run: |
+          mkdir -p artifacts
+          python scripts/recover_gbif_partial96_butterflies_microchunks_20261019.py \
+            --keys data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv \
+            --tdwg-geojson input/source/inputs/level3.geojson \
+            --output-counts artifacts/gbif_96_recovered_region_basis_counts.csv \
+            --output-manifest artifacts/gbif_96_recovery_receipts.json \
+            --max-species 24 \
+            --start-index ${{ matrix.start }} \
+            --workers 2
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          r=json.loads(Path("artifacts/gbif_96_recovery_receipts.json").read_text())
+          assert r["species_attempted"]==24
+          assert r["original_ordinal_size"]==300
+          assert r["transport_only_subrequest_size"]==75
+          assert r["retained_original_source_sampling_protocol"]
+          assert r["complete_species"]+r["not_completed_species"]==24
+          c=list(csv.DictReader(Path("artifacts/gbif_96_recovered_region_basis_counts.csv").open()))
+          assert len(c)==r["regional_basis_count_rows"]
+          assert sum(int(x["sampled_record_count"]) for x in c)==r["mapped_complete_records"]
+          assert {x["species"] for x in c}<={x["species"] for x in r["species_receipts"] if x["status"]=="COMPLETE"}
+          print("PASS 24 disjoint frozen source taxa, bounded original ordinal sample and honest no-pseudo-absence outcome")
+          PY
+      - name: Upload source-verified microchunk shard (GBIF region aggregates only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-96-shard-${{ matrix.shard }}
+          path: |
+            artifacts/gbif_96_recovered_region_basis_counts.csv
+            artifacts/gbif_96_recovery_receipts.json
+
+  merge-source-and-run-macro:
+    needs: recover-exact-original-96-in-disjoint-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source analysis dependency
+        run: python -m pip install -e .
+      - name: Download all four independently audited 24-species shard artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: gbif-96-shard-*
+          path: input/shards
+      - name: Download original SAME 135-complete species' GBIF region aggregates
+        uses: actions/download-artifact@v4
+        with:
+          name: gbif-239-butterfly-effort-climate-macro-audit-only
+          run-id: 39233336804
+          github-token: ${{ github.token }}
+          path: input/gbif_135_original
+      - name: Download original source-pinned WCVP HOSTS BCE TDWG and climate ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: input/source_zip
+      - name: Recombine EXACT original 96 incomplete-source taxa and original 135 complete taxa
+        run: |
+          mkdir -p artifacts
+          python scripts/merge_gbif_partial96_shard_receipts_20261019.py \
+            --shards-directory input/shards \
+            --frozen-taxonomy data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv \
+            --output-counts artifacts/gbif_96_recovered_region_basis_counts.csv \
+            --output-manifest artifacts/gbif_96_recovery_receipts.json
+          python scripts/merge_gbif_239_source_with_transport_recovery_20261019.py \
+            --original-manifest input/gbif_135_original/gbif_239_species_source_receipts.json \
+            --original-counts input/gbif_135_original/gbif_239_species_region_window_basis_counts.csv \
+            --recovery-manifest artifacts/gbif_96_recovery_receipts.json \
+            --recovery-counts artifacts/gbif_96_recovered_region_basis_counts.csv \
+            --output-manifest artifacts/gbif_239_merged_original_and_96_recovery_receipts.json \
+            --output-counts artifacts/gbif_239_merged_region_basis_counts.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("artifacts/gbif_239_merged_original_and_96_recovery_receipts.json").read_text())
+          assert x["species_requested"]==239
+          assert x["species_statuses"]["TAXON_UNRESOLVED"]==8
+          assert x["species_statuses"]["COMPLETE"]==135+x["merge_metadata"]["recovered_new_complete"]
+          assert x["merge_metadata"]["still_transport_incomplete"]+x["merge_metadata"]["recovered_new_complete"]==96
+          assert x["outputs"]["source_records_mapped"]>=123764
+          print("PASS original 135 retained, disjoint verified 96 species attempted; missing source is NOT butterfly absence")
+          PY
+      - name: Verify original pinned source byte SHA and extract author-only geography
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          p=[x for x in Path("input/source_zip").rglob("*.zip") if hashlib.sha256(x.read_bytes()).hexdigest()==expected]
+          assert len(p)==1
+          target=Path("input/source");target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(p[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          print("PASS fixed author-only provider source")
+          PY
+      - name: Rerun 72 original effort/climate/basis/year butterfly ecological contrasts
+        run: |
+          python scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py \
+            --source-root input/source \
+            --gbif-counts artifacts/gbif_239_merged_region_basis_counts.csv \
+            --gbif-manifest artifacts/gbif_239_merged_original_and_96_recovery_receipts.json \
+            --original-gbif-manifest input/gbif_135_original/gbif_239_species_source_receipts.json \
+            --output-json artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json").read_text())
+          assert len(r["all_combinations"])==72
+          assert r["GBIF_sample_metadata"]["gbif_species_requested"]==239
+          old=r["fixed_original_135_background_diagnostic"]["original_initial135_source_invariant_primary"]
+          assert old["sampled_positive_region_species_n"]==119
+          assert old["observed_positives_on_added_host_cells_n"]==74
+          assert abs(old["continent_conditional_expected_overlap"]-69.61846219208861)<1e-7
+          p=r["primary"]
+          assert p["source_species_complete"]==r["GBIF_sample_metadata"]["gbif_resolved_complete"]
+          assert p["sampled_positive_region_species_n"]>=p["observed_positives_on_added_host_cells_n"]
+          assert p["status"] in ("EXPLORATORY_SAMPLED_PRESENCE_OVERLAP","NOT_IDENTIFIABLE_SAMPLED_SPECIES_OR_REGIONS")
+          if p["status"]=="EXPLORATORY_SAMPLED_PRESENCE_OVERLAP":
+              assert math.isfinite(p["observed_minus_expected_pp"])
+              assert len(p["genus_bootstrap_excess_pp_95ci"])==2
+          print("PASS full merged source and original 135 target+effort benchmark, no imputed GBIF species")
+          print(json.dumps({
+              "source_complete":r["GBIF_sample_metadata"]["gbif_resolved_complete"],
+              "primary":p,
+              "fixed135":old,
+              "fixed_original135_effort_with_expanded_targets":r["fixed_original_135_background_diagnostic"]["expanded_targets_fixed_original135_effort_primary"]
+          },sort_keys=True))
+          PY
+      - name: Save original merged source provenance and derived study output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-239-disjoint96-merged-effort-macro-source-audit
+          if-no-files-found: warn
+          path: |
+            artifacts/gbif_96_recovery_receipts.json
+            artifacts/gbif_96_recovered_region_basis_counts.csv
+            artifacts/gbif_239_merged_original_and_96_recovery_receipts.json
+            artifacts/gbif_239_merged_region_basis_counts.csv
+            artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json
