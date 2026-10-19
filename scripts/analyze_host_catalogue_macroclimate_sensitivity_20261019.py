@@ -195,6 +195,15 @@ def run(source):
     assert len(old)==len(new)==239
     affected=set(k for k in old if new[k]["has_new_BCE_accepted_host_links"])
     assert len(affected)==81
+    eligible_old={k for k,v in old.items() if v["eligible_native_climate_regions_ge_10"]}
+    eligible_new={k for k,v in new.items() if v["eligible_native_climate_regions_ge_10"]}
+    common_eligible=eligible_old & eligible_new
+    newly_eligible=eligible_new-eligible_old
+    lost_eligible=eligible_old-eligible_new
+    assert len(eligible_old)==234 and len(eligible_new)==235
+    assert len(common_eligible)==234
+    assert newly_eligible=={"Satyrium pruni"}
+    assert not lost_eligible
     results={}
     for q in QS:
         tag=str(q)
@@ -202,6 +211,8 @@ def run(source):
         b=aggregate(list(new.values()),q=q)
         o=aggregate(list(old.values()),selected=affected,q=q)
         t=aggregate(list(new.values()),selected=affected,q=q)
+        matched_old=aggregate(list(old.values()),selected=common_eligible,q=q)
+        matched_new=aggregate(list(new.values()),selected=common_eligible,q=q)
         # Source sensitivity is a paired butterfly×catalogue comparison,
         # not a butterfly temporal transition or independent global sample.
         shared=[
@@ -219,6 +230,11 @@ def run(source):
             "partially_augmented_all_239_source_eligible":b,
             "original_81_affected_subset":o,
             "augmented_81_affected_subset":t,
+            "matched_climate_eligible_original":matched_old,
+            "matched_climate_eligible_augmented":matched_new,
+            "matched_eligible_source_robustness_excess_pp_difference":
+                100*(matched_new["observed_minus_expected_fraction"]-
+                     matched_old["observed_minus_expected_fraction"]),
             "paired_affected_species_positive_added_both_n":len(shared),
             "paired_affected_species_mean_change_in_excess_fraction":float(np.mean(differences)),
             "paired_affected_species_median_change_in_excess_fraction":float(np.median(differences)),
@@ -255,6 +271,16 @@ def run(source):
     assert aud["missing_region_codes_by_species"]=={
         "Coenonympha oedippus":["ANT","HMD"]
     }
+    matched_wide=results["0.05"]["matched_climate_eligible_augmented"]
+    assert matched_wide["eligible_species"]==234
+    assert matched_wide["expanded_eligible_species"]==211
+    assert matched_wide["newly_supported_region_cells"]==14903
+    assert matched_wide["observed_analog_cells"]==9903
+    assert abs(matched_wide["continent_uniform_expected_analog_cells"]-8676.490370318297)<1e-5
+    matched_narrow=results["0.1"]["matched_climate_eligible_augmented"]
+    assert matched_narrow["newly_supported_region_cells"]==14903
+    assert matched_narrow["observed_analog_cells"]==7331
+    assert abs(matched_narrow["continent_uniform_expected_analog_cells"]-6093.365254672549)<1e-5
     return {
         "schema":"chocho_butterfly_climate_analogue_BCE_partial_source_sensitivity_v0.1",
         "status":"SOURCE_RECONSTRUCTED_EXPLORATORY_MACRO_CLIMATE_SENSITIVITY",
@@ -262,6 +288,11 @@ def run(source):
         "additional_hosts_source_SHA256":metadata["bce_accepted_edges_sha256"],
         "candidate_host_pairs":1027,
         "butterflies_with_partially_augmented_hosts":81,
+        "original_climate_eligible_species":len(eligible_old),
+        "augmented_climate_eligible_species":len(eligible_new),
+        "matched_climate_eligible_species":len(common_eligible),
+        "newly_climate_eligible_species_from_catalogue":sorted(newly_eligible),
+        "lost_climate_eligible_species_from_catalogue":sorted(lost_eligible),
         "unique_newly_added_accepted_plant_IDs":679,
         "whole_panel_resource_totals":{
             name:obj["totals"] for name,obj in maps.items()
@@ -271,6 +302,7 @@ def run(source):
         },
         "comparisons_by_native_host_climate_quantile":results,
         "claim_limitations":[
+            "Full-panel climate eligibility changes from 234 to 235 butterflies when BCE source augmentation increases Satyrium pruni native-host support; matched fixed 234-butterfly baseline sensitivity is required for source comparison.",
             "European-biased BCE/Clarke supplementary host links; NOT an independent globally representative second dataset.",
             "Changing reference native-host resources can classify a formerly newly introduced region as native-supported. These are host-catalogue differences, NOT temporal colonisation or plant loss.",
             "The null fixes each butterfly's newly supported region counts per broad continent and uniform allocation within Level1, NOT the introduced plant×region network.",
