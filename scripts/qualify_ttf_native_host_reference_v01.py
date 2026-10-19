@@ -55,7 +55,7 @@ def main():
         if sha(q)!=expected:raise ValueError("immutable source drift: "+str(q))
     refs={r["species"]:r for r in load_csv(ipath)}
     old={r["species"]:r for r in load_csv(original)}
-    if len(refs)!=len(old)!=641:raise ValueError("original 641 cohort drift")
+    if not (len(refs)==len(old)==641):raise ValueError("original 641 cohort drift")
     hostsets=defaultdict(set)
     for r in load_csv(hpath):
         hostsets[r["insect_species"]].add(normalize_id(r["wcvp_id_as_frozen"]))
