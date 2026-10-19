@@ -28,7 +28,7 @@ class TestMacroHabitatFilter(unittest.TestCase):
         self.assertEqual(sum(int(x["contemporary"]) for x in r),41083)
         self.assertEqual(sum(int(x["added"]) for x in r),14553)
         self.assertTrue(all(math.isclose(x["log_expansion"],
-              math.log(x["contemporary"]/x["native"]),abs_tol=1e-10) for x in r))
+              math.log1p(x["contemporary"])-math.log1p(x["native"]),abs_tol=1e-10) for x in r))
         self.assertEqual(len(self.fams),6)
         self.assertTrue(all(len(s)==64 for s in self.digests.values()))
 
