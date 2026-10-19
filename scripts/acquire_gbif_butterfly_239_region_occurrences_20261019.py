@@ -16,6 +16,7 @@ import csv
 import json
 import math
 import random
+import subprocess
 import threading
 import time
 from collections import Counter, defaultdict
@@ -51,30 +52,47 @@ def polite_wait():
         time.sleep(delay)
 
 
-def get_json(path,params,*,timeout=18.,tries=5):
+def get_json(path,params,*,timeout=18.,tries=4):
+    """GBIF HTTPS through curl subprocess with a TRUE whole-request deadline.
+
+    This repo's earlier 32-butterfly GBIF acquisition intentionally used
+    curl --max-time: Python socket timeouts do not bound an entire
+    response.read(), and can stall live GitHub Actions despite API HTTP 200.
+    """
     url=API+"/"+path+"?"+urlencode(params)
     last=None
     for attempt in range(tries):
         polite_wait()
-        req=Request(url,headers={"User-Agent":USER_AGENT,"Accept":"application/json"})
+        cmd=[
+            "curl","--location","--silent","--show-error","--compressed",
+            "--connect-timeout","7","--max-time",str(float(timeout)),
+            "--header",f"User-Agent: {USER_AGENT}",
+            "--header","Accept: application/json",
+            "--write-out","\n%{http_code}",url
+        ]
         try:
-            with urlopen(req,timeout=timeout) as response:
-                return json.load(response)
-        except HTTPError as exc:
-            last=f"HTTP_{exc.code}"
-            if exc.code not in (429,500,502,503,504):
-                raise RuntimeError(f"{last} on GBIF query {path}") from exc
-            retry_after=exc.headers.get("Retry-After")
-            try:
-                delay=min(30.,max(1.,float(retry_after))) if retry_after else min(24.,2.0**attempt)
-            except ValueError:
-                delay=min(24.,2.0**attempt)
-        except (TimeoutError,URLError,ValueError,OSError) as exc:
-            last=f"{type(exc).__name__}: {exc}"
-            delay=min(24.,2.0**attempt)
+            call=subprocess.run(cmd,capture_output=True,text=True,
+                                timeout=float(timeout)+3,check=False)
+            if "\n" in call.stdout:
+                body,code=call.stdout.rsplit("\n",1)
+            else:
+                body,code=call.stdout,"000"
+            try:status=int(code.strip())
+            except ValueError:status=0
+            if call.returncode==0 and status==200:
+                try:
+                    return json.loads(body)
+                except json.JSONDecodeError as exc:
+                    last=f"HTTP_200_JSON_DECODE: {exc}"
+            else:
+                last=f"curl_rc={call.returncode} HTTP={status} stderr={(call.stderr or '')[:200]} body={body[:200]}"
+                if status and status not in (429,500,502,503,504):
+                    raise RuntimeError(f"Nonretryable GBIF source response {last}")
+        except subprocess.TimeoutExpired:
+            last="GBIF subprocess exceeded hard total response time"
         if attempt<tries-1:
-            time.sleep(delay)
-    raise RuntimeError(f"GBIF request unsuccessful ({last}) on {path}")
+            time.sleep(min(20.,2.**attempt))
+    raise RuntimeError(f"GBIF source query failed after {tries} capped requests ({last}); url path={path}")
 
 
 def resolve_exact(name):
