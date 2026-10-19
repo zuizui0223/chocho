@@ -61,7 +61,7 @@ jobs:
           assert len(chosen_offsets(300000,2))==2
           assert max(chosen_offsets(300000,2))<100000
           source=Path('_retrieval/extracted_source')
-          model,regions,climate,raw,provenance=source_augmented_model(source)
+          model,regions,climate,provenance=source_augmented_model(source)
           byspecies,climate_strata,index,metadata=climate_and_plant_candidates(model,regions,climate)
           assert len(byspecies)==239
           assert len(index)==365

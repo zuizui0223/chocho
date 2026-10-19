@@ -4,9 +4,9 @@ on:
     branches:
       - analysis/global-habitat-filter-20261019
     paths:
-      - .github/workflows/butterfly-239-gbif-effort-macro.yml
+      # Only acquisition-code changes should refetch all 239 butterflies.
+      # Analyse previously downloaded GBIF artifact separately on code changes.
       - scripts/acquire_gbif_butterfly_239_region_occurrences_20261019.py
-      - scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py
   workflow_dispatch:
 
 permissions:

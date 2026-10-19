@@ -237,7 +237,7 @@ def run(args):
     if args.require_all_species and receipt["species_requested"]!=239:
         raise ValueError("Cannot publish 239-panel validation from smoke test")
     observations=source_observation_counts(args.gbif_counts,receipt)
-    model,regions,climate,raw,prov=source_augmented_model(args.source_root)
+    model,regions,climate,prov=source_augmented_model(args.source_root)
     grouped=group_results({"model":model,"climate":climate},regions,receipt,observations,
                           nb=args.null_draws_sensitivity,main_n=args.null_draws_primary)
     main_key="all_accepted_bases|pooled|E3|q0.05|level1"
