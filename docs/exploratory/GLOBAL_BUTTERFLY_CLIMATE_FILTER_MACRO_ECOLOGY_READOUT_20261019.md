@@ -82,6 +82,6 @@ Positivity violation: among butterflies with strong habitat classes and climate 
 - [Original HOSTS global macro base, strictly qualified butterfly×region climatic null](https://github.com/zuizui0223/chocho/actions/runs/39211273830).
 - [Original HOSTS plant-family and coarse climate preserving host-network null, two independent chains](https://github.com/zuizui0223/chocho/actions/runs/39212635930).
 - [BCE partial host-catalogue source exact source and fixed 234-species overlap validation](https://github.com/zuizui0223/chocho/actions/runs/39216890299).
-- [BCE augmented 679-plant-family audited, two-mode 2×199-draw plant-network MCMC source-verified workflow](https://github.com/zuizui0223/chocho/actions/runs/39221274009); full [independent result interpretation](../../provenance/reviewer_defenses/results/bce_augmented_plant_network_macroclimate_null_20261019.md).
+- [BCE augmented 679-plant-family audited, two-mode 2×199-draw plant-network MCMC source-verified workflow](https://github.com/zuizui0223/chocho/actions/runs/39221327128); full [independent result interpretation](../../provenance/reviewer_defenses/results/bce_augmented_plant_network_macroclimate_null_20261019.md).
 
 **Result classification: Exploratory macroecological positive resource-structure pattern supported by multiple source-verified numerical contrasts and qualified posthoc geographic nulls, with habitat-based observational generalization explicitly restricted.** No novel field experiments or independent new butterfly observations were created.
