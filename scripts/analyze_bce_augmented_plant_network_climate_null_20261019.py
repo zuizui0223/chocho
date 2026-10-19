@@ -49,6 +49,11 @@ QS=(.05,.10)
 EXPECTED_BASE=(26530,41083,14553)
 EXPECTED_AUGMENTED=(29852,44819,14967)
 EXPECTED_CLIMATE={(0.05):(9949,14961),(0.10):(7370,14961)}
+EXPECTED_MATCHED_ORIGINAL_ELIGIBLE={
+    (0.05):(9903,14903),
+    (0.10):(7331,14903),
+}
+ALL_RESPONSE_KEYS=("0.05","0.1","matched_0.05","matched_0.1")
 EXPECTED_EXTRA_HOST_EDGES=1027
 EXPECTED_EXTRA_ACCEPTED_PLANTS=679
 EXPECTED_INTRODUCED_PLANT_REGION_EDGES=37869
@@ -218,6 +223,16 @@ def source_augmented_model(source_root):
     assert (full_native_total,full_contemporary_total,full_added_total)==EXPECTED_AUGMENTED
     assert added_climate_all==14965
     assert out_of_climate==EXPECTED_OUTSIDE_CLIMATE
+    original_eligible={
+        row["species"] for row in orig if row["native"]>=10
+    }
+    augmented_eligible={
+        sp for sp,mask in zip(base["species"],baseline_climate)
+        if mask.bit_count()>=10
+    }
+    assert len(original_eligible)==234 and len(augmented_eligible)==235
+    assert augmented_eligible-original_eligible=={"Satyrium pruni"}
+    assert not (original_eligible-augmented_eligible)
     assert sum(len(v) for v in introduced_sets.values())==37869
     # Validate original source-model geography as independent anti-drift.
     assert (sum(x["native"] for x in orig),
@@ -240,7 +255,9 @@ def source_augmented_model(source_root):
         "whole_source_native_contemporary_added":list(EXPECTED_AUGMENTED),
         "source_added_regions_missing_climate":out_of_climate,
         "climate_covered_added_all_239":added_climate_all,
-        "introduced_plant_region_links":sum(map(len,introduced_sets.values()))
+        "introduced_plant_region_links":sum(map(len,introduced_sets.values())),
+        "climate_eligible_original_HOSTS_butterflies":len(original_eligible),
+        "newly_eligible_under_BCE":sorted(augmented_eligible-original_eligible)
     }
 
 
@@ -276,11 +293,20 @@ def metrics(model,plants,analogs):
         union=0
         for h in hosts:union |= plantbits[h]
         newly[i]=union & ~native
+    matched_exclude=model["species"].index("Satyrium pruni")
     for q,eligible in analogs.items():
         A=sum(newly[i].bit_count() for i in eligible)
         O=sum((newly[i]&analog).bit_count() for i,analog in eligible.items())
         if A<=0 or O>A:raise ValueError("invalid added resource denominator")
         out[str(q)]={"aligned":O,"evaluable_added":A,"aligned_fraction":O/A}
+        assert matched_exclude in eligible
+        matched_A=A-newly[matched_exclude].bit_count()
+        matched_O=O-(newly[matched_exclude]&eligible[matched_exclude]).bit_count()
+        assert matched_A>0 and 0<=matched_O<=matched_A
+        out["matched_"+str(q)]={
+            "aligned":matched_O,"evaluable_added":matched_A,
+            "aligned_fraction":matched_O/matched_A,
+        }
     return out,sum(x.bit_count() for x in newly.values())
 
 
@@ -320,6 +346,12 @@ def null_chain(model,regions,climate,analogs,source_plants,mode,seed,*,draws,bur
             climate,regions,model["level1"],"temperature_precipitation_2x2")
         groups,cumulative,structure=grouped_introduced_edges(
             plants,model["host_families"],model["level1"],classes)
+        # Source API returns viable_fraction_of_total, while this script
+        # uses one common key across both null modes. Preserve the original.
+        structure={
+            **structure,
+            "viable_edge_fraction":structure["viable_fraction_of_total"],
+        }
     assert structure["total_introduced_plant_region_edges"]==E
     assert structure["viable_edge_fraction"]>=0.75
     assert structure["climate_covered_fraction"]>=0.95
@@ -330,7 +362,7 @@ def null_chain(model,regions,climate,analogs,source_plants,mode,seed,*,draws,bur
         groups,cumulative,model["native_sets"],plants,burn*E,rng)
     moved=sum(len(plants[h]^source_plants[h]) for h in plants)/(2*E)
     assert marginal_signature(model,plants,classes)==source_sig
-    history={str(q):[] for q in QS}
+    history={key:[] for key in ALL_RESPONSE_KEYS}
     sampled_accept=[]
     for draw in range(draws):
         n=attempt_range_swaps(
@@ -345,8 +377,7 @@ def null_chain(model,regions,climate,analogs,source_plants,mode,seed,*,draws,bur
             if marginal_signature(model,plants,classes)!=source_sig:
                 raise ValueError("plant-family or plant-stratum margin drift")
     summaries={}
-    for q in QS:
-        k=str(q)
+    for k in ALL_RESPONSE_KEYS:
         values=[z["aligned_fraction"] for z in history[k]]
         ds=[z["evaluable_added"] for z in history[k]]
         summaries[k]={
@@ -370,8 +401,7 @@ def null_chain(model,regions,climate,analogs,source_plants,mode,seed,*,draws,bur
 
 def qualify(observed,chains,mode):
     result={};gates={}
-    for q in QS:
-        k=str(q)
+    for k in ALL_RESPONSE_KEYS:
         stats=[c["summaries"][k] for c in chains]
         a,b=[z["null_fraction_median"] for z in stats]
         ess=[z["ess_diagnostic"]["ess_approx"] for z in stats]
@@ -420,6 +450,9 @@ def run(source_root,*,draws=DEFAULT_DRAWS,burn=DEFAULT_BURN,spacing=DEFAULT_SPAC
         assert (
             observed[str(q)]["aligned"],observed[str(q)]["evaluable_added"]
         )==expect,(q,observed[str(q)])
+    for q,expect in EXPECTED_MATCHED_ORIGINAL_ELIGIBLE.items():
+        key="matched_"+str(q)
+        assert (observed[key]["aligned"],observed[key]["evaluable_added"])==expect,            (key,observed[key])
     modes_out={}
     for mode in modes:
         chains=[
@@ -436,6 +469,7 @@ def run(source_root,*,draws=DEFAULT_DRAWS,burn=DEFAULT_BURN,spacing=DEFAULT_SPAC
         "source_scope":{
             "total_butterflies":239,
             "climate_eligible_butterflies":235,
+            "original_eligibility_matched_butterflies":234,
             "accepted_extra_host_links":1027,
             "unique_extra_accepted_plant_ids":679,
             "introduced_plant_region_edges":37869,
@@ -460,6 +494,7 @@ def run(source_root,*,draws=DEFAULT_DRAWS,burn=DEFAULT_BURN,spacing=DEFAULT_SPAC
             "Serial MCMC add-one right-tail fractions are not exact permutation p-values or evidence of butterfly population causation.",
             "Null conditions coarse plant climate 2×2; finer plant spatial/climate autocorrelation still unmodelled.",
             "Source WCVP/HOSTS accepted IDs and geographic sidecars are author-only; no raw provider redistribution authorised.",
+            "Both a 235-butterfly augmented-eligibility response and a fixed-original-eligibility 234-butterfly response are evaluated from identical null draws, excluding only newly eligible Satyrium pruni from the matched response.",
             "This is exploratory, post hoc; original frozen GEB submission manuscript PR38 unchanged."
         ]
     }
