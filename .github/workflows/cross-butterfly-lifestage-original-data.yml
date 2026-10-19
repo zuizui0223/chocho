@@ -1,0 +1,43 @@
+name: Independent butterfly larval original-source audit
+on:
+  push:
+    branches:
+      - analysis/cross-butterfly-lifestage-raw-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify CC0 originals and recompute biological stage endpoints
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_cross_butterfly_lifestage_raw_20261019.py --output artifacts/original_butterfly_lifestage_receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/original_butterfly_lifestage_receipt.json").read_text())
+          assert r["original_larval_records_total"] == 3458
+          assert r["distinct_butterfly_species"] == 4
+          assert r["vanessa"]["observations"] == 1684
+          assert r["danaus"]["lab_n"] == 40
+          assert r["danaus"]["field_n"] == 54
+          assert r["melitaea"]["n"] == 1680
+          assert r["melitaea"]["family_n"] == 14
+          assert r["melitaea"]["independent_treatment_group_n"] == 112
+          assert len(r["melitaea"]["discordant_Dead_Time2_rows"]) == 4
+          assert not r["source_independence"]["total_recruitment_sign_reversal_identified"]
+          print("PASS: all checksums, stage codes, denominators, mother clusters, negative gates")
+          PY
+      - name: Upload audit receipt only (no raw source in review artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-butterfly-lifestage-raw-audit
+          path: artifacts/original_butterfly_lifestage_receipt.json
