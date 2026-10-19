@@ -65,11 +65,22 @@ jobs:
             "native":29852,"contemporary":44819,"added":14967}
           x=d["comparisons_by_native_host_climate_quantile"]
           assert x["0.05"]["original_all_239_source_eligible"]["observed_analog_cells"]==9451
-          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==9904
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==9949
           assert x["0.1"]["original_all_239_source_eligible"]["observed_analog_cells"]==6948
-          assert x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==7337
+          assert x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==7370
           assert x["0.05"]["original_all_239_source_eligible"]["newly_supported_region_cells"]==14481
-          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["newly_supported_region_cells"]==14901
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["newly_supported_region_cells"]==14961
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["eligible_species"]==235
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["expanded_eligible_species"]==212
+          coverage=d["climate_source_coverage"]
+          assert coverage["original_HOSTS"]["newly_supported_without_climate"]==0
+          assert coverage["BCE_partial_augmented"]["source_newly_supported_all"]==14967
+          assert coverage["BCE_partial_augmented"]["newly_supported_with_climate"]==14965
+          assert coverage["BCE_partial_augmented"]["newly_supported_without_climate"]==2
+          assert coverage["BCE_partial_augmented"]["missing_region_codes_by_species"]=={
+            "Coenonympha oedippus":["ANT","HMD"]}
+          assert abs(x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08262618089866795)<1e-9
+          assert abs(x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08355930030714843)<1e-9
           assert all(r["original_all_239_source_eligible"]["observed_minus_expected_fraction"]>0 for r in x.values())
           assert all(r["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]>0 for r in x.values())
           print("PASS baseline 239 butterflies and source augmentation: 1,027 candidate links, both climate thresholds")
