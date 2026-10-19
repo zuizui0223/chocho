@@ -84,11 +84,11 @@ jobs:
           assert r["result"]["0.1"]["observed"]==6948
           assert len(r["chains"])==2
           assert [x["seed"] for x in r["chains"]]==[20261019,20261020]
-          assert all(len(c["full_draw_history"]["0.05"])==99 for c in r["chains"])
-          assert all(len(c["full_draw_history"]["0.1"])==99 for c in r["chains"])
+          assert all(len(c["full_draw_history"]["0.05"])==199 for c in r["chains"])
+          assert all(len(c["full_draw_history"]["0.1"])==199 for c in r["chains"])
           if r["status"]!="QUALIFIED_EXPLORATORY_MCMC_STRUCTURAL_NULL":
               assert any(not v["qualified"] for v in r["quality"].values())
-          print("PASS: source-pinned fixed margins, original regional climate counts, 2×99 audit; significance qualified only if mixing gates pass")
+          print("PASS: source-pinned fixed margins, original regional climate counts, 2×199 audit; significance qualified only if mixing gates pass")
           PY
       - name: Check geographic and native-climate confounding with held-out genera
         run: |
