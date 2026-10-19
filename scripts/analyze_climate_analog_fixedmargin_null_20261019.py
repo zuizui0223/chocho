@@ -77,21 +77,21 @@ def create_area_graph(model,raw):
 def check_margins(groups,original_native,orig_added,baseline_region_degree):
     added=[0]*len(orig_added)
     regional=Counter()
+    per_butterfly_area=Counter()
     for key,edges in groups.items():
         for b,region in edges:
             assert not ((original_native[b]>>region)&1)
             assert not ((added[b]>>region)&1)
             added[b] |= 1<<region
             regional[region]+=1
+            per_butterfly_area[b,key]+=1
     assert sum(x.bit_count() for x in added)==14553
     assert regional==baseline_region_degree
-    for b in range(len(added)):
-        for c in set(groups):
-            mask=sum(1<<region for bb,region in groups[c] if bb==b)
-            # Original and shuffled per butterfly×continent counts are fixed.
-            original=sum(1 for x in bits_to_indices(orig_added[b],365)
-                         if c==_LEVEL1_BY_REGION[x])
-            assert mask.bit_count()==original
+    original_per_butterfly_area=Counter()
+    for b,mask in enumerate(orig_added):
+        for i in bits_to_indices(mask,365):
+            original_per_butterfly_area[b,_LEVEL1_BY_REGION[i]]+=1
+    assert per_butterfly_area==original_per_butterfly_area
     return added
 
 
