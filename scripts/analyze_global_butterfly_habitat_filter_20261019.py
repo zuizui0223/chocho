@@ -64,7 +64,7 @@ def read_inputs():
         c = float(row["contemporary_resource_units"])
         added = float(row["introduced_added_units"])
         assert 0 < a <= c <= N_REGIONS and abs((c-a)-added) < 1e-8, (s,a,c,added)
-        actual_y = math.log(c/a)
+        actual_y = math.log1p(c) - math.log1p(a)
         assert abs(actual_y - float(row["log_resource_expansion"])) < 1e-10, s
         n_hosts = float(row["resolved_host_species"])
         n_families = float(row["host_family_count"])
