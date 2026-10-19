@@ -1,0 +1,101 @@
+name: Butterfly host-catalogue macroclimate sensitivity
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/host-catalogue-macroclimate-sensitivity.yml
+      - scripts/analyze_host_catalogue_macroclimate_sensitivity_20261019.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-verified-BCE-macroclimate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source analysis dependency
+        run: python -m pip install -e .
+      - name: Restore author-only source-verified 239-butterfly accepted-host and climate archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Confirm original archive byte-identity and safe paths
+        run: |
+          python - <<'PY'
+          import hashlib, zipfile
+          from pathlib import Path
+          source=Path("_retrieval/author_only")
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in source.rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(matches)==1,"Original pinned author-only archive unavailable or SHA changed"
+          destination=Path("_retrieval/extracted_source")
+          destination.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              for member in z.namelist():
+                  path=Path(member)
+                  assert not path.is_absolute() and ".." not in path.parts
+              z.extractall(destination)
+          assert (destination/"SOURCE_MANIFEST.json").is_file()
+          print("PASS source archive fixed SHA and safe paths")
+          PY
+      - name: Independently recompute two catalogue versions and climate analogue bias
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_host_catalogue_macroclimate_sensitivity_20261019.py --source-root _retrieval/extracted_source --output-json artifacts/host_catalogue_macroclimate_sensitivity_20261019.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("artifacts/host_catalogue_macroclimate_sensitivity_20261019.json").read_text())
+          assert d["candidate_host_pairs"]==1027
+          assert d["butterflies_with_partially_augmented_hosts"]==81
+          assert d["whole_panel_resource_totals"]["original_HOSTS"]=={
+            "native":26530,"contemporary":41083,"added":14553}
+          assert d["whole_panel_resource_totals"]["BCE_partial_augmented"]=={
+            "native":29852,"contemporary":44819,"added":14967}
+          x=d["comparisons_by_native_host_climate_quantile"]
+          assert x["0.05"]["original_all_239_source_eligible"]["observed_analog_cells"]==9451
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==9949
+          assert x["0.1"]["original_all_239_source_eligible"]["observed_analog_cells"]==6948
+          assert x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_analog_cells"]==7370
+          assert x["0.05"]["original_all_239_source_eligible"]["newly_supported_region_cells"]==14481
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["newly_supported_region_cells"]==14961
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["eligible_species"]==235
+          assert x["0.05"]["partially_augmented_all_239_source_eligible"]["expanded_eligible_species"]==212
+          coverage=d["climate_source_coverage"]
+          assert coverage["original_HOSTS"]["newly_supported_without_climate"]==0
+          assert coverage["BCE_partial_augmented"]["source_newly_supported_all"]==14967
+          assert coverage["BCE_partial_augmented"]["newly_supported_with_climate"]==14965
+          assert coverage["BCE_partial_augmented"]["newly_supported_without_climate"]==2
+          assert coverage["BCE_partial_augmented"]["missing_region_codes_by_species"]=={
+            "Coenonympha oedippus":["ANT","HMD"]}
+          assert d["original_climate_eligible_species"]==234
+          assert d["augmented_climate_eligible_species"]==235
+          assert d["matched_climate_eligible_species"]==234
+          assert d["newly_climate_eligible_species_from_catalogue"]==["Satyrium pruni"]
+          assert d["lost_climate_eligible_species_from_catalogue"]==[]
+          assert x["0.05"]["matched_climate_eligible_augmented"]["newly_supported_region_cells"]==14903
+          assert x["0.05"]["matched_climate_eligible_augmented"]["observed_analog_cells"]==9903
+          assert x["0.1"]["matched_climate_eligible_augmented"]["observed_analog_cells"]==7331
+          assert x["0.05"]["matched_climate_eligible_augmented"]["eligible_species"]==234
+          assert abs(x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08262618089866795)<1e-9
+          assert abs(x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08355930030714843)<1e-9
+          assert all(r["original_all_239_source_eligible"]["observed_minus_expected_fraction"]>0 for r in x.values())
+          assert all(r["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]>0 for r in x.values())
+          print("PASS baseline 239 butterflies and source augmentation: 1,027 candidate links, both climate thresholds")
+          PY
+      - name: Upload macro-derived aggregate summary ONLY
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-BCE-partial-source-climate-sensitivity-exploratory
+          path: artifacts/host_catalogue_macroclimate_sensitivity_20261019.json

@@ -1,0 +1,89 @@
+name: GBIF 239 butterfly downstream source and schema offline smoke
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/gbif-239-downstream-offline-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-source-and-synthetic-input-interface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing project dependencies plus geographic mapping
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/source
+      - name: Validate exact private original source archive SHA and extract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          want='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323'
+          zips=[p for p in Path('_retrieval/source').rglob('*.zip') if hashlib.sha256(p.read_bytes()).hexdigest()==want]
+          assert len(zips)==1
+          target=Path('_retrieval/extracted_source')
+          target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(zips[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(s).is_absolute() and '..' not in Path(s).parts for s in z.namelist())
+              z.extractall(target)
+          assert (target/'SOURCE_MANIFEST.json').is_file()
+          print('PASS original source outer SHA and safe archive')
+          PY
+      - name: Verify GBIF source-honest sampling offsets and exact frozen 239-resource interface
+        run: |
+          python - <<'PY'
+          import sys,csv,tempfile
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from acquire_gbif_butterfly_239_region_occurrences_20261019 import chosen_offsets,source_polygon_map,region_for_latlon
+          from analyze_bce_augmented_plant_network_climate_null_20261019 import source_augmented_model
+          from analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019 import climate_and_plant_candidates,source_observation_counts
+          assert chosen_offsets(0,2)==[]
+          assert chosen_offsets(299,2)==[0]
+          assert chosen_offsets(301,2)==[0,300]
+          assert len(chosen_offsets(90000,2))==2
+          assert len(chosen_offsets(300000,2))==2
+          assert max(chosen_offsets(300000,2))<100000
+          source=Path('_retrieval/extracted_source')
+          model,regions,climate,provenance=source_augmented_model(source)
+          byspecies,climate_strata,index,metadata=climate_and_plant_candidates(model,regions,climate)
+          assert len(byspecies)==239
+          assert len(index)==365
+          assert len(climate_strata)==365
+          assert sum(x['added'].bit_count() for x in byspecies.values())==14965
+          assert sum(x['masks'][.05] is not None for x in byspecies.values())==235
+          assert sum(x['masks'][.10] is not None for x in byspecies.values())==235
+          geom=source_polygon_map(source/'inputs/level3.geojson')
+          assert len(geom[2])>=365
+          with tempfile.TemporaryDirectory() as t:
+              fp=Path(t)/'input.csv'
+              with fp.open('w',newline='',encoding='utf-8') as f:
+                  w=csv.DictWriter(f,fieldnames=['species','window','wgsrpd3','basis','sampled_record_count'])
+                  w.writeheader()
+                  w.writerow({'species':model['species'][0],'window':'2010_2017','wgsrpd3':regions[0],
+                              'basis':'HUMAN_OBSERVATION','sampled_record_count':2})
+              sp=model['species'][0]
+              receipt={'species_requested':1,'species_receipts':[{'species':sp,'status':'COMPLETE'}],
+                       'queries':{'windows':[['2010_2017','2010,2017'],['2018_2025','2018,2025']]}}
+              v=source_observation_counts(fp,receipt)
+              assert v[('all_accepted_bases','pooled')][sp,regions[0]]==2
+              assert v[('human_and_preserved_only','2010_2017')][sp,regions[0]]==2
+              assert v[('human_and_preserved_only','2018_2025')][sp,regions[0]]==0
+          print('PASS original 239/235 resource and climate mapping, capped search offsets, synthetic downstream data interface only; NO simulated butterfly ecological result')
+          PY

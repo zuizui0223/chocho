@@ -1,0 +1,102 @@
+name: Recover GBIF 96 incomplete butterflies via 75 record chunks
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/gbif-partial96-butterfly-microchunks.yml
+      - scripts/recover_gbif_partial96_butterflies_microchunks_20261019.py
+      - data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover-only-original-missing-96:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install geospatial point-in-polygon with Shapely 2
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: input/source_zip
+      - name: Extract exact archived polygon source
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          exact_sha='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323'
+          ps=[p for p in Path('input/source_zip').rglob('*.zip') if hashlib.sha256(p.read_bytes()).hexdigest()==exact_sha]
+          assert len(ps)==1
+          target=Path('input/original')
+          target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(ps[0]) as f:
+              assert f.testzip() is None
+              assert all(not Path(n).is_absolute() and '..' not in Path(n).parts for n in f.namelist())
+              f.extractall(target)
+          assert (target/'inputs/level3.geojson').is_file()
+          print('PASS exact pinned native geography and original incomplete-source taxon keys')
+          PY
+      - name: Verify original pages are transport identical on a small 3-species subset
+        run: |
+          mkdir -p artifacts
+          python scripts/recover_gbif_partial96_butterflies_microchunks_20261019.py \
+            --keys data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv \
+            --tdwg-geojson input/original/inputs/level3.geojson \
+            --output-counts artifacts/gbif_96_smoke_regions.csv \
+            --output-manifest artifacts/gbif_96_smoke_audit.json \
+            --max-species 3 --workers 2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('artifacts/gbif_96_smoke_audit.json').read_text())
+          assert d['species_attempted']==3
+          assert d['original_ordinal_size']==300
+          assert d['transport_only_subrequest_size']==75
+          assert d['retained_original_source_sampling_protocol']
+          assert d['complete_species']+d['not_completed_species']==3
+          print('PASS microchunk source and original count/offset identity; failures are explicit missingness')
+          PY
+      - name: Recover exactly the previous 96 incomplete butterfly taxa
+        run: |
+          python scripts/recover_gbif_partial96_butterflies_microchunks_20261019.py \
+            --keys data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv \
+            --tdwg-geojson input/original/inputs/level3.geojson \
+            --output-counts artifacts/gbif_96_recovered_region_basis_counts.csv \
+            --output-manifest artifacts/gbif_96_recovery_receipts.json \
+            --max-species 96 --workers 3
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          d=json.loads(Path('artifacts/gbif_96_recovery_receipts.json').read_text())
+          assert d['species_attempted']==96
+          assert d['complete_species']+d['not_completed_species']==96
+          assert len(d['species_receipts'])==96
+          assert d['original_ordinal_size']==300
+          assert d['transport_only_subrequest_size']==75
+          counts=list(csv.DictReader(Path('artifacts/gbif_96_recovered_region_basis_counts.csv').open()))
+          assert len(counts)==d['regional_basis_count_rows']
+          assert sum(int(v['sampled_record_count']) for v in counts)==d['mapped_complete_records']
+          assert {v['species'] for v in counts}<={r['species'] for r in d['species_receipts'] if r['status']=='COMPLETE'}
+          print('PASS independent source-traceable 96 attempted, total recovered completeness',d['complete_species'])
+          PY
+      - name: Upload only newly recovered derived GBIF mapped region counts and public source audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-96-partial-transport-microchunk-recovery
+          if-no-files-found: warn
+          path: |
+            artifacts/gbif_96_smoke_audit.json
+            artifacts/gbif_96_recovered_region_basis_counts.csv
+            artifacts/gbif_96_recovery_receipts.json

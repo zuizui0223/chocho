@@ -1,0 +1,137 @@
+name: Butterfly GBIF 135 plus 96 recovery ecological macro analysis
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/gbif-239-merged-recovery-ecology.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-matched-GBIF-merged-resource-overlap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned manuscript Python and numpy
+        run: python -m pip install -e .
+      - name: Verify merge test's negative gates against synthetic source-shaped CSVs
+        run: python -m unittest discover -s tests -p 'test_gbif_239_source_recovery_merge_20261019.py' -v
+      - name: Load original frozen author-only plant-host climate data
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: input/original_source_zip
+      - name: Load ORIGINAL complete-135 GBIF source receipts and counts
+        uses: actions/download-artifact@v4
+        with:
+          name: gbif-239-butterfly-effort-climate-macro-audit-only
+          run-id: 39233336804
+          github-token: ${{ github.token }}
+          path: input/original_GBIF_239
+      - name: Load GBIF source RE-COLLECTED ONLY 96 originally incomplete taxa
+        uses: actions/download-artifact@v4
+        with:
+          name: gbif-96-partial-transport-microchunk-recovery
+          run-id: 39238606016
+          github-token: ${{ github.token }}
+          path: input/GBIF_recovered_96
+      - name: Extract pinned plant source and reconcile original/partial GBIF run receipts
+        run: |
+          mkdir -p artifacts
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          base=Path("input/original_source_zip")
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in base.rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(matches)==1, "PREVIOUS_PROVIDER_ARCHIVE_MISSING_OR_SHA_CHANGED"
+          target=Path("input/source")
+          target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(name).is_absolute() and ".." not in Path(name).parts for name in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          raw=json.loads(Path("input/original_GBIF_239/gbif_239_species_source_receipts.json").read_text())
+          recovered=json.loads(Path("input/GBIF_recovered_96/gbif_96_recovery_receipts.json").read_text())
+          assert raw["species_statuses"]=={
+            "COMPLETE":135,"PARTIAL_FETCH_NOT_ELIGIBLE":96,"TAXON_UNRESOLVED":8}
+          assert recovered["species_attempted"]==96
+          assert recovered["original_ordinal_size"]==300
+          assert recovered["transport_only_subrequest_size"]==75
+          assert recovered["retained_original_source_sampling_protocol"]
+          print("PASS SHA pinned original HOSTS/WCVP/CHELSA and both complete GBIF provider receipts",recovered["complete_species"])
+          PY
+          python scripts/merge_gbif_239_source_with_transport_recovery_20261019.py \
+            --original-manifest input/original_GBIF_239/gbif_239_species_source_receipts.json \
+            --original-counts input/original_GBIF_239/gbif_239_species_region_window_basis_counts.csv \
+            --recovery-manifest input/GBIF_recovered_96/gbif_96_recovery_receipts.json \
+            --recovery-counts input/GBIF_recovered_96/gbif_96_recovered_region_basis_counts.csv \
+            --output-manifest artifacts/gbif_239_merged_original_and_96_recovery_receipts.json \
+            --output-counts artifacts/gbif_239_merged_region_basis_counts.csv
+      - name: Execute original unchanged 72 effort-climate comparisons on recovered source sample
+        run: |
+          python scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py \
+            --source-root input/source \
+            --gbif-counts artifacts/gbif_239_merged_region_basis_counts.csv \
+            --gbif-manifest artifacts/gbif_239_merged_original_and_96_recovery_receipts.json \
+            --original-gbif-manifest input/original_GBIF_239/gbif_239_species_source_receipts.json \
+            --output-json artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          m=json.loads(Path("artifacts/gbif_239_merged_original_and_96_recovery_receipts.json").read_text())
+          x=json.loads(Path("artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json").read_text())
+          assert m["species_requested"]==239
+          assert m["species_statuses"]["TAXON_UNRESOLVED"]==8
+          assert m["species_statuses"]["COMPLETE"]==135+m["merge_metadata"]["recovered_new_complete"]
+          assert m["species_statuses"]["COMPLETE"]+m["species_statuses"].get("PARTIAL_FETCH_NOT_ELIGIBLE",0)+8==239
+          assert x["GBIF_sample_metadata"]["gbif_resolved_complete"]==m["species_statuses"]["COMPLETE"]
+          assert x["GBIF_sample_metadata"]["gbif_sampled_mapped_records"]==m["outputs"]["source_records_mapped"]
+          assert len(x["all_combinations"])==72
+          p=x["primary"]
+          fixed=x["fixed_original_135_background_diagnostic"]
+          assert fixed is not None
+          unchanged=fixed["original_initial135_source_invariant_primary"]
+          assert unchanged["sampled_positive_region_species_n"]==119
+          assert unchanged["observed_positives_on_added_host_cells_n"]==74
+          assert abs(unchanged["continent_conditional_expected_overlap"]-69.61846219208861)<1e-7
+          assert fixed["expanded_targets_fixed_original135_effort_primary"]["source_species_complete"]==m["species_statuses"]["COMPLETE"]
+          assert p["source_species_complete"]==m["species_statuses"]["COMPLETE"]
+          assert 0<=p["observed_positives_on_added_host_cells_n"]<=p["sampled_positive_region_species_n"]
+          assert p["candidate_region_species_n"]>=p["candidate_added_host_cells_n"]
+          assert p["status"] in ("NOT_IDENTIFIABLE_SAMPLED_SPECIES_OR_REGIONS","EXPLORATORY_SAMPLED_PRESENCE_OVERLAP")
+          if p["status"]=="EXPLORATORY_SAMPLED_PRESENCE_OVERLAP":
+              assert p["null_draws"]==9999
+              assert math.isfinite(p["observed_minus_expected_pp"])
+              assert len(p["genus_bootstrap_excess_pp_95ci"])==2
+          print("PASS real merged GBIF sampled presence, no source loss or fabricated absences; ecological outcome may be positive, null or negative")
+          print(json.dumps({
+              "total_239_attempted":239,
+              "source_complete":m["species_statuses"]["COMPLETE"],
+              "recovered_of_96":m["merge_metadata"]["recovered_new_complete"],
+              "still_incomplete":m["merge_metadata"]["still_transport_incomplete"],
+              "mapped_GBIF_rows":m["outputs"]["source_records_mapped"],
+              "primary":p,
+          },sort_keys=True))
+          PY
+      - name: Upload ONLY derived public GBIF region/basis and species source receipts and analysis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-239-merged-135-plus-recovery-effort-climate-result
+          if-no-files-found: warn
+          path: |
+            artifacts/gbif_239_merged_region_basis_counts.csv
+            artifacts/gbif_239_merged_original_and_96_recovery_receipts.json
+            artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json

@@ -1,0 +1,78 @@
+name: Cached GBIF 239 effort-climate macro test
+on:
+  push:
+    branches: [analysis/global-habitat-filter-20261019]
+    paths: [.github/workflows/gbif-239-archived-analysis-only.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  analyse-records:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e .
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 39006554609
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          github-token: ${{ github.token }}
+          path: input/source_zip
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 39233336804
+          name: gbif-239-butterfly-effort-climate-macro-audit-only
+          github-token: ${{ github.token }}
+          path: input/gbif
+      - name: Restore source ZIP by SHA
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          key='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323'
+          matches=[p for p in Path('input/source_zip').rglob('*.zip') if hashlib.sha256(p.read_bytes()).hexdigest()==key]
+          assert len(matches)==1
+          dest=Path('input/source')
+          dest.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and '..' not in Path(n).parts for n in z.namelist())
+              z.extractall(dest)
+          PY
+      - name: Analyse observed GBIF records without repeating network queries
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_butterfly_239_GBIF_occurrence_host_opportunity_20261019.py --source-root input/source --gbif-counts input/gbif/gbif_239_species_region_window_basis_counts.csv --gbif-manifest input/gbif/gbif_239_species_source_receipts.json --output-json artifacts/gbif_239_effort_climate_completed135.json
+      - name: Fail closed on source-inconsistent GBIF 135 ecology and show uncertainty
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path("artifacts/gbif_239_effort_climate_completed135.json").read_text())
+          assert d["GBIF_sample_metadata"]["gbif_species_requested"]==239
+          assert d["GBIF_sample_metadata"]["gbif_resolved_complete"]==135
+          assert d["GBIF_sample_metadata"]["gbif_sampled_mapped_records"]==123764
+          assert len(d["all_combinations"])==72
+          a=d["primary"]
+          assert a["source_species_complete"]==135
+          assert a["sampled_positive_region_species_n"]==119
+          assert a["observed_positives_on_added_host_cells_n"]==74
+          assert abs(a["continent_conditional_expected_overlap"]-69.61846219208861)<1e-7
+          assert abs(a["observed_minus_expected_pp"]-3.682)<0.01
+          assert a["status"]=="EXPLORATORY_SAMPLED_PRESENCE_OVERLAP"
+          assert a["genus_bootstrap_excess_pp_95ci"][0]<0<a["genus_bootstrap_excess_pp_95ci"][1]
+          assert a["null_draws"]==9999
+          print("PASS source-matched 135 GBIF species: positive point contrast, but bootstrap CI spans 0")
+          print(json.dumps({"recorded_taxa":135,"primary":a},sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gbif-239-135-complete-climate-effort-original-analysis
+          path: artifacts/gbif_239_effort_climate_completed135.json
+          if-no-files-found: warn
