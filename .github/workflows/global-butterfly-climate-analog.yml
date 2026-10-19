@@ -3,6 +3,13 @@ on:
   push:
     branches:
       - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/global-butterfly-climate-analog.yml
+      - scripts/analyze_butterfly_climate_analog_macro_20261019.py
+      - scripts/analyze_climate_analog_fixedmargin_null_20261019.py
+      - scripts/analyze_butterfly_climate_analog_geography_sensitivity_20261019.py
+      - scripts/analyze_global_butterfly_habitat_filter_20261019.py
+      - data/frozen/figure_sources/**
   workflow_dispatch:
 
 permissions:
