@@ -1,0 +1,123 @@
+name: BCE butterfly finer plant climate and locality nulls
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/bce-finer-climate-locality-null.yml
+      - scripts/analyze_bce_finer_climate_spatial_null_20261019.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  finer-climate-spatial-macro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      matrix:
+        mode:
+          - plant_bio1_bio12_3x3
+          - plant_bio1_bio7_bio12_bio15_2x2x2x2
+          - plant_bio1_bio12_2x2_local1500km
+    env:
+      CURRENT_MODE: ${{ matrix.mode }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned project analysis dependencies and geometry helper
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - name: Restore author-only WCVP HOSTS BCE CHELSA and TDWG source ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Verify original archive SHA256 and safe paths
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          target=Path("_retrieval/extracted_source")
+          target.mkdir(parents=True,exist_ok=True)
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in Path("_retrieval/author_only").rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(matches)==1,"Source archive missing or content drift"
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          print("PASS: pinned author-only source ZIP SHA and safe paths")
+          PY
+      - name: Smoke check host, region and source-stratum swap invariants
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_bce_finer_climate_spatial_null_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --output-json "artifacts/smoke_$CURRENT_MODE.json" \
+            --mode "$CURRENT_MODE" --draws 9 --burn-factor 2 --spacing-factor 1
+          python - <<'PY'
+          from pathlib import Path
+          import json,os
+          mode=os.environ["CURRENT_MODE"]
+          r=json.loads(Path(f"artifacts/smoke_{mode}.json").read_text())
+          assert r["scope"]["butterflies"]==239
+          assert r["scope"]["climate_eligible_augmented_butterflies"]==235
+          assert r["scope"]["source_introduced_plant_WGSRPD3_links"]==37869
+          assert r["observed"]["0.05"]["aligned"]==9949
+          assert r["observed"]["0.1"]["aligned"]==7370
+          assert r["observed"]["matched_0.05"]["aligned"]==9903
+          assert r["observed"]["matched_0.1"]["aligned"]==7331
+          assert set(r["modes"])=={mode}
+          for c in r["modes"][mode]["chains"]:
+              assert len(c["full_draw_history"]["0.05"])==9
+              assert len(c["full_draw_history"]["matched_0.1"])==9
+              assert c["stratum_structure"]["viable_fraction_of_total"]>=.75
+              if "local1500km" in mode:
+                  assert c["geography"]["mapped_focal_regions"]==365
+                  assert c["geography"]["radius_km"]==1500
+          print("PASS 9-draw source and exchange invariants; short smoke is not biological evidence")
+          PY
+      - name: Two fully verified independently seeded 199-draw null chains
+        run: |
+          python scripts/analyze_bce_finer_climate_spatial_null_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --output-json "artifacts/BCE_finer_macro_$CURRENT_MODE.json" \
+            --mode "$CURRENT_MODE"
+          python - <<'PY'
+          from pathlib import Path
+          import json,math,os
+          mode=os.environ["CURRENT_MODE"]
+          r=json.loads(Path(f"artifacts/BCE_finer_macro_{mode}.json").read_text())
+          assert r["schema"]=="chocho_BCE_239_butterflies_finer_plant_climate_spatial_MCMC_v0.1"
+          assert r["seeds"]==[20261019,20261020]
+          assert r["draws_per_chain"]==199
+          assert r["scope"]["climate_eligible_augmented_butterflies"]==235
+          assert r["scope"]["same_original_climate_eligible_butterflies"]==234
+          assert r["scope"]["source_introduced_plant_WGSRPD3_links"]==37869
+          v=r["modes"][mode]
+          assert [c["seed"] for c in v["chains"]]==[20261019,20261020]
+          for c in v["chains"]:
+              assert c["draws"]==199 and c["plant_edges"]==37869
+              assert c["stratum_structure"]["viable_fraction_of_total"]>=.75
+              assert all(len(c["full_draw_history"][k])==199 for k in
+                  ("0.05","0.1","matched_0.05","matched_0.1"))
+          for k,x in v["quality"].items():
+              if not x["qualified"]:
+                  assert v["status"]=="NOT_EVALUABLE_MIXING_OR_GEOGRAPHIC_LOCALITY"
+              else:
+                  assert all(math.isfinite(y) for y in v["contrasts"][k]["median_null_fraction_by_chain"])
+          print("PASS source integrity, independently seeded MCMC, native and host/region/matched-climate margins")
+          PY
+      - name: Upload derived numerical MCMC receipts (no raw WCVP tables)
+        uses: actions/upload-artifact@v4
+        with:
+          name: BCE-finer-null-${{ matrix.mode }}
+          path: artifacts/BCE_finer_macro_*.json
