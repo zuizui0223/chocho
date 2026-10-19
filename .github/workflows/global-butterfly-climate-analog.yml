@@ -109,6 +109,30 @@ jobs:
               assert v["out_of_genus_CV_baseline_vs_disturbance_including_geo"]["repeats"]==10
           print("PASS spatial-bias sensitivity, source counts, climate benchmark and genus-heldout controls")
           PY
+      - name: Test plant-host network preserving climate-analogue nulls in two independent chains
+        run: |
+          python scripts/analyze_plant_network_preserving_climate_analog_null_20261019.py --source-root _retrieval/extracted_source --output-json artifacts/butterfly_plant_network_climate_analog_null_20261019.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("artifacts/butterfly_plant_network_climate_analog_null_20261019.json").read_text())
+          assert x["species"]==239 and x["climate_evaluable_species"]==234
+          assert x["plant_introduced_region_edges"]==30373
+          assert x["original_butterfly_region_added_all"]==14553
+          assert x["original_butterfly_region_added_evaluable"]==14481
+          assert x["draws_per_chain"]==199 and x["chain_seeds"]==[20261019,20261020]
+          assert len(x["modes"])==2
+          assert x["original_observed"]["0.05"]["aligned"]==9451
+          assert x["original_observed"]["0.1"]["aligned"]==6948
+          for v in x["modes"].values():
+              assert len(v["chain_receipts"])==2
+              assert [z["seed"] for z in v["chain_receipts"]]==[20261019,20261020]
+              assert all(len(y["draws"]["0.05"])==199 for y in v["chain_receipts"])
+              assert all(len(y["draws"]["0.1"])==199 for y in v["chain_receipts"])
+              if v["status"]!="QUALIFIED_EXPLORATORY_PLANT_NETWORK_MCMC_NULL":
+                  assert any(not q["qualified"] for q in v["qualification"].values())
+          print("PASS frozen accepted-host links, plant family/geographic/climate strata, native exclusions, two 199-draw chain qualification checks")
+          PY
       - name: Upload only macro-derived region COUNT results, not raw plant geography
         uses: actions/upload-artifact@v4
         with:
@@ -117,3 +141,4 @@ jobs:
             artifacts/butterfly_climate_analog_macro_20261019.json
             artifacts/butterfly_climate_analog_fixedmargin_null_20261019.json
             artifacts/butterfly_climate_analog_geography_20261019.json
+            artifacts/butterfly_plant_network_climate_analog_null_20261019.json
