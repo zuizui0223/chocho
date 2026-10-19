@@ -24,7 +24,7 @@ from analyze_butterfly_climate_analog_macro_20261019 import (
 )
 
 SEEDS=(20261019,20261020)
-EXPECTED={"0.05":9451,"0.10":6948}
+EXPECTED={"0.05":9451,"0.1":6948}
 Q=(.05,.10)
 BURN_FACTOR=10
 SPACING_FACTOR=2
