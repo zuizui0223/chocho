@@ -90,6 +90,25 @@ jobs:
               assert any(not v["qualified"] for v in r["quality"].values())
           print("PASS: source-pinned fixed margins, original regional climate counts, 2×99 audit; significance qualified only if mixing gates pass")
           PY
+      - name: Check geographic and native-climate confounding with held-out genera
+        run: |
+          python scripts/analyze_butterfly_climate_analog_geography_sensitivity_20261019.py --derived-json artifacts/butterfly_climate_analog_macro_20261019.json --output-json artifacts/butterfly_climate_analog_geography_20261019.json
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_climate_analog_geography_20261019.json").read_text())
+          assert r["status"]=="POSTHOC_239_BUTTERFLY_GEOGRAPHY_AND_CLIMATE_SENSITIVITY"
+          for v in r["by_cutoff"].values():
+              assert v["primary_eligible_trait_count"]>150
+              raw=v["observed_versus_continent_benchmark"]
+              assert sum(t["added"] for t in raw.values())>12000
+              assert all(0<=t["observed"]<=t["added"] for t in raw.values())
+              x=v["plus_native_continent_and_bio1_bio12"]
+              assert x["status"]=="EXPLORATORY_ASSOCIATION"
+              assert math.isfinite(x["estimate_associated_minus_avoidant"])
+              assert v["out_of_genus_CV_baseline_vs_disturbance_including_geo"]["repeats"]==10
+          print("PASS spatial-bias sensitivity, source counts, climate benchmark and genus-heldout controls")
+          PY
       - name: Upload only macro-derived region COUNT results, not raw plant geography
         uses: actions/upload-artifact@v4
         with:
@@ -97,3 +116,4 @@ jobs:
           path: |
             artifacts/butterfly_climate_analog_macro_20261019.json
             artifacts/butterfly_climate_analog_fixedmargin_null_20261019.json
+            artifacts/butterfly_climate_analog_geography_20261019.json
