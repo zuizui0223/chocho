@@ -79,6 +79,15 @@ jobs:
           assert coverage["BCE_partial_augmented"]["newly_supported_without_climate"]==2
           assert coverage["BCE_partial_augmented"]["missing_region_codes_by_species"]=={
             "Coenonympha oedippus":["ANT","HMD"]}
+          assert d["original_climate_eligible_species"]==234
+          assert d["augmented_climate_eligible_species"]==235
+          assert d["matched_climate_eligible_species"]==234
+          assert d["newly_climate_eligible_species_from_catalogue"]==["Satyrium pruni"]
+          assert d["lost_climate_eligible_species_from_catalogue"]==[]
+          assert x["0.05"]["matched_climate_eligible_augmented"]["newly_supported_region_cells"]==14903
+          assert x["0.05"]["matched_climate_eligible_augmented"]["observed_analog_cells"]==9903
+          assert x["0.1"]["matched_climate_eligible_augmented"]["observed_analog_cells"]==7331
+          assert x["0.05"]["matched_climate_eligible_augmented"]["eligible_species"]==234
           assert abs(x["0.05"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08262618089866795)<1e-9
           assert abs(x["0.1"]["partially_augmented_all_239_source_eligible"]["observed_minus_expected_fraction"]-0.08355930030714843)<1e-9
           assert all(r["original_all_239_source_eligible"]["observed_minus_expected_fraction"]>0 for r in x.values())
