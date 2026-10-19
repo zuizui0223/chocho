@@ -71,6 +71,11 @@ jobs:
             "aligned":9949,"evaluable_added":14961,"aligned_fraction":9949/14961}
           assert x["observed"]["0.1"]=={
             "aligned":7370,"evaluable_added":14961,"aligned_fraction":7370/14961}
+          assert x["observed"]["matched_0.05"]=={
+            "aligned":9903,"evaluable_added":14903,"aligned_fraction":9903/14903}
+          assert x["observed"]["matched_0.1"]=={
+            "aligned":7331,"evaluable_added":14903,"aligned_fraction":7331/14903}
+          assert x["source_scope"]["original_eligibility_matched_butterflies"]==234
           assert len(x["modes"])==1
           assert all(len(c["samples"]["0.05"])==9 for m in x["modes"].values() for c in m["chains"])
           print("PASS source exact, 52 family mappings, 2 missing climate region cells, 235 species, swapped margins")
@@ -87,6 +92,7 @@ jobs:
           assert x["schema"]=="chocho_239_butterfly_bce_augmented_host_network_climate_null_v0.1"
           assert x["source_scope"]["total_butterflies"]==239
           assert x["source_scope"]["climate_eligible_butterflies"]==235
+          assert x["source_scope"]["original_eligibility_matched_butterflies"]==234
           assert x["source_scope"]["accepted_extra_host_links"]==1027
           assert x["source_scope"]["unique_extra_accepted_plant_ids"]==679
           assert x["source_scope"]["introduced_plant_region_edges"]==37869
@@ -97,12 +103,17 @@ jobs:
           assert x["draws_per_chain"]==199
           assert x["observed"]["0.05"]["aligned"]==9949
           assert x["observed"]["0.1"]["aligned"]==7370
+          assert x["observed"]["matched_0.05"]["aligned"]==9903
+          assert x["observed"]["matched_0.1"]["aligned"]==7331
+          assert x["observed"]["matched_0.05"]["evaluable_added"]==14903
           assert len(x["modes"])==2
           for mode,m in x["modes"].items():
               assert [c["seed"] for c in m["chains"]]==[20261019,20261020]
               for c in m["chains"]:
                   assert len(c["samples"]["0.05"])==199
                   assert len(c["samples"]["0.1"])==199
+                  assert len(c["samples"]["matched_0.05"])==199
+                  assert len(c["samples"]["matched_0.1"])==199
                   assert c["structure"]["viable_edge_fraction"]>=.75
               for q,y in m["quality"].items():
                   assert y["qualified"] or m["status"]=="NOT_EVALUABLE_MCMC_QUALITY_GATE"
