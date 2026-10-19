@@ -19,6 +19,7 @@ jobs:
       - name: Verify CC0 originals and recompute biological stage endpoints
         run: |
           mkdir -p artifacts
+          python scripts/download_exact_cross_butterfly_sources_20261019.py
           python scripts/analyze_cross_butterfly_lifestage_raw_20261019.py --output artifacts/original_butterfly_lifestage_receipt.json
           python - <<'PY'
           import json
