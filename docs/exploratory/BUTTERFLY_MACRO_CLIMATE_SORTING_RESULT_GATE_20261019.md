@@ -40,7 +40,7 @@ This comparison shows **directional robustness of the macro climate-analogue *re
 
 ### BCE augmented HOST-PLANT NETWORK: full 2×199-draw source-reproduction now complete
 
-The conditional network null **has now also been independently rerun after BCE host inventory augmentation**, including every newly accepted host and taxonomic family (323 original HOSTS accepted IDs, 304 exact unique-genus family matches, 52 pinned GBIF taxon family checks; 679/679 resolved). The rebuilt 239-butterfly graph has **37,869 introduced plant×WGSRPD3 links**. [Workflow 39221274009](https://github.com/zuizui0223/chocho/actions/runs/39221274009) succeeded, including two independent 199-draw chains in each of the two plant-side conditioning regimes. All eight full-run mode×climate×eligibility MCMC quality gates passed; do not mistake the initial nine-draw smoke for the final qualified result.
+The conditional network null **has now also been independently rerun after BCE host inventory augmentation**, including every newly accepted host and taxonomic family (323 original HOSTS accepted IDs, 304 exact unique-genus family matches, 52 pinned GBIF taxon family checks; 679/679 resolved). The rebuilt 239-butterfly graph has **37,869 introduced plant×WGSRPD3 links**. [Workflow 39221327128](https://github.com/zuizui0223/chocho/actions/runs/39221327128) succeeded, including two independent 199-draw chains in each of the two plant-side conditioning regimes. All eight full-run mode×climate×eligibility MCMC quality gates passed; do not mistake the initial nine-draw smoke for the final qualified result.
 
 | Resource-climate response and plant null | BCE 235, 5–95% | BCE 235, 10–90% | **Matched original 234**, 5–95% | **Matched 234**, 10–90% |
 | --- | ---: | ---: | ---: | ---: |
