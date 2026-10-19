@@ -1,0 +1,37 @@
+name: GBIF butterfly source API transport smoke diagnostic
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/gbif-butterfly-api-transport-diagnostic.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  single-species-source-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Check GBIF species and occurrence source API with hard wall clock caps
+        shell: bash
+        run: |
+          set +e
+          for route in \
+            "https://api.gbif.org/v1/species/match?name=Vanessa%20cardui&strict=true" \
+            "https://api.gbif.org/v1/occurrence/search?scientificName=Vanessa%20cardui&year=2010%2C2015&limit=1"; do
+            curl --location --silent --show-error \
+              --connect-timeout 7 --max-time 15 \
+              --header "Accept: application/json" \
+              --header "User-Agent: chocho-butterfly-data-transport-check/0.1" \
+              --output /tmp/gbif_response.txt \
+              --write-out 'HTTP=%{http_code} DNS=%{time_namelookup} TCP=%{time_connect} TLS=%{time_appconnect} TOTAL=%{time_total} BYTES=%{size_download}\n' \
+              "$route"
+            rc=$?
+            echo "curl_exit=$rc"
+            head -c 220 /tmp/gbif_response.txt || true
+            echo
+          done
+          echo "diagnostic_complete (never treat failure as ecological absence)"
