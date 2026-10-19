@@ -68,6 +68,15 @@ def reconstruct(source_root):
     level1=json.loads((data/"level1_lookup.json").read_text())["units"]
     assert set(regions)<=set(level1)
     assert set(regions)<=set(climate)
+    # The 365-region climate crossfit is the fixed *analysis universe*;
+    # accepted BCE hosts can introduce geographic codes beyond that grid.
+    # In this version ANT and HMD are in introduced resources for one
+    # butterfly, without source climate vectors. Keep geographic source
+    # totals untouched, then transparently condition ONLY the climate
+    # analysis on all climate-covered added cells (not on an entire species).
+    coverage=set(climate)
+    assert len(coverage)==365
+    assert set(regions)==coverage
     maps={}
     for name,augmented,nh,ch in (
         ("original_HOSTS",False,native0,cont0),
@@ -86,16 +95,18 @@ def reconstruct(source_root):
                 assert (n,c,a)==(int(old["native_resource_units"]),
                                   int(old["contemporary_resource_units"]),
                                   int(old["introduced_added_units"])),sp
-            natcl=sorted(native & set(climate))
-            # Under this frozen data, coverage is complete; do not silently
-            # treat unknown climate as zero-fitness or unaligned.
-            assert len(newly & set(climate))==a,sp
+            natcl=sorted(native & coverage)
+            covered_additions=newly & coverage
+            missing_additions=newly-coverage
             row={
                 "species":sp,"genus":sp.split(" ")[0],
                 "eligible_native_climate_regions_ge_10":len(natcl)>=10,
                 "has_new_BCE_accepted_host_links":sp in candidate,
                 "native_regions":n,"contemporary_regions":c,
                 "newly_supported_regions":a,
+                "newly_supported_climate_evaluable_regions":len(covered_additions),
+                "added_regions_missing_climate":len(missing_additions),
+                "missing_climate_region_codes":sorted(missing_additions),
                 "climate_analog":{},
             }
             if len(natcl)>=10:
@@ -104,7 +115,7 @@ def reconstruct(source_root):
                     plo,phi=qbounds([climate[x][2] for x in natcl],q)
                     analog={code for code,value in climate.items()
                             if tlo<=value[0]<=thi and plo<=value[2]<=phi}
-                    O=len(newly&analog)
+                    O=len(covered_additions&analog)
                     E=0.0
                     for broad in set(level1.values()):
                         candidate_space={
@@ -112,16 +123,17 @@ def reconstruct(source_root):
                             if level1[code]==broad and code not in native
                         }
                         if not candidate_space:continue
-                        add_in_area=len(newly&candidate_space)
+                        add_in_area=len(covered_additions&candidate_space)
                         analog_in_area=len(analog&candidate_space)
                         E+=add_in_area*analog_in_area/len(candidate_space)
-                    assert 0<=O<=a and 0<=E<=a+1e-8
+                    covered_A=len(covered_additions)
+                    assert 0<=O<=covered_A and 0<=E<=covered_A+1e-8
                     row["climate_analog"][str(q)]={
-                        "added":a,
+                        "added":covered_A,
                         "aligned":O,
                         "expected_continent_uniform":E,
-                        "aligned_fraction":O/a if a else None,
-                        "excess_fraction":(O-E)/a if a else None,
+                        "aligned_fraction":O/covered_A if covered_A else None,
+                        "excess_fraction":(O-E)/covered_A if covered_A else None,
                     }
             rows.append(row)
         totals={
@@ -130,18 +142,33 @@ def reconstruct(source_root):
             "added":sum(r["newly_supported_regions"] for r in rows),
         }
         assert totals== (EXPECTED_AUG if augmented else EXPECTED_BASE),(name,totals)
-        maps[name]={"rows":rows,"totals":totals}
+        missing={
+            row["species"]:row["missing_climate_region_codes"]
+            for row in rows if row["added_regions_missing_climate"]>0
+        }
+        maps[name]={
+            "rows":rows,"totals":totals,
+            "climate_source_coverage":{
+                "source_newly_supported_all":totals["added"],
+                "newly_supported_with_climate":sum(
+                    r["newly_supported_climate_evaluable_regions"] for r in rows),
+                "newly_supported_without_climate":sum(
+                    r["added_regions_missing_climate"] for r in rows),
+                "butterfly_species_affected":len(missing),
+                "missing_region_codes_by_species":missing
+            }
+        }
     return maps,metadata,source_prov
 
 
 def aggregate(rows,*,selected=None,q=0.05):
     rows=[r for r in rows if r["eligible_native_climate_regions_ge_10"]
           and (selected is None or r["species"] in selected)]
-    evaluated=[r for r in rows if r["newly_supported_regions"]>0]
+    evaluated=[r for r in rows if r["newly_supported_climate_evaluable_regions"]>0]
     key=str(q)
     O=sum(r["climate_analog"][key]["aligned"] for r in evaluated)
     E=sum(r["climate_analog"][key]["expected_continent_uniform"] for r in evaluated)
-    A=sum(r["newly_supported_regions"] for r in evaluated)
+    A=sum(r["newly_supported_climate_evaluable_regions"] for r in evaluated)
     if A<=0:raise ValueError("no evaluable newly introduced host regions")
     return {
         "eligible_species":len(rows),
@@ -213,10 +240,21 @@ def run(source):
     assert base_strict["observed_analog_cells"]==6948
     assert abs(base_strict["continent_uniform_expected_analog_cells"]-5834.664323099673)<1e-5
     aug=results["0.05"]["partially_augmented_all_239_source_eligible"]
-    assert aug["eligible_species"]==234
-    assert aug["expanded_eligible_species"]==211
-    assert aug["newly_supported_region_cells"]==14901
-    assert aug["observed_analog_cells"]==9904
+    assert aug["eligible_species"]==235
+    assert aug["expanded_eligible_species"]==212
+    assert aug["newly_supported_region_cells"]==14961
+    assert aug["observed_analog_cells"]==9949
+    assert abs(aug["continent_uniform_expected_analog_cells"]-8712.829707575029)<1e-5
+    second_aug=results["0.1"]["partially_augmented_all_239_source_eligible"]
+    assert second_aug["newly_supported_region_cells"]==14961
+    assert second_aug["observed_analog_cells"]==7370
+    assert abs(second_aug["continent_uniform_expected_analog_cells"]-6119.869308104752)<1e-5
+    assert maps["original_HOSTS"]["climate_source_coverage"]["newly_supported_without_climate"]==0
+    aud=maps["BCE_partial_augmented"]["climate_source_coverage"]
+    assert aud["newly_supported_without_climate"]==2
+    assert aud["missing_region_codes_by_species"]=={
+        "Coenonympha oedippus":["ANT","HMD"]
+    }
     return {
         "schema":"chocho_butterfly_climate_analogue_BCE_partial_source_sensitivity_v0.1",
         "status":"SOURCE_RECONSTRUCTED_EXPLORATORY_MACRO_CLIMATE_SENSITIVITY",
@@ -228,11 +266,15 @@ def run(source):
         "whole_panel_resource_totals":{
             name:obj["totals"] for name,obj in maps.items()
         },
+        "climate_source_coverage":{
+            name:obj["climate_source_coverage"] for name,obj in maps.items()
+        },
         "comparisons_by_native_host_climate_quantile":results,
         "claim_limitations":[
             "European-biased BCE/Clarke supplementary host links; NOT an independent globally representative second dataset.",
             "Changing reference native-host resources can classify a formerly newly introduced region as native-supported. These are host-catalogue differences, NOT temporal colonisation or plant loss.",
             "The null fixes each butterfly's newly supported region counts per broad continent and uniform allocation within Level1, NOT the introduced plant×region network.",
+            "Climate estimands use exact 365 region vectors; two BCE-introduced cells (ANT, HMD) without climate are retained in geographic totals but excluded at the cell level from climate denominators. The corresponding Coenonympha oedippus has 60 climate-evaluable newly supported cells and is NOT discarded.",
             "All numbers are potential recorded larval host-resource regions rather than occupied habitats, adult recruitment, or fitness.",
             "Do not publicly redistribute author-only WCVP/HOSTS/TDWG source archive without rights approval.",
             "The ecology hypothesis was explored after source results were inspected. This is source-conditional validation, not a confirmatory independent test."
