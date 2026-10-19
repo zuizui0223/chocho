@@ -85,6 +85,7 @@ jobs:
             --source-root input/source \
             --gbif-counts artifacts/gbif_239_merged_region_basis_counts.csv \
             --gbif-manifest artifacts/gbif_239_merged_original_and_96_recovery_receipts.json \
+            --original-gbif-manifest input/original_GBIF_239/gbif_239_species_source_receipts.json \
             --output-json artifacts/butterfly_239_GBIF_merged_effort_climate_resource_results.json
           python - <<'PY'
           import json,math
@@ -99,6 +100,13 @@ jobs:
           assert x["GBIF_sample_metadata"]["gbif_sampled_mapped_records"]==m["outputs"]["source_records_mapped"]
           assert len(x["all_combinations"])==72
           p=x["primary"]
+          fixed=x["fixed_original_135_background_diagnostic"]
+          assert fixed is not None
+          unchanged=fixed["original_initial135_source_invariant_primary"]
+          assert unchanged["sampled_positive_region_species_n"]==119
+          assert unchanged["observed_positives_on_added_host_cells_n"]==74
+          assert abs(unchanged["continent_conditional_expected_overlap"]-69.61846219208861)<1e-7
+          assert fixed["expanded_targets_fixed_original135_effort_primary"]["source_species_complete"]==m["species_statuses"]["COMPLETE"]
           assert p["source_species_complete"]==m["species_statuses"]["COMPLETE"]
           assert 0<=p["observed_positives_on_added_host_cells_n"]<=p["sampled_positive_region_species_n"]
           assert p["candidate_region_species_n"]>=p["candidate_added_host_cells_n"]
