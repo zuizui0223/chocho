@@ -138,6 +138,30 @@ class TestMerge(unittest.TestCase):
         with self.assertRaises(ValueError):
             run_assemble(raw,old,rec,added)
 
+    def test_known_original_ordinal_index_drift_is_explicit(self):
+        raw,old,rec,added=sample_source(1)
+        original=next(r for r in raw["species_receipts"]
+                      if r["species"]=="Butterfly species135")
+        original["windows"]["2010_2017"]={
+            "complete":True,
+            "index_offsets":[300,1200],
+            "reported_GBIF_count":1760,
+        }
+        rec["species_receipts"][0]["windows"]["2010_2017"]={
+            "complete":True,
+            "selected_original_page_offsets":[300,1500],
+            "reported_GBIF_count":1990,
+        }
+        merged,metadata=run_assemble(raw,old,rec,added)
+        source=metadata["merge_metadata"]
+        self.assertEqual(source["originally_completed_windows_with_original_offset_metadata"],1)
+        self.assertEqual(source["originally_completed_windows_with_index_offset_changes"],1)
+        self.assertEqual(source["originally_completed_windows_with_GBIF_count_changes"],1)
+        self.assertFalse(source["frozen_original_order_reproducible_without_GBIF_Download_DOI"])
+        self.assertEqual(source["ordinal_index_offset_changes"][0]["species"],"Butterfly species135")
+        self.assertEqual(source["GBIF_count_changes_in_originally_completed_windows"][0]["original_GBIF_count"],1760)
+        self.assertEqual(merged,{**old,**added})
+
     def test_zero_recovery_is_explicit_missingness(self):
         raw,old,rec,added=sample_source(0)
         merged,metadata=run_assemble(raw,old,rec,added)
