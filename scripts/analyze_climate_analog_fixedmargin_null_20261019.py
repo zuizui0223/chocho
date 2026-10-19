@@ -231,8 +231,8 @@ def run(source_root):
         key=str(q)
         stats=[c["observed_model_analogue_counts"][key] for c in chains]
         null_med=[x["median"] for x in stats]
-        tail=[(sum(v>=observed[key] for v in c["full_draw_history"][key])+1)/100
-              for c in chains]
+        tail=[(sum(v>=observed[key] for v in c["full_draw_history"][key])+1)/
+              (len(c["full_draw_history"][key])+1) for c in chains]
         comparison[key]={
             "observed":observed[key],
             "evaluated_added_butterfly_region_units":14481,
