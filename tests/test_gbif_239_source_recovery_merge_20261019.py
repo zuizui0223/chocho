@@ -5,7 +5,9 @@ Artificial tiny count rows test logic, not ecological associations.
 """
 from __future__ import annotations
 import sys
+import csv
 import unittest
+from tempfile import TemporaryDirectory
 from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
@@ -74,10 +76,28 @@ def sample_source(recovered_subset=5):
     return original,basecounts,rescue,recovercounts
 
 
+def run_run_assemble(raw,old,rec,added):
+    # Production merge intentionally requires exact source *file paths*,
+    # not Python dicts. Build tiny source-shaped CSV fixtures in a sandbox,
+    # then test that the actual file-reading merge enforces its contracts.
+    with TemporaryDirectory() as folder:
+        root=Path(folder)
+        original=root/"initial_135.csv"
+        recovered=root/"recovered_96.csv"
+        headers=("species","window","wgsrpd3","basis","sampled_record_count")
+        for path,values in ((original,old),(recovered,added)):
+            with path.open("w",newline="",encoding="utf-8") as fh:
+                writer=csv.writer(fh)
+                writer.writerow(headers)
+                for key,n in sorted(values.items()):
+                    writer.writerow([*key,n])
+        return assemble(raw,original,rec,recovered)
+
+
 class TestMerge(unittest.TestCase):
     def test_exact_source_promotion_and_counts(self):
         raw,old,rec,added=sample_source(5)
-        result,metadata=assemble(raw,old,rec,added)
+        result,metadata=run_assemble(raw,old,rec,added)
         self.assertEqual(metadata["species_taxon_resolved_and_complete"],140)
         self.assertEqual(metadata["species_statuses"],{
             "COMPLETE":140,"PARTIAL_FETCH_NOT_ELIGIBLE":91,"TAXON_UNRESOLVED":8
@@ -96,31 +116,31 @@ class TestMerge(unittest.TestCase):
         raw,old,rec,added=sample_source(1)
         rec["species_receipts"][0]["accepted_species_key"]=123456
         with self.assertRaises(ValueError):
-            assemble(raw,old,rec,added)
+            run_assemble(raw,old,rec,added)
         raw,old,rec,added=sample_source(1)
         added.update(old)
         with self.assertRaises(ValueError):
-            assemble(raw,old,rec,added)
+            run_assemble(raw,old,rec,added)
 
     def test_reject_partial_recovery_leaking_into_observed(self):
         raw,old,rec,added=sample_source(0)
         added[("Butterfly species135","2018_2025","CAN","HUMAN_OBSERVATION")]=1
         with self.assertRaises(ValueError):
-            assemble(raw,old,rec,added)
+            run_assemble(raw,old,rec,added)
 
     def test_reject_wrong_recovery_species_set_and_unready_windows(self):
         raw,old,rec,added=sample_source(1)
         rec["species_receipts"][0]["species"]="Wrong butterfly"
         with self.assertRaises(ValueError):
-            assemble(raw,old,rec,added)
+            run_assemble(raw,old,rec,added)
         raw,old,rec,added=sample_source(1)
         rec["species_receipts"][0]["windows"]["2018_2025"]["complete"]=False
         with self.assertRaises(ValueError):
-            assemble(raw,old,rec,added)
+            run_assemble(raw,old,rec,added)
 
     def test_zero_recovery_is_explicit_missingness(self):
         raw,old,rec,added=sample_source(0)
-        merged,metadata=assemble(raw,old,rec,added)
+        merged,metadata=run_assemble(raw,old,rec,added)
         self.assertEqual(metadata["species_statuses"],{
             "COMPLETE":135,"PARTIAL_FETCH_NOT_ELIGIBLE":96,"TAXON_UNRESOLVED":8})
         self.assertEqual(merged,old)
