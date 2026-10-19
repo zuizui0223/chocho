@@ -1,0 +1,36 @@
+{
+  "eligibility_counts": {
+    "INSUFFICIENT_NATIVE_BACKGROUND": 3,
+    "INSUFFICIENT_NATIVE_OBSERVATIONS": 98,
+    "NO_DOCUMENTED_NATIVE_WCVP": 1,
+    "READY_NATIVE_SDM": 416
+  },
+  "limits": [
+    "Eligibility is based on current WCVP regional-native source and modern GBIF observations only",
+    "Historical plant occupancy, dispersal and gene flow are not measured"
+  ],
+  "model_eligible_taxa": 416,
+  "model_rules": {
+    "background": "original 6373 WCVP support points inside each host's CURRENT documented native L3",
+    "max_plant_points": 200,
+    "maximum_background_points": 1000,
+    "minimum_native_background": 30,
+    "minimum_presences": 30,
+    "spatial_thinning_km": 10
+  },
+  "native_WCVP_taxa": 517,
+  "no_paleoclimate_or_genetic_response_used": true,
+  "original_insect_species": 641,
+  "original_native_paired_insects": 392,
+  "plant_host_taxa": 518,
+  "schema": "chocho_native_WCVP_host_SDM_0BP_LGM_eligibility_v0.1",
+  "source_native_observation_points": 220137,
+  "source_sha256": {
+    "host_reference_request_manifest.csv": "a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044",
+    "native_host_wgsrpd3.csv": "8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0",
+    "native_supported_observations.csv.gz": "bf00cbbd49d901da80dcb30e3824c2ae30a427a17ace2b0e935b05f69fd72cd4",
+    "wgsrpd3_support_points_v0.1.csv": "d0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f"
+  },
+  "status": "SOURCE_FIXED_BEFORE_0BP_OR_LGM_MODELLING",
+  "thinned_plant_observations": 73386
+}
