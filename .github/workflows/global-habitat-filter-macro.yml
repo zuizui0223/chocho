@@ -1,0 +1,49 @@
+name: Global butterfly habitat-filter macroecology
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-frozen-macro-trait-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing project analysis requirements
+        run: python -m pip install -e .
+      - name: Run independent source and algebra tests
+        run: python -m unittest discover -s tests -p 'test_global_butterfly_habitat_filter_20261019.py' -v
+      - name: Run frozen 239-butterfly macroecology analysis
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_global_butterfly_habitat_filter_20261019.py --output-json artifacts/global_butterfly_disturbance_filter_20261019.json
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/global_butterfly_disturbance_filter_20261019.json").read_text())
+          assert r["scope"]["resource_species"]==239
+          assert r["scope"]["resource_introduced_added_total"]==14553
+          assert r["strict_groups"]["n_total"]==183
+          assert r["strict_groups"]["affiliated"]["species"]==150
+          assert r["strict_groups"]["avoidant"]["species"]==33
+          assert r["strict_primary_adjusted"]["design_rank"]==r["strict_primary_adjusted"]["n_covariates_including_exposure"]
+          assert r["out_of_genus_cv"]["repeats"]==10
+          assert r["negative_gates"]["population_recruitment_measured"] is False
+          assert r["negative_gates"]["test_was_designed_after_descriptive_data_review"] is True
+          for k in ["strict_primary_adjusted","strict_plus_edge_adjusted","strict_capacity_filled_logit",
+                    "strict_host_adequate_only","broad_weak_plus_strong"]:
+              assert math.isfinite(r[k]["adjusted_coefficient"])
+          print("PASS: measured 239-species evidence; 365 regions; all predeclared diagnostics; no occupancy/recruitment substitution.")
+          PY
+      - name: Save exploratory numerical evidence (not GEB submission)
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-butterfly-disturbance-filter-exploratory
+          path: artifacts/global_butterfly_disturbance_filter_20261019.json
