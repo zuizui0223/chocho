@@ -1,0 +1,108 @@
+name: chocho source-only plan native plant SDM panel without LGM climate
+on:
+  push:
+    branches: [ecology/lgm-native-plant-niche-hindcast-v01]
+    paths:
+      - .github/workflows/lgm-native-host-sdm-plan-v01.yml
+      - scripts/plan_native_host_sdm_v01.py
+      - tests/test_plan_native_host_sdm_v01.py
+      - docs/supporting/ttf_native_plant_lgm_sdm_v01_contract.json
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: chocho-native-SDM-source-eligibility-v01
+  cancel-in-progress: false
+jobs:
+  freeze-native-plant-source-plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/TTF
+          ref: 187e15c6a7b777c119b97b8a43a0d92783ef7c5c
+          path: input/TTF
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source-blind deterministic host thinning implementation
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pytest>=8,<9'
+          python -m pytest -q tests/test_plan_native_host_sdm_v01.py
+          python - <<'PY'
+          import json
+          q=json.load(open('docs/supporting/ttf_native_plant_lgm_sdm_v01_contract.json'))
+          assert q['status']=='EXPLORATORY_FIXED_BEFORE_NATIVE_SDM_PREDICTED_LGM_OUTCOMES'
+          assert q['train']['minimum_native_presence_points']==30
+          assert q['train']['max_presence_points_per_plant']==200
+          assert q['inputs']['source_native_observations']==220137
+          assert q['bounds'][0].startswith('The LGM outputs indicate potential')
+          print('PASS_SOURCE_ONLY_LGM_MODEL_DESIGN_FIXED_BEFORE_OUTCOMES')
+          PY
+      - name: Fetch source-locked native observations and original 6373 support points
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/native_WCVP input/support
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12185640323/zip" > /tmp/source_native.zip
+          echo '4a3f55b43998bdc7d72a62e189789d35b6e1589888bfb8fb0ec00046c8956381  /tmp/source_native.zip' | sha256sum -c -
+          unzip -q /tmp/source_native.zip -d input/native_WCVP
+          gh api /repos/zuizui0223/TTF/actions/artifacts/11495066386/zip > /tmp/support.zip
+          unzip -q /tmp/support.zip -d input/support
+          echo 'bf00cbbd49d901da80dcb30e3824c2ae30a427a17ace2b0e935b05f69fd72cd4  input/native_WCVP/results/lgm_wcvp_native_observations_v01/native_supported_observations.csv.gz' | sha256sum -c -
+          echo '8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0  input/native_WCVP/input/native_WCVP/native_host_wgsrpd3.csv' | sha256sum -c -
+          echo 'd0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f  input/support/wgsrpd3_support_points_v0.1.csv' | sha256sum -c -
+          echo 'a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044  input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv' | sha256sum -c -
+      - name: Freeze all-518 plant niche-model data eligibility without historical scores
+        run: |
+          set -euo pipefail
+          python -u scripts/plan_native_host_sdm_v01.py \
+            --host-manifest input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv \
+            --native-points input/native_WCVP/results/lgm_wcvp_native_observations_v01/native_supported_observations.csv.gz \
+            --native-units input/native_WCVP/input/native_WCVP/native_host_wgsrpd3.csv \
+            --support input/support/wgsrpd3_support_points_v0.1.csv \
+            --out results/lgm_native_plant_sdm_plan_v01
+          python - <<'PYTHON'
+          import csv,json,hashlib,os
+          from pathlib import Path
+          d=Path('results/lgm_native_plant_sdm_plan_v01')
+          q=json.loads((d/'summary.json').read_text())
+          rows=list(csv.DictReader((d/'all_518_native_sdm_qualification.csv').open()))
+          assert len(rows)==518 and sum(q['eligibility_counts'].values())==518
+          assert 0<q['model_eligible_taxa']<=435
+          assert q['source_native_observation_points']==220137
+          assert q['no_paleoclimate_or_genetic_response_used'] is True
+          receipt={'schema':'chocho_native_host_sdm_source_only_receipt_v01',
+             'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+             'sha256':{x.name:hashlib.sha256(x.read_bytes()).hexdigest()
+                      for x in sorted(d.iterdir()) if x.is_file()},
+             'LGM_climate_score_used':False,'genetics_used':False}
+          (d/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PYTHON
+      - name: Preserve only source qualification and hashes, keep individual observations in artifact
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_native_plant_sdm_plan_v01/summary.json
+          git add results/lgm_native_plant_sdm_plan_v01/all_518_native_sdm_qualification.csv
+          git add results/lgm_native_plant_sdm_plan_v01/receipt.json
+          git commit -m 'Freeze WCVP native-screened host SDM eligibility and model source receipt'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-native-plant-518-SDM-source-preLGM-plan-v01
+          path: results/lgm_native_plant_sdm_plan_v01/
+          if-no-files-found: warn
+          retention-days: 30
