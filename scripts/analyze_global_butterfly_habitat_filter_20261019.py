@@ -280,7 +280,7 @@ def adjusted(rows, families, *, label, y_key="log_expansion", bootstrap=True, ed
     return out
 
 
-def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5):
+def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5, y_key="log_expansion"):
     members = defaultdict(list)
     for row in rows:
         members[row["genus"]].append(row)
@@ -297,7 +297,7 @@ def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5):
             smallest=min(range(folds),key=lambda j:(fold_sizes[j],j))
             bins[smallest].append(g)
             fold_sizes[smallest]+=len(members[g])
-        actual = np.array([r["log_expansion"] for r in rows])
+        actual = np.array([r[y_key] for r in rows])
         pred0 = np.zeros(len(rows));pred1=np.zeros(len(rows))
         for fold in bins:
             test_groups=set(fold)
@@ -315,7 +315,7 @@ def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5):
             z_test = np.array([_columns(r,families) for r in test],dtype=float)
             X_train = np.column_stack([z_train,[r["exposure"] for r in train]])
             X_test = np.column_stack([z_test,[r["exposure"] for r in test]])
-            y_train = np.array([r["log_expansion"] for r in train],dtype=float)
+            y_train = np.array([r[y_key] for r in train],dtype=float)
             b0=np.linalg.lstsq(z_train,y_train,rcond=None)[0]
             b1=np.linalg.lstsq(X_train,y_train,rcond=None)[0]
             pred0[ii_test] = z_test @ b0
@@ -331,6 +331,7 @@ def grouped_out_of_genus_cv(rows, families, *, repeat=10, folds=5):
         })
     return {
         "heldout_grouping": "butterfly_genus_5fold",
+        "outcome":y_key,
         "repeats":repeat,
         "mean_MSE_baseline":mean([x["MSE_baseline"] for x in scores]),
         "mean_MSE_plus_disturbance":mean([x["MSE_plus_disturbance"] for x in scores]),
@@ -360,7 +361,7 @@ def taxonomy_family_signs(rows):
     return out
 
 
-def within_mixed_genus(rows):
+def within_mixed_genus(rows, *, y_key="log_expansion"):
     by_genus=defaultdict(list)
     for r in rows:
         by_genus[r["genus"]].append(r)
@@ -372,8 +373,8 @@ def within_mixed_genus(rows):
             both[genus]={
                 "affiliated_n":len(a),
                 "avoidant_n":len(b),
-                "mean_log_difference":mean([r["log_expansion"] for r in a]) -
-                    mean([r["log_expansion"] for r in b]),
+                "mean_log_difference":mean([r[y_key] for r in a]) -
+                    mean([r[y_key] for r in b]),
             }
     return {
         "mixed_genera_n":len(both),
@@ -434,18 +435,30 @@ def main_analysis():
                      y_key="capacity_logit",bootstrap=True)
     adequate=[r for r in strong if r["adequate"]]
     quality=adjusted(adequate,full_families,label="strict_host_adequate_only",bootstrap=True)
+    quality_capacity=adjusted(adequate,full_families,label="strict_capacity_adequate_only",
+                              y_key="capacity_logit",bootstrap=True)
+    capacity_edge=adjusted(ceiling_rows,full_families,label="strict_capacity_plus_edge",
+                           y_key="capacity_logit",bootstrap=False,edge=True)
     broad=annotate(all_rows,broad=True)
     broadmod=adjusted(broad,full_families,label="broad_weak_plus_strong",bootstrap=True)
+    broad_capacity=adjusted([r for r in broad if r["capacity_logit"] is not None],
+                        full_families,label="broad_capacity_logit",
+                        y_key="capacity_logit",bootstrap=False)
     # Disturbance groups differ in their taxonomic sampling; genus-level contrasts
     # are important, but do not become independent tests of global treatment.
     mixed=within_mixed_genus(strong)
+    mixed_capacity=within_mixed_genus(ceiling_rows,y_key="capacity_logit")
     fam=taxonomy_family_signs(strong)
     cv=grouped_out_of_genus_cv(strong,full_families)
+    cv_capacity=grouped_out_of_genus_cv(ceiling_rows,full_families,y_key="capacity_logit")
     genus_sizes=Counter(r["genus"] for r in strong)
     largest=sorted(genus_sizes.items(),key=lambda p:(-p[1],p[0]))[0]
     no_largest=[r for r in strong if r["genus"] != largest[0]]
     leave_largest=adjusted(no_largest,full_families,label="strict_excluding_largest_genus",
                             bootstrap=False)
+    leave_largest_capacity=adjusted(no_largest,full_families,
+                        label="strict_capacity_excluding_largest_genus",
+                        y_key="capacity_logit",bootstrap=False)
     outcome={
         "schema":"chocho_global_butterfly_disturbance_macrofilter_v0.1",
         "status":"EXPLORATORY_MACRO_TRAIT_ASSOCIATION_NOT_OBSERVED_BUTTERFLY_DISTRIBUTION",
@@ -472,14 +485,20 @@ def main_analysis():
         "strict_plus_edge_adjusted":edge,
         "strict_capacity_filled_logit":ceiling,
         "strict_host_adequate_only":quality,
+        "strict_capacity_adequate_only":quality_capacity,
+        "strict_capacity_plus_edge":capacity_edge,
         "broad_weak_plus_strong":broadmod,
+        "broad_capacity_logit":broad_capacity,
         "within_genus_descriptive":mixed,
+        "within_genus_capacity_descriptive":mixed_capacity,
         "taxonomy_family_stratification":fam,
         "leave_largest_genus": {
             "largest_genus":largest[0], "excluded_species":largest[1],
-            "adjusted":leave_largest
+            "adjusted":leave_largest,
+            "capacity_logit_adjusted":leave_largest_capacity
         },
         "out_of_genus_cv":cv,
+        "out_of_genus_cv_capacity_logit":cv_capacity,
         "negative_gates":{
             "population_recruitment_measured":False,
             "actual_butterfly_occupancy_change_measured":False,
@@ -511,6 +530,7 @@ if __name__=="__main__":
         "strong_boot_ci":ans["strict_primary_adjusted"]["genus_bootstrap"]["percentile_95ci"],
         "strong_wild_tail":ans["strict_primary_adjusted"]["wild_reduced_genus_signflip"]["two_sided_tail_fraction_not_randomization_p"],
         "strict_adequate_beta":ans["strict_host_adequate_only"]["adjusted_coefficient"],
+        "strict_adequate_capacity_beta":ans["strict_capacity_adequate_only"]["adjusted_coefficient"],
         "strict_ceiling_logit_beta":ans["strict_capacity_filled_logit"]["adjusted_coefficient"],
         "strict_edge_adjusted_beta":ans["strict_plus_edge_adjusted"]["adjusted_coefficient"],
         "broad_beta":ans["broad_weak_plus_strong"]["adjusted_coefficient"],
@@ -525,12 +545,17 @@ if __name__=="__main__":
             } for k in (
                 "strict_primary_adjusted","strict_plus_edge_adjusted",
                 "strict_capacity_filled_logit","strict_host_adequate_only",
-                "broad_weak_plus_strong")
+                "strict_capacity_adequate_only","strict_capacity_plus_edge",
+                "broad_weak_plus_strong","broad_capacity_logit")
         },
         "taxonomy_family_stratification":ans["taxonomy_family_stratification"],
         "leave_largest_genus":ans["leave_largest_genus"],
         "mixed_genus":ans["within_genus_descriptive"],
+        "mixed_genus_capacity":ans["within_genus_capacity_descriptive"],
         "out_of_genus_cv": {
             k:v for k,v in ans["out_of_genus_cv"].items() if k!="individual_repeats"
+        },
+        "out_of_genus_cv_capacity_logit":{
+            k:v for k,v in ans["out_of_genus_cv_capacity_logit"].items() if k!="individual_repeats"
         }
     },sort_keys=True))
