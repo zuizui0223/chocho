@@ -1,0 +1,162 @@
+{
+  "schema": "chocho_spatially_local_resource_absorption_qualified_v0.2",
+  "status": "QUALIFIED_EXPLORATORY_MCMC_SENSITIVITY",
+  "source": {
+    "repo": "zuizui0223/chocho",
+    "run_id": 38700697916,
+    "job_id": 116307892808,
+    "head_sha": "6ad19f09d9ee38c4790796e0ce776d1be97c68a8",
+    "artifact_id": 11956173280,
+    "artifact_name": "butterfly-spatial-local-longchain-v02",
+    "full_artifact_raw_sha256": "22c60accba86b576aa6ddc9f46ca7dd4d2003e2e81f1ba333ef41da5dbabbb91",
+    "source_url": "https://github.com/zuizui0223/chocho/actions/runs/38700697916",
+    "frozen_mixing_protocol": "provenance/reviewer_defenses/protocols/SPATIAL_NULL_EXTENDED_MIXING_GATE_20261015.md",
+    "result_is": "Source-verified compact summary; full 25,693-byte JSON is in artifact ZIP, not altered here."
+  },
+  "study": {
+    "butterflies": 239,
+    "regions": 365,
+    "fixed_candidate_incidences": 75346,
+    "spatial_caliper_km": 1500,
+    "climate_vars": [
+      "CHELSA BIO1",
+      "CHELSA BIO12"
+    ],
+    "source_footprint_tether": true
+  },
+  "observed": {
+    "introduced_incidences_in_native_supported_cells": 46387,
+    "added_units": 14553
+  },
+  "geometry": {
+    "total_introduced_plant_region_edges": 30373,
+    "climate_covered_edges": 30373,
+    "climate_covered_fraction": 1,
+    "viable_edges": 27886,
+    "viable_fraction_of_total": 0.9181180653870213,
+    "fixed_edges": 2487,
+    "viable_group_count": 811,
+    "nonswappable_group_count": 774,
+    "radius_km": 1500,
+    "original_tethered_mobile_edges": 11551,
+    "original_tethered_mobile_fraction": 0.3803048760412208,
+    "median_neighbour_regions": 10,
+    "one_step_validity_definition": "At least one reversible two-edge swap within family × Level1 × climate-bin, local to both involved region points and tethered to each host's originally introduced locations.",
+    "input_regions": 365
+  },
+  "qualification": {
+    "status": "QUALIFIED_EXPLORATORY_MCMC_SENSITIVITY",
+    "checks": [
+      {
+        "seed": 20261017,
+        "status": "EXPLORATORY_SPATIAL_NULL_EVALUABLE",
+        "primary_A": {
+          "n": 99,
+          "lag1": 0.10479139614850765,
+          "iact": 1.1705160580512541,
+          "approximate_ess": 84.5780793172724,
+          "full_sd": 24.632830425599384,
+          "early_quarter_mean": 46116.208333333336,
+          "late_quarter_mean": 46124.333333333336,
+          "late_minus_early": 8.125,
+          "lag1_gate": true,
+          "ess_gate": true,
+          "drift_gate": true,
+          "pass": true
+        },
+        "secondary_U": {
+          "n": 99,
+          "lag1": 0.15079374733010076,
+          "iact": 1.950379690812159,
+          "approximate_ess": 50.75934725241901,
+          "full_sd": 22.95462168653188,
+          "early_quarter_mean": 14827.291666666666,
+          "late_quarter_mean": 14822.208333333334,
+          "late_minus_early": -5.083333333332121,
+          "lag1_gate": true,
+          "ess_gate": true,
+          "drift_gate": true,
+          "pass": true
+        },
+        "pass": true
+      },
+      {
+        "seed": 20261018,
+        "status": "EXPLORATORY_SPATIAL_NULL_EVALUABLE",
+        "primary_A": {
+          "n": 99,
+          "lag1": 0.0641313050761957,
+          "iact": 1.3205051212100605,
+          "approximate_ess": 74.97131090963144,
+          "full_sd": 26.256834470692702,
+          "early_quarter_mean": 46107.958333333336,
+          "late_quarter_mean": 46109.916666666664,
+          "late_minus_early": 1.9583333333284827,
+          "lag1_gate": true,
+          "ess_gate": true,
+          "drift_gate": true,
+          "pass": true
+        },
+        "secondary_U": {
+          "n": 99,
+          "lag1": 0.11608285975749404,
+          "iact": 1.4649999530983662,
+          "approximate_ess": 67.57679397232904,
+          "full_sd": 23.182225613939323,
+          "early_quarter_mean": 14819.875,
+          "late_quarter_mean": 14815.958333333334,
+          "late_minus_early": -3.9166666666660603,
+          "lag1_gate": true,
+          "ess_gate": true,
+          "drift_gate": true,
+          "pass": true
+        },
+        "pass": true
+      }
+    ],
+    "between_chain": {
+      "abs_difference_primary_medians": 5,
+      "maximum_within_chain_sd": 26.256834470692702,
+      "threshold": 13.128417235346351,
+      "pass": true
+    },
+    "interpretation": "The outcome was screened by predetermined post-hoc simulation reliability gates. Passing does not convert it to prospectively tested biology; failing precludes inferential promotion."
+  },
+  "chains": [
+    {
+      "seed": 20261017,
+      "status": "EXPLORATORY_SPATIAL_NULL_EVALUABLE",
+      "observed_absorption_minus_null": 271,
+      "null_absorption_median": 46116,
+      "observed_unique_added_minus_null": -264
+    },
+    {
+      "seed": 20261018,
+      "status": "EXPLORATORY_SPATIAL_NULL_EVALUABLE",
+      "observed_absorption_minus_null": 276,
+      "null_absorption_median": 46111,
+      "observed_unique_added_minus_null": -267
+    }
+  ],
+  "effect_sizes": {
+    "observed_native_absorption_share": 0.6156531202718127,
+    "excess_absorption_share_percentage_points_by_chain": [
+      0.3596740371088047,
+      0.36631008945398563
+    ],
+    "deficit_in_novel_resource_geography_pct_vs_null_by_chain": [
+      -1.78173719376392,
+      -1.8016194331983806
+    ]
+  },
+  "claim_boundary": [
+    "Post-hoc structural sensitivity; no confirmatory frequentist test of biological causal effect has been performed.",
+    "99 serial world samples per seed, two independent chains; ESS and drift passed declared finite thresholds but do not prove full stationarity or irreducible support.",
+    "Reported nominal Monte Carlo tail fractions for observed A=46387 are at 1/(99+1) per chain and should not be used as exact independent-permutation p-values.",
+    "Within 1500 km of each replacement's source region and also within 1500 km of an original introduced region of each host (point-proxy).",
+    "Plant-family, continent, climate-bin, original recorded butterfly-host links, native geographic exclusions, and plant and regional introduced-range margins preserved.",
+    "Result does not demonstrate butterfly occupancy, host quality, successful breeding or functional redundancy; source interaction records and WCVP range cells remain uncertain.",
+    "Original WCVP introduced status is not a historical introduction timeline; no elevation, land cover, original range buffering, habitat, or record-effort conditioning.",
+    "Observation-minus-null native absorption excess is only ~0.36 percentage points of fixed host×butterfly×region incidence volume."
+  ]
+}

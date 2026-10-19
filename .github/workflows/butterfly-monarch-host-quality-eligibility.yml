@@ -1,0 +1,88 @@
+name: butterfly published monarch host-quality source eligibility
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/audit_external_monarch_host_quality_appendix.py"
+      - "tests/test_external_monarch_host_quality_appendix.py"
+      - ".github/workflows/butterfly-monarch-host-quality-eligibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monarch-quality-eligibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-supplement-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Unit-test strict published host-quality classification gating
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_external_monarch_host_quality_appendix.py tests/test_host_realization_nonmonotonicity.py
+      - name: Attempt exact open-access PLOS ONE S1 foodplant appendix
+        id: plos
+        run: |
+          set -euo pipefail
+          mkdir -p _external results/feasibility
+          http=$(curl --silent --show-error --location --max-time 120 \
+            "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0269701.s001&type=supplementary" \
+            --output _external/Greenstein_2022_S1_literature_foodplants.docx \
+            --write-out "%{http_code}")
+          if [[ "$http" == "200" ]]; then
+            python - <<'PY'
+          import zipfile
+          p="_external/Greenstein_2022_S1_literature_foodplants.docx"
+          with zipfile.ZipFile(p) as z:
+              assert z.testzip() is None
+              assert "word/document.xml" in z.namelist()
+          PY
+            echo "source_access=verified_docx" >> "$GITHUB_OUTPUT"
+          elif [[ "$http" == "401" || "$http" == "403" || "$http" == "404" ]]; then
+            python - <<'PY'
+          import json,pathlib
+          out={
+            "schema":"chocho_monarch_2022_host_quality_supplement_schema_v0.1",
+            "status":"NOT_EVALUABLE_PUBLISHED_SUPPLEMENT_DOWNLOAD_BLOCKED",
+            "source":"Greenstein et al. 2022 PLOS ONE 10.1371/journal.pone.0269701.s001",
+            "download_http_status":"401_or_403_or_404",
+            "quality_classification_verified":False,
+            "HOSTS_40_species_WCVP_quality_join":"NOT_PERFORMED",
+            "fitness_corrected_82_new_regions":"NOT_ESTIMATED",
+            "next_step":"Use the licensed publicly documented supplement from an accessible scholarly repository; do not invent taxa or their host-quality categories.",
+          }
+          p=pathlib.Path("results/feasibility/monarch_quality_appendix_schema_v01.json")
+          p.write_text(json.dumps(out,indent=2)+"\n")
+          print({"status":out["status"]})
+          PY
+            echo "source_access=blocked" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unexpected publication-server response $http" >&2
+            exit 1
+          fi
+
+      - name: Inspect published host quality appendix table shapes (no outcomes)
+        if: steps.plos.outputs.source_access == 'verified_docx'
+        run: |
+          python scripts/audit_external_monarch_host_quality_appendix.py \
+            --supplement-docx _external/Greenstein_2022_S1_literature_foodplants.docx \
+            --output-json results/feasibility/monarch_quality_appendix_schema_v01.json
+          test -s results/feasibility/monarch_quality_appendix_schema_v01.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-monarch-2022-127-host-performance-eligibility-v01
+          path: results/feasibility/monarch_quality_appendix_schema_v01.json
+          retention-days: 30
+          if-no-files-found: warn

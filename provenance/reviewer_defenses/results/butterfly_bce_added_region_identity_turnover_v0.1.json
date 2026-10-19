@@ -1,0 +1,103 @@
+{
+  "schema": "chocho_bce_source_inventory_added_resource_turnover_verified_v0.1",
+  "status": "SUCCESS_DESCRIPTIVE_EUROPE_BIASED_HOST_INVENTORY_TURNOVER",
+  "provenance": {
+    "source_workflow_run": 38992178101,
+    "source_job": 117276744814,
+    "artifact_id": 12084569989,
+    "source_head_sha": "e00a2f186625679a266263cd75a4c7de28aa1205",
+    "source_url": "https://github.com/zuizui0223/chocho/actions/runs/38992178101",
+    "source_program": "scripts/summarize_bce_added_resource_identity_turnover.py",
+    "source_tests": "tests/test_bce_added_resource_identity_turnover.py",
+    "full_source_artifact": "butterfly-bce-added-resource-identity-turnover-v01",
+    "originating_host_inventory_source_run": 38988757959
+  },
+  "source": {
+    "input_schema": "chocho_butterfly_bce_host_inventory_resource_novelty_v0.1",
+    "BCE_source_workflow_run": 37795847333,
+    "BCE_sensitivity_workflow_run": 38988757959,
+    "BCE_candidate_host_links_added": 1027,
+    "BCE_butterflies_modified": 81,
+    "focal_butterflies": 239,
+    "identity": "butterfly species x WGSRPD3 resource region, with first host support counted only once"
+  },
+  "affected_81": {
+    "original_new_resource_cells": 4628,
+    "augmented_new_resource_cells": 5042,
+    "retained_in_both": 3225,
+    "reclassified_as_native": 1403,
+    "newly_added_by_augmentation": 1817,
+    "union_of_either_source": 6445,
+    "intersection_over_union_jaccard": 0.5003878975950349,
+    "discordant_fraction_of_union": 0.49961210240496506,
+    "nonempty_union_species": 77,
+    "median_species_jaccard_nonempty_union": 0.5704697986577181,
+    "species_increase_net": 36,
+    "species_decrease_net": 35,
+    "species_equal_net": 10,
+    "species_with_both_discovery_and_reclassification": 54,
+    "source_identity_discordance_overall": "This is item-specific overlap, NOT a p value or evidence of regional larval use."
+  },
+  "full_239": {
+    "original_new_resource_cells": 14553,
+    "augmented_new_resource_cells": 14967,
+    "retained_in_both": 13150,
+    "union_of_either_source": 16370,
+    "intersection_over_union_jaccard": 0.8032987171655467,
+    "unchanged_host_inventory_species": 158,
+    "warning": "All 158 species without added BCE hosts are identical in the two scenarios, raising apparent full-panel overlap."
+  },
+  "illustrative_cases": {
+    "most_positive_net": {
+      "species": "Lycaena dispar",
+      "BCE_candidate_host_links_added": 11,
+      "base_added": 0,
+      "augmented_added": 146,
+      "net_change": 146,
+      "retained_new_resource_cells": 0,
+      "reclassified_native": 0,
+      "previously_unadded_new": 146,
+      "union_new_resource_cells": 146,
+      "jaccard": 0,
+      "is_turnover_despite_unchanged_count": false,
+      "both_reclassification_and_discovery": false
+    },
+    "most_negative_net": {
+      "species": "Minois dryas",
+      "BCE_candidate_host_links_added": 16,
+      "base_added": 157,
+      "augmented_added": 47,
+      "net_change": -110,
+      "retained_new_resource_cells": 32,
+      "reclassified_native": 125,
+      "previously_unadded_new": 15,
+      "union_new_resource_cells": 172,
+      "jaccard": 0.18604651162790697,
+      "is_turnover_despite_unchanged_count": false,
+      "both_reclassification_and_discovery": true
+    },
+    "equal_count_hidden_turnover": {
+      "species": "Thymelicus lineola",
+      "BCE_candidate_host_links_added": 20,
+      "base_added": 65,
+      "augmented_added": 65,
+      "net_change": 0,
+      "retained_new_resource_cells": 38,
+      "reclassified_native": 27,
+      "previously_unadded_new": 27,
+      "union_new_resource_cells": 92,
+      "jaccard": 0.41304347826086957,
+      "is_turnover_despite_unchanged_count": true,
+      "both_reclassification_and_discovery": true
+    }
+  },
+  "science_boundary": [
+    "Jaccard compares potential resource regions under two literature host inventories, NOT temporal geographic range shifts.",
+    "Only 81 butterflies have BCE added host relations; the rest 158 have the exact same mapped resources, inflating the full-239 source Jaccard.",
+    "There are 4 affected butterflies with no new-resource regions under either host inventory; species-level Jaccard median uses the other 77.",
+    "A difference in species-level new-resource AREA count does not imply a difference in butterfly colonization or reproduction.",
+    "The source is a Europe-derived, evidence-filtered, only partially overlapping host inventory—not a representative global independent replicate.",
+    "The species with the largest positive and negative changes are exact extreme selection for audit, not biologically independent model validation.",
+    "No new source-specific climate/spatial structural null was performed here; the earlier 0.36 percentage-point original-HOSTS residual remains source-conditional."
+  ]
+}

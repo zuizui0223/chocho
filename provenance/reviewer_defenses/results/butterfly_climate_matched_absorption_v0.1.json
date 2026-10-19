@@ -1,0 +1,230 @@
+{
+  "schema": "chocho_climate_adjusted_resource_absorption_result_v0.1",
+  "status": "SUCCESS_POSTHOC_EXPLORATORY_CLIMATE_CONSTRAINED_SENSITIVITY",
+  "provenance": {
+    "run": 38696007445,
+    "job_id": 116292612624,
+    "source_head_sha": "8b7ca9c545d665db970fefa28e56f3f059d4eab0",
+    "artifact_id": 11955166356,
+    "artifact_name": "butterfly-climate-matched-structural-null-v01",
+    "source_url": "https://github.com/zuizui0223/chocho/actions/runs/38696007445",
+    "protocol": "provenance/reviewer_defenses/protocols/CLIMATE_CONDITIONED_RESOURCE_ABSORPTION_20261015.md",
+    "analysis_code": "scripts/analyze_butterfly_climate_matched_plant_range_null.py",
+    "test_code": "tests/test_butterfly_climate_matched_plant_range_null.py",
+    "output_access": "full 59599-byte JSON in run artifact 11955166356; compact tested numerical receipt transcribed from successful workflow stdout"
+  },
+  "climate": {
+    "source_file_sha256": "0087117e0915a0847abaae8d11762b75f35b8eac94434d50913c2781bea727e2",
+    "source_rows": 5300,
+    "source_unique_valid_regions": 365,
+    "duplicate_rows_validated": 4935,
+    "regions_only_missing_climate": 0,
+    "data_source": "CHELSA V2.1 1981-2010 median climate samples within WGSRPD3, frozen independent climate crossfit result, TTF run 36270581743 artifact 10919985332"
+  },
+  "study": {
+    "focal_butterflies": 239,
+    "source_climate_regions": 365,
+    "resource_regions": 365,
+    "variables": [
+      "bio1",
+      "bio7",
+      "bio12",
+      "bio15"
+    ],
+    "source_climate_age": "1981–2010 climatology, not introduction dates",
+    "source_geo": "WGSRPD3 are geographically coarse"
+  },
+  "baseline": {
+    "introduced_host_butterfly_region_incidences": 75346,
+    "introduced_incidences_in_native_supported_cells": 46387,
+    "added_units": 14553
+  },
+  "models": {
+    "temperature_precipitation_2x2": {
+      "status": "EVALUABLE",
+      "chains": [
+        {
+          "seed": 20261015,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.9181180653870213,
+          "burn_moved_fraction": 0.22177591940210056,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 45756.45,
+            "null_median": 45835,
+            "null_q975": 45919.2,
+            "observed_minus_null_median": 552,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.2479819695843066
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14915.45,
+            "null_median": 14979,
+            "null_q975": 15040,
+            "observed_minus_null_median": -426,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.06698131645444079
+          }
+        },
+        {
+          "seed": 20261016,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.9181180653870213,
+          "burn_moved_fraction": 0.22154545155236557,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 45747.45,
+            "null_median": 45829,
+            "null_q975": 45907.649999999994,
+            "observed_minus_null_median": 558,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.1835993842035104
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14917.45,
+            "null_median": 14984,
+            "null_q975": 15049.65,
+            "observed_minus_null_median": -431,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.1822445831253771
+          }
+        }
+      ]
+    },
+    "temperature_precipitation_3x3": {
+      "status": "EVALUABLE",
+      "chains": [
+        {
+          "seed": 20261015,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.8674151384453297,
+          "burn_moved_fraction": 0.16221644223487966,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 46025.9,
+            "null_median": 46099,
+            "null_q975": 46153.55,
+            "observed_minus_null_median": 288,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.2117520736273149
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14767.8,
+            "null_median": 14817,
+            "null_q975": 14862.65,
+            "observed_minus_null_median": -264,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.2399200147125735
+          }
+        },
+        {
+          "seed": 20261016,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.8674151384453297,
+          "burn_moved_fraction": 0.16201889836367828,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 46024.9,
+            "null_median": 46096,
+            "null_q975": 46162,
+            "observed_minus_null_median": 291,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.22720379193391002
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14768,
+            "null_median": 14813,
+            "null_q975": 14865.55,
+            "observed_minus_null_median": -260,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.11102662163404729
+          }
+        }
+      ]
+    },
+    "four_bioclim_variables_2x2x2x2": {
+      "status": "EVALUABLE",
+      "chains": [
+        {
+          "seed": 20261015,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.8047937312744872,
+          "burn_moved_fraction": 0.14433872189115332,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 45946.9,
+            "null_median": 46006,
+            "null_q975": 46067,
+            "observed_minus_null_median": 381,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.12055832459380901
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14783.900000000001,
+            "null_median": 14832,
+            "null_q975": 14879.55,
+            "observed_minus_null_median": -279,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.11850805998247821
+          }
+        },
+        {
+          "seed": 20261016,
+          "status": "EXPLORATORY_CLIMATE_CONDITIONED_NULL_EVALUABLE",
+          "coverage": 1,
+          "viable_fraction": 0.8047937312744872,
+          "burn_moved_fraction": 0.14170480360846804,
+          "absorbed": {
+            "observed": 46387,
+            "null_q025": 45942.600000000006,
+            "null_median": 46007,
+            "null_q975": 46066.1,
+            "observed_minus_null_median": 380,
+            "nominal_one_sided_p_above": 0.0033333333333333335,
+            "nominal_one_sided_p_below": 1,
+            "lag1_null_draw_correlation": 0.12038480285418167
+          },
+          "unique_added": {
+            "observed": 14553,
+            "null_q025": 14779.9,
+            "null_median": 14832,
+            "null_q975": 14876.55,
+            "observed_minus_null_median": -279,
+            "nominal_one_sided_p_above": 1,
+            "nominal_one_sided_p_below": 0.0033333333333333335,
+            "lag1_null_draw_correlation": 0.1712193527051104
+          }
+        }
+      ]
+    }
+  },
+  "caveats": [
+    "This is post-hoc after earlier baseline null results; small Monte Carlo p-values per serial swap-chain are descriptive and not pre-registered significance tests.",
+    "Null preserves butterfly-host identities, native geography, plant family × continent × coarse climate stratum introduced range count per plant, and introduced plant richness per region and family.",
+    "All 365 resource regions had previously sampled CHELSA BIO1/7/12/15 values, but region-level medians compress topographic and microclimatic heterogeneity.",
+    "Randomization conserves introduced plant × region edges, not each butterfly's introduced-added resource count; climatic stratification alone does not condition on local habitat, introduction history, or sampling bias.",
+    "The three climate stratification methods are not nested; don't interpret monotonic change across them as a causal share of climate explanation.",
+    "Recorded resource geography does not measure butterfly abundance, host quality, local breeding, or competition.",
+    "No GEB submission manuscript or original result is changed by this experiment."
+  ]
+}

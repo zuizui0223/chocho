@@ -1,0 +1,104 @@
+name: butterfly geographically local climate null (exploratory)
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/analyze_butterfly_spatially_local_plant_range_null.py"
+      - "scripts/analyze_butterfly_climate_matched_plant_range_null.py"
+      - "tests/test_butterfly_spatially_local_plant_range_null.py"
+      - ".github/workflows/butterfly-spatially-local-resource-null.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-local-resource-null-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  spatial-local-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+
+      - name: Install scientific geometry dependency
+        run: python -m pip install "shapely>=2,<3"
+
+      - name: Restore frozen S1 resource descriptors
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-envelope-pilot-v01
+          path: inputs/s1
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36222306369
+
+      - name: Restore independently archived CHELSA climate summaries
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-climate-release-postgate-independent-result-v01
+          path: inputs/climate
+          github-token: ${{ github.token }}
+          repository: zuizui0223/TTF
+          run-id: 36270581743
+
+      - name: Checkout pinned TDWG WGSRPD3 polygons
+        uses: actions/checkout@v7
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _wgsrpd
+
+      - name: Checkout pinned HOSTS
+        uses: actions/checkout@v7
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+
+      - name: Checkout pinned WCVP v13
+        uses: actions/checkout@v7
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+
+      - name: Rebuild exact HOSTS and WCVP host-region sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS results/native results/contemporary
+
+      - name: Test geography-restricted null on rebuilt data
+        run: |
+          python scripts/analyze_butterfly_spatially_local_plant_range_null.py \
+            --descriptors-csv inputs/s1/butterfly-resource-envelope-pilot-v0.1/s1_resource_descriptors.csv \
+            --insect-host-csv results/native/insect_host_accepted.csv \
+            --native-distribution-csv results/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv results/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --unit-climate-csv inputs/climate/unit_climate_crossfit.csv \
+            --level3-geojson _wgsrpd/geojson/level3.geojson \
+            --seeds 20261015 20261016 \
+            --draws 199 \
+            --burn-factor 5 \
+            --spacing-factor 1 \
+            --output-json results/spatial-local-null/geographically_tethered_climate_null_v0.1.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-geographically-local-null-v01
+          path: results/spatial-local-null/*.json
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,0 +1,373 @@
+{
+  "schema": "chocho_butterfly_plant_range_structural_null_two_chains_v0.2",
+  "status": "SUCCESS_POSTHOC_EXPLORATORY_TWO_SEED_RECONSTRUCTION",
+  "source": {
+    "repo": "zuizui0223/chocho",
+    "source_run": 38685083853,
+    "source_job": 116257977462,
+    "source_head_sha": "b75638dd9ca05550417a92e7f95707d504355bc8",
+    "workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/38685083853",
+    "source_workflow": ".github/workflows/butterfly-plant-range-structural-null.yml",
+    "pinned_hosts_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "pinned_wcvp_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "description": "Two independent RNG chains of 499 draws each, higher swap spacing, preserving host family × WGSRPD Level1 plant-range margins"
+  },
+  "accounting": {
+    "fixed_candidate_incidences": 75346,
+    "observed_incidences_absorbed_by_native_resource": 46387,
+    "observed_incidences_supporting_new_resource_regions": 28959,
+    "observed_redundant_incidences_within_new_resource_regions": 14406,
+    "observed_unique_added_butterfly_region_cells": 14553,
+    "identity": "H= A+N; N = U+R. H fixed by host×range margins, A = introduced host incidences in cells already supported natively, U = new butterfly×region cells, R = extra introduced supports beyond first in U cells.",
+    "observed_fraction_absorbed": 0.6156531202718127
+  },
+  "chains": [
+    {
+      "status": "EXPLORATORY_PLANT_RANGE_FIXED_DEGREE_NULL",
+      "observed": {
+        "added_units": 14553,
+        "introduced_host_butterfly_region_incidences": 75346,
+        "introduced_incidences_in_native_supported_cells": 46387,
+        "introduced_incidences_in_newly_supported_cells": 28959,
+        "redundant_introduced_host_incidences_in_new_cells": 14406,
+        "mean_introduced_hosts_per_new_cell": 1.9898989898989898,
+        "single_units": 8574,
+        "single_fraction": 0.5891568748711606,
+        "novel_exact_shared_pair_regions": 79412,
+        "shared_pair_units_per_added_unit": 5.456744313887171,
+        "added_cell_total_other_shared_butterflies": 83135,
+        "added_cell_mean_other_shared_butterflies": 5.712567855424998,
+        "added_cell_fraction_with_any_shared_butterfly": 0.9010513296227582,
+        "added_cell_fraction_without_shared_butterfly": 0.09894867037724181
+      },
+      "total_introduced_edges": 30373,
+      "viable_edges": 28670,
+      "seed": 20261015,
+      "replicates": 499,
+      "burn_proposals": 151865,
+      "burn_accepted": 20284,
+      "changed_fraction_after_burn": 0.3109011292924637,
+      "step_proposals_per_rep": 60746,
+      "step_accepted_min": 7895,
+      "step_accepted_median": 8124,
+      "null_summary": {
+        "added_units": {
+          "observed": 14553,
+          "null_q025": 15314.45,
+          "null_median": 15384,
+          "null_q975": 15457.55,
+          "observed_minus_null_median": -831,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "introduced_host_butterfly_region_incidences": {
+          "observed": 75346,
+          "null_q025": 75346,
+          "null_median": 75346,
+          "null_q975": 75346,
+          "observed_minus_null_median": 0,
+          "p_ge": 1,
+          "p_le": 1
+        },
+        "introduced_incidences_in_native_supported_cells": {
+          "observed": 46387,
+          "null_q025": 45196.350000000006,
+          "null_median": 45301,
+          "null_q975": 45399.55,
+          "observed_minus_null_median": 1086,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "introduced_incidences_in_newly_supported_cells": {
+          "observed": 28959,
+          "null_q025": 29946.449999999997,
+          "null_median": 30045,
+          "null_q975": 30149.649999999998,
+          "observed_minus_null_median": -1086,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "redundant_introduced_host_incidences_in_new_cells": {
+          "observed": 14406,
+          "null_q025": 14569.9,
+          "null_median": 14662,
+          "null_q975": 14766.099999999999,
+          "observed_minus_null_median": -256,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "mean_introduced_hosts_per_new_cell": {
+          "observed": 1.9898989898989898,
+          "null_q025": 1.9446707595488752,
+          "null_median": 1.9532406806078713,
+          "null_q975": 1.9615363270312431,
+          "observed_minus_null_median": 0.036658309291118574,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "single_units": {
+          "observed": 8574,
+          "null_q025": 9009.35,
+          "null_median": 9107,
+          "null_q975": 9212.65,
+          "observed_minus_null_median": -533,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "single_fraction": {
+          "observed": 0.5891568748711606,
+          "null_q025": 0.5874060531260596,
+          "null_median": 0.5920864245737342,
+          "null_q975": 0.5967151008562179,
+          "observed_minus_null_median": -0.0029295497025735306,
+          "p_ge": 0.91,
+          "p_le": 0.092
+        },
+        "novel_exact_shared_pair_regions": {
+          "observed": 79412,
+          "null_q025": 81267.95000000001,
+          "null_median": 81534,
+          "null_q975": 81790.4,
+          "observed_minus_null_median": -2122,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "shared_pair_units_per_added_unit": {
+          "observed": 5.456744313887171,
+          "null_q025": 5.279803901538417,
+          "null_median": 5.299779048609306,
+          "null_q975": 5.319095320756567,
+          "observed_minus_null_median": 0.15696526527786503,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "added_cell_total_other_shared_butterflies": {
+          "observed": 83135,
+          "null_q025": 87734.05,
+          "null_median": 88410,
+          "null_q975": 89150.95000000001,
+          "observed_minus_null_median": -5275,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "added_cell_mean_other_shared_butterflies": {
+          "observed": 5.712567855424998,
+          "null_q025": 5.71180054587312,
+          "null_median": 5.748296671208877,
+          "null_q975": 5.7823040688145575,
+          "observed_minus_null_median": -0.03572881578387843,
+          "p_ge": 0.97,
+          "p_le": 0.032
+        },
+        "added_cell_fraction_with_any_shared_butterfly": {
+          "observed": 0.9010513296227582,
+          "null_q025": 0.8980700217396653,
+          "null_median": 0.9000846740050804,
+          "null_q975": 0.9022963572683937,
+          "observed_minus_null_median": 0.0009666556176778363,
+          "p_ge": 0.188,
+          "p_le": 0.814
+        },
+        "added_cell_fraction_without_shared_butterfly": {
+          "observed": 0.09894867037724181,
+          "null_q025": 0.09770364273160617,
+          "null_median": 0.09991532599491956,
+          "null_q975": 0.10192997826033465,
+          "observed_minus_null_median": -0.000966655617677753,
+          "p_ge": 0.814,
+          "p_le": 0.188
+        }
+      },
+      "preserves": [
+        "butterfly-host interaction identities and degrees",
+        "introduced geographic cells per plant per WGSRPD Level1",
+        "introduced plant richness per region per plant family",
+        "all native plant occurrences as forbidden introduced cells"
+      ],
+      "does_not_preserve": [
+        "individual butterfly added-resource region count",
+        "realistic plant climate niche or time of introduction",
+        "observed butterfly occupancy, larval success or host phenology"
+      ],
+      "interpretation": "Post-hoc plant-family×continent range-shuffle diagnostic. The new-cell co-user density and zero-co-user fraction share an identical butterfly×region denominator and are preferable to the cross-unit shared pair×region / added-cell ratio. All results are structural opportunity, not local co-occurrence or competitive intensity."
+    },
+    {
+      "status": "EXPLORATORY_PLANT_RANGE_FIXED_DEGREE_NULL",
+      "observed": {
+        "added_units": 14553,
+        "introduced_host_butterfly_region_incidences": 75346,
+        "introduced_incidences_in_native_supported_cells": 46387,
+        "introduced_incidences_in_newly_supported_cells": 28959,
+        "redundant_introduced_host_incidences_in_new_cells": 14406,
+        "mean_introduced_hosts_per_new_cell": 1.9898989898989898,
+        "single_units": 8574,
+        "single_fraction": 0.5891568748711606,
+        "novel_exact_shared_pair_regions": 79412,
+        "shared_pair_units_per_added_unit": 5.456744313887171,
+        "added_cell_total_other_shared_butterflies": 83135,
+        "added_cell_mean_other_shared_butterflies": 5.712567855424998,
+        "added_cell_fraction_with_any_shared_butterfly": 0.9010513296227582,
+        "added_cell_fraction_without_shared_butterfly": 0.09894867037724181
+      },
+      "total_introduced_edges": 30373,
+      "viable_edges": 28670,
+      "seed": 20261016,
+      "replicates": 499,
+      "burn_proposals": 151865,
+      "burn_accepted": 20442,
+      "changed_fraction_after_burn": 0.30708194778257003,
+      "step_proposals_per_rep": 60746,
+      "step_accepted_min": 7862,
+      "step_accepted_median": 8129,
+      "null_summary": {
+        "added_units": {
+          "observed": 14553,
+          "null_q025": 15313,
+          "null_median": 15385,
+          "null_q975": 15456.650000000001,
+          "observed_minus_null_median": -832,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "introduced_host_butterfly_region_incidences": {
+          "observed": 75346,
+          "null_q025": 75346,
+          "null_median": 75346,
+          "null_q975": 75346,
+          "observed_minus_null_median": 0,
+          "p_ge": 1,
+          "p_le": 1
+        },
+        "introduced_incidences_in_native_supported_cells": {
+          "observed": 46387,
+          "null_q025": 45190.350000000006,
+          "null_median": 45298,
+          "null_q975": 45407.100000000006,
+          "observed_minus_null_median": 1089,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "introduced_incidences_in_newly_supported_cells": {
+          "observed": 28959,
+          "null_q025": 29938.9,
+          "null_median": 30048,
+          "null_q975": 30155.65,
+          "observed_minus_null_median": -1089,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "redundant_introduced_host_incidences_in_new_cells": {
+          "observed": 14406,
+          "null_q025": 14566.599999999999,
+          "null_median": 14659,
+          "null_q975": 14767,
+          "observed_minus_null_median": -253,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "mean_introduced_hosts_per_new_cell": {
+          "observed": 1.9898989898989898,
+          "null_q025": 1.9445793735141002,
+          "null_median": 1.9528799219004231,
+          "null_q975": 1.962337344697151,
+          "observed_minus_null_median": 0.03701906799856669,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "single_units": {
+          "observed": 8574,
+          "null_q025": 9000,
+          "null_median": 9107,
+          "null_q975": 9202.55,
+          "observed_minus_null_median": -533,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "single_fraction": {
+          "observed": 0.5891568748711606,
+          "null_q025": 0.5870161198498938,
+          "null_median": 0.592029741716671,
+          "null_q975": 0.5958855534808581,
+          "observed_minus_null_median": -0.002872866845510358,
+          "p_ge": 0.864,
+          "p_le": 0.138
+        },
+        "novel_exact_shared_pair_regions": {
+          "observed": 79412,
+          "null_q025": 81266.8,
+          "null_median": 81549,
+          "null_q975": 81803.70000000001,
+          "observed_minus_null_median": -2137,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "shared_pair_units_per_added_unit": {
+          "observed": 5.456744313887171,
+          "null_q025": 5.281408179242245,
+          "null_median": 5.299921946142838,
+          "null_q975": 5.321181194345375,
+          "observed_minus_null_median": 0.15682236774433278,
+          "p_ge": 0.002,
+          "p_le": 1
+        },
+        "added_cell_total_other_shared_butterflies": {
+          "observed": 83135,
+          "null_q025": 87654.8,
+          "null_median": 88440,
+          "null_q975": 89189,
+          "observed_minus_null_median": -5305,
+          "p_ge": 1,
+          "p_le": 0.002
+        },
+        "added_cell_mean_other_shared_butterflies": {
+          "observed": 5.712567855424998,
+          "null_q025": 5.712428423676608,
+          "null_median": 5.747232712592785,
+          "null_q975": 5.7865114637203225,
+          "observed_minus_null_median": -0.03466485716778678,
+          "p_ge": 0.974,
+          "p_le": 0.028
+        },
+        "added_cell_fraction_with_any_shared_butterfly": {
+          "observed": 0.9010513296227582,
+          "null_q025": 0.8979259877655282,
+          "null_median": 0.9002273465410847,
+          "null_q975": 0.9022476211778544,
+          "observed_minus_null_median": 0.0008239830816735294,
+          "p_ge": 0.238,
+          "p_le": 0.764
+        },
+        "added_cell_fraction_without_shared_butterfly": {
+          "observed": 0.09894867037724181,
+          "null_q025": 0.0977523788221456,
+          "null_median": 0.09977265345891523,
+          "null_q975": 0.10207401223447175,
+          "observed_minus_null_median": -0.0008239830816734184,
+          "p_ge": 0.764,
+          "p_le": 0.238
+        }
+      },
+      "preserves": [
+        "butterfly-host interaction identities and degrees",
+        "introduced geographic cells per plant per WGSRPD Level1",
+        "introduced plant richness per region per plant family",
+        "all native plant occurrences as forbidden introduced cells"
+      ],
+      "does_not_preserve": [
+        "individual butterfly added-resource region count",
+        "realistic plant climate niche or time of introduction",
+        "observed butterfly occupancy, larval success or host phenology"
+      ],
+      "interpretation": "Post-hoc plant-family×continent range-shuffle diagnostic. The new-cell co-user density and zero-co-user fraction share an identical butterfly×region denominator and are preferable to the cross-unit shared pair×region / added-cell ratio. All results are structural opportunity, not local co-occurrence or competitive intensity."
+    }
+  ],
+  "scientific_boundaries": [
+    "Post-hoc comparison of potential WGSRPD3 host resources, not observed butterfly colonization, biomass, larval performance or site-level persistence.",
+    "Exact host links are frozen across native and introduced ranges; the null preserves plant-family × Level1 introduced geographic margins, not climate suitability or individual butterfly gain counts.",
+    "Null distributions are 499 correlated swap-chain samples per seed, not 998 fully independent random permutations; two chain agreement is a robustness check, not proof of convergence or exchangeability.",
+    "Nominal one-sided p=0.002 is Monte Carlo lower resolution per 499-draw chain, not a calibrated global confirmatory claim after post-hoc endpoint selection and multiple metric inspection.",
+    "High native-overlap incidence may arise from shared plant/butterfly climate niches and baseline-resource saturation rather than biological preference for reinforcement.",
+    "Mean 1.99 introduced hosts per new cell vs null ~1.95 does not establish host quality or realized demographic redundancy; the one-host fraction itself is not unusually high.",
+    "Mean co-users per added resource cell is observed ~5.713 vs null ~5.747-5.748, not an excess; shared-host geography does not prove competition."
+  ]
+}

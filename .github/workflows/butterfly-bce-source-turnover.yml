@@ -1,0 +1,74 @@
+name: butterfly BCE added resource identity turnover (exploratory)
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/summarize_bce_added_resource_identity_turnover.py"
+      - "scripts/render_bce_added_resource_identity_turnover_figure.py"
+      - "tests/test_bce_added_resource_identity_turnover.py"
+      - ".github/workflows/butterfly-bce-source-turnover.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-bce-source-turnover-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  turnover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install reproducible figure and test dependencies
+        run: python -m pip install -e ".[figure,test]"
+      - name: Test paired geography and empty-union rules
+        run: python -m pytest -q tests/test_bce_added_resource_identity_turnover.py
+      - name: Restore already-audited BCE resource sensitivity
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-bce-resource-novelty-sensitivity-v01
+          path: inputs/source
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          run-id: 38988757959
+      - name: Inspect original archived source identity
+        run: |
+          test -s inputs/source/bce_clarke_resource_novelty_v0.1.json
+          python - <<'PY'
+          import json,pathlib,hashlib
+          f=pathlib.Path("inputs/source/bce_clarke_resource_novelty_v0.1.json")
+          a=json.loads(f.read_text())
+          assert a["schema"] == "chocho_butterfly_bce_host_inventory_resource_novelty_v0.1"
+          assert a["source"]["candidate_additional_host_links"] == 1027
+          assert a["change"]["old_added_cells_reclassified_native"] == 1403
+          assert a["change"]["previously_unadded_regions_newly_added"] == 1817
+          print({"original_source_sha256":hashlib.sha256(f.read_bytes()).hexdigest()})
+          PY
+      - name: Reconcile species-level source turnover and write full results
+        run: |
+          python scripts/summarize_bce_added_resource_identity_turnover.py \
+            --input-json inputs/source/bce_clarke_resource_novelty_v0.1.json \
+            --output-json results/bce-source-turnover/turnover_v0.1.json \
+            --output-species-csv results/bce-source-turnover/turnover_81_butterflies.csv
+      - name: Render paired geographic-resource identity turnover
+        run: |
+          python scripts/render_bce_added_resource_identity_turnover_figure.py \
+            --summary-json results/bce-source-turnover/turnover_v0.1.json \
+            --output-png results/bce-source-turnover/figure_added_resource_identity_turnover.png \
+            --output-svg results/bce-source-turnover/figure_added_resource_identity_turnover.svg
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-bce-added-resource-identity-turnover-v01
+          path: results/bce-source-turnover/
+          retention-days: 30
+          if-no-files-found: warn

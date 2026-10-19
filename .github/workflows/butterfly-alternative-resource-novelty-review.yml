@@ -1,0 +1,84 @@
+name: butterfly alternative GEB resource novelty author review bundle
+
+on:
+  push:
+    branches:
+      - synthesis/nontrivial-macroecology-20261015
+    paths:
+      - "scripts/build_butterfly_resource_novelty_review_bundle.py"
+      - "tests/test_butterfly_resource_novelty_full_draft.py"
+      - ".github/workflows/butterfly-alternative-resource-novelty-review.yml"
+      - "docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md"
+  workflow_dispatch:
+
+concurrency:
+  group: butterfly-resource-novelty-alternative-review-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  author-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install paper evidence test environment
+        run: python -m pip install -e ".[test]"
+      - name: Check complete alternative article against source receipts
+        run: python -m pytest -q tests/test_butterfly_resource_novelty_full_draft.py
+
+      - name: Restore generated resource accounting and BCE budget diagrams
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-exploratory-resource-novelty-figure-v03
+          repository: zuizui0223/chocho
+          run-id: 38995025937
+          github-token: ${{ github.token }}
+
+          path: input/combined
+
+      - name: Restore butterfly-specific resource geography turnover panel
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-bce-added-resource-identity-turnover-v01
+          repository: zuizui0223/chocho
+          run-id: 38992305236
+          github-token: ${{ github.token }}
+          path: input/turnover
+
+      - name: Restore independent butterfly occurrences and host-family Figure 3
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-resource-novelty-ecological-context-figure3-v01
+          repository: zuizui0223/chocho
+          run-id: 38994098049
+          github-token: ${{ github.token }}
+          path: input/context
+
+      - name: Assemble alternative author-review manuscript, figures and checksums
+        run: |
+          python scripts/build_butterfly_resource_novelty_review_bundle.py \
+            --manuscript docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md \
+            --receipt-dir provenance/reviewer_defenses/results \
+            --combined-figures-dir input/combined \
+            --turnover-figures-dir input/turnover \
+            --context-figures-dir input/context \
+            --output-dir dist/alternative-review \
+            --head-sha "$GITHUB_SHA"
+          unzip -t dist/alternative-review/butterfly_resource_novelty_alternative_review_v01.zip
+          test -s dist/alternative-review/REVIEW_PACKAGE_MANIFEST.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-alternative-geb-resource-novelty-review-v01
+          path: |
+            dist/alternative-review/butterfly_resource_novelty_alternative_review_v01.zip
+            dist/alternative-review/REVIEW_PACKAGE_MANIFEST.json
+          retention-days: 30
