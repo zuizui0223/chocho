@@ -1,0 +1,108 @@
+name: BCE butterfly family and regional macroecology residual
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/bce-butterfly-family-realm-macro.yml
+      - scripts/analyze_bce_butterfly_family_realm_macro_residual_20261019.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  climate-conditioned-family-and-realm-original-macro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing numpy
+        run: python -m pip install -e .
+      - name: Restore pinned author-only HOSTS/WCVP/BCE/CHELSA/TDWG source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Verify raw source ZIP SHA, member list, and safe extraction
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          archives=[p for p in Path("_retrieval/author_only").rglob("*.zip")
+                    if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(archives)==1
+          dest=Path("_retrieval/extracted_source")
+          dest.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(archives[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(dest)
+          assert (dest/"SOURCE_MANIFEST.json").is_file()
+          print("PASS original provider-source outer archive SHA")
+          PY
+      - name: Source-only 9-draw simulation sanity and original family mapping
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_bce_butterfly_family_realm_macro_residual_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --draws 9 \
+            --output-json artifacts/butterfly_family_realm_source_smoke.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("artifacts/butterfly_family_realm_source_smoke.json").read_text())
+          assert a["sources"]["239_focal_species"]==239
+          assert a["sources"]["total_introduced_plant_region_edges"]==37869
+          assert len(a["sources"]["butterfly_families"])==6
+          assert len(a["sources"]["recipient_level1_codes"])==9
+          c=a["family_and_realm_results"]["augmented_235"]["0.05"]
+          assert c["all"]["all"]["observed_added_cells"]==14961
+          assert c["all"]["all"]["observed_aligned"]==9949
+          assert sum(v["observed_added_cells"] for v in c["family"].values())==14961
+          assert sum(v["observed_added_cells"] for v in c["realm"].values())==14961
+          print("PASS 239 species/families/Level1 source and observed resource decomposition")
+          PY
+      - name: Compute independent two-chain 199-draw family and biogeography heterogeneity
+        run: |
+          python scripts/analyze_bce_butterfly_family_realm_macro_residual_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --draws 199 \
+            --output-json artifacts/butterfly_family_realm_climate_macro_20261019.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_family_realm_climate_macro_20261019.json").read_text())
+          assert r["status"]=="GLOBAL_SOURCE_QUALIFIED_GROUP_HETEROGENEITY"
+          assert r["mcmc_mode"]=="plant_bio1_bio12_3x3"
+          assert len(r["chain_quality"])==2
+          assert [c["seed"] for c in r["chain_quality"]]==[20261019,20261020]
+          assert all(c["moved_fraction"]>=.10 for c in r["chain_quality"])
+          assert all(c["source_viable_edge_fraction"]>=.75 for c in r["chain_quality"])
+          x=r["family_and_realm_results"]
+          for co,source_n in (("augmented_235",235),("matched_original_234",234)):
+              for q in ("0.05","0.1"):
+                  fam=x[co][q]["family"]
+                  reg=x[co][q]["realm"]
+                  assert len(fam)==6 and len(reg)==9
+                  assert x[co][q]["all"]["all"]["status"]=="QUALIFIED_EXPLORATORY_HETEROGENEITY"
+                  assert sum(z["observed_added_cells"] for z in fam.values())==x[co][q]["all"]["all"]["observed_added_cells"]
+                  assert sum(z["observed_added_cells"] for z in reg.values())==x[co][q]["all"]["all"]["observed_added_cells"]
+                  assert sum(z["observed_aligned"] for z in fam.values())==x[co][q]["all"]["all"]["observed_aligned"]
+                  assert sum(z["observed_aligned"] for z in reg.values())==x[co][q]["all"]["all"]["observed_aligned"]
+                  assert all(len(z["ESS_approx_by_chain"])==2 for z in fam.values())
+                  assert all(len(z["ESS_approx_by_chain"])==2 for z in reg.values())
+          print("PASS globally qualified independent MCMC, all 6 families and 9 Level1 regions retained without sign-based selection")
+          PY
+      - name: Upload only derived family/recipient macro statistics
+        uses: actions/upload-artifact@v4
+        with:
+          name: BCE-butterfly-family-realm-climate-macro-exploratory
+          path: artifacts/butterfly_family_realm_climate_macro_20261019.json
