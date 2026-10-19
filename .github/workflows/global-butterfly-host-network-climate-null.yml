@@ -1,0 +1,83 @@
+name: Global butterfly host-network climate-analogue structural null
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - scripts/analyze_butterfly_plant_network_climate_null_20261019.py
+      - .github/workflows/global-butterfly-host-network-climate-null.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-host-network-geography:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original pinned numpy dependency
+        run: python -m pip install -e .
+      - name: Retrieve source-verified author-only global WCVP/HOSTS/CHELSA archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Verify source archive pin before host-network null
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          root=Path("_retrieval/author_only")
+          target="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[p for p in root.rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==target]
+          assert len(matches)==1,"PRESPECIFIED_AUTHOR_ONLY_WCVP_HOSTS_SOURCE_MISSING_OR_CHANGED"
+          dst=Path("_retrieval/source")
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              for path in z.namelist():
+                  p=Path(path)
+                  assert not p.is_absolute() and ".." not in p.parts
+              z.extractall(dst)
+          assert (dst/"SOURCE_MANIFEST.json").is_file()
+          print("PASS source archive original SHA; raw third-party files NOT uploaded")
+          PY
+      - name: Two-chain 199-draw plant-identity/family/continent/climate-constrained null
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_butterfly_plant_network_climate_null_20261019.py --source-root _retrieval/source --output-json artifacts/butterfly_climate_plant_network_null_20261019.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/butterfly_climate_plant_network_null_20261019.json").read_text())
+          assert r["original_focal_butterflies"]==239
+          assert r["eligible_native_host_climate_butterflies"]==234
+          assert r["introduced_plant_region_edges"]==30373
+          assert r["climate_mode"]=="temperature_precipitation_2x2"
+          assert r["butterfly_host_edges_kept_fixed"]
+          assert r["native_host_plants_and_ranges_kept_fixed"]
+          assert r["per_region_per_plant_family_introduced_counts_fixed"]
+          assert r["newly_added_butterfly_region_count_changes_under_null"]
+          assert r["draws_per_chain"]==199
+          for q,counts in (("0.05",(9451,14481)),("0.1",(6948,14481))):
+              x=r["result"][q]
+              assert (x["observed"]["O"],x["observed"]["A"])==counts
+              assert len(x["null_share_median_by_chain"])==2
+              assert all(math.isfinite(z) for z in x["null_share_median_by_chain"])
+              if not r["quality"][q]["qualified"]:
+                  assert x["serial_right_tail_fractions_if_qualified"] is None
+              else:
+                  assert all(0<x<=1 for x in x["serial_right_tail_fractions_if_qualified"])
+          print("PASS source-pinned butterfly-host-identity conserving null; denominators recalculated and mixing gates enforced")
+          PY
+      - name: Upload derived null statistics ONLY (not 30,373 raw plant-range edges)
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-climate-plant-network-null-exploratory
+          path: artifacts/butterfly_climate_plant_network_null_20261019.json
