@@ -1,0 +1,90 @@
+name: BCE butterfly local1500km 399-draw mixing recovery
+on:
+  push:
+    branches:
+      - analysis/global-habitat-filter-20261019
+    paths:
+      - .github/workflows/bce-local-spatial-399-mixing.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-geography-tether-longchain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing numpy and polygon geometry support
+        run: python -m pip install -e . 'shapely>=2,<3'
+      - name: Download fixed author-only WCVP HOSTS BCE CHELSA TDWG bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Validate original source bundle bytes and extract
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          archives=[p for p in Path("_retrieval/author_only").rglob("*.zip")
+                    if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(archives)==1,"Source drift/unavailable"
+          target=Path("_retrieval/extracted_source")
+          target.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(archives[0]) as z:
+              assert z.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in z.namelist())
+              z.extractall(target)
+          assert (target/"SOURCE_MANIFEST.json").is_file()
+          print("PASS original 239-butterfly author-only source integrity")
+          PY
+      - name: Rerun unchanged 1500km climate-bin local null with two 399-draw chains
+        run: |
+          mkdir -p artifacts
+          python scripts/analyze_bce_finer_climate_spatial_null_20261019.py \
+            --source-root _retrieval/extracted_source \
+            --mode plant_bio1_bio12_2x2_local1500km \
+            --draws 399 --burn-factor 10 --spacing-factor 4 \
+            --output-json artifacts/BCE_local1500km_399draw_mixing_20261019.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          r=json.loads(Path("artifacts/BCE_local1500km_399draw_mixing_20261019.json").read_text())
+          assert r["draws_per_chain"]==399
+          assert r["seeds"]==[20261019,20261020]
+          assert r["scope"]["butterflies"]==239
+          assert r["scope"]["climate_eligible_augmented_butterflies"]==235
+          assert r["scope"]["same_original_climate_eligible_butterflies"]==234
+          assert r["scope"]["source_introduced_plant_WGSRPD3_links"]==37869
+          expected={"0.05":(9949,14961),"0.1":(7370,14961),
+                    "matched_0.05":(9903,14903),"matched_0.1":(7331,14903)}
+          for k,(o,a) in expected.items():
+              assert (r["observed"][k]["aligned"],r["observed"][k]["evaluable_added"])==(o,a)
+          key="plant_bio1_bio12_2x2_local1500km"
+          m=r["modes"][key]
+          assert [c["seed"] for c in m["chains"]]==[20261019,20261020]
+          for c in m["chains"]:
+              assert c["draws"]==399
+              assert c["geography"]["radius_km"]==1500
+              assert c["geography"]["mapped_focal_regions"]==365
+              assert all(len(c["full_draw_history"][q])==399 for q in expected)
+              assert c["stratum_structure"]["viable_fraction_of_total"]>=.75
+          for q,g in m["quality"].items():
+              assert g["qualified"] or m["status"]=="NOT_EVALUABLE_MIXING_OR_GEOGRAPHIC_LOCALITY"
+              assert all(math.isfinite(x) for x in m["contrasts"][q]["median_null_fraction_by_chain"])
+          print("PASS unchanged 1500km spatial/geography and plant margin test, 2x399 draws; never ignore failed ESS gate")
+          PY
+      - name: Upload derived local geometric null MCMC diagnostics only
+        uses: actions/upload-artifact@v4
+        with:
+          name: BCE-1500km-local-null-399-mixing-exploratory
+          path: artifacts/BCE_local1500km_399draw_mixing_20261019.json
