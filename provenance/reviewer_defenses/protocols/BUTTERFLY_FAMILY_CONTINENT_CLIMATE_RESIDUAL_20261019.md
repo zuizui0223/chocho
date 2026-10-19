@@ -1,0 +1,22 @@
+# Do climate-aligned introduced host-resource residuals generalise among butterfly families and biogeographic regions?
+
+**Exploratory original macroecology protocol, 2026-10-19, before group-level outcomes are inspected.** Previous all-butterfly BIO1/BIO12 3×3 plant-family/climate-matched residual was approximately +0.39–0.42 pp on the 5–95% native-host analogue. Reusing the same original WCVP/HOSTS/BCE/CHELSA/TDWG source data and qualifying 3×3 graph null, ask whether this small resource opportunity residual is broadly shared or concentrated within few taxonomic families and receiver regions.
+
+## Sources and denominators
+- Accepted host network: frozen 239 butterflies, +1,027 BCE/Clarke accepted host links for 81 butterflies, 679 accepted host IDs with source-botanically resolved families (323 direct, 304 genus, 52 pinned GBIF). The BCE augmentation is Europe-biased, not a globally representative replication.
+- Region climate: frozen CHELSA BIO1 and BIO12 over 365 WGSRPD3 regions, 235 climate-eligible butterflies; parallel fixed-original-eligibility 234-species sensitivity (exclude newly eligible Satyrium pruni only). Source baseline 5–95% analogue O/A=9949/14961, 10–90% O/A=7370/14961; matched 234: 9903/14903 and 7331/14903.
+- Butterfly families from exact previously connected LepTraits records (Species and Family columns). Fail if missing or conflicting for any focal butterfly; do not guess.
+- Recipient group: WGSRPD Level1 geographical unit; this is a plant resource map, not a measured butterfly occupied location or range expansion.
+
+## Primary counterfactual and analytic unit
+Reproduce exactly the already source-qualified plant Family × continent × CHELSA BIO1/BIO12 3×3 intro-plant-region degree swap: fixed butterfly–host associations, each plant native geography, native exclusions, plant within climate stratum added-cell degrees, and each recipient region introduced plant-family count.
+Two independently seeded chains 20261019/20261020; burn 10×37,869 proposed plant swaps; spacing 4×37,869; 199 draws each. For each draw recompute added resource masks for all butterflies (no synthetic butterfly observations), then aggregate numerator climate-analog added butterfly×region cells O and denominator *that draw's own* novel resource cells A by family and Level1 receiver region. Only compare observed O/A with simulated median O/A; use both q=0.05 and q=0.10; keep 235 and matched 234 on the identical null draws. No raw plant geometry or occurrence observations go into output.
+
+## Inclusion, quality and negative gates
+- Report every butterfly family and Level1 area represented; no positive-result selection. Flag family as DESCRIPTIVE_LOW_SUPPORT when fewer than five butterfly species have added resources OR fewer than 150 observed newly added cells. Flag Level1 area when fewer than 150 observed added cells. These are not ecological zeroes.
+- For each group retain observed A, O, species counts, two-chain null medians, 95% null percentile intervals, and ESS. Qualify family/region conditional residual only if BOTH independent chains have approximate ESS at least 30, median agreement within twice the larger chain SD, adequate support and overall global-chain geometry/burn/acceptance gates pass. Otherwise report NOT_EVALUABLE instead of asserting sign or p-value.
+- Require original 239/235/234 cohort count, all original introduced plant edges, exact source SHAs, same all-species global 3×3 null median near the prior qualified run, and all plant climate/recipient-family margins. Fail closed if any input or null design changed.
+- All families share some hosts and many regions: family/Level1 differences are not independent replicated experiments. MCMC serial-tail ranks are never called randomized p-values.
+
+## Biological interpretation / stop rule
+If one family/realm dominates the global residual, demote any universal butterfly-network inference. If most adequately represented groups have residuals in the same direction, report only cross-family/realm consistency in **potential larval host-resource climatic geography**, not butterfly physiology, fitness or historical colonisation. Current sources lack local host use, insect occurrence evidence across 239, butterfly demography, true plant biomass and equal-area weighting. Keep exploratory Draft PR #46 isolated from GEB PR #38 and main; third-party source geography remains author-only pending rights review.
