@@ -18,6 +18,14 @@ from rasterio.transform import from_origin
 VARS=("bio01","bio07","bio12","bio15")
 MD5={0:"5ba8c0df48a12132238ffcbf675578e0",21:"9443668583800099ce9e865be90e4ad6"}
 
+def coarse_pmip_icefree(free):
+    """Source south-to-north 0..360 lon; target north-to-south -180..180."""
+    free=np.asarray(free,bool)
+    if free.shape!=(1080,2160):
+        raise ValueError("invalid ICE6GC 10arcmin grid")
+    three_by_three=free.reshape(360,3,720,3).sum(axis=(1,3))
+    return np.roll(np.flipud(three_by_three),360,axis=1)
+
 def pmip0p5(src):
     n=Path(src).name
     yr=0 if n.endswith(".0.nc") else 21 if n.endswith(".21.nc") else None
@@ -33,9 +41,7 @@ def pmip0p5(src):
         raise ValueError("PMIP4 1080x2160 grid changed")
     if not np.isin(land,[0,100]).all() or not np.isin(ice,[0,100]).all():
         raise ValueError("PMIP4 masks not binary percent")
-    free=(land==100)&(ice==0)
-    by_half_degree=free.reshape(360,3,720,3).sum(axis=(1,3))
-    return np.roll(np.flipud(by_half_degree),360,axis=1)
+    return coarse_pmip_icefree((land==100)&(ice==0))
 
 def climate_05deg(assets):
     transform=from_origin(-180,90,.5,.5)
