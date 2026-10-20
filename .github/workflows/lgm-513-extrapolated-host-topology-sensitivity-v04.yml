@@ -1,0 +1,111 @@
+name: chocho 513 insect climate-resource topology with source-verified novel-climate extrapolation
+on:
+  push:
+    branches: [ecology/lgm-nonanalog-connectivity-sensitivity-v03]
+    paths:
+      - .github/workflows/lgm-513-extrapolated-host-topology-sensitivity-v04.yml
+      - scripts/audit_513_2d_host_nonanalog_sensitivity_v04.py
+      - tests/test_513_nonanalog_sensitivity_v04.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-513-insect-349-hostset-nonanalog-climate-sensitivity-v04
+  cancel-in-progress: false
+jobs:
+  only-source-reproduced-ecological-predictor-graphs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/TTF
+          ref: 187e15c6a7b777c119b97b8a43a0d92783ef7c5c
+          path: input/TTF
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check 513 exactly matched original insect identities and source graphics
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'pytest>=8,<9'
+          python -m pytest -q tests/test_513_nonanalog_sensitivity_v04.py tests/test_audit_513_2d_resource_topology_v03.py
+          python -m py_compile scripts/audit_513_2d_host_nonanalog_sensitivity_v04.py
+      - name: Verify immutable original and extrapolation products with exact SHA256
+        run: |
+          set -euo pipefail
+          echo '169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af  results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz' | sha256sum -c -
+          echo '67c0d99852b8b8896559dbc0da07504bcb07a6ad7c017afa0eb86e31d40acc2a  results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz' | sha256sum -c -
+          echo '3ac3d4cd6020e22377315359a2d50ddd461cbcd892ecb49b8f34f0a90a7f32d6  results/lgm_416_native_nonanalog_source_recovery_v03/summary.json' | sha256sum -c -
+          echo '838b73df7f9ba7cd23cc33b981d3a434931ab1a6ed61f4bd27621f009d129020  results/lgm_513_topology_4v8_hostsets_audit_v03/all_513_4v8_topology_and_hostset.csv' | sha256sum -c -
+          echo 'a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044  input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv' | sha256sum -c -
+          python - <<'PYTHON'
+          import json
+          p=json.load(open('results/lgm_416_native_nonanalog_source_recovery_v03/summary.json'))
+          assert p['modeled_plant_taxa']==416
+          assert p['source_21ka_predictions_used_only_for_validation']
+          assert p['source_replay_max_absolute_error_0bp']<=1e-5
+          assert p['source_holdout_max_absolute_error_21ka']<=1e-5
+          assert p['source_main_threshold_border_disagree_0BP']==0
+          assert p['source_main_threshold_border_disagree_21ka']==0
+          print('PASS_ALL416_FREE_OF_SOURCE_FIT_VARIANCE_BEFORE_INSECT_EXTRAPOLATION')
+          PYTHON
+      - name: Independently compare all513 insects and 349 unique host combinations across nonanalog choices
+        run: |
+          set -euo pipefail
+          python -u scripts/audit_513_2d_host_nonanalog_sensitivity_v04.py \
+            --plant-main results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz \
+            --plant-extended results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz \
+            --prior513 results/lgm_513_topology_4v8_hostsets_audit_v03/all_513_4v8_topology_and_hostset.csv \
+            --insect-host input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv \
+            --model-summary results/lgm_416_native_nonanalog_source_recovery_v03/summary.json \
+            --out results/lgm_513_insect_nonanalog_climate_graph_sensitivity_v04
+          python - <<'PYTHON'
+          import json,csv,hashlib,os
+          from pathlib import Path
+          p=Path('results/lgm_513_insect_nonanalog_climate_graph_sensitivity_v04')
+          q=json.loads((p/'summary.json').read_text())
+          with (p/'all_513_main_vs_extrapolated_climatic_host_graphs_v04.csv').open(newline='') as f:r=list(csv.DictReader(f))
+          assert q['species_qualified']==513 and len(r)==513
+          assert q['unique_known_hostsets']==349
+          assert q['status']=='EXPLORATORY_CLIMATE_EXTRAPOLATION_SENSITIVITY_NOT_ANCIENT_OCCUPANCY'
+          assert q['source_validation']['primary_source_replayed'] is True
+          assert q['main_species_equal_weight']['potential_suitable_area_declines']==399
+          assert q['main_species_equal_weight']['four_neighbor_components_decline']==477
+          assert q['main_species_equal_weight']['four_neighbor_largest_fraction_declines']==371
+          assert q['main_distinct_hostset_equal_weight']['four_neighbor_largest_fraction_declines']==252
+          assert q['extended_species_equal_weight']['n']==513
+          assert q['extended_distinct_hostset_equal_weight']['n']==349
+          receipt={'schema':'chocho_513_349_source_model_nonanalog_sensitivity_v04',
+             'run_id':os.environ['GITHUB_RUN_ID'],'code_commit':os.environ['GITHUB_SHA'],
+             'output_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                      for f in sorted(p.iterdir()) if f.is_file()},
+             'original_416_0bp_logit_plus_21ka_holdout_verification_passed':True,
+             'original_513_primary_never_modified':True,
+             'observed_ancient_host_occupancy_or_genetics_used':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PYTHON
+      - name: Preserve both primary and extrapolation sensitivity with race-safe commit
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_513_insect_nonanalog_climate_graph_sensitivity_v04/
+          git commit -m 'Archive independent 513-insect 349-hostset extrapolation-induced glacial topology sensitivity'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-sourceverified-513-insect-LGM-extrapolation-v04
+          path: results/lgm_513_insect_nonanalog_climate_graph_sensitivity_v04/
+          retention-days: 30
+          if-no-files-found: warn
