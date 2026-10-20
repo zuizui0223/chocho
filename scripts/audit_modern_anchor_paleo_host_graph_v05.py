@@ -90,7 +90,7 @@ def build_terrain_contact_index(host_mask,phys_labels):
     """Per physically connected ice-free landmass: suitable-site tree and host patch ID."""
     host=np.asarray(host_mask,bool)
     physical=np.asarray(phys_labels,int)
-    if host.shape!=physical.shape!=SHAPE:
+    if not (host.shape==physical.shape==SHAPE):
         raise ValueError("inconsistent physical and host climate grid shape")
     if np.any(host & (physical==0)):
         raise ValueError("suitable climate cell found on source ocean/ice")
@@ -178,7 +178,7 @@ def create_analysis(args):
     for record in read_csv(args.edges):
         edges[record["species"]].append((
           int(record["node_left"]),int(record["node_right"])))
-    if len(loc)!=len(edges)!=642 or not complete<=set(loc):
+    if not (len(loc)==len(edges)==642) or not complete<=set(loc):
         raise ValueError("original 642 geometry taxa and 513 source insects don't align")
     groups=defaultdict(list)
     for species in complete:
