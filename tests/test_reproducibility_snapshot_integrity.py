@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,7 +62,8 @@ def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
 
 def test_shapely_is_explicit_in_clean_test_environment() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'test = ["pytest>=8", "shapely>=2,<3"]' in pyproject
+    dependencies = tomllib.loads(pyproject)["project"]["optional-dependencies"]["test"]
+    assert {"pytest>=8", "shapely>=2,<3", "pyproj>=3.6,<4"} <= set(dependencies)
     workflow = (ROOT / ".github/workflows/paper-ci.yml").read_text(encoding="utf-8")
     assert 'python -m pip install -e ".[test]"' in workflow
 
