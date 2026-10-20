@@ -151,6 +151,47 @@ Thus **26/48 positive cells and 16/26 added-host positive cells are in Central
 America or the Caribbean**. The sparse comparison and geographic concentration
 limit generalization even though source retrieval is complete.
 
+## Posthoc geographic dependence of the country-level excess
+
+A new **posthoc** leave-area-out diagnostic recomputes the same within-stratum
+conditional expectation after excluding each geographic subset. This is
+important because merely subtracting positive records would not preserve the
+original definition of the comparison (0<A<N within species × Level-1). No
+selection is promoted as a confirmatory biological hypothesis test.
+
+| Recomputed geographical subset | K positive cells | O added-host positives | Expected overlap | Excess pp | Informative strata |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Frozen primary | 48 | 26 | 24.122 | +3.91 | 21 |
+| Excluding Caribbean (CU, DO, HT) | 33 | 14 | 14.495 | **−1.50** | 18 |
+| Excluding Central America (GT, HN, NI) | 37 | 22 | 19.404 | +7.02 | 16 |
+| Excluding both six-country sets | 22 | 10 | 10.481 | **−2.19** | 13 |
+| Southern America Level-1 only | 34 | 19 | 16.017 | +8.77 | 12 |
+| Excluding entire Southern America Level-1 | 14 | 7 | 8.105 | **−7.89** | 9 |
+
+The formal WGSRPD Level-1 label *Southern America* includes Central America
+and the Caribbean. Removing these locations flips the overall point estimate
+negative; retaining only the remaining continents also gives a negative point
+estimate. **This is evidence of geographical sensitivity, not a demonstrated
+biological geographic interaction.** All estimates use far fewer than the
+prospective 50 informative strata, and the regional exclusions were selected
+after inspecting the spatial distribution of the primary positives. Record
+absence remains an imperfect proxy for biological absence.
+
+A comprehensive influence audit recomputes the expectation after separately
+omitting **all 119 candidate countries** and **all 99 candidate genera**.
+One-country and one-genus omissions are correlated and can remove whole
+resource-contrast strata. Thus they are deletion diagnostics rather than
+independent replications or estimates of local causal contributions. The
+archived exact conditional geographical upper tails are diagnostic reference
+quantities, not biological p-values. They reproduce the primary exact upper
+tail of 0.283249575 without simulating additional observations.
+
+The [posthoc results and full leave-one-out arrays](../../provenance/reviewer_defenses/results/gbif_country_20261020/geographic_dependence_posthoc_20261020.json)
+and [standalone recomputation script](../../scripts/analyze_gbif_country_geographic_influence_20261020.py)
+use only the frozen public primary strata. They do not require access to
+author-only HOSTS/WCVP/TDWG/CHELSA inputs and do not modify the frozen GEB
+manuscript.
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.
