@@ -225,6 +225,8 @@ def main():
          support_latitude=np.array([float(support[i]["latitude"]) for i in np.where(comparable)[0]],np.float32),
          scores_present=now_predictions,scores_21ka=lgm_predictions)
     complete=[r for r in results if r["model_status"]=="COMPLETE_POTENTIAL_CLIMATE_HINDCAST"]
+    crossvalidated=[r["cv_auc_presence_vs_background"] for r in complete
+                    if r["cv_auc_presence_vs_background"] is not None]
     summary={"schema":"chocho_WCVP_native_plant_TraCE21ka_potential_suitability_v0.1",
        "status":"EXPLORATORY_CLIMATIC_SUITABILITY_NOT_ACTUAL_LGM_PLANT_OCCUPANCY",
        "plant_source_taxa":518,"source_native_paired_insect_species":392,
@@ -236,9 +238,8 @@ def main():
             [r["climate_suitable_fraction_delta_21ka_minus_now"] for r in complete])) if complete else None,
        "median_21ka_nonanalog_site_fraction":float(np.median(
             [r["nonanalog_21ka_site_fraction"] for r in complete])) if complete else None,
-       "spatial_auc_available":sum(r["cv_auc_presence_vs_background"] is not None for r in complete),
-       "median_spatial_auc_presence_vs_background":float(np.median(
-            [r["cv_auc_presence_vs_background"] for r in complete if r["cv_auc_presence_vs_background"] is not None])) if complete else None,
+       "spatial_auc_available":len(crossvalidated),
+       "median_spatial_auc_presence_vs_background":float(np.median(crossvalidated)) if crossvalidated else None,
        "climate_sources":["CHELSA-TraCE21k original 0BP and 21ka, bio01/07/12/15"],
        "no_lgm_occupancy_or_genetic_response_claim":True,
        "limits":["Presence-background logistic scores are not prevalence-calibrated occupancy probabilities",
