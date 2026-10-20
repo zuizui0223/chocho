@@ -19,7 +19,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 from pmip4_potential_habitat_components_v02 import graph_metrics
 from run_native_plant_21ka_climate_hindcast_v01 import (
-    read_csv,climate_sample,background_support_indices
+    read_csv,climate_sample,background_support_indices,fit_predict as original_fit_predict
 )
 
 ROOT_SHA={
@@ -226,7 +226,28 @@ def main():
         err=max(float(np.max(np.abs(predicted_original_now-source_scores_now[j]))),
                 float(np.max(np.abs(predicted_original_then-source_scores_then[j]))))
         max_source_error=max(max_source_error,err)
-        if err>SCORE_TOL:raise ValueError(f"original 6337 source SDM prediction not replayed: {key} {err}")
+        if err>SCORE_TOL:
+            pxy=np.array([(float(p["latitude"]),float(p["longitude"])) for p in pres[key]])
+            bxy=np.array([(float(support[i]["latitude"]),float(support[i]["longitude"])) for i in bg_ids])
+            diag,orig_now,orig_then,_=original_fit_predict(
+                data_p,data_b,pxy[fp],bxy[fb],
+                reference_now,reference_then,key)
+            source_error=float(max(np.max(np.abs(orig_now-source_scores_now[j])),
+                                   np.max(np.abs(orig_then-source_scores_then[j]))))
+            manual_vs_original=float(max(np.max(np.abs(orig_now-predicted_original_now)),
+                                         np.max(np.abs(orig_then-predicted_original_then))))
+            info={"taxon":key,"name":plant["accepted_host_name"],"model_row_index":j,
+                  "source_replay_error":err,
+                  "reproduction_via_original_fit_predict_error":source_error,
+                  "reproduction_via_original_fit_predict_vs_manual_error":manual_vs_original,
+                  "original_saved_threshold":old_models[j]["threshold_0BP_presence_quantile_10"],
+                  "recomputed_threshold_original":diag["threshold_0BP_presence_quantile_10"],
+                  "training_presence_n":int(len(data_p)),
+                  "training_background_n":int(len(data_b)),
+                  "presence_data_sha256":hashlib.sha256(data_p.tobytes()).hexdigest(),
+                  "background_data_sha256":hashlib.sha256(data_b.tobytes()).hexdigest()}
+            print(json.dumps({"SOURCE_REPRODUCTION_DIAGNOSTIC":info},sort_keys=True),flush=True)
+            raise ValueError(f"source plant SDM numerical replay exceeded fixed 1e-5 tolerance for {key}: {err}")
         fitted_presence=model_probs(clf,poly,data_p)
         original_threshold=float(old_models[j]["threshold_0BP_presence_quantile_10"])
         threshold=float(np.quantile(fitted_presence,.10))
