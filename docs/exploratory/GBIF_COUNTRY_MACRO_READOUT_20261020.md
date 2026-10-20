@@ -251,6 +251,18 @@ These cannot distinguish wild colonization from recording processes,
 or demonstrate larval recruitment. See the
 [source-provenance readout](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_SOURCE_PROVENANCE_READOUT_20261020.md).
 
+## Subnational positive-cell and developmental metadata gate
+
+All **48 positive butterfly×country cells** were verified from the
+same original country source and now have GADM1/life-stage facets.
+**736/756** indexed records map to first-level administrative units;
+**500/756** have a life-stage string, but only **39** carry putative
+Egg/Larva/Caterpillar/Pupa labels. These are concentrated in **11
+positive cells and three species**. EstablishmentMeans is absent
+in **all 756 records**. The raw labels do not prove host use, larval
+survival or independent breeding. See the
+[complete subcountry+stage analysis](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_POSITIVE48_SUBCOUNTRY_STAGE_READOUT_20261020.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.

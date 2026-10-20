@@ -18,3 +18,21 @@ def test_strict_completed_and_source_gates():
         m.summarise({"status":"INCOMPLETE"})
     with pytest.raises(ValueError,match="hashes drifted"):
         m.summarise({"status":"COMPLETE_48","pilot":False,"source":{}})
+
+def test_archived_48_positive_gadm_stage_source_replays():
+    import json
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    raw=json.loads((root/"provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json").read_text(encoding="utf8"))
+    saved=json.loads((root/"provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_subcountry_stage_summary_20261020.json").read_text(encoding="utf8"))
+    z=m.summarise(raw)
+    assert z["positive_species_country_cells"]==48
+    assert z["indexed_records"]==saved["indexed_records"]==756
+    assert z["gadm1_assigned_records"]==saved["gadm1_assigned_records"]==736
+    assert z["life_stage_raw_labels"]==saved["life_stage_raw_labels"]
+    assert z["establishment_means_annotated_records"]==0
+    assert saved["juvenile_label_count"]==39
+    assert saved["juvenile_label_cells"]==11
+    assert saved["juvenile_label_species"]=={
+       "Papilio demoleus":27,"Colobura dirce":11,"Anteos clorinde":1}
+    assert saved["host_use_or_establishment_verified"] is False
