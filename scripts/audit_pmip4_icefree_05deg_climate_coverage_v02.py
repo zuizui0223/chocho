@@ -56,7 +56,7 @@ def climate_05deg(assets):
 def source_metrics(now_free,glacial_free,now_climate,glacial_climate):
     if any(x.shape!=(360,720) for x in (now_free,glacial_free,now_climate,glacial_climate)):
         raise ValueError("0.5-degree geometry does not align")
-    response={}
+    response={"source":{},"coverage":{}}
     response["source"]["PMIP_0ka_ice_free_land_cells"]=int(now_free.sum())
     response["source"]["PMIP_21ka_ice_free_land_cells"]=int(glacial_free.sum())
     newly=glacial_free&~now_free
