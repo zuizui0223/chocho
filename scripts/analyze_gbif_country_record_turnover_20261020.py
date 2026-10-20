@@ -196,8 +196,9 @@ def cluster_ci(rows, label, draws):
     g = [value for _, value in sorted(bygenus.items())]
     if not g:
         return None, 0
-    digest = hashlib.sha256(f"{SEED}/{label}".encode("utf-8")).digest()
-    rng = random.Random(int.from_bytes(digest[:8], "big"))
+    # Use common random numbers for overlapping source scopes: identical
+    # stratum/genus data must produce identical confidence intervals.
+    rng = random.Random(SEED)
     stats = []
     for _ in range(draws):
         choice = [g[rng.randrange(len(g))] for _ in range(len(g))]
@@ -260,6 +261,36 @@ def run(strata, counts, background, source_info, *, bootstrap_draws=499):
     if len(grid) != 12:
         raise RuntimeError("Did not execute all prespecified 12 settings")
     p = next(x for x in grid if x["setting"] == "all_accepted_bases/other3/focal1")
+
+    # Region deletions are explicitly POSTHOC probes of where the finite
+    # indexed records come from, not stratified predictions of recruitment.
+    base_states, _ = states_for(strata, counts, background,
+                                "all_accepted_bases", 3, 1)
+    caribbean = {"CU", "DO", "HT"}
+    central = {"GT", "HN", "NI"}
+    region_omissions = {
+        "exclude_caribbean": caribbean,
+        "exclude_central_america": central,
+        "exclude_caribbean_and_central_america": caribbean | central,
+    }
+    regional_posthoc = {}
+    for region_name, omitted in region_omissions.items():
+        reduced = [{**st, "cells": [c for c in st["cells"]
+                                   if c["country"] not in omitted]}
+                   for st in base_states]
+        regional_posthoc[region_name] = {
+            direction: result_for_direction(
+                build_direction_rows(reduced, direction),
+                f"posthoc/{region_name}/{direction}", bootstrap_draws)
+            for direction in ("late_only", "early_only")
+        }
+    reduced_level1 = [st for st in base_states if st["stratum"] != "8"]
+    regional_posthoc["exclude_level1_8"] = {
+        direction: result_for_direction(
+            build_direction_rows(reduced_level1, direction),
+            f"posthoc/exclude_level1_8/{direction}", bootstrap_draws)
+        for direction in ("late_only", "early_only")
+    }
     return {
         "schema": "gbif_country_two_eight_year_windows_record_turnover_exploratory_v1",
         "protocol": "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md",
@@ -269,6 +300,7 @@ def run(strata, counts, background, source_info, *, bootstrap_draws=499):
         "source": source_info,
         "primary_setting": p["setting"], "primary": p,
         "sensitivity_grid": grid,
+        "regional_posthoc_diagnostics": regional_posthoc,
         "information_gate": {"minimum_informative_strata": 50,
                              "minimum_positive_species": 25,
                              "minimum_positive_record_cells": 25},
@@ -297,7 +329,16 @@ def main():
     } for x in result["sensitivity_grid"]]
     print("GBIF_COUNTRY_TEMPORAL_SUMMARY=" + json.dumps({
         "source": source_info, "primary_setting": result["primary_setting"],
-        "settings": compact}, separators=(",", ":")))
+        "settings": compact,
+        "primary_positive_country_counts": {
+            "late_only": result["primary"]["late_only"]["positive_country_counts"],
+            "early_only": result["primary"]["early_only"]["positive_country_counts"]},
+        "regional_posthoc_diagnostics": {
+            key: {direction: {k:v for k,v in result["regional_posthoc_diagnostics"][key][direction].items()
+                              if k != "positive_country_counts"}
+                  for direction in ("late_only","early_only")}
+            for key in result["regional_posthoc_diagnostics"]}
+        }, separators=(",", ":")))
 
 
 if __name__ == "__main__":

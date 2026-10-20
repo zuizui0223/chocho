@@ -31,7 +31,7 @@ jobs:
             --country-counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
             --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
             --frozen-strata provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json \
-            --bootstrap-draws 499 \
+            --bootstrap-draws 1999 \
             --output _temporal/country_record_turnover_results.json
       - name: Upload aggregate-only temporal result (not breeding or colonization)
         uses: actions/upload-artifact@v4

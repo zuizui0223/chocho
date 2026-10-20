@@ -81,3 +81,14 @@ def test_source_and_primary_margin_frozen_without_fitting():
     assert audit["paired_effort_candidate_cells"] <= 3188
     assert all(c["state"] in {"00", "01", "10", "11"}
                for row in paired for c in row["cells"])
+
+
+def test_common_random_numbers_make_identical_scopes_comparable():
+    from fractions import Fraction
+    row = {"N": 4, "A": 2, "K": 1, "O": 1, "E": Fraction(1, 2),
+           "genus": "Example", "species": "Example alpha",
+           "positive_countries": ["AA"], "added_positive_countries": ["AA"]}
+    a = mod.result_for_direction([row], "accepted/late_only", draws=99)
+    b = mod.result_for_direction([row], "core/late_only", draws=99)
+    assert a["genus_bootstrap_95_interval_pp"] == b["genus_bootstrap_95_interval_pp"]
+
