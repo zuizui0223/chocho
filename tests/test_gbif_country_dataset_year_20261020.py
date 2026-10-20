@@ -79,3 +79,32 @@ def test_joint_country_year_reconciliation_does_not_mask_dataset_drift():
     doc = mod.assemble(pairs, fetched, meta)
     assert doc["status"] == "INCOMPLETE_NO_INFERENCE"
     assert any(x["status"] == "SOURCE_DRIFT_OR_UNAVAILABLE_NO_INFERENCE" for x in doc["country_cells"])
+
+
+def test_saved_eleven_dataset_year_query_matrix_reconciles_original():
+    p = ROOT / "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_year_matrix_20261020.json"
+    assert p.is_file()
+    output = json.loads(p.read_text(encoding="utf-8"))
+    assert output["schema"] == "gbif_country_seven_candidate_dataset_by_year_qc_v1"
+    assert output["status"] == "ALL_SEVEN_SOURCE_CELLS_RECONCILED"
+    assert output["complete_country_cells"] == 7
+    assert output["complete_dataset_queries"] == 11
+    source = json.loads(QC.read_text(encoding="utf-8"))
+    reference = {(r["species"],r["country"]):r for r in source["results"]}
+    assert len(output["country_cells"]) == 7
+    for item in output["country_cells"]:
+        row = reference[(item["species"],item["country"])]
+        assert item["country_years"] == row["facet_counts"]["YEAR"]
+        assert item["record_count"] == row["frozen_late_records"]
+        assert sum(d["record_count"] for d in item["datasets"]) == item["record_count"]
+        assert all(d["status"] == "COMPLETE_MATCHED_SOURCE_COUNT" for d in item["datasets"])
+    israel = output["primary_two_case_readout"]["israel_papilio"]
+    assert israel["record_count"] == 86 and israel["2025_total"] == 61
+    assert israel["2025_by_dataset_title"] == {
+        "iNaturalist Research-grade Observations":33,
+        "INPA - Observations":27,"eButterfly Surveys":1}
+    assert israel["inpa_2025_contribution"] == 27
+    assert israel["non_inpa_year_marginals"]["2024"] == 9
+    assert israel["non_inpa_year_marginals"]["2025"] == 34
+    assert output["outcomes_cannot_establish_butterfly_colonization"] is True
+

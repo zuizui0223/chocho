@@ -102,6 +102,22 @@ are saved independently of the ecological effect calculation; the
 and exact six-ID source receipt are retained. The frozen country and GEB
 manuscript results remain unchanged.
 
+## Dataset × year cross-tab validation (posthoc)
+
+All 11 dataset-conditioned year facets for the seven fixed cells were
+fetched and reconciled with the original marginal totals, without any drift.
+In Israel the `Papilio demoleus` **61 records dated 2025** split as
+**33 iNaturalist, 27 INPA, 1 eButterfly**; excluding all INPA observations
+still leaves **9 indexed records in 2024 and 34 in 2025** from other
+providers. The INPA dataset was registered in 2025 but contributes
+observations dated 2023 and 2024 as well. This establishes that a single
+newly published provider dataset does not by itself explain the later-year
+distribution; it does **not** establish independent abundance growth.
+The Dominican Republic `Aguna asander` 9 records remain distributed across
+six years but belong to a single dataset. See the
+[complete dataset-year readout](GBIF_COUNTRY_DATASET_YEAR_READOUT_20261020.md)
+and [source-validated JSON](gbif_country_dataset_year_matrix_20261020.json).
+
 ## Reproducibility and verification
 
 - Original country aggregate (unchanged): 23,433 rows, 229 noncolliding taxa,
