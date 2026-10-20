@@ -24,11 +24,20 @@ jobs:
         run: |
           python -m pip install "pytest>=8,<10"
           pytest -q tests/test_gbif_juvenile_gadm1_20261021.py
-      - name: Condition GADM1 on every frozen immature life-stage label
+      - name: Restore already completed raw aggregate queries from first attempt
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-juvenile-gadm1-conditional-20261021
+          run-id: 39448612865
+          github-token: ${{ github.token }}
+          path: _juvenile_archived
+      - name: Independently replay all 15 completed GBIF conditional GADM1 facets
         run: |
           mkdir -p _juvenile
+          test -f _juvenile_archived/gbif_juvenile_gadm1_20261021.json
           python scripts/audit_gbif_juvenile_gadm1_20261021.py \
             --frozen-positive48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --replay-results _juvenile_archived/gbif_juvenile_gadm1_20261021.json \
             --output _juvenile/gbif_juvenile_gadm1_20261021.json
       - name: Preserve aggregate juvenile location counts even on provider failure
         if: always()

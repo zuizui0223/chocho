@@ -54,3 +54,10 @@ def test_facet_error_and_subset_fail_closed():
     req,cells,meta=m.cohort(source)
     fake=[{**r,"status":"API_UNAVAILABLE_NOT_ZERO"} for r in req]
     assert m.summarize(fake,cells,meta)["status"]=="INCOMPLETE_STAGE_GADM_DATA_NOT_ZERO"
+
+def test_replay_requires_same_species_country_stage_identities(tmp_path):
+    req,pairs,meta=m.cohort(source)
+    fake=[{**r,"status":"API_UNAVAILABLE_NOT_ZERO"} for r in req]
+    z=m.summarize(fake,pairs,meta)
+    assert z["status"]=="INCOMPLETE_STAGE_GADM_DATA_NOT_ZERO"
+    assert len(z["attempts"])==15

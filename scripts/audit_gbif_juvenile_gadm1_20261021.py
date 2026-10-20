@@ -225,17 +225,29 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("--frozen-positive48", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--replay-results", type=Path, default=None,
+                   help="Re-evaluate saved 15 facet query results; no GBIF network calls")
     args = p.parse_args()
     queries, pairs, meta = cohort(args.frozen_positive48)
-    output = []
-    for row in queries:
-        output.append(fetch(row))
-        time.sleep(1.0)
+    if args.replay_results is not None:
+        archived = json.loads(args.replay_results.read_text(encoding="utf-8"))
+        if archived.get("schema") != SCHEMA:
+            raise ValueError("Archived conditional GADM source schema differs")
+        output = archived["attempts"]
+        if {(x["species"],x["country"],x["life_stage"]) for x in output} != {
+            (x["species"],x["country"],x["life_stage"]) for x in queries}:
+            raise ValueError("Archived query identities differ from locked 15 queries")
+    else:
+        output = []
+        for row in queries:
+            output.append(fetch(row))
+            time.sleep(1.0)
     result = summarize(output, pairs, meta)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("GBIF_JUVENILE_GADM_CONDITIONAL="+json.dumps(
-        {k:v for k,v in result.items() if k!="attempts"}, separators=(",", ":"), flush=True))
+        {k:v for k,v in result.items() if k!="attempts"}, separators=(",", ":")), flush=True)
+    print("GBIF_JUVENILE_GADM_FULL="+json.dumps(result,separators=(",", ":")),flush=True)
     if result["status"] != "COMPLETE_CONDITIONAL_JUVENILE_GADM1":
         raise SystemExit("Juvenile facet query conditional mismatch, preserve but do not interpret")
 
