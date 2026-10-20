@@ -61,3 +61,17 @@ def test_replay_requires_same_species_country_stage_identities(tmp_path):
     z=m.summarize(fake,pairs,meta)
     assert z["status"]=="INCOMPLETE_STAGE_GADM_DATA_NOT_ZERO"
     assert len(z["attempts"])==15
+
+def test_full_saved_stage_conditional_source_matches_frozen_48():
+    from pathlib import Path
+    import json
+    base=ROOT/"provenance/reviewer_defenses/results/gbif_country_20261020"
+    expected=json.loads((base/"gbif_juvenile_gadm1_conditional_20261021.json").read_text(encoding="utf-8"))
+    qs,full,meta=m.cohort(source)
+    replay=m.summarize(expected["attempts"],full,meta)
+    assert replay["status"]=="COMPLETE_CONDITIONAL_JUVENILE_GADM1"
+    assert replay["matched_conditionals"]==15
+    assert replay["resolved_juvenile_records"]==replay["gadm1_mapped_juvenile_records"]==39
+    assert replay["cell_gadm1_juvenile_summary"]==expected["cell_gadm1_juvenile_summary"]
+    assert all(x["cross_category_gadm_mismatch"]=={}
+               for x in replay["cell_gadm1_juvenile_summary"])
