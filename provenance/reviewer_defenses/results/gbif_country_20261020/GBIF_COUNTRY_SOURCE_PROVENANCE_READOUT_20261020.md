@@ -65,6 +65,43 @@ establishment, or dated introduction evidence in these three compact facets.
 The macro effect remains unresolved. Do not promote these seven observations
 or the 86-record maximum to a global conservation conclusion.
 
+## Dataset registry identities validated
+
+The six unique dataset keys in these seven late-only candidate cells were
+subsequently resolved directly against the GBIF dataset registry (all 6/6
+successful). This is **posthoc provenance metadata** only, not an
+independence or successful breeding verification.
+
+| GBIF dataset registry title | DOI | Key (prefix) |
+| --- | --- | --- |
+| iNaturalist Research-grade Observations | 10.15468/ab3s5x | `50c9509d` |
+| NABU|naturgucker | 10.15468/uc1apo | `6ac3f774` |
+| INPA - Observations | 10.15468/nqx5dj | `6c8d87be` |
+| Observation.org, Nature data from around the World | 10.15468/5nilie | `8a863029` |
+| JRS Wetands data Rwanda, 2019 | 10.15468/k5weqa | `8fbdc3e6` |
+| eButterfly Surveys | 10.15468/ykxm8x | `cf3bdc30` |
+
+In the most repeatedly indexed *Papilio demoleus* / Israel comparison, the
+86 observations split as **43 iNaturalist Research-grade Observations,
+42 INPA - Observations and 1 eButterfly Surveys**, representing three
+different GBIF publishing-organization keys. The three platforms provide
+source heterogeneity, but GBIF facet totals cannot establish that their
+underlying observations are deduplicated, independent visits or breeding
+records. The 61 records indexed in 2025 are only a marginal year total;
+this audit did not measure which of those years came from which platform.
+
+The two German *Danaus plexippus* observations split across iNaturalist and
+**NABU|naturgucker**, while all four 2019 Rwandan *Melanargia galathea*
+records belong to the single sampling-event resource
+**JRS Wetands data Rwanda, 2019**. These provenance differences show why
+record counts should not be substituted for validated demographic evidence.
+
+[Complete registry titles, DOI, publishing keys and source hashes](gbif_country_dataset_registry_qc_20261020.json)
+are saved independently of the ecological effect calculation; the
+[successful metadata workflow](https://github.com/zuizui0223/chocho/actions/runs/39402802072)
+and exact six-ID source receipt are retained. The frozen country and GEB
+manuscript results remain unchanged.
+
 ## Reproducibility and verification
 
 - Original country aggregate (unchanged): 23,433 rows, 229 noncolliding taxa,

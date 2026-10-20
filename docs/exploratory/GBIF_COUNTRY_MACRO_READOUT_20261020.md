@@ -231,6 +231,14 @@ See the [temporal depth audit](../../provenance/reviewer_defenses/results/gbif_c
 
 ### Candidate GBIF recording provenance (20 October 2026)
 
+The six corresponding GBIF dataset identities were also independently
+resolved. In Israel, 86 `Papilio demoleus` records come from three
+publishers: **43 iNaturalist, 42 INPA Observations and 1 eButterfly**.
+That is stronger *provenance variety* than a single dataset, but it
+still does not verify nonduplicated individuals or larval establishment.
+[Dataset metadata audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_registry_qc_20261020.json).
+
+
 The later-only recording subgroup was further checked using
 dataset, observation-year and basis-of-record facets for all seven
 non-singleton species × country cells. All **7/7 live country counts
