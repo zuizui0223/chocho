@@ -57,3 +57,11 @@ def test_leave_one_country_and_genus_include_all_groups():
     assert len(z["leave_one_genus_out"]) == len({x["genus"] for x in frozen})
     assert sum(x["omitted_positive_cells"] for x in z["leave_one_country_out"]) == 48
     assert sum(x["omitted_added_positive_cells"] for x in z["leave_one_country_out"]) == 26
+
+def test_exact_rational_rounding_regression():
+    from fractions import Fraction
+    assert mod.round_nonnegative_fraction(Fraction(1, 2 * 10**12), 12) == 0
+    assert mod.round_nonnegative_fraction(Fraction(3, 2 * 10**12), 12) == 2e-12
+    frozen = json.loads(SOURCE.read_text(encoding="utf-8"))
+    ie = mod.summarize(frozen, omit_countries={"IE"})
+    assert ie["expected_added_positive"] == 23.577761617467

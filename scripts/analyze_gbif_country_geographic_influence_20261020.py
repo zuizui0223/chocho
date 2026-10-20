@@ -64,6 +64,23 @@ def exact_upper_tail(rows, observed):
     return float(sum(probabilities[observed:]))
 
 
+def round_nonnegative_fraction(value: Fraction, digits: int) -> float:
+    """Half-even decimal rounding of a rational *before* floating conversion.
+
+    Rounding float(Fraction) can round in the wrong direction near a tie;
+    the exact Ireland-out expectation ends ...467499, not ...467500.
+    """
+    if value < 0 or digits < 0:
+        raise ValueError("Expected nonnegative Fraction and decimal places")
+    scale = 10 ** digits
+    scaled = value * scale
+    whole, remainder = divmod(scaled.numerator, scaled.denominator)
+    if 2 * remainder > scaled.denominator or (
+            2 * remainder == scaled.denominator and whole % 2):
+        whole += 1
+    return whole / scale
+
+
 def summarize(frozen, *, omit_countries=frozenset(),
               omit_genera=frozenset(), included_level1=None,
               excluded_level1=frozenset()):
@@ -91,7 +108,7 @@ def summarize(frozen, *, omit_countries=frozenset(),
     result = {
         "candidate_strata": len(rows), "candidate_cells": N,
         "added_cells": A, "positive_cells": K, "observed_added_positive": O,
-        "expected_added_positive": round(float(E), 12),
+        "expected_added_positive": round_nonnegative_fraction(E, 12),
         "excess_pp": round(100 * float((O - E) / K), 9) if K else None,
         "informative_strata": informative,
         "independent_positive_genera": len({r["genus"] for r in rows if r["K"] > 0}),
