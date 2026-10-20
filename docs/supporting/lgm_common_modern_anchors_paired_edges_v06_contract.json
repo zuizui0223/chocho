@@ -1,0 +1,55 @@
+{
+  "schema": "chocho_LGM_paired_same_modern_sampling_edges_host_patch_v06",
+  "status": "EXPLORATORY_FIXED_PAIR_DENOMINATOR_BEFORE_PAIRED_CONTACT_EFFECTS",
+  "date": "2026-10-20",
+  "research": "On EXACT SAME modern sampling-locality pairs contactable under both 0 BP and 21ka PMIP4 land and predicted native-host climate, how often does a pair switch from the same to a different potential host-patch component? This is modern geographic anchor counterfactual, not historical population genetics.",
+  "source": {
+    "input_lgm_anchor_comparison": "results/lgm_513_modern_anchor_host_contact_v05/",
+    "source_513_original_modern_insects": 513,
+    "source_349_hostset_combinations": 349,
+    "localities_sha256": "037cd8fa1f059fb67c349a465540d3d5fac469b5d14a2a4d2658d74c036c0ae9",
+    "edges_sha256": "ab10a876895cf00817e8ce555665ebb78a0f2ac64323d2e93c213e1857738ba9",
+    "hostlinks_sha256": "a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044",
+    "plant_source_main_sha256": "169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af",
+    "plant_source_extrap_sha256": "67c0d99852b8b8896559dbc0da07504bcb07a6ad7c017afa0eb86e31d40acc2a",
+    "PMIP4_source_sha256": "d8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db",
+    "original_source_all641_disposition_sha256": "1666e33b69297d692deca5054597564390004110266b0cee0934faa7acbb55b8"
+  },
+  "methods": {
+    "source_same_513": "Use exactly the same qualified species, all existing modern localities and all source pair IDs as v05. No retuning of source model or geographic constraints.",
+    "radii_km": [
+      50,
+      100,
+      150
+    ],
+    "primary_radius": 100,
+    "scenarios": [
+      "analog",
+      "extrapolated"
+    ],
+    "physical_constraint": "Modern anchor 0BP vs 21ka must be ice-free PMIP4 majority >=5/9 in each epoch; nearest potential host climatic patch on same physical 4-neighbor dateline-aware landmass.",
+    "common_pair": "Retain an original edge only if BOTH anchors can be mapped within the fixed radius in BOTH epochs, THEN compare its 0BP and 21ka host-patch membership; do not consider other edges disconnected.",
+    "transition_counts": [
+      "SAME_0BP_TO_SAME_21KA",
+      "SAME_0BP_TO_DIFFERENT_21KA",
+      "DIFFERENT_0BP_TO_SAME_21KA",
+      "DIFFERENT_0BP_TO_DIFFERENT_21KA"
+    ],
+    "fractions": "Use identical common-edge denominator for 0BP and21ka. Report species with zero common edges as unevaluable, not zero change. Report >=5-edge subset descriptive only.",
+    "levels": [
+      "per species per radius scenario",
+      "all 641 eligibility statuses",
+      "species-weighted descriptive signs",
+      "349 shared hostset dependence, which does NOT make pairs across insect geography identical"
+    ],
+    "scope_boundaries": [
+      "No ancient specimens or genotypes read",
+      "A change in hypothetical host climate component on MODERN locality coordinates does not confirm realized glacial refugia, dispersal or gene flow",
+      "Numerous modern anchors land on ice at 21ka and become unavailable rather than 'different patch'",
+      "Common-edge restriction induces severe selectivity in some species; report lost denominators",
+      "TTF alternative real plant v0.5 climate specificity outcome remains negative and frozen",
+      "Do not infer independent insect genetic barriers from this graph response",
+      "Never change radius, source 0.5deg terrain mask, host lists, or native-WCVP fitted niche to improve effect"
+    ]
+  }
+}
