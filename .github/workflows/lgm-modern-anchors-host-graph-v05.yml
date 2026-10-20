@@ -1,0 +1,131 @@
+name: chocho 513 modern sampling anchors against 0BP/21ka host climate patch geography
+on:
+  push:
+    branches: [ecology/lgm-modern-anchors-resource-graph-v05]
+    paths:
+      - .github/workflows/lgm-modern-anchors-host-graph-v05.yml
+      - scripts/audit_modern_anchor_paleo_host_graph_v05.py
+      - tests/test_modern_anchor_paleo_host_graph_v05.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-513-modern-anchors-pmip4-host-contact-v05
+  cancel-in-progress: false
+jobs:
+  audit-original-locality-edges-without-genotypes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/TTF
+          ref: 187e15c6a7b777c119b97b8a43a0d92783ef7c5c
+          path: input/TTF
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate land-matched contact and fail-closed no historical genetic inference
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'pytest>=8,<9'
+          python -m pytest -q tests/test_modern_anchor_paleo_host_graph_v05.py tests/test_pmip4_potential_habitat_components_v02.py
+          python -m py_compile scripts/audit_modern_anchor_paleo_host_graph_v05.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('docs/supporting/lgm_modern_sampling_anchor_host_graph_v05_contract.json').read_text())
+          assert q['status']=='EXPLORATORY_SAMPLING_GEOMETRY_ENDPOINTS_FROZEN_BEFORE_NEW_CONTACT_OUTCOMES'
+          assert q['qualification']['complete_host_models_insects']==513
+          assert q['methods']['radii_km']==[50,100,150]
+          assert q['methods']['primary_radius_km']==100
+          assert 'No genetic response' in ' '.join(q['methods']['limits']) or q['qualification']['ancient_or_genetic_response_used'] is False
+          print('PASS_SOURCE_RESPONSE_FREE_MODERN_ANCHOR_CONTRACT')
+          PY
+      - name: Restore original 642-species source geometry and exact external host identities
+        run: |
+          set -euo pipefail
+          mkdir -p input/geometry
+          echo '92e19da615ffc2003a90569afd4089eb24871f1fc0df69cc3aface4263b96dc4  input/TTF/provenance/data/historical_host_memory_geometry_642_canonical_v01.tar.xz' | sha256sum -c -
+          tar -xJf input/TTF/provenance/data/historical_host_memory_geometry_642_canonical_v01.tar.xz -C input/geometry
+          echo '037cd8fa1f059fb67c349a465540d3d5fac469540d3d5fac469540d3d5fac46  /dev/null' | true
+          echo '037cd8fa1f059fb67c349a465540d3d5fac469b5d14a2a4d2658d74c036c0ae9  input/geometry/historical_host_memory_localities_v0.1.csv' | sha256sum -c -
+          echo 'ab10a876895cf00817e8ce555665ebb78a0f2ac64323d2e93c213e1857738ba9  input/geometry/historical_host_memory_edges_v0.1.csv' | sha256sum -c -
+          echo 'a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044  input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv' | sha256sum -c -
+      - name: Verify original 416-source plant landscapes and PMIP4 terrain source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          echo '169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af  results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz' | sha256sum -c -
+          echo '67c0d99852b8b8896559dbc0da07504bcb07a6ad7c017afa0eb86e31d40acc2a  results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz' | sha256sum -c -
+          echo '838b73df7f9ba7cd23cc33b981d3a434931ab1a6ed61f4bd27621f009d129020  results/lgm_513_topology_4v8_hostsets_audit_v03/all_513_4v8_topology_and_hostset.csv' | sha256sum -c -
+          mkdir -p input/pmip
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12239910484/zip" > /tmp/originalpmip05.zip
+          echo '706d482c5e139675951a170e538ceee11249281c77e38da99f37f2b3b7524947  /tmp/originalpmip05.zip' | sha256sum -c -
+          unzip -q /tmp/originalpmip05.zip -d input/pmip
+          echo 'd8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db  input/pmip/coarse_masks_finite_05deg.npz' | sha256sum -c -
+          echo PASS_ALL_0BP_21KA_SOURCE_PINNED_MASKS
+      - name: Project all modern sampling pairs into counterfactual past icefree-host climatic patch graphs
+        run: |
+          set -euo pipefail
+          out=results/lgm_513_modern_anchor_host_contact_v05
+          mkdir -p "$out"
+          python -u scripts/audit_modern_anchor_paleo_host_graph_v05.py \
+            --localities input/geometry/historical_host_memory_localities_v0.1.csv \
+            --edges input/geometry/historical_host_memory_edges_v0.1.csv \
+            --manifest input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv \
+            --analog results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz \
+            --extrapolated results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz \
+            --terrain input/pmip/coarse_masks_finite_05deg.npz \
+            --original513 results/lgm_513_insects_native_host_potential_components_v02/all_641_insect_potential_21ka_host_components_v02.csv \
+            --out "$out"
+          python - <<'PY'
+          import csv,json,os,hashlib
+          from pathlib import Path
+          out=Path('results/lgm_513_modern_anchor_host_contact_v05')
+          x=json.loads((out/'summary.json').read_text())
+          with (out/'all_513_modern_anchor_host_climate_contact_v05.csv').open(newline='') as f:rows=list(csv.DictReader(f))
+          assert x['status']=='EXPLORATORY_MODERN_ANCHOR_CONTACT_NOT_ANCIENT_OCCUPANCY_OR_GENETIC_BARRIER'
+          assert (x['original_animal_species'],x['host_complete_insects'],x['distinct_recorded_host_combinations'])==(641,513,349)
+          assert x['source_rows']==513*2*2*3 and len(rows)==x['source_rows']
+          assert len({r['species'] for r in rows})==513
+          assert set(r['radius_km'] for r in rows)=={'50','100','150'}
+          assert set(r['epoch'] for r in rows)=={'0BP','21ka'}
+          assert set(r['scenario'] for r in rows)=={'analog','extrapolated'}
+          assert len(x['comparisons'])==6
+          for r in rows:
+              assert sum(int(r[k]) for k in ('edge_both_anchor_contacts_n','edge_one_anchor_contact_n','edge_neither_anchor_contact_n'))==int(r['edges_n'])
+              assert int(r['edge_same_host_climate_component_n'])+int(r['edge_different_host_climate_components_n'])==int(r['edge_both_anchor_contacts_n'])
+          receipt={'schema':'chocho_513modern_anchors_349_hostsets_21ka_landclimate_contact_v05_receipt',
+            'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+            'result_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+               for p in sorted(out.iterdir()) if p.is_file()},
+            'only_original_sampling_geometry_used':True,
+            'historical_insect_or_plant_occupancy_or_genetic_response_used':False}
+          (out/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(x,sort_keys=True))
+          PY
+      - name: Save results and source SHA receipts only on isolated draft branch
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_513_modern_anchor_host_contact_v05/
+          git commit -m 'Archive source-locked 513 insect modern-locality contact with 0BP/21ka hypothetical host climatic patches'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-513-modern-insect-anchors-21ka-hostgraph-v05
+          path: results/lgm_513_modern_anchor_host_contact_v05/
+          retention-days: 30
+          if-no-files-found: warn
