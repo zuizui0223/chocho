@@ -38,7 +38,8 @@ def test_area_weighted_largest_component_and_fragmentation():
     assert d["components"]==2
     assert d["suitable_grid_cells"]==5
     assert d["largest_component_cells"]==3
-    assert d["fraction_area_in_largest_component"]>0.9
+    expected=3/(3+2*np.cos(np.deg2rad(80)))
+    assert d["fraction_area_in_largest_component"]==pytest.approx(expected,abs=1e-4)
     assert d["fraction_cells_in_largest_component"]==pytest.approx(3/5)
 
 def test_equator_weight_bigger_than_pole_and_invalid_configs_rejected():
