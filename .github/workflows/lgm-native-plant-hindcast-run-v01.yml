@@ -1,0 +1,144 @@
+name: chocho 416 WCVP-native host plant CHELSA 0BP to 21ka SDM
+on:
+  push:
+    branches: [ecology/lgm-native-plant-hindcast-run-v01]
+    paths:
+      - .github/workflows/lgm-native-plant-hindcast-run-v01.yml
+      - scripts/run_native_plant_21ka_climate_hindcast_v01.py
+      - tests/test_native_plant_hindcast_v01.py
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: read
+concurrency:
+  group: chocho-416-native-host-21ka-hindcast-v01
+  cancel-in-progress: false
+jobs:
+  native-plant-climate-potential-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 210
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source-blind SDM regression tests before real CHELSA LGM projection
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'scikit-learn>=1.6,<1.9' 'rasterio>=1.4,<2' 'pytest>=8,<9'
+          python -m pytest -q tests/test_native_plant_hindcast_v01.py tests/test_plan_native_host_sdm_v01.py
+          python -m py_compile scripts/run_native_plant_21ka_climate_hindcast_v01.py
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('docs/supporting/ttf_native_plant_lgm_sdm_v01_contract.json').read_text())
+          assert q['status']=='EXPLORATORY_FIXED_BEFORE_NATIVE_SDM_PREDICTED_LGM_OUTCOMES'
+          assert q['train']['minimum_native_presence_points']==30
+          assert q['train']['quadratic_feature_degree']==2
+          assert q['train']['model'].startswith('L2-penalized')
+          assert q['inputs']['source_native_observations']==220137
+          assert q['project']['do_not_derive_connectivity'] is True
+          print('PASS_FROZEN_416_NATIVE_HOST_CLIMATE_ONLY_DESIGN')
+          PYTHON
+      - name: Restore precise source-bound 416 native host observations and 6373 support pixels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/native_plan input/source_native input/global_support
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12186082998/zip" > /tmp/plan.zip
+          echo '691469436850346dbe6cb127d7872e90823eb7e0722fef6312923217c352c6c5  /tmp/plan.zip' | sha256sum -c -
+          unzip -q /tmp/plan.zip -d input/native_plan
+          echo 'f580dfc76c7eb3d2b7ffa68e54e35bf6534578465d40e997f5bcfec0f19efc79  input/native_plan/source_thinned_native_occurrences.csv.gz' | sha256sum -c -
+          echo '1b009db9cc813a5ab992dd1baace23ea1aeed3673dbae5064a642be876c489c0  input/native_plan/all_518_native_sdm_qualification.csv' | sha256sum -c -
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12185640323/zip" > /tmp/native.zip
+          echo '4a3f55b43998bdc7d72a62e189789d35b6e1589888bfb8fb0ec00046c8956381  /tmp/native.zip' | sha256sum -c -
+          unzip -q /tmp/native.zip -d input/source_native
+          echo '8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0  input/source_native/input/native_WCVP/native_host_wgsrpd3.csv' | sha256sum -c -
+          gh api "/repos/zuizui0223/TTF/actions/artifacts/11495066386/zip" > /tmp/support.zip
+          unzip -q /tmp/support.zip -d input/global_support
+          echo 'd0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f  input/global_support/wgsrpd3_support_points_v0.1.csv' | sha256sum -c -
+          python - <<'PYTHON'
+          import csv
+          from pathlib import Path
+          p=Path('input/native_plan/all_518_native_sdm_qualification.csv')
+          with p.open(newline='') as f: rows=list(csv.DictReader(f))
+          assert len(rows)==518
+          assert sum(r['status']=='READY_NATIVE_SDM' for r in rows)==416
+          print('PASS_NATIVE_HOST_416_QUALIFIED_BEFORE_CLIMATE')
+          PYTHON
+      - name: Restore exact original eight 0BP and 21ka CHELSA-TraCE21K climate rasters
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/chelsa
+          df -h .
+          gh api "/repos/zuizui0223/TTF/actions/artifacts/10791389409/zip" > /tmp/ttf-original-climate.zip
+          echo '0a797c609d26a185ba08d209a71203a584fa60f1045c4a8c335934372cee30b2  /tmp/ttf-original-climate.zip' | sha256sum -c -
+          unzip -q /tmp/ttf-original-climate.zip -d input/chelsa
+          rm /tmp/ttf-original-climate.zip
+          echo '7d82833996006fc1e99b86acb4ea7e80cde29c7f500df739ef48cb9ce145d450  input/chelsa/manifest.json' | sha256sum -c -
+          for v in bio01 bio07 bio12 bio15; do
+            for t in -190 20; do
+              test -s "input/chelsa/historical/CHELSA_TraCE21K_${v}_${t}_V1.0.tif"
+            done
+          done
+          df -h .
+      - name: Train frozen 0BP WCVP native-area logistic climatic niche models and hindcast 21ka
+        run: |
+          set -euo pipefail
+          mkdir -p results/lgm_native_plant_hindcast_v01
+          python -u scripts/run_native_plant_21ka_climate_hindcast_v01.py \
+            --plant-plan input/native_plan/all_518_native_sdm_qualification.csv \
+            --thinned-native input/native_plan/source_thinned_native_occurrences.csv.gz \
+            --native-units input/source_native/input/native_WCVP/native_host_wgsrpd3.csv \
+            --support input/global_support/wgsrpd3_support_points_v0.1.csv \
+            --chelsa-root input/chelsa/historical \
+            --out results/lgm_native_plant_hindcast_v01
+      - name: Verify all 518 dispositions and exploratory no-genetics source receipt
+        run: |
+          set -euo pipefail
+          python - <<'PYTHON'
+          import csv,hashlib,json,os
+          from pathlib import Path
+          import numpy as np
+          out=Path('results/lgm_native_plant_hindcast_v01')
+          q=json.loads((out/'summary.json').read_text())
+          with (out/'all_518_native_host_hindcast.csv').open(newline='') as f: rows=list(csv.DictReader(f))
+          assert q['status']=='EXPLORATORY_CLIMATIC_SUITABILITY_NOT_ACTUAL_LGM_PLANT_OCCUPANCY'
+          assert len(rows)==518 and q['plant_source_taxa']==518
+          assert q['input_model_eligible_taxa']==416
+          assert sum(q['model_status_counts'].values())==518
+          assert q['global_reference_sites_present_finite']==6343
+          assert q['global_sites_comparable_0BP_vs_21ka']>=6000
+          assert q['no_lgm_occupancy_or_genetic_response_claim'] is True
+          assert q['model_complete_taxa']>0
+          assert (out/'native_host_climate_surface_scores.npz').is_file()
+          z=np.load(out/'native_host_climate_surface_scores.npz',allow_pickle=False)
+          assert z['scores_present'].shape==z['scores_21ka'].shape
+          assert z['scores_present'].shape[0]==518
+          assert z['scores_present'].shape[1]==q['global_sites_comparable_0BP_vs_21ka']
+          receipt={'schema':'chocho_native_WCVP_416_potential_climate_hindcast_v01_receipt',
+            'run_id':os.environ['GITHUB_RUN_ID'],'commit':os.environ['GITHUB_SHA'],
+            'inputs_frozen_before_LGM':True,
+            'output_sha256':{x.name:hashlib.sha256(x.read_bytes()).hexdigest()
+                for x in sorted(out.iterdir()) if x.is_file()},
+            'observed_21ka_plant_occupancy_used':False,'genetic_response_used':False}
+          (out/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-sourcepinned-416-native-host-0BP-21ka-climate-potential-v01
+          path: results/lgm_native_plant_hindcast_v01/
+          if-no-files-found: warn
+          retention-days: 30
