@@ -132,6 +132,7 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_SOURCE_INDEPENDENCE_GATE_20261020.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_DATASET_YEAR_CONFOUND_20261020.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_PLATFORM_EFFORT_DENOM_20261020.md"),
+    Path("provenance/reviewer_defenses/protocols/GBIF_SUBCOUNTRY_POSITIVE48_QC_20261020.md"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_provenance_facet_qc_20261020.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_registry_qc_20261020.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_SOURCE_PROVENANCE_READOUT_20261020.md"),
