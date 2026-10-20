@@ -1,0 +1,49 @@
+name: GBIF fine-grain GADM1 + life-stage feasibility for 48 butterfly country cells
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/audit_gbif_positive48_subcountry_20261020.py"
+      - "tests/test_gbif_positive48_subcountry_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_SUBCOUNTRY_POSITIVE48_QC_20261020.md"
+      - ".github/workflows/gbif-positive48-subcountry.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  subcountry-positive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test locked positive 48 and safe GBIF facet parser
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_positive48_subcountry_20261020.py
+      - name: Pilot two previously validated non-singleton positive species-countries
+        run: |
+          mkdir -p _subcountry
+          python scripts/audit_gbif_positive48_subcountry_20261020.py \
+            --strata provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json \
+            --manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --pilot --output _subcountry/pilot_two_species_countries.json
+      - name: Audit all 48 positive butterfly country cells without individual records
+        run: |
+          python scripts/audit_gbif_positive48_subcountry_20261020.py \
+            --strata provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json \
+            --manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --output _subcountry/all_48_species_countries.json
+      - name: Upload safe aggregate admin-unit and stage-coverage receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-positive48-gadm1-lifestage-audit-20261020
+          path: _subcountry/*.json
+          if-no-files-found: warn
+          retention-days: 30
