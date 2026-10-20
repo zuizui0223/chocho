@@ -32,10 +32,10 @@ COPY_PATHS = (
     "manuscript/butterfly_specialization_supplement_v0.2.md",
 )
 
-# All files added *only* by the independent draft PR #43 are excluded from the
+# Independent analyses from draft PR #43 and its continuations are excluded from the
 # EXISTING GEB v0.2 double-anonymous reviewer snapshot. They are delivered via
-# the separate alternative author-review package, never the submitted pack.
-# Review the list if the alternative PR gains further files.
+# their separate analysis branches and review packages, never the submitted pack.
+# Review the list whenever an independent analysis gains further files.
 EXCLUDE_RELATIVE = {
     Path("docs/exploratory/BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md"),
     Path("docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md"),
@@ -91,6 +91,32 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_repository_layout.py"),
     Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
     Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
+    # Country-grain continuation: its data and dependencies are outside this snapshot.
+    Path("docs/exploratory/GBIF_COUNTRY_MACRO_READOUT_20261020.md"),
+    Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_FULL_INDEX_MACRO_20261020.md"),
+    Path("provenance/reviewer_defenses/protocols/GBIF_RECOVERY_CONTINUATION_20261020.md"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_results.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_summary.png"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_summary.svg"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_sensitivities.csv"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/original133_alias_exclusion_20261020.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/original135_replay_20261020.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/verification_20261020.json"),
+    Path("scripts/acquire_gbif_country_facets_20261020.py"),
+    Path("scripts/analyze_gbif_country_host_opportunity_20261020.py"),
+    Path("scripts/build_country_area_atoms_20261020.py"),
+    Path("scripts/build_country_wgsrpd_crosswalk_20261020.py"),
+    Path("scripts/render_gbif_country_macro_20261020.py"),
+    Path("scripts/validate_gbif_recovery_taxon_keys_20261020.py"),
+    Path("tests/test_country_area_atoms_20261020.py"),
+    Path("tests/test_country_wgsrpd_crosswalk_20261020.py"),
+    Path("tests/test_gbif_country_facets_20261020.py"),
+    Path("tests/test_gbif_country_macro_20261020.py"),
+    Path("tests/test_gbif_macro_information_gate_20261020.py"),
+    Path("tests/test_gbif_recovery_taxon_keys_20261020.py"),
 }
 
 IDENTITY_REPLACEMENTS = {

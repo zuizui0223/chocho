@@ -142,6 +142,42 @@ def test_anonymous_bundle_excludes_internal_response_memos():
     assert 'Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md")' in source
 
 
+def test_anonymous_bundle_excludes_independent_country_macro_continuation(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location(
+        "anonymous_snapshot_builder", ROOT / "scripts/build_anonymous_review_bundle.py"
+    )
+    assert spec and spec.loader
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    source_root = tmp_path / "source"
+    excluded = (
+        "scripts/analyze_gbif_country_host_opportunity_20261020.py",
+        "scripts/build_country_area_atoms_20261020.py",
+        "tests/test_gbif_country_macro_20261020.py",
+        "tests/test_gbif_macro_information_gate_20261020.py",
+        "docs/exploratory/GBIF_COUNTRY_MACRO_READOUT_20261020.md",
+        "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_FULL_INDEX_MACRO_20261020.md",
+        "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json",
+    )
+    retained = (
+        "scripts/render_butterfly_specialization_v02_figures.py",
+        "provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json",
+    )
+    for relative in excluded + retained:
+        path = source_root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("{}\n", encoding="utf-8")
+    monkeypatch.setattr(builder, "ROOT", source_root)
+    monkeypatch.setattr(builder, "COPY_PATHS", (
+        "scripts", "tests", "docs/exploratory", "provenance/reviewer_defenses"
+    ))
+    stage = tmp_path / "stage"
+    stage.mkdir()
+    builder.stage_snapshot(stage)
+    assert all(not (stage / path).exists() for path in excluded)
+    assert all((stage / path).is_file() for path in retained)
+
+
 def test_cover_letter_interest_paragraph_and_title_page_contacts_are_submission_ready():
     cover = (
         ROOT / "manuscript" / "butterfly_specialization_geb_cover_letter_v0.2.md"

@@ -196,7 +196,13 @@ CSV rows and hashes, source totals, and all geographic union-area identities
 passed verification. A separate implementation rebuilt every primary cell and
 stratum from the frozen CSV and resource fractions. It obtained the exact
 expectation 1,919,141/79,560 and independently convolved the conditional null.
-The offline repository suite passed **251 tests plus five subtests**.
+The analysis-freeze repository suite passed **251 tests plus five subtests**.
+After adding the completed readout, CI exposed a missing repository allowlist
+entry and accidental inclusion of independent country-analysis tests in the
+original GEB anonymous snapshot. Both packaging boundaries were corrected;
+the final local suite passed **252 tests plus five subtests**, and the staged
+anonymous snapshot passed **88 tests with one intentional skip**. No ecological
+estimate or manuscript text changed in this packaging correction.
 
 The [frozen public aggregate inputs](../../data/exploratory/gbif_country_20261020/README.md)
 include replay instructions. [Complete results and all 72 settings](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_results.json),
