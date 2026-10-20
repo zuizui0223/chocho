@@ -1,0 +1,63 @@
+name: chocho PMIP4 ICE-6G_C 21ka original land and ice source verification
+on:
+  push:
+    branches: [ecology/lgm-pmip4-ice6g-land-graph-v01]
+    paths:
+      - .github/workflows/lgm-pmip4-ice6gc-source-v01.yml
+      - scripts/acquire_pmip4_ice6gc_21ka.py
+      - docs/supporting/lgm_pmip4_ice6gc_source_v01.json
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: chocho-21ka-pmip4-ice6gc-source
+  cancel-in-progress: false
+jobs:
+  authoritative-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact PMIP4 file identity requirements before request
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'requests>=2.31,<3'
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path('docs/supporting/lgm_pmip4_ice6gc_source_v01.json').read_text())
+          assert q['status']=='SOURCE_ONLY_PRE_BARRIER_RESULT'
+          assert {x['filename']:x['expected_md5'] for x in q['time_files']}=={
+              'I6_C.VM5a_10min.0.nc':'5ba8c0df48a12132238ffcbf675578e0',
+              'I6_C.VM5a_10min.21.nc':'9443668583800099ce9e865be90e4ad6'}
+          assert q['grid']['lat_n']==1080 and q['grid']['lon_n']==2160
+          assert q['expected_variables']=={'land':'sftlf','ice':'sftgif'}
+          print('PASS_PRIOR_FROZEN_21KA_PMIP4_LAND_ICE_SOURCE_IDENTITY')
+          PY
+      - name: Try authoritative original 21ka then 0ka NetCDF source; fail closed on missing/bad MD5
+        run: |
+          set -euo pipefail
+          python -u scripts/acquire_pmip4_ice6gc_21ka.py \
+            --contract docs/supporting/lgm_pmip4_ice6gc_source_v01.json \
+            --out results/lgm_pmip4_ice6gc_source_v01
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          q=json.loads(Path('results/lgm_pmip4_ice6gc_source_v01/source_receipt.json').read_text())
+          assert q['complete'] and len(q['verified_sources'])==2
+          assert not q['genetic_or_host_LGM_model_opened']
+          assert not q['unverified_substitute_fabricated']
+          print('PASS_BYTE_MD5_VERIFIED_ORIGINAL_0KA_21KA_PMIP4_DATA')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-only-pmip4-ICE6GC-21ka-v01
+          path: results/lgm_pmip4_ice6gc_source_v01/
+          if-no-files-found: warn
+          retention-days: 30
