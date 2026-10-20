@@ -1,0 +1,49 @@
+{
+  "limitations": [
+    "Potential continuously adjacent climate-suitable land in a coarse 0.5\u00b0 model; not occupied 21ka habitat",
+    "Even moderate 0.5\u00b0 PMIP4 land mask can create or erase narrow bridges and coastlines",
+    "Model is trained on currently native documented WCVP regions and modern GBIF sampling",
+    "Original 416 plant fits are replayed; 0.5\u00b0 pixels are model predictions and are not independent plant observations",
+    "Excluding climate-nonanalog pixels is a conservative uncertainty censoring convention, not proof of physical barriers",
+    "No inferred biological migration, glacial plant occupancy, observed insect genetics or confirmatory host-specific genetic effect"
+  ],
+  "main_source": {
+    "climate": "CHELSA 0BP and 21ka, four original bioclimatic variables",
+    "connectivity": "4-neighbor, dateline-connected, 0.5 degree",
+    "land": ">=5 of 9 PMIP4 10-minute icefree subcells",
+    "nonanalog": "Exclude modern training-envelope nonanalog cells at both epochs",
+    "threshold": "0BP plant native observed fit 10th percentile"
+  },
+  "median_paired_potential_suitable_area_change_km2": -2903383.198410429,
+  "models_reproduced_on_original_6337_sites": 416,
+  "original_model_score_replay_max_abs_error": 2.9802313394888813e-08,
+  "original_presence_threshold_replay_max_abs_error": 0.0,
+  "plant_graph_status_counts": {
+    "COMPLETE_05DEG_POTENTIAL_CLIMATIC_HABITAT": 416,
+    "INSUFFICIENT_NATIVE_BACKGROUND": 3,
+    "INSUFFICIENT_NATIVE_OBSERVATIONS": 98,
+    "NO_DOCUMENTED_NATIVE_WCVP": 1
+  },
+  "plant_graphs_completed": 416,
+  "plants_potential_suitable_area_decrease": 289,
+  "plants_potential_suitable_area_increase": 127,
+  "plants_potential_suitable_area_unchanged": 0,
+  "schema": "chocho_native_WCVP_416_plant_05deg_paleo_land_connectivity_v02",
+  "source_grid_cells": 259200,
+  "source_grid_shape": [
+    360,
+    720
+  ],
+  "source_original_plant_models": 416,
+  "source_sha256": {
+    "coarse_pmip_climate": "d8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db",
+    "coarse_pmip_summary": "2c18201c522906e7872617488d7382ad5d64ddb57741237024bd7fb488c1a15d",
+    "native_l3": "8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0",
+    "native_points": "f580dfc76c7eb3d2b7ffa68e54e35bf6534578465d40e997f5bcfec0f19efc79",
+    "original_models": "153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733",
+    "original_scores": "8559ec905cddd1a0b9579530551c9980ab3519daa92902df150a04687bf81159",
+    "plan": "1b009db9cc813a5ab992dd1baace23ea1aeed3673dbae5064a642be876c489c0",
+    "support": "d0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f"
+  },
+  "status": "PHYSICAL_LAND_AND_CLIMATIC_POTENTIAL_GRAPH_NOT_LGM_OCCUPANCY_OR_GENETICS"
+}
