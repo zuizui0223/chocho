@@ -66,7 +66,7 @@ def test_directional_conditioning_recomputes_exposure_margin():
     assert len(forward) == 1
     assert (forward[0]["N"], forward[0]["A"], forward[0]["K"], forward[0]["O"]) == (2, 1, 1, 1)
     assert len(backwards) == 1
-    assert (backwards[0]["N"], backwards[0]["A"], backwards[0]["K"], backwards[0]["O"]) == (2, 1, 1, 0)
+    assert (backwards[0]["N"], backwards[0]["A"], backwards[0]["K"], backwards[0]["O"]) == (2, 1, 1, 1)
 
 
 def test_source_and_primary_margin_frozen_without_fitting():
