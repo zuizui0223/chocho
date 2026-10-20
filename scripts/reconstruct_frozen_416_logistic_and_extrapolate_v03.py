@@ -67,7 +67,7 @@ def probabilities(features,coefficients):
     return expit(np.asarray(features,float)@np.asarray(coefficients,float))
 
 def summarize_pair(main0,main21,extended0,extended21,lat):
-    if (main0.shape!=main21.shape!=GRID or extended0.shape!=extended21.shape!=GRID):
+    if not (main0.shape==main21.shape==extended0.shape==extended21.shape==GRID):
         raise ValueError("unmatched source climate masks")
     original=[graph_metrics(main0,lat,4),graph_metrics(main21,lat,4)]
     extended=[graph_metrics(extended0,lat,4),graph_metrics(extended21,lat,4)]
