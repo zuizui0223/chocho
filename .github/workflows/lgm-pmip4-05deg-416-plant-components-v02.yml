@@ -1,0 +1,140 @@
+name: chocho 416 WCVP-native plants PMIP4 0.5deg potential habitat components
+on:
+  push:
+    branches: [ecology/lgm-pmip4-2d-climatic-connectivity-v02]
+    paths:
+      - .github/workflows/lgm-pmip4-05deg-416-plant-components-v02.yml
+      - scripts/fit_native_plant_05deg_glacial_potential_graph_v02.py
+      - tests/test_native_plant_05deg_graph_v02.py
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: chocho-pmip4-416-native-plant-05deg-model-graph-v02
+  cancel-in-progress: false
+jobs:
+  reproduce-old-6337-source-then-project-new-05deg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 220
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      NUMEXPR_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test direct native-WCVP SDM reproduction and 2D physical topology
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'scikit-learn>=1.6,<1.9' 'rasterio>=1.4,<2' 'pytest>=8,<9'
+          python -m pytest -q \
+            tests/test_native_plant_05deg_graph_v02.py \
+            tests/test_pmip4_potential_habitat_components_v02.py \
+            tests/test_native_plant_hindcast_v01.py
+          python -m py_compile scripts/fit_native_plant_05deg_glacial_potential_graph_v02.py
+          python - <<'PYTHON'
+          import json
+          q=json.load(open('docs/supporting/lgm_pmip4_2d_climate_connectivity_v02_contract.json'))
+          assert q['status']=='EXPLORATORY_GRAPH_DESIGN_FROZEN_BEFORE_NEW_05DEG_CONNECTIVITY_OUTPUT'
+          assert q['grid']['cells']==259200
+          assert q['model']['original_taxa']==518
+          assert q['model']['qualified_plant_SDMS']==416
+          assert q['model']['model'].startswith('Original quadratic')
+          print('PASS_PRIOR_FROZEN_05DEG_416_SDMS_NO_GENETIC_UNBLINDING')
+          PYTHON
+      - name: Restore and verify original plant models, native observations and authoritative 0.5 PMIP4 mask
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/plan input/native input/support input/model input/source_coverage input/chelsa
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12186082998/zip" > /tmp/plan.zip
+          echo '691469436850346dbe6cb127d7872e90823eb7e0722fef6312923217c352c6c5  /tmp/plan.zip' | sha256sum -c -
+          unzip -q /tmp/plan.zip -d input/plan
+          echo 'f580dfc76c7eb3d2b7ffa68e54e35bf6534578465d40e997f5bcfec0f19efc79  input/plan/source_thinned_native_occurrences.csv.gz' | sha256sum -c -
+          echo '1b009db9cc813a5ab992dd1baace23ea1aeed3673dbae5064a642be876c489c0  input/plan/all_518_native_sdm_qualification.csv' | sha256sum -c -
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12185640323/zip" > /tmp/native.zip
+          echo '4a3f55b43998bdc7d72a62e189789d35b6e1589888bfb8fb0ec00046c8956381  /tmp/native.zip' | sha256sum -c -
+          unzip -q /tmp/native.zip -d input/native
+          echo '8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0  input/native/input/native_WCVP/native_host_wgsrpd3.csv' | sha256sum -c -
+          gh api "/repos/zuizui0223/TTF/actions/artifacts/11495066386/zip" > /tmp/support.zip
+          unzip -q /tmp/support.zip -d input/support
+          echo 'd0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f  input/support/wgsrpd3_support_points_v0.1.csv' | sha256sum -c -
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12234343435/zip" > /tmp/source416.zip
+          echo '8ac33d6f1c98b09fc057c73eaa3fb60278af89780b870864b22b44a9b494ecad  /tmp/source416.zip' | sha256sum -c -
+          unzip -q /tmp/source416.zip -d input/model
+          echo '8559ec905cddd1a0b9579530551c9980ab3519daa92902df150a04687bf81159  input/model/native_host_climate_surface_scores.npz' | sha256sum -c -
+          echo '153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733  input/model/all_518_native_host_hindcast.csv' | sha256sum -c -
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12239910484/zip" > /tmp/preflight.zip
+          echo '706d482c5e139675951a170e538ceee11249281c77e38da99f37f2b3b7524947  /tmp/preflight.zip' | sha256sum -c -
+          unzip -q /tmp/preflight.zip -d input/source_coverage
+          echo 'd8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db  input/source_coverage/coarse_masks_finite_05deg.npz' | sha256sum -c -
+          echo '2c18201c522906e7872617488d7382ad5d64ddb57741237024bd7fb488c1a15d  input/source_coverage/summary.json' | sha256sum -c -
+          echo 'PASS_PINNED_SOURCE_416_NATIVE_PLANTS_PMIP4_05DEG_COVERAGE'
+      - name: Restore original CHELSA 0BP and 21ka bioclimatic data, without genetic sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/zuizui0223/TTF/actions/artifacts/10791389409/zip" > /tmp/chelsa.zip
+          echo '0a797c609d26a185ba08d209a71203a584fa60f1045c4a8c335934372cee30b2  /tmp/chelsa.zip' | sha256sum -c -
+          unzip -q /tmp/chelsa.zip -d input/chelsa
+          rm /tmp/chelsa.zip
+          echo '7d82833996006fc1e99b86acb4ea7e80cde29c7f500df739ef48cb9ce145d450  input/chelsa/manifest.json' | sha256sum -c -
+          for v in bio01 bio07 bio12 bio15; do
+            for t in -190 20; do
+              test -s "input/chelsa/historical/CHELSA_TraCE21K_${v}_${t}_V1.0.tif"
+            done
+          done
+      - name: Refit exactly 416 source-native SDMs and audit reproduction on original all-6337 scoring sites
+        run: |
+          set -euo pipefail
+          python -u scripts/fit_native_plant_05deg_glacial_potential_graph_v02.py \
+            --plant-plan input/plan/all_518_native_sdm_qualification.csv \
+            --thinned-native input/plan/source_thinned_native_occurrences.csv.gz \
+            --native-units input/native/input/native_WCVP/native_host_wgsrpd3.csv \
+            --support input/support/wgsrpd3_support_points_v0.1.csv \
+            --source-models input/model/all_518_native_host_hindcast.csv \
+            --source-scores input/model/native_host_climate_surface_scores.npz \
+            --pmip-coarse input/source_coverage/coarse_masks_finite_05deg.npz \
+            --pmip-summary input/source_coverage/summary.json \
+            --chelsa-root input/chelsa/historical \
+            --out results/lgm_416_native_05deg_potential_graph_v02
+          python - <<'PYTHON'
+          import csv,json,hashlib,os
+          from pathlib import Path
+          import numpy as np
+          d=Path('results/lgm_416_native_05deg_potential_graph_v02')
+          q=json.loads((d/'summary.json').read_text())
+          assert q['status']=='PHYSICAL_LAND_AND_CLIMATIC_POTENTIAL_GRAPH_NOT_LGM_OCCUPANCY_OR_GENETICS'
+          assert q['models_reproduced_on_original_6337_sites']==416
+          assert q['original_model_score_replay_max_abs_error']<=1e-5
+          assert q['original_presence_threshold_replay_max_abs_error']<=1e-5
+          assert q['plant_graphs_completed']==416 and q['source_grid_cells']==259200
+          with (d/'all_518_plant_potential_2d_graph_v02.csv').open(newline='') as f:
+            data=list(csv.DictReader(f))
+          assert len(data)==518
+          z=np.load(d/'plant_potential_climate_graph_masks_primary_v02.npz',allow_pickle=False)
+          assert z['mask_0BP'].shape==z['mask_21ka'].shape==(416,32400)
+          receipt={'schema':'chocho_PMIP4_nativeWCVP_climatic_potential_graph_2d_v02_receipt',
+            'run_id':os.environ['GITHUB_RUN_ID'],'head_sha':os.environ['GITHUB_SHA'],
+            'input_original_scores_sha256':'8559ec905cddd1a0b9579530551c9980ab3519daa92902df150a04687bf81159',
+            'output_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+              for f in sorted(d.iterdir()) if f.is_file()},
+            'genetics_used':False,'historical_plants_observed':False}
+          (d/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-native-416-plant-05deg-PMIP4-potential-habitat-graph-v02
+          path: results/lgm_416_native_05deg_potential_graph_v02/
+          retention-days: 30
+          if-no-files-found: warn
