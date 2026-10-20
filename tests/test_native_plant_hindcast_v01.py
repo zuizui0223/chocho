@@ -57,12 +57,12 @@ def test_21ka_shift_can_change_climatic_suitability_without_claiming_occupancy()
     pc=np.column_stack([np.arange(65)*1.7-55,np.arange(65)*2.3-75])
     bc=np.column_stack([np.arange(75)*1.5-55,np.arange(75)*2.2-75])
     now=rng.normal(.4,.12,size=(90,4))
-    lgm=now-1.7
+    lgm=np.vstack([now[:10], now[10:]-1.7])
     output,current,glacial,novel=fit_predict(p,b,pc,bc,now,lgm,"Testia beta")
     assert output["climate_suitable_fraction_now"]>output["climate_suitable_fraction_21ka"]
     assert output["climate_suitable_fraction_delta_21ka_minus_now"]<0
     assert output["nonanalog_21ka_site_fraction"]>0.95
-    assert output["supported_analog_21ka_site_n"]<5
+    assert 5 <= output["supported_analog_21ka_site_n"] < 20
 
 def test_nonfinite_or_insufficient_training_refused():
     x=np.ones((31,4))
