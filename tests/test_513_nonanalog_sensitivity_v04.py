@@ -22,14 +22,16 @@ def test_source_already_counted_513_species_and_not_416_plant_artificial_replica
     assert 'len(groups)!=349' in x
     assert 'len(bysp)!=641' in x
     assert 'source_21ka_predictions_used_only_for_validation' in x
-    assert 'not a' not in '' # trivial no interpolation rule guard
 
 def test_primary_4_and_8_metrics_must_replay_source_with_no_eyeballed_thresholds():
-    row={'insect_species':'A a','area_delta_km2':-123,
+    rows=[{'insect_species':f'Testus species{i}', 'area_delta_km2':-123,
          'component_delta_4':-3,'component_delta_8':-1,
          'largest_fraction_delta_4':-.1,'largest_fraction_delta_8':.05}
-    q=source_comparison([row.copy()],[row.copy()],[row.copy()])
+         for i in range(513)]
+    q=source_comparison(rows,rows,rows)
     assert q['primary_source_replayed']
-    assert q['area_direction_transitions']=={'decline_to_decline':1}
-    r=row.copy();r['area_delta_km2']=0
-    with pytest.raises(ValueError):source_comparison([r],[row],[row])
+    assert q['area_direction_transitions']=={'decline_to_decline':513}
+    modified=[v.copy() for v in rows]
+    modified[11]['area_delta_km2']=0
+    with pytest.raises(ValueError):
+        source_comparison(modified,rows,rows)
