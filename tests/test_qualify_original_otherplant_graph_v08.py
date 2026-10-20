@@ -13,7 +13,7 @@ def entry(actual,groups):
 def test_four_preselected_fully_modelled_plant_groups_required_without_outcomes():
     model={"10","20","30","40","50","60"}
     alt={"A a":entry(["10"],["20","30","40","50","60"]),
-         "B b":entry(["10"],["20","30","40"]),
+         "B b":entry(["10"],["20","30","40","70"]),
          "C c":entry(["10"],["20","30","40","50"])}
     kept,rows=eligible_actual_and_other_plants(alt,model)
     assert sorted(kept)==["A a","C c"]
