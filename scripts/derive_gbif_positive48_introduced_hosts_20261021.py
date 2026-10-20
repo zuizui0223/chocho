@@ -16,7 +16,6 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from analyze_bce_augmented_plant_network_climate_null_20261019 import source_augmented_model
 
 BASE="provenance/reviewer_defenses/results/gbif_country_20261020/"
 EXPECTED_COHORT=(48,20,23,26)
@@ -157,6 +156,7 @@ def main():
     ap.add_argument("--juvenile-readout",type=Path,required=True)
     ap.add_argument("--output",type=Path,required=True)
     a=ap.parse_args()
+    from analyze_bce_augmented_plant_network_climate_null_20261019 import source_augmented_model
     model,regions,climate,provenance=source_augmented_model(a.source_root)
     links=load_country_links(a.crosswalk,regions)
     positive=json.loads(a.positive48.read_text(encoding="utf8"))
