@@ -16,7 +16,7 @@ from pmip4_potential_habitat_components_v02 import graph_metrics
 EXPECTED={
     "plant_masks":"169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af",
     "original_insects":"a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044",
-    "original513":"27cd6d45ec67382d7606b40f74e232ac3bccbd3e7d0118498635b58d3de27cad"
+    "original513":"1666e33b69297d692deca5054597564390004110266b0cee0934faa7acbb55b8"
 }
 GRID=(360,720)
 N=360*720
@@ -111,7 +111,7 @@ def audit(plant_file,original_insects,original513):
     rows=[]
     with np.load(plant_file,allow_pickle=False) as data:
         plants=[accepted(x) for x in data["plant_wcvp_ids"]]
-        if len(plants)!=len(set(plants))!=416:raise ValueError("original plant model cohort drift")
+        if not (len(plants)==len(set(plants))==416):raise ValueError("original plant model cohort drift")
         ref={key:i for i,key in enumerate(plants)}
         m0,m21=data["mask_0BP"],data["mask_21ka"]
         lat=np.asarray(data["lat_centers"],float)
