@@ -1,0 +1,63 @@
+{
+  "schema": "chocho_LGM_source_bound_modern_climate_matched_other_plant_graph_null_v08",
+  "status": "EXPLORATORY_FIXED_ALTERNATIVE_BOTANICAL_REFERENCE_BEFORE_V08_ANCIENT_PATCH_SCORES",
+  "purpose": "Test whether glacial split/merge of the same original modern insect sampling pairs is stronger for the insect's recorded larval host climatic landscape than for preselected currently climate-matched OTHER REAL PLANT taxa. Not confirmatory; TTF v05 found negative host identity-specific analogue.",
+  "date": "2026-10-20",
+  "input_sources": {
+    "original_TTF_v05_0BP_only_plant_selection_sha256": "c8099e516a42850c8ab946c4cdc23e71afe1e8eb5360a90fcd848365b3cb8075",
+    "native_WCVP_416_plant_model_source_sha256": "153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733",
+    "source_513_host_2D_primary_mask_sha256": "169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af",
+    "source_513_host_2D_extrapolated_mask_sha256": "67c0d99852b8b8896559dbc0da07504bcb07a6ad7c017afa0eb86e31d40acc2a",
+    "source_original_1037_accepted_host_links_sha256": "a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044",
+    "source_original_modern_insect_localities_sha256": "037cd8fa1f059fb67c349a465540d3d5fac469b5d14a2a4d2658d74c036c0ae9",
+    "source_original_modern_insect_edges_sha256": "ab10a876895cf00817e8ce555665ebb78a0f2ac64323d2e93c213e1857738ba9",
+    "source_0BP_and_21ka_PMIP4_0p5_icefree_sha256": "d8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db",
+    "original_TTF_host_specificity_v05": "EXPLORATORY_NO_KNOWN_HOST_IDENTITY_ADVANTAGE_AGAINST_0BP_CLIMATE_MATCHED_REAL_OTHER_PLANTS"
+  },
+  "source_eligibility": {
+    "prior_0BP_only_selected_insects": 335,
+    "actual_hosts_all_416_native_plant_models_available": 294,
+    "minimum_original_selected_alt_plant_groups_with_all_416_models": 4,
+    "source_eligible_insects": 292,
+    "source_eligible_alternative_plant_group_records": 2108,
+    "source_distinct_alternative_plant_model_taxa": 362,
+    "fully_modelled_alt_groups_exact_8": 146,
+    "source_selection_rule": "Eligibility uses only original v05 0BP-matched alternative plant IDs and native-host model-success statuses; no v08 glacial patch-split outcome examined.",
+    "no_species_posthoc_substitution": true
+  },
+  "graph": {
+    "terrain": "Original ICE6G_C physically icefree 0.5 degree PMIP4 majority>=5 of9 10 arcminute subcells separately for0 BP and21ka",
+    "climate_main": "Original source-trained WCVP-native plant 4 predictor 0BP logistic 10th percentile masked analogous-climate suitability",
+    "climate_sensitivity": "Same original 416 plant logit source restored from saved 0BP only and independently checked against saved 21ka; finite novel-climate extrapolation included",
+    "graphs": "For each insect and each historical age, OR all recorded actual host plant climate cells or all donor plants in one frozen alternative plant group. 4-neighbor host patch and 4-neighbor physical landmass with longitude dateline closure.",
+    "source_modern_insect_geography": "Only original current insect sampling location coordinates and pair IDs; not historical insect locality or genetics",
+    "distance_radii_km": [
+      50,
+      100,
+      150
+    ],
+    "primary_radius_km": 100,
+    "anchor_assignment": "At each time age, a modern locality anchor must be on source icefree physical terrain, and assigned to nearest source climate-potential plant patch cell center within radius on the SAME physical landmass. No across-ocean/ice plant jump.",
+    "same_original_edge_definition": "Only compare pairs with BOTH endpoints contactable under all FOUR actual-host0BP, actual-host21ka, alternate-plant0BP and alternate-plant21ka. Store count of those edges and all unavailable categories; do not treat uncontactable as split.",
+    "same_edge_paired_hypothesis": "difference-in-differences Δhost−Δalternative, where Δ=(proportion_same_patch21ka−proportion_same_patch0BP) on exact common original pairs, NEGATIVE if the recorded host climate patch is lost more than another plant.",
+    "baseline_balancing": "Always report present 0BP actual host vs other-plant SAME-PATCH fraction on exactly matched edges. The original donors were matched on observed 0BP climate moments, NOT necessarily current native SDM patch connectivity.",
+    "per_species_aggregation": "Per-insect median over its source valid alternative groups, never treat the up-to-8 controls as independent insects. Insect groups sharing host sets or donors are dependent; 349 hostsets remain the upper dependency denominator.",
+    "no_data": "If fewer than one fully comparable original pair to a donor group, record no contrast; even 292 model-eligible species may have smaller graph-contact evaluability. Report >=5-pair stability subset separately without rescuing ineligible species.",
+    "results": [
+      "every prior 335 eligibility disposition",
+      "292 all source modelled control groups",
+      "per donor-group exact edge counts, 0BP baseline, Δhost, Δalternate, Δhost−Δalternate",
+      "per-insect median and sign of valid donor comparisons",
+      "50km,100km,150km and nonanalog extrap sensitivity",
+      "descriptive species-versus-hostset dependence; no p-value"
+    ]
+  },
+  "limits": [
+    "Alternative real plants were not recorded hosts in original source, but unlisted is NOT biologically confirmed nonhost",
+    "Modern-climate-matched alternative plant identities were frozen pre-LGM, but different taxonomic ecological niches and native region ranges remain confounded",
+    "Modern insect sampling localities projected into 21ka physical geography are counterfactual anchor positions, not actual ancient insect occurrence",
+    "Same source plant climate patch under two ages does not prove actual plant occupied routes or allowed larvae to migrate",
+    "Original host-specific climate analogue negative in TTF v0.5 remains frozen negative, and no independent genetic response tested",
+    "At most 1-3 recorded accepted larval hosts per insect source may not enumerate all hosts; no on-result retune or subgroup cherry-pick"
+  ]
+}
