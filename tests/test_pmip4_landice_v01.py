@@ -24,9 +24,10 @@ def test_diagonal_is_not_traversable_land_connection():
     assert n==3
 
 def test_ice_bridge_blocks_4_neighbor_land_connectivity():
-    mask=np.array([[0,0,0],[1,1,1],[0,0,0]],bool)
+    # Avoid the longitude seam: first and last columns are neighbors.
+    mask=np.array([[0,0,0,0,0],[0,1,1,1,0],[0,0,0,0,0]],bool)
     assert component_ids(mask)[1]==1
-    mask[1,1]=False
+    mask[1,2]=False
     assert component_ids(mask)[1]==2
 
 def test_area_weighting_decreases_toward_pole_not_pixel_counts():
