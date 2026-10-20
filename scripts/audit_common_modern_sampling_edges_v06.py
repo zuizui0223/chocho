@@ -30,7 +30,7 @@ def source_qualified(original513,links,loc,edges):
     ready={r["insect_species"] for r in read_csv(original513)
            if r["status"]=="ALL_RECORDED_HOST_MODELS_AVAILABLE"}
     if (len(ready)!=513 or len(links)!=641 or
-        not ready<=set(loc) or len(loc)!=len(edges)!=642):
+        not ready<=set(loc) or not (len(loc)==len(edges)==642)):
         raise ValueError("original 641 species/642 geo source 513 fully-host-modelled cohort drift")
     return ready
 
