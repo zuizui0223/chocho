@@ -1,0 +1,128 @@
+name: chocho 513 insects 0BP versus 21ka native host potential climate graph
+on:
+  push:
+    branches: [ecology/lgm-513-insects-2d-host-components-v02]
+    paths:
+      - .github/workflows/lgm-513-native-host-2d-components-v02.yml
+      - scripts/aggregate_insect_host_climatic_graph_v02.py
+      - tests/test_insect_climatic_graph_v02.py
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: chocho-513-insects-paleoclimate-host-2d-components-v02
+  cancel-in-progress: false
+jobs:
+  source-locked-insect-resource-climate-graphs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/TTF
+          ref: 187e15c6a7b777c119b97b8a43a0d92783ef7c5c
+          path: input/TTF
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test 513 complete host union and physical 4-neighbor topology
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'pytest>=8,<9'
+          python -m pytest -q tests/test_insect_climatic_graph_v02.py tests/test_pmip4_potential_habitat_components_v02.py
+          python -m py_compile scripts/aggregate_insect_host_climatic_graph_v02.py
+          echo 'a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044  input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv' | sha256sum -c -
+      - name: Restore exact 416-plant original trained-source-reproduced climate graph outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/native416
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12240531654/zip" > /tmp/source416graphs.zip
+          echo '201c45d7cd163beadb2f7af0b34cab3382a67ac44803c114a734f69dc5249a92  /tmp/source416graphs.zip' | sha256sum -c -
+          unzip -q /tmp/source416graphs.zip -d input/native416
+          echo '09e4238943001fa60a2289d02e559984968cf2fb66f6743e2a7d09f6380a971a  input/native416/summary.json' | sha256sum -c -
+          echo '169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af  input/native416/plant_potential_climate_graph_masks_primary_v02.npz' | sha256sum -c -
+          echo 'e538c196e7ba57478e366c2c681c9c56cf530aaff86050fd58cfabd8b82e97c7  input/native416/all_518_plant_potential_2d_graph_v02.csv' | sha256sum -c -
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+          p=Path('input/native416/summary.json')
+          j=json.loads(p.read_text())
+          assert j['models_reproduced_on_original_6337_sites']==416
+          assert j['original_model_score_replay_max_abs_error']<=1e-5
+          assert j['original_presence_threshold_replay_max_abs_error']<=1e-5
+          assert j['plant_graphs_completed']==416
+          assert j['source_grid_cells']==259200
+          assert j['status']=='PHYSICAL_LAND_AND_CLIMATIC_POTENTIAL_GRAPH_NOT_LGM_OCCUPANCY_OR_GENETICS'
+          print('PASS_ALL_416_NATIVE_PLANT_CLIMATE_GRAPH_SOURCE_VERIFICATION')
+          PYTHON
+      - name: Aggregate all original 641 insect outcomes with complete recorded hosts only
+        run: |
+          set -euo pipefail
+          python -u scripts/aggregate_insect_host_climatic_graph_v02.py \
+            --plant-mask input/native416/plant_potential_climate_graph_masks_primary_v02.npz \
+            --plant-summary input/native416/summary.json \
+            --insect-host-manifest input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv \
+            --out results/lgm_513_insects_native_host_potential_components_v02
+          python - <<'PYTHON'
+          import csv,hashlib,json,os
+          from pathlib import Path
+          d=Path('results/lgm_513_insects_native_host_potential_components_v02')
+          r=json.loads((d/'summary.json').read_text())
+          with (d/'all_641_insect_potential_21ka_host_components_v02.csv').open(newline='') as f:
+              table=list(csv.DictReader(f))
+          assert len(table)==641
+          assert r['status']=='HYPOTHETICAL_CLIMATIC_RESOURCE_CONNECTIVITY_NOT_REAL_LGM_OCCUPANCY'
+          assert r['all_recorded_hosts_modelled_insects']==513
+          assert r['source_native_plants']==416
+          assert r['statuses']=={
+             'ALL_RECORDED_HOST_MODELS_AVAILABLE':513,
+             'PARTIAL_RECORDED_HOST_MODELS_NOT_EVALUATED':83,
+             'NO_RECORDED_HOST_MODEL_AVAILABLE':45}
+          assert r['area_decrease_species']+r['area_increase_species']+r['area_equal_species']==513
+          assert (r['component_count_increase_species']+
+                  r['component_count_decrease_species']+
+                  r['component_count_unchanged_species'])==513
+          receipt={'schema':'chocho_513_insects_potential_lgm_host_component_audit_receipt_v02',
+            'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+            'source_plant_mask_sha256':'169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af',
+            'source_plant_summary_sha256':'09e4238943001fa60a2289d02e559984968cf2fb66f6743e2a7d09f6380a971a',
+            'output_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                             for p in sorted(d.iterdir()) if p.is_file()},
+            'historical_plant_occupancy_or_genetic_response_used':False}
+          (d/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(r,sort_keys=True))
+          PYTHON
+      - name: Retain original 416 models and 513-insect compact results on isolated branch
+        run: |
+          set -euo pipefail
+          out=results/lgm_416_native_05deg_potential_graph_v02
+          mkdir -p "$out"
+          cp input/native416/summary.json "$out/summary.json"
+          cp input/native416/receipt.json "$out/receipt.json"
+          cp input/native416/all_518_plant_potential_2d_graph_v02.csv "$out/all_518_plant_potential_2d_graph_v02.csv"
+          cp input/native416/plant_potential_climate_graph_masks_primary_v02.npz "$out/plant_potential_climate_graph_masks_primary_v02.npz"
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_416_native_05deg_potential_graph_v02/ results/lgm_513_insects_native_host_potential_components_v02/
+          git commit -m 'Archive source-pinned 416 native-plant and 513 insect 0BP/21ka potential climate habitat graphs'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-513-insects-416-host-potential-05deg-graph-v02
+          path: |
+            results/lgm_416_native_05deg_potential_graph_v02/
+            results/lgm_513_insects_native_host_potential_components_v02/
+          retention-days: 30
+          if-no-files-found: warn
