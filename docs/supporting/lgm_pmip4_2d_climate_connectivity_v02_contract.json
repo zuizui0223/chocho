@@ -1,0 +1,68 @@
+{
+  "schema": "chocho_ICE6GC_native_host_two_dimensional_hypothetical_climate_connectivity_v02",
+  "status": "EXPLORATORY_GRAPH_DESIGN_FROZEN_BEFORE_NEW_05DEG_CONNECTIVITY_OUTPUT",
+  "reason": "Expand 416 native WCVP plant climatic niches to a globally regular 0.5-degree grid, apply authoritative PMIP4 reconstructed 0 and 21 ka physical land & grounded ice masks, and compare potential climate-suitable topology for accepted host groups of 513 insects. Never assert actual ancient plant occupancy or genetic barriers.",
+  "source": {
+    "plant_model_input": "chocho-native-plant-518-SDM-source-preLGM-plan-v01 artifact 12186082998",
+    "source_plan_zip_sha256": "691469436850346dbe6cb127d7872e90823eb7e0722fef6312923217c352c6c5",
+    "source_thinned_73386_plant_observations_sha256": "f580dfc76c7eb3d2b7ffa68e54e35bf6534578465d40e997f5bcfec0f19efc79",
+    "source_plant_qualifier_sha256": "1b009db9cc813a5ab992dd1baace23ea1aeed3673dbae5064a642be876c489c0",
+    "native_WCVP_regions_sha256": "8fbf5e0fab0df919862955f725a1822c7af05e3d59887d785cbc3d22b9b96dc0",
+    "source_global_support_6373_sha256": "d0fc12f635ec56a442dd37dec06cf3aa06684a00b14f1bb1f2db2f6fe3c4a21f",
+    "source_CHELSA_8layer_zip_sha256": "0a797c609d26a185ba08d209a71203a584fa60f1045c4a8c335934372cee30b2",
+    "source_current_416_6337_score_npz_sha256": "8559ec905cddd1a0b9579530551c9980ab3519daa92902df150a04687bf81159",
+    "source_current_518_model_csv_sha256": "153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733",
+    "source_accepted_host_manifest_sha256": "a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044",
+    "PMIP4_landmask_0ka_original_MD5": "5ba8c0df48a12132238ffcbf675578e0",
+    "PMIP4_landmask_21ka_original_MD5": "9443668583800099ce9e865be90e4ad6",
+    "PMIP4_original_artifact_id": 12234969425,
+    "PMIP4_original_artifact_sha256": "ffe0423b78688dbab54d460125963bfc652f24ca069d8c3d691c33a79ad47e65"
+  },
+  "grid": {
+    "latitude_centers": "89.75 down to -89.75 step 0.5 degree, 360 rows",
+    "longitude_centers": "-179.75 to +179.75 step 0.5 degree, 720 columns",
+    "cells": 259200,
+    "continuous_globe_longitude_wrap": true,
+    "climate": "Nearest neighbor sample from 8 SHA-bound CHELSA-TraCE21K original rasters; sample EPSG:4326, no off-grid extrapolation at raster edges.",
+    "PMIP4_coarsen": "Each global 0.5 degree cell corresponds to exactly 3x3 original 10-arcmin reconstructed ICE6GC source cells; transform 0..360 to -180..180 with source original longitude seam.",
+    "physical_mask_main": ">=5 of 9 ten-minute original subcells must be ice-free land (`sftlf=100 AND sftgif=0`); this is a coarse mean-value terrain accessibility proxy, not a perfect cell shoreline.",
+    "physical_mask_sensitivity": [
+      "9/9 subcells ice-free",
+      "at least 1/9 subcells ice-free"
+    ],
+    "area": "sum spherical equal-angle 0.5-degree latitude-dependent cell areas"
+  },
+  "model": {
+    "original_taxa": 518,
+    "qualified_plant_SDMS": 416,
+    "original_eligible_insects": 513,
+    "training_predeclared": "source-only WCVP-native GBIF observations 10km thin cap200, >=30 plant and native-region pseudo-background, original fixed 4 variables bio01,bio07,bio12,bio15",
+    "model": "Original quadratic 4-var degree2, L2 logistic C=0.3, liblinear, balanced classes, deterministic tol1e-5, solver reproduction must match original all 416 x6337 source saved 0BP predictions within max absolute tolerance 1e-5 and source threshold within1e-5; fail closed, never retune.",
+    "standardization": "original global present reference 6343 finite points determines same mean and sd for both epochs",
+    "threshold_main": "10th percentile fitted modern native plant presence scores, source-fixed exactly",
+    "threshold_sensitivity": [
+      "5th",
+      "15th"
+    ],
+    "climate_nonanalog": "A projection is flagged if any of 4 standardized variables lies >0.05*(native presence+background training range) beyond that range; no-data flagged separately.",
+    "main_analog_rule": "Reject nonanalog CLIMATE CELLS in BOTH epochs for graph topology. Secondary report climate extrapolation included to assess coverage-dependent bias.",
+    "spatial_passability": "Suitable plant climate AND authoritative 0BP/21ka terrain ice-free land AND climate nonanalog rule",
+    "connectivity_main": "4-neighbor on 360x720 regular grid with periodic dateline boundary; connected components only among continuously adjacent potentially suitable cells.",
+    "connectivity_sensitivity": "8-neighbor permissive diagonal corner jumps; report as sensitivity not true dispersal behavior",
+    "species_host_rule": "For each insect, OR all 1-3 recorded WCVP host-plant potential suitable pixels; only score if models for ALL recorded hosts available; retain remaining 83 partial and 45 none as unscored, no data imputation."
+  },
+  "outputs": [
+    "all518 plant climate+terrain component statistics for 0BP and21ka",
+    "all641 insect climatic host habitat component statistics including statuses",
+    "number climate suitable cells, mask suitable land km², number of components, and % suitable cells in largest component, time differences",
+    "sensitivity outputs for thresholds and land mask all/any and 8-neighbor",
+    "preserve source-hashed reproduction check summary for 416 old SDM scores and 6337 points"
+  ],
+  "prohibitions": [
+    "This is potential climatically suitable traversable substrate, not actual occupied plant ranges at 21ka",
+    "No inference of per-species historical dispersal distance, pollinator host fidelity, genetic effects or genuine host-resource corridors",
+    "No selective dropping species with negative results",
+    "No result-driven tuning of the grid resolution, land fraction threshold, climate projection, novel-climate range or neighborness",
+    "No opening of previously frozen TTF LGM genetic responses. TTF true-host-vs-other-plant v0.5 negative outcome remains unchanged."
+  ]
+}
