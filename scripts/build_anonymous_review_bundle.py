@@ -139,6 +139,8 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/protocols/GBIF_SUBCOUNTRY_POSITIVE48_QC_20261020.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_JUVENILE_GADM1_CONDITIONAL_20261021.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_LOCAL_HOST_BRIDGE_20261021.md"),
+    Path("scripts/derive_gbif_positive48_introduced_hosts_20261021.py"),
+    Path("tests/test_gbif_positive48_introduced_hosts_20261021.py"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_gadm1_conditional_20261021.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_gadm1_readout_20261021.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_JUVENILE_GADM1_READOUT_20261021.md"),
