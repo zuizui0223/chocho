@@ -94,6 +94,7 @@ EXCLUDE_RELATIVE = {
     # Country-grain continuation: its data and dependencies are outside this snapshot.
     Path("docs/exploratory/GBIF_COUNTRY_MACRO_READOUT_20261020.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_FULL_INDEX_MACRO_20261020.md"),
+    Path("provenance/reviewer_defenses/protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_RECOVERY_CONTINUATION_20261020.md"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz"),
