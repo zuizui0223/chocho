@@ -112,7 +112,7 @@ def contact_modern_anchors(coords,phys_labels,source):
     original_physical=np.asarray(phys_labels).reshape(-1)[indices]
     nearest_km=np.full(len(indices),np.inf,float)
     habitat_comp=np.zeros(len(indices),dtype=np.int32)
-    state=np.full(len(indices),"PHYSICAL_ANCHOR_BLOCKED",dtype="<U38")
+    state=np.full(len(indices),"PHYSICAL_ANCHOR_BLOCKED",dtype=object)
     for land in np.unique(original_physical):
         if land==0:continue
         ix=np.flatnonzero(original_physical==land)
