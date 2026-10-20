@@ -22,7 +22,11 @@ def test_conditional_reference_matches_hand_computation():
     rows = [
         {"N": 4, "A": 2, "K": 1, "O": 1, "E": Fraction(1, 2),
          "genus": "Example", "species": "Example alpha",
-         "positive_countries": ["AA"], "added_positive_countries": ["AA"]}
+         "positive_countries": ["AA"], "added_positive_countries": ["AA"],
+         "positive_records": [{"species": "Example alpha", "country": "AA",
+                              "botanical_level1": "8", "added_host_country": 1,
+                              "early_record_count": 0, "late_record_count": 1,
+                              "other_taxa_early": 3, "other_taxa_late": 3}]}
     ]
     r = mod.result_for_direction(rows, "toy", draws=19)
     assert r["positive_record_cells"] == 1
@@ -56,10 +60,10 @@ def test_reporting_background_excludes_target_and_uses_both_windows():
 def test_directional_conditioning_recomputes_exposure_margin():
     data = [{"species": "A a", "genus": "A", "stratum": "8",
              "cells": [
-                 {"country": "AA", "added": 1, "early": 0, "late": 1},
-                 {"country": "BB", "added": 0, "early": 0, "late": 0},
-                 {"country": "CC", "added": 1, "early": 1, "late": 0},
-                 {"country": "DD", "added": 0, "early": 1, "late": 1},
+                 {"country": "AA", "added": 1, "early": 0, "late": 1, "early_count": 0, "late_count": 1, "other_early": 3, "other_late": 3},
+                 {"country": "BB", "added": 0, "early": 0, "late": 0, "early_count": 0, "late_count": 0, "other_early": 3, "other_late": 3},
+                 {"country": "CC", "added": 1, "early": 1, "late": 0, "early_count": 1, "late_count": 0, "other_early": 3, "other_late": 3},
+                 {"country": "DD", "added": 0, "early": 1, "late": 1, "early_count": 1, "late_count": 1, "other_early": 3, "other_late": 3},
              ]}]
     forward = mod.build_direction_rows(data, "late_only")
     backwards = mod.build_direction_rows(data, "early_only")
@@ -87,7 +91,11 @@ def test_common_random_numbers_make_identical_scopes_comparable():
     from fractions import Fraction
     row = {"N": 4, "A": 2, "K": 1, "O": 1, "E": Fraction(1, 2),
            "genus": "Example", "species": "Example alpha",
-           "positive_countries": ["AA"], "added_positive_countries": ["AA"]}
+           "positive_countries": ["AA"], "added_positive_countries": ["AA"],
+         "positive_records": [{"species": "Example alpha", "country": "AA",
+                              "botanical_level1": "8", "added_host_country": 1,
+                              "early_record_count": 0, "late_record_count": 1,
+                              "other_taxa_early": 3, "other_taxa_late": 3}]}
     a = mod.result_for_direction([row], "accepted/late_only", draws=99)
     b = mod.result_for_direction([row], "core/late_only", draws=99)
     assert a["genus_bootstrap_95_interval_pp"] == b["genus_bootstrap_95_interval_pp"]
@@ -111,3 +119,19 @@ def test_published_record_turnover_summary_has_no_unearned_inference():
                for s in report["all_settings"] for key in ("late_only","early_only"))
     assert report["regional_posthoc_diagnostics"]["exclude_caribbean"]["late_only"]["excess_percentage_points"] < 0
 
+
+
+def test_positive_transition_details_preserve_species_country_and_record_counts():
+    state = [{"species": "A a", "genus": "A", "stratum": "8", "cells": [
+        {"country": "AA", "added": 1, "early": 0, "late": 1,
+         "early_count": 0, "late_count": 3, "other_early": 4, "other_late": 4},
+        {"country": "BB", "added": 0, "early": 0, "late": 0,
+         "early_count": 0, "late_count": 0, "other_early": 4, "other_late": 4}
+    ]}]
+    r = mod.result_for_direction(mod.build_direction_rows(state, "late_only"),
+                                 "accepted/late_only", draws=19)
+    assert r["positive_record_cells"] == len(r["positive_species_country_details"]) == 1
+    cell = r["positive_species_country_details"][0]
+    assert (cell["species"], cell["country"], cell["added_host_country"]) == ("A a", "AA", 1)
+    assert cell["late_record_count"] == 3
+    assert r["positive_window_single_record_cells"] == 0

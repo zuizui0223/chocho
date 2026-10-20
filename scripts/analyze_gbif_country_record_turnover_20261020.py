@@ -129,7 +129,8 @@ def states_for(strata, counts, background, scope, effort_gate, focal_min):
             overall["added" if added else "control"][state] += 1
             cells.append({"country": ct, "added": added, "early": early,
                           "late": late, "state": state, "early_count": e,
-                          "late_count": l})
+                          "late_count": l, "other_early": other_early,
+                          "other_late": other_late})
         by_st.append({"species": sp, "genus": st["genus"],
                       "stratum": st["stratum"], "cells": cells})
     return by_st, {
@@ -158,7 +159,16 @@ def build_direction_rows(by_st, direction):
                      "stratum": st["stratum"], "N": N, "A": A, "K": K, "O": O,
                      "E": Fraction(A * K, N),
                      "positive_countries": [c["country"] for c in cells if c[outcome]],
-                     "added_positive_countries": [c["country"] for c in cells if c[outcome] and c["added"]]})
+                     "added_positive_countries": [c["country"] for c in cells if c[outcome] and c["added"]],
+                     "positive_records": [{
+                         "species": st["species"], "country": c["country"],
+                         "botanical_level1": st["stratum"],
+                         "added_host_country": c["added"],
+                         "early_record_count": c["early_count"],
+                         "late_record_count": c["late_count"],
+                         "other_taxa_early": c["other_early"],
+                         "other_taxa_late": c["other_late"]
+                     } for c in cells if c[outcome]]})
     return rows
 
 
@@ -222,6 +232,11 @@ def result_for_direction(rows, label, draws=499):
     enough = informative >= 50 and positive_species >= 25 and K >= 25
     ci, valid = cluster_ci(rows, label, draws) if K else (None, 0)
     pos = Counter(ct for r in rows for ct in r["positive_countries"])
+    cell_details = sorted(
+        (cell for r in rows for cell in r["positive_records"]),
+        key=lambda x: (x["species"], x["country"], x["botanical_level1"]))
+    if len(cell_details) != K or sum(x["added_host_country"] for x in cell_details) != O:
+        raise ValueError("Transition record-level audit disagrees with conditional margins")
     return {
         "status": ("EXPLORATORY_INFORMATION_GATE_MET" if enough else
                    "BELOW_PROTOCOL_INFORMATION_THRESHOLD"),
@@ -237,6 +252,10 @@ def result_for_direction(rows, label, draws=499):
         "exact_conditional_geographic_upper_tail": (round(exact_conditional_upper_tail(rows, O), 9)
                                                      if K else None),
         "positive_country_counts": dict(sorted(pos.items())),
+        "positive_species_country_details": cell_details,
+        "positive_window_single_record_cells": sum(
+            x["late_record_count" if "late_only" in label else "early_record_count"] == 1
+            for x in cell_details),
         "interpretation": "Indexed GBIF country records; NOT range expansion, colonization, breeding, host use, or a causal p-value",
     }
 
@@ -333,6 +352,9 @@ def main():
         "primary_positive_country_counts": {
             "late_only": result["primary"]["late_only"]["positive_country_counts"],
             "early_only": result["primary"]["early_only"]["positive_country_counts"]},
+        "primary_positive_species_country_details": {
+            "late_only": result["primary"]["late_only"]["positive_species_country_details"],
+            "early_only": result["primary"]["early_only"]["positive_species_country_details"]},
         "regional_posthoc_diagnostics": {
             key: {direction: {k:v for k,v in result["regional_posthoc_diagnostics"][key][direction].items()
                               if k != "positive_country_counts"}
