@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_pmip4_ice6gc_21ka_source_contract_v01",
+  "status": "SOURCE_ONLY_PRE_BARRIER_RESULT",
+  "target": "Global physical land and grounded-ice mask at 21 ka, paired with 0 ka ICE-6G_C baseline",
+  "published_source": "PMIP4 ICE-6G_C (VM5a) historical model documentation: https://pmip4.lsce.ipsl.fr/doku.php/data:ice_ice6g_c",
+  "download_page": "https://sharebox.lsce.ipsl.fr/index.php/s/1RSwVf7afj38cmG",
+  "time_files": [
+    {
+      "age_ka": 0,
+      "filename": "I6_C.VM5a_10min.0.nc",
+      "expected_md5": "5ba8c0df48a12132238ffcbf675578e0"
+    },
+    {
+      "age_ka": 21,
+      "filename": "I6_C.VM5a_10min.21.nc",
+      "expected_md5": "9443668583800099ce9e865be90e4ad6"
+    }
+  ],
+  "grid": {
+    "lat_n": 1080,
+    "lon_n": 2160,
+    "lat_min": -89.91667175,
+    "lat_max": 89.91666412,
+    "lon_min": 0,
+    "lon_max": 359.83334351,
+    "resolution_degrees": 0.16666666666666666
+  },
+  "expected_variables": {
+    "land": "sftlf",
+    "ice": "sftgif"
+  },
+  "classification": "land mask=100 AND ice mask=0 => putatively passable ice-free land; land & ice => blocked for ordinary terrestrial plant dispersal; floating ice blocked; ocean blocked",
+  "mask_values": "Source sftlf and sftgif are binary 0 or 100; reject intermediate values until reviewed",
+  "boundaries": [
+    "No substitution of current ETOPO+uniform -120m for measured PMIP4 21ka land and ice masks",
+    "No fallback to interpolated ICE6GC 0ka land where 21ka source inaccessible",
+    "A contiguous climate-suitable land graph is not evidence that a plant actually occupied it or dispersed through it",
+    "No current or 21ka species score opened during mask retrieval",
+    "No genetic outcome used; previous TTF negative plant identity remains unchanged"
+  ],
+  "source_authority": {
+    "doi_ice6g_c": "10.1002/2014JB011176",
+    "doi_pmip4": "10.5194/gmd-10-4035-2017"
+  },
+  "outputs": [
+    "byte-identical original 0ka and 21ka NetCDF with MD5 SHA256 pinned",
+    "source-first preflight receipt",
+    "raster metadata / value frequencies / source coverage quality gate only"
+  ]
+}
