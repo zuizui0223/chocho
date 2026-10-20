@@ -1,0 +1,115 @@
+name: chocho exact spatial accounting of LGM native-host climate vs PMIP4 land replacement
+on:
+  push:
+    branches: [ecology/lgm-climate-terrain-accounting-v07]
+    paths:
+      - .github/workflows/lgm-land-climate-accounting-v07.yml
+      - scripts/land_vs_climate_common_domain_accounting_v07.py
+      - tests/test_land_climate_common_domain_v07.py
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: chocho-416-plants-513-insects-LGM-domain-identity-v07
+  cancel-in-progress: false
+jobs:
+  exact-source-area-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/TTF
+          ref: 187e15c6a7b777c119b97b8a43a0d92783ef7c5c
+          path: input/TTF
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test exact domain accounting and confirm original source hashes
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'pytest>=8,<9'
+          python -m pytest -q tests/test_land_climate_common_domain_v07.py
+          python -m py_compile scripts/land_vs_climate_common_domain_accounting_v07.py
+          echo '169b9da084d0043abba5c89f008137d6867b554dfb7c7dbe283b750142d220af  results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz' | sha256sum -c -
+          echo '67c0d99852b8b8896559dbc0da07504bcb07a6ad7c017afa0eb86e31d40acc2a  results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz' | sha256sum -c -
+          echo 'a28fba9efa8a9dc79c162336f62c883059c5dddbfabec2861f554d038dd98044  input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv' | sha256sum -c -
+      - name: Restore source PMIP4 grid used in frozen 416 plant results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p input/pmip4
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12239910484/zip" > /tmp/original-pmip-05deg.zip
+          echo '706d482c5e139675951a170e538ceee11249281c77e38da99f37f2b3b7524947  /tmp/original-pmip-05deg.zip' | sha256sum -c -
+          unzip -q /tmp/original-pmip-05deg.zip -d input/pmip4
+          echo 'd8283a8ef177b56fd4554dc5bcc115e62adc5556e445bf5b7492c2c636a2a9db  input/pmip4/coarse_masks_finite_05deg.npz' | sha256sum -c -
+      - name: Compute all 416 plants, all original 641 insects and 349 distinct hostset area identities
+        run: |
+          set -euo pipefail
+          out=results/lgm_land_climate_common_domain_accounting_v07
+          python -u scripts/land_vs_climate_common_domain_accounting_v07.py \
+            --plant-primary results/lgm_416_native_05deg_potential_graph_v02/plant_potential_climate_graph_masks_primary_v02.npz \
+            --plant-extrapolated results/lgm_416_native_nonanalog_source_recovery_v03/plant_potential_climate_masks_extrapolation_included_v03.npz \
+            --terrain input/pmip4/coarse_masks_finite_05deg.npz \
+            --manifest input/TTF/benchmarks/exploratory/lgm_external_reference_v01/host_reference_request_manifest.csv \
+            --out "$out"
+          python - <<'PYTHON'
+          import csv,json,hashlib,os
+          from pathlib import Path
+          p=Path('results/lgm_land_climate_common_domain_accounting_v07')
+          x=json.loads((p/'summary.json').read_text())
+          assert x['status']=='EXPLORATORY_EXACT_SPATIAL_ACCOUNTING_NOT_CAUSAL_FACTORIAL_OR_HISTORICAL_GENETICS'
+          assert x['qualifying_insects']==513 and x['original_insects']==641
+          assert x['qualified_distinct_hostsets']==349 and x['modelled_native_plants']==416
+          assert (x['icefree_land_common_cells'],x['icefree_land_only_0BP_cells'],x['icefree_land_only_21ka_cells'])==(48830,9935,8356)
+          assert x['strata']['analog']['insects']['full_suitable_area_decrease']==399
+          assert x['strata']['extrapolated']['insects']['full_suitable_area_decrease']==322
+          assert x['strata']['analog']['insects']['unchanged_land_climate_decrease']==404
+          assert x['strata']['analog']['insects']['terrain_replacement_net_negative']==359
+          assert x['strata']['analog']['insects']['both_climate_and_terrain_negative']==314
+          assert x['strata']['analog']['distinct_hostsets']['n']==349
+          for model in x['strata'].values():
+              for unit in model.values():
+                  assert unit['max_abs_identity_remainder_km2']<2e-5
+          def csvrows(filename):
+              with (p/filename).open(newline='') as f:return list(csv.DictReader(f))
+          plants=csvrows('all_416_plants_land_climate_partition_v07.csv')
+          insects=csvrows('all_641_insects_land_climate_partition_v07.csv')
+          hosts=csvrows('349_unique_hostsets_land_climate_partition_v07.csv')
+          assert len(plants)==832 and len(insects)==1282 and len(hosts)==698
+          assert sum(r['status']=='COMPLETE_ALL_RECORDED_HOST_MODELS' for r in insects)==1026
+          assert sum(r['status']=='INCOMPLETE_RECORDED_HOST_MODELS_UNSCORED' for r in insects)==256
+          receipt={'schema':'chocho_exact_native_plant_lgm_domain_accounting_v07_receipt',
+             'run_id':os.environ['GITHUB_RUN_ID'],'code_commit':os.environ['GITHUB_SHA'],
+             'source_model_or_genetic_refitting_performed':False,
+             'ancient_host_plant_occupancy_used':False,
+             'csv_json_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                  for f in sorted(p.iterdir()) if f.is_file()}}
+          (p/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print('PASS_EXACT_LGM_POTENTIAL_CLIMATE_COMMON_LAND_ACCOUNTING_416_513_349')
+          PYTHON
+      - name: Preserve frozen source-derived biology-accounting outputs
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_land_climate_common_domain_accounting_v07/
+          git commit -m 'Archive exact source-land vs shared-land native-host 416 plant 513 insect glacial climate accounting'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-PMIP4-exact-416-513-land-climate-accounting-v07
+          path: results/lgm_land_climate_common_domain_accounting_v07/
+          retention-days: 30
+          if-no-files-found: warn
