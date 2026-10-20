@@ -119,6 +119,8 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_gbif_macro_information_gate_20261020.py"),
     Path("tests/test_gbif_recovery_taxon_keys_20261020.py"),
     Path("scripts/analyze_gbif_country_geographic_influence_20261020.py"),
+    Path("scripts/analyze_gbif_country_record_turnover_20261020.py"),
+    Path("tests/test_gbif_country_record_turnover_20261020.py"),
     Path("tests/test_gbif_country_geographic_influence_20261020.py"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/geographic_dependence_posthoc_20261020.json"),
 }
