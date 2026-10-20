@@ -1,0 +1,41 @@
+name: GBIF source-conditioned year cross-tabs (seven butterfly cells)
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/audit_gbif_country_dataset_year_20261020.py"
+      - "tests/test_gbif_country_dataset_year_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_DATASET_YEAR_CONFOUND_20261020.md"
+      - ".github/workflows/gbif-country-dataset-year.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dataset-year-qc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test exact frozen seven-cell source cohort and complete year facets
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_country_dataset_year_20261020.py
+      - name: Cross-tab all eleven GBIF dataset-specific year series
+        run: |
+          mkdir -p _dataset_year_audit
+          python scripts/audit_gbif_country_dataset_year_20261020.py \
+            --source-qc provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_provenance_facet_qc_20261020.json \
+            --dataset-registry provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_registry_qc_20261020.json \
+            --output _dataset_year_audit/gbif_dataset_year_matrix_20261020.json
+      - name: Upload aggregated cross-tabs, never individual GBIF records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-seven-country-dataset-year-audit-20261020
+          path: _dataset_year_audit/gbif_dataset_year_matrix_20261020.json
+          if-no-files-found: warn
+          retention-days: 30
