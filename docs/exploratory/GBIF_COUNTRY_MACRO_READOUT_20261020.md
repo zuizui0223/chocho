@@ -192,6 +192,30 @@ use only the frozen public primary strata. They do not require access to
 author-only HOSTS/WCVP/TDWG/CHELSA inputs and do not modify the frozen GEB
 manuscript.
 
+## Paired-window recording turnover (20 October 2026)
+
+A new [outcome-blind protocol](../../provenance/reviewer_defenses/protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md)
+was frozen before inspecting 2010–2017 / 2018–2025 transitions. Its 12
+source/paired-effort/record-threshold settings are now fully executed with
+the 229-taxon country count source and fixed 255 candidate strata. Requiring
+>=3 other butterfly taxa recorded in **each** period retains 2,684 candidate
+species × country cells: 2,638 not recorded in either window, **16 late-only**,
+**7 early-only**, and **23 recorded in both**. These are GBIF record states,
+never colonization, demographic recruitment or extinction.
+
+The primary late-only comparison has 9 observed added-host detections against
+8.096 conditional expectation: **+5.65 pp** (genus-bootstrap 95% interval
+**−15.02 to +22.04 pp**), from only **10 informative strata**. The reverse
+early-only comparison is +16.34 pp (interval −21.82 to +57.84) from 6 strata.
+All 12 settings are below the source-blind information threshold. Posthoc
+Caribbean deletion changes the late-only estimate to **−6.36 pp** (8 strata),
+again with a zero-spanning interval. Dated host arrival, local larval use and
+establishment are not available in country facets.
+
+See the [complete recording-turnover readout](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_RECORD_TURNOVER_READOUT_20261020.md),
+[archived 12-setting summary](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json),
+and [successful 20 October workflow](https://github.com/zuizui0223/chocho/actions/runs/39386941953).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.

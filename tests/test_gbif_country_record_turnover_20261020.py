@@ -92,3 +92,22 @@ def test_common_random_numbers_make_identical_scopes_comparable():
     b = mod.result_for_direction([row], "core/late_only", draws=99)
     assert a["genus_bootstrap_95_interval_pp"] == b["genus_bootstrap_95_interval_pp"]
 
+
+
+def test_published_record_turnover_summary_has_no_unearned_inference():
+    path = ROOT / "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json"
+    report = json.loads(path.read_text(encoding="utf-8"))
+    assert report["source"]["source_taxa"] == 229
+    assert report["source"]["country_rows_including_excluded_aliases"] == 23433
+    assert len(report["all_settings"]) == 12
+    primary = next(s for s in report["all_settings"] if s["setting"] == report["primary_focal"])
+    states = primary["states"]
+    assert sum(states["states_added"].values()) + sum(states["states_control"].values()) == 2684
+    assert primary["late_only"]["positive_record_cells"] == 16
+    assert primary["late_only"]["observed_added_positive"] == 9
+    assert primary["late_only"]["informative_strata"] == 10
+    assert primary["early_only"]["positive_record_cells"] == 7
+    assert all(s[key]["status"] == "BELOW_PROTOCOL_INFORMATION_THRESHOLD"
+               for s in report["all_settings"] for key in ("late_only","early_only"))
+    assert report["regional_posthoc_diagnostics"]["exclude_caribbean"]["late_only"]["excess_percentage_points"] < 0
+

@@ -123,6 +123,8 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_gbif_country_record_turnover_20261020.py"),
     Path("tests/test_gbif_country_geographic_influence_20261020.py"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/geographic_dependence_posthoc_20261020.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_RECORD_TURNOVER_READOUT_20261020.md"),
 }
 
 IDENTITY_REPLACEMENTS = {

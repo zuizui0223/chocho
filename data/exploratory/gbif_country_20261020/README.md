@@ -67,3 +67,26 @@ a fresh output directory and `--requests-per-second 1`. A later live snapshot
 is not byte-equivalent to this archive; existing valid checkpoints can be
 resumed. The original 96-species record-body recovery remains a separate,
 transport-blocked acquisition route.
+
+## Two-window detection turnover (2010–2017 vs 2018–2025)
+
+The fixed country panel now has a **separate exploratory** recording-turnover
+analysis, using the 229 noncolliding taxa and same 255 resource-contrast strata.
+Results: 16 late-only detected species × country cells and 7 early-only cells
+after a >=3-other-taxa-in-each-window gate; primary late-only excess +5.65 pp
+(genus-bootstrap 95% interval −15.02 to +22.04), 10 informative strata. This
+does not establish colonization. See the
+[full readout](../../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_RECORD_TURNOVER_READOUT_20261020.md),
+[summary JSON](../../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json)
+and [successful analysis workflow](https://github.com/zuizui0223/chocho/actions/runs/39386941953).
+
+Replay using the frozen country aggregates:
+
+```bash
+python scripts/analyze_gbif_country_record_turnover_20261020.py \
+  --country-counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+  --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+  --frozen-strata provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json \
+  --bootstrap-draws 1999 \
+  --output /tmp/gbif_country_record_turnover.json
+```
