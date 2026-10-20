@@ -121,6 +121,19 @@ country in the same catalogue). The complete 7-cell >=2 list is retained in
 These are **targets for finer-grain occurrence and record-provenance checks**,
 not evidence of recent colonization, breeding, or population support.
 
+## Seven-cell source-provenance validation (20 October 2026)
+
+A pre-outcome-defined seven-cell GBIF dataset/year/basis facet audit
+successfully matched **all seven** frozen late-only country record totals.
+All indexed records in these candidate cells were HUMAN_OBSERVATION.
+Four cells come from one dataset each. The stronger **>=5 record**
+subset has only two cells: `Aguna asander` / Dominican Republic (9
+iNaturalist records across six years, added-host flag) and
+`Papilio demoleus` / Israel (86 records, 61 in 2025, three datasets,
+**no** added-host flag). Dataset plurality is not observer or demographic
+independence. See the [full source-provenance audit](GBIF_COUNTRY_SOURCE_PROVENANCE_READOUT_20261020.md)
+and [facet receipts](gbif_country_provenance_facet_qc_20261020.json).
+
 ## Scope, verification and replay
 
 - Frozen protocol: [GBIF_COUNTRY_RECORD_TURNOVER_20261020.md](../../protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md)

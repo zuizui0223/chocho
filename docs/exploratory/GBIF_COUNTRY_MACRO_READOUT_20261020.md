@@ -229,6 +229,20 @@ cells are `Aguna asander` / Dominican Republic (9 country records) and
 indexed GBIF records, *not* verified wild establishment or local host use.
 See the [temporal depth audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_RECORD_TURNOVER_READOUT_20261020.md).
 
+### Candidate GBIF recording provenance (20 October 2026)
+
+The later-only recording subgroup was further checked using
+dataset, observation-year and basis-of-record facets for all seven
+non-singleton species × country cells. All **7/7 live country counts
+reproduced the frozen totals** and all seven were HUMAN_OBSERVATION
+records. `Aguna asander` / Dominican Republic has nine iNaturalist
+records across six years from **one** dataset; `Papilio demoleus` /
+Israel has 86 records over three years from **three** datasets, 61
+of them in 2025, but lacks an added-host flag in the country catalogue.
+These cannot distinguish wild colonization from recording processes,
+or demonstrate larval recruitment. See the
+[source-provenance readout](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_SOURCE_PROVENANCE_READOUT_20261020.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.

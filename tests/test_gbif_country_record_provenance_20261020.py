@@ -64,3 +64,24 @@ def test_reject_missing_or_mismatched_facets_and_truncated_response():
         mod.validate_response(json.dumps(v).encode())
     with pytest.raises(ValueError):
         mod.validate_response(b'{"incomplete":')
+
+def test_saved_provenance_facet_audit_complete_and_not_host_use():
+    result = ROOT / "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_provenance_facet_qc_20261020.json"
+    report = json.loads(result.read_text(encoding="utf-8"))
+    assert report["schema"] == "gbif_country_record_provenance_facet_qc_v1"
+    assert report["frozen_candidates"] == report["live_facets_complete"] == 7
+    assert len(report["results"]) == 7
+    assert sum(x["added_host_country"] for x in report["results"]) == 3
+    assert all(x["status"] == "COMPLETE_LIVE_FACET_QC" and
+               x["source_drift_records"] == 0 and
+               sum(x["facet_counts"]["BASISOFRECORD"].values()) == x["frozen_late_records"]
+               for x in report["results"])
+    assert all(set(x["facet_counts"]["BASISOFRECORD"]) == {"HUMAN_OBSERVATION"}
+               for x in report["results"])
+    bykey = {(x["species"],x["country"]):x for x in report["results"]}
+    aguna = bykey[("Aguna asander","DO")]
+    papilio = bykey[("Papilio demoleus","IL")]
+    assert aguna["dataset_count"] == 1 and len(aguna["years_recorded"]) == 6
+    assert papilio["dataset_count"] == 3 and papilio["facet_counts"]["YEAR"]["2025"] == 61
+    assert aguna["added_host_country"] == 1 and papilio["added_host_country"] == 0
+    assert report["quality_audit_only_not_establishment"] is True
