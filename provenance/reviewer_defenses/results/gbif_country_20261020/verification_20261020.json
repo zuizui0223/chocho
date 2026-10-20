@@ -1,0 +1,37 @@
+{
+  "executed_utc": "2026-10-20T04:59:32.083431+00:00",
+  "status": "PASS",
+  "offline_test_suite": {
+    "tests_passed": 251,
+    "subtests_passed": 5,
+    "failures": 0
+  },
+  "primary_independent_cell_recalculation": {
+    "strata": 255,
+    "N": 3188,
+    "A": 1527,
+    "K": 48,
+    "O": 26,
+    "expected_fraction": "1919141/79560",
+    "expected": 24.121933132227248,
+    "exact_conditional_geographic_upper_tail": 0.28324957473908985,
+    "monte_carlo_upper_tail": 0.2844
+  },
+  "grid": {
+    "settings": 72,
+    "information_range": [
+      6,
+      21
+    ],
+    "all_95ci_include_zero": true
+  },
+  "source": {
+    "queries_complete": 924,
+    "all_raw_bodies_reparsed_and_hash_checked": true,
+    "CSV_and_complete_window_receipts_equal": true,
+    "original_manifest_sha256": "18f84371cf2a9a71ca06202fac2246d9aa3df0465bd973d06b4e9e8bfa58e8d2",
+    "uncompressed_receipt_sha256": "f020f61c92d122f342cc4d7af90f57f36cea379e14b522a3df66ed8be14f8006",
+    "raw_response_set_sha256": "2b6d093e445ede691d681804dc114b577953a1db072464720617eeca90bea1eb"
+  },
+  "independent_review": "Separate calculation rebuilt membership from country counts and saved resource fractions; every retained cell and stratum matched. This is computational verification, not independent ecological data."
+}

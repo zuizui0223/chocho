@@ -1,0 +1,207 @@
+# Full-index country records leave the realized-butterfly association unresolved
+
+**20 October 2026 — completed exploratory analysis.** The independent
+country-grain acquisition and all specified comparisons have finished. The
+primary estimate is **+3.91 percentage points**, with a genus-bootstrap 95%
+interval of **−6.42 to +14.94 pp**. Only **21 informative strata** contribute,
+below the prospectively stated minimum of 50. This is evidence of unresolved
+precision and restricted scope, not evidence that the biological effect is zero.
+
+![Country comparison and prespecified sensitivities](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_summary.png)
+
+## What was advanced
+
+The four apparently successful 96-species recovery jobs had returned only one
+completed taxon, zero usable mapped records and 95 incomplete taxa. That lone
+taxon, Chlosyne lacinia, used the transcribed key 1914469 instead of the frozen
+source key 1914465. The identity-preserving merge correctly rejected it. The
+key is corrected and every recovery key is now checked against the original
+manifest before requests begin. The original merge protection remains intact.
+
+Ordinary occurrence bodies still truncate at the transport layer, including
+75-, 15- and 10-record requests. Repeating the full failed recovery was stopped.
+Compact country facets then provided a separate feasible route to the full
+matching live index. This does **not** recover the missing WGSRPD3 samples and
+changes the spatial estimand. The country protocol, exclusions and analysis
+code were frozen before the country association was calculated; see the
+[protocol](../../provenance/reviewer_defenses/protocols/GBIF_COUNTRY_FULL_INDEX_MACRO_20261020.md)
+and [code freeze c792732](https://github.com/zuizui0223/chocho/commit/c792732b8c18dfbb61bd89bbbddf6b483e42816e).
+
+## New source and analysis population
+
+| Source accounting | Completed quantity |
+| --- | ---: |
+| Original butterfly names retained in source audit | 239 |
+| Resolved names with both windows and both basis scopes complete | 231 |
+| Completed country-facet queries | 924 / 924 |
+| Original unresolved names | 8 |
+| Non-colliding accepted-key taxa in ecological analysis | 229 |
+| Country-assigned records, accepted bases, 229 taxa | 33,817,891 |
+| Country-assigned records, core bases, 229 taxa | 33,621,039 |
+| Country/territory codes represented in the source | 238 |
+| Countries meeting the fixed geography/climate-source criteria | 140 |
+| Eligible countries with any retained taxon record | 139 |
+| Accepted-base records in eligible countries | 25,558,968 |
+
+Oeneis bore and Oeneis polixenes share accepted key 9804158. Both are excluded
+before ecological outcomes are examined; neither is chosen arbitrarily as the
+representative resource catalogue. All original unresolved taxa and rejected
+geographic units remain missing, rather than ecological negatives.
+
+The source comprises 2010–2017 and 2018–2025 country facets with coordinates,
+no GBIF geospatial issue and status PRESENT. Core bases are human observations
+and preserved specimens; the accepted-bases scope additionally allows
+OBSERVATION, MACHINE_OBSERVATION and OCCURRENCE. The scopes overlap and are
+never added together. Counts are indexed records, not independent individuals,
+verified wild populations or breeding events. The source has no uniform
+captive/wild or establishment verification.
+
+The 140-country panel requires at least 95% mapped geographic coverage,
+unambiguous country codes, a single material WGSRPD Level-1 region and known
+climate data for material and guard units. This excludes major multi-region
+countries including the United States, Australia, Russia, Spain and Portugal.
+Thus this is a geographically restricted macro comparison, not an unrestricted
+worldwide butterfly estimate. All excluded codes and reasons are retained.
+Exact disjoint area partitions avoid double-counting overlapping boundaries.
+
+## Primary ecological comparison
+
+The question is whether country-level butterfly records outside documented
+**native-host resource geography** are enriched where introduced plants add
+potential host resources. Native-host geography is not butterfly-native range.
+An entire country is excluded if a guard-linked region contains a native host.
+Eligible countries must have at least 90% of their total land area within the
+native-host BIO1/BIO12 5–95% analogue and at least three other focal butterfly
+taxa recorded. The focal taxon cannot supply its own effort proxy.
+
+Within each butterfly × Level-1 stratum, N is eligible countries, A is
+added-host countries, K is positive countries and O is positive added-host
+countries. Only 0<A<N strata provide resource contrasts. The geographical
+reference expectation is AK/N, preserving K within each stratum.
+
+| Primary quantity | Result |
+| --- | ---: |
+| Species / genera with resource contrasts | 156 / 99 |
+| Species / genera contributing positive countries | 20 / 19 |
+| Resource-contrast strata | 255 |
+| Candidate species × country cells N | 3,188 |
+| Added-host candidate cells A | 1,527 |
+| Positive species × country cells K | 48 |
+| Observed positives overlapping added-host countries O | 26 |
+| Conditional expected overlap | 24.121933 |
+| Observed fraction | 54.17% |
+| Conditional expected fraction | 50.25% |
+| Excess | **+3.912639 pp** |
+| Genus-bootstrap 95% interval | **−6.416154 to +14.935744 pp** |
+| Strata with 0<A<N and 0<K<N | **21; minimum 50 not reached** |
+| Monte Carlo conditional geographical upper tail | 0.2844 |
+| Independently calculated exact conditional upper tail | 0.283249575 |
+
+The conditional tail is a geographical benchmark, not a causal or biological
+p-value. The bootstrap resamples genera; it does not eliminate shared-country,
+shared-host or observer dependence. The original 33.82 million indexed records
+do not create 33.82 million independent observations for this hypothesis.
+
+## Prespecified sensitivity results
+
+All **72** settings were executed: two basis scopes × three windows × three
+effort gates × two climate bounds × two focal-record thresholds. Every setting
+has **6–21 informative strata**, below 50; all 72 genus intervals include zero.
+Their positive point estimates are correlated analyses of the same source,
+not 72 independent replications. All eight additional diagnostic intervals
+also include zero.
+
+| Selected prespecified check | Excess pp | 95% genus interval pp | Positive cells |
+| --- | ---: | ---: | ---: |
+| Primary | +3.91 | −6.42 to +14.94 | 48 |
+| Core observation/specimen bases | +3.91 | −6.63 to +14.75 | 48 |
+| Narrower 10–90% climate analogue | +4.43 | −9.64 to +17.26 | 36 |
+| At least five focal records | +6.94 | −9.20 to +23.90 | 20 |
+| Additional country-area classes | +3.27 | −5.35 to +14.86 | 38 |
+| Additional reporting-intensity classes | +4.62 | −5.84 to +15.37 | 45 |
+| Added-resource coverage at least 90% | +4.04 | −6.24 to +15.87 | 48 |
+| One material botanical region per country | +8.39 | −8.00 to +24.68 | 28 |
+| Continuous added-and-analogue area fraction | +3.74 | −6.28 to +13.17 | 48 |
+
+The continuous result uses country land-area fractions rather than a binary
+added-host-country label, so its response differs from the binary overlap.
+Both retain the unmapped remainder in the full country-area denominator.
+
+Using only the original-complete, non-colliding 133 taxa as both target and
+effort panel in the **new country data** gives +8.65 pp (interval −2.78 to
++25.00). Expanding targets to 229 with the same 133-taxon effort reference gives
++7.18 pp (−3.05 to +17.44); expanding the effort panel as well gives the primary
++3.91 pp. The internal reporting background affects the comparison. None of
+these country estimates is a reproduction of the older WGSRPD3 estimate.
+
+## Where the information is concentrated
+
+Of the 48 positive cells, **28 contain only one to four indexed records**.
+The WGSRPD Level-1 code 8 accounts for 34 positive cells and 19 added-host
+positive cells. Its formal name, Southern America, includes Central America
+and the Caribbean; it must not be described simply as mainland South America.
+
+| Contribution within Level-1 code 8 | Positive cells | Added-host positive cells |
+| --- | ---: | ---: |
+| Caribbean: Cuba, Dominican Republic, Haiti | 15 | 12 |
+| Central America: Guatemala, Honduras, Nicaragua | 11 | 4 |
+| South American mainland side: BO, EC, GF, GY, SR, VE | 8 | 3 |
+
+Thus **26/48 positive cells and 16/26 added-host positive cells are in Central
+America or the Caribbean**. The sparse comparison and geographic concentration
+limit generalization even though source retrieval is complete.
+
+## Archived sample replay and the information-gate correction
+
+The original 135-name source replay reproduces its numerical result exactly.
+Its written protocol called for 50 informative strata, while the old code
+checked ten K>0 strata. The new separate gate counts true nonzero conditional
+variance, 0<A<N and 0<K<N, and does not silently relabel the archived result.
+
+| Archived WGSRPD3 comparison | Original 135 names | Both shared-key names removed |
+| --- | ---: | ---: |
+| Target and effort names | 135 | 133 |
+| Positive cells | 119 | 118 |
+| Observed added-host overlap | 74 | 74 |
+| Expected overlap | 69.618462 | 69.383168 |
+| Excess pp | +3.681965 | +3.912569 |
+| Genus 95% interval pp | −0.993179 to +9.104424 | −0.501672 to +9.547507 |
+| True informative strata | 29 | 28 |
+
+The 133-name result is an explicit posthoc taxonomic-identity diagnostic;
+neither the original source nor its exact replay is overwritten. The inference
+remains unresolved after the collision exclusion. Similar country and WGSRPD3
+point estimates do not make the new country analysis a same-grain replication.
+
+## Ecological implication and useful next evidence
+
+The existing resource-network work supports expansion and homogenization of
+**potential larval-resource geography**. Its stronger plant-climate and spatial
+nulls already showed that much of apparent climate sorting reflects plant
+distribution structure. The completed country record comparison does not
+establish that introduced hosts caused butterfly expansion, local host use,
+establishment or demographic benefit. It also does not establish a zero effect.
+
+The next useful evidence would preserve finer geographic resolution and verify
+wild occurrence/establishment in the relatively small set of informative
+outside-native-resource locations. Further variants of the same plant null or
+larger totals from repeated records inside already occupied countries would
+not resolve the present information bottleneck. This identifies the remaining
+empirical requirement; it is not an unreported completed analysis.
+
+## Verification and reproducibility
+
+All 924 raw-body hashes and facet summaries, complete-window receipt identities,
+CSV rows and hashes, source totals, and all geographic union-area identities
+passed verification. A separate implementation rebuilt every primary cell and
+stratum from the frozen CSV and resource fractions. It obtained the exact
+expectation 1,919,141/79,560 and independently convolved the conditional null.
+The offline repository suite passed **251 tests plus five subtests**.
+
+The [frozen public aggregate inputs](../../data/exploratory/gbif_country_20261020/README.md)
+include replay instructions. [Complete results and all 72 settings](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_macro_results.json),
+[sensitivity CSV](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_sensitivities.csv),
+[primary cells](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json),
+and [verification receipt](../../provenance/reviewer_defenses/results/gbif_country_20261020/verification_20261020.json)
+are retained. Author-only raw source tables and geometry remain outside this
+branch. The frozen GEB manuscript is unchanged.
