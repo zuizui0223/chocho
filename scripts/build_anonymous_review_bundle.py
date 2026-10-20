@@ -122,6 +122,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/analyze_gbif_country_record_turnover_20261020.py"),
     Path("scripts/audit_gbif_country_record_provenance_20261020.py"),
     Path("scripts/audit_gbif_country_dataset_year_20261020.py"),
+    Path("scripts/audit_gbif_country_platform_reporting_20261020.py"),
+    Path("tests/test_gbif_country_platform_reporting_20261020.py"),
     Path("tests/test_gbif_country_dataset_year_20261020.py"),
     Path("scripts/audit_gbif_dataset_registry_20261020.py"),
     Path("tests/test_gbif_dataset_registry_20261020.py"),
