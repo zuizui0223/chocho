@@ -1,0 +1,857 @@
+{
+  "schema": "gbif_butterfly_country_dataset_year_reporting_denominators_v1",
+  "source": {
+    "dataset_year_source_sha256": "ceb7571e8e2d0fb346e60d0c8bec7b46a890d870d2fa8d5a3f9af460933cb2f5",
+    "source_group_count": 11,
+    "seven_country_species_cases": 7,
+    "original_record_years": "2018-2025",
+    "source_query_type": "country/dataset/year facets"
+  },
+  "executed_utc": "2026-10-20T10:50:34.938156+00:00",
+  "status": "ALL_BROAD_DENOMINATORS_VALID",
+  "source_conditioned_queries": 22,
+  "all_taxa_compatible_groups": 11,
+  "lepidoptera_legacy_key_compatible_groups": 11,
+  "cannot_infer_butterfly_abundance_or_breeding": true,
+  "cases": [
+    {
+      "species": "Aguna asander",
+      "country": "DO",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2019": 2,
+        "2020": 2,
+        "2022": 1,
+        "2023": 1,
+        "2024": 2,
+        "2025": 1
+      },
+      "source_total": 9,
+      "added_host_country": 1,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 62731,
+          "year_counts": {
+            "2018": 2888,
+            "2019": 4603,
+            "2020": 4518,
+            "2021": 4640,
+            "2022": 7732,
+            "2023": 10086,
+            "2024": 14329,
+            "2025": 13935
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=DO&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "ab6a67a1744af0df60f927e1429a583c0dc4419569ca6a74212320a94d3f9a9d",
+          "retrieved_utc": "2026-10-20T10:49:26.625429+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 7586,
+          "year_counts": {
+            "2018": 461,
+            "2019": 879,
+            "2020": 808,
+            "2021": 682,
+            "2022": 809,
+            "2023": 1324,
+            "2024": 1228,
+            "2025": 1395
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=DO&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "76a2e86d195eab908ea3dc8076586a4ce45fe9d40b3d3871efdb07e30cec345a",
+          "retrieved_utc": "2026-10-20T10:49:32.457305+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 4.3449924,
+            "2020": 4.42673749,
+            "2022": 1.29332644,
+            "2023": 0.99147333,
+            "2024": 1.39577081,
+            "2025": 0.71761751
+          },
+          "all_year_total": 62731
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 22.75312856,
+            "2020": 24.75247525,
+            "2022": 12.36093943,
+            "2023": 7.55287009,
+            "2024": 16.28664495,
+            "2025": 7.16845878
+          },
+          "all_year_total": 7586
+        }
+      }
+    },
+    {
+      "species": "Aguna asander",
+      "country": "EC",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2019": 1,
+        "2020": 1,
+        "2022": 1
+      },
+      "source_total": 3,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 591853,
+          "year_counts": {
+            "2018": 21055,
+            "2019": 47804,
+            "2020": 42476,
+            "2021": 73989,
+            "2022": 80365,
+            "2023": 99932,
+            "2024": 94588,
+            "2025": 131644
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=EC&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "ab3bf86b0cb57126e2c81f7bd63b789fb646917f7556aea953cbb24672c8002c",
+          "retrieved_utc": "2026-10-20T10:49:37.647643+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 46891,
+          "year_counts": {
+            "2018": 2543,
+            "2019": 3997,
+            "2020": 4546,
+            "2021": 6143,
+            "2022": 5189,
+            "2023": 7796,
+            "2024": 6974,
+            "2025": 9703
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=EC&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "4d7e32878a4365eb5d758d0a50973aa33fee9365da179b86ba8f36e42c68c4aa",
+          "retrieved_utc": "2026-10-20T10:49:42.793444+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 0.20918752,
+            "2020": 0.23542706,
+            "2022": 0.12443228
+          },
+          "all_year_total": 591853
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 2.50187641,
+            "2020": 2.19973603,
+            "2022": 1.92715359
+          },
+          "all_year_total": 46891
+        }
+      }
+    },
+    {
+      "species": "Aguna asander",
+      "country": "HT",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2020": 1,
+        "2023": 2
+      },
+      "source_total": 3,
+      "added_host_country": 1,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 7670,
+          "year_counts": {
+            "2018": 242,
+            "2019": 1203,
+            "2020": 634,
+            "2021": 2649,
+            "2022": 484,
+            "2023": 859,
+            "2024": 1195,
+            "2025": 404
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=HT&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "54d9d0ffc9a34ea3c0133daf3c0a9f3e0d93dfc784b541a3e607a3c682610463",
+          "retrieved_utc": "2026-10-20T10:49:47.240043+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 528,
+          "year_counts": {
+            "2018": 24,
+            "2019": 49,
+            "2020": 51,
+            "2021": 108,
+            "2022": 45,
+            "2023": 113,
+            "2024": 89,
+            "2025": 49
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=HT&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "9904ade56d690990c49a66ce1915d3959ed85436a1b784544f802953e3b7297a",
+          "retrieved_utc": "2026-10-20T10:49:50.077287+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2020": 15.77287066,
+            "2023": 23.28288708
+          },
+          "all_year_total": 7670
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2020": 196.07843137,
+            "2023": 176.99115044
+          },
+          "all_year_total": 528
+        }
+      }
+    },
+    {
+      "species": "Danaus plexippus",
+      "country": "DE",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2025": 1
+      },
+      "source_total": 1,
+      "added_host_country": 1,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 3363737,
+          "year_counts": {
+            "2018": 66566,
+            "2019": 137798,
+            "2020": 284669,
+            "2021": 362241,
+            "2022": 412138,
+            "2023": 517970,
+            "2024": 694243,
+            "2025": 888112
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=DE&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "6de5b3bebd3ece5f52ab9b5b6e760890ee66b1757b8c494b598bf5b336f02c22",
+          "retrieved_utc": "2026-10-20T10:49:55.377803+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 435578,
+          "year_counts": {
+            "2018": 12048,
+            "2019": 16226,
+            "2020": 32166,
+            "2021": 42392,
+            "2022": 59612,
+            "2023": 58983,
+            "2024": 85704,
+            "2025": 128447
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=DE&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "f1eb0311922c462d71e60c612552bc5fbe026aa53f2180944cd09670d96759b9",
+          "retrieved_utc": "2026-10-20T10:49:57.003215+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2025": 0.01125984
+          },
+          "all_year_total": 3363737
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2025": 0.07785312
+          },
+          "all_year_total": 435578
+        }
+      }
+    },
+    {
+      "species": "Danaus plexippus",
+      "country": "DE",
+      "dataset_key": "6ac3f774-d9fb-4796-b3e9-92bf6c81c084",
+      "dataset_title": "NABU|naturgucker",
+      "source_years": {
+        "2023": 1
+      },
+      "source_total": 1,
+      "added_host_country": 1,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 10828568,
+          "year_counts": {
+            "2018": 1314342,
+            "2019": 1321577,
+            "2020": 1618707,
+            "2021": 1579217,
+            "2022": 1369527,
+            "2023": 1267178,
+            "2024": 1279118,
+            "2025": 1078902
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=6ac3f774-d9fb-4796-b3e9-92bf6c81c084&country=DE&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "c5b6ac6b4bd08803a3a79bb17495d067b96fd89a513bbd5093e656ca1190f275",
+          "retrieved_utc": "2026-10-20T10:50:02.983491+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 888869,
+          "year_counts": {
+            "2018": 113694,
+            "2019": 96542,
+            "2020": 124970,
+            "2021": 111081,
+            "2022": 128120,
+            "2023": 105516,
+            "2024": 105151,
+            "2025": 103795
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=6ac3f774-d9fb-4796-b3e9-92bf6c81c084&country=DE&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "91835525e0e48bb706e3b11ae9e27c1e87fd3ff756f7263e6548c964e845ffd6",
+          "retrieved_utc": "2026-10-20T10:50:05.202764+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 0.00789155
+          },
+          "all_year_total": 10828568
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 0.09477236
+          },
+          "all_year_total": 888869
+        }
+      }
+    },
+    {
+      "species": "Melanargia galathea",
+      "country": "RW",
+      "dataset_key": "8fbdc3e6-eaa0-4ad8-8733-ad433976a448",
+      "dataset_title": "JRS Wetands data Rwanda, 2019",
+      "source_years": {
+        "2019": 4
+      },
+      "source_total": 4,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 1509,
+          "year_counts": {
+            "2019": 1508,
+            "2020": 1
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=8fbdc3e6-eaa0-4ad8-8733-ad433976a448&country=RW&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "8e226006e586cec4bfd205145ea44992504a7bdfb7e8ef342bec32645b1c57ab",
+          "retrieved_utc": "2026-10-20T10:50:10.694804+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 139,
+          "year_counts": {
+            "2019": 139
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=8fbdc3e6-eaa0-4ad8-8733-ad433976a448&country=RW&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "c950182c67450df138f746aa1bc85b57a0a51c40c6693e7b2d1772406eae96a8",
+          "retrieved_utc": "2026-10-20T10:50:12.606868+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 26.52519894
+          },
+          "all_year_total": 1509
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2019": 287.76978417
+          },
+          "all_year_total": 139
+        }
+      }
+    },
+    {
+      "species": "Papilio demoleus",
+      "country": "IL",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2023": 1,
+        "2024": 9,
+        "2025": 33
+      },
+      "source_total": 43,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 171222,
+          "year_counts": {
+            "2018": 5172,
+            "2019": 10359,
+            "2020": 12691,
+            "2021": 13477,
+            "2022": 21343,
+            "2023": 27223,
+            "2024": 34270,
+            "2025": 46687
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "cb9589c3876cc69519b40ffe113986bd6d8ef88f5c9a180815dce6501e27a9bd",
+          "retrieved_utc": "2026-10-20T10:50:14.324638+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 14111,
+          "year_counts": {
+            "2018": 256,
+            "2019": 472,
+            "2020": 960,
+            "2021": 1057,
+            "2022": 1418,
+            "2023": 2456,
+            "2024": 3056,
+            "2025": 4436
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "88e6d900cd25b239d8ef4609230cc28993c281c01c6cc192e2c1371a4d4bd5c5",
+          "retrieved_utc": "2026-10-20T10:50:16.449923+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 0.36733644,
+            "2024": 2.62620368,
+            "2025": 7.06834879
+          },
+          "all_year_total": 171222
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 4.07166124,
+            "2024": 29.45026178,
+            "2025": 74.39134355
+          },
+          "all_year_total": 14111
+        }
+      }
+    },
+    {
+      "species": "Papilio demoleus",
+      "country": "IL",
+      "dataset_key": "6c8d87be-829d-4364-b2bc-578258761cc2",
+      "dataset_title": "INPA - Observations",
+      "source_years": {
+        "2023": 1,
+        "2024": 14,
+        "2025": 27
+      },
+      "source_total": 42,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 1082409,
+          "year_counts": {
+            "2018": 106896,
+            "2019": 109053,
+            "2020": 119254,
+            "2021": 108548,
+            "2022": 162823,
+            "2023": 170363,
+            "2024": 143482,
+            "2025": 161990
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=6c8d87be-829d-4364-b2bc-578258761cc2&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "0c332b78cf61997ea258c527f2a8046de45e106b570d7691c3bb0d995c61ba3b",
+          "retrieved_utc": "2026-10-20T10:50:22.031997+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 104850,
+          "year_counts": {
+            "2018": 9986,
+            "2019": 13785,
+            "2020": 15982,
+            "2021": 16578,
+            "2022": 17834,
+            "2023": 22113,
+            "2024": 6777,
+            "2025": 1795
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=6c8d87be-829d-4364-b2bc-578258761cc2&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "aa1eeb4db4320116732923f513a350c9ed98380f2ff7efbc07ede245dfbde64c",
+          "retrieved_utc": "2026-10-20T10:50:23.675928+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 0.05869819,
+            "2024": 0.97573215,
+            "2025": 1.66676955
+          },
+          "all_year_total": 1082409
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2023": 0.45222267,
+            "2024": 20.65810831,
+            "2025": 150.4178273
+          },
+          "all_year_total": 104850
+        }
+      }
+    },
+    {
+      "species": "Papilio demoleus",
+      "country": "IL",
+      "dataset_key": "cf3bdc30-370c-48d3-8fff-b587a39d72d6",
+      "dataset_title": "eButterfly Surveys",
+      "source_years": {
+        "2025": 1
+      },
+      "source_total": 1,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 66,
+          "year_counts": {
+            "2025": 66
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=cf3bdc30-370c-48d3-8fff-b587a39d72d6&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "ad45e24c420659a4cd0f41847e3a4ed3362a6b3f18fc32295587f5bd80cd2f66",
+          "retrieved_utc": "2026-10-20T10:50:25.177842+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 66,
+          "year_counts": {
+            "2025": 66
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=cf3bdc30-370c-48d3-8fff-b587a39d72d6&country=IL&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "ad45e24c420659a4cd0f41847e3a4ed3362a6b3f18fc32295587f5bd80cd2f66",
+          "retrieved_utc": "2026-10-20T10:50:27.123490+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2025": 151.51515152
+          },
+          "all_year_total": 66
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2025": 151.51515152
+          },
+          "all_year_total": 66
+        }
+      }
+    },
+    {
+      "species": "Papilio demoleus",
+      "country": "LB",
+      "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "dataset_title": "iNaturalist Research-grade Observations",
+      "source_years": {
+        "2021": 1,
+        "2024": 1
+      },
+      "source_total": 2,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 4872,
+          "year_counts": {
+            "2018": 232,
+            "2019": 796,
+            "2020": 421,
+            "2021": 613,
+            "2022": 395,
+            "2023": 908,
+            "2024": 512,
+            "2025": 995
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=LB&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "1bc185fbd68611633140a1a25e7fb5aa5844016f7a038bddf441a4ea39dfbce8",
+          "retrieved_utc": "2026-10-20T10:50:28.697538+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 277,
+          "year_counts": {
+            "2018": 11,
+            "2019": 62,
+            "2020": 13,
+            "2021": 11,
+            "2022": 16,
+            "2023": 46,
+            "2024": 26,
+            "2025": 92
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=50c9509d-22c7-4a22-a47d-8c48425ef4a7&country=LB&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "50be608e4e3de575edd593d73230897d90b6fe50fd86ab9781a45ccd6337ffb2",
+          "retrieved_utc": "2026-10-20T10:50:30.249961+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2021": 16.3132137,
+            "2024": 19.53125
+          },
+          "all_year_total": 4872
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2021": 909.09090909,
+            "2024": 384.61538462
+          },
+          "all_year_total": 277
+        }
+      }
+    },
+    {
+      "species": "Papilio demoleus",
+      "country": "LB",
+      "dataset_key": "8a863029-f435-446a-821e-275f4f641165",
+      "dataset_title": "Observation.org, Nature data from around the World",
+      "source_years": {
+        "2024": 1
+      },
+      "source_total": 1,
+      "added_host_country": 0,
+      "denominators": {
+        "all_taxa": {
+          "index_count": 48,
+          "year_counts": {
+            "2018": 6,
+            "2019": 10,
+            "2021": 3,
+            "2022": 10,
+            "2023": 9,
+            "2024": 6,
+            "2025": 4
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=8a863029-f435-446a-821e-275f4f641165&country=LB&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+          "http_status": 200,
+          "raw_response_sha256": "dfea9ea01ac82b4c2519e8e79e8e12f3e2ab1e64e134075c89bdf02137d17a63",
+          "retrieved_utc": "2026-10-20T10:50:31.907780+00:00",
+          "attempts": 1
+        },
+        "lepidoptera_legacy_797": {
+          "index_count": 15,
+          "year_counts": {
+            "2019": 7,
+            "2022": 3,
+            "2024": 3,
+            "2025": 2
+          },
+          "status": "COMPLETE",
+          "url": "https://api.gbif.org/v1/occurrence/search?datasetKey=8a863029-f435-446a-821e-275f4f641165&country=LB&year=2018%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&orderKey=797",
+          "http_status": 200,
+          "raw_response_sha256": "00d18810898509df6a48adc2e00efe8f22a1f1e2058dc51e58365ba27bec52d0",
+          "retrieved_utc": "2026-10-20T10:50:33.837888+00:00",
+          "attempts": 1
+        }
+      },
+      "nested_quality": {
+        "all_taxa": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2024": 1666.66666667
+          },
+          "all_year_total": 48
+        },
+        "lepidoptera_legacy_797": {
+          "status": "NESTED_VALID",
+          "focal_rate_per_10000": {
+            "2024": 3333.33333333
+          },
+          "all_year_total": 15
+        }
+      }
+    }
+  ],
+  "focal_summary": {
+    "israel_papilio": {
+      "iNaturalist": {
+        "all_taxa": {
+          "status": "DESCRIPTIVE_RATES_ONLY",
+          "focal_2024": 9,
+          "focal_2025": 33,
+          "reporting_2024": 34270,
+          "reporting_2025": 46687,
+          "relative_focal_rate_2025_to_2024": 2.69147015,
+          "focal_2024_per_10000": 2.62620368,
+          "focal_2025_per_10000": 7.06834879,
+          "reporting_volume_ratio_2025_to_2024": 1.36232857
+        },
+        "lepidoptera_legacy_797": {
+          "status": "DESCRIPTIVE_RATES_ONLY",
+          "focal_2024": 9,
+          "focal_2025": 33,
+          "reporting_2024": 3056,
+          "reporting_2025": 4436,
+          "relative_focal_rate_2025_to_2024": 2.5259994,
+          "focal_2024_per_10000": 29.45026178,
+          "focal_2025_per_10000": 74.39134355,
+          "reporting_volume_ratio_2025_to_2024": 1.45157068
+        }
+      },
+      "INPA": {
+        "all_taxa": {
+          "status": "DESCRIPTIVE_RATES_ONLY",
+          "focal_2024": 14,
+          "focal_2025": 27,
+          "reporting_2024": 143482,
+          "reporting_2025": 161990,
+          "relative_focal_rate_2025_to_2024": 1.70822449,
+          "focal_2024_per_10000": 0.97573215,
+          "focal_2025_per_10000": 1.66676955,
+          "reporting_volume_ratio_2025_to_2024": 1.12899179
+        },
+        "lepidoptera_legacy_797": {
+          "status": "DESCRIPTIVE_RATES_ONLY",
+          "focal_2024": 14,
+          "focal_2025": 27,
+          "reporting_2024": 6777,
+          "reporting_2025": 1795,
+          "relative_focal_rate_2025_to_2024": 7.28129725,
+          "focal_2024_per_10000": 20.65810831,
+          "focal_2025_per_10000": 150.4178273,
+          "reporting_volume_ratio_2025_to_2024": 0.26486646
+        }
+      }
+    },
+    "dominican_aguna": {
+      "country": "DO",
+      "source_years": {
+        "2019": 2,
+        "2020": 2,
+        "2022": 1,
+        "2023": 1,
+        "2024": 2,
+        "2025": 1
+      },
+      "reporting_years": {
+        "all_taxa": {
+          "2018": 2888,
+          "2019": 4603,
+          "2020": 4518,
+          "2021": 4640,
+          "2022": 7732,
+          "2023": 10086,
+          "2024": 14329,
+          "2025": 13935
+        },
+        "lepidoptera_legacy_797": {
+          "2018": 461,
+          "2019": 879,
+          "2020": 808,
+          "2021": 682,
+          "2022": 809,
+          "2023": 1324,
+          "2024": 1228,
+          "2025": 1395
+        }
+      },
+      "nested_status": {
+        "all_taxa": "NESTED_VALID",
+        "lepidoptera_legacy_797": "NESTED_VALID"
+      }
+    }
+  },
+  "reproducibility": {
+    "action_run": "https://github.com/zuizui0223/chocho/actions/runs/39410608472",
+    "head_sha": "2858facb3b0beb9d9c1e7886476d02da0563f8bd",
+    "artifact_name": "gbif-platform-reporting-20261020",
+    "artifact_id": 12259231592
+  }
+}

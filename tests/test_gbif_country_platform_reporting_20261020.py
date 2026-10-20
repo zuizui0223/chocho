@@ -78,3 +78,24 @@ def test_comparison_requires_same_provider_with_two_positive_years():
         for scope in m.FACETS:
             x=report["focal_summary"]["israel_papilio"][provider][scope]
             assert x["relative_focal_rate_2025_to_2024"]==1
+
+def test_archived_reporting_denominators_reconcile_and_do_not_claim_demography():
+    from pathlib import Path
+    p=ROOT/"provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_platform_reporting_20261020.json"
+    data=json.loads(p.read_text(encoding="utf-8"))
+    assert data["schema"]==m.SCHEMA
+    assert data["status"]=="ALL_BROAD_DENOMINATORS_VALID"
+    assert len(data["cases"])==11
+    assert data["source_conditioned_queries"]==22
+    assert data["all_taxa_compatible_groups"]==11
+    assert data["lepidoptera_legacy_key_compatible_groups"]==11
+    assert data["cannot_infer_butterfly_abundance_or_breeding"] is True
+    assert all(all(s["status"]=="NESTED_VALID" for s in r["nested_quality"].values())
+               for r in data["cases"])
+    il=data["focal_summary"]["israel_papilio"]
+    assert il["iNaturalist"]["all_taxa"]["reporting_2024"]==34270
+    assert il["iNaturalist"]["all_taxa"]["reporting_2025"]==46687
+    assert il["iNaturalist"]["all_taxa"]["relative_focal_rate_2025_to_2024"]==pytest.approx(2.69147015)
+    assert il["INPA"]["all_taxa"]["relative_focal_rate_2025_to_2024"]==pytest.approx(1.70822449)
+    assert il["INPA"]["lepidoptera_legacy_797"]["reporting_2024"]==6777
+    assert il["INPA"]["lepidoptera_legacy_797"]["reporting_2025"]==1795

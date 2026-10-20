@@ -137,6 +137,8 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_SOURCE_PROVENANCE_READOUT_20261020.md"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_year_matrix_20261020.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_DATASET_YEAR_READOUT_20261020.md"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_platform_reporting_20261020.json"),
+    Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_PLATFORM_REPORTING_READOUT_20261020.md"),
     Path("tests/test_gbif_country_record_turnover_20261020.py"),
     Path("tests/test_gbif_country_geographic_influence_20261020.py"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/geographic_dependence_posthoc_20261020.json"),

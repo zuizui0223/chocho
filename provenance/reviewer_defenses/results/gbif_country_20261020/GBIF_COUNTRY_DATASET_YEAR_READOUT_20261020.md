@@ -63,6 +63,21 @@ all HUMAN_OBSERVATION. These facet breakdowns cannot validate individual
 organisms, taxonomic misidentifications, larvae, egg survival, recruitment
 or settlement.
 
+## Matched-platform observation-volume normalization
+
+A follow-up, explicitly posthoc 22-facet audit normalized the 2024–2025
+Israeli `Papilio demoleus` counts by the **same provider's** total
+GBIF reporting volume. For iNaturalist, the focal share increased **2.69×**
+against all taxa or **2.53×** against the legacy Lepidoptera filter.
+For INPA, the respective values are **1.71×** (all taxa) and **7.28×**
+(legacy Lepidoptera); the Lepidoptera denominator fell very sharply
+and is not a stable survey frame. These are **indexing composition
+comparisons, not butterfly abundance indices**. All 11 × 2
+denominator queries matched the source identity and passed nested-count
+validation. See the
+[complete reporting-normalization readout](GBIF_COUNTRY_PLATFORM_REPORTING_READOUT_20261020.md)
+and [full audited denominator counts](gbif_country_platform_reporting_20261020.json).
+
 ## Audit protocol, validation and limits
 
 The [fixed source-conditioned plan](../../protocols/GBIF_COUNTRY_DATASET_YEAR_CONFOUND_20261020.md)
