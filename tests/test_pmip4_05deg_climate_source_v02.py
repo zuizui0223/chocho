@@ -42,7 +42,7 @@ def test_pmip_longitude_roll_and_north_up_transform():
 
 def test_majority_any_and_all_masks_are_ordered():
     g=np.zeros((1080,2160),bool)
-    g[0,0:1]=1; g[3,0:5]=1; g[6:9,0:3]=1
+    g[0,0:1]=1; g[3,0:3]=1; g[4,0:2]=1; g[6:9,0:3]=1
     x=coarse_pmip_icefree(g)
     assert np.count_nonzero(x>=1)==3
     assert np.count_nonzero(x>=5)==2
