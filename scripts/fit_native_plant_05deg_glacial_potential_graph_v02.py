@@ -125,7 +125,7 @@ def main():
     if source_summary["status"]!="SOURCE_FIRST_PALEOLAND_CLIMATE_COVERAGE_NOT_SPECIES_CONNECTIVITY":
         raise ValueError("PMIP paleoland climate preflight not source complete")
     plants=read_csv(args.plant_plan);old_models=read_csv(args.source_models)
-    if len(plants)!=len(old_models)!=518:raise ValueError("518 source host model identities changed")
+    if not (len(plants)==len(old_models)==518):raise ValueError("518 source host model identities changed")
     if [r["wcvp_id"] for r in plants]!=[r["wcvp_id"] for r in old_models]:
         raise ValueError("original native plant order changed")
     support=read_csv(args.support)
@@ -272,7 +272,7 @@ def main():
                   "reproduction_error_max":max_source_error}),flush=True)
     if status["COMPLETE_05DEG_POTENTIAL_CLIMATIC_HABITAT"]!=416:
         raise ValueError("416 original source-qualified plant niche models failed to reproduce")
-    if len(main_masks0)!=len(main_masks21)!=416:
+    if not (len(main_masks0)==len(main_masks21)==416):
         raise ValueError("main plant surface status count mismatch")
     maskids=[a[0] for a in main_masks0]
     if maskids!=[b[0] for b in main_masks21]:raise ValueError("0BP/21ka masks plant ordering drift")
