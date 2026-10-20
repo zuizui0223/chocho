@@ -216,6 +216,19 @@ See the [complete recording-turnover readout](../../provenance/reviewer_defenses
 [archived 12-setting summary](../../provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json),
 and [successful 20 October workflow](https://github.com/zuizui0223/chocho/actions/runs/39386941953).
 
+### Two-window record depth diagnostic (20 October 2026)
+
+After preserving the **early period as strictly zero-record**, posthoc
+later-record thresholds reduce 16 late-only country/species cells to
+**7 cells with >=2 records** (3 added-resource) and only **2 with >=5 records**
+(1 added-resource). Nine of 16 late-only cells and six of nine added-resource
+late-only cells are singletons. The stricter >=5 comparison has only two
+informative strata, not stronger evidence for colonization. The two >=5
+cells are `Aguna asander` / Dominican Republic (9 country records) and
+`Papilio demoleus` / Israel (86 country records). All labels refer to
+indexed GBIF records, *not* verified wild establishment or local host use.
+See the [temporal depth audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_COUNTRY_RECORD_TURNOVER_READOUT_20261020.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.

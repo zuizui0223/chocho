@@ -93,6 +93,34 @@ Late-only positive country counts: DE: 1, DO: 1, EC: 1, GB: 1, GT: 2, HN: 2, HT:
 Early-only positive country counts: DE: 1, GF: 1, GT: 1, GY: 1, HN: 1, NA: 1, VE: 1.
 These are indexed country detections, not wild demographic events.
 
+## Posthoc minimum later-indexed-record strength (distinct from prespecified 5/5 binning)
+
+The fixed primary requires **zero** earlier 2010–2017 records. Holding that
+early-zero criterion and all matched country candidates unchanged, we raised
+only the minimum number of 2018–2025 indexed records. This does *not* assume
+independence of GBIF records, wild reproduction or plant arrival dates.
+
+| Later record threshold, earlier still zero | Qualified late-only cells | Added-host positive cells | Conditional expected | Excess pp | Informative strata | Genus 95% interval pp |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| >=1 (primary) | 16 | 9 | 8.096 | +5.65 | 10 | −15.02 to +22.04 |
+| >=2 | 7 | 3 | 2.364 | +9.08 | 4 | −21.43 to +36.67 |
+| >=5 | **2** | **1** | 0.467 | +26.67 | **2** | not estimable |
+
+Exactly **9/16 late-only cells have only one record**, and **6/9 positive
+added-host cells** have only one record. The increase in point estimates at
+stricter thresholds is a consequence of the shrinking, highly selected
+denominator, not stronger evidence. Every setting remains well below the
+prior 50-informative-strata gate.
+
+The only two species/country cells with zero earlier records and >=5 later
+records are `Aguna asander` in Dominican Republic (9 indexed records;
+**added-host-resource country** under the coarse fixed catalogue) and
+`Papilio demoleus` in Israel (86 indexed records; **not** an added-host
+country in the same catalogue). The complete 7-cell >=2 list is retained in
+[the archived summary](gbif_country_record_turnover_summary_20261020.json).
+These are **targets for finer-grain occurrence and record-provenance checks**,
+not evidence of recent colonization, breeding, or population support.
+
 ## Scope, verification and replay
 
 - Frozen protocol: [GBIF_COUNTRY_RECORD_TURNOVER_20261020.md](../../protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md)

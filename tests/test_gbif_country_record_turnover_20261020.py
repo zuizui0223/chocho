@@ -153,3 +153,23 @@ def test_posthoc_strict_late_record_depth_does_not_reclassify_earlier_records():
     assert (depth2[0]["N"], depth2[0]["A"], depth2[0]["K"], depth2[0]["O"]) == (3, 1, 1, 1)
     assert (depth5[0]["N"], depth5[0]["A"], depth5[0]["K"], depth5[0]["O"]) == (3, 1, 0, 0)
     assert "CC" not in depth2[0]["positive_countries"]
+
+def test_published_strict_record_depth_removes_singletons_without_colonization_claim():
+    result_file = ROOT / "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json"
+    saved = json.loads(result_file.read_text(encoding="utf-8"))
+    p = next(s for s in saved["all_settings"] if s["setting"] == saved["primary_focal"])
+    primary = p["late_only"]
+    assert primary["positive_record_cells"] == 16
+    assert primary["positive_window_single_record_cells"] == 9
+    assert sum(x["added_host_country"] for x in primary["positive_species_country_details"]
+               if x["late_record_count"] == 1) == 6
+    depth2, depth5 = (saved["record_depth_posthoc_diagnostics"][str(i)] for i in (2,5))
+    assert (depth2["positive_record_cells"], depth2["observed_added_positive"],
+            depth2["informative_strata"]) == (7,3,4)
+    assert (depth5["positive_record_cells"], depth5["observed_added_positive"],
+            depth5["informative_strata"]) == (2,1,2)
+    assert { (x["species"], x["country"], x["late_record_count"])
+             for x in depth5["positive_species_country_details"] } == {
+        ("Aguna asander","DO",9),("Papilio demoleus","IL",86)}
+    assert all(saved["record_depth_posthoc_diagnostics"][k]["status"]
+               == "BELOW_PROTOCOL_INFORMATION_THRESHOLD" for k in ("2","5"))
