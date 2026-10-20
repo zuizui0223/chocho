@@ -1,0 +1,83 @@
+name: chocho preserve source-verified 513 modern anchors versus 21ka host climate contact
+on:
+  push:
+    branches: [ecology/lgm-modern-anchors-resource-graph-v05]
+    paths: [.github/workflows/lgm-modern-anchors-archive-v05.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: chocho-513-modern-anchor-contact-exact-archive
+  cancel-in-progress: false
+jobs:
+  archive-original-scientific-output:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Verify original completed 513-species source and scientific model output
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          out=results/lgm_513_modern_anchor_host_contact_v05
+          mkdir -p "$out"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/12255682133/zip" > /tmp/originalmodernanchors.zip
+          echo 'a5371e31a45b593ae71a2f41d692beacc33ecb3f6f87794e6501b47ce4d36d49  /tmp/originalmodernanchors.zip' | sha256sum -c -
+          unzip -q /tmp/originalmodernanchors.zip -d "$out"
+          echo '6272f2ac132ef3713356a4566b8b21007343931e0e05cd967150343d4b6194b7  results/lgm_513_modern_anchor_host_contact_v05/all_513_modern_anchor_host_climate_contact_v05.csv' | sha256sum -c -
+          echo '010d37605b2675e6701668d32442c14215b472206e7d84ae8dc4a914dd396f45  results/lgm_513_modern_anchor_host_contact_v05/summary.json' | sha256sum -c -
+          echo '0b45e4bb1f3075ba4603ffa967b6f9b817aaa948363a71e524164080e6bb3296  results/lgm_513_modern_anchor_host_contact_v05/receipt.json' | sha256sum -c -
+          python - <<'PYTHON'
+          import csv,json
+          from pathlib import Path
+          p=Path('results/lgm_513_modern_anchor_host_contact_v05')
+          z=json.loads((p/'summary.json').read_text())
+          assert z['source_rows']==6156 and z['host_complete_insects']==513
+          assert z['distinct_recorded_host_combinations']==349
+          assert z['original_animal_species']==641
+          assert z['status']=='EXPLORATORY_MODERN_ANCHOR_CONTACT_NOT_ANCIENT_OCCUPANCY_OR_GENETIC_BARRIER'
+          q=z['comparisons']['analog_radius100km']
+          assert (q['eligible_insects_with_comparable_both_era_pairs'],
+                  q['share_same_patch_decrease'],q['share_same_patch_equal'],
+                  q['share_same_patch_increase'])==(399,193,72,134)
+          q2=z['comparisons']['extrapolated_radius100km']
+          assert (q2['eligible_insects_with_comparable_both_era_pairs'],
+                  q2['share_same_patch_decrease'],q2['share_same_patch_equal'],
+                  q2['share_same_patch_increase'])==(400,189,74,137)
+          with (p/'all_513_modern_anchor_host_climate_contact_v05.csv').open(newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==6156 and len(set(r['species'] for r in rows))==513
+          for x in rows:
+              edge=int(x['edges_n'])
+              assert edge==(int(x['edge_both_anchor_contacts_n'])+
+                             int(x['edge_one_anchor_contact_n'])+
+                             int(x['edge_neither_anchor_contact_n']))
+              assert int(x['edge_both_anchor_contacts_n'])==(int(x['edge_same_host_climate_component_n'])+
+                  int(x['edge_different_host_climate_components_n']))
+          subset=lambda epoch:{x['species']:x for x in rows
+                if x['epoch']==epoch and x['scenario']=='analog' and x['radius_km']=='100'}
+          now,later=subset('0BP'),subset('21ka')
+          assert len(now)==len(later)==513
+          f=lambda data,key:sum(int(v[key]) for v in data.values())
+          assert f(now,'locality_n')==f(later,'locality_n')==13569
+          assert f(now,'edges_n')==f(later,'edges_n')==57252
+          assert (f(now,'physically_blocked_locality_n'),f(later,'physically_blocked_locality_n'))==(1536,5300)
+          assert (f(now,'eligible_locality_n'),f(later,'eligible_locality_n'))==(10409,5493)
+          assert (f(now,'edge_both_anchor_contacts_n'),f(later,'edge_both_anchor_contacts_n'))==(40169,22133)
+          assert (f(now,'edge_same_host_climate_component_n'),f(later,'edge_same_host_climate_component_n'))==(33843,17478)
+          print('PASS_ORIGINAL_MODERN_ANCHOR_POTENTIAL_CONTACT_513_SPECIES_0BP_LGM')
+          PYTHON
+      - name: Record previous source-bounded result on the isolated draft branch
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_513_modern_anchor_host_contact_v05/
+          git commit -m 'Archive exact 513 species original sample anchor LGM host-patch contact diagnostic and source receipt'
+          git push origin "HEAD:${{ github.ref_name }}"
