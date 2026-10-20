@@ -1,0 +1,96 @@
+name: chocho source-only Neotoma dated plant fossil metadata API feasibility for LGM
+on:
+  push:
+    branches: [ecology/lgm-fossil-neotoma-source-pilot-v01]
+    paths:
+      - .github/workflows/lgm-neotoma-fossil-source-pilot-v01.yml
+      - scripts/neotoma_fossil_taxon_source_pilot_v01.py
+      - tests/test_neotoma_fossil_source_v01.py
+      - docs/supporting/lgm_neotoma_21ka_fossil_source_pilot_v01.json
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-LGM-source-only-independent-neotoma-15taxon-v01
+  cancel-in-progress: false
+jobs:
+  check-public-fossil-source-without-ancient-host-presence-claim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source WCVP IDs, Neotoma metadata API assumptions and no genetic response
+        run: |
+          set -euo pipefail
+          python -m pip install 'requests>=2.31,<3' 'pytest>=8,<9'
+          python -m pytest -q tests/test_neotoma_fossil_source_v01.py
+          python -m py_compile scripts/neotoma_fossil_taxon_source_pilot_v01.py
+          echo '153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733  results/lgm_native_plant_hindcast_v01/all_518_native_host_hindcast.csv' | sha256sum -c -
+          python - <<'PYTHON'
+          import csv,json
+          from pathlib import Path
+          q=json.load(open('docs/supporting/lgm_neotoma_21ka_fossil_source_pilot_v01.json'))
+          assert q['status']=='SOURCE_ONLY_EXPLORATORY_FEASIBILITY_NO_ANCIENT_OCCUPANCY_ESTIMATES'
+          assert len(q['selected_source_taxa'])==15
+          assert sum(x['design']=='quantile-check' for x in q['selected_source_taxa'])==12
+          assert sum(x['design']=='API-positive-technical-control' for x in q['selected_source_taxa'])==3
+          with Path('results/lgm_native_plant_hindcast_v01/all_518_native_host_hindcast.csv').open(newline='') as f:
+              rr={int(x['wcvp_id']):x for x in csv.DictReader(f)}
+          assert len(rr)==518
+          for x in q['selected_source_taxa']:
+              assert rr[int(x['wcvp_id'])]['model_status']=='COMPLETE_POTENTIAL_CLIMATE_HINDCAST'
+              assert rr[int(x['wcvp_id'])]['accepted_host_name']==x['name']
+          print('PASS_15_SOURCE_PLANT_PILOT_IDENTITIES_AND_NO_ANCIENT_OCCUPANCY_INFERENCE')
+          PYTHON
+      - name: Contact official Neotoma v2 taxa and fossil proxy API for metadata-only 18-24ka source feasibility
+        run: |
+          set -euo pipefail
+          out=results/lgm_neotoma_15_plant_fossil_source_pilot_v01
+          mkdir -p "$out"
+          python -u scripts/neotoma_fossil_taxon_source_pilot_v01.py \
+            --contract docs/supporting/lgm_neotoma_21ka_fossil_source_pilot_v01.json \
+            --source-models results/lgm_native_plant_hindcast_v01/all_518_native_host_hindcast.csv \
+            --out "$out"
+          python - <<'PYTHON'
+          import csv,json,hashlib,os
+          from pathlib import Path
+          d=Path('results/lgm_neotoma_15_plant_fossil_source_pilot_v01')
+          q=json.load((d/'source_pilot_summary.json').open())
+          assert q['status']=='SOURCE_ACCESS_QUERY_RESPONSES_ONLY_NO_21KA_SPECIES_OCCUPANCY_CLAIMS'
+          assert q['attempted_WCVP_taxa']==15 and q['requested_proxy_queries']==30
+          assert q['Neotoma_query_age_BP']==[18000,24000]
+          assert not q['ancient_plant_geography_estimated'] and q['no_genetic_response_opened']
+          assert q['fossil_species_occurrence_support_verified_n'] is None
+          with (d/'all_15_taxa_source_query_status.csv').open(newline='') as f:rows=list(csv.DictReader(f))
+          assert len(rows)==30
+          receipt={'schema':'chocho_neotoma_LGM_15_taxa_metadata_only_source_access_receipt_v01',
+             'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+             'response_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sorted(d.iterdir()) if p.is_file()},
+             'no_ancient_species_occupancy_inferred':True,
+             'no_lgm_species_fossil_presence_or_genetic_test':True}
+          (d/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PYTHON
+      - name: Commit technical source-access statuses, not fossil observations or unsupported LGM range claims
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_15_plant_fossil_source_pilot_v01/
+          git commit -m 'Record Neotoma source-only 15 plant fossil API schema/age query feasibility without LGM occupancy claims'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-neotoma-independent-plant-fossil-source-only-pilot-v01
+          path: results/lgm_neotoma_15_plant_fossil_source_pilot_v01/
+          retention-days: 30
+          if-no-files-found: warn
