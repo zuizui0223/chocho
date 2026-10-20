@@ -135,3 +135,21 @@ def test_positive_transition_details_preserve_species_country_and_record_counts(
     assert (cell["species"], cell["country"], cell["added_host_country"]) == ("A a", "AA", 1)
     assert cell["late_record_count"] == 3
     assert r["positive_window_single_record_cells"] == 0
+
+
+def test_posthoc_strict_late_record_depth_does_not_reclassify_earlier_records():
+    states = [{"species": "A a", "genus": "A", "stratum": "8", "cells": [
+        {"country": "AA", "added": 1, "early": 0, "late": 1,
+         "early_count": 0, "late_count": 3, "other_early": 4, "other_late": 4},
+        {"country": "BB", "added": 0, "early": 0, "late": 0,
+         "early_count": 0, "late_count": 0, "other_early": 4, "other_late": 4},
+        {"country": "CC", "added": 1, "early": 1, "late": 1,
+         "early_count": 1, "late_count": 6, "other_early": 4, "other_late": 4},
+        {"country": "DD", "added": 0, "early": 0, "late": 1,
+         "early_count": 0, "late_count": 1, "other_early": 4, "other_late": 4},
+    ]}]
+    depth2 = mod.strict_late_record_depth_rows(states, min_late_records=2)
+    depth5 = mod.strict_late_record_depth_rows(states, min_late_records=5)
+    assert (depth2[0]["N"], depth2[0]["A"], depth2[0]["K"], depth2[0]["O"]) == (3, 1, 1, 1)
+    assert (depth5[0]["N"], depth5[0]["A"], depth5[0]["K"], depth5[0]["O"]) == (3, 1, 0, 0)
+    assert "CC" not in depth2[0]["positive_countries"]

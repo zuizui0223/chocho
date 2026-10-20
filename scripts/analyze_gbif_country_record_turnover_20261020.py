@@ -172,6 +172,20 @@ def build_direction_rows(by_st, direction):
     return rows
 
 
+def strict_late_record_depth_rows(states, *, min_late_records: int):
+    """Posthoc evidence-strength sensitivity, *never* recoding early records.
+
+    Trial-eligible cells always require zero 2010–2017 GBIF records. The late
+    criterion alone changes from >=1 to >=2 or >=5 indexed records.
+    """
+    if min_late_records < 2:
+        raise ValueError("Only posthoc stronger thresholds of 2+ belong here")
+    adapted = [{**st, "cells": [
+        {**c, "late": int(c["late_count"] >= min_late_records)}
+        for c in st["cells"]]} for st in states]
+    return build_direction_rows(adapted, "late_only")
+
+
 def exact_conditional_upper_tail(rows, observed):
     distribution = [Fraction(1)]
     for r in rows:
@@ -303,6 +317,13 @@ def run(strata, counts, background, source_info, *, bootstrap_draws=499):
                 f"posthoc/{region_name}/{direction}", bootstrap_draws)
             for direction in ("late_only", "early_only")
         }
+    record_depth_posthoc = {
+        str(min_records): result_for_direction(
+            strict_late_record_depth_rows(
+                base_states, min_late_records=min_records),
+            f"posthoc/late_only_min{min_records}", bootstrap_draws)
+        for min_records in (2, 5)
+    }
     reduced_level1 = [st for st in base_states if st["stratum"] != "8"]
     regional_posthoc["exclude_level1_8"] = {
         direction: result_for_direction(
@@ -320,6 +341,7 @@ def run(strata, counts, background, source_info, *, bootstrap_draws=499):
         "primary_setting": p["setting"], "primary": p,
         "sensitivity_grid": grid,
         "regional_posthoc_diagnostics": regional_posthoc,
+        "record_depth_posthoc_diagnostics": record_depth_posthoc,
         "information_gate": {"minimum_informative_strata": 50,
                              "minimum_positive_species": 25,
                              "minimum_positive_record_cells": 25},
@@ -359,7 +381,8 @@ def main():
             key: {direction: {k:v for k,v in result["regional_posthoc_diagnostics"][key][direction].items()
                               if k != "positive_country_counts"}
                   for direction in ("late_only","early_only")}
-            for key in result["regional_posthoc_diagnostics"]}
+            for key in result["regional_posthoc_diagnostics"]},
+        "record_depth_posthoc_diagnostics": result["record_depth_posthoc_diagnostics"]
         }, separators=(",", ":")))
 
 
