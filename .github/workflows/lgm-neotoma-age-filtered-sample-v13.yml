@@ -1,0 +1,97 @@
+name: chocho Neotoma numeric taxonID 18-24ka fossil source record validation
+on:
+  push:
+    branches: [ecology/lgm-neotoma-taxonid-age-query-v13]
+    paths:
+      - .github/workflows/lgm-neotoma-age-filtered-sample-v13.yml
+      - scripts/probe_neotoma_agefiltered_plant_samples_v13.py
+      - tests/test_neotoma_agefiltered_samples_v13.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-source-taxonomic-18-24ka-plant-fossil-candidates-v13
+  cancel-in-progress: false
+jobs:
+  check-source-age-and-proxy-before-any-ancient-plant-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prove sample taxonomy and age proxy validity checks are fail-closed
+        run: |
+          set -euo pipefail
+          python -m pip install 'pytest>=8,<9' 'requests>=2.31,<3'
+          python -m pytest -q tests/test_neotoma_agefiltered_samples_v13.py tests/test_neotoma_taxonid_sample_age_v12.py
+          python -m py_compile scripts/probe_neotoma_agefiltered_plant_samples_v13.py
+          echo '55887306ce8defa7c027fc1d518f2bb798ac2868b6c7f46db288f154e8ea8219  results/lgm_neotoma_taxon_filter_integrity_v11/source_filter_integrity_summary.json' | sha256sum -c -
+          echo '657d56b7ae45176de48a5f86eab7d32d783a4eaff70cd7a07fe334e57af3c690  results/lgm_neotoma_taxonid_sample_age_v12/summary.json' | sha256sum -c -
+          python - <<'PY'
+          import json
+          q=json.load(open('docs/supporting/lgm_neotoma_idage_sample_candidates_v13_contract.json'))
+          assert q['status']=='BOUNDED_SOURCE_SAMPLE_VERIFICATION_NOT_LGM_OCCUPANCY'
+          assert q['queries']['datasettypes']==['plant macrofossil','pollen']
+          assert (q['queries']['ageyoung'],q['queries']['ageold'])==(18000,24000)
+          assert q['queries']['limit']==30
+          print('PASS_SOURCE_AGE_BIN_AND_NUMERIC_NEOTOMA_TAXON_ID_RULES')
+          PY
+      - name: Retrieve bounded source taxonid fossil proxy records with sample-level age gates
+        run: |
+          set -euo pipefail
+          out=results/lgm_neotoma_idage_18_24ka_source_candidates_v13
+          mkdir -p "$out"
+          python -u scripts/probe_neotoma_agefiltered_plant_samples_v13.py \
+            --contract docs/supporting/lgm_neotoma_idage_sample_candidates_v13_contract.json \
+            --v11 results/lgm_neotoma_taxon_filter_integrity_v11/source_filter_integrity_summary.json \
+            --v12 results/lgm_neotoma_taxonid_sample_age_v12/summary.json \
+            --out "$out"
+          python - <<'PY'
+          import csv,hashlib,json,os
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_idage_18_24ka_source_candidates_v13')
+          q=json.loads((p/'summary.json').read_text())
+          assert q['schema']=='chocho_Neotoma_18_24ka_taxonID_sample_proxy_age_candidates_v13'
+          assert q['source_sample_age_calibration_verified'] is False
+          assert q['species_level_pollen_diagnostic_verified'] is False
+          assert q['global_21ka_host_plant_distribution_estimated'] is False
+          assert q['independent_insect_genetic_response_used'] is False
+          assert q['original_negative_host_specificity_result_preserved'] is True
+          assert q['source_query_not_exhaustive'] is True
+          assert q['status'] in (
+             'SOURCE_FILTER_INTEGRITY_FAILED_NO_FOSSIL_INFERENCE',
+             'AGE_WINDOW_METADATA_CANDIDATES_FOUND_BUT_CHRONOLOGY_UNVERIFIED',
+             'NO_QUALIFIED_AGE_WINDOW_IN_BOUNDED_SOURCE_NO_ABSENCE_INFERENCE')
+          for name in ['bounded_taxonid_age_source_queries.csv',
+                       'bounded_18_24ka_sample_taxon_proxy_checks.csv','summary.json']:
+              assert (p/name).is_file()
+          receipt={'schema':'chocho_neotoma_two_species_source_18_24ka_exact_taxon_proxy_age_audit_v13',
+              'run_id':os.environ['GITHUB_RUN_ID'],'code_commit':os.environ['GITHUB_SHA'],
+              'result_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                   for f in sorted(p.iterdir()) if f.is_file()},
+              'true_LGM_plant_occupancy_or_gene_flow_claimed':False,
+              'fossil_taxonomy_chronology_unverified':True}
+          (p/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print('FINISHED_SOURCE_FILTERED_FOSSIL_METADATA_CHECK_NOT_OCCUPANCY')
+          PY
+      - name: Retain bounded exact source age/proxy record classifications and provenance
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_idage_18_24ka_source_candidates_v13/
+          git commit -m 'Archive bounded Neotoma fossil taxonid proxy and 18-24ka sample-age source candidates only'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-neotoma-two-plant-ID-specific-18-24ka-source-candidates-v13
+          path: results/lgm_neotoma_idage_18_24ka_source_candidates_v13/
+          retention-days: 30
+          if-no-files-found: warn
