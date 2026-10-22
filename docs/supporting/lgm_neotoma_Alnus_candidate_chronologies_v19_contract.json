@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_Neotoma_Alnus_direct21_candidate_sample_chronology_objects_v19",
+  "status": "SOURCE_FROZEN_21_CANDIDATE_CHRONOLOGY_ID_LOOKUP_BEFORE_LIVE_QUERIES",
+  "date": "2026-10-22",
+  "question": "For 21 already source-labelled 18–24ka calibrated BP taxonid1299 positive-datum samples across five original Neotoma pollen datasets, do full official chronology objects with EXACT sample.ages.chronologyid exist and what calibration/age-model provenance and date controls are stated?",
+  "sources": {
+    "original_v18_all_source_age_models_csv_sha256": "85cb546d43e57c8ff195c09d5dba253e6e2cc88a5cbae4e1eddb762e5c67c6e4",
+    "original_v18_summary_sha256": "934c29c61a9ee8603f54758fcf27f85f1970bd512e39cebf9a44fdebd9a195cf",
+    "source_dataset_site_map": {
+      "4396": "3392",
+      "14556": "9834",
+      "22662": "14474",
+      "22683": "14485",
+      "24197": "15750",
+      "41351": "23855"
+    },
+    "required_source_21_labelled_candidates": 21,
+    "required_source_positive_datum_samples": 437,
+    "required_source_21_candidate_chron_ids": {
+      "14556": [
+        "7725"
+      ],
+      "22662": [
+        "13010"
+      ],
+      "22683": [
+        "13034"
+      ],
+      "24197": [
+        "14552"
+      ],
+      "41351": [
+        "25462"
+      ]
+    },
+    "source_raw_radio_4396_chronology_id": "30953",
+    "no_species_addition": true
+  },
+  "acquisition": {
+    "official_url_template": "https://api.neotomadb.org/v2.0/data/datasets/{datasetid}/chronologies",
+    "six_bounded_requests": true,
+    "max_response_bytes": 1800000,
+    "connection_timeout_s": 8,
+    "read_timeout_s": 25,
+    "one_request_per_id": true,
+    "source_response_sha256_and_first_source_fields": true
+  },
+  "matching": {
+    "required_key": "datasetid exact AND sample.ages.chronologyid exact numeric, never infer by age alone",
+    "all_sample_age_rows_preserved": true,
+    "outcome": "source chronology object present/missing; original chronology agtype vs source sample age agtype consistency; chronology controls number/source dating age types; original citation review flags",
+    "strict_reporting": "A matching chronologyid validates database STRUCTURAL linkage but not calibration model quality or taxon diagnostic pollen identification.",
+    "no_false_reclassification": "A source chronology mismatch or timeout is source unknown/conflict, not proof ancient plant absent.",
+    "no_cherry_picking": "All six original fixed datasets and all 21 candidate-age rows reported, including 20 missing original age uncertainty bounds."
+  },
+  "limits": [
+    "No independently calibrated or externally audited 21ka occupied Alnus glutinosa host population may be inferred.",
+    "Original v13 26 occurrence IDs remain unjoined to exact sample IDs; v17 fake-occurrenceID echo ruled out assuming endpoint ID verifies source existence.",
+    "No revision to previous TTF #149 and chocho #59 host identity-specific climate negative controls.",
+    "No ancient insect genomic/COI response opened."
+  ]
+}
