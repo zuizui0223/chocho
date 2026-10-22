@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_Neotoma_source_filter_and_taxon_id_integrity_v11",
+  "status": "TECHNICAL_NEGATIVE_CONTROL_BEFORE_NEW_FOSSIL_EVIDENCE",
+  "date": "2026-10-22",
+  "purpose": "Audit original Neotoma 15 WCVP plants x pollen/macrofossil pilot for repeated content across different taxon queries, then test official Neotoma v2 taxon-name filter vs definitely nonexistent botanical-name negative control and exact taxon-ID occurrence endpoints. Never infer fossil species occupancy without sample-level source verification.",
+  "source": {
+    "WCVP_models_sha256": "153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733",
+    "previous_15x2_queries_csv_sha256": "f53676979098828d9467e261c5d27c60a867a09f72c6e254f6c5c9546b9ee90e",
+    "previous_15x2_query_summary_sha256": "18e5d38ecaa3951e4433293b6e6ec793b99beb2d43b03600f0f66a0012fec4dc",
+    "previous_15x2_source_schema_sha256": "d339d1aa6070d24cd3fe34f10274ec15eedec433d3136da8acb17103190df6da",
+    "original_action_run": 39416627281,
+    "original_successful_json_queries": 12,
+    "original_timeouts_or_unavailable": 18,
+    "original_distinct_success_body_sha256": 2,
+    "official_neotoma_openapi": "https://api.neotomadb.org/swagger.json",
+    "official_taxon_lookup": "https://api.neotomadb.org/v2.0/data/taxa",
+    "official_occurrence": "https://api.neotomadb.org/v2.0/data/occurrences",
+    "official_taxon_id_occurrences": "https://api.neotomadb.org/v2.0/data/taxa/{taxonid}/occurrences"
+  },
+  "probe": {
+    "positive_WCVP_model_names": [
+      "Alnus glutinosa",
+      "Betula pendula"
+    ],
+    "sentinel_negative_name": "Definitelynotaneotomataxon alpha9999",
+    "proxy": "pollen",
+    "ageold_BP": 24000,
+    "ageyoung_BP": 18000,
+    "query_max_items": 2,
+    "offset": 0,
+    "filter_pairs": "Same occurrence endpoint and same time/proxy/limit; ONLY taxonname changes. Compare response SHA and occurrence IDs, including the impossible sentinel. Inspect source registry result separately; require unambiguous exact Neotoma taxon name and immutable numeric taxonid for taxonomy-specific path.",
+    "request_budget": "Three named occurrence queries, three taxon-lookup queries, and up to two taxonid-specific occurrence queries; do not retry timeouts indefinitely.",
+    "age_issue": "Neotoma ageold/ageyoung API contract may be an intercept with dataset time range; do not treat as per-sample 18–24ka confirmed chronology",
+    "source_response_scope": "record ID, taxon name and fossil age/site field metadata only; no ancient presence claims, no full download"
+  },
+  "expected_outputs": [
+    "original pilot repeated-hash audit with exact source status",
+    "live source query-control status per case and full response SHA",
+    "precise taxon registry match only where source returns exact binomial",
+    "taxon-ID-specific API feasibility, age-field structure; source availability/timeout explicitly distinct",
+    "technical status: source filters verified, filters fail, or undecidable with reasons"
+  ],
+  "science_firewall": [
+    "No ancient plant occurrence or 21 ka population location is inferred from HTTP200 or top-two generic database records",
+    "Different taxa with byte-identical nonempty occurrence payloads under a taxonname filter are treated as filter integrity failure",
+    "Impossible taxon positive result under taxonname query is a negative-control failure even if 200",
+    "An exact name in the taxon table does not validate per-sample pollen species identification or calibrated fossil ages",
+    "No result-guided taxon substitutions. TTF v0.5 and chocho v0.8 host-specificity negative results stay unchanged",
+    "No genus pollen record is relabeled as a WCVP accepted binomial species",
+    "Do not compare fossils with genetic outcomes until independent sample-level chronological and taxonomic verification is complete"
+  ]
+}

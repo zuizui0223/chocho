@@ -1,0 +1,110 @@
+{
+  "schema": "chocho_neotoma_source_21ka_fossil_evidence_feasibility_v01",
+  "status": "SOURCE_ONLY_EXPLORATORY_FEASIBILITY_NO_ANCIENT_OCCUPANCY_ESTIMATES",
+  "motivation": "Evaluate whether independently dated macrofossil/pollen records could constrain future 21ka host plant occupancy models, rather than result-driven retuning of a negative current-climate host-identity comparison.",
+  "original_WCVP_518_model_csv_sha256": "153189ad188a8647c49bb5401b20786098386979ca1f00f1cbc67bf55a0ad733",
+  "original_model_eligible_taxa": 416,
+  "Neotoma": {
+    "api_root": "https://api.neotomadb.org",
+    "openapi": "https://api.neotomadb.org/swagger.json",
+    "paths": [
+      "/v2.0/data/taxa",
+      "/v2.0/data/occurrences"
+    ],
+    "ageyoung_calibrated_BP": 18000,
+    "ageold_calibrated_BP": 24000,
+    "per_query_limit": 5,
+    "dataset_types": [
+      "plant macrofossil",
+      "pollen"
+    ],
+    "request_method": "exact taxon name. No wildcard genus expansion for claims."
+  },
+  "selected_source_taxa": [
+    {
+      "wcvp_id": "35028",
+      "name": "Castanea pumila",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "174902",
+      "name": "Quercus rubra",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "379843",
+      "name": "Pinus contorta",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "433393",
+      "name": "Phalaris arundinacea",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2424185",
+      "name": "Rumex acetosella",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2459647",
+      "name": "Viola riviniana",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2548140",
+      "name": "Parthenocissus tricuspidata",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2641868",
+      "name": "Anthriscus sylvestris",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2766711",
+      "name": "Dicliptera squarrosa",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2917379",
+      "name": "Populus tremula",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "2948952",
+      "name": "Fragaria vesca",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "3089154",
+      "name": "Antennaria dioica",
+      "design": "quantile-check"
+    },
+    {
+      "wcvp_id": "6364",
+      "name": "Alnus glutinosa",
+      "design": "API-positive-technical-control"
+    },
+    {
+      "wcvp_id": "21582",
+      "name": "Betula pendula",
+      "design": "API-positive-technical-control"
+    },
+    {
+      "wcvp_id": "174750",
+      "name": "Quercus robur",
+      "design": "API-positive-technical-control"
+    }
+  ],
+  "selection_rule": "Source-only 12 evenly spaced positions among 416 source modelled WCVP accepted IDs in ascending ID plus 3 labeled temperate woody technical API query controls; neither is representative of global host fossil coverage.",
+  "status_rules": [
+    "No occurrence returned / API timeout must be recorded as missing source info, NOT species absent during LGM",
+    "Neotoma taxon genus-only pollen or fossil identifications cannot be imputed to exact WCVP species",
+    "Ageold/ageyoung API query may filter dataset date spans rather than directly observed calibrated sample age: do NOT claim 18-24ka confirmed occurrences from metadata alone",
+    "Any returned record requires sample chronology, taxon taxonomic precision, site coordinates, dataset ID, depositional/proxy type and collection provenance review before ancient plant occupancy evidence",
+    "Do not use fossil observation availability to select insects or alter prior glacial host patch null family; source access test only",
+    "Earlier TTF host-identity v0.5 and chocho real-alt-plant v0.8 remain negative/not-positively-supported and frozen",
+    "No source genetics or modern insect response accessed"
+  ]
+}

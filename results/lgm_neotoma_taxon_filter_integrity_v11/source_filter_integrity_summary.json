@@ -1,0 +1,56 @@
+{
+  "exact_taxon_registry_ids": {
+    "Alnus glutinosa": 1299,
+    "Betula pendula": 3461
+  },
+  "fossil_species_21ka_sample_occurrence_verified": false,
+  "genetic_response_used": false,
+  "identical_distinct_name_response_pairs": [
+    [
+      "Alnus glutinosa",
+      "Betula pendula"
+    ],
+    [
+      "Alnus glutinosa",
+      "Definitelynotaneotomataxon alpha9999"
+    ],
+    [
+      "Betula pendula",
+      "Definitelynotaneotomataxon alpha9999"
+    ]
+  ],
+  "limitations": [
+    "No historical species occupancy, absence or fossil calibration conclusion from this source-only endpoint test",
+    "A valid Neotoma taxon registry taxonID does not confirm occurrence or per-sample calibrated 21ka age",
+    "Neotoma occurrence query age filters can describe dataset envelopes; direct fossil sample age model must be checked",
+    "Same returned body for unrelated taxon names under apparent taxon filter invalidates taxon-specific interpretation",
+    "No changes to existing TTF/chocho host-vs-alternative-plant negative glacial climate tests"
+  ],
+  "original_lgm_host_climate_specificity_result_reopened": false,
+  "original_pilot_audit_status": "12 HTTP 200 queries collapse to 2 distinct payloads across unrelated requested taxa",
+  "queried_species": [
+    "Alnus glutinosa",
+    "Betula pendula",
+    "Definitelynotaneotomataxon alpha9999"
+  ],
+  "sample_age_model_or_pollen_species_identification_verified": false,
+  "schema": "chocho_Neotoma_21ka_occurrence_taxon_filter_source_controls_v11",
+  "source_openapi": "https://api.neotomadb.org/swagger.json",
+  "source_original_audit_sha256": "9efad29898675168b1ae99cef61b304eead4883214d666e520f55159766beed4",
+  "status": "FOSSIL_TAXONNAME_FILTER_INVALID_SENTINEL_MATCHES_REAL_TAXON",
+  "success_occurrence_query_n": 3,
+  "success_records_response_sha_groups": {
+    "Alnus glutinosa": {
+      "n": 2,
+      "sha256": "965ab0d1b5879aaba05feb98fcb9000afecaec1f5d2d75485a4059ca7155a7df"
+    },
+    "Betula pendula": {
+      "n": 2,
+      "sha256": "965ab0d1b5879aaba05feb98fcb9000afecaec1f5d2d75485a4059ca7155a7df"
+    },
+    "Definitelynotaneotomataxon alpha9999": {
+      "n": 2,
+      "sha256": "965ab0d1b5879aaba05feb98fcb9000afecaec1f5d2d75485a4059ca7155a7df"
+    }
+  }
+}
