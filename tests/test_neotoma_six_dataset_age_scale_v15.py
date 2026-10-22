@@ -21,6 +21,10 @@ def test_six_source_dataset_and_chronology_citations_are_available_and_exact():
     assert items["4396"]["site_name"]=="Plesheevo Lake"
     assert "provisional" in items["4396"]["first_chronology_notes"].lower()
     assert "SOURCE_SAYS_CHRONOLOGY_VERY_PROVISIONAL" in items["4396"]["metadata_flags"]
+    assert items["4396"]["dataset_contains_uncalibrated_radiocarbon_BP"] is True
+    assert items["14556"]["dataset_contains_uncalibrated_radiocarbon_BP"] is False
+    assert items["24197"]["dataset_contains_uncalibrated_radiocarbon_BP"] is True
+    assert items["41351"]["dataset_contains_uncalibrated_radiocarbon_BP"] is True
     assert "MULTIPLE_INCOMPATIBLE_PUBLISHED_AGE_SCALES" in items["24197"]["metadata_flags"]
     assert "MULTIPLE_INCOMPATIBLE_PUBLISHED_AGE_SCALES" in items["41351"]["metadata_flags"]
     assert "OLD_CALIBRATION_CURVE_SOURCE_REVIEW" in items["22662"]["metadata_flags"]
