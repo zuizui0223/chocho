@@ -154,8 +154,8 @@ def audit_live(session,contract):
     dup=[]
     for x,aa in success.items():
         for y,bb in success.items():
-            if x<y and aa["has_nonempty_data"] and bb["has_nonempty_data"] and
-                    aa["sha256"]==bb["sha256"]:
+            if (x<y and aa["has_nonempty_data"] and bb["has_nonempty_data"] and
+                    aa["sha256"]==bb["sha256"]):
                 dup.append([x,y])
     if any(BAD in pair for pair in dup):
         status="FOSSIL_TAXONNAME_FILTER_INVALID_SENTINEL_MATCHES_REAL_TAXON"
