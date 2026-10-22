@@ -1,0 +1,57 @@
+{
+  "schema": "chocho_neotoma_Alnus_six_dataset_sample_assigned_chronology_v16",
+  "status": "SOURCE_ONLY_DETERMINISTIC_FROZEN_BEFORE_FULL_DATASET_DOWNLOADS",
+  "date": "2026-10-22",
+  "question": "Can any of 27 v13 18-24 ka Alnus pollen taxon-ID candidate records be unambiguously linked, at SAMPLE level, to a calibrated age-depth chronology and sufficient taxonomic identification in the six prior-fixed source datasets?",
+  "source": {
+    "v13_sample_rows_sha256": "3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc",
+    "v15_source_candidate_age_QC_sha256": "8a3d26bf4ad1b80a5f8fa272d9b6be7f37aced15",
+    "v15_source_summary_sha256": "SOURCE_LOCKED_LOOKUP_AT_EXECUTION",
+    "source_taxonid": 1299,
+    "species": "Alnus glutinosa",
+    "proxy": "pollen",
+    "age_bounds_BP": [
+      18000,
+      24000
+    ],
+    "frozen_datasetids": [
+      4396,
+      14556,
+      22662,
+      22683,
+      24197,
+      41351
+    ],
+    "frozen_siteids": [
+      3392,
+      9834,
+      14474,
+      14485,
+      15750,
+      23855
+    ],
+    "source_original_candidates": 27,
+    "unique_occurrence_ids": 26
+  },
+  "source_diagnostic": {
+    "api": "https://api.neotomadb.org/v2.0/data/downloads/{datasetid}",
+    "max_response_bytes_per_dataset": 6000000,
+    "max_attempts": 1,
+    "timeout_connect_seconds": 8,
+    "timeout_read_seconds": 35,
+    "validation": "Only HTTP 200 JSON and dataset ID direct provenance; never count generic taxon-name hits. Save response SHA and serialized JSON in workflow artifact to permit later inspection.",
+    "field_inventory": "Exact nested keys and data types for dataset, default chronology, sample ages, analysis unit IDs, taxon IDs, age types, age controls; no inference of linkage from key proximity.",
+    "negative_control_dataset_id": 9999999,
+    "negative_control": "invalid download source must NOT contain a normal nonempty target dataset",
+    "uncertainty": "Original occurrence may be in a different sample chronology than first download. Dataset age ranges and pollen label do not certify exact sample calibration."
+  },
+  "admission_gate": [
+    "Only original exact dataset/site/occurrence/taxon IDs are eligible",
+    "Trace each sample to its explicit sampleage.chronologyid and age-model units; age-age bounds must cover 18-24 ka calibrated BP for probabilistic ancient occupancy",
+    "If sample has no explicit chronology assignment, label UNRESOLVED rather than guess default",
+    "Review original age-depth controls and source publication/DOI; radiocarbon BP cannot be taken as calibrated years BP without proper source calibration",
+    "Species-level pollen morphological diagnostics independent; a source label Alnus glutinosa is not itself proof",
+    "No new positive species or dataset selection based on LGM model scores, genetic response or outcome tuning"
+  ],
+  "outcome_claim_allowed": false
+}
