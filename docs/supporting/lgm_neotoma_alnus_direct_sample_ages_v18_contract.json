@@ -1,0 +1,53 @@
+{
+  "schema": "chocho_neotoma_alnus_6_original_dataset_datum_sampleage_v18",
+  "status": "PREDECLARED_SAMPLE_LEVEL_SOURCE_CHECK_NO_ACCEPTED_LGM_OCCUPANCY",
+  "date": "2026-10-22",
+  "goal": "Within the six fixed source datasets, enumerate every sample whose datum taxonid is 1299 (Alnus glutinosa) and inspect all sample-specific ages, chronologies and uncertainty. No new species selection.",
+  "source": {
+    "dataset_sha256": {
+      "4396": "d8a3da16b86739b529e83e7167eabeafe1a82892fc6c050a9a2b5e30ae57d5a4",
+      "14556": "e519765ea784093fd4230a8a599136935938c1a3595a16056e792803f252ced6",
+      "22662": "891183daa2fe19b3690d74bb8afa6c667fbecac4a0df084bef85ccb69622bf00",
+      "22683": "74e9948a20a1d915e417bb6f3b34c3b8c3b45d86004179865155d743eea00951",
+      "24197": "ee1794bd9c2e83865c29b8909dbd886de9fde2d86643063d5d4f1ac3ed1181ac",
+      "41351": "95304a0118a2f06c2b92c5456283986ab410ac1de5f313af2f44a2647fc7190d"
+    },
+    "source_v16_artifact_id": 12427662101,
+    "source_v16_artifact_sha256": "7af90fc6be66b8c4fbde85e45189db3da9b8c033678fd46e2b94b5510f63231e",
+    "v13_candidate_csv_sha256": "3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc",
+    "dataset_site": {
+      "4396": "3392",
+      "14556": "9834",
+      "22662": "14474",
+      "22683": "14485",
+      "24197": "15750",
+      "41351": "23855"
+    },
+    "taxonid": 1299,
+    "source_taxon_label": "Alnus glutinosa",
+    "proxy": "pollen",
+    "age_min_calibrated_BP": 18000,
+    "age_max_calibrated_BP": 24000,
+    "no_new_api_queries": true
+  },
+  "rules": {
+    "sample_grain": "Unique datasetid/sampleid. A sample with multiple age chronologies is one sample, not independent duplicates.",
+    "positive_taxon_datum": "At least one sample.datum with numeric taxonid=1299, positive finite numeric value >0.",
+    "dates": "Retain all ages per source sample without selecting best chronological result; age bounds and calibration-type label kept.",
+    "calibrated_source_candidate": "Exact age source label 'Calibrated radiocarbon years BP' with finite center age 18000..24000 AND explicit chronologyid. This is only database-labelled candidate, NOT independently verified calibrated fossil occurrence.",
+    "no_unverifiable_joins": "Never join old v13 occurrenceids to full source samples by numerical ages, geographical location or ordering because v17 proved no explicit sampleid crosswalk.",
+    "scope": "Modern sampled insect anchor models, LGM host-climatic predictions and genetics are untouched."
+  },
+  "report": [
+    "All Alnus taxonid1299 datum-bearing source samples, including zero-value or nonnumeric statuses",
+    "Every age-model row and chronologyid per distinct source-positive sample",
+    "Dataset-level positive sample count, central-21ka calendar-labelled candidate count, missing age uncertainty, multiple models, source integrity SHA",
+    "Explicit zero confirmed ancient occupied Alnus sites"
+  ],
+  "limits": [
+    "A Neotoma taxonid label is not species-diagnostic pollen morphology.",
+    "Multiple calibrations or raw vs calibrated BP remain distinct, without outcome-driven selection.",
+    "An old numeric source-age candidate is not directly linked to this complete dataset's sample identifier.",
+    "No independently accepted LGM source-host occupancy, dispersal, genetic break result, or reversal of prior real-other-plant negative controls."
+  ]
+}
