@@ -1,0 +1,71 @@
+{
+  "generic_negative_controls_identical_payload_pairs": [],
+  "limitations": [
+    "Source-only limited direct-ID occurrence metadata pages are not a complete fossil survey",
+    "No sample-level chronometric calibration/age-depth provenance or species-level pollen taxonomic proof",
+    "The global 416 WCVP native plants have not been matched to validated 21ka fossil geographic observations",
+    "No insect ancient population or genetic response has been used"
+  ],
+  "official_source": "https://api.neotomadb.org/swagger.json",
+  "original_TTF_host_climate_negative_control_unchanged": true,
+  "schema": "chocho_neotoma_exact_taxonID_sample_age_metadata_v12",
+  "source_any_original_species_18_24ka_fossil_occupancy_verified": false,
+  "source_direct_age_data_shapes": {
+    "Alnus glutinosa": {
+      "keys": [
+        "age",
+        "ageolder",
+        "ageyounger"
+      ],
+      "kind": "object",
+      "subshapes": {
+        "age": {
+          "kind": "int"
+        },
+        "ageolder": {
+          "kind": "null"
+        },
+        "ageyounger": {
+          "kind": "null"
+        }
+      }
+    },
+    "Betula pendula": {
+      "keys": [
+        "age",
+        "ageolder",
+        "ageyounger"
+      ],
+      "kind": "object",
+      "subshapes": {
+        "age": {
+          "kind": "int"
+        },
+        "ageolder": {
+          "kind": "int"
+        },
+        "ageyounger": {
+          "kind": "int"
+        }
+      }
+    }
+  },
+  "source_direct_occurrence_ids_covered_by_bounded_pages": {
+    "Alnus glutinosa": 40,
+    "Betula pendula": 27
+  },
+  "source_direct_success_response_pages": 4,
+  "source_missing_response_does_not_mean_species_absence": true,
+  "source_only_target_taxon_ids": {
+    "Alnus glutinosa": 1299,
+    "Betula pendula": 3461
+  },
+  "source_pagination_exhausted": false,
+  "source_pollen_species_vs_genus_identity_verified": false,
+  "source_sample_level_chronology_verified": false,
+  "source_taxa_with_nonempty_direct_path": [
+    "Alnus glutinosa",
+    "Betula pendula"
+  ],
+  "status": "TAXON_ID_PATH_DIFFERENT_OCCURRENCE_RECORDS_CHRONOLOGY_UNVERIFIED"
+}
