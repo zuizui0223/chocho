@@ -153,5 +153,107 @@
     "Matching other real plants on 0BP climate moments need not balance native 0BP habitat patch contact; many species have >0.1 baseline mismatch",
     "Plant donors and hosts are shared across insect species; 2108 groups not biological replicates",
     "No genetic response or ancestral host occupancy read"
-  ]
+  ],
+  "uniqueHostsetEqualWeight": {
+    "definition": "For each distinct original accepted host ID combination, take median of within-insect median glacial same-edge Δ(actual host)-Δ(other real plant). Each hostset counted once.",
+    "limits": "Non-independent plant donors and insect geography; descriptive not confirmatory.",
+    "byScenarioRadius": {
+      "analog_50km": {
+        "hostsets": 158,
+        "signs": {
+          "realHostMoreSplit": 23,
+          "otherPlantMoreSplit": 32,
+          "equal": 103
+        },
+        "median": 0,
+        "stableHostsets": 86,
+        "stableSigns": {
+          "realHostMoreSplit": 20,
+          "otherPlantMoreSplit": 29,
+          "equal": 37
+        },
+        "stableMedian": 0
+      },
+      "analog_100km": {
+        "hostsets": 173,
+        "signs": {
+          "realHostMoreSplit": 48,
+          "otherPlantMoreSplit": 61,
+          "equal": 64
+        },
+        "median": 0,
+        "stableHostsets": 133,
+        "stableSigns": {
+          "realHostMoreSplit": 44,
+          "otherPlantMoreSplit": 50,
+          "equal": 39
+        },
+        "stableMedian": 0
+      },
+      "analog_150km": {
+        "hostsets": 181,
+        "signs": {
+          "realHostMoreSplit": 61,
+          "otherPlantMoreSplit": 64,
+          "equal": 56
+        },
+        "median": 0,
+        "stableHostsets": 148,
+        "stableSigns": {
+          "realHostMoreSplit": 59,
+          "otherPlantMoreSplit": 58,
+          "equal": 31
+        },
+        "stableMedian": 0
+      },
+      "extrapolated_50km": {
+        "hostsets": 159,
+        "signs": {
+          "realHostMoreSplit": 22,
+          "otherPlantMoreSplit": 31,
+          "equal": 106
+        },
+        "median": 0,
+        "stableHostsets": 89,
+        "stableSigns": {
+          "realHostMoreSplit": 22,
+          "otherPlantMoreSplit": 28,
+          "equal": 39
+        },
+        "stableMedian": 0
+      },
+      "extrapolated_100km": {
+        "hostsets": 173,
+        "signs": {
+          "realHostMoreSplit": 47,
+          "otherPlantMoreSplit": 62,
+          "equal": 64
+        },
+        "median": 0,
+        "stableHostsets": 134,
+        "stableSigns": {
+          "realHostMoreSplit": 44,
+          "otherPlantMoreSplit": 51,
+          "equal": 39
+        },
+        "stableMedian": 0
+      },
+      "extrapolated_150km": {
+        "hostsets": 182,
+        "signs": {
+          "realHostMoreSplit": 60,
+          "otherPlantMoreSplit": 63,
+          "equal": 59
+        },
+        "median": 0,
+        "stableHostsets": 150,
+        "stableSigns": {
+          "realHostMoreSplit": 60,
+          "otherPlantMoreSplit": 58,
+          "equal": 32
+        },
+        "stableMedian": 0
+      }
+    }
+  }
 }
