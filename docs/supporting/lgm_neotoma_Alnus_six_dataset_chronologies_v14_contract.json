@@ -1,0 +1,65 @@
+{
+  "schema": "chocho_neotoma_Alnus_6sites_dataset_chronology_provenance_v14",
+  "status": "EXPLORATORY_DATASET_METADATA_CHECK_NOT_VALIDATED_21KA_OCCUPANCY",
+  "date": "2026-10-22",
+  "source": {
+    "v13_candidate_sample_csv_sha256": "3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc",
+    "v13_summary_sha256": "16bc59d362365416ac9144d29bae05ed503341ebb99d109f750ababdaa401bd9",
+    "Neotoma_taxonid": 1299,
+    "taxon": "Alnus glutinosa",
+    "proxy": "pollen",
+    "age_source_range_BP": [
+      18000,
+      24000
+    ],
+    "records_from_prior_source": 27,
+    "unique_source_occids": 26,
+    "candidate_dataset_sites": [
+      {
+        "datasetid": 4396,
+        "siteid": 3392
+      },
+      {
+        "datasetid": 14556,
+        "siteid": 9834
+      },
+      {
+        "datasetid": 22662,
+        "siteid": 14474
+      },
+      {
+        "datasetid": 22683,
+        "siteid": 14485
+      },
+      {
+        "datasetid": 24197,
+        "siteid": 15750
+      },
+      {
+        "datasetid": 41351,
+        "siteid": 23855
+      }
+    ]
+  },
+  "queries": {
+    "official_api": "https://api.neotomadb.org",
+    "per_dataset": [
+      "/v2.0/data/datasets/{datasetid}",
+      "/v2.0/data/datasets/{datasetid}/chronologies",
+      "/v2.0/data/datasets/{datasetid}/publications"
+    ],
+    "negative_dataset_id": 9999999,
+    "max_body_bytes": 450000,
+    "one_attempt_each": true,
+    "purpose": "Retrieve source dataset metadata, chronology controls, references before accepting sampled pollen dates; no new fossil search or non-representative source selection."
+  },
+  "evidence_requirements": [
+    "At least one source chronology attached to a dataset does not by itself validate every Alnus sample's age model",
+    "Original chronology/sample age-depth model, calibration and dated depths must support sample age within 18-24ka uncertainty before fossil location admitted",
+    "Species pollen diagnostics must be reviewed against source publications and alternative Alnus species, and pollen transport must be accounted for",
+    "6 datasets from 6 sites are source site units, not 26 independent species-level historical population observations",
+    "Missing metadata/HTTP failure does not imply absence of valid LGM fossil or misidentification",
+    "Original v13 candidate source is not a confirmed fossil survey of 416 plant taxa",
+    "No insect genetics, no 21ka host corridors, no retune of TTF/chocho negative real-other-plant controls"
+  ]
+}
