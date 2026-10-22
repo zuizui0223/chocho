@@ -130,7 +130,7 @@ def analyse(source, stage, all_stage):
                 "country_gadm1_units_detected": link["gadm1_count"],
                 "juvenile_source_gadm1_units_with_this_plant": matched_juv_gadm,
             })
-        if case["added_host_country"] != 1 or all_cases[key]["added_resource_country"] != 1:
+        if stage_cases[key]["added_host_country"] != 1 or all_cases[key]["added_resource_country"] != 1:
             raise ValueError("Fixed cases no longer originally added-resource")
         if jsource != case["juvenile_labeled_focal_gadm1_counts"]:
             raise ValueError("GBIF juvenile data source mismatched")
