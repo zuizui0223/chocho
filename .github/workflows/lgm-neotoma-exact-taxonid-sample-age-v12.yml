@@ -1,0 +1,96 @@
+name: chocho direct Neotoma taxon-ID occurrence sample/age chronology metadata preflight
+on:
+  push:
+    branches: [ecology/lgm-neotoma-taxonid-age-audit-v12]
+    paths:
+      - .github/workflows/lgm-neotoma-exact-taxonid-sample-age-v12.yml
+      - scripts/probe_neotoma_taxonid_sample_age_v12.py
+      - tests/test_neotoma_taxonid_sample_age_v12.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-source-only-LGM-neotoma-direct-taxonID-v12
+  cancel-in-progress: false
+jobs:
+  verify-neotoma-direct-taxonomy-without-fossil-occupation-claim:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact source taxon IDs and chronology-gating tests
+        run: |
+          set -euo pipefail
+          python -m pip install 'pytest>=8,<9' 'requests>=2.31,<3'
+          python -m pytest -q tests/test_neotoma_taxonid_sample_age_v12.py tests/test_neotoma_taxon_filter_integrity_v11.py
+          python -m py_compile scripts/probe_neotoma_taxonid_sample_age_v12.py
+          echo '55887306ce8defa7c027fc1d518f2bb798ac2868b6c7f46db288f154e8ea8219  results/lgm_neotoma_taxon_filter_integrity_v11/source_filter_integrity_summary.json' | sha256sum -c -
+          python - <<'PY'
+          import json
+          a=json.load(open('results/lgm_neotoma_taxon_filter_integrity_v11/source_filter_integrity_summary.json'))
+          b=json.load(open('docs/supporting/lgm_neotoma_taxonid_age_source_v12_contract.json'))
+          assert a['status']=='FOSSIL_TAXONNAME_FILTER_INVALID_SENTINEL_MATCHES_REAL_TAXON'
+          assert a['exact_taxon_registry_ids']=={'Alnus glutinosa':1299,'Betula pendula':3461}
+          assert b['status']=='SOURCE_SAMPLE_LEVEL_CHRONOLOGY_PRECHECK_NOT_LGM_PRESENCE'
+          assert b['age_target_BP']==[18000,24000]
+          assert b['source_pilot_limits']['items_per_page']==20
+          print('PASS_EXACT_NEOTOMA_TAXON_IDS_PRE_LGM_SAMPLE_AGE_FIELDS')
+          PY
+      - name: Probe taxon-ID path occurrence metadata and never infer fossil presence from generic filter
+        run: |
+          set -euo pipefail
+          python -u scripts/probe_neotoma_taxonid_sample_age_v12.py \
+            --contract docs/supporting/lgm_neotoma_taxonid_age_source_v12_contract.json \
+            --v11-summary results/lgm_neotoma_taxon_filter_integrity_v11/source_filter_integrity_summary.json \
+            --out results/lgm_neotoma_taxonid_sample_age_v12
+          python - <<'PY'
+          import csv,json,os,hashlib
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_taxonid_sample_age_v12')
+          x=json.loads((p/'summary.json').read_text())
+          assert x['source_any_original_species_18_24ka_fossil_occupancy_verified'] is False
+          assert x['source_sample_level_chronology_verified'] is False
+          assert x['source_pollen_species_vs_genus_identity_verified'] is False
+          assert x['source_pagination_exhausted'] is False
+          assert x['original_TTF_host_climate_negative_control_unchanged'] is True
+          assert x['source_direct_success_response_pages']<=4
+          assert len(x['source_taxa_with_nonempty_direct_path'])<=2
+          assert x['status'] in {
+              'TAXON_ID_OCCURRENCE_PATH_NOT_DISTINCT_FILTER_UNTRUSTWORTHY',
+              'TAXON_ID_PATH_DIFFERENT_OCCURRENCE_RECORDS_CHRONOLOGY_UNVERIFIED',
+              'TAXON_ID_PATH_INCOMPLETE_NO_AGE_OR_ABSENCE_INFERENCE'
+          }
+          for name in ['taxonid_route_and_generic_controls.csv','sample_age_site_raw_metadata_shapes.csv','summary.json']:
+              assert (p/name).is_file()
+          receipt={'schema':'chocho_Neotoma_2_exact_plant_taxonids_20recordpages_age_metadata_v12',
+              'run_id':os.environ['GITHUB_RUN_ID'],'code_commit':os.environ['GITHUB_SHA'],
+              'source_integrity_status':x['status'],
+              'result_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                  for f in sorted(p.iterdir()) if f.is_file()},
+              'fossil_21ka_species_presence_or_absence_verified':False,
+              'genetics_or_ancestral_host_distribution_accessed':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print('FINISHED_BOUNDED_SOURCE_TAXON_ID_CHRONOLOGY_METADATA_DIAGNOSIS')
+          PY
+      - name: Commit source-only direct-ID chronology metadata and receipt
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_taxonid_sample_age_v12/
+          git commit -m 'Archive Neotoma exact taxon ID fossil-sample age schema pilot without historic plant occupancy claims'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-neotoma-verified-taxonid-record-ages-v12
+          path: results/lgm_neotoma_taxonid_sample_age_v12/
+          retention-days: 30
+          if-no-files-found: warn
