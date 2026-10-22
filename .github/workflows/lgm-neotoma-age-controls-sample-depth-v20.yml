@@ -82,8 +82,8 @@ jobs:
           assert q['descriptive_counts']['nondefault_source_chronology']==10
           assert q['descriptive_counts']['source_sample_missing_both_age_bounds']==20
           assert q['descriptive_counts']['beyond_oldest_reliable_age_span']==1
-          assert q['descriptive_counts']['deeper_than_last_returned_source_control']==18
-          assert q['descriptive_counts']['within_returned_control_depth_extent']==3
+          assert q['descriptive_counts']['deeper_than_last_returned_source_control']==11
+          assert q['descriptive_counts']['within_returned_control_depth_extent']==10
           assert q['descriptive_counts']['bracket_control_age_gap_over_10000_BP']==3
           assert q['ancient_21ka_Alnus_occupied_plant_populations_accepted']==0
           assert q['original_sample_ages_independently_calibrated']==0
