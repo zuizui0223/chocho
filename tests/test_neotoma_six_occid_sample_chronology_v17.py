@@ -18,7 +18,7 @@ def fixture_dataset():
         {"sampleid":13,"analysisunitid":92,
          "ages":[{"age":20456,"agetype":"Calibrated radiocarbon years BP","chronologyid":101}],
          "datum":[{"taxonid":1299,"value":7}]}],
-       "chronologies":[{"chronologyid":100},{"chronologyid":101}]}}}]}
+       "chronologies":[{"chronologyid":100},{"chronologyid":101}]}}}}]}
 
 def test_original_six_full_dataset_ids_must_align_exactly():
     d=source_datasets(fixture_dataset(),"14556","9834")
