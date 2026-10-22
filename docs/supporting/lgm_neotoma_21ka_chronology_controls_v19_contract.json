@@ -1,0 +1,77 @@
+{
+  "schema": "chocho_Neotoma_Alnus_21ka_chronology_controls_v19",
+  "status": "SOURCE_CHRONOLOGY_PREFLIGHT_FROZEN_BEFORE_CONTROL_EVIDENCE",
+  "date": "2026-10-23",
+  "purpose": "Inspect the exact Neotoma chronology objects and time-control evidence for the 21 source-labelled 18-24ka positive Alnus pollen sample age records, without conflating database chronology labels with independent calibration or occupied glacial trees.",
+  "parent_source": {
+    "v18_sample_age_rows": "results/lgm_neotoma_Alnus_direct_sample_age_models_v18/all_source_Alnus_sample_age_models_v18.csv",
+    "v18_sample_age_rows_sha256": "85cb546d43e57c8ff195c09d5dba253e6e2cc88a5cbae4e1eddb762e5c67c6e4",
+    "v18_summary_sha256": "934c29c61a9ee8603f54758fcf27f85f1970bd512e39cebf9a44fdebd9a195cf",
+    "source_positive_sample_n": 437,
+    "source_18_24ka_calibrated_label_candidates_n": 21,
+    "source_source_candidate_sites": 5,
+    "source_dataset_to_all_chronology_ids": {
+      "4396": [
+        30953
+      ],
+      "14556": [
+        7725,
+        7726
+      ],
+      "22662": [
+        13010,
+        13011
+      ],
+      "22683": [
+        13033,
+        13034
+      ],
+      "24197": [
+        14551,
+        14552
+      ],
+      "41351": [
+        25461,
+        25462
+      ]
+    },
+    "source_dataset_to_labelled_candidate_chronology_id": {
+      "14556": 7725,
+      "22662": 13010,
+      "22683": 13034,
+      "24197": 14552,
+      "41351": 25462
+    },
+    "false_positive_guard": "Never silently turn radiocarbon BP into calibrated years BP or assume a source-labelled age has independent absolute age validation."
+  },
+  "api": {
+    "base": "https://api.neotomadb.org/v2.0/data",
+    "target_endpoints": [
+      "GET /chronologies/{chronid} for all 11 source chronology IDs",
+      "GET /datasets/{datasetid}/chronologies for each of 6 frozen datasets"
+    ],
+    "docs": "https://api.neotomadb.org/api-docs/",
+    "manual": "https://open.neotomadb.org/manual/chronology-age-related-tables-1.html",
+    "max_response_bytes_per_endpoint": 3000000,
+    "read_timeout_seconds": 35,
+    "connect_timeout_seconds": 10,
+    "request_retries": 2,
+    "negative_control_chronology_id": 987654321,
+    "sample_source_type": "Alnus glutinosa taxonid1299 source pollen datum; taxon label is not a species-diagnostic morphology"
+  },
+  "evaluation": {
+    "age_type_must_label": "Calibrated radiocarbon years BP",
+    "candidate_central_window_BP": [
+      18000,
+      24000
+    ],
+    "reliability_bounds": "Use chronology reliable AgeBoundYounger, AgeBoundOlder if present and numeric, verify lower<=upper; absent bounds -> unverified, never imputed",
+    "calibration_controls": "ChronControl records with lab number/dated material/depth/age/errors when exposed in original endpoint; do not infer zero radiocarbon controls from an endpoint that returns metadata only",
+    "source_identity": "ChronologyID fields must directly match URL chronologyid; fake ID echoed by endpoint is invalid unless metadata includes independently linked collectionunit, age bounds or controls",
+    "multiple_models": "Retain all 11 IDs, 21 samples' original chronology IDs and dataset assigned chrono lists; no selection of preferred alternative by favourable age",
+    "no_genetics": true,
+    "no_occupied_species_inference": true
+  },
+  "stopping_rule": "If the API does not expose independently interpretable chronology object/controls, do not infer 21ka calibration from source label. Report source availability/metadata only and keep ancient host occupancy unverified.",
+  "note": "This audit follows a negative host-specific comparison in TTF v0.5 and chocho v0.8; do not retune or reverse those outcomes."
+}
