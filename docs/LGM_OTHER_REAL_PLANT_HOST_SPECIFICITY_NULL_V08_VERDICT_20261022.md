@@ -70,3 +70,17 @@ Original source v0.8 [successful run #39408984271](https://github.com/zuizui0223
 The robust ecological question for a genuinely new programme is whether **independently reconstructed/validated occupied LGM plant distributions**, with taxon-specific dispersal and refuge geography, correspond to independently sourced present-day within-species genetic discontinuities. This cannot be answered by repeatedly retuning the current climate-mask cutoffs, radius thresholds or posthoc taxonomic subsets. A credible next decisive dataset would use verified palaeoecological records / regionally native palaeoniches alongside a **fresh, outcome-unseen genetic panel**. If neither is available, the appropriate publishable object is a carefully labelled comparative model-based glacial climatic-resource *opportunity* and geography study, not an inferred genetic barrier.
 
 **Inferential stop rule:** Do not relabel this null result as host-specific LGM support, do not recode unevaluable as zero, do not confuse 173 distinct source hostsets with 226 independent host graph realizations, and do not claim occupied host corridors or actual glacial insect ancestral populations.
+
+## Equal-weight distinct recorded-hostset robustness
+
+The 226 primary 100-km evaluable insects share only **173 distinct recorded accepted host-plant combinations**. Replacing species-weighted effects by the median across insect effects within a combination, and then weighting each different combination once:
+
+| Unit (primary analog-only, 100 km) | Real hosts more split | Other real plants more split | Equal | Median species/hostset contrast |
+|---|---:|---:|---:|---:|
+| 226 source-evaluable insects | 62 | 79 | 85 | 0 |
+| **173 distinct host combinations** | **48** | **61** | **64** | **0** |
+| Stable ≥4 other-plant groups each with ≥5 matched pairs, 133 host combinations | 44 | 50 | 39 | 0 |
+
+With novel-climate extrapolation included, the 173 host combinations give **47 real-host-more / 62 other-plant-more / 64 equal**, median 0. This is a descriptive source-dependence sensitivity, NOT 173 independent ancient landscapes: alternative donor plants and insect modern sampling geography are still shared across combinations.
+
+The underlying report was extended at `results/lgm_v08_otherplant_independent_audit_v09/summary.json`, without changing any original TTF v0.5/v0.8 source scores, species qualifications, control donor IDs or genetic inference status.
