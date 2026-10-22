@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_neotoma_taxonid_agefiltered_exact_sample_candidates_v13",
+  "status": "BOUNDED_SOURCE_SAMPLE_VERIFICATION_NOT_LGM_OCCUPANCY",
+  "date": "2026-10-22",
+  "provenance": {
+    "v11_invalid_taxonname_filter_summary_sha256": "55887306ce8defa7c027fc1d518f2bb798ac2868b6c7f46db288f154e8ea8219",
+    "v12_exact_taxon_id_page_summary_sha256": "657d56b7ae45176de48a5f86eab7d32d783a4eaff70cd7a07fe334e57af3c690",
+    "v12_preliminary_generic_filter_test": "taxonid=1299 18-24ka returned two different IDs than same taxonid 100-200BP, sentinel and taxonid3461 returned empty, but sample ages and taxon IDs were not examined."
+  },
+  "cases": [
+    {
+      "name": "Alnus glutinosa",
+      "neotoma_taxonid": 1299
+    },
+    {
+      "name": "Betula pendula",
+      "neotoma_taxonid": 3461
+    }
+  ],
+  "queries": {
+    "endpoint": "https://api.neotomadb.org/v2.0/data/occurrences",
+    "datasettypes": [
+      "plant macrofossil",
+      "pollen"
+    ],
+    "ageyoung": 18000,
+    "ageold": 24000,
+    "limit": 30,
+    "offset": 0,
+    "negative_controls": [
+      {
+        "taxonid": 9999999,
+        "datasettype": "pollen",
+        "ageyoung": 18000,
+        "ageold": 24000
+      },
+      {
+        "taxonid": 1299,
+        "datasettype": "pollen",
+        "ageyoung": 100,
+        "ageold": 200
+      }
+    ]
+  },
+  "individual_evidence_check": {
+    "record_occurrence_id": "occid unique; duplicate same id not independent fossil evidence",
+    "taxonid": "sample.taxonid MUST equal requested numeric Neotoma taxon ID; otherwise status invalid_filter",
+    "plant_name": "sample.taxonname MUST be exact selected source binomial, not just genus (if present)",
+    "proxy": "site.datasettype MUST match requested pollen/plant macrofossil source label",
+    "age": "age.age numeric strictly 18000<=age<=24000 BP. ageolder/ageyounger uncertainty retained but sample age model not necessarily verified",
+    "site": "site.siteid and site.location retained as raw site metadata; no historical occupancy claim until sedimentation/deposition age provenance and site location validated independently",
+    "limit": "30 per selected query, NOT an exhaustive source search or species absence inference"
+  },
+  "uncertainties": [
+    "Neotoma API age query may intersect dataset age range rather than strictly select sample ages",
+    "Even taxonid and age matching does not confirm a source-calibrated age-depth model, dating error or transported pollen's provenance",
+    "Species-level pollen identification may not be morphologically independent; no species occupancy confirmation",
+    "Two temperate model plants selected for API technical viability are not representative of all 416 native WCVP hosts",
+    "Never accept generic no-data response as biological absence or infer any host-specific genetic effect",
+    "TTF and chocho negative known-host vs climate-matched other-plant LGM results remain fixed"
+  ]
+}
