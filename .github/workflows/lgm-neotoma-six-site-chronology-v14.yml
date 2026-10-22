@@ -1,0 +1,95 @@
+name: chocho Neotoma six Alnus LGM pollen site chronology and publication source metadata
+on:
+  push:
+    branches: [ecology/lgm-neotoma-six-site-chronology-v14]
+    paths:
+      - .github/workflows/lgm-neotoma-six-site-chronology-v14.yml
+      - scripts/audit_neotoma_six_alnus_chronologies_v14.py
+      - tests/test_neotoma_six_alnus_chronologies_v14.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-source-six-alnus-pollen-chronologies-v14
+  cancel-in-progress: false
+jobs:
+  source-audit-not-21ka-population-inference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test six fixed candidate site IDs and chronology provenance guards
+        run: |
+          set -euo pipefail
+          python -m pip install 'pytest>=8,<9' 'requests>=2.31,<3'
+          python -m pytest -q tests/test_neotoma_six_alnus_chronologies_v14.py tests/test_neotoma_agefiltered_samples_v13.py
+          python -m py_compile scripts/audit_neotoma_six_alnus_chronologies_v14.py
+          echo '3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc  results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv' | sha256sum -c -
+          echo '16bc59d362365416ac9144d29bae05ed503341ebb99d109f750ababdaa401bd9  results/lgm_neotoma_idage_18_24ka_source_candidates_v13/summary.json' | sha256sum -c -
+          python - <<'PYTHON'
+          import json
+          x=json.load(open('docs/supporting/lgm_neotoma_Alnus_six_dataset_chronologies_v14_contract.json'))
+          assert x['status']=='EXPLORATORY_DATASET_METADATA_CHECK_NOT_VALIDATED_21KA_OCCUPANCY'
+          assert x['source']['records_from_prior_source']==27
+          assert x['source']['unique_source_occids']==26
+          assert len(x['source']['candidate_dataset_sites'])==6
+          print('PASS_ORIGINAL_SIX_FOSSIL_SOURCE_SITE_GROUPS_FROZEN')
+          PYTHON
+      - name: Retrieve official six dataset age model and publication metadata, not fossils
+        run: |
+          set -euo pipefail
+          out=results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14
+          python -u scripts/audit_neotoma_six_alnus_chronologies_v14.py \
+            --contract docs/supporting/lgm_neotoma_Alnus_six_dataset_chronologies_v14_contract.json \
+            --prior-records results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv \
+            --prior-summary results/lgm_neotoma_idage_18_24ka_source_candidates_v13/summary.json \
+            --out "$out"
+          python - <<'PYTHON'
+          import csv,hashlib,json,os
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14')
+          q=json.loads((p/'summary.json').read_text())
+          with (p/'all_six_dataset_chronology_publication_source_queries.csv').open(newline='') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==q['source_query_count']==19
+          assert q['candidate_source_sites']==6 and q['candidate_source_datasets']==6
+          assert q['source_Alnus_18_24ka_pollen_candidate_rows']==27
+          assert q['source_Alnus_18_24ka_unique_occurrence_ids']==26
+          assert q['sample_ages_independently_chronology_validated'] is False
+          assert q['pollen_morphology_species_level_validated'] is False
+          assert q['original_21ka_host_plant_populations_inferred'] is False
+          assert q['genetic_response_used'] is False
+          assert q['status'] in (
+              'CHRONOLOGY_AND_PUBLICATION_METADATA_AVAILABILITY_AUDITED_NO_FOSSIL_OCCUPANCY',
+              'NEGATIVE_DATASET_ID_CONTROL_NONEMPTY_SOURCE_METADATA_INVALID')
+          receipt={'schema':'chocho_Neotoma_six_Alnus_pollen_dataset_chronology_provenance_v14_receipt',
+              'run_id':os.environ['GITHUB_RUN_ID'],'code_commit':os.environ['GITHUB_SHA'],
+              'source_SHA256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                   for f in sorted(p.iterdir()) if f.is_file()},
+              'sample_age_depth_and_pollen_species_identification_verified':False,
+              'source_fossils_accepted_as_LGM_native_plant_occupied_ranges':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,sort_keys=True,indent=2)+'\n')
+          print('FINISHED_SIX_FOSSIL_SITE_SOURCE_DATASETS_ONLY_NOT_POPULATION_OCCUPANCY')
+          PYTHON
+      - name: Preserve six original Neotoma chronology/source checks on isolated draft branch
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/
+          git commit -m 'Archive source chronologies and references for six 21ka Alnus pollen candidate datasets'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-six-Alnus-pollen-source-datasets-chronology-audit-v14
+          path: results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/
+          retention-days: 30
+          if-no-files-found: warn
