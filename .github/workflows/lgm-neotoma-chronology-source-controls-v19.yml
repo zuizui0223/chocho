@@ -1,0 +1,94 @@
+name: chocho 21 Alnus LGM-labelled pollen samples chronology source-control audit v19
+on:
+  push:
+    branches: [ecology/lgm-neotoma-21ka-chronology-controls-v19]
+    paths:
+      - .github/workflows/lgm-neotoma-chronology-source-controls-v19.yml
+      - scripts/fetch_neotoma_Alnus_chronology_controls_v19.py
+      - tests/test_neotoma_chronology_controls_v19.py
+      - docs/supporting/lgm_neotoma_21ka_chronology_controls_v19_contract.json
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-neotoma-21ka-11-chronology-source-controls-v19
+  cancel-in-progress: false
+jobs:
+  original-neotoma-chronology-metadata-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original v18 21 Alnus pollen sample-age evidence and negative controls
+        run: |
+          set -euo pipefail
+          python -m pip install 'pytest>=8,<9' 'requests>=2.31,<3'
+          python -m pytest -q tests/test_neotoma_chronology_controls_v19.py
+          python -m py_compile scripts/fetch_neotoma_Alnus_chronology_controls_v19.py
+          echo '85cb546d43e57c8ff195c09d5dba253e6e2cc88a5cbae4e1eddb762e5c67c6e4  results/lgm_neotoma_Alnus_direct_sample_age_models_v18/all_source_Alnus_sample_age_models_v18.csv' | sha256sum -c -
+          echo '934c29c61a9ee8603f54758fcf27f85f1970bd512e39cebf9a44fdebd9a195cf  results/lgm_neotoma_Alnus_direct_sample_age_models_v18/summary.json' | sha256sum -c -
+          python - <<'PY'
+          import json
+          q=json.load(open('docs/supporting/lgm_neotoma_21ka_chronology_controls_v19_contract.json'))
+          assert q['status']=='SOURCE_CHRONOLOGY_PREFLIGHT_FROZEN_BEFORE_CONTROL_EVIDENCE'
+          assert q['parent_source']['source_18_24ka_calibrated_label_candidates_n']==21
+          assert len({int(z) for v in q['parent_source']['source_dataset_to_all_chronology_ids'].values() for z in v})==11
+          assert q['evaluation']['no_genetics'] and q['evaluation']['no_occupied_species_inference']
+          print('PASS_PREDECLARED_SIX_DATASET_ELEVEN_CHRONOLOGY_21_SAMPLE_SOURCE_CONTRACT')
+          PY
+      - name: Download 11 exact Neotoma chronology objects and six related dataset chronology lists
+        run: |
+          set -euo pipefail
+          python -u scripts/fetch_neotoma_Alnus_chronology_controls_v19.py \
+            --contract docs/supporting/lgm_neotoma_21ka_chronology_controls_v19_contract.json \
+            --ages results/lgm_neotoma_Alnus_direct_sample_age_models_v18/all_source_Alnus_sample_age_models_v18.csv \
+            --v18-summary results/lgm_neotoma_Alnus_direct_sample_age_models_v18/summary.json \
+            --out results/lgm_neotoma_Alnus_chronology_source_controls_v19
+          python - <<'PY'
+          import json,hashlib,os
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_Alnus_chronology_source_controls_v19')
+          q=json.loads((p/'summary.json').read_text())
+          routes=json.loads((p/'all_11_chronology_plus_six_dataset_source_routes.json').read_text())
+          assert q['status']=='SOURCE_CHRONOLOGY_METADATA_NOT_INDEPENDENT_AGE_CALIBRATION'
+          assert q['candidate_pollen_sample_age_rows']==21
+          assert q['source_chronology_ids']==11 and q['source_datasets']==6
+          assert len(routes)==17 and q['requested_official_chronology_endpoints']==17
+          assert q['independently_verified_age_depth_model_count']==0
+          assert q['independently_verified_LGM_Alnus_occupied_plant_site_count']==0
+          assert not q['original_genetic_response_used']
+          receipt={'schema':'chocho_Alnus_21ka_Neotoma_chronology_controls_v19_source_receipt',
+                   'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+                   'source_bodies':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                      for f in sorted((p/'raw_api_responses').glob('*.json.gz'))},
+                   'output_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                      for f in sorted(p.iterdir()) if f.is_file()},
+                   'original_21_sample_source_labels_not_independent_calibrated_ages':True,
+                   'ancient_Alnus_population_occupancy_or_genetic_response_claimed':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(q,sort_keys=True))
+          PY
+      - name: Preserve concise exact source-route metadata, without retroactive chronology acceptance
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+users.noreply.github.com'
+          git add results/lgm_neotoma_Alnus_chronology_source_controls_v19/summary.json
+          git add results/lgm_neotoma_Alnus_chronology_source_controls_v19/all_11_chronology_plus_six_dataset_source_routes.json
+          git add results/lgm_neotoma_Alnus_chronology_source_controls_v19/receipt.json
+          git commit -m 'Archive source-bound Neotoma chronology metadata requests for 21 LGM-labelled Alnus samples'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-Neotoma-21-Alnus-candidate-chronology-metadata-v19
+          path: results/lgm_neotoma_Alnus_chronology_source_controls_v19/
+          retention-days: 30
+          if-no-files-found: warn

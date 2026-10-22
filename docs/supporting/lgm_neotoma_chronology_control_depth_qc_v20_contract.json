@@ -1,0 +1,66 @@
+{
+  "schema": "chocho_Alnus21ka_original_chronology_control_depth_audit_v20",
+  "status": "EXPLORATORY_POST_RETRIEVAL_SOURCE_METADATA_QC_NOT_INDEPENDENT_CALIBRATION",
+  "date": "2026-10-23",
+  "motivation": "Read the complete official Neotoma chronology object structure, not string-match generic fields: chronologies contain reliableagespan, controls, default, modelType, geochron and calibration notes. Check exactly the original 21 candidate pollen-sample chronology assignments against the original source control-depth and reliability bounds.",
+  "sources": {
+    "source_v18_all_Alnus_sample_ages_sha256": "85cb546d43e57c8ff195c09d5dba253e6e2cc88a5cbae4e1eddb762e5c67c6e4",
+    "source_v18_all_Alnus_sample_datums_sha256": "22e2ceae388c704dcc1dc21d6e71605f674807ec3ab3dce004956b9220d674f4",
+    "source_v18_summary_sha256": "934c29c61a9ee8603f54758fcf27f85f1970bd512e39cebf9a44fdebd9a195cf",
+    "source_v19_API_artifact_id": 12463050740,
+    "source_v19_API_archive_sha256": "f01683540e34ba722ba65ed484c88139a323b23d6427da58a50be63f2e526650",
+    "source_v19_API_receipt_path": "results/lgm_neotoma_Alnus_chronology_source_controls_v19/receipt.json",
+    "chronology_ids": [
+      30953,
+      7725,
+      7726,
+      13010,
+      13011,
+      13033,
+      13034,
+      14551,
+      14552,
+      25461,
+      25462
+    ],
+    "positive_sample_labelled_18_24ka_n": 21,
+    "dataset_ids": [
+      4396,
+      14556,
+      22662,
+      22683,
+      24197,
+      41351
+    ],
+    "official_schema": "https://api.neotomadb.org/v2.0/data/chronologies/{chronid}",
+    "database_manual": "https://open.neotomadb.org/manual/chronology-age-related-tables-1.html"
+  },
+  "methods": {
+    "original_population_unit": "datasetid + sampleid, NOT number of age models or controls",
+    "candidate_inclusion": "Exactly source original v18 positive pollen datum with labelled source calibrated radiocarbon years BP center between 18000 and24000 and explicit chronology ID, no new favourable sample selection.",
+    "time_range": "Use original source sample age at its explicitly assigned original chronologyid. Do not substitute other chronology even if it yields a more plausible date.",
+    "official_model_metadata": "chronology agetype, default, modelType, reliableagespan.younger/older, controls[].depth/age/controltype, source geochron and note fields, exact chronology->pollen dataset link.",
+    "sample_controls": "Compare source sample depth against MIN and MAX depths of all source-returned age controls. Below/above control depth => model age may be extrapolated; NOT automatically false date.",
+    "model_reliability": "If original age center outside source chronology reliableagespan younger/older => source chronology metadata fails center reliability. Inside => database-labelled reliability only, NOT independent calibrated chronology proof.",
+    "control_bracketing": "When source sample depth lies strictly between two separate controls, report ages and chronological gap; matching depth within limit is not age validation.",
+    "age_uncertainty": "Preserve original source ageyounger/ageolder and count missing bounds; do not borrow broad reliableagespan to replace per-sample uncertainty.",
+    "alternative_model": "Retain every age model's original source age for those 21 exact sampleIDs; report default age/type when present without choosing a preferred biological explanation.",
+    "fossil_presence": "Taxon ID 1299 and positive numeric pollen datum are not independently validated species-level local Alnus glutinosa occupancy.",
+    "source_reproducibility": "Exact SHA for every gzip chronology source body from original v19 receipt, no new live source requery during this QC."
+  },
+  "outcomes": [
+    "exact 11 chronology metadata and age-control schema records",
+    "exact 21 positive-labelled pollen-sample rows with source ages, source depth and source date bounds",
+    "source chronology age-type/default/reliable upper+lower, sample within/outside reliability flag",
+    "source sample depth inside/outside control depth bracket, neighboring dated age controls if present",
+    "alternative chronology age values for same original sample, independent age calibration status NOT VERIFIED",
+    "dataset-level descriptive counts, 0 accepted ancestral plant occupancy and 0 genetics"
+  ],
+  "limits": [
+    "These are post-retrieval exploratory quality diagnostics; do not frame them as preregistered confirmatory fossil hypothesis tests",
+    "An interpolated chronology estimate can be valid beyond the nearest available controls if a validated external model exists; this source metadata alone does not rule it out",
+    "Source `reliableagespan` is recorded database metadata; it is not independent verification of calibration, uncertainty, dated material or taphonomy",
+    "Even a well-dated positive genus-level pollen datum is not proof of local species-diagnostic living trees",
+    "Prior TTF v0.5 and chocho v0.8 other-real-plant host-specific climate nulls remain negative and unchanged"
+  ]
+}
