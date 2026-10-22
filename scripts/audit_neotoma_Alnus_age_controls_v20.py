@@ -38,12 +38,28 @@ def number(value):
     return x if math.isfinite(x) else None
 
 def chronology_object(data,expected_id,expected_dataset):
-    if not isinstance(data,dict) or not isinstance(data.get("data"),list) or len(data["data"])!=1:
-        raise ValueError("official chronology must be single source object")
-    outer=data["data"][0]
-    c=outer.get("chronology")
+    if not isinstance(data,dict) or not isinstance(data.get("data"),list) or not data["data"]:
+        raise ValueError("official chronology must include at least one source object")
+    records=data["data"]
+    c=records[0].get("chronology") if isinstance(records[0],dict) else None
     if not isinstance(c,dict) or str(c.get("chronologyid"))!=str(expected_id):
         raise ValueError("source chronology identity not explicitly verified")
+    # Neotoma v2 sometimes returns the SAME chronology metadata in multiple
+    # data[] records, with different age-control objects in each record.
+    # Looking only at data[0] silently drops dated age controls and falsely
+    # labels original pollen samples as beyond the known depth range.
+    control_records=[]
+    for entry in records:
+        detail=entry.get("chronology") if isinstance(entry,dict) else None
+        if not isinstance(detail,dict) or str(detail.get("chronologyid"))!=str(expected_id):
+            raise ValueError("mixed chronology identities in one original official response")
+        for key in ("agetype","default","modelType","reliableagespan"):
+            if detail.get(key)!=c.get(key):
+                raise ValueError("inconsistent repeated source chronology metadata: "+key)
+        current=detail.get("controls")
+        if not isinstance(current,list):
+            raise ValueError("a repeated chronology lacks its own controls array")
+        control_records.extend(current)
     linked=c.get("datasets")
     if not isinstance(linked,list) or not any(
             isinstance(v,dict) and str(v.get("datasetid"))==str(expected_dataset) and
@@ -56,11 +72,14 @@ def chronology_object(data,expected_id,expected_dataset):
     younger=number(reliable.get("younger"));older=number(reliable.get("older"))
     if (younger is not None and older is not None and younger>older):
         raise ValueError("inverted reliable age bounds")
-    controls=c.get("controls")
-    if not isinstance(controls,list):
-        raise ValueError("source chronology controls not explicitly list-typed")
-    for v in controls:
+    controls=[]
+    dedup=set()
+    for v in control_records:
         if not isinstance(v,dict):raise ValueError("malformed chronology control")
+        key=(str(v.get("chroncontrolid")),number(v.get("depth")),number(v.get("age")))
+        if key not in dedup:
+            controls.append(v)
+            dedup.add(key)
     cc=[]
     for v in controls:
         cc.append({"chroncontrolid":str(v.get("chroncontrolid") or ""),
@@ -87,6 +106,8 @@ def chronology_object(data,expected_id,expected_dataset):
             "chronology_notes":str(c.get("chronologynotes") or ""),
             "source_reliable_younger_BP":younger,"source_reliable_older_BP":older,
             "source_age_controls_n":len(controls),
+            "official_chronology_response_records_n":len(records),
+            "official_chronology_controls_before_dedup_n":len(control_records),
             "numeric_age_controls_n":num_control_ages,
             "controls_with_valid_depth_n":len(validdepth),
             "source_control_depth_min_cm":min(validdepth) if validdepth else None,
