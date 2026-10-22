@@ -155,7 +155,9 @@ def main():
     session.headers.update({"User-Agent":"chocho/source-only-Neotoma-exact-taxonID-chronology-validation/0.1"})
     records,samples,summary=run_probe(session,q)
     def dump_csv(file,rows):
-        if not rows:return
+        if not rows:
+            (a.out/file).write_text("source_status\\nNO_DATA_RETURNED_DO_NOT_INFER_ABSENCE\\n")
+            return
         keys=sorted(set().union(*(v.keys() for v in rows)))
         with (a.out/file).open("w",newline="",encoding="utf8") as f:
             w=csv.DictWriter(f,fieldnames=keys,lineterminator="\n")
