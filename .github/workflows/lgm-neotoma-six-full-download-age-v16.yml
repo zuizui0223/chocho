@@ -1,0 +1,96 @@
+name: chocho Neotoma six Alnus pollen full dataset sample chronology source audit v16
+on:
+  push:
+    branches: [ecology/lgm-neotoma-six-dataset-sample-age-provenance-v16]
+    paths:
+      - .github/workflows/lgm-neotoma-six-full-download-age-v16.yml
+      - scripts/neotoma_six_full_dataset_download_provenance_v16.py
+      - tests/test_neotoma_six_full_dataset_age_v16.py
+      - docs/supporting/lgm_neotoma_Alnus_six_full_dataset_age_v16_contract.json
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-neotoma-original-6-pollen-dataset-age-v16
+  cancel-in-progress: false
+jobs:
+  six-original-source-datasets-no-genetic-outcomes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen source names, chronology provenance assumptions and zero occupancy claims
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'requests>=2.31,<3' 'pytest>=8,<9'
+          python -m pytest -q tests/test_neotoma_six_full_dataset_age_v16.py
+          python -m py_compile scripts/neotoma_six_full_dataset_download_provenance_v16.py
+          echo '3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc  results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv' | sha256sum -c -
+          echo '914270f10a0874ea1c000dac395ab6589c95485c1db59d63a6aef3903751a518  results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15/all_27_candidate_source_age_scale_flags_v15.csv' | sha256sum -c -
+          python - <<'PY'
+          import json
+          q=json.load(open('docs/supporting/lgm_neotoma_Alnus_six_full_dataset_age_v16_contract.json'))
+          assert q['status']=='SOURCE_ONLY_DETERMINISTIC_FROZEN_BEFORE_FULL_DATASET_DOWNLOADS'
+          assert sorted(q['source']['frozen_datasetids'])==[4396,14556,22662,22683,24197,41351]
+          assert q['source']['source_original_candidates']==27
+          assert q['source_diagnostic']['max_attempts']==1
+          assert q['outcome_claim_allowed'] is False
+          print('PASS_SOURCE_FROZEN_BEFORE_FETCHING_ANY_FULL_DATASET_SAMPLE_AGE')
+          PY
+      - name: Retrieve exact six official Neotoma full datasets and inspect explicit sample chronology structure only
+        run: |
+          set -euo pipefail
+          mkdir -p results/lgm_neotoma_six_full_dataset_provenance_v16
+          python -u scripts/neotoma_six_full_dataset_download_provenance_v16.py \
+            --contract docs/supporting/lgm_neotoma_Alnus_six_full_dataset_age_v16_contract.json \
+            --candidate results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv \
+            --ageflags results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15/all_27_candidate_source_age_scale_flags_v15.csv \
+            --out results/lgm_neotoma_six_full_dataset_provenance_v16
+          python - <<'PY'
+          import json,csv,hashlib,os
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_six_full_dataset_provenance_v16')
+          j=json.loads((p/'summary.json').read_text())
+          with (p/'six_dataset_full_source_schema_v16.csv').open(newline='') as f:r=list(csv.DictReader(f))
+          assert j['source_datasets_n']==6 and len(r)==6
+          assert j['original_candidate_rows']==27 and j['original_candidate_occurrence_ids']==26
+          assert j['source_query_records']==7
+          assert j['sample_assigned_age_depth_models_verified']==0
+          assert j['Alnus_21ka_fossil_site_presence_accepted']==0
+          assert j['independent_species_diagnostic_pollen_morphology_verified']==0
+          assert not j['historical_host_occurrence_or_genetic_response_used']
+          assert sum(j['source_response_availability'].values())==6
+          receipt={'schema':'chocho_Neotoma_six_sample_chronology_full_download_v16_receipt',
+                   'run_id':os.environ['GITHUB_RUN_ID'],'commit':os.environ['GITHUB_SHA'],
+                   'old_sample_age_quality_issues_untouched':True,
+                   'current_results_sha256':{a.name:hashlib.sha256(a.read_bytes()).hexdigest()
+                            for a in sorted(p.iterdir()) if a.is_file()},
+                   'full_source_download_sha256':j['source_original_data_sha256'],
+                   'source_fossil_presence_validated':False,'genetic_response_opened':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(j,sort_keys=True))
+          PY
+      - name: Preserve bounded structured source and receipts; raw source bodies in workflow artifact only
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_six_full_dataset_provenance_v16/summary.json
+          git add results/lgm_neotoma_six_full_dataset_provenance_v16/six_dataset_full_source_schema_v16.csv
+          git add results/lgm_neotoma_six_full_dataset_provenance_v16/receipt.json
+          git commit -m 'Archive source-only Neotoma six full-dataset chronology linkage availability and negative integrity control'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-neotoma-full-sample-chronology-six-dataset-v16
+          path: results/lgm_neotoma_six_full_dataset_provenance_v16/
+          retention-days: 30
+          if-no-files-found: warn
