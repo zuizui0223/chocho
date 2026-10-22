@@ -106,7 +106,7 @@ def parse_dataset_source(did,source_triple):
       "dataset_age_unit_labels":";".join(sorted(units)),
       "dataset_contains_calibrated_BP":any("calibrated" in x.lower() for x in units),
       "dataset_contains_uncalibrated_radiocarbon_BP":any(
-           "radiocarbon years BP" in x.lower() and "calibrated" not in x.lower()
+           "radiocarbon years bp" in x.lower() and "calibrated" not in x.lower()
            for x in units),
       "first_chronology_age_type":chrono_agetype,
       "first_chronology_name":chrono_name,
