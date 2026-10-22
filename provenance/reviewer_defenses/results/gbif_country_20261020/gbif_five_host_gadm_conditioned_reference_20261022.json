@@ -1,0 +1,269 @@
+{
+  "schema": "chocho_five_country_gadm_host_juvenile_reference_posthoc_v1",
+  "status": "COMPLETE_SOURCE_RECONSTRUCTION_INSUFFICIENT_BIOLOGICAL_EVIDENCE",
+  "exact_gbif_accepted_botanical_species": 8,
+  "source_candidate_host_country_links": 20,
+  "plant_country_links_with_at_least_one_indexed_record": 9,
+  "source_indexed_botanical_records_across_20_links": 38,
+  "preselected_juvenile_positive_country_cases": 5,
+  "positive_cases_with_administrative_plant_co_detection": 3,
+  "source_juvenile_label_count_in_five_cases": 24,
+  "source_juvenile_labels_in_candidate_plant_positive_gadm1": 16,
+  "juvenile_source_admin_units_in_five_cases": 14,
+  "juvenile_source_admin_units_with_plant_records": 7,
+  "source_status_warning": "Only 38 botanical GBIF records for 20 plant-country links; missing indexed plant records are not proof of plant absence.",
+  "posthoc_label_allocation_reference": {
+    "all_five": {
+      "juvenile_label_count": 24,
+      "in_plant_detected_gadm": 16,
+      "null_expected_labels": 13.8704528719,
+      "observed_minus_reference_pp": 8.873113,
+      "conditional_finite_label_reassignment_upper_tail_NOT_ecological_p": 0.2291464884,
+      "reference_design": "Reassign juvenile source-stage labels without replacement within each species-country, keeping exact original all-butterfly GADM1 records and candidate-plant-positive GADM1 distribution; ignores observer heterogeneity, correlated records, and stage-annotation bias."
+    },
+    "excluding_papilio_dominican_republic": {
+      "juvenile_label_count": 5,
+      "in_plant_detected_gadm": 3,
+      "null_expected_labels": 3.3910714286,
+      "observed_minus_reference_pp": -7.8214286,
+      "conditional_finite_label_reassignment_upper_tail_NOT_ecological_p": 0.9088010204,
+      "reference_design": "Reassign juvenile source-stage labels without replacement within each species-country, keeping exact original all-butterfly GADM1 records and candidate-plant-positive GADM1 distribution; ignores observer heterogeneity, correlated records, and stage-annotation bias."
+    }
+  },
+  "cases": [
+    {
+      "butterfly": "Anteos clorinde",
+      "country": "CU",
+      "candidate_host_species": 1,
+      "with_any_indexed_country_plant_observation": 1,
+      "all_butterfly_gadm1_records": 32,
+      "all_butterfly_records_in_plant_gadm1": 10,
+      "immature_source_labels": 1,
+      "immature_labels_in_plant_detected_gadm1": 0,
+      "source_immature_gadm1_units": 1,
+      "immature_gadm1_units_with_candidate_plant_observations": 0,
+      "same_administrative_units_NOT_same_site_or_feeding": true,
+      "candidate_plant_records": [
+        {
+          "plant": "Senna spectabilis",
+          "taxon_key": 2957438,
+          "source_country_records": 3,
+          "country_gadm1_units_detected": 3,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        }
+      ]
+    },
+    {
+      "butterfly": "Colobura dirce",
+      "country": "VE",
+      "candidate_host_species": 1,
+      "with_any_indexed_country_plant_observation": 1,
+      "all_butterfly_gadm1_records": 56,
+      "all_butterfly_records_in_plant_gadm1": 46,
+      "immature_source_labels": 1,
+      "immature_labels_in_plant_detected_gadm1": 1,
+      "source_immature_gadm1_units": 1,
+      "immature_gadm1_units_with_candidate_plant_observations": 1,
+      "same_administrative_units_NOT_same_site_or_feeding": true,
+      "candidate_plant_records": [
+        {
+          "plant": "Cassia fistula",
+          "taxon_key": 5357108,
+          "source_country_records": 12,
+          "country_gadm1_units_detected": 8,
+          "juvenile_source_gadm1_units_with_this_plant": [
+            "VEN.11_1"
+          ]
+        }
+      ]
+    },
+    {
+      "butterfly": "Papilio demoleus",
+      "country": "CU",
+      "candidate_host_species": 6,
+      "with_any_indexed_country_plant_observation": 2,
+      "all_butterfly_gadm1_records": 35,
+      "all_butterfly_records_in_plant_gadm1": 9,
+      "immature_source_labels": 1,
+      "immature_labels_in_plant_detected_gadm1": 0,
+      "source_immature_gadm1_units": 1,
+      "immature_gadm1_units_with_candidate_plant_observations": 0,
+      "same_administrative_units_NOT_same_site_or_feeding": true,
+      "candidate_plant_records": [
+        {
+          "plant": "Citrus japonica",
+          "taxon_key": 3831801,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Citrus maxima",
+          "taxon_key": 3190160,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Citrus medica",
+          "taxon_key": 3190157,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Glycosmis parviflora",
+          "taxon_key": 7732678,
+          "source_country_records": 2,
+          "country_gadm1_units_detected": 1,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Triphasia trifolia",
+          "taxon_key": 3190406,
+          "source_country_records": 2,
+          "country_gadm1_units_detected": 1,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Ziziphus mauritiana",
+          "taxon_key": 3039424,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        }
+      ]
+    },
+    {
+      "butterfly": "Papilio demoleus",
+      "country": "DO",
+      "candidate_host_species": 6,
+      "with_any_indexed_country_plant_observation": 3,
+      "all_butterfly_gadm1_records": 194,
+      "all_butterfly_records_in_plant_gadm1": 107,
+      "immature_source_labels": 19,
+      "immature_labels_in_plant_detected_gadm1": 13,
+      "source_immature_gadm1_units": 10,
+      "immature_gadm1_units_with_candidate_plant_observations": 5,
+      "same_administrative_units_NOT_same_site_or_feeding": true,
+      "candidate_plant_records": [
+        {
+          "plant": "Citrus japonica",
+          "taxon_key": 3831801,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Citrus maxima",
+          "taxon_key": 3190160,
+          "source_country_records": 1,
+          "country_gadm1_units_detected": 1,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Citrus medica",
+          "taxon_key": 3190157,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Glycosmis parviflora",
+          "taxon_key": 7732678,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Triphasia trifolia",
+          "taxon_key": 3190406,
+          "source_country_records": 8,
+          "country_gadm1_units_detected": 4,
+          "juvenile_source_gadm1_units_with_this_plant": [
+            "DOM.14_1",
+            "DOM.30_1",
+            "DOM.31_1",
+            "DOM.6_1"
+          ]
+        },
+        {
+          "plant": "Ziziphus mauritiana",
+          "taxon_key": 3039424,
+          "source_country_records": 1,
+          "country_gadm1_units_detected": 1,
+          "juvenile_source_gadm1_units_with_this_plant": [
+            "DOM.5_1"
+          ]
+        }
+      ]
+    },
+    {
+      "butterfly": "Papilio demoleus",
+      "country": "HT",
+      "candidate_host_species": 6,
+      "with_any_indexed_country_plant_observation": 2,
+      "all_butterfly_gadm1_records": 8,
+      "all_butterfly_records_in_plant_gadm1": 8,
+      "immature_source_labels": 2,
+      "immature_labels_in_plant_detected_gadm1": 2,
+      "source_immature_gadm1_units": 1,
+      "immature_gadm1_units_with_candidate_plant_observations": 1,
+      "same_administrative_units_NOT_same_site_or_feeding": true,
+      "candidate_plant_records": [
+        {
+          "plant": "Citrus japonica",
+          "taxon_key": 3831801,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Citrus maxima",
+          "taxon_key": 3190160,
+          "source_country_records": 3,
+          "country_gadm1_units_detected": 2,
+          "juvenile_source_gadm1_units_with_this_plant": [
+            "HTI.10_1"
+          ]
+        },
+        {
+          "plant": "Citrus medica",
+          "taxon_key": 3190157,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Glycosmis parviflora",
+          "taxon_key": 7732678,
+          "source_country_records": 6,
+          "country_gadm1_units_detected": 4,
+          "juvenile_source_gadm1_units_with_this_plant": [
+            "HTI.10_1"
+          ]
+        },
+        {
+          "plant": "Triphasia trifolia",
+          "taxon_key": 3190406,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        },
+        {
+          "plant": "Ziziphus mauritiana",
+          "taxon_key": 3039424,
+          "source_country_records": 0,
+          "country_gadm1_units_detected": 0,
+          "juvenile_source_gadm1_units_with_this_plant": []
+        }
+      ]
+    }
+  ],
+  "interpretation": "Administrative GADM1 co-detection only; source stage names are unverified and the null is descriptive, not a demographic host effect or valid independent-sample p-value.",
+  "source_sha256": {
+    "gbif_20_host_country_facets": "116e3a121c352a9dbbcebe114c5491a5c50a1ff61549c6d21fec077d2fb44e30",
+    "gbif_15_juvenile_stage_facets": "e7c03f8ab98a1627c6aed7bbd689bc10cb0cc9412ad5665a647ad7b2007e70d2",
+    "gbif_48_all_stage_positive_cells": "11953efec0b0882ead95b4fd9272608d15b0512c532e630d68e22a94a5bb9ac5"
+  }
+}

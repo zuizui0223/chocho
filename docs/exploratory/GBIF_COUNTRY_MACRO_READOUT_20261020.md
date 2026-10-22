@@ -263,6 +263,23 @@ in **all 756 records**. The raw labels do not prove host use, larval
 survival or independent breeding. See the
 [complete subcountry+stage analysis](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_POSITIVE48_SUBCOUNTRY_STAGE_READOUT_20261020.md).
 
+## Exact candidate-host plant × juvenile GADM1 co-detection (22 October 2026)
+
+Original source-verified HOSTS/WCVP/BCE reconstruction supplies 8
+strictly accepted botanical taxa for 20 butterfly×country×plant
+links in 5 preselected juvenile-labelled added-resource cases. Only
+**9/20 plant links have any matching indexed GBIF botanical record**
+(38 plant records total). Among **24 butterfly records carrying source
+immature-stage labels**, **16** fall in a GADM1 subdivision also
+reporting a candidate plant; across 5 species×country cases this
+occurs in only **3**. A posthoc within-species-country
+recording-geography reference predicts **13.870** stage-label
+overlaps versus 16 observed (+8.87 pp), but an exact conditional
+reference upper-tail is 0.229 and the direction flips when Dominican
+Republic *Papilio demoleus* is omitted. This is **not** an inferential
+butterfly population test or verified larval host use.
+[Full local GADM1 plant audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_FIVE_HOST_GADM_LOCAL_READOUT_20261022.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.
