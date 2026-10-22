@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_Neotoma_six_Alnus_occurrence_to_sample_age_join_v17",
+  "status": "SOURCE_ONLY_FROZEN_SIX_FIRST_OCCURRENCE_ID_JOIN_TEST_BEFORE_NEW_HTTP",
+  "date": "2026-10-22",
+  "purpose": "Test whether one fixed occurrenceid per already-vetted six Neotoma Alnus glutinosa pollen datasets has explicit sampleid / analysisunitid permitting a verifiable join to the complete dataset's sample-specific age chronology.",
+  "source": {
+    "original_candidates_sha256": "3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc",
+    "source_v16_artifact_id": 12427662101,
+    "source_v16_artifact_sha256": "7af90fc6be66b8c4fbde85e45189db3da9b8c033678fd46e2b94b5510f63231e",
+    "source_v16_dataset_sha256": {
+      "4396": "d8a3da16b86739b529e83e7167eabeafe1a82892fc6c050a9a2b5e30ae57d5a4",
+      "14556": "e519765ea784093fd4230a8a599136935938c1a3595a16056e792803f252ced6",
+      "22662": "891183daa2fe19b3690d74bb8afa6c667fbecac4a0df084bef85ccb69622bf00",
+      "22683": "74e9948a20a1d915e417bb6f3b34c3b8c3b45d86004179865155d743eea00951",
+      "24197": "ee1794bd9c2e83865c29b8909dbd886de9fde2d86643063d5d4f1ac3ed1181ac",
+      "41351": "95304a0118a2f06c2b92c5456283986ab410ac1de5f313af2f44a2647fc7190d"
+    },
+    "source_taxonid": 1299,
+    "source_species": "Alnus glutinosa",
+    "source_dataset_ids": [
+      4396,
+      14556,
+      22662,
+      22683,
+      24197,
+      41351
+    ],
+    "original_27_metadata_candidate_rows": 27,
+    "original_26_unique_occurrence_ids": 26,
+    "prior_accepted_calibrated_samples": 0
+  },
+  "test": {
+    "choose_one_per_dataset": "smallest numerical occurrenceid in original frozen v13 27 metadata candidate rows (never based on age or model agreement)",
+    "target_api": "https://api.neotomadb.org/v2.0/data/occurrences/{occurrenceid}",
+    "control_impossible_occid": 9999999,
+    "max_response_bytes": 400000,
+    "one_request_per_id": true,
+    "max_connection_seconds": 8,
+    "max_read_seconds": 20,
+    "required_source_identity": "source occurrenceid, Alnus glutinosa taxonid=1299, pollen dataset id and site id must match exactly; any mismatch is a source failure, not biological absence",
+    "sample_join": "Only exact explicit sampleid or analysisunitid from individually requested occurrence and original FULL dataset same ID. No joins based on equal sample ages, depths, geography or alphabetical order.",
+    "chronology_join": "Only if exact sample object has a chronologyid for its age row, cross-check explicit chronologyid in the same original full dataset. Chronology label units still cannot independently prove calibrated age-depth posterior.",
+    "output": "six source statuses, candidate occurrence ID, dataset/sample direct key inventory, exact sample join count, explicit age chronology IDs if present, all source SHA, and no occupied LGM status"
+  },
+  "scope_guardrails": [
+    "Sample and chronology identity are necessary but not sufficient for accepting pollen species-level 21ka occupied host presence",
+    "Pollen species-diagnostic morphology, calibration/revision of age-depth posterior and deposition/transport site must be independently checked",
+    "A request error is not a fossil absence; no favorable-site replacement after source result",
+    "Previous TTF #149 and chocho #59 real other-plant negative host-specific LGM comparison is not touched",
+    "No insect genotype or genuinely ancient insect locality was opened"
+  ]
+}
