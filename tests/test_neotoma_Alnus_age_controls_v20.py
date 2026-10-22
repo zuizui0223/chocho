@@ -70,3 +70,32 @@ def test_bad_source_numbers_are_not_trusted_age():
     for x in ["",None,True,"nan","inf","uncalibrated"]:
         assert number(x) is None
     with pytest.raises(ValueError):risk_at_sample("unverified depth","20400",chronology_object(obj(),"14552","24197"))
+
+def test_official_chronology_fragments_have_to_be_merged_before_sample_age_depth_qc():
+    # Real Neotoma API returns 13034 as SIX data[] records and 25462 as TEN.
+    # Ignoring all except the first wrongly classified 18/21 rather than
+    # 11/21 source sample depths as outside returned chronological controls.
+    a=obj('13034',22683)
+    first=a['data'][0]
+    first['chronology']['controls']=[
+        {'age':1875,'depth':59,'chroncontrolid':100,'controltype':'Radiocarbon'}]
+    b={"chronology":dict(first["chronology"])}
+    b["chronology"]["controls"]=[
+        {'age':20930,'depth':406,'chroncontrolid':101,'controltype':'Radiocarbon'}]
+    original={"data":[first,b,{"chronology":dict(first["chronology"])}]}
+    meta=chronology_object(original,'13034','22683')
+    assert meta['source_age_controls_n']==2
+    assert meta['official_chronology_response_records_n']==3
+    assert meta['official_chronology_controls_before_dedup_n']==3
+    assert meta['source_control_depth_max_cm']==406
+    result=risk_at_sample(392,20368,meta)
+    assert result['relative_to_source_returned_control_depth_extent']=="WITHIN_RETURNED_CONTROL_DEPTH_EXTENT"
+    assert result['sample_center_inside_database_reliable_age_span'] is True
+
+def test_mixed_repeated_chronology_source_identity_rejected():
+    a=obj()
+    copy={"chronology":dict(a['data'][0]['chronology'])}
+    copy['chronology']['chronologyid']=7725
+    a['data'].append(copy)
+    with pytest.raises(ValueError):
+        chronology_object(a,'14552','24197')
