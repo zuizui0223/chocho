@@ -1,0 +1,56 @@
+{
+  "schema": "chocho_neotoma_exact_taxonID_pilot_sample_age_metadata_v12",
+  "status": "SOURCE_SAMPLE_LEVEL_CHRONOLOGY_PRECHECK_NOT_LGM_PRESENCE",
+  "date": "2026-10-22",
+  "source": "The original /v2.0/data/occurrences?taxonname=... response ignored a non-existing taxon name; do not use this endpoint to claim species-level fossils.",
+  "exact_taxon_records": [
+    {
+      "neotoma_taxonid": 1299,
+      "accepted": "Alnus glutinosa"
+    },
+    {
+      "neotoma_taxonid": 3461,
+      "accepted": "Betula pendula"
+    }
+  ],
+  "previous_v11_source_sha256": "55887306ce8defa7c027fc1d518f2bb798ac2868b6c7f46db288f154e8ea8219",
+  "neotoma_api": "https://api.neotomadb.org",
+  "age_target_BP": [
+    18000,
+    24000
+  ],
+  "positive_taxon_id_paths": [
+    "/v2.0/data/taxa/1299/occurrences",
+    "/v2.0/data/taxa/3461/occurrences"
+  ],
+  "source_pilot_limits": {
+    "max_record_pages_per_taxon": 2,
+    "offsets": [
+      0,
+      50
+    ],
+    "items_per_page": 20
+  },
+  "generic_endpoint_negative_controls": [
+    {
+      "query": "taxonid=1299&datasettype=pollen&ageyoung=18000&ageold=24000&limit=2"
+    },
+    {
+      "query": "taxonid=3461&datasettype=pollen&ageyoung=18000&ageold=24000&limit=2"
+    },
+    {
+      "query": "taxonid=9999999&datasettype=pollen&ageyoung=18000&ageold=24000&limit=2"
+    },
+    {
+      "query": "taxonid=1299&datasettype=pollen&ageyoung=100&ageold=200&limit=2"
+    }
+  ],
+  "validation": [
+    "Taxon-specific /taxa/{taxonid}/occurrences path must return different occurrence IDs or a confirmed zero outcome; repeated generic query hashes invalid evidence",
+    "Age fields are extracted with field paths and raw source values, not misread as independently calibrated species-level 21ka fossils",
+    "Do not filter periods unless a sample-level age model and calibration source are independently verified",
+    "Pollen at genus only may not identify exact species even when matched to valid Neotoma taxon ID",
+    "Source 20-row pages do not support absence inference and fail on missing chronology/site geometry",
+    "Do not change existing negative host vs unrelated botanical glacial climate conclusions; no insect genotypes opened"
+  ]
+}
