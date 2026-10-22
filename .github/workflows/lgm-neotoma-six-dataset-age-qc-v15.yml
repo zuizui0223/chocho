@@ -1,0 +1,90 @@
+name: chocho audit 6 Neotoma Alnus pollen dataset age scales and 27 original candidates
+on:
+  push:
+    branches: [ecology/lgm-neotoma-six-site-chronology-qc-v15]
+    paths:
+      - .github/workflows/lgm-neotoma-six-dataset-age-qc-v15.yml
+      - scripts/audit_neotoma_six_dataset_age_scale_v15.py
+      - tests/test_neotoma_six_dataset_age_scale_v15.py
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: chocho-neotoma-six-Alnus-sample-age-units-v15
+  cancel-in-progress: false
+jobs:
+  source-locked-six-site-age-scale-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run source-only fossil chronology uncertainty and exact dataset mismatch tests
+        run: |
+          set -euo pipefail
+          python -m pip install 'pytest>=8,<9'
+          python -m pytest -q tests/test_neotoma_six_dataset_age_scale_v15.py
+          python -m py_compile scripts/audit_neotoma_six_dataset_age_scale_v15.py
+          echo '3d47fe9a31cb6a04ce60aa0f1d7fc8dd7fb1508d3966d6f3a7dc6942ddfa9efc  results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv' | sha256sum -c -
+          echo '16bc59d362365416ac9144d29bae05ed503341ebb99d109f750ababdaa401bd9  results/lgm_neotoma_idage_18_24ka_source_candidates_v13/summary.json' | sha256sum -c -
+          echo 'c212dd7a3e8cb888097a47575bb3c7c2007add5735c96d47c7f5c33888e8ecef  results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/all_six_dataset_chronology_publication_source_queries.csv' | sha256sum -c -
+          echo '8000b0a79a9afb93740b0698db4b2703dd5b93d749373777bb2dd50add77696b  results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/summary.json' | sha256sum -c -
+      - name: Reconcile all 27 raw source age rows against six chronology scales and publication metadata
+        run: |
+          set -euo pipefail
+          out=results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15
+          python -u scripts/audit_neotoma_six_dataset_age_scale_v15.py \
+            --candidate results/lgm_neotoma_idage_18_24ka_source_candidates_v13/bounded_18_24ka_sample_taxon_proxy_checks.csv \
+            --candidate-summary results/lgm_neotoma_idage_18_24ka_source_candidates_v13/summary.json \
+            --dataset-metadata results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/all_six_dataset_chronology_publication_source_queries.csv \
+            --dataset-summary results/lgm_neotoma_Alnus_six_pollen_datasets_chronology_v14/summary.json \
+            --out "$out"
+          python - <<'PYTHON'
+          import csv,hashlib,json,os
+          from pathlib import Path
+          p=Path('results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15')
+          q=json.loads((p/'summary.json').read_text())
+          with (p/'all_27_candidate_source_age_scale_flags_v15.csv').open(newline='') as f:r=list(csv.DictReader(f))
+          with (p/'six_dataset_source_chronology_risk_v15.csv').open(newline='') as f:s=list(csv.DictReader(f))
+          assert q['status']=='SOURCE_AGE_SCALE_CONFLICTS_REQUIRING_FOSSIL_CHRONOLOGY_AND_TAXONOMY_REVIEW'
+          assert (q['original_dataset_count'],q['original_source_candidate_rows'],
+                  q['unique_candidate_occurrence_ids'])==(6,27,26)
+          assert q['candidate_rows_outside_all_published_dataset_age_envelopes']==4
+          assert q['by_dataset_id']['14556']['numeric_age_outside_any_published_range']==3
+          assert q['by_dataset_id']['22662']['numeric_age_outside_any_published_range']==1
+          assert len(r)==27 and len(s)==6
+          assert q['source_sample_calibrated_18_24ka_ages_verified_n']==0
+          assert q['independent_species_pollen_identifications_verified_n']==0
+          assert q['fossil_occurrences_admitted_to_LGM_host_occupancy_model_n']==0
+          assert q['insect_genetic_response_opened'] is False
+          receipt={'schema':'chocho_neotoma_6dataset_27candidate_age_scale_review_v15',
+              'run_id':os.environ['GITHUB_RUN_ID'],'code_sha':os.environ['GITHUB_SHA'],
+              'sources_original_sha256':q['source_sha256'],
+              'output_sha256':{f.name:hashlib.sha256(f.read_bytes()).hexdigest()
+                  for f in sorted(p.iterdir()) if f.is_file()},
+              'calibrated_species_21ka_occupation_verified':False,
+              'insect_genetic_breaks_read':False}
+          (p/'receipt.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
+          print('PASS_EXACT_4_SOURCE_AGE_RANGE_DISCORDANCES_NO_LGM_OCCUPANCY_PROMOTION')
+          PYTHON
+      - name: Preserve all six site source QC flags and citation crosswalk on draft branch
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.ref_name }}"
+          test "$(git rev-parse FETCH_HEAD)" = "${{ github.sha }}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15/
+          git commit -m 'Archive original 27 pollen candidate age-scale audit and 6 source dataset review flags'
+          git push origin "HEAD:${{ github.ref_name }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-neotoma-Alnus-six-source-age-scale-qc-v15
+          path: results/lgm_neotoma_six_Alnus_source_age_scale_qc_v15/
+          retention-days: 30
+          if-no-files-found: warn
