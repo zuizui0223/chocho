@@ -62,7 +62,7 @@ def test_original_six_dataset_ids_and_26_source_occurrences_are_exactly_pinned()
 class Response:
     def __init__(self,payload,mime="application/json",status=200):
         self.content=json.dumps(payload).encode()
-        self.headers={"Content-Type":mime,"Content-Length":str(len(self.content))}
+        self.headers={"content-type":mime,"content-length":str(len(self.content))}
         self.status_code=status
         self.url="https://api.neotomadb.org/v2.0/data/downloads/4396"
     def __enter__(self):return self
