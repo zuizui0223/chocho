@@ -46,7 +46,12 @@ def test_exact_source_plant_mentions_not_raw_comment_leak():
     assert r["records_with_exact_source_candidate_binomial_mention"]==source["expected_count"]
     assert r["records_with_candidate_mention_and_host_related_words_unverified"]==source["expected_count"]
     assert "associatedTaxa" in r["field_nonempty_record_counts"]
-    assert "observer" not in json.dumps(r).lower()
+    # The privacy declaration's key contains the word "observer", but
+    # raw observer identities or occurrence fields must not be present.
+    assert r["no_raw_observer_location_date_or_text_saved"] is True
+    assert not set(("recordedBy","identifiedBy","occurrenceID",
+                    "decimalLatitude","decimalLongitude","eventDate",
+                    "associatedTaxa","occurrenceRemarks")) & set(r)
     assert "Larva feeding" not in json.dumps(r)
 
 def test_source_drift_and_incomplete_paging_are_not_negative_evidence():
