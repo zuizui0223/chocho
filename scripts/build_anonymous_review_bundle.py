@@ -147,6 +147,7 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_ALL26_HOST_GADM_READOUT_20261023.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_ALL26_HOST_IDENTITY_SPATIAL_REFERENCE_20261023.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_ALL26_WEIGHTING_SENSITIVITY_20261023.md"),
+    Path("provenance/reviewer_defenses/protocols/GBIF_JUVENILE_HOST_METADATA_GATE_20261023.md"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_weighting_stability_20261023.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_ALL26_WEIGHTING_STABILITY_READOUT_20261023.md"),
     Path("scripts/analyze_gbif_all26_weighting_stability_20261023.py"),
