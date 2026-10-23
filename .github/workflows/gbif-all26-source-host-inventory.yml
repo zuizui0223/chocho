@@ -1,0 +1,65 @@
+name: Original HOSTS WCVP candidate inventory for ALL 26 added-host butterfly-positive countries
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/derive_gbif_all26_source_host_country_inventory_20261023.py"
+      - "tests/test_gbif_all26_source_host_country_inventory_20261023.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_ALL26_INTRODUCED_HOST_INVENTORY_20261023.md"
+      - ".github/workflows/gbif-all26-source-host-inventory.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  full-source-candidate-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with: 
+          python-version: "3.12"
+      - name: Test strict taxon identity and fixed selection rules
+        run: |
+          python -m pip install -e ".[test]"
+          pytest -q tests/test_gbif_all26_source_host_country_inventory_20261023.py
+      - name: Recover source-frozen original HOSTS WCVP BCE climate archive
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 39006554609
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          github-token: ${{ github.token }}
+          path: _zip
+      - name: Validate unchanged author-only source and extract safely
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          want="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          z=[p for p in Path("_zip").rglob("*.zip") if hashlib.sha256(p.read_bytes()).hexdigest()==want]
+          assert len(z)==1,"Source ZIP hash drift or missing archive"
+          dest=Path("_author_source");dest.mkdir()
+          with zipfile.ZipFile(z[0]) as f:
+              assert f.testzip() is None
+              assert all(not Path(n).is_absolute() and ".." not in Path(n).parts for n in f.namelist())
+              f.extractall(dest)
+          assert (dest/"SOURCE_MANIFEST.json").is_file()
+          PY
+      - name: Rebuild all 48 source flags and enumerate all 26 added-host plant links
+        run: |
+          mkdir -p _output
+          python scripts/derive_gbif_all26_source_host_country_inventory_20261023.py \
+            --source-root _author_source \
+            --crosswalk data/exploratory/gbif_country_20261020/country_wgsrpd_links.csv \
+            --positive48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --original-five provenance/reviewer_defenses/results/gbif_country_20261020/gbif_source_introduced_hosts_five_cases_20261021.json \
+            --output _output/all26_source_host_inventory_20261023.json
+      - name: Preserve ONLY derived botanical source subset and metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-all26-source-botanical-host-candidates-20261023
+          path: _output/*.json
+          if-no-files-found: warn
+          retention-days: 30
