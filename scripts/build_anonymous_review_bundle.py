@@ -143,6 +143,8 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_source_host_country_inventory_20261023.json"),
     Path("provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_ALL26_SOURCE_HOST_INVENTORY_READOUT_20261023.md"),
     Path("provenance/reviewer_defenses/protocols/GBIF_ALL26_PLANT_GADM_ACQUISITION_20261023.md"),
+    Path("scripts/audit_gbif_all26_host_gadm_20261023.py"),
+    Path("tests/test_gbif_all26_host_gadm_20261023.py"),
     Path("scripts/derive_gbif_all26_source_host_country_inventory_20261023.py"),
     Path("tests/test_gbif_all26_source_host_country_inventory_20261023.py"),
     Path("scripts/audit_gbif_five_host_gadm_cocoverage_20261021.py"),
