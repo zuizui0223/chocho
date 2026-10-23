@@ -48,7 +48,7 @@ def census(model,regions,links,positive,names,old_five,*,locked=True):
         raise ValueError("Repeated positive butterfly-country observation")
     if locked and (len(original),len({x for x,_ in original}),
                    len({c for _,c in original}),
-                   sum(bool(x["added_resource_country"]) for x in original))!=(48,20,23,26):
+                   sum(bool(x["added_resource_country"]) for x in original.values()))!=(48,20,23,26):
         raise ValueError("Original positive 48 / species 20 / country 23 / added 26 drifted")
     rows=[]
     for (sp,ct),cell in sorted(original.items()):
