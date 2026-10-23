@@ -43,3 +43,13 @@ def test_exact_frozen_all26_reproduction_and_weight_sensitivity():
     assert omitted["CU"]["exact_label_upper_tail_NOT_biological_p"]==.099515056794
     assert omitted["DO"]["exact_label_upper_tail_NOT_biological_p"]==.076183338991
     assert "NOT a biological p-value" in out["biology_warning"]
+
+def test_archived_full_exact_weighting_table_is_source_exact():
+    a=json.loads((BASE/"gbif_all26_weighting_stability_20261023.json").read_text(encoding="utf8"))
+    bot=json.loads((BASE/"gbif_all26_host_gadm_source_20261023.json").read_text(encoding="utf8"))
+    bf=json.loads((BASE/"gbif_positive48_gadm_lifestage_facets_20261020.json").read_text(encoding="utf8"))
+    out=mod.analyse(bot,bf)
+    assert a["source_population"]["butterfly_country_cases"]==26
+    assert a["status"]=="EXACT_POSTHOC_SOURCE_GEOMETRY_AUDIT_NOT_ECOLOGICAL_HYPOTHESIS_TEST"
+    assert out["metrics"]==a["weighting_results"]
+    assert out["posthoc_leave_one_country_out_case_metric"]==a["country_omission_descriptives"]

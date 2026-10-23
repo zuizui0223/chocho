@@ -280,6 +280,22 @@ Republic *Papilio demoleus* is omitted. This is **not** an inferential
 butterfly population test or verified larval host use.
 [Full local GADM1 plant audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_FIVE_HOST_GADM_LOCAL_READOUT_20261022.md).
 
+## Source host-label weighting changes the interpretation (23 October)
+
+The all26 GADM1 botanical-source panel reproduces **231/453**
+country/administrative indexed butterfly records co-located with a
+candidate plant record. Against exact within-country,
+fixed-butterfly/plant-degree host-label reference, the
+**record-weighted** excess is only **+0.20 pp**. The same label
+reference for **26 equally weighted species×country cases** yields
+**+6.86 pp**, but this posthoc discrepancy becomes **+5.18 pp**
+when weighting the 16 butterfly species equally and has
+material Cuba/Dominican Republic dependence. Finite label
+permutation tails are NOT ecological p-values: a simulated link may
+be a non-host, and no verified larval feeding or population
+recruitment is observed. See the
+[full weighting stability audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_ALL26_WEIGHTING_STABILITY_READOUT_20261023.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.

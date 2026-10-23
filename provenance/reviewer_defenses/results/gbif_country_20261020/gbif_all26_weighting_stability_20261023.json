@@ -1,0 +1,149 @@
+{
+  "schema": "chocho_all26_country_degree_host_identity_weighting_posthoc_v1",
+  "source_commit": "4ca43b7357c86c36f516edea10f927dc93ba641a",
+  "run_url": "https://github.com/zuizui0223/chocho/actions/runs/39918369972",
+  "source_butterfly48_git_blob_sha": "489d83c69c5bc64675e5c004b51066e444962056",
+  "source_botanical_git_blob_sha": "e6efea65267271343bf874b56dece884d5d582dd",
+  "source_population": {
+    "butterfly_country_cases": 26,
+    "butterfly_species": 16,
+    "countries": 11,
+    "gbif_mapped_records": 453,
+    "plant_indexed_gadm_butterfly_records": 231
+  },
+  "status": "EXACT_POSTHOC_SOURCE_GEOMETRY_AUDIT_NOT_ECOLOGICAL_HYPOTHESIS_TEST",
+  "weighting_results": {
+    "record": {
+      "observed_fraction": 0.5099337748,
+      "reference_expected_fraction": 0.5079102281,
+      "observed_minus_reference_pp": 0.2023547,
+      "exact_label_upper_tail_NOT_biological_p": 0.619575948324,
+      "source_unit_denominator": 453,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 133,
+      "countries_where_statistic_varies": 6
+    },
+    "case": {
+      "observed_fraction": 0.4941197073,
+      "reference_expected_fraction": 0.4255390565,
+      "observed_minus_reference_pp": 6.8580651,
+      "exact_label_upper_tail_NOT_biological_p": 0.02771483041,
+      "source_unit_denominator": 26,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 338692,
+      "countries_where_statistic_varies": 7
+    },
+    "species": {
+      "observed_fraction": 0.4947221096,
+      "reference_expected_fraction": 0.4429387244,
+      "observed_minus_reference_pp": 5.1783385,
+      "exact_label_upper_tail_NOT_biological_p": 0.099317206042,
+      "source_unit_denominator": 16,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 336864,
+      "countries_where_statistic_varies": 7
+    },
+    "country": {
+      "observed_fraction": 0.5296313422,
+      "reference_expected_fraction": 0.4846998465,
+      "observed_minus_reference_pp": 4.4931496,
+      "exact_label_upper_tail_NOT_biological_p": 0.045550194376,
+      "source_unit_denominator": 11,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 361138,
+      "countries_where_statistic_varies": 7
+    },
+    "case_n2": {
+      "observed_fraction": 0.4615948465,
+      "reference_expected_fraction": 0.3877525439,
+      "observed_minus_reference_pp": 7.3842303,
+      "exact_label_upper_tail_NOT_biological_p": 0.04742290119,
+      "source_unit_denominator": 17,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 240454,
+      "countries_where_statistic_varies": 7
+    },
+    "case_n5": {
+      "observed_fraction": 0.4861011264,
+      "reference_expected_fraction": 0.3833448405,
+      "observed_minus_reference_pp": 10.2756286,
+      "exact_label_upper_tail_NOT_biological_p": 0.000213709823,
+      "source_unit_denominator": 11,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 38154,
+      "countries_where_statistic_varies": 5
+    },
+    "case_n10": {
+      "observed_fraction": 0.4706668088,
+      "reference_expected_fraction": 0.3600363551,
+      "observed_minus_reference_pp": 11.0630454,
+      "exact_label_upper_tail_NOT_biological_p": 0.001057676157,
+      "source_unit_denominator": 9,
+      "graph_states": "13826598912",
+      "distinct_exact_reference_scores": 9900,
+      "countries_where_statistic_varies": 4
+    }
+  },
+  "country_omission_descriptives": [
+    {
+      "omitted_country": "CU",
+      "retained_cases": 22,
+      "observed_minus_reference_pp": 5.1692296,
+      "exact_label_upper_tail_NOT_biological_p": 0.099515056794
+    },
+    {
+      "omitted_country": "DE",
+      "retained_cases": 24,
+      "observed_minus_reference_pp": 7.4295705
+    },
+    {
+      "omitted_country": "DO",
+      "retained_cases": 22,
+      "observed_minus_reference_pp": 5.9161857,
+      "exact_label_upper_tail_NOT_biological_p": 0.076183338991
+    },
+    {
+      "omitted_country": "GA",
+      "retained_cases": 25,
+      "observed_minus_reference_pp": 7.1323877
+    },
+    {
+      "omitted_country": "GB",
+      "retained_cases": 25,
+      "observed_minus_reference_pp": 7.1323877
+    },
+    {
+      "omitted_country": "GT",
+      "retained_cases": 24,
+      "observed_minus_reference_pp": 7.9504038
+    },
+    {
+      "omitted_country": "HN",
+      "retained_cases": 24,
+      "observed_minus_reference_pp": 6.5036446
+    },
+    {
+      "omitted_country": "HT",
+      "retained_cases": 22,
+      "observed_minus_reference_pp": 6.7634456
+    },
+    {
+      "omitted_country": "NA",
+      "retained_cases": 24,
+      "observed_minus_reference_pp": 7.374015
+    },
+    {
+      "omitted_country": "SE",
+      "retained_cases": 25,
+      "observed_minus_reference_pp": 7.1323877
+    },
+    {
+      "omitted_country": "VE",
+      "retained_cases": 23,
+      "observed_minus_reference_pp": 6.6656388
+    }
+  ],
+  "reference_graphs_total": "13826598912",
+  "preserves": "Country-specific butterfly host candidate row counts, plant column host-link counts, plant GADM footprints and butterfly GADM record counts",
+  "ecological_inference_boundary": "Artificial permutations may link nonhost plants to butterflies. No host utilization, larval survival, breeding, establishment or causal butterfly range effect is demonstrated."
+}

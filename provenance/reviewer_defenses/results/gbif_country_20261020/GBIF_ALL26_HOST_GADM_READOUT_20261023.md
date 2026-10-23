@@ -105,3 +105,19 @@ measurement rather than independent global butterfly evidence.
 - [Complete acquisition and source tests](https://github.com/zuizui0223/chocho/actions/runs/39879660472)
 - The original GEB manuscript, anonymous review snapshot, 239-butterfly
   resource analysis and historical five-case GBIF data were not modified.
+
+## Exact reporting-unit weighting sensitivity (posthoc, 23 October)
+
+The exact degree-fixed host-label reference has a distinct interpretation
+depending on the source statistic: record-weighted observed−expected
+**+0.20 pp** (453 records; artificial upper tail **0.6196**) versus
+equally weighted **26 butterfly×country source cases +6.86 pp**
+(artificial upper tail **0.0277**). Species-balanced **+5.18 pp**
+(artificial upper tail **0.0993**) and country-balanced **+4.49 pp**
+(artificial upper tail **0.0456**) do not remove ecological
+uncertainty. Omitting Cuba or Dominican Republic increases the
+equal-case artificial upper tails to ~0.100 and ~0.076.
+All of these are NOT ecological p-values: the null creates non-host
+edges, the analysis was conceived posthoc and indexed butterfly
+observations are not independent populations. See the
+[exact weight-sensitivity readout](GBIF_ALL26_WEIGHTING_STABILITY_READOUT_20261023.md).
