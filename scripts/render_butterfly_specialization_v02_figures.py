@@ -241,11 +241,12 @@ def fig3_resource_homogenization(homog, overlap, outdir):
     )
     axes[0].set_xticks(x, ["Native", "Contemporary", "Fixed-margin\nnull"])
     axes[0].set_ylabel("Mean pairwise Jaccard similarity")
+    axes[0].set_ylim(0, max(vals) * 1.42)  # reserve clear headroom for effect-size label
     axes[0].set_title("Regional resource assemblages converge")
     axes[0].text(
         0.03, 0.96,
         "+66.8% raw similarity\n"
-        f"observed vs null p = {regional['p_greater_or_equal']:.3f}",
+        f"fixed-margin excess +{vals[1]-vals[2]:.4f} Jaccard",
         transform=axes[0].transAxes,
         va="top",
         fontsize=9,
@@ -266,11 +267,12 @@ def fig3_resource_homogenization(homog, overlap, outdir):
     )
     axes[1].set_xticks(x, ["Native", "Contemporary", "Fixed-margin\nnull"])
     axes[1].set_ylabel("Mean pairwise resource-envelope Jaccard")
+    axes[1].set_ylim(0, max(vals2) * 1.42)
     axes[1].set_title("Butterfly resource geography overlaps more")
     axes[1].text(
         0.03, 0.96,
         "+47.4% raw overlap\n"
-        f"observed vs null p = {niche['p_greater_or_equal']:.3f}",
+        f"fixed-margin excess +{vals2[1]-vals2[2]:.4f} Jaccard",
         transform=axes[1].transAxes,
         va="top",
         fontsize=9,
@@ -284,6 +286,7 @@ def fig3_resource_homogenization(homog, overlap, outdir):
     axes[2].bar([0, 1], vals3)
     axes[2].set_xticks([0, 1], ["Native", "Contemporary"])
     axes[2].set_ylabel("Butterfly-pair × region units")
+    axes[2].set_ylim(0, max(vals3) * 1.42)
     axes[2].set_title("Exact shared-host geography expands")
     axes[2].text(
         0.03, 0.96,
