@@ -1,0 +1,52 @@
+name: GloBI fixed-cohort paginated validation
+on:
+  push:
+    branches:
+      - analysis/globi-larval-host-source-pilot-20261024
+    paths:
+      - 'scripts/audit_globi_larval_host_macro_source_paged_20261024.py'
+      - '.github/workflows/globi-paginated-source-validation-20261024.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Retrieve all fixed focal sources with bounded source pagination
+        run: |
+          python scripts/audit_globi_larval_host_macro_source_paged_20261024.py \
+            --out provenance/reviewer_defenses/results/globi_larval_host_feasibility_paginated_20261024.json
+      - name: Upload page-sourced aggregate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-globi-paged-20species-20261024
+          path: provenance/reviewer_defenses/results/globi_larval_host_feasibility_paginated_20261024.json
+          if-no-files-found: ignore
+      - name: Commit aggregate verification to exploratory branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = 'provenance/reviewer_defenses/results/globi_larval_host_feasibility_paginated_20261024.json';
+            const content = Buffer.from(fs.readFileSync(path)).toString('base64');
+            const owner = context.repo.owner, repo = context.repo.repo;
+            let existing;
+            try {
+              existing = (await github.rest.repos.getContent({owner,repo,path,ref:context.ref})).data.sha;
+            } catch(e) {
+              if (e.status !== 404) throw e;
+            }
+            const payload = {owner,repo,path,branch:context.ref.replace('refs/heads/',''),
+                             message:'Archive bounded GloBI pagination and immutable candidate evidence counts',
+                             content};
+            if (existing) payload.sha=existing;
+            const z=await github.rest.repos.createOrUpdateFileContents(payload);
+            core.info('Verified page aggregate committed '+z.data.commit.sha);
