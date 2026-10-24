@@ -34,3 +34,7 @@ Set flags `SOURCE_MISSING`, `ONLY_CROSS_SECTION`, `FEASIBLE_TIME_SERIES`, `TOO_F
 
 ## Stopping rule
 No statistical significance hunt across taxa, lags or host niche scores. Stop if original site-index data unavailable or one dataset does not distinguish missing observations from zeros. Publish only source gate result and a transparent next-eligible route. Maintain GEB main and PR #38/70 isolation.
+
+## Source transport correction after first attempt (same dataset, before data acquisition)
+
+The dataset EIDC website `/data/53a1c705-4437-48bb-9bcd-b68977f8edd9` returned HTTP 200 with **1,196 bytes of `text/html`** rather than dataset ZIP ([saved v0.1 receipt](../results/ukbms_site_abundance_source_gate_20261025.json)). This is a transport mistake in endpoint selection, not source absence or negative biological evidence. The official dataset download link on the EIDC record resolves to `https://data-package.ceh.ac.uk/sd/53a1c705-4437-48bb-9bcd-b68977f8edd9.zip`; verified in the public catalogue before this corrected request. The second attempt changes ONLY the URL endpoint, not the dataset DOI, prespecified butterflies, eligibility, years, source scientific question, sample thresholds, or response definitions. Both original and corrected receipts must be retained under separate filename/schema.
