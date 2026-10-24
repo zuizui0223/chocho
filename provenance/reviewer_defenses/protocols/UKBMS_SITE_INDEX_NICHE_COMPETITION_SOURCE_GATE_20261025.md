@@ -1,0 +1,36 @@
+# UKBMS candidate realized abundance / niche sharing / competition: source-first gate (2026-10-25)
+
+**Status:** prespecified ecological *questions* and strict acquisition gate, BEFORE source access. This is a distinct exploratory source-based analysis and **not** a new result in the frozen GEB submission (main / PR #38 / draft PR #70 remain unchanged).
+
+## Scientific pivot
+The global 239-butterfly HOSTS/WCVP reconstruction gives potential larval host distributions; co-occurring potential hosts cannot identify adult abundance, larval recruitment, facilitation or competition. The priority is to test whether **butterflies sharing larval hosts show more positive simultaneous local abundance variation (resource filter), but more negative lagged, density-conditioned responses (putative competition)**.
+
+These effects need not exclude one another. Niche overlap is defined at two layers: *documented larval host identities* (permitted source) and *actually realized local use of the plants at an individual site* (not available). Shared host is an exposure **proxy**, not demonstrated local niche overlap.
+
+## Verified public data source, fixed before outcome exploration
+- Primary source: *United Kingdom Butterfly Monitoring Scheme: site indices 2024*, Botham et al. (2025), DOI **10.5285/53a1c705-4437-48bb-9bcd-b68977f8edd9**; official data package `https://data-package.ceh.ac.uk/data/53a1c705-4437-48bb-9bcd-b68977f8edd9`. UKBMS site indices approximate monitored local population size, not raw independent individual counts. Source dataset documentation: https://catalogue.ceh.ac.uk/documents/53a1c705-4437-48bb-9bcd-b68977f8edd9
+- Geographic site information is held separately and not part of the first stage. Do not publish site IDs, coordinates, visit dates or raw unpublished occurrence information to repo without licence/source policy review. Aggregate readout only.
+- UKBMS attribution required: "Contains UK Butterfly Monitoring Scheme (UKBMS) data © copyright and database right Butterfly Conservation, the UK Centre for Ecology & Hydrology, British Trust for Ornithology, and the Joint Nature Conservation Committee."
+- Original fixed butterfly focal set: 239 exact scientific names from `data/frozen/figure_sources/anthropogenic_species_metrics.csv` git blob `9f83d2d9ac8e46f1cfd4ded572c7a023273503dd`. UK source uses its own species synonyms/taxonomic conventions: do not assume an unverified one-to-one exact match; report name crosswalk collisions and unresolved spellings.
+- Host graph: `globalbioticinteractions/HOSTS` pinned commit `808e0b869f9ec1adf8efff87cf6a395adda103e0` plus accepted WCVP mapping if needed. The fixed 239-species original full-reconstruction link sidecar is necessary to build an exact known-host-sharing network. No new host list or posthoc focal taxa to rescue outcome.
+
+## Initial acquisition-only gate
+1. Download original UKBMS site-index 2024 **ZIP** with plain HTTPS; one bounded attempt, max 250 MB. If blocked, record transport failure, DO NOT fabricate schema/rows or use GBIF occurrence counts as population counts.
+2. Inspect ZIP integrity and tabular CSV member metadata: exact archive SHA256, names/columns, row counts, data-type examples **without** storing raw site-level values, whether it contains site × species × YEAR or just the 2024 year; year coverage; number of unique monitored sites and butterfly names (aggregate counts).
+3. Explicitly distinguish zero abundance, omitted/unrecorded species, insufficient visit coverage, and missing index. Species absent from a site-year with no recorded index must NOT be converted to observed zeros unless UKBMS source documentation warrants it.
+4. Report if site-year observations are repeated over multiple years and whether enough original 239 species are exact name matches (minimum **15 species**, **100 distinct sites**, **three consecutive years** with at least 100 same-site repeated site/species-year pairs). If not, source is inadequate for lagged local competition.
+5. Only after a successful and schema-understood audit choose the observational model; model terms, null controls, source-dependent bounds are defined below, but cannot invent year structure or site coverage.
+
+## Observational test (only when gate allows)
+- Outcome: `Δlog(1+I_{i,s,t}) = log(1+I_{i,s,t+1})−log(1+I_{i,s,t})` where I is a valid site annual abundance index; no zero-fill of omitted pairs. Restrict to repeatedly surveyed standardised sites and prespecified source-scoped named butterflies. Do not mix targeted non-comparable survey indices with standard transect indices without source-verified method and offset.
+- Predictors: focal species' own lagged `log(1+I)`, site-year total monitored intensity/detection proxies, climate anomalies when independently sourced, and for the putative competitor exposure, lagged sum of *other species* abundance indices weighted by documented **exact shared larval hosts**. A matched **non-host-sharing competitor exposure** must be a comparator at the same site and time, not assumed to equal zero competition.
+- Controls: species×site baseline if estimable, calendar year effects, species-specific temporal changes, major habitat and survey method. The competition coefficient must be compared against a counterfactual of **host-link permutations that preserve host-degree and butterfly degree / abundance time series**. The null cannot be a distribution-unaware random pair permutation. A negative lagged coefficient after these controls is **evidence consistent with competition**, never direct causation without host resource availability, stage overlap and independent manipulations.
+- Resource filtering primary descriptive contrast: species pair simultaneous site-year abundance correlation, shared hosts vs nonshared, controlling co-detection / site / year and host phylogenetic/environment similarity. A positive co-occurrence does not prove facilitation or survival. Co-detection driven by adult monitoring protocols must be modelled.
+- Change in plant habitat availability over time: UKBMS site-index data have no independent local host-plant introduction dates. **Cannot** infer that novel introduced host plants caused changes in local butterfly abundance without independent site-year botanical surveys. The WCVP native/introduced **region** flag is not a site-year treatment.
+
+## Requirements for biological inference
+Separate evidence hierarchy: 1 geography potential; 2 regional co-occurrence; 3 site-year adult abundance association; 4 within-species lagged site-year population response with proper controls; 5 field-level host-specific larval recruitment or manipulated resource competition. Current global paper at 1–2; UKBMS may permit 3–4 only.
+Set flags `SOURCE_MISSING`, `ONLY_CROSS_SECTION`, `FEASIBLE_TIME_SERIES`, `TOO_FEW_SHARED_HOST_FOCALS`, `TAXONOMY_UNVERIFIED` and do not treat any of these as null biological effects.
+
+## Stopping rule
+No statistical significance hunt across taxa, lags or host niche scores. Stop if original site-index data unavailable or one dataset does not distinguish missing observations from zeros. Publish only source gate result and a transparent next-eligible route. Maintain GEB main and PR #38/70 isolation.
