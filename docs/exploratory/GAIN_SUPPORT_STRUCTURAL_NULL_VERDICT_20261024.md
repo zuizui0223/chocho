@@ -74,3 +74,12 @@ Substantive ecological next data must come from source-independent local larval 
 - `.github/workflows/gain-support-plant-null-20261024.yml`: CI rebuild from pinned HOSTS and WCVP
 - [Raw prior gain–support exploratory analysis](../../docs/exploratory/BUTTERFLY_GAIN_AND_HOST_SUPPORT_ARCHITECTURE_20261024.md)
 - GEB `main` and PR #38 remain unchanged.
+
+
+## Null distribution figure — inspected and source-verified
+
+![Two-chain null histogram against original adjusted slopes](figures/butterfly_gain_support_plant_null_20261024.png)
+
+[Source-verified PNG](figures/butterfly_gain_support_plant_null_20261024.png) · [Editable SVG](figures/butterfly_gain_support_plant_null_20261024.svg) · [Successful figure verification workflow](https://github.com/zuizui0223/chocho/actions/runs/40081898912).
+
+The dashed black line indicates the original species-level slope, with the two colored histograms showing 199 null states for each independent plant-family×continent constrained chain. The observed coefficient falls within the dense part of both nulls under the primary 206-species analysis and the 191-species catalogue-adequacy sensitivity. Null percentiles summarize source-conditional plant-range randomizations, not natural biological sampling uncertainty. All figures are built from the original JSON draw histories with explicit checksum/source assertions and passed a visual review.
