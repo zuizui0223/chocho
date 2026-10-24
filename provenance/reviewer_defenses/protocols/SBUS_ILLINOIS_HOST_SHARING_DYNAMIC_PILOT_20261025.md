@@ -27,3 +27,14 @@ Can butterflies sharing known larval host plants be *positively associated in si
 
 ## Full hypothesis hierarchy
 `resource present` (old GEB) → `field annual butterfly abundance` (new source) → `conditional within-site annual interaction signal` (this pilot) → `interference vs exploitative competition via host leaf biomass manipulations` (requires new experiments). Environmental filtering can yield **positive site-level cooccurrence and negative within-site heterospecific density effects simultaneously** without contradiction.
+
+
+## Post-primary fragility checks — specified after seeing observational pilot, before re-estimation
+
+The first Illinois model passed the predeclared eligibility gate (121 sites, 47 species, 9,178 site-species-year transitions) but the host-sharing lag coefficient itself was **+0.02194 ± 0.01717**, NOT a negative competition effect; the sharing minus nonsharing contrast was **−0.2835** (cluster-normal 95% −0.5132 to −0.0538). The model includes a site-year mean of focal+all peer indices, mechanically related to the same exposure variables. Moreover, **7,501** eligible site-year×species records were zero-imputed (45.6% of species-year index cells; source generally omits unobserved species), and Michigan/Colorado fail the original minimum of 50 eligible sites, so no generalizable competition conclusion is established. The first whole dataset re-estimation must never be relabeled confirmatory.
+
+We fix two **posthoc failure-mode audits** now, *before their results*: 
+1. **Omit all-species within-site-year mean log count rate** (the fifth exposure-control variable) while keeping the original 9,178 focal transitions, same effort and own baseline, site×species and calendar-year effects and site-cluster covariance. This assesses compositional/collider coupling to the nonsharing/shared exposure terms.
+2. **Only positive focal counts recorded in the original source in BOTH adjacent years** (no implied-zero focal observations), retaining the original source's positive observation inclusion and same fixed effects. Peer terms can still contain imputed zeros; this is a bounded sensitivity, NOT unbiased survivor-only inference. Exclude if <300 eligible contrasts, <50 unique sites, or full-rank within-group design fails.
+3. Report both choices side by side with the original coefficient, cluster-normal 95% intervals for shared coefficient and for shared−nonshared contrast, n sites/observations, and source flags. A sign-flip or interval spanning zero in any sensitivity prevents promoting the comparative difference as evidence for competition. Missing focal presence is not treated as verified absence.
+4. Do not reduce year windows, season-gate thresholds, choose taxa by outcome, or reinterpret a nonnegative shared-peer beta as negative heterospecific competition. These checks challenge a pilot result; they do NOT replace the original locked protocol and host-degree network null requirement.
