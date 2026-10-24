@@ -236,6 +236,14 @@ def calc_panel(program, events, focal, hostgraph):
                     "x":[log_rate[sp],sum(same)/len(same),sum(other)/len(other),
                          math.log(annual_hrs_next/annual_hrs),mean_log_rate],
                     "y":outcome,
+                    # Source-fate tags for explicit-versus-imputed-zero sensitivity.
+                    # No site-level records or individual counts will be exported.
+                    "focal_positive_both_years": (
+                        sp in eligible_years[(site,year)]["counts"] and
+                        float(eligible_years[(site,year)]["counts"][sp]) > 0 and
+                        sp in eligible_years[(site,year+1)]["counts"] and
+                        float(eligible_years[(site,year+1)]["counts"][sp]) > 0
+                    ),
                 })
     result={
         "status":"PANEL_PREPARED_NO_ECOLOGICAL_INFERENCE",
