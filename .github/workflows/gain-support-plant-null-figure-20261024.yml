@@ -1,0 +1,53 @@
+name: Gain-support plant-null explanatory figure
+on:
+  push:
+    branches:
+      - analysis/gain-support-plantnull-20261024
+    paths:
+      - 'scripts/render_butterfly_gain_support_plant_null_20261024.py'
+      - '.github/workflows/gain-support-plant-null-figure-20261024.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render-source-verified-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install plot dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'matplotlib>=3.9,<4'
+      - name: Render two independent MCMC source chains and observed species associations
+        run: |
+          python scripts/render_butterfly_gain_support_plant_null_20261024.py \
+            --svg docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.svg \
+            --png docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.png
+      - name: Upload vector and bitmap plot
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-gain-support-plant-null-figure-20261024
+          path: |
+            docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.svg
+            docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.png
+      - name: Commit both reproducible visualizations to only this analysis branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs=require('fs');
+            const owner=context.repo.owner,repo=context.repo.repo,branch=context.ref.replace('refs/heads/','');
+            for(const path of [
+              'docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.svg',
+              'docs/exploratory/figures/butterfly_gain_support_plant_null_20261024.png'
+            ]){
+              const content=Buffer.from(fs.readFileSync(path)).toString('base64');
+              let sha;
+              try {sha=(await github.rest.repos.getContent({owner,repo,path,ref:branch})).data.sha;}
+              catch(e){if(e.status!==404)throw e;}
+              const payload={owner,repo,path,branch,content,message:'Archive qualified plant-null slope plot '+path.split('.').pop()};
+              if(sha)payload.sha=sha;
+              await github.rest.repos.createOrUpdateFileContents(payload);
+            }
