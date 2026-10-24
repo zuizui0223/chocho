@@ -21,19 +21,19 @@ jobs:
       - name: Acquire original official relative-abundance indices and report verified schema
         run: |
           python scripts/audit_ukbms_site_indices_population_gate_20261025.py \
-            --out provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025.json
+            --out provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025_v02.json
       - name: Upload privacy-minimal source schema receipt only
         uses: actions/upload-artifact@v4
         with:
-          name: ukbms-site-indices-2024-source-gate-20261025
-          path: provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025.json
+          name: ukbms-site-indices-2024-source-gate-20261025-v02
+          path: provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025_v02.json
       - name: Archive verifiable aggregated source gate in separate branch
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs=require('fs');
-            const path='provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025.json';
+            const path='provenance/reviewer_defenses/results/ukbms_site_abundance_source_gate_20261025_v02.json';
             const content=Buffer.from(fs.readFileSync(path)).toString('base64');
             const owner=context.repo.owner,repo=context.repo.repo;
             const branch=context.ref.replace('refs/heads/','');
