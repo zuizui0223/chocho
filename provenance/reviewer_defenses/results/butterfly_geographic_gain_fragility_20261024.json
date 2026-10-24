@@ -1,0 +1,130 @@
+{
+  "schema": "chocho_geographic_gain_vs_host_support_fragility_macro_20261024",
+  "status": "PRESPECIFIED_POSITIVE_FRAGILITY_HYPOTHESIS_FALSIFIED_EXPLORATORY_NEGATIVE_CATALOGUE_ASSOCIATION",
+  "source_git_blob_sha": {
+    "data/frozen/figure_sources/anthropogenic_species_metrics.csv": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+    "data/frozen/figure_sources/host_contribution_metrics.csv": "4cf4851499ca2233ff2adadf1c4ee7f0e863f23d",
+    "data/frozen/figure_sources/s1_resource_descriptors.csv": "09541b5894529cc8629c7515ea9022ded9edead2"
+  },
+  "full_butterfly_panel": 239,
+  "added_resource_regions_total": 14553,
+  "expanded_species": 206,
+  "analyses": {
+    "primary_all": {
+      "species": 206,
+      "genera": 124,
+      "outcome": "fraction_added_cells_single_recorded_host",
+      "model": "equal_species_OLS_y~1+log_gain+log_native_units+log1p_recorded_hosts+host_family_count",
+      "coefficient_log_gain": -0.22071872904922496,
+      "all_coefficients": [
+        1.9577100412534623,
+        -0.22071872904922496,
+        -0.19225669404140436,
+        -0.13614644923990046,
+        0.0029660151228388114
+      ],
+      "raw_spearman_gain_vs_outcome": -0.1998679987044984,
+      "partial_residual_pearson": -0.40877408788887715,
+      "genus_bootstrap_95_percentile": [
+        -0.29836714078100646,
+        -0.1647120308676176
+      ],
+      "genus_bootstrap_draws": 5000,
+      "genus_bootstrap_successful": 5000,
+      "genus_bootstrap_failed": 0,
+      "positive_coefficient_bootstrap_fraction": 0.0,
+      "leave_one_genus_out_coefficient_range": [
+        -0.2406119749307769,
+        -0.21142048745552822
+      ],
+      "median_resource_ratio": 1.4668053905771758,
+      "median_outcome": 0.688259109311741,
+      "exploratory_terciles": {
+        "low_n": 69,
+        "high_n": 71,
+        "low_mean_outcome": 0.7692737579270407,
+        "high_mean_outcome": 0.6808842632538367
+      }
+    },
+    "primary_adequate_catalogue": {
+      "species": 191,
+      "genera": 119,
+      "outcome": "fraction_added_cells_single_recorded_host",
+      "model": "equal_species_OLS_y~1+log_gain+log_native_units+log1p_recorded_hosts+host_family_count",
+      "coefficient_log_gain": -0.2711287143300629,
+      "all_coefficients": [
+        2.047174101321446,
+        -0.2711287143300629,
+        -0.2068472691079265,
+        -0.13557127674100874,
+        0.004076198648050114
+      ],
+      "raw_spearman_gain_vs_outcome": -0.19968050433937642,
+      "partial_residual_pearson": -0.414942801087991,
+      "genus_bootstrap_95_percentile": [
+        -0.36897840530126025,
+        -0.19667324968887895
+      ],
+      "genus_bootstrap_draws": 5000,
+      "genus_bootstrap_successful": 5000,
+      "genus_bootstrap_failed": 0,
+      "positive_coefficient_bootstrap_fraction": 0.0,
+      "leave_one_genus_out_coefficient_range": [
+        -0.2954662071662531,
+        -0.2574675209604483
+      ],
+      "median_resource_ratio": 1.4619289340101522,
+      "median_outcome": 0.6593406593406593,
+      "exploratory_terciles": {
+        "low_n": 64,
+        "high_n": 64,
+        "low_mean_outcome": 0.7389968498105451,
+        "high_mean_outcome": 0.6639542914332083
+      }
+    },
+    "secondary_max_host_share": {
+      "species": 206,
+      "genera": 124,
+      "outcome": "max_single_host_fractional_credit",
+      "model": "equal_species_OLS_y~1+log_gain+log_native_units+log1p_recorded_hosts+host_family_count",
+      "coefficient_log_gain": -0.1500830513125028,
+      "all_coefficients": [
+        1.7637936752299914,
+        -0.1500830513125028,
+        -0.14709435818359323,
+        -0.17557961390535395,
+        -0.0009753036727783734
+      ],
+      "raw_spearman_gain_vs_outcome": -0.1022227845929365,
+      "partial_residual_pearson": -0.31303091572512926,
+      "genus_bootstrap_95_percentile": [
+        -0.21535205710793023,
+        -0.09349350025159177
+      ],
+      "genus_bootstrap_draws": 5000,
+      "genus_bootstrap_successful": 5000,
+      "genus_bootstrap_failed": 0,
+      "positive_coefficient_bootstrap_fraction": 0.0,
+      "leave_one_genus_out_coefficient_range": [
+        -0.16356219052102774,
+        -0.1376016146936031
+      ],
+      "median_resource_ratio": 1.4668053905771758,
+      "median_outcome": 0.5708020050125313,
+      "exploratory_terciles": {
+        "low_n": 69,
+        "high_n": 71,
+        "low_mean_outcome": 0.7079901046396518,
+        "high_mean_outcome": 0.6585106650112819
+      }
+    }
+  },
+  "poaceae_status": "NOT_EVALUABLE_NO_FROZEN_PER_SPECIES_POACEAE_HOST_FLAG_IN_THREE_INPUT_CSVS",
+  "interpretive_limits": [
+    "Extent and redundancy are derived from the same union-of-known-hosts resource map",
+    "Evidence is about recorded introduced hosts supporting potential regions, not larval performance",
+    "Taxonomic catalogue incompleteness can overstate single-host support",
+    "Butterfly genus clusters are not a phylogenetic random effect or independent study replication",
+    "No time of plant arrival, butterfly abundance, adult emergence or conservation intervention measured"
+  ]
+}
