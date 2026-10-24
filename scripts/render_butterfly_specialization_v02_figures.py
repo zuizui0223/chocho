@@ -215,7 +215,15 @@ def fig2_occurrence(occ, overlap, species_robustness, outdir):
 
 
 def fig3_resource_homogenization(homog, overlap, outdir):
-    fig, axes = plt.subplots(1, 3, figsize=(15.0, 4.7))
+    # Two-row journal figure retains legible axes at the 6-inch Word text width.
+    # The prior 1x3 landscape figure shrank each axis to roughly 2 inches.
+    fig = plt.figure(figsize=(10.3, 7.7))
+    grid = fig.add_gridspec(2, 2, height_ratios=(1, 0.9))
+    axes = [
+        fig.add_subplot(grid[0, 0]),
+        fig.add_subplot(grid[0, 1]),
+        fig.add_subplot(grid[1, :]),
+    ]
     for label, ax in zip(("a", "b", "c"), axes):
         ax.text(
             -0.10, 1.06, label,
@@ -299,10 +307,10 @@ def fig3_resource_homogenization(homog, overlap, outdir):
     )
 
     fig.suptitle(
-        "Plant globalization homogenizes butterfly resource geography and shared-resource exposure",
-        fontsize=13,
+        "Plant globalization reshapes butterfly resource geography and sharing",
+        fontsize=14,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.tight_layout(rect=(0, 0, 1, 0.94), h_pad=2.4, w_pad=2.6)
     save(fig, outdir, "Figure3_expansion_robustness")
 
 
