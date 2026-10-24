@@ -67,7 +67,7 @@ def read_source(path: Path) -> dict[str, dict[str, str]]:
 def make_panel() -> list[dict[str, str]]:
     for relpath, expected in EXPECTED_GIT_BLOBS.items():
         data = (ROOT / relpath).read_bytes()
-        git_sha = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\x00" + data).hexdigest()
+        git_sha = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\x00" + data).hexdigest()
         if git_sha != expected:
             raise ValueError(f"Source blob changed: {relpath}: {git_sha} != {expected}")
     sources = [read_source(ROOT / p) for p in FILES]
