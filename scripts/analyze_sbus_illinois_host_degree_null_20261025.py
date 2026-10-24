@@ -83,10 +83,10 @@ def accepted_edges(path,focal,taxon):
     edges={group:sorted(rows) for group,rows in edge_groups.items()}
     viable={k:v for k,v in edges.items() if len(v)>=2 and
             len({a for a,b in v})>=2 and len({b for a,b in v})>=2}
-    return original_hostset, original,edges,viable
+    return original_hostset, original,edges,viable,plantfam
 
 
-def draw_graph(original_hostset, original_pairs, all_groups, viable, replicate):
+def draw_graph(original_hostset, original_pairs, all_groups, viable, plantfam, taxon, replicate):
     # Every draw starts afresh from the same source-locked network, independent RNG.
     host_map={s:set(links) for s,links in original_hostset.items()}
     connections=set(original_pairs)
@@ -139,14 +139,16 @@ def draw_graph(original_hostset, original_pairs, all_groups, viable, replicate):
     after=Counter((host for sp,host in final))
     if after!=originally:
         raise ValueError("Plant popularity/degree not preserved")
-    # A stronger within-butterfly botanical-family structural invariant follows
-    # from swaps within group: no known butterfly was assigned a new plant family.
-    original_group_degrees=Counter((key,len(value)) for key,value in all_groups.items())
-    final_by_group=defaultdict(int)
-    for (sp,host) in final:
-        # Must be a link in a viable group OR an invariant (never sampled) group.
-        # Family assignment for each accepted host comes from original link data.
-        pass
+    # Explicitly audit taxonomic butterfly family × botanical plant family
+    # strata after every independently rebuilt source graph.
+    origin_strata=Counter((taxon[sp],plantfam[host]) for sp,host in original_pairs)
+    final_strata=Counter((taxon[sp],plantfam[host]) for sp,host in final)
+    if final_strata!=origin_strata:
+        raise ValueError("Butterfly family by botanical host family margins changed")
+    origin_per_butterfly_family=Counter((sp,plantfam[host]) for sp,host in original_pairs)
+    final_per_butterfly_family=Counter((sp,plantfam[host]) for sp,host in final)
+    if origin_per_butterfly_family!=final_per_butterfly_family:
+        raise ValueError("Consumer botanical family host portfolio drift")
     return {sp:frozenset(hs) for sp,hs in host_map.items()},{
         "accepted":accepted,
         "moved_original_edges_fraction":moved_links/max(1,E),
@@ -174,7 +176,7 @@ def main():
     a=ap.parse_args()
     focal=frozen_focal()
     families=butterfly_families(focal)
-    hosts,original_pairs,groups,viable=accepted_edges(a.accepted_host_csv,focal,families)
+    hosts,original_pairs,groups,viable,plantfam=accepted_edges(a.accepted_host_csv,focal,families)
     with tempfile.TemporaryDirectory() as temp:
         source=Path(temp)/"original"
         load_source(source)
@@ -206,7 +208,7 @@ def main():
     failures=[]
     started=time.monotonic()
     for i in range(DRAWS):
-        randomized,diag=draw_graph(hosts,original_pairs,groups,viable,i)
+        randomized,diag=draw_graph(hosts,original_pairs,groups,viable,plantfam,families,i)
         report,ob=calc_panel(PROGRAMS[0],events,focal,randomized)
         coef=slope(ob) if report["analysis_gate_pass"] else None
         item={
