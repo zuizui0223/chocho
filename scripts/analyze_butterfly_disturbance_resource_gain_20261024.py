@@ -214,6 +214,35 @@ def group_readout(rows, label):
     }
 
 
+def adequacy_diagnostic(rows):
+    """Posthoc inventory-completeness audit, never used to rescue the primary."""
+    out = {}
+    for group in (A, V):
+        for sufficient in ("True", "False"):
+            rr = [
+                r for r in rows if r["disturbance_affinity"] == group
+                and r["host_taxonomy_lower_bound_adequate"] == sufficient
+            ]
+            log_gain = [
+                math.log(int(r["contemporary_resource_units"]) /
+                         int(r["native_resource_units"]))
+                for r in rr
+            ]
+            out[f"{group}|{sufficient}"] = {
+                "n": len(rr),
+                "zero_gain": sum(int(r["introduced_added_units"]) == 0 for r in rr),
+                "mean_log_gain": float(np.mean(log_gain)),
+                "geometric_mean_gain": float(math.exp(np.mean(log_gain))),
+                "mean_recorded_host_species": float(np.mean([
+                    int(r["resolved_host_species"]) for r in rr
+                ])),
+                "mean_native_resource_regions": float(np.mean([
+                    int(r["native_resource_units"]) for r in rr
+                ])),
+            }
+    return out
+
+
 def result():
     all_rows = make_panel()
     pairs = [x for x in all_rows if x["disturbance_affinity"] in {A, V}]
@@ -223,6 +252,7 @@ def result():
         "source_paths": list(FILES),
         "source_panel_species": len(all_rows),
         "source_added_resource_units": sum(int(r["introduced_added_units"]) for r in all_rows),
+        "posthoc_adequacy_diagnostic": adequacy_diagnostic(pairs),
         "prespecified_groups": {A: group_readout(pairs, A), V: group_readout(pairs, V)},
         "analyses": {
             "primary_full": analyze(pairs),
@@ -261,6 +291,16 @@ def main():
             for field in ("genus_bootstrap_95_interval", "leave_one_genus_out_range"):
                 if not np.allclose(actual[field], expected[field], rtol=0, atol=1e-6):
                     raise AssertionError(f"{key}.{field}: {actual[field]} != {expected[field]}")
+        if "posthoc_adequacy_diagnostic" in reference:
+            for label, actual in output["posthoc_adequacy_diagnostic"].items():
+                expected = reference["posthoc_adequacy_diagnostic"][label]
+                for key in ("n", "zero_gain"):
+                    if actual[key] != expected[key]:
+                        raise AssertionError(f"Stratum {label}: {key} differs")
+                for key in ("mean_log_gain", "geometric_mean_gain",
+                            "mean_recorded_host_species", "mean_native_resource_regions"):
+                    if not math.isclose(actual[key], expected[key], abs_tol=1e-6):
+                        raise AssertionError(f"Stratum {label}: {key} differs")
         print("VERIFIED: all four source-locked result receipts match")
     if args.out:
         args.out.parent.mkdir(parents=True, exist_ok=True)
