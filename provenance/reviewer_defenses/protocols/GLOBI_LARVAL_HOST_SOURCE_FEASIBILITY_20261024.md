@@ -3,7 +3,7 @@
 **Scope:** investigate whether `chocho` can replace potential host-map overlap with geographically and life-stage-resolved *observed* butterfly–plant feeding, without reanalysing published single-species experiments. Exploratory acquisition, **no ecological effect estimated or inferred**.
 
 ## Current epistemic boundary
-The frozen 239-butterfly HOSTS/WCVP reconstruction measures potential resources, not recorded caterpillar feeding or emergence. The 229-butterfly GBIF country index lacks usable explicit exact host-feeding tags in the audited 39 juvenile records. The October 2024? project timestamp is **2026-10-24**, not a new data year. Previously reanalysed monarch and Kyoto experiments are prior art, not independent global recruitment evidence.
+The frozen 239-butterfly HOSTS/WCVP reconstruction measures potential resources, not recorded caterpillar feeding or emergence. The 229-butterfly GBIF country index lacks usable explicit exact host-feeding tags in the audited 39 juvenile records. This is an October 2026 source-feasibility pilot, not a new observation season. Previously reanalysed monarch and Kyoto experiments are prior art, not independent global recruitment evidence.
 
 GloBI aggregates recorded interaction links with provenance, possible specimen life stage, event date, and coordinates. Its live API is **not version-stable** and may include the original HOSTS literature or duplicated sources; a GloBI hit is not automatically independent of HOSTS. Its versioned Zenodo release (doi:10.5281/zenodo.3950589) is required for later publishable full-population analysis. GloBI references: https://www.globalbioticinteractions.org/data and https://www.globalbioticinteractions.org/how-to .
 
