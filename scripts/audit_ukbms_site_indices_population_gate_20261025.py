@@ -21,7 +21,7 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-URL = "https://data-package.ceh.ac.uk/data/53a1c705-4437-48bb-9bcd-b68977f8edd9"
+URL = "https://data-package.ceh.ac.uk/sd/53a1c705-4437-48bb-9bcd-b68977f8edd9.zip"
 BLOB = "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd"
 LIMIT_BYTES = 250 * 1024 * 1024
 DATASET_DOI = "10.5285/53a1c705-4437-48bb-9bcd-b68977f8edd9"
@@ -108,7 +108,6 @@ def read_schema(zf, member, focal):
     years=collections.Counter()
     eligible=collections.Counter()
     repeated=collections.defaultdict(set)
-    site_year_count=collections.Counter()
     indices_nonmissing=0
     missing_indices=0
     n_rows=0
@@ -173,7 +172,6 @@ def read_schema(zf, member, focal):
                 if site and species in focal:
                     eligible[species]+=1
                     repeated[(site,species)].add(yy)
-                    site_year_count[site].update([]) if False else None
     except (UnicodeError, csv.Error, OSError, zipfile.BadZipFile) as e:
         result.update(status="SOURCE_SCHEMA_ERROR",error_type=type(e).__name__)
         return result
@@ -207,7 +205,7 @@ def main():
     args=p.parse_args()
     original=original_focal()
     result={
-        "schema":"chocho_ukbms_site_abundance_source_gate_20261025_v01",
+        "schema":"chocho_ukbms_site_abundance_source_gate_20261025_v02",
         "dataset_doi":DATASET_DOI,
         "source_terms":"Open Government Licence UKBMS with UKBMS attribution",
         "required_attribution":ATtribution,
