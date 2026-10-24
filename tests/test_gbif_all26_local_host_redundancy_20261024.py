@@ -75,3 +75,23 @@ def test_fail_closed_on_host_network_source_drift():
 
 def test_degree_class_clamps_2_or_more_to_one_category():
     assert [m.degree_bucket(i) for i in range(5)]==["0","1","2plus","2plus","2plus"]
+
+def test_published_posthoc_numeric_archive_matches_source_generator():
+    published=json.loads((DIR/"gbif_local_host_redundancy_summary_20261024.json").read_text(encoding="utf-8"))
+    current=m.summary_for(*source())
+    assert published["status"]==current["status"]
+    assert published["thresholds"]==current["minimum_plant_records_per_species_per_GADM1_sensitivity"]
+    assert published["juvenile_stage_metadata"]==current["five_source_juvenile_cases"]
+    assert published["input_cases"]==current["original_26_cases"]==26
+    assert published["source_species_country_host_links"]==current["original_46_butterfly_country_plant_links"]==46
+
+
+def test_source_locked_39_stage_records_do_not_prove_field_host_use():
+    gate=json.loads((DIR/"gbif_juvenile_host_annotation_coverage_20261023.json").read_text(encoding="utf-8"))
+    assert gate["status"]=="COMPLETE_39_METADATA_COVERAGE_NOT_HOST_USE"
+    assert gate["original_juvenile_stage_records"]==39
+    assert gate["completed_source_groups"]==15
+    assert gate["records_with_nonempty_selected_text_fields"]==12
+    assert gate["records_with_any_host_action_keyword_not_verified"]==0
+    assert gate["records_with_exact_accepted_candidate_binomial_in_text"]==0
+    assert sum(v["source_stage_records"] for v in gate["by_butterfly_country"].values())==39

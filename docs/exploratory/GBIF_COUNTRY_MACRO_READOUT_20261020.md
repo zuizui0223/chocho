@@ -296,6 +296,29 @@ be a non-host, and no verified larval feeding or population
 recruitment is observed. See the
 [full weighting stability audit](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_ALL26_WEIGHTING_STABILITY_READOUT_20261023.md).
 
+## Observed local candidate-host redundancy and stage-label evidence (24 October 2026)
+
+A deterministic posthoc source audit subdivided the original **453 indexed
+butterfly records** across all 26 source-added-host country cells according
+to whether any source candidate plant species had a GBIF indexed observation
+in the same GADM1 administrative unit. **222** butterfly indices have no
+recorded plant, **226** have exactly one recorded candidate plant species,
+and **only five** have two or more. The 7 butterfly×country cases that
+originally had multiple candidate plant taxa still show **5/129**
+records in GADM1 units with at least two GBIF-recorded candidates.
+When each plant must have >=5 indexed GADM records, **0/453**
+butterfly records have two indexed plant species and only 28/453
+have even one. This is a **host-recording portfolio** pattern, NOT an
+ecological specialization, actual biological redundancy, botanical
+extinction, host-use or butterfly production estimate.
+
+Of 39 source-labelled immature GBIF records, 12 have any
+selected annotation text, **none contain a strict source plant
+binomial or source parser feeding/host-action keyword**; this is
+missing evidence, not negative wild larval performance evidence.
+[Complete portfolio readout](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_LOCAL_HOST_REDUNDANCY_READOUT_20261024.md)
+and [privacy-safe host metadata gate](../../provenance/reviewer_defenses/results/gbif_country_20261020/GBIF_JUVENILE_HOST_METADATA_READOUT_20261024.md).
+
 ## Archived sample replay and the information-gate correction
 
 The original 135-name source replay reproduces its numerical result exactly.
