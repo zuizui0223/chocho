@@ -37,6 +37,27 @@ COPY_PATHS = (
 # their separate analysis branches and review packages, never the submitted pack.
 # Review the list whenever an independent analysis gains further files.
 EXCLUDE_RELATIVE = {
+    # Exploratory 2026-10-24 null and source-sensitivity work belongs to
+    # isolated analysis branches, never the frozen GEB double-anonymous review ZIP.
+    Path("docs/exploratory/BUTTERFLY_GAIN_AND_HOST_SUPPORT_ARCHITECTURE_20261024.md"),
+    Path("docs/exploratory/GAIN_SUPPORT_STRUCTURAL_NULL_VERDICT_20261024.md"),
+    Path("docs/exploratory/CHOCHO_ECOLOGY_CLAIM_LEDGER_20261024.md"),
+    Path("docs/exploratory/figures/butterfly_gain_host_support_20261024.png"),
+    Path("docs/exploratory/figures/butterfly_gain_host_support_20261024.svg"),
+    Path("docs/exploratory/figures/butterfly_gain_host_support_plant_null_20261024.png"),
+    Path("docs/exploratory/figures/butterfly_gain_host_support_plant_null_20261024.svg"),
+    Path("provenance/reviewer_defenses/protocols/BUTTERFLY_GEOGRAPHIC_GAIN_FRAGILITY_20261024.md"),
+    Path("provenance/reviewer_defenses/protocols/BUTTERFLY_BCE_GAIN_SUPPORT_SOURCE_SENSITIVITY_20261024.md"),
+    Path("provenance/reviewer_defenses/protocols/GAIN_SUPPORT_PLANT_RANGE_NULL_20261024.md"),
+    Path("provenance/reviewer_defenses/results/butterfly_geographic_gain_fragility_20261024.json"),
+    Path("provenance/reviewer_defenses/results/butterfly_bce_paired_gain_support_20261024.json"),
+    Path("provenance/reviewer_defenses/results/butterfly_gain_support_plant_null_20261024.json"),
+    Path("scripts/analyze_butterfly_gain_fragility_20261024.py"),
+    Path("scripts/analyze_bce_paired_gain_support_20261024.py"),
+    Path("scripts/render_butterfly_gain_host_support_20261024.py"),
+    Path("scripts/analyze_butterfly_gain_support_plant_null_20261024.py"),
+    Path("scripts/render_butterfly_gain_support_plant_null_20261024.py"),
+    Path("tests/test_gain_support_plant_range_null_20261024.py"),
     Path("docs/exploratory/BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md"),
     Path("docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md"),
     Path("docs/exploratory/NONTRIVIAL_MACROECOLOGICAL_FINDINGS_20261015.md"),

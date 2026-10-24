@@ -170,6 +170,11 @@ def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
         "BUTTERFLY_SPECIALIZATION_ECOLOGY_SYNTHESIS_V0_1.md",
         "BUTTERFLY_RESOURCE_HOMOGENIZATION_ECOLOGY_V01.md",
         "NONTRIVIAL_MACROECOLOGICAL_FINDINGS_20261015.md",
+        # Source-conditional 2026-10-24 posthoc follow-ups; these are retained
+        # for scientific auditing but explicitly excluded from GEB review ZIP.
+        "BUTTERFLY_GAIN_AND_HOST_SUPPORT_ARCHITECTURE_20261024.md",
+        "GAIN_SUPPORT_STRUCTURAL_NULL_VERDICT_20261024.md",
+        "CHOCHO_ECOLOGY_CLAIM_LEDGER_20261024.md",
         "GBIF_COUNTRY_MACRO_READOUT_20261020.md",
         # Isolated 2026-10-19 macroecology protocols and source-bound
         # exploratory results; do not include them in the frozen GEB PR #38.

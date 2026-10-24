@@ -1,5 +1,7 @@
 # Potential resource expansion and host-support multiplicity across butterflies
 
+**SUPERSEDED ON 2026-10-24:** A new qualified 2×199-draw plant-family×continent host-range null reproduces the observed negative gain–single-host-support slope (original β=−0.220719; null medians −0.222145 and −0.222255; adequate-host β=−0.271129 vs null −0.270004/−0.270131). This earlier analysis is a reproducible within-catalogue descriptor **but does not establish exceptional biological buffering**. See [completed null verdict](GAIN_SUPPORT_STRUCTURAL_NULL_VERDICT_20261024.md). Do not use the originally suggested manuscript promotion as a new ecological mechanism.
+
 **Exploratory ecology result — 24 October 2026.** Independent exact-source GitHub Actions runs completed. **Not a demonstrated butterfly demographic buffer or a second standalone paper.** The frozen GEB submission manuscript and PR #38 are unchanged.
 
 ## What was actually tested
