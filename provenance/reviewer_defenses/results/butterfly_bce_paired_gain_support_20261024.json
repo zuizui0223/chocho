@@ -1,0 +1,96 @@
+{
+  "schema": "chocho_bce_paired_gain_support_intensity_diagnostic_20261024",
+  "status": "POSTHOC_SOURCE_SENSITIVITY_NOT_DIRECT_SINGLE_HOST_FRACTION_REPLICATION",
+  "source_run": 38988757959,
+  "source_artifact_id": 12084636746,
+  "source_artifact_name": "bce_clarke_resource_novelty_v0.1.json",
+  "source_uncompressed_json_sha256": "57a19c06b8e4c95a61120de8e8dabfce53fcdea652fa3e6524dd6b2f8a13965c",
+  "original_239_record_git_blob": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+  "all_augmented_species": 81,
+  "positive_gain_both_catalogues": 70,
+  "nonpaired_due_to_zero_U": 11,
+  "analyses": {
+    "before_extra_links": {
+      "species": 70,
+      "genera": 53,
+      "slope_log_support_intensity_on_log_gain": 0.2974703394283158,
+      "genus_bootstrap_95_percentile": [
+        0.1766142302100458,
+        0.5718935937616539
+      ],
+      "genus_bootstrap_successes": 5000,
+      "genus_bootstrap_failed": 0,
+      "positive_bootstrap_fraction": 1.0,
+      "leave_one_genus_coefficient_range": [
+        0.274579409136862,
+        0.4224568793393013
+      ],
+      "median_introduced_support_incidence_per_new_cell": 1.4356060606060606,
+      "median_geographic_resource_expansion_ratio": 1.4299316313890833,
+      "model": "log(1+R/U)~1+log_growth+log_native+log1p_resolved_hosts+host_family_breadth"
+    },
+    "after_extra_links": {
+      "species": 70,
+      "genera": 53,
+      "slope_log_support_intensity_on_log_gain": 0.5772624245819207,
+      "genus_bootstrap_95_percentile": [
+        0.294803835385166,
+        0.9755517424009365
+      ],
+      "genus_bootstrap_successes": 5000,
+      "genus_bootstrap_failed": 0,
+      "positive_bootstrap_fraction": 0.9998,
+      "leave_one_genus_coefficient_range": [
+        0.4832810831369731,
+        0.6742063906334013
+      ],
+      "median_introduced_support_incidence_per_new_cell": 2.2121588089330024,
+      "median_geographic_resource_expansion_ratio": 1.3289607545872197,
+      "model": "log(1+R/U)~1+log_growth+log_native+log1p_resolved_hosts+host_family_breadth"
+    }
+  },
+  "paired_source_change": {
+    "median_change_log_geographic_gain": -0.041179283454848226,
+    "median_change_log_support_intensity": 0.36346822663653444,
+    "mean_change_log_geographic_gain": -0.13148949718821568,
+    "mean_change_log_support_intensity": 0.4035600825308532,
+    "fraction_species_with_higher_intensity_after": 0.8428571428571429,
+    "correlation_within_species_changes": -0.019084179873752685
+  },
+  "source_full_81_aggregates": {
+    "base_81": {
+      "focal_butterflies": 81,
+      "species_with_expansion": 70,
+      "native_cells": 9047,
+      "contemporary_cells": 13675,
+      "distinct_added_cells": 4628,
+      "candidate_incidences": 28658,
+      "native_absorbed_incidences": 18806,
+      "redundant_new_cell_incidences": 5224,
+      "native_absorption_fraction": 0.6562216484053318,
+      "distinct_new_region_per_candidate_fraction": 0.16149068322981366,
+      "mean_introduced_support_per_new_cell": 2.128781331028522
+    },
+    "augmented_81": {
+      "focal_butterflies": 81,
+      "species_with_expansion": 77,
+      "native_cells": 12369,
+      "contemporary_cells": 17411,
+      "distinct_added_cells": 5042,
+      "candidate_incidences": 56661,
+      "native_absorbed_incidences": 40159,
+      "redundant_new_cell_incidences": 11460,
+      "native_absorption_fraction": 0.7087591112052382,
+      "distinct_new_region_per_candidate_fraction": 0.0889853691251478,
+      "mean_introduced_support_per_new_cell": 3.272907576358588
+    }
+  },
+  "scientific_limits": [
+    "BCE catalogue Europe-biased, not independent global cohort",
+    "Mean introduced supports per cell is not the fraction of cells with ≥2 supports",
+    "H, A, R and U are mathematically linked components of same map",
+    "A changed host list can move regions from newly added to natively supported",
+    "No field verification of local plants, larval survival or butterfly recruitment",
+    "Posthoc exploratory source sensitivity, not causal host buffering"
+  ]
+}
