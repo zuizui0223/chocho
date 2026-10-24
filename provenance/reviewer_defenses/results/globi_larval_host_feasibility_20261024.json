@@ -1,0 +1,1316 @@
+{
+  "schema": "chocho_globi_immature_georeferenced_source_pilot_v01",
+  "status": "SOURCE_GATE_INCOMPLETE_NOT_NEGATIVE_EVIDENCE",
+  "date_utc": "2026-10-24T08:28:21.534407+00:00",
+  "source": "GloBI live API (unstable feasibility probe, NOT pinned archival release)",
+  "source_versioned_archive": "https://doi.org/10.5281/zenodo.3950589",
+  "focal_git_blob": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+  "focal_n": 239,
+  "random_focal_selected": [
+    "Erynnis icelus",
+    "Charaxes etesipe",
+    "Gonepteryx rhamni",
+    "Junonia orithya",
+    "Colias croceus",
+    "Chlosyne lacinia",
+    "Colias palaeno",
+    "Thecla betulae",
+    "Pieris brassicae",
+    "Lampides boeticus",
+    "Mestra dorcas",
+    "Erynnis brizo",
+    "Siproeta epaphus",
+    "Elymnias hypermnestra",
+    "Polyommatus eros",
+    "Aphantopus hyperantus",
+    "Araschnia levana",
+    "Colias nastes",
+    "Pyrgus andromedae",
+    "Pseudozizeeria maha"
+  ],
+  "positive_controls": [
+    "Danaus plexippus",
+    "Pieris brassicae"
+  ],
+  "source_requests": 21,
+  "response_blind_selected_queries": 20,
+  "complete_random_focal": false,
+  "random_focal_with_strict_candidate": 5,
+  "strict_candidate_distinct_source_ids": 2,
+  "next_decision": "SOURCE_GATE_INCOMPLETE_NOT_NEGATIVE_EVIDENCE",
+  "important_limits": [
+    "Source IDs are not a fully verified independence check; may reuse HOSTS citations",
+    "Larval georeferenced feeding is not successful adult recruitment",
+    "Georeferenced interactions do not establish nonnative plant at encounter",
+    "Live API data unstable; full study must pin a versioned GloBI archive",
+    "Errors, missingness and truncation are not ecological absence"
+  ],
+  "taxa": [
+    {
+      "species": "Aphantopus hyperantus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Aphantopus+hyperantus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "245998a8e40c5e018ad78c0b8b85dfcb1b3b21dee0a830aab83acad0b5e79a3b",
+      "response_bytes": 970616,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "coordinates": 49,
+        "dated_full": 528,
+        "dated_year": 528,
+        "exact_focal": 1024,
+        "explicit_trophic": 392,
+        "immature_stage": 10,
+        "plant_target": 398,
+        "plant_trophic": 247,
+        "plant_trophic_immature": 4,
+        "plant_trophic_immature_georeferenced": 4,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 1024,
+        "strict_candidate": 4,
+        "strict_candidate_dated": 4
+      },
+      "interaction_type_counts": {
+        "eats": 392,
+        "preyedUponBy": 390,
+        "pollinates": 151,
+        "hasHost": 71,
+        "visitsFlowersOf": 20
+      },
+      "observed_stage_terms": {
+        "Young": 110,
+        "Adult": 92,
+        "larva": 10
+      },
+      "distinct_study_source_ids": 8,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 893,
+        "globalbioticinteractions/ferrer-paris": 71,
+        "globalbioticinteractions/web-of-life": 20,
+        "globalbioticinteractions/menares2025-flowervisitation": 14,
+        "globalbioticinteractions/menares2025-herbivory": 10,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 10,
+        "globalbioticinteractions/russo2022": 5,
+        "zedomel/redhead2018": 1
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/menares2025-herbivory"
+      ]
+    },
+    {
+      "species": "Araschnia levana",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Araschnia+levana&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "db398fa96d2866650e8569af965ca34ca8a43f509011529bc5fbfc2745e94aee",
+      "response_bytes": 943978,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 972,
+      "counts": {
+        "coordinates": 391,
+        "dated_full": 578,
+        "dated_year": 578,
+        "exact_focal": 972,
+        "explicit_trophic": 182,
+        "immature_stage": 42,
+        "plant_target": 306,
+        "plant_trophic": 104,
+        "plant_trophic_immature": 7,
+        "plant_trophic_immature_georeferenced": 6,
+        "rows": 972,
+        "source_not_HOSTS_marked": 962,
+        "strict_candidate": 6,
+        "strict_candidate_dated": 6
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 393,
+        "visitsFlowersOf": 270,
+        "eats": 182,
+        "interactsWith": 52,
+        "hasHost": 26,
+        "visits": 23,
+        "pollinates": 21,
+        "eatenBy": 2,
+        "hasPathogen": 2,
+        "hasParasitoid": 1
+      },
+      "observed_stage_terms": {
+        "adult": 167,
+        "Young": 97,
+        "Adult": 69,
+        "larva": 40,
+        "larval stage": 2
+      },
+      "distinct_study_source_ids": 12,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 549,
+        "globalbioticinteractions/inaturalist": 240,
+        "globalbioticinteractions/menares2025-flowervisitation": 86,
+        "globalbioticinteractions/dopi": 63,
+        "globalbioticinteractions/ferrer-paris": 13,
+        "globalbioticinteractions/HOSTS": 10,
+        "JoseBSL/EuPPollNet": 3,
+        "millerse/Ecological-Database-of-the-World-s-Insect-Pathogens": 2,
+        "globalbioticinteractions/menares2025-herbivory": 2,
+        "globalbioticinteractions/saito2016": 2
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist",
+        "globalbioticinteractions/menares2025-herbivory"
+      ]
+    },
+    {
+      "species": "Charaxes etesipe",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Charaxes+etesipe&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "9af8d17fa0708c5126710dadd9fb5d82fcb25450ce2b50e2511e9c78080f5509",
+      "response_bytes": 101925,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 124,
+      "counts": {
+        "exact_focal": 122,
+        "explicit_trophic": 41,
+        "other_source_taxon": 2,
+        "plant_target": 88,
+        "plant_trophic": 27,
+        "rows": 124,
+        "source_not_HOSTS_marked": 85
+      },
+      "interaction_type_counts": {
+        "hasHost": 81,
+        "eats": 41
+      },
+      "observed_stage_terms": {},
+      "distinct_study_source_ids": 3,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 44,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 41,
+        "globalbioticinteractions/HOSTS": 37
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Chlosyne lacinia",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Chlosyne+lacinia&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "0c6aab5371052d0374ae5dd95f3f9bded4cc21e2c0b8b9aec7f0180249fece93",
+      "response_bytes": 398285,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 630,
+      "counts": {
+        "coordinates": 282,
+        "dated_full": 280,
+        "dated_year": 280,
+        "exact_focal": 513,
+        "explicit_trophic": 71,
+        "immature_stage": 92,
+        "other_source_taxon": 117,
+        "plant_target": 276,
+        "plant_trophic": 36,
+        "plant_trophic_immature": 1,
+        "plant_trophic_immature_georeferenced": 1,
+        "rows": 630,
+        "source_not_HOSTS_marked": 435,
+        "strict_candidate": 1,
+        "strict_candidate_dated": 1
+      },
+      "interaction_type_counts": {
+        "hasHost": 186,
+        "interactsWith": 116,
+        "visitsFlowersOf": 74,
+        "eats": 71,
+        "visits": 31,
+        "hostOf": 27,
+        "hasParasite": 5,
+        "preyedUponBy": 2,
+        "eatenBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 160,
+        "larva": 81,
+        "larvae": 11,
+        "egg": 2
+      },
+      "distinct_study_source_ids": 12,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 261,
+        "globalbioticinteractions/ferrer-paris": 107,
+        "globalbioticinteractions/HOSTS": 78,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 19,
+        "globalbioticinteractions/bold": 19,
+        "globalbioticinteractions/scan": 14,
+        "globalbioticinteractions/taxonworks": 4,
+        "EOL/pseudonitzchia": 4,
+        "urn:lsid:checklistbank.org:dataset:124661": 4,
+        "globalbioticinteractions/ecdysis": 1
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Colias croceus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Colias+croceus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "9594fbd2574fbf8e551afd7ccd162f4d36be506398b790349b9992618e4d708c",
+      "response_bytes": 941154,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "coordinates": 141,
+        "dated_full": 569,
+        "dated_year": 569,
+        "exact_focal": 1024,
+        "explicit_trophic": 193,
+        "plant_target": 345,
+        "plant_trophic": 103,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 1019
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 379,
+        "pollinates": 235,
+        "eats": 193,
+        "visitsFlowersOf": 142,
+        "hasHost": 75
+      },
+      "observed_stage_terms": {
+        "Young": 96,
+        "Adult": 72
+      },
+      "distinct_study_source_ids": 6,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 802,
+        "globalbioticinteractions/dopi": 141,
+        "globalbioticinteractions/ferrer-paris": 70,
+        "globalbioticinteractions/web-of-life": 5,
+        "globalbioticinteractions/HOSTS": 5,
+        "zedomel/redhead2018": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Colias nastes",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Colias+nastes&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "0803069d030eca6bf1e0a8c14809e461e84c3a79f9acf7783046bd8b1b3a5d0a",
+      "response_bytes": 49094,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 88,
+      "counts": {
+        "coordinates": 8,
+        "dated_full": 7,
+        "dated_year": 7,
+        "exact_focal": 79,
+        "explicit_trophic": 7,
+        "other_source_taxon": 9,
+        "plant_target": 47,
+        "plant_trophic": 6,
+        "rows": 88,
+        "source_not_HOSTS_marked": 70
+      },
+      "interaction_type_counts": {
+        "hasHost": 68,
+        "eats": 7,
+        "visitsFlowersOf": 3,
+        "interactsWith": 1
+      },
+      "observed_stage_terms": {
+        "adult": 1
+      },
+      "distinct_study_source_ids": 6,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 59,
+        "globalbioticinteractions/HOSTS": 9,
+        "globalbioticinteractions/vertnet": 4,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 3,
+        "globalbioticinteractions/inaturalist": 3,
+        "millerse/Plant-Pollinator-Web": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Colias palaeno",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Colias+palaeno&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "53253a9c87cca54a624be5a33314e8745bdd8f35dedfa0b427c4c21f31080cdf",
+      "response_bytes": 522477,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 543,
+      "counts": {
+        "coordinates": 38,
+        "dated_full": 172,
+        "dated_year": 172,
+        "exact_focal": 542,
+        "explicit_trophic": 67,
+        "immature_stage": 3,
+        "other_source_taxon": 1,
+        "plant_target": 84,
+        "plant_trophic": 39,
+        "plant_trophic_immature": 3,
+        "rows": 543,
+        "source_not_HOSTS_marked": 539
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 378,
+        "eats": 67,
+        "hasHost": 58,
+        "adjacentTo": 27,
+        "visitsFlowersOf": 9,
+        "pollinates": 1,
+        "interactsWith": 1,
+        "visits": 1
+      },
+      "observed_stage_terms": {
+        "Young": 95,
+        "Adult": 25,
+        "adult": 9,
+        "larval stage": 3,
+        "egg": 1
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 442,
+        "globalbioticinteractions/ferrer-paris": 55,
+        "globalbioticinteractions/vertnet": 28,
+        "globalbioticinteractions/inaturalist": 10,
+        "globalbioticinteractions/saito2016": 3,
+        "globalbioticinteractions/HOSTS": 3,
+        "globalbioticinteractions/dopi": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Danaus plexippus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Danaus+plexippus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "90c3eb7a0ae7c9f9aea42387286243f0a02e6fab29834466f333dbb3ec3c4fb4",
+      "response_bytes": 581662,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "coordinates": 8,
+        "dated_full": 9,
+        "dated_year": 9,
+        "exact_focal": 18,
+        "explicit_trophic": 5,
+        "immature_stage": 1,
+        "other_source_taxon": 1006,
+        "plant_target": 2,
+        "plant_trophic": 1,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 18
+      },
+      "interaction_type_counts": {
+        "interactsWith": 5,
+        "eats": 5,
+        "adjacentTo": 4,
+        "hasHost": 2,
+        "preyedUponBy": 1,
+        "hasParasite": 1
+      },
+      "observed_stage_terms": {
+        "adult": 6,
+        "larvae": 1,
+        "pupae": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/scan": 11,
+        "globalbioticinteractions/siad": 5,
+        "EOL/pseudonitzchia": 1,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Elymnias hypermnestra",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Elymnias+hypermnestra&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "f60bf5aa8f7e77ea047c6f91f184a27ad1dd26e2d5eb1e69b46706ad04bb9a80",
+      "response_bytes": 196932,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 259,
+      "counts": {
+        "coordinates": 82,
+        "dated_full": 82,
+        "dated_year": 82,
+        "exact_focal": 222,
+        "explicit_trophic": 65,
+        "immature_stage": 26,
+        "other_source_taxon": 37,
+        "plant_target": 128,
+        "plant_trophic": 41,
+        "plant_trophic_immature": 2,
+        "plant_trophic_immature_georeferenced": 2,
+        "rows": 259,
+        "source_not_HOSTS_marked": 174,
+        "strict_candidate": 2,
+        "strict_candidate_dated": 2
+      },
+      "interaction_type_counts": {
+        "hasHost": 96,
+        "eats": 65,
+        "interactsWith": 46,
+        "visitsFlowersOf": 11,
+        "visits": 2,
+        "preyedUponBy": 2
+      },
+      "observed_stage_terms": {
+        "adult": 42,
+        "larva": 26,
+        "egg": 8,
+        "pupa": 5
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 82,
+        "globalbioticinteractions/ferrer-paris": 48,
+        "globalbioticinteractions/HOSTS": 48,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 44
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Erynnis brizo",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Erynnis+brizo&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "1626318ac1771d211327beeb801ad52d242c01bc5b3122c2622439ecf277fc89",
+      "response_bytes": 140692,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 215,
+      "counts": {
+        "coordinates": 121,
+        "dated_full": 101,
+        "dated_year": 101,
+        "exact_focal": 202,
+        "explicit_trophic": 6,
+        "immature_stage": 4,
+        "other_source_taxon": 13,
+        "plant_target": 83,
+        "plant_trophic": 2,
+        "rows": 215,
+        "source_not_HOSTS_marked": 189
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 58,
+        "interactsWith": 44,
+        "mutualistOf": 33,
+        "hasHost": 25,
+        "pollinates": 21,
+        "adjacentTo": 8,
+        "eats": 6,
+        "visits": 5,
+        "hasParasite": 2
+      },
+      "observed_stage_terms": {
+        "adult": 53,
+        "larvae": 3,
+        "larva": 1
+      },
+      "distinct_study_source_ids": 14,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 51,
+        "globalbioticinteractions/mangal": 33,
+        "EOL/pseudonitzchia": 31,
+        "globalbioticinteractions/web-of-life": 21,
+        "globalbioticinteractions/HOSTS": 13,
+        "globalbioticinteractions/ferrer-paris": 11,
+        "globalbioticinteractions/cpc-pollinators": 11,
+        "millerse/Flowers-and-insects-lists-of-visitors-to-four-hundred-and-fifty-three-flowers": 8,
+        "globalbioticinteractions/scan": 7,
+        "globalbioticinteractions/ecdysis": 5
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Erynnis icelus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Erynnis+icelus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "c2cd7d344713c2bd674ab9a587d6383a25a7c8b857855885b9134baf5f06ca4a",
+      "response_bytes": 175987,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 279,
+      "counts": {
+        "coordinates": 151,
+        "dated_full": 151,
+        "dated_year": 151,
+        "exact_focal": 279,
+        "explicit_trophic": 51,
+        "immature_stage": 13,
+        "plant_target": 113,
+        "plant_trophic": 20,
+        "rows": 279,
+        "source_not_HOSTS_marked": 263
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 71,
+        "interactsWith": 63,
+        "eats": 51,
+        "hasHost": 47,
+        "adjacentTo": 42,
+        "visits": 5
+      },
+      "observed_stage_terms": {
+        "adult": 122,
+        "larva": 11,
+        "Larval": 2
+      },
+      "distinct_study_source_ids": 11,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 105,
+        "globalbioticinteractions/hale2024": 46,
+        "globalbioticinteractions/ferrer-paris": 31,
+        "EOL/pseudonitzchia": 28,
+        "globalbioticinteractions/scan": 18,
+        "globalbioticinteractions/wis-ih-wirc": 18,
+        "globalbioticinteractions/HOSTS": 16,
+        "globalbioticinteractions/cpc-pollinators": 6,
+        "globalbioticinteractions/ecdysis": 6,
+        "globalbioticinteractions/msu-msuc": 4
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Gonepteryx rhamni",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Gonepteryx+rhamni&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "13b355b9a208e2870757fe9fbd5add3f1ca66358646525f6c7dc8c92e2da7b2c",
+      "response_bytes": 978857,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "dated_full": 563,
+        "dated_year": 563,
+        "exact_focal": 1024,
+        "explicit_trophic": 281,
+        "plant_target": 362,
+        "plant_trophic": 153,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 1024
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 378,
+        "pollinates": 324,
+        "eats": 281,
+        "hasHost": 34,
+        "hasParasitoid": 4,
+        "visitsFlowersOf": 2,
+        "hasParasite": 1
+      },
+      "observed_stage_terms": {
+        "Adult": 139,
+        "Young": 96
+      },
+      "distinct_study_source_ids": 5,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 987,
+        "globalbioticinteractions/ferrer-paris": 34,
+        "zedomel/redhead2018": 1,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1,
+        "globalbioticinteractions/carvalheiro2023": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Junonia orithya",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Junonia+orithya&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "cb8398baa3f7f83195cfdaa88083a7303134be9b83dfecf9e059f52f3aa2fc97",
+      "response_bytes": 323849,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 503,
+      "counts": {
+        "coordinates": 194,
+        "dated_full": 194,
+        "dated_year": 194,
+        "exact_focal": 488,
+        "explicit_trophic": 237,
+        "immature_stage": 23,
+        "other_source_taxon": 15,
+        "plant_target": 336,
+        "plant_trophic": 138,
+        "plant_trophic_immature": 11,
+        "plant_trophic_immature_georeferenced": 1,
+        "rows": 503,
+        "source_not_HOSTS_marked": 431,
+        "strict_candidate": 1,
+        "strict_candidate_dated": 1
+      },
+      "interaction_type_counts": {
+        "eats": 237,
+        "hasHost": 215,
+        "interactsWith": 20,
+        "visitsFlowersOf": 13,
+        "hasPathogen": 2,
+        "visits": 1
+      },
+      "observed_stage_terms": {
+        "adult": 175,
+        "larval stage": 12,
+        "larva": 11
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 194,
+        "globalbioticinteractions/ferrer-paris": 158,
+        "globalbioticinteractions/HOSTS": 57,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 45,
+        "globalbioticinteractions/siad": 16,
+        "globalbioticinteractions/saito2016": 12,
+        "fkeck/gpt_interactions": 6
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Lampides boeticus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Lampides+boeticus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "3c0d147672366a114f57b434a8b0a69461d827a60effb7b835469bee21d5b5d9",
+      "response_bytes": 961875,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "coordinates": 41,
+        "dated_full": 398,
+        "dated_year": 398,
+        "exact_focal": 1024,
+        "explicit_trophic": 313,
+        "plant_target": 347,
+        "plant_trophic": 137,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 873
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 376,
+        "eats": 313,
+        "hasHost": 268,
+        "pollinates": 28,
+        "visitsFlowersOf": 15,
+        "hasParasite": 11,
+        "interactsWith": 9,
+        "preysOn": 4
+      },
+      "observed_stage_terms": {
+        "Young": 95,
+        "adult": 11,
+        "Adult": 1
+      },
+      "distinct_study_source_ids": 14,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 639,
+        "globalbioticinteractions/HOSTS": 151,
+        "globalbioticinteractions/ferrer-paris": 86,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 61,
+        "globalbioticinteractions/siad": 25,
+        "globalbioticinteractions/bold": 21,
+        "globalbioticinteractions/dopi": 12,
+        "globalbioticinteractions/ecdysis": 11,
+        "globalbioticinteractions/companion-planting-decision-support": 8,
+        "globalbioticinteractions/globalwebdb": 3
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Mestra dorcas",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Mestra+dorcas&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "773aff0eb4f24c90e3fe4a00229d3fe0438b06c42022b5a9222f0d4752767fc0",
+      "response_bytes": 9094,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 13,
+      "counts": {
+        "coordinates": 1,
+        "dated_full": 1,
+        "dated_year": 1,
+        "exact_focal": 11,
+        "explicit_trophic": 1,
+        "other_source_taxon": 2,
+        "plant_target": 7,
+        "plant_trophic": 1,
+        "rows": 13,
+        "source_not_HOSTS_marked": 10
+      },
+      "interaction_type_counts": {
+        "hasHost": 9,
+        "eats": 1,
+        "visitsFlowersOf": 1
+      },
+      "observed_stage_terms": {
+        "adult": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 8,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1,
+        "globalbioticinteractions/HOSTS": 1,
+        "globalbioticinteractions/inaturalist": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pieris brassicae",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Pieris+brassicae&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "PAGINATION_REQUIRED",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "ca21f8e38c45b57f2e0ab097dec2d398b033d225bc0f9bea71da47973df3b6d9",
+      "response_bytes": 937615,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 1024,
+      "counts": {
+        "dated_full": 724,
+        "dated_year": 724,
+        "exact_focal": 1024,
+        "explicit_trophic": 421,
+        "plant_target": 523,
+        "plant_trophic": 269,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 1024
+      },
+      "interaction_type_counts": {
+        "pollinates": 457,
+        "eats": 421,
+        "preyedUponBy": 127,
+        "hasParasitoid": 17,
+        "pathogenOf": 2
+      },
+      "observed_stage_terms": {
+        "Adult": 194,
+        "Young": 35
+      },
+      "distinct_study_source_ids": 3,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 1021,
+        "globalbioticinteractions/caps-pest-lists": 2,
+        "millerse/Ecological-Database-of-the-World-s-Insect-Pathogens": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Polyommatus eros",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Polyommatus+eros&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "ae5c7e2d22894bd77a68b6f51f8e764d0a46c42b2e2912e82b3dd4cb5fb57ae4",
+      "response_bytes": 476581,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 466,
+      "counts": {
+        "coordinates": 20,
+        "dated_full": 169,
+        "dated_year": 169,
+        "exact_focal": 462,
+        "explicit_trophic": 32,
+        "other_source_taxon": 4,
+        "plant_target": 49,
+        "plant_trophic": 15,
+        "rows": 466,
+        "source_not_HOSTS_marked": 460
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 377,
+        "eats": 32,
+        "pollinates": 24,
+        "visitsFlowersOf": 18,
+        "hasHost": 9,
+        "visits": 1,
+        "interactsWith": 1
+      },
+      "observed_stage_terms": {
+        "Young": 96,
+        "adult": 19,
+        "egg": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 433,
+        "globalbioticinteractions/inaturalist": 20,
+        "globalbioticinteractions/ferrer-paris": 7,
+        "globalbioticinteractions/HOSTS": 2
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pseudozizeeria maha",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Pseudozizeeria+maha&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "d046c062b4db569672818533d1a0f0249feb26835f22ba2fe60b98baaf494e71",
+      "response_bytes": 272947,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 497,
+      "counts": {
+        "coordinates": 366,
+        "dated_full": 366,
+        "dated_year": 366,
+        "exact_focal": 398,
+        "explicit_trophic": 181,
+        "immature_stage": 5,
+        "other_source_taxon": 99,
+        "plant_target": 230,
+        "plant_trophic": 104,
+        "plant_trophic_immature": 5,
+        "rows": 497,
+        "source_not_HOSTS_marked": 391
+      },
+      "interaction_type_counts": {
+        "eats": 181,
+        "visitsFlowersOf": 163,
+        "interactsWith": 24,
+        "hasHost": 17,
+        "laysEggsOn": 7,
+        "visits": 2,
+        "preysOn": 1,
+        "flowersVisitedBy": 1,
+        "eatenBy": 1,
+        "pollinates": 1
+      },
+      "observed_stage_terms": {
+        "adult": 286,
+        "larval stage": 5
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 365,
+        "globalbioticinteractions/ferrer-paris": 10,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 7,
+        "globalbioticinteractions/HOSTS": 7,
+        "globalbioticinteractions/saito2016": 5,
+        "globalbioticinteractions/ollerton2022": 3,
+        "ibartomeus/CropPol": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pyrgus andromedae",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Pyrgus+andromedae&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "d03c5b174345bc8f2fa16da0ba7b7c5bf34262ee98374c4ae37fe873724e0421",
+      "response_bytes": 17824,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 27,
+      "counts": {
+        "coordinates": 2,
+        "dated_full": 12,
+        "dated_year": 12,
+        "exact_focal": 27,
+        "explicit_trophic": 10,
+        "plant_target": 17,
+        "plant_trophic": 5,
+        "rows": 27,
+        "source_not_HOSTS_marked": 26
+      },
+      "interaction_type_counts": {
+        "hasHost": 14,
+        "eats": 10,
+        "visits": 1,
+        "visitsFlowersOf": 1,
+        "preyedUponBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 2
+      },
+      "distinct_study_source_ids": 5,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 13,
+        "globalbioticinteractions/trophiCH": 10,
+        "globalbioticinteractions/inaturalist": 2,
+        "globalbioticinteractions/HOSTS": 1,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Siproeta epaphus",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Siproeta+epaphus&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "1fded1e1acb8a2bbac9625314de17b7aa40aa58c8a0f3b2cb953c1eb05dd70ef",
+      "response_bytes": 32995,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 52,
+      "counts": {
+        "coordinates": 13,
+        "dated_full": 13,
+        "dated_year": 13,
+        "exact_focal": 26,
+        "explicit_trophic": 1,
+        "immature_stage": 1,
+        "other_source_taxon": 26,
+        "plant_target": 13,
+        "plant_trophic": 1,
+        "rows": 52,
+        "source_not_HOSTS_marked": 23
+      },
+      "interaction_type_counts": {
+        "hasHost": 13,
+        "visitsFlowersOf": 6,
+        "interactsWith": 4,
+        "hostOf": 2,
+        "eats": 1
+      },
+      "observed_stage_terms": {
+        "adult": 10,
+        "larva": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 11,
+        "globalbioticinteractions/ferrer-paris": 10,
+        "globalbioticinteractions/HOSTS": 3,
+        "globalbioticinteractions/bold": 2
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Thecla betulae",
+      "url": "https://api.globalbioticinteractions.org/interaction.csv?sourceTaxon=Thecla+betulae&includeObservations=true&limit=1024&type=csv&fields=source_taxon_name%2Cinteraction_type%2Ctarget_taxon_name%2Ctarget_taxon_path%2Csource_specimen_life_stage%2Cevent_date%2Clatitude%2Clongitude%2Cstudy_source_id%2Cstudy_citation%2Cstudy_source_citation",
+      "status": "COMPLETE",
+      "http_status": 200,
+      "content_type": "text/csv;charset=UTF-8",
+      "source_response_sha256": "41cb0d339d4010f4d4d183f23b79fe25c69666f653f3600f1518f748ecb4554a",
+      "response_bytes": 607665,
+      "returned_header": [
+        "source_taxon_name",
+        "interaction_type",
+        "target_taxon_name",
+        "target_taxon_path",
+        "source_specimen_life_stage",
+        "event_date",
+        "latitude",
+        "longitude",
+        "study_source_id",
+        "study_citation",
+        "study_source_citation"
+      ],
+      "rows_returned": 615,
+      "counts": {
+        "coordinates": 53,
+        "dated_full": 227,
+        "dated_year": 227,
+        "exact_focal": 614,
+        "explicit_trophic": 105,
+        "immature_stage": 5,
+        "other_source_taxon": 1,
+        "plant_target": 92,
+        "plant_trophic": 38,
+        "rows": 615,
+        "source_not_HOSTS_marked": 600
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 376,
+        "eats": 105,
+        "hasHost": 38,
+        "visitsFlowersOf": 32,
+        "pollinates": 25,
+        "interactsWith": 16,
+        "visits": 8,
+        "hostOf": 7,
+        "laysEggsOn": 2,
+        "hasParasitoid": 2,
+        "hasParasite": 2,
+        "flowersVisitedBy": 1
+      },
+      "observed_stage_terms": {
+        "Young": 99,
+        "adult": 30,
+        "Adult": 25,
+        "egg": 13,
+        "larva": 5
+      },
+      "distinct_study_source_ids": 11,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 491,
+        "globalbioticinteractions/inaturalist": 49,
+        "globalbioticinteractions/ferrer-paris": 23,
+        "globalbioticinteractions/HOSTS": 14,
+        "zedomel/redhead2018": 14,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 7,
+        "globalbioticinteractions/taxonworks": 5,
+        "globalbioticinteractions/web-of-life": 4,
+        "millerse/Plant-Herbivore-Web": 4,
+        "urn:lsid:checklistbank.org:dataset:124661": 2
+      },
+      "strict_qualifying_source_ids": []
+    }
+  ]
+}
