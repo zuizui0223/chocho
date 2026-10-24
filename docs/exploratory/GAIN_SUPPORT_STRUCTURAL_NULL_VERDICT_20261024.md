@@ -12,7 +12,7 @@ The observed coefficient is almost exactly reproduced by two independently seede
 ## Question, frozen comparison, and source provenance
 The observed species-level regression from [the exploratory gain–fragility result](butterfly_geographic_gain_fragility_20261024.json) was β = −0.220718729049... across 206 butterflies with newly opened regions (a source-conditional genus-bootstrap interval −0.298 to −0.165). This coefficient describes a within-catalogue association and alone does **not** test against a plant geography null.
 
-Before the new null simulation, the [protocol](../protocols/GAIN_SUPPORT_PLANT_RANGE_NULL_20261024.md) fixed both numerical seeds, original source identities, candidate fauna, plant-graph constraints, predictor/outcome definitions and inferential stop rule. The null was selected **after** seeing the old observed coefficient, so it is an explicit **posthoc falsification test**, not a registered independent confirmation.
+Before the new null simulation, the [protocol](../../provenance/reviewer_defenses/protocols/GAIN_SUPPORT_PLANT_RANGE_NULL_20261024.md) fixed both numerical seeds, original source identities, candidate fauna, plant-graph constraints, predictor/outcome definitions and inferential stop rule. The null was selected **after** seeing the old observed coefficient, so it is an explicit **posthoc falsification test**, not a registered independent confirmation.
 
 Exact sources:
 - HOSTS pinned Git commit `808e0b869f9ec1adf8efff87cf6a395adda103e0`
@@ -45,7 +45,7 @@ Two independent MCMC chains used seeds 20261024 and 20261025, each with 5 × 30,
 
 Approximate positive-sequence ESS for the full-panel coefficients was **119.8 / 150.4**, and for adequate-host coefficients **97.1 / 150.0**, all above the prospectively required 30. The two-chain median agreement test passed for both responses. The exploratory MCMC is therefore **numerically qualified** under the declared constraints.
 
-[Full numeric source receipt](butterfly_gain_support_plant_null_20261024.json) (contains each draw's slope, panel consistency diagnostics, original source identities and chain quality).
+[Full numeric source receipt](../../provenance/reviewer_defenses/results/butterfly_gain_support_plant_null_20261024.json) (contains each draw's slope, panel consistency diagnostics, original source identities and chain quality).
 [Source workflow, successful](https://github.com/zuizui0223/chocho/actions/runs/40081217645).
 
 ## What this adds, what must be retracted and what survives
@@ -68,7 +68,7 @@ The *main* submission claim should remain **partner redistribution changes butte
 Substantive ecological next data must come from source-independent local larval feeding and survival, dated host arrival, or independently validated community abundance/occupancy—none are inferred from this randomized host map. Stop further arbitrary host/country strata and do not retune null thresholds to manufacture extra signal.
 
 ## Branch and files
-- [Frozen prospective-for-this-null protocol](../protocols/GAIN_SUPPORT_PLANT_RANGE_NULL_20261024.md)
+- [Frozen prospective-for-this-null protocol](../../provenance/reviewer_defenses/protocols/GAIN_SUPPORT_PLANT_RANGE_NULL_20261024.md)
 - `scripts/analyze_butterfly_gain_support_plant_null_20261024.py`: replay exact frozen source with 2×199 draws
 - `tests/test_gain_support_plant_range_null_20261024.py`: source-independent bit/margin/ESS guards
 - `.github/workflows/gain-support-plant-null-20261024.yml`: CI rebuild from pinned HOSTS and WCVP
