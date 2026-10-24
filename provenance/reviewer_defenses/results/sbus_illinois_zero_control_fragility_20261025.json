@@ -1,0 +1,85 @@
+{
+  "schema": "chocho_us_sbus_illinois_host_sharing_posthoc_fragility_v01",
+  "status": "POSTHOC_OBSERVATIONAL_SENSITIVITY_COMPLETE_NO_COMPETITION_CAUSAL_ESTIMATE",
+  "source_doi": "10.6084/m9.figshare.27934602.v1",
+  "original_observations": 9178,
+  "positive_focal_both_year_observations": 3404,
+  "focal_positive_both_year_fraction": 0.3708869034648071,
+  "original_source_implied_zeros": 7501,
+  "original_source_explicit_species_site_year": 8953,
+  "original_within_model": {
+    "beta_shared": 0.02193913354342561,
+    "shared_SE": 0.017170986656599004,
+    "beta_nonshared": 0.305446280354096,
+    "contrast": -0.28350714681067035,
+    "contrast_CI": [
+      -0.5131980237590328,
+      -0.053816269862307975
+    ]
+  },
+  "leave_out_site_mean_control": {
+    "status": "OBSERVATIONAL_ASSOCIATION_ONLY",
+    "n_transitions": 9178,
+    "n_sites": 121,
+    "n_species_site_clusters": 1718,
+    "drop_composite_site_year_mean": true,
+    "beta_lag_shared": -0.0014782884300739516,
+    "shared_sitecluster_95_normal": [
+      -0.027187277409588803,
+      0.024230700549440903
+    ],
+    "beta_lag_nonshared": 0.08101774579418165,
+    "contrast_shared_minus_nonshared": -0.08249603422425561,
+    "contrast_sitecluster_95_normal": [
+      -0.15049160904169423,
+      -0.014500459406817004
+    ],
+    "not_causal_or_population_density": true
+  },
+  "positive_focal_in_both_years_original_control_set": {
+    "status": "OBSERVATIONAL_ASSOCIATION_ONLY",
+    "n_transitions": 3404,
+    "n_sites": 120,
+    "n_species_site_clusters": 1014,
+    "drop_composite_site_year_mean": false,
+    "beta_lag_shared": 0.021327815890034768,
+    "shared_sitecluster_95_normal": [
+      -0.0739385865743209,
+      0.11659421835439043
+    ],
+    "beta_lag_nonshared": 0.6845395212167835,
+    "contrast_shared_minus_nonshared": -0.6632117053267488,
+    "contrast_sitecluster_95_normal": [
+      -1.5697705414376601,
+      0.2433471307841627
+    ],
+    "not_causal_or_population_density": true
+  },
+  "positive_focal_in_both_years_no_site_mean": {
+    "status": "OBSERVATIONAL_ASSOCIATION_ONLY",
+    "n_transitions": 3404,
+    "n_sites": 120,
+    "n_species_site_clusters": 1014,
+    "drop_composite_site_year_mean": true,
+    "beta_lag_shared": -0.01997382933651215,
+    "shared_sitecluster_95_normal": [
+      -0.06729291564010542,
+      0.027345256967081115
+    ],
+    "beta_lag_nonshared": 0.2346464411297768,
+    "contrast_shared_minus_nonshared": -0.254620270466289,
+    "contrast_sitecluster_95_normal": [
+      -0.4109726893639961,
+      -0.09826785156858184
+    ],
+    "not_causal_or_population_density": true
+  },
+  "limitations": [
+    "Focal positivity conditioning selects survivors with observation, and cannot restore undocumented survey zeros",
+    "Peers still use imputed zeros, so no complete elimination of source nonreporting risk",
+    "All regressions remain observational adult counts per recorded survey hour",
+    "Shared host documented in global HOSTS literature, not locally observed larvae",
+    "No fine-scale weather, plant biomass, abundance calibration or phylogenetic structure controls",
+    "Network degree-preserving null required before even a source-conditional niche association claim"
+  ]
+}
