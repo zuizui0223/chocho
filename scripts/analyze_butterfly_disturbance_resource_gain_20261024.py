@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from collections import defaultdict
@@ -23,6 +24,11 @@ FILES = (
     "data/frozen/figure_sources/s1_resource_descriptors.csv",
     "data/frozen/figure_sources/host_contribution_metrics.csv",
 )
+EXPECTED_GIT_BLOBS = {
+    FILES[0]: "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+    FILES[1]: "09541b5894529cc8629c7515ea9022ded9edead2",
+    FILES[2]: "4cf4851499ca2233ff2adadf1c4ee7f0e863f23d",
+}
 BOOTSTRAPS = 5000
 SEED = 20261024
 
@@ -59,6 +65,11 @@ def read_source(path: Path) -> dict[str, dict[str, str]]:
 
 
 def make_panel() -> list[dict[str, str]]:
+    for relpath, expected in EXPECTED_GIT_BLOBS.items():
+        data = (ROOT / relpath).read_bytes()
+        git_sha = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\\x00" + data).hexdigest()
+        if git_sha != expected:
+            raise ValueError(f"Source blob changed: {relpath}: {git_sha} != {expected}")
     sources = [read_source(ROOT / p) for p in FILES]
     a, traits, host = sources
     if len(a) != 239 or len(host) != 239 or len(traits) != 339:
