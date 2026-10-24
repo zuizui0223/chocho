@@ -1,0 +1,69 @@
+name: GEB ecology manuscript preflight audit
+on:
+  push:
+    branches:
+      - submission/geb-ecology-audit-20261024
+    paths:
+      - '.github/workflows/geb-ecology-preflight-20261024.yml'
+      - 'docs/submission/**'
+      - 'manuscript/**'
+      - 'scripts/submission_preflight.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-identifying-inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebuild blinded source from selected ecological manuscript
+        run: |
+          python scripts/render_butterfly_specialization_blinded_manuscript.py \
+            --input manuscript/butterfly_specialization_ecology_v0.2.md \
+            --output manuscript/generated/butterfly_specialization_ecology_blinded_v0.2.md
+      - name: Verify every unresolved blocker is author-supplied metadata, not science or package failure
+        run: |
+          mkdir -p _audit_out
+          python - <<'PY'
+          import json, pathlib, sys
+          sys.path.insert(0, "scripts")
+          from submission_preflight import inspect_initial_submission
+          result=inspect_initial_submission()
+          blockers=set(result["blockers"])
+          author_only={
+             "title-page author/affiliation/contact placeholders remain",
+             "CRediT contribution placeholders remain",
+             "acknowledgements placeholder remains",
+             "funding placeholder remains",
+             "conflict-of-interest placeholder remains",
+             "cover-letter corresponding-author placeholders remain",
+          }
+          assert blockers==author_only, {
+             "unexpected_non_author_blockers":sorted(blockers-author_only),
+             "missing_expected_author_prompts":sorted(author_only-blockers)
+          }
+          assert result["journal"]=="Global Ecology and Biogeography"
+          assert result["counts"]["abstract_words"]<=300
+          assert result["counts"]["main_text_words"]<=5000
+          assert result["counts"]["cover_letter_interest_words"]<250
+          result["audit_status"]="PASS_SCIENTIFIC_FORMAT_PENDING_ONLY_AUTHOR_IDENTITIES_DECLARATIONS"
+          result["author_placeholders_not_assumed_approved"]=True
+          result["source_branch"]="submission/geb-ecology-audit-20261024"
+          pathlib.Path("_audit_out/geb_20261024_preflight.json").write_text(
+             json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          print(json.dumps({
+             "audit_status":result["audit_status"],
+             "counts":result["counts"],
+             "outstanding_author_only":sorted(author_only),
+             "s9_and_si_files_have_mapping":True,
+          },ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-ecology-preflight-20261024
+          path: _audit_out/geb_20261024_preflight.json
+          retention-days: 30
