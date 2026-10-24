@@ -1,0 +1,40 @@
+name: Exact all-26 country-stratified host identity GADM null reference
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/analyze_gbif_all26_host_identity_reference_20261023.py"
+      - "tests/test_gbif_all26_host_identity_reference_20261023.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_ALL26_HOST_IDENTITY_SPATIAL_REFERENCE_20261023.md"
+      - ".github/workflows/gbif-all26-host-identity-null.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-source-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test exact enumeration and source host margin contracts
+        run: |
+          python -m pip install "pytest>=8,<10"
+          pytest -q tests/test_gbif_all26_host_identity_reference_20261023.py
+      - name: Enumerate all simple host-plant identity graphs by country and convolve exact null
+        run: |
+          mkdir -p _reference
+          python scripts/analyze_gbif_all26_host_identity_reference_20261023.py \
+            --source-botanical provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json \
+            --original-butterfly-48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --out _reference/all26_exact_country_host_identity_ref_20261023.json
+      - name: Preserve complete finite graph reference and sampling metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-all26-exact-host-identity-null-20261023
+          path: _reference/*.json
+          if-no-files-found: warn
+          retention-days: 30

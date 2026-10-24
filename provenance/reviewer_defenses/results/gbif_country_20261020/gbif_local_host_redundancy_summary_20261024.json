@@ -1,0 +1,173 @@
+{
+  "schema": "chocho_local_candidate_host_indexed_redundancy_source_checked_summary_v1",
+  "status": "EXACT_SOURCE_DESCRIPTIVE_POSTHOC_NOT_HOST_USE",
+  "source_workflow": "https://github.com/zuizui0223/chocho/actions/runs/40073886529",
+  "source_commit": "ac8c5da1a6026997e53906d6952fb07f988fd4b4",
+  "full_derived_result_artifact": {
+    "name": "gbif-local-host-portfolio-20261024",
+    "id": 12552281871
+  },
+  "input_cases": 26,
+  "unique_original_plant_taxa": 24,
+  "source_plant_country_queries": 44,
+  "source_species_country_host_links": 46,
+  "indexed_plant_country_records": 3595,
+  "mapped_butterfly_records": 453,
+  "mapped_butterfly_gadm_units": 106,
+  "source_candidate_case_counts": {
+    "single_source_candidate_host": 19,
+    "multiple_source_candidate_hosts": 7
+  },
+  "thresholds": {
+    "1": {
+      "butterfly_record_degree": {
+        "0": 222,
+        "1": 226,
+        "2plus": 5
+      },
+      "butterfly_gadm_unit_degree": {
+        "0": 66,
+        "1": 38,
+        "2plus": 2
+      },
+      "multi_candidate_record_degree": {
+        "0": 139,
+        "1": 124,
+        "2plus": 5
+      },
+      "multi_candidate_gadm_unit_degree": {
+        "0": 32,
+        "1": 13,
+        "2plus": 2
+      }
+    },
+    "2": {
+      "butterfly_record_degree": {
+        "0": 351,
+        "1": 101,
+        "2plus": 1
+      },
+      "butterfly_gadm_unit_degree": {
+        "0": 84,
+        "1": 21,
+        "2plus": 1
+      },
+      "multi_candidate_record_degree": {
+        "0": 225,
+        "1": 42,
+        "2plus": 1
+      },
+      "multi_candidate_gadm_unit_degree": {
+        "0": 37,
+        "1": 9,
+        "2plus": 1
+      }
+    },
+    "3": {
+      "butterfly_record_degree": {
+        "0": 408,
+        "1": 44,
+        "2plus": 1
+      },
+      "butterfly_gadm_unit_degree": {
+        "0": 93,
+        "1": 12,
+        "2plus": 1
+      },
+      "multi_candidate_record_degree": {
+        "0": 252,
+        "1": 15,
+        "2plus": 1
+      },
+      "multi_candidate_gadm_unit_degree": {
+        "0": 44,
+        "1": 2,
+        "2plus": 1
+      }
+    },
+    "5": {
+      "butterfly_record_degree": {
+        "0": 425,
+        "1": 28,
+        "2plus": 0
+      },
+      "butterfly_gadm_unit_degree": {
+        "0": 97,
+        "1": 9,
+        "2plus": 0
+      },
+      "multi_candidate_record_degree": {
+        "0": 267,
+        "1": 1,
+        "2plus": 0
+      },
+      "multi_candidate_gadm_unit_degree": {
+        "0": 46,
+        "1": 1,
+        "2plus": 0
+      }
+    }
+  },
+  "juvenile_stage_metadata": {
+    "cases": 5,
+    "source_stage_label_count": 24,
+    "stage_label_candidate_plant_species_degree_records": {
+      "0": 8,
+      "1": 14,
+      "2plus": 2
+    },
+    "per_case": [
+      {
+        "species": "Anteos clorinde",
+        "country": "CU",
+        "juvenile_source_label_count": 1,
+        "juvenile_label_candidate_plant_degrees": {
+          "0": 1,
+          "1": 0,
+          "2plus": 0
+        }
+      },
+      {
+        "species": "Colobura dirce",
+        "country": "VE",
+        "juvenile_source_label_count": 1,
+        "juvenile_label_candidate_plant_degrees": {
+          "0": 0,
+          "1": 1,
+          "2plus": 0
+        }
+      },
+      {
+        "species": "Papilio demoleus",
+        "country": "CU",
+        "juvenile_source_label_count": 1,
+        "juvenile_label_candidate_plant_degrees": {
+          "0": 1,
+          "1": 0,
+          "2plus": 0
+        }
+      },
+      {
+        "species": "Papilio demoleus",
+        "country": "DO",
+        "juvenile_source_label_count": 19,
+        "juvenile_label_candidate_plant_degrees": {
+          "0": 6,
+          "1": 13,
+          "2plus": 0
+        }
+      },
+      {
+        "species": "Papilio demoleus",
+        "country": "HT",
+        "juvenile_source_label_count": 2,
+        "juvenile_label_candidate_plant_degrees": {
+          "0": 0,
+          "1": 0,
+          "2plus": 2
+        }
+      }
+    ]
+  },
+  "interpretation": "POSTHOC: plant taxa are those with at least one GBIF botanical indexed record in same GADM1. Not actual plant presence, larval host-use, functional redundancy, plant extinction simulation or butterfly recruitment. Source-host model uses original 26 presences, no matched absences."
+}

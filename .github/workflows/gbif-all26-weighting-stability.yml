@@ -1,0 +1,36 @@
+name: Exact all-26 butterfly country plant-host reference weighting stability
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/analyze_gbif_all26_weighting_stability_20261023.py"
+      - "tests/test_gbif_all26_weighting_stability_20261023.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_ALL26_WEIGHTING_SENSITIVITY_20261023.md"
+      - ".github/workflows/gbif-all26-weighting-stability.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-weighting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Independent source and finite-reference regression tests
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_all26_weighting_stability_20261023.py
+      - name: Recompute all weighted exact reference distributions from source files
+        run: |
+          mkdir -p _weighting
+          python scripts/analyze_gbif_all26_weighting_stability_20261023.py             --botanical provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json             --butterfly48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json             --out _weighting/gbif_all26_exact_weighting_20261023.json
+      - name: Retain source-only posthoc weighting output
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-all26-weighting-stability-20261023
+          path: _weighting/*.json
+          if-no-files-found: error
+          retention-days: 30

@@ -17,6 +17,7 @@ import json
 import math
 import sys
 from collections import Counter,defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -35,6 +36,33 @@ QS=(.05,.10)
 TAXON_SOURCES={"HUMAN_OBSERVATION","PRESERVED_SPECIMEN"}
 PRIMARY_ARGS=("all_accepted_bases","pooled",3,.05,"level1")
 SEED=20261019
+
+
+def stratum_information_audit(strata):
+    """Expose the original protocol's 50-stratum gate conservatively.
+
+    The old implementation counted K>0, with a threshold of ten. Conditional
+    hypergeometric comparisons have zero variance at either K=0 or K=N.
+    This audit retains the legacy estimates and status for exact reproduction,
+    while separately reporting whether 50 genuinely informative strata exist.
+    The clarification was made before inspecting the 20 October recovery.
+    """
+    mixed = [x for x in strata if 0 < x["A"] < x["N"]]
+    informative = sum(0 < x["K"] < x["N"] for x in mixed)
+    return {
+        "mixed_resource_strata": len(mixed),
+        "positive_strata_legacy_definition": sum(x["K"] > 0 for x in mixed),
+        "nonzero_conditional_variance_strata": informative,
+        "zero_positive_strata": sum(x["K"] == 0 for x in mixed),
+        "all_positive_strata": sum(x["K"] == x["N"] for x in mixed),
+        "protocol_minimum_informative_strata": 50,
+        "legacy_implementation_minimum_positive_strata": 10,
+        "status": ("MEETS_PROTOCOL_INFORMATION_THRESHOLD" if informative >= 50
+                   else "BELOW_PROTOCOL_INFORMATION_THRESHOLD"),
+        "definition": "0<A<N and 0<K<N; nonzero conditional hypergeometric variance",
+        "clarification_date": "2026-10-20",
+        "qualification": "Information-size check only; all estimates remain exploratory.",
+    }
 
 
 def source_observation_counts(path:Path,manifest:dict):
@@ -191,6 +219,7 @@ def group_results(model,regions,manifest,counts,*,nb=999,main_n=9999,
                                 len({x["species"] for x in valid if x["K"]>0}),
                             "eligible_species_level1_strata":len(valid),
                             "informative_positive_strata":informative,
+                            "protocol_information_gate":stratum_information_audit(valid),
                             "candidate_region_species_n":totalN,
                             "sampled_positive_region_species_n":totalK,
                             "candidate_added_host_cells_n":totalA,
@@ -301,7 +330,8 @@ def run(args):
         "gbif_sampled_mapped_records":receipt["outputs"]["source_records_mapped"],
         "gbif_sampled_region_basis_rows":receipt["outputs"]["aggregated_region_basis_rows"],
         "taxon_query_saturation_count":sum(
-            any(w.get("total_search_more_than_100000",False)
+            any(w.get("total_search_more_than_100000",False) or
+                w.get("source_count_more_than_100000",False)
                 for w in x.get("windows",{}).values())
             for x in receipt["species_receipts"]),
         "sample_provenance_source":"GBIF occurrence REST API bounded deterministic ordinal pages, two 8-year windows, not an archived DOI download",
@@ -311,6 +341,7 @@ def run(args):
         "status":primary["status"],
         "source_scope":"239 frozen butterfly host-resource panel with partial BCE accepted host catalogue (author-only WCVP/HOSTS); two bounded 2010-2025 GBIF sampling windows",
         "analysis_date":"2026-10-19",
+        "executed_utc":datetime.now(timezone.utc).isoformat(),
         "original_source":prov,
         "GBIF_sample_metadata":source_diagnostics,
         "primary":primary,

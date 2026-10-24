@@ -1,0 +1,37 @@
+name: Source-locked 39 public GBIF juvenile records, privacy-safe host-annotation availability
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/audit_gbif_juvenile_host_annotations_20261023.py"
+      - "tests/test_gbif_juvenile_host_annotations_20261023.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_JUVENILE_HOST_METADATA_GATE_20261023.md"
+      - ".github/workflows/gbif-juvenile-host-annotations-20261023.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  safe-record-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Source-frozen, privacy and missingness contract tests
+        run: |
+          python -m pip install "pytest>=8,<10"
+          pytest -q tests/test_gbif_juvenile_host_annotations_20261023.py
+      - name: Inspect 39 public stage-indexed source records, output ONLY aggregate annotation counts
+        run: |
+          mkdir -p _metadata_only
+          python scripts/audit_gbif_juvenile_host_annotations_20261023.py             --juvenile provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_gadm1_conditional_20261021.json             --positive48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json             --host-five provenance/reviewer_defenses/results/gbif_country_20261020/gbif_source_introduced_hosts_five_cases_20261021.json             --out _metadata_only/juvenile_host_annotation_counts.json
+      - name: Save sanitized source coverage only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif39-juvenile-host-annotation-coverage-20261023
+          path: _metadata_only/*.json
+          if-no-files-found: warn
+          retention-days: 30

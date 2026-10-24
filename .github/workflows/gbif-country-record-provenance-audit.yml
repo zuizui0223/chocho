@@ -1,0 +1,41 @@
+name: GBIF country butterfly record-provenance facet audit
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/audit_gbif_country_record_provenance_20261020.py"
+      - "tests/test_gbif_country_record_provenance_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_SOURCE_INDEPENDENCE_GATE_20261020.md"
+      - ".github/workflows/gbif-country-record-provenance-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Test frozen source keys and facet response validation without network
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_country_record_provenance_20261020.py
+      - name: Audit all 7 non-singleton late-record country cells on live GBIF index
+        run: |
+          mkdir -p _record_provenance
+          python scripts/audit_gbif_country_record_provenance_20261020.py \
+            --temporal-summary provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_record_turnover_summary_20261020.json \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --frozen-country-counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --output _record_provenance/facet_qc.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gbif-country-record-provenance-20261020
+          path: _record_provenance/facet_qc.json
+          if-no-files-found: warn
+          retention-days: 30

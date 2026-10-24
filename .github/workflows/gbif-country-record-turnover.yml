@@ -1,0 +1,42 @@
+name: GBIF country butterfly recording turnover diagnostic
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/analyze_gbif_country_record_turnover_20261020.py"
+      - "tests/test_gbif_country_record_turnover_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_RECORD_TURNOVER_20261020.md"
+      - ".github/workflows/gbif-country-record-turnover.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  record-turnover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install "pytest>=8,<10"
+      - name: Verify frozen source and paired-window transition estimand
+        run: python -m pytest -q tests/test_gbif_country_record_turnover_20261020.py
+      - name: Run all 12 prospectively documented temporal diagnostics
+        run: |
+          mkdir -p _temporal
+          python scripts/analyze_gbif_country_record_turnover_20261020.py \
+            --country-counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --frozen-strata provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_primary_strata.json \
+            --bootstrap-draws 1999 \
+            --output _temporal/country_record_turnover_results.json
+      - name: Upload aggregate-only temporal result (not breeding or colonization)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-country-record-turnover-20261020
+          path: _temporal/country_record_turnover_results.json
+          retention-days: 30
+          if-no-files-found: error

@@ -1,0 +1,41 @@
+name: 26-country butterfly local host portfolio redundancy, source-locked posthoc
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/analyze_gbif_all26_local_host_redundancy_20261024.py"
+      - "tests/test_gbif_all26_local_host_redundancy_20261024.py"
+      - ".github/workflows/gbif-all26-local-host-redundancy-20261024.yml"
+      - "provenance/reviewer_defenses/protocols/GBIF_ALL26_LOCAL_HOST_REDUNDANCY_POSTHOC_20261024.md"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only-local-host-redundancy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify source margins, plant species GADM counts, and posthoc thresholds
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_all26_local_host_redundancy_20261024.py
+      - name: Recompute exact original indexed host portfolios, no GBIF requests
+        run: |
+          mkdir -p _local
+          python scripts/analyze_gbif_all26_local_host_redundancy_20261024.py \
+            --all26-plants provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json \
+            --all48-butterflies provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --juvenile-gadm provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_gadm1_conditional_20261021.json \
+            --original-five provenance/reviewer_defenses/results/gbif_country_20261020/gbif_source_introduced_hosts_five_cases_20261021.json \
+            --output _local/gbif_local_host_redundancy_posthoc_20261024.json
+      - name: Upload source-only derived portfolio audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-local-host-portfolio-20261024
+          path: _local/*.json
+          retention-days: 30
+          if-no-files-found: error

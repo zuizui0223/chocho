@@ -2,6 +2,15 @@
 
 This directory is the **active protocol surface** for the manuscript.
 
+## Latest independent macro continuation
+
+- [20 October: full-index GBIF country comparison](GBIF_COUNTRY_MACRO_READOUT_20261020.md) —
+  229 non-colliding taxa, 924 completed source queries, 140 eligible countries;
+  +3.91 pp with a 95% genus interval of −6.42 to +14.94 pp and 21 informative
+  strata (minimum 50 not met). Includes the original sample replay, taxonomic
+  collision diagnostic, fixed 72-condition grid and complete public aggregates.
+  This exploratory follow-up is separate from the frozen submission manuscript.
+
 ## Current claim-relevant protocols
 
 - `butterfly_anthropogenic_resource_expansion_protocol_v0.1.json` — anthropogenic resource expansion.

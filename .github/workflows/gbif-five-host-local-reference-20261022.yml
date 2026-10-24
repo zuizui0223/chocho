@@ -1,0 +1,48 @@
+name: Independently audit fixed 5 host/juvenile GADM1 co-detection and posthoc label reference
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/analyze_gbif_five_host_gadm_reference_20261022.py"
+      - "tests/test_gbif_five_host_gadm_reference_20261022.py"
+      - ".github/workflows/gbif-five-host-local-reference-20261022.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  conditional-label-reference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify exact hypergeometric references and source contracts
+        run: |
+          python -m pip install "pytest>=8,<10"
+          pytest -q tests/test_gbif_five_host_gadm_reference_20261022.py
+      - name: Restore validated plant candidate/source GADM1 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-five-case-host-plant-gadm-source-20261021
+          run-id: 39451888303
+          github-token: ${{ github.token }}
+          path: _source
+      - name: Audit all five, preserving exact source and whole observed-count conditional reference
+        run: |
+          test -f _source/gbif_plant_butterfly_gadm_five_20261021.json
+          mkdir -p _result
+          python scripts/analyze_gbif_five_host_gadm_reference_20261022.py \
+            --plant-source _source/gbif_plant_butterfly_gadm_five_20261021.json \
+            --juvenile-source provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_gadm1_conditional_20261021.json \
+            --all-stage-source provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --output _result/five_host_gadm1_source_reference_20261022.json
+      - name: Preserve safe 5-case source-conditional evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-gadm1-host-juvenile-reference-20261022
+          path: _result/*.json
+          retention-days: 30
+          if-no-files-found: error

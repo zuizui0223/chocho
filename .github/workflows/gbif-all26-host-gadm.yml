@@ -1,0 +1,41 @@
+name: GBIF GADM1 source botanical detection across all 26 positive added-resource butterfly countries
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/audit_gbif_all26_host_gadm_20261023.py"
+      - "tests/test_gbif_all26_host_gadm_20261023.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_ALL26_PLANT_GADM_ACQUISITION_20261023.md"
+      - ".github/workflows/gbif-all26-host-gadm.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  complete-all26-host-country:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify exact 44 deduplicated plant-country queries and 26 cases
+        run: |
+          python -m pip install "pytest>=8,<10"
+          pytest -q tests/test_gbif_all26_host_gadm_20261023.py
+      - name: Check all 24 botanical taxa and 44 fixed country-GADM source queries
+        run: |
+          mkdir -p _all26
+          python scripts/audit_gbif_all26_host_gadm_20261023.py \
+            --source-inventory provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_source_host_country_inventory_20261023.json \
+            --positive48 provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --previous-five-plant-source provenance/reviewer_defenses/results/gbif_country_20261020/gbif_five_host_plant_gadm_source_20261021.json \
+            --output _all26/gbif_all26_host_gadm_20261023.json
+      - name: Upload checked botanical taxonomy and GADM1 occurrence receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-gbif-all26-source-host-gadm-20261023
+          path: _all26/*.json
+          if-no-files-found: warn
+          retention-days: 30

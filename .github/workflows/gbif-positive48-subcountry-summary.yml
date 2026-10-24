@@ -1,0 +1,44 @@
+name: Replay frozen 48 GBIF GADM1 metadata and source-reported life stages
+on:
+  push:
+    branches: [analysis/gbif-macro-recovery-20261020]
+    paths:
+      - "scripts/summarize_gbif_positive48_subcountry_20261020.py"
+      - "tests/test_gbif_positive48_subcountry_summary_20261020.py"
+      - ".github/workflows/gbif-positive48-subcountry-summary.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  independent-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Run no-network source-summary tests
+        run: |
+          python -m pip install "pytest>=8,<10"
+          pytest -q tests/test_gbif_positive48_subcountry_summary_20261020.py
+      - name: Restore previously completed 48 positive-country GBIF facet source
+        uses: actions/download-artifact@v4
+        with:
+          name: gbif-positive48-gadm1-lifestage-audit-20261020
+          run-id: 39414408960
+          github-token: ${{ github.token }}
+          path: _pinned
+      - name: Replay 48, metadata-only; log exact source for archival
+        run: |
+          test -f _pinned/all_48_species_countries.json
+          python scripts/summarize_gbif_positive48_subcountry_20261020.py \
+            --archived-source _pinned/all_48_species_countries.json \
+            --out _pinned/gbif_positive48_safe_summary.json
+      - name: Upload replay checksums and summaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-48-independent-aggregated-replay-20261020
+          path: _pinned/*.json
+          retention-days: 30

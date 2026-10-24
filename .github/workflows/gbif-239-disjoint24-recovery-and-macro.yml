@@ -36,6 +36,18 @@ jobs:
           python-version: '3.11'
       - name: Install library for source-frozen TDWG polygon mapping
         run: python -m pip install -e . 'shapely>=2,<3'
+      - name: Load original taxonomic source before any recovery requests
+        uses: actions/download-artifact@v4
+        with:
+          name: gbif-239-butterfly-effort-climate-macro-audit-only
+          run-id: 39233336804
+          github-token: ${{ github.token }}
+          path: input/original_GBIF_239
+      - name: Validate every recovery key against the original source
+        run: |
+          python scripts/validate_gbif_recovery_taxon_keys_20261020.py \
+            --original-manifest input/original_GBIF_239/gbif_239_species_source_receipts.json \
+            --keys data/exploratory/gbif_239_partial96_exact_taxon_keys_20261019.csv
       - name: Retrieve original host/TDWG source from pinned author-only CI
         uses: actions/download-artifact@v4
         with:

@@ -1,0 +1,39 @@
+name: GBIF dataset registry provenance names (7-cell follow-up)
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/audit_gbif_dataset_registry_20261020.py"
+      - "tests/test_gbif_dataset_registry_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_DATASET_REGISTRY_FOLLOWUP_20261020.md"
+      - ".github/workflows/gbif-country-dataset-registry-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Offline registry schema and unique-key checks
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_dataset_registry_20261020.py
+      - name: Retrieve six source-locked GBIF dataset registry titles and publishers
+        run: |
+          mkdir -p _registry
+          python scripts/audit_gbif_dataset_registry_20261020.py \
+            --facet-audit provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_provenance_facet_qc_20261020.json \
+            --output _registry/gbif_dataset_registry.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gbif-country-registry-metadata-20261020
+          path: _registry/gbif_dataset_registry.json
+          retention-days: 30
+          if-no-files-found: warn

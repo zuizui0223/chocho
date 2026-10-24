@@ -1,0 +1,40 @@
+name: GBIF matched-provider reporting denominators for seven butterfly candidates
+on:
+  push:
+    branches:
+      - analysis/gbif-macro-recovery-20261020
+    paths:
+      - "scripts/audit_gbif_country_platform_reporting_20261020.py"
+      - "tests/test_gbif_country_platform_reporting_20261020.py"
+      - "provenance/reviewer_defenses/protocols/GBIF_COUNTRY_PLATFORM_EFFORT_DENOM_20261020.md"
+      - ".github/workflows/gbif-country-platform-reporting.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  effort-denominator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Verify frozen eleven dataset/country groups and nesting diagnostics
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_gbif_country_platform_reporting_20261020.py
+      - name: Acquire all-taxon and legacy Lepidoptera year facets (22 compact aggregates)
+        run: |
+          mkdir -p _reporting
+          python scripts/audit_gbif_country_platform_reporting_20261020.py \
+            --dataset-year-source provenance/reviewer_defenses/results/gbif_country_20261020/gbif_country_dataset_year_matrix_20261020.json \
+            --output _reporting/gbif_platform_reporting_20261020.json
+      - name: Upload aggregate reporting denominators only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gbif-platform-reporting-20261020
+          path: _reporting/gbif_platform_reporting_20261020.json
+          if-no-files-found: warn
+          retention-days: 30
