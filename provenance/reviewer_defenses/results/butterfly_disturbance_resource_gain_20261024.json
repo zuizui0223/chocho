@@ -1,0 +1,146 @@
+{
+  "schema": "chocho_disturbance_trait_geographic_resource_gain_v1",
+  "status": "EXPLORATORY_TRAIT_SORTING_PRIMARY_SUGGESTIVE_ADEQUATE_HOST_SENSITIVITY_UNRESOLVED",
+  "analysis_date": "2026-10-24",
+  "protocol": "provenance/reviewer_defenses/protocols/DISTURBANCE_TRAIT_RESOURCE_GAIN_20261024.md",
+  "source_git_blobs": [
+    {
+      "path": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+      "git_blob_sha": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd"
+    },
+    {
+      "path": "data/frozen/figure_sources/s1_resource_descriptors.csv",
+      "git_blob_sha": "09541b5894529cc8629c7515ea9022ded9edead2"
+    },
+    {
+      "path": "data/frozen/figure_sources/host_contribution_metrics.csv",
+      "git_blob_sha": "4cf4851499ca2233ff2adadf1c4ee7f0e863f23d"
+    }
+  ],
+  "source_paths": [
+    "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+    "data/frozen/figure_sources/s1_resource_descriptors.csv",
+    "data/frozen/figure_sources/host_contribution_metrics.csv"
+  ],
+  "source_panel_species": 239,
+  "source_added_resource_units": 14553,
+  "prespecified_groups": {
+    "Disturbance-associated (strong)": {
+      "n": 150,
+      "mean_log_ratio": 0.51896855443047,
+      "median_log_ratio": 0.38322437249909835,
+      "geometric_mean_ratio": 1.680293624161989,
+      "median_ratio": 1.4670071492046384,
+      "mean_added_regions": 67.22666666666667,
+      "median_added_regions": 67.5,
+      "zero_gain_species": 15
+    },
+    "Disturbance-avoidant (strong)": {
+      "n": 33,
+      "mean_log_ratio": 0.23909713226362858,
+      "median_log_ratio": 0.196506191785911,
+      "geometric_mean_ratio": 1.270101898464967,
+      "median_ratio": 1.217142857142857,
+      "mean_added_regions": 35.515151515151516,
+      "median_added_regions": 21,
+      "zero_gain_species": 10
+    }
+  },
+  "analyses": {
+    "primary_full": {
+      "n": 183,
+      "n_genera": 113,
+      "n_associated": 150,
+      "n_avoidant": 33,
+      "raw_mean_difference": 0.27987142216684135,
+      "adjusted_coefficient": 0.1466355951975994,
+      "genus_bootstrap_95_interval": [
+        0.01109026451305352,
+        0.2868202110023301
+      ],
+      "bootstrap_positive_fraction": 0.9814,
+      "bootstrap_draws": 5000,
+      "bootstrap_successes": 5000,
+      "bootstrap_singular": 0,
+      "leave_one_genus_out_range": [
+        0.11880756542095064,
+        0.16386585991772767
+      ],
+      "response": "log(contemporary_resource_units/native_resource_units)",
+      "control_set": "full"
+    },
+    "primary_reduced": {
+      "n": 183,
+      "n_genera": 113,
+      "n_associated": 150,
+      "n_avoidant": 33,
+      "raw_mean_difference": 0.27987142216684135,
+      "adjusted_coefficient": 0.223223293119262,
+      "genus_bootstrap_95_interval": [
+        0.0946847064075537,
+        0.3515748311654387
+      ],
+      "bootstrap_positive_fraction": 0.9994,
+      "bootstrap_draws": 5000,
+      "bootstrap_successes": 5000,
+      "bootstrap_singular": 0,
+      "leave_one_genus_out_range": [
+        0.2019168062163482,
+        0.24527186579570726
+      ],
+      "response": "log(contemporary_resource_units/native_resource_units)",
+      "control_set": "reduced"
+    },
+    "primary_taxonomy": {
+      "n": 163,
+      "n_genera": 107,
+      "n_associated": 139,
+      "n_avoidant": 24,
+      "raw_mean_difference": 0.18864396813011491,
+      "adjusted_coefficient": 0.062292035017298256,
+      "genus_bootstrap_95_interval": [
+        -0.06920775641470996,
+        0.19141259059701074
+      ],
+      "bootstrap_positive_fraction": 0.8422,
+      "bootstrap_draws": 5000,
+      "bootstrap_successes": 5000,
+      "bootstrap_singular": 0,
+      "leave_one_genus_out_range": [
+        0.042827598266905985,
+        0.08342473596481556
+      ],
+      "response": "log(contemporary_resource_units/native_resource_units)",
+      "control_set": "full"
+    },
+    "secondary_full": {
+      "n": 158,
+      "n_genera": 101,
+      "n_associated": 135,
+      "n_avoidant": 23,
+      "raw_mean_difference": 0.14377881879695426,
+      "adjusted_coefficient": 0.08734459322245075,
+      "genus_bootstrap_95_interval": [
+        -0.04097466892042855,
+        0.1999727657018251
+      ],
+      "bootstrap_positive_fraction": 0.9122,
+      "bootstrap_draws": 5000,
+      "bootstrap_successes": 5000,
+      "bootstrap_singular": 0,
+      "leave_one_genus_out_range": [
+        0.0659660341922923,
+        0.11545807851881501
+      ],
+      "response": "fraction_added_units_with_multiple_contributing_hosts",
+      "control_set": "full"
+    }
+  },
+  "limitations": [
+    "Potential resource geography only, not recruitment or actual host use",
+    "One trait contrast was prespecified on an already examined source panel",
+    "Host inventory completeness and correlated taxa limit inference",
+    "Bootstrap genus clusters are not a phylogenetic comparative model",
+    "Posthoc observational association cannot identify causal mechanism"
+  ]
+}
