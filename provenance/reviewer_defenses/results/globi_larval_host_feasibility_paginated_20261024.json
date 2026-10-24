@@ -1,0 +1,1361 @@
+{
+  "schema": "chocho_globi_immature_georeferenced_source_pilot_paginated_v02",
+  "status": "SOURCE_GATE_INCOMPLETE_AFTER_FIXED_PAGINATION",
+  "date_utc": "2026-10-24T08:34:55.692643+00:00",
+  "source": "Live GloBI API (not a version-pinned archive)",
+  "source_versioned_archive": "https://doi.org/10.5281/zenodo.3950589",
+  "base_v01_receipt": "provenance/reviewer_defenses/results/globi_larval_host_feasibility_20261024.json",
+  "protocol": "provenance/reviewer_defenses/protocols/GLOBI_LARVAL_HOST_SOURCE_FEASIBILITY_20261024.md",
+  "focal_git_blob": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+  "focal_n": 239,
+  "random_focal_selected": [
+    "Erynnis icelus",
+    "Charaxes etesipe",
+    "Gonepteryx rhamni",
+    "Junonia orithya",
+    "Colias croceus",
+    "Chlosyne lacinia",
+    "Colias palaeno",
+    "Thecla betulae",
+    "Pieris brassicae",
+    "Lampides boeticus",
+    "Mestra dorcas",
+    "Erynnis brizo",
+    "Siproeta epaphus",
+    "Elymnias hypermnestra",
+    "Polyommatus eros",
+    "Aphantopus hyperantus",
+    "Araschnia levana",
+    "Colias nastes",
+    "Pyrgus andromedae",
+    "Pseudozizeeria maha"
+  ],
+  "positive_controls": [
+    "Danaus plexippus",
+    "Pieris brassicae"
+  ],
+  "source_requests": 21,
+  "complete_random_focal": false,
+  "random_focal_with_strict_candidate": 5,
+  "strict_candidate_distinct_source_ids": 2,
+  "strict_candidate_source_ids": [
+    "globalbioticinteractions/inaturalist",
+    "globalbioticinteractions/menares2025-herbivory"
+  ],
+  "all_strict_candidate_rows": 26,
+  "sampling": "20 response-blind SHA256-min focal taxa; positive controls excluded",
+  "paging_limit": {
+    "rows_per_page": 1024,
+    "max_focal_pages": 12,
+    "controls_max_pages": 1
+  },
+  "important_limits": [
+    "GloBI data may reuse source HOSTS records even with different study_source_id",
+    "Live pages not a transactional version-stable snapshot",
+    "Source rows are not independent individuals or confirmed larval feeding events",
+    "Stage-labelled geographic trophic record not adult emergence, colonization or establishment",
+    "No introduced or native status of observed individual plant known",
+    "Any failed, capped, or missing source query cannot establish ecological absence"
+  ],
+  "taxa": [
+    {
+      "species": "Aphantopus hyperantus",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 970616,
+          "sha256": "245998a8e40c5e018ad78c0b8b85dfcb1b3b21dee0a830aab83acad0b5e79a3b",
+          "rows": 1024
+        },
+        {
+          "skip": 1024,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 809277,
+          "sha256": "8858bef3e1a8409f3ddc0c4abdd4979dd63e01dfea7ae1f929d034e117765d41",
+          "rows": 1024
+        },
+        {
+          "skip": 2048,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 157094,
+          "sha256": "3e654b8c3b2c838df84b729072db449f7230c3d7047abab82a080f78e93c6448",
+          "rows": 284
+        }
+      ],
+      "source_response_sha256": "6d7295530add25132cbfb003459e8b1a8ba038d127f8e21c4fa83769e5b189d0",
+      "response_bytes": 1936987,
+      "rows_returned": 2332,
+      "counts": {
+        "coordinates": 1260,
+        "dated_full": 1788,
+        "dated_year": 1788,
+        "exact_focal": 2332,
+        "explicit_trophic": 418,
+        "immature_stage": 14,
+        "plant_target": 945,
+        "plant_trophic": 260,
+        "plant_trophic_immature": 4,
+        "plant_trophic_immature_georeferenced": 4,
+        "rows": 2332,
+        "source_not_HOSTS_marked": 2317,
+        "strict_candidate": 4,
+        "strict_candidate_dated": 4
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 944,
+        "eats": 418,
+        "pollinates": 397,
+        "preyedUponBy": 397,
+        "hasHost": 86,
+        "interactsWith": 46,
+        "visits": 42,
+        "eatenBy": 2
+      },
+      "observed_stage_terms": {
+        "adult": 224,
+        "Young": 110,
+        "Adult": 92,
+        "larva": 14
+      },
+      "distinct_study_source_ids": 15,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 893,
+        "globalbioticinteractions/dopi": 643,
+        "globalbioticinteractions/inaturalist": 287,
+        "JoseBSL/EuPPollNet": 228,
+        "globalbioticinteractions/menares2025-flowervisitation": 106,
+        "globalbioticinteractions/ferrer-paris": 71,
+        "globalbioticinteractions/web-of-life": 20,
+        "globalbioticinteractions/schwarz2021": 18,
+        "zedomel/redhead2018": 17,
+        "globalbioticinteractions/HOSTS": 15
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/menares2025-herbivory"
+      ]
+    },
+    {
+      "species": "Araschnia levana",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 943978,
+          "sha256": "db398fa96d2866650e8569af965ca34ca8a43f509011529bc5fbfc2745e94aee",
+          "rows": 972
+        }
+      ],
+      "source_response_sha256": "ea7c0f2b4e652bf5190629a24077a78dd3133205f8dd5935fe5028adb0afdc71",
+      "response_bytes": 943978,
+      "rows_returned": 972,
+      "counts": {
+        "coordinates": 391,
+        "dated_full": 578,
+        "dated_year": 578,
+        "exact_focal": 972,
+        "explicit_trophic": 182,
+        "immature_stage": 42,
+        "plant_target": 306,
+        "plant_trophic": 104,
+        "plant_trophic_immature": 7,
+        "plant_trophic_immature_georeferenced": 6,
+        "rows": 972,
+        "source_not_HOSTS_marked": 962,
+        "strict_candidate": 6,
+        "strict_candidate_dated": 6
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 393,
+        "visitsFlowersOf": 270,
+        "eats": 182,
+        "interactsWith": 52,
+        "hasHost": 26,
+        "visits": 23,
+        "pollinates": 21,
+        "eatenBy": 2,
+        "hasPathogen": 2,
+        "hasParasitoid": 1
+      },
+      "observed_stage_terms": {
+        "adult": 167,
+        "Young": 97,
+        "Adult": 69,
+        "larva": 40,
+        "larval stage": 2
+      },
+      "distinct_study_source_ids": 12,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 549,
+        "globalbioticinteractions/inaturalist": 240,
+        "globalbioticinteractions/menares2025-flowervisitation": 86,
+        "globalbioticinteractions/dopi": 63,
+        "globalbioticinteractions/ferrer-paris": 13,
+        "globalbioticinteractions/HOSTS": 10,
+        "JoseBSL/EuPPollNet": 3,
+        "millerse/Ecological-Database-of-the-World-s-Insect-Pathogens": 2,
+        "globalbioticinteractions/menares2025-herbivory": 2,
+        "globalbioticinteractions/saito2016": 2
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist",
+        "globalbioticinteractions/menares2025-herbivory"
+      ]
+    },
+    {
+      "species": "Charaxes etesipe",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 101925,
+          "sha256": "9af8d17fa0708c5126710dadd9fb5d82fcb25450ce2b50e2511e9c78080f5509",
+          "rows": 124
+        }
+      ],
+      "source_response_sha256": "79005e258658b51e5ee5dea4610f664285e57481557761d93bbdbba5bbec2532",
+      "response_bytes": 101925,
+      "rows_returned": 124,
+      "counts": {
+        "exact_focal": 122,
+        "explicit_trophic": 41,
+        "other_source_taxon": 2,
+        "plant_target": 88,
+        "plant_trophic": 27,
+        "rows": 124,
+        "source_not_HOSTS_marked": 85
+      },
+      "interaction_type_counts": {
+        "hasHost": 81,
+        "eats": 41
+      },
+      "observed_stage_terms": {},
+      "distinct_study_source_ids": 3,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 44,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 41,
+        "globalbioticinteractions/HOSTS": 37
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Chlosyne lacinia",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 398285,
+          "sha256": "0c6aab5371052d0374ae5dd95f3f9bded4cc21e2c0b8b9aec7f0180249fece93",
+          "rows": 630
+        }
+      ],
+      "source_response_sha256": "c9a0efa4148e1278d7bdb02c1d757ede20feb512468dd17ba30b56ef47bb5a54",
+      "response_bytes": 398285,
+      "rows_returned": 630,
+      "counts": {
+        "coordinates": 282,
+        "dated_full": 280,
+        "dated_year": 280,
+        "exact_focal": 513,
+        "explicit_trophic": 71,
+        "immature_stage": 92,
+        "other_source_taxon": 117,
+        "plant_target": 276,
+        "plant_trophic": 36,
+        "plant_trophic_immature": 1,
+        "plant_trophic_immature_georeferenced": 1,
+        "rows": 630,
+        "source_not_HOSTS_marked": 435,
+        "strict_candidate": 1,
+        "strict_candidate_dated": 1
+      },
+      "interaction_type_counts": {
+        "hasHost": 186,
+        "interactsWith": 116,
+        "visitsFlowersOf": 74,
+        "eats": 71,
+        "visits": 31,
+        "hostOf": 27,
+        "hasParasite": 5,
+        "preyedUponBy": 2,
+        "eatenBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 160,
+        "larva": 81,
+        "larvae": 11,
+        "egg": 2
+      },
+      "distinct_study_source_ids": 12,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 261,
+        "globalbioticinteractions/ferrer-paris": 107,
+        "globalbioticinteractions/HOSTS": 78,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 19,
+        "globalbioticinteractions/bold": 19,
+        "globalbioticinteractions/scan": 14,
+        "globalbioticinteractions/taxonworks": 4,
+        "EOL/pseudonitzchia": 4,
+        "urn:lsid:checklistbank.org:dataset:124661": 4,
+        "globalbioticinteractions/ecdysis": 1
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Colias croceus",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 941154,
+          "sha256": "9594fbd2574fbf8e551afd7ccd162f4d36be506398b790349b9992618e4d708c",
+          "rows": 1024
+        },
+        {
+          "skip": 1024,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 665207,
+          "sha256": "51869a62ad6f5f6038b77a9fa265bc8ffa792b500bbccddf93e57879a4e89c95",
+          "rows": 1024
+        },
+        {
+          "skip": 2048,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 255768,
+          "sha256": "fe41bc2f5c2725a4d5cb411ccd36e941ffc170c95d6dab923150a801800e3c55",
+          "rows": 481
+        }
+      ],
+      "source_response_sha256": "80cf330590965c80774e79337f12b1c3cf5732c5d922cd76fa91dc5fa6fe4182",
+      "response_bytes": 1862129,
+      "rows_returned": 2529,
+      "counts": {
+        "coordinates": 1562,
+        "dated_full": 1991,
+        "dated_year": 1991,
+        "exact_focal": 2522,
+        "explicit_trophic": 213,
+        "immature_stage": 7,
+        "other_source_taxon": 7,
+        "plant_target": 1287,
+        "plant_trophic": 114,
+        "rows": 2529,
+        "source_not_HOSTS_marked": 2513
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 1198,
+        "preyedUponBy": 383,
+        "pollinates": 324,
+        "visits": 262,
+        "eats": 213,
+        "hasHost": 79,
+        "interactsWith": 55,
+        "mutualistOf": 4,
+        "flowersVisitedBy": 3,
+        "eatenBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 840,
+        "Young": 96,
+        "Adult": 72,
+        "egg": 12,
+        "larva": 7
+      },
+      "distinct_study_source_ids": 15,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 1213,
+        "globalbioticinteractions/trophiCH": 802,
+        "globalbioticinteractions/dopi": 221,
+        "JoseBSL/EuPPollNet": 82,
+        "globalbioticinteractions/ferrer-paris": 70,
+        "zedomel/redhead2018": 65,
+        "globalbioticinteractions/menares2025-flowervisitation": 35,
+        "globalbioticinteractions/HOSTS": 9,
+        "globalbioticinteractions/schwarz2021": 7,
+        "globalbioticinteractions/web-of-life": 5
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Colias nastes",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 49094,
+          "sha256": "0803069d030eca6bf1e0a8c14809e461e84c3a79f9acf7783046bd8b1b3a5d0a",
+          "rows": 88
+        }
+      ],
+      "source_response_sha256": "9a08c37319a51b5c6fad15b28ec6e3ae922f2c3557938fabf3a1fefc23a0b57e",
+      "response_bytes": 49094,
+      "rows_returned": 88,
+      "counts": {
+        "coordinates": 8,
+        "dated_full": 7,
+        "dated_year": 7,
+        "exact_focal": 79,
+        "explicit_trophic": 7,
+        "other_source_taxon": 9,
+        "plant_target": 47,
+        "plant_trophic": 6,
+        "rows": 88,
+        "source_not_HOSTS_marked": 70
+      },
+      "interaction_type_counts": {
+        "hasHost": 68,
+        "eats": 7,
+        "visitsFlowersOf": 3,
+        "interactsWith": 1
+      },
+      "observed_stage_terms": {
+        "adult": 1
+      },
+      "distinct_study_source_ids": 6,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 59,
+        "globalbioticinteractions/HOSTS": 9,
+        "globalbioticinteractions/vertnet": 4,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 3,
+        "globalbioticinteractions/inaturalist": 3,
+        "millerse/Plant-Pollinator-Web": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Colias palaeno",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 522477,
+          "sha256": "53253a9c87cca54a624be5a33314e8745bdd8f35dedfa0b427c4c21f31080cdf",
+          "rows": 543
+        }
+      ],
+      "source_response_sha256": "2012dfa4580492aca97b2fc1f4adb2a53e04a8d32321b8d9ba72cd4cb627e23f",
+      "response_bytes": 522477,
+      "rows_returned": 543,
+      "counts": {
+        "coordinates": 38,
+        "dated_full": 172,
+        "dated_year": 172,
+        "exact_focal": 542,
+        "explicit_trophic": 67,
+        "immature_stage": 3,
+        "other_source_taxon": 1,
+        "plant_target": 84,
+        "plant_trophic": 39,
+        "plant_trophic_immature": 3,
+        "rows": 543,
+        "source_not_HOSTS_marked": 539
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 378,
+        "eats": 67,
+        "hasHost": 58,
+        "adjacentTo": 27,
+        "visitsFlowersOf": 9,
+        "pollinates": 1,
+        "interactsWith": 1,
+        "visits": 1
+      },
+      "observed_stage_terms": {
+        "Young": 95,
+        "Adult": 25,
+        "adult": 9,
+        "larval stage": 3,
+        "egg": 1
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 442,
+        "globalbioticinteractions/ferrer-paris": 55,
+        "globalbioticinteractions/vertnet": 28,
+        "globalbioticinteractions/inaturalist": 10,
+        "globalbioticinteractions/saito2016": 3,
+        "globalbioticinteractions/HOSTS": 3,
+        "globalbioticinteractions/dopi": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Danaus plexippus",
+      "status": "PAGINATION_CAP_INCOMPLETE",
+      "paging_cap": 1,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 581662,
+          "sha256": "90c3eb7a0ae7c9f9aea42387286243f0a02e6fab29834466f333dbb3ec3c4fb4",
+          "rows": 1024
+        }
+      ],
+      "source_response_sha256": "2f2363e396b317b85b85e3177f582f7153618d8fca24c15fa401aec82caa2cde",
+      "response_bytes": 581662,
+      "rows_returned": 1024,
+      "counts": {
+        "coordinates": 8,
+        "dated_full": 9,
+        "dated_year": 9,
+        "exact_focal": 18,
+        "explicit_trophic": 5,
+        "immature_stage": 1,
+        "other_source_taxon": 1006,
+        "plant_target": 2,
+        "plant_trophic": 1,
+        "rows": 1024,
+        "source_not_HOSTS_marked": 18
+      },
+      "interaction_type_counts": {
+        "interactsWith": 5,
+        "eats": 5,
+        "adjacentTo": 4,
+        "hasHost": 2,
+        "preyedUponBy": 1,
+        "hasParasite": 1
+      },
+      "observed_stage_terms": {
+        "adult": 6,
+        "larvae": 1,
+        "pupae": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/scan": 11,
+        "globalbioticinteractions/siad": 5,
+        "EOL/pseudonitzchia": 1,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Elymnias hypermnestra",
+      "status": "SOURCE_ERROR_INCOMPLETE",
+      "paging_cap": 12,
+      "pagination": [],
+      "error_type": "TimeoutError",
+      "source_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_bytes": 0,
+      "rows_returned": 0
+    },
+    {
+      "species": "Erynnis brizo",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 140692,
+          "sha256": "1626318ac1771d211327beeb801ad52d242c01bc5b3122c2622439ecf277fc89",
+          "rows": 215
+        }
+      ],
+      "source_response_sha256": "717678e0b100dc4edf033bc4b83c9941aea8cb1fa7e23e4c35dedb58bbe6dfd8",
+      "response_bytes": 140692,
+      "rows_returned": 215,
+      "counts": {
+        "coordinates": 121,
+        "dated_full": 101,
+        "dated_year": 101,
+        "exact_focal": 202,
+        "explicit_trophic": 6,
+        "immature_stage": 4,
+        "other_source_taxon": 13,
+        "plant_target": 83,
+        "plant_trophic": 2,
+        "rows": 215,
+        "source_not_HOSTS_marked": 189
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 58,
+        "interactsWith": 44,
+        "mutualistOf": 33,
+        "hasHost": 25,
+        "pollinates": 21,
+        "adjacentTo": 8,
+        "eats": 6,
+        "visits": 5,
+        "hasParasite": 2
+      },
+      "observed_stage_terms": {
+        "adult": 53,
+        "larvae": 3,
+        "larva": 1
+      },
+      "distinct_study_source_ids": 14,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 51,
+        "globalbioticinteractions/mangal": 33,
+        "EOL/pseudonitzchia": 31,
+        "globalbioticinteractions/web-of-life": 21,
+        "globalbioticinteractions/HOSTS": 13,
+        "globalbioticinteractions/ferrer-paris": 11,
+        "globalbioticinteractions/cpc-pollinators": 11,
+        "millerse/Flowers-and-insects-lists-of-visitors-to-four-hundred-and-fifty-three-flowers": 8,
+        "globalbioticinteractions/scan": 7,
+        "globalbioticinteractions/ecdysis": 5
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Erynnis icelus",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 175987,
+          "sha256": "c2cd7d344713c2bd674ab9a587d6383a25a7c8b857855885b9134baf5f06ca4a",
+          "rows": 279
+        }
+      ],
+      "source_response_sha256": "68aafedd04f56d15a67ffda3a48c2ecd705754cf4416c365286d621cda6bdf80",
+      "response_bytes": 175987,
+      "rows_returned": 279,
+      "counts": {
+        "coordinates": 151,
+        "dated_full": 151,
+        "dated_year": 151,
+        "exact_focal": 279,
+        "explicit_trophic": 51,
+        "immature_stage": 13,
+        "plant_target": 113,
+        "plant_trophic": 20,
+        "rows": 279,
+        "source_not_HOSTS_marked": 263
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 71,
+        "interactsWith": 63,
+        "eats": 51,
+        "hasHost": 47,
+        "adjacentTo": 42,
+        "visits": 5
+      },
+      "observed_stage_terms": {
+        "adult": 122,
+        "larva": 11,
+        "Larval": 2
+      },
+      "distinct_study_source_ids": 11,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 105,
+        "globalbioticinteractions/hale2024": 46,
+        "globalbioticinteractions/ferrer-paris": 31,
+        "EOL/pseudonitzchia": 28,
+        "globalbioticinteractions/scan": 18,
+        "globalbioticinteractions/wis-ih-wirc": 18,
+        "globalbioticinteractions/HOSTS": 16,
+        "globalbioticinteractions/cpc-pollinators": 6,
+        "globalbioticinteractions/ecdysis": 6,
+        "globalbioticinteractions/msu-msuc": 4
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Gonepteryx rhamni",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 978857,
+          "sha256": "13b355b9a208e2870757fe9fbd5add3f1ca66358646525f6c7dc8c92e2da7b2c",
+          "rows": 1024
+        },
+        {
+          "skip": 1024,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 586128,
+          "sha256": "2239314ac8f44a58896ab7a3a21804c59d69f703e1db14e2824f3fd2ec8fe229",
+          "rows": 1024
+        },
+        {
+          "skip": 2048,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 784423,
+          "sha256": "fc3cf88bcfa099b20f580ecd7c380732d3adf9f42105530bdaf204412e68375c",
+          "rows": 1024
+        },
+        {
+          "skip": 3072,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 9322,
+          "sha256": "8c1498a8eb8895f4060f2485a807a46429e3b7334fe5c95d131dc74ea56b4bfe",
+          "rows": 5
+        }
+      ],
+      "source_response_sha256": "f456f8056fc7235955b1482b6d7a4690c69bf491e247dbe965bc3669c6061035",
+      "response_bytes": 2358730,
+      "rows_returned": 3077,
+      "counts": {
+        "coordinates": 1866,
+        "dated_full": 2437,
+        "dated_year": 2437,
+        "exact_focal": 3077,
+        "explicit_trophic": 367,
+        "immature_stage": 20,
+        "plant_target": 1454,
+        "plant_trophic": 192,
+        "rows": 3077,
+        "source_not_HOSTS_marked": 3069
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 1476,
+        "preyedUponBy": 379,
+        "eats": 367,
+        "pollinates": 362,
+        "interactsWith": 235,
+        "visits": 177,
+        "hasHost": 67,
+        "hasParasitoid": 4,
+        "hostOf": 2,
+        "flowersVisitedBy": 2,
+        "hasEndoparasitoid": 2,
+        "hasParasite": 1,
+        "laysEggsOn": 1,
+        "eatenBy": 1,
+        "hasPathogen": 1
+      },
+      "observed_stage_terms": {
+        "adult": 1232,
+        "Adult": 139,
+        "Young": 96,
+        "larva": 20,
+        "egg": 5,
+        "pupa": 2
+      },
+      "distinct_study_source_ids": 17,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 1565,
+        "globalbioticinteractions/trophiCH": 987,
+        "globalbioticinteractions/dopi": 167,
+        "globalbioticinteractions/menares2025-flowervisitation": 129,
+        "zedomel/redhead2018": 108,
+        "globalbioticinteractions/ferrer-paris": 59,
+        "globalbioticinteractions/schwarz2021": 19,
+        "globalbioticinteractions/web-of-life": 10,
+        "JoseBSL/EuPPollNet": 9,
+        "globalbioticinteractions/HOSTS": 8
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Junonia orithya",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 323849,
+          "sha256": "cb8398baa3f7f83195cfdaa88083a7303134be9b83dfecf9e059f52f3aa2fc97",
+          "rows": 503
+        }
+      ],
+      "source_response_sha256": "587fafab1caa4b284b3e763088e4f242b6a0999d9b908e3626df8e848183a84b",
+      "response_bytes": 323849,
+      "rows_returned": 503,
+      "counts": {
+        "coordinates": 194,
+        "dated_full": 194,
+        "dated_year": 194,
+        "exact_focal": 488,
+        "explicit_trophic": 237,
+        "immature_stage": 23,
+        "other_source_taxon": 15,
+        "plant_target": 336,
+        "plant_trophic": 138,
+        "plant_trophic_immature": 11,
+        "plant_trophic_immature_georeferenced": 1,
+        "rows": 503,
+        "source_not_HOSTS_marked": 431,
+        "strict_candidate": 1,
+        "strict_candidate_dated": 1
+      },
+      "interaction_type_counts": {
+        "eats": 237,
+        "hasHost": 215,
+        "interactsWith": 20,
+        "visitsFlowersOf": 13,
+        "hasPathogen": 2,
+        "visits": 1
+      },
+      "observed_stage_terms": {
+        "adult": 175,
+        "larval stage": 12,
+        "larva": 11
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 194,
+        "globalbioticinteractions/ferrer-paris": 158,
+        "globalbioticinteractions/HOSTS": 57,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 45,
+        "globalbioticinteractions/siad": 16,
+        "globalbioticinteractions/saito2016": 12,
+        "fkeck/gpt_interactions": 6
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Lampides boeticus",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 961875,
+          "sha256": "3c0d147672366a114f57b434a8b0a69461d827a60effb7b835469bee21d5b5d9",
+          "rows": 1024
+        },
+        {
+          "skip": 1024,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 472481,
+          "sha256": "bb395cd7bbfa6da0cb6b3fbb112e315a2756ae62564111fe779b8032da8df693",
+          "rows": 876
+        }
+      ],
+      "source_response_sha256": "aee9fe50f448b8df9c111a34dc30c3e331183b97b2a066242a2082cabf422fef",
+      "response_bytes": 1434356,
+      "rows_returned": 1900,
+      "counts": {
+        "coordinates": 819,
+        "dated_full": 1176,
+        "dated_year": 1176,
+        "exact_focal": 1899,
+        "explicit_trophic": 569,
+        "immature_stage": 78,
+        "other_source_taxon": 1,
+        "plant_target": 870,
+        "plant_trophic": 306,
+        "plant_trophic_immature": 74,
+        "rows": 1900,
+        "source_not_HOSTS_marked": 1748
+      },
+      "interaction_type_counts": {
+        "eats": 569,
+        "visitsFlowersOf": 475,
+        "preyedUponBy": 376,
+        "hasHost": 271,
+        "interactsWith": 73,
+        "visits": 51,
+        "pollinates": 44,
+        "hostOf": 20,
+        "hasParasite": 12,
+        "preysOn": 4,
+        "flowersVisitedBy": 2,
+        "laysEggsOn": 1,
+        "eatenBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 581,
+        "Young": 95,
+        "larval stage": 76,
+        "egg": 4,
+        "larva": 2,
+        "Adult": 1
+      },
+      "distinct_study_source_ids": 19,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 734,
+        "globalbioticinteractions/trophiCH": 639,
+        "globalbioticinteractions/HOSTS": 151,
+        "globalbioticinteractions/ferrer-paris": 86,
+        "globalbioticinteractions/saito2016": 76,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 61,
+        "globalbioticinteractions/dopi": 41,
+        "globalbioticinteractions/siad": 25,
+        "globalbioticinteractions/bold": 21,
+        "JoseBSL/EuPPollNet": 16
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Mestra dorcas",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 9094,
+          "sha256": "773aff0eb4f24c90e3fe4a00229d3fe0438b06c42022b5a9222f0d4752767fc0",
+          "rows": 13
+        }
+      ],
+      "source_response_sha256": "09b75fe7f4e30fcecf782309681ff06e6d04be2f83e7d27afd6da11905680076",
+      "response_bytes": 9094,
+      "rows_returned": 13,
+      "counts": {
+        "coordinates": 1,
+        "dated_full": 1,
+        "dated_year": 1,
+        "exact_focal": 11,
+        "explicit_trophic": 1,
+        "other_source_taxon": 2,
+        "plant_target": 7,
+        "plant_trophic": 1,
+        "rows": 13,
+        "source_not_HOSTS_marked": 10
+      },
+      "interaction_type_counts": {
+        "hasHost": 9,
+        "eats": 1,
+        "visitsFlowersOf": 1
+      },
+      "observed_stage_terms": {
+        "adult": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 8,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1,
+        "globalbioticinteractions/HOSTS": 1,
+        "globalbioticinteractions/inaturalist": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pieris brassicae",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 937615,
+          "sha256": "ca21f8e38c45b57f2e0ab097dec2d398b033d225bc0f9bea71da47973df3b6d9",
+          "rows": 1024
+        },
+        {
+          "skip": 1024,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 785384,
+          "sha256": "4e4a320f4712e5db4310dd30f4ee85e6fca875102e31b5a3d929205716692cc6",
+          "rows": 1024
+        },
+        {
+          "skip": 2048,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 781296,
+          "sha256": "62c94dbc96950d773e096837bd3729c8141de493b37b2cb23a12fac283a35bd4",
+          "rows": 1024
+        },
+        {
+          "skip": 3072,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 559666,
+          "sha256": "47df6bd1e869385aac7af0cee004624e758a4fe18a410c0ec7ec841d3f7ba0f7",
+          "rows": 1024
+        },
+        {
+          "skip": 4096,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 839480,
+          "sha256": "d1a7069803b2d4b61769f7758adb6adb81a3a361a2a97675b9c7d7a34918b9b0",
+          "rows": 1024
+        },
+        {
+          "skip": 5120,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 85404,
+          "sha256": "b5136cec20bf5ee27dde0e70783a9d05d35912696ed691342233940cfb44772e",
+          "rows": 141
+        }
+      ],
+      "source_response_sha256": "1445f16d5c4fe9a79644fb5caf1ff57e338dadebfd3278dbd45c16ae395e7640",
+      "response_bytes": 3988845,
+      "rows_returned": 5261,
+      "counts": {
+        "coordinates": 2447,
+        "dated_full": 3334,
+        "dated_year": 3334,
+        "exact_focal": 5158,
+        "explicit_trophic": 640,
+        "immature_stage": 382,
+        "other_source_taxon": 103,
+        "plant_target": 2104,
+        "plant_trophic": 403,
+        "plant_trophic_immature": 31,
+        "plant_trophic_immature_georeferenced": 14,
+        "rows": 5261,
+        "source_not_HOSTS_marked": 5102,
+        "strict_candidate": 14,
+        "strict_candidate_dated": 14
+      },
+      "interaction_type_counts": {
+        "visitsFlowersOf": 1882,
+        "pollinates": 714,
+        "eats": 640,
+        "preyedUponBy": 389,
+        "hasParasite": 352,
+        "hasHost": 350,
+        "hostOf": 346,
+        "interactsWith": 221,
+        "visits": 163,
+        "hasParasitoid": 59,
+        "hasPathogen": 20,
+        "eatenBy": 9,
+        "hasEndoparasitoid": 6,
+        "pathogenOf": 2,
+        "flowersVisitedBy": 2,
+        "parasiteOf": 2,
+        "hasVector": 1
+      },
+      "observed_stage_terms": {
+        "adult": 868,
+        "larva": 363,
+        "Adult": 206,
+        "Young": 99,
+        "larval stage": 19,
+        "egg": 18,
+        "female": 1
+      },
+      "distinct_study_source_ids": 35,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 1399,
+        "globalbioticinteractions/trophiCH": 1321,
+        "globalbioticinteractions/dopi": 832,
+        "globalbioticinteractions/ferrer-paris": 285,
+        "globalbioticinteractions/taxonworks": 260,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 245,
+        "zedomel/redhead2018": 150,
+        "JoseBSL/EuPPollNet": 149,
+        "globalbioticinteractions/menares2025-flowervisitation": 104,
+        "millerse/Ecological-Database-of-the-World-s-Insect-Pathogens": 85
+      },
+      "strict_qualifying_source_ids": [
+        "globalbioticinteractions/inaturalist"
+      ]
+    },
+    {
+      "species": "Polyommatus eros",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 476581,
+          "sha256": "ae5c7e2d22894bd77a68b6f51f8e764d0a46c42b2e2912e82b3dd4cb5fb57ae4",
+          "rows": 466
+        }
+      ],
+      "source_response_sha256": "6feb8fdee996b9f05354dc1948d4779c9e8483752c2d4a9bd5c7fd2ca3b7df47",
+      "response_bytes": 476581,
+      "rows_returned": 466,
+      "counts": {
+        "coordinates": 20,
+        "dated_full": 169,
+        "dated_year": 169,
+        "exact_focal": 462,
+        "explicit_trophic": 32,
+        "other_source_taxon": 4,
+        "plant_target": 49,
+        "plant_trophic": 15,
+        "rows": 466,
+        "source_not_HOSTS_marked": 460
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 377,
+        "eats": 32,
+        "pollinates": 24,
+        "visitsFlowersOf": 18,
+        "hasHost": 9,
+        "visits": 1,
+        "interactsWith": 1
+      },
+      "observed_stage_terms": {
+        "Young": 96,
+        "adult": 19,
+        "egg": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 433,
+        "globalbioticinteractions/inaturalist": 20,
+        "globalbioticinteractions/ferrer-paris": 7,
+        "globalbioticinteractions/HOSTS": 2
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pseudozizeeria maha",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 272947,
+          "sha256": "d046c062b4db569672818533d1a0f0249feb26835f22ba2fe60b98baaf494e71",
+          "rows": 497
+        }
+      ],
+      "source_response_sha256": "b7fa6847a14045ded693b96c99429e07a10cb4566b5ce010d04a027685e79609",
+      "response_bytes": 272947,
+      "rows_returned": 497,
+      "counts": {
+        "coordinates": 366,
+        "dated_full": 366,
+        "dated_year": 366,
+        "exact_focal": 398,
+        "explicit_trophic": 181,
+        "immature_stage": 5,
+        "other_source_taxon": 99,
+        "plant_target": 230,
+        "plant_trophic": 104,
+        "plant_trophic_immature": 5,
+        "rows": 497,
+        "source_not_HOSTS_marked": 391
+      },
+      "interaction_type_counts": {
+        "eats": 181,
+        "visitsFlowersOf": 163,
+        "interactsWith": 24,
+        "hasHost": 17,
+        "laysEggsOn": 7,
+        "visits": 2,
+        "preysOn": 1,
+        "flowersVisitedBy": 1,
+        "eatenBy": 1,
+        "pollinates": 1
+      },
+      "observed_stage_terms": {
+        "adult": 286,
+        "larval stage": 5
+      },
+      "distinct_study_source_ids": 7,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 365,
+        "globalbioticinteractions/ferrer-paris": 10,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 7,
+        "globalbioticinteractions/HOSTS": 7,
+        "globalbioticinteractions/saito2016": 5,
+        "globalbioticinteractions/ollerton2022": 3,
+        "ibartomeus/CropPol": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Pyrgus andromedae",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 17824,
+          "sha256": "d03c5b174345bc8f2fa16da0ba7b7c5bf34262ee98374c4ae37fe873724e0421",
+          "rows": 27
+        }
+      ],
+      "source_response_sha256": "d76ada00b19176a46d5cfd0fa19d3da17d87416e16642913cc395e2348a25147",
+      "response_bytes": 17824,
+      "rows_returned": 27,
+      "counts": {
+        "coordinates": 2,
+        "dated_full": 12,
+        "dated_year": 12,
+        "exact_focal": 27,
+        "explicit_trophic": 10,
+        "plant_target": 17,
+        "plant_trophic": 5,
+        "rows": 27,
+        "source_not_HOSTS_marked": 26
+      },
+      "interaction_type_counts": {
+        "hasHost": 14,
+        "eats": 10,
+        "visits": 1,
+        "visitsFlowersOf": 1,
+        "preyedUponBy": 1
+      },
+      "observed_stage_terms": {
+        "adult": 2
+      },
+      "distinct_study_source_ids": 5,
+      "study_source_id_top10": {
+        "globalbioticinteractions/ferrer-paris": 13,
+        "globalbioticinteractions/trophiCH": 10,
+        "globalbioticinteractions/inaturalist": 2,
+        "globalbioticinteractions/HOSTS": 1,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 1
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Siproeta epaphus",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 32995,
+          "sha256": "1fded1e1acb8a2bbac9625314de17b7aa40aa58c8a0f3b2cb953c1eb05dd70ef",
+          "rows": 52
+        }
+      ],
+      "source_response_sha256": "0f29496c5c5199fd15266330f057574eee649220e5e52c3eed35357f0b7399b3",
+      "response_bytes": 32995,
+      "rows_returned": 52,
+      "counts": {
+        "coordinates": 13,
+        "dated_full": 13,
+        "dated_year": 13,
+        "exact_focal": 26,
+        "explicit_trophic": 1,
+        "immature_stage": 1,
+        "other_source_taxon": 26,
+        "plant_target": 13,
+        "plant_trophic": 1,
+        "rows": 52,
+        "source_not_HOSTS_marked": 23
+      },
+      "interaction_type_counts": {
+        "hasHost": 13,
+        "visitsFlowersOf": 6,
+        "interactsWith": 4,
+        "hostOf": 2,
+        "eats": 1
+      },
+      "observed_stage_terms": {
+        "adult": 10,
+        "larva": 1
+      },
+      "distinct_study_source_ids": 4,
+      "study_source_id_top10": {
+        "globalbioticinteractions/inaturalist": 11,
+        "globalbioticinteractions/ferrer-paris": 10,
+        "globalbioticinteractions/HOSTS": 3,
+        "globalbioticinteractions/bold": 2
+      },
+      "strict_qualifying_source_ids": []
+    },
+    {
+      "species": "Thecla betulae",
+      "status": "COMPLETE",
+      "paging_cap": 12,
+      "pagination": [
+        {
+          "skip": 0,
+          "http_status": 200,
+          "content_type": "text/csv;charset=UTF-8",
+          "bytes": 607665,
+          "sha256": "41cb0d339d4010f4d4d183f23b79fe25c69666f653f3600f1518f748ecb4554a",
+          "rows": 615
+        }
+      ],
+      "source_response_sha256": "c7139aefa6f840dafab82c002cf0639ff517db06bc76c69b424704bd5e34a846",
+      "response_bytes": 607665,
+      "rows_returned": 615,
+      "counts": {
+        "coordinates": 53,
+        "dated_full": 227,
+        "dated_year": 227,
+        "exact_focal": 614,
+        "explicit_trophic": 105,
+        "immature_stage": 5,
+        "other_source_taxon": 1,
+        "plant_target": 92,
+        "plant_trophic": 38,
+        "rows": 615,
+        "source_not_HOSTS_marked": 600
+      },
+      "interaction_type_counts": {
+        "preyedUponBy": 376,
+        "eats": 105,
+        "hasHost": 38,
+        "visitsFlowersOf": 32,
+        "pollinates": 25,
+        "interactsWith": 16,
+        "visits": 8,
+        "hostOf": 7,
+        "laysEggsOn": 2,
+        "hasParasitoid": 2,
+        "hasParasite": 2,
+        "flowersVisitedBy": 1
+      },
+      "observed_stage_terms": {
+        "Young": 99,
+        "adult": 30,
+        "Adult": 25,
+        "egg": 13,
+        "larva": 5
+      },
+      "distinct_study_source_ids": 11,
+      "study_source_id_top10": {
+        "globalbioticinteractions/trophiCH": 491,
+        "globalbioticinteractions/inaturalist": 49,
+        "globalbioticinteractions/ferrer-paris": 23,
+        "globalbioticinteractions/HOSTS": 14,
+        "zedomel/redhead2018": 14,
+        "globalbioticinteractions/natural-history-museum-london-interactions-bank": 7,
+        "globalbioticinteractions/taxonworks": 5,
+        "globalbioticinteractions/web-of-life": 4,
+        "millerse/Plant-Herbivore-Web": 4,
+        "urn:lsid:checklistbank.org:dataset:124661": 2
+      },
+      "strict_qualifying_source_ids": []
+    }
+  ]
+}
