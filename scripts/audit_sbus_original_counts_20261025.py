@@ -233,7 +233,8 @@ def main():
                         for m in members
                         if m.filename.lower().endswith((".csv",".txt",".zip",".json"))
                     ][:300]
-                    candidates=[m for m in members if m.filename.lower().endswith(".csv")
+                    candidates=[m for m in members if not m.filename.startswith("__MACOSX/")
+                        and m.filename.lower().endswith(".csv")
                         and ("complete-share" in m.filename.lower() or
                              "complete share" in m.filename.lower())]
                     if not candidates:
