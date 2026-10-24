@@ -68,3 +68,12 @@ The strongest **source-conditional** insight is that *geographic extent of poten
 - [BCE archive comparison workflow](https://github.com/zuizui0223/chocho/actions/runs/40079912815) — **SUCCESS**
 
 Source interpretation boundary: data measure modeled butterfly×geographic-region *potential larval host resources*, not observed adults, larval resource productivity, historical colonizations, protected populations, or plant-management effects.
+
+
+## Audited figure and interpretation
+
+[View two-panel PNG](figures/butterfly_gain_host_support_20261024.png) · [View editable SVG](figures/butterfly_gain_host_support_20261024.svg). [Successful source-locked rendering workflow](https://github.com/zuizui0223/chocho/actions/runs/40080207205).
+
+Panel A presents each of the 206 gain-positive butterflies without smoothing, with the host-catalogue adequacy labels exposed rather than hidden. Panel B residualizes both the resource-gain predictor and the single-host-support outcome against native resource count, resolved host count and host-family breadth. The adjusted coefficient and genus-bootstrap slope envelope were checked against the immutable numerical receipt before rendering. The wedge is a **slope-uncertainty display**, not a prediction interval for local butterfly populations or host availability.
+
+The companion [candidate Results, Discussion and legend](../../manuscript/butterfly_gain_support_exploratory_insert_v0.1.md) is an isolated draft addendum. Publication claims should remain explicitly about reconstructed potential host-resource architecture.
