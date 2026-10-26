@@ -62,3 +62,31 @@ Do not multiply observed potential resource additions by the Fisher laboratory t
 - [Machine-readable per-block/2-scenario source receipt](../../provenance/reviewer_defenses/results/monarch_leaf_age_pupation_stage_conversion_20261026.json)
 - [Exact original-source GH Actions success](https://github.com/zuizui0223/chocho/actions/runs/40321446363)
 - Source six original CSV Git blob SHAs included in machine receipt. No source raw individual IDs committed.
+
+
+## 2026-10-26 follow-up: published survival percentages and test method source-checked
+
+The article's publicly accessible [Section 2.6 and Section 3.2](https://www.mdpi.com/2075-4450/17/2/215) report pupation rates **60.8% Top and 48.8% Bottom**, χ²=1.3139 and p=0.2517, and no statistically detectable survival difference. In the exact original author R script (Git blob de410164236730994c559bcf115a1e64e187be18), the corresponding function call is literally `chisq.test(c(48.8,60.8))`, and the Day-6 survival call is `chisq.test(c(74.2,75.4))`.
+
+An [independent fixed-source statistical-method audit](../../provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json) reproduced the reported pupation χ² **1.3138686** and p **0.2516954** exactly as a **chi-square goodness-of-fit test whose two input frequency values are percentages**, not treatment-specific numbers surviving/failing out of **240 assigned Top and 240 assigned Bottom larvae**. The original R code thus does **not implement the two-treatment sample-denominator-aware pupation survival test described in the paper's Methods**. This is a specific methodological source mismatch, not a judgement of the authors' intent.
+
+The actual original counts do not uniquely reproduce the paper's published rates:
+
+| Original data source | Top pupated / 240 | Bottom pupated / 240 | Correct count-based pooled Fisher exact two-sided p | Four-block conditional exact p |
+|---|---:|---:|---:|---:|
+| S0, literal SurviveToPupation.csv | 140 (58.3%) | 122 (50.8%) | **0.1190** | **0.0986** |
+| S1, hypothetical correction supported by both individual pupal files | 146 (60.8%) | 116 (48.3%) | **0.00778** | **0.00478** |
+| Published prose/code (`chisq.test(c(48.8,60.8))`) | implies 146 when Top denominator =240 | **48.8% is neither source count; closest 117/240** | **not computed from original individuals** | **not computed from original four blocks** |
+
+The original published p=.2517 therefore cannot resolve the original source contradiction; it reproduces from percentage numbers even if the true treatment numerator labels are different. Treat p-values in the second and third columns as **different statistical objects**, not as proof S1 is the correct sample. Only original authors can establish whether `SurviveToPupation.csv` 20241 had inverted labels, or the two raw pupal outcome files did, and why the published Bottom survival 48.8% does not exactly match either.
+
+The original 2026 article's **growth and earlier pupation** results remain independently measured among relevant source animals; the source-integrity finding applies to treatment-specific survival-to-pupation inference, and does not overturn unrelated original experiments. The scientific scope remains leaf age of *A. syriaca* within a controlled *D. plexippus* study, **not human-introduced larval hosts causing new butterfly populations**.
+
+**Action-ready neutral questions for study authors (not sent):**
+1. Which YearTrial=20241 Top/Bottom pupation assignment is correct: 30/36 in original survival summary, or 36/30 in both pupal individual-stage files?
+2. What original successes and denominators give Bottom 48.8% quoted in the article, given pupal stage records show 116/240=48.3%?
+3. Would a reproducible survival-to-pupation comparison based on the original binary successes/failures and four trials, rather than the two percentages passed to `chisq.test`, better reflect the design?
+
+[Published-method audit code](../../scripts/audit_fisher2026_published_percent_chisq_20261026.py) · [fixed audit protocol](../../provenance/reviewer_defenses/protocols/MONARCH_FISHER_PUBLISHED_PROPORTION_TEST_SOURCE_AUDIT_20261026.md) · [successful Actions audit](https://github.com/zuizui0223/chocho/actions/runs/40326629096).
+
+**Stop rule:** Preserve all source files and both statistical scenarios. Do not silently "correct" treatment labels or tell readers a firm survival effect exists pending original author/source verification. No additional parameter sweep; identifying plant quality effects in field populations still needs actual local host availability and tracked juveniles.
