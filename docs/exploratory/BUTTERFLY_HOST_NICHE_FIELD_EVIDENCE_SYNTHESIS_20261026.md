@@ -44,3 +44,14 @@ Decisive independent test requires:
 - Source-method >10-hour survey-duration validation and independent source-only QC under `provenance/reviewer_defenses/protocols/SBUS_ILLINOIS_SOURCE_10H_TEMPORAL_SENSITIVITY_20261026.md`; a corrected ecological re-analysis is handled as a separate labelled source-QC sensitivity, not substituted into this evidence hierarchy until verified.
 
 **Journal boundary:** This is an exploratory continuation using new observational adult data, **not** an automatic new Results section for the frozen GEB resource-geography manuscript. Do not merge into `main` or modify PR #38/70 without explicit scientific review; do not claim participant causal effects or ecology in Illinois extrapolates globally.
+
+
+## Published source-effort QC result, independently replayed
+
+[Original source 600-minute survey effort QA](../../provenance/reviewer_defenses/results/sbus_original_effort_duration_10h_20261026.json) found **5 Illinois survey events with duration >600 minutes among 14,843 unique events**, with 59 other invalid/inconsistent-duration events already rejected by the previous model. This criterion came from the **original Henry et al. 2025 Usage Notes**, not the sign of our observed host-niche coefficients.
+
+After excluding just these five source-duration outliers, the [full exact-source 199-graph degree-preserving replay](../../provenance/reviewer_defenses/results/sbus_illinois_10h_source_cofluctuation_20261026.json) was successful. Exactly **two** originally eligible site×years had changed effort denominators, while **121 sites, 851 site×years, 39 focal taxa, and all 640 within-site temporal species pairs** remained unchanged.
+
+The host-sharing minus nonsharing adult annual rate-correlation contrast changed from **+0.143230644** to **+0.143325885** (difference +0.000095241). The corrected 199-graph null median was **+0.088676607**, 95% null range **[+0.045865110,+0.143163278]**, and descriptive right tail was **0.030**. The minor outliers do not explain the observed marginal positive synchrony. However, the original 3 tested related outcomes, weather/phylogeny/host-biomass confounding and zero non-detection assumption remain fully intact, so no mechanism is promoted.
+
+[Independent survey QC and host-network corrected workflow](https://github.com/zuizui0223/chocho/actions/runs/40291907574) passed. The plotted original source-result figures are still representative, with source-QC differences well below normal display precision; future figures should footnote both original and corrected values if reused.
