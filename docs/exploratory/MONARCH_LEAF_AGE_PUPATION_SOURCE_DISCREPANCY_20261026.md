@@ -90,3 +90,29 @@ The original 2026 article's **growth and earlier pupation** results remain indep
 [Published-method audit code](../../scripts/audit_fisher2026_published_percent_chisq_20261026.py) · [fixed audit protocol](../../provenance/reviewer_defenses/protocols/MONARCH_FISHER_PUBLISHED_PROPORTION_TEST_SOURCE_AUDIT_20261026.md) · [successful Actions audit](https://github.com/zuizui0223/chocho/actions/runs/40326629096).
 
 **Stop rule:** Preserve all source files and both statistical scenarios. Do not silently "correct" treatment labels or tell readers a firm survival effect exists pending original author/source verification. No additional parameter sweep; identifying plant quality effects in field populations still needs actual local host availability and tracked juveniles.
+
+
+## Distinct individual-stage finding: day-six larval mass predicts recorded later pupation within original treatment strata
+
+**Posthoc within-original-source prognostic test, 2026-10-26.** The original article quantified mean six-day mass, mean time to pupation and source treatment survival separately. We located an actual *individual larva ID* bridge in original `2324_GD_AllMass.csv` (Git blob `3905f64bfe2667ce566a09d291e7c848378a11bf`) and validated each mass against the two independent **file copies** `2324_GD_6DayMass.csv` and `2324_GD_PupalMass.csv` from the same original experiment. These are not independent biological experimental replications.
+
+The cross-file agreement is exact: **532 measured stage records**, of which **270 larvae were weighed on Day 6** and **262 pupae were weighed**. The oldest trial `20231` lacks Day-6 weights entirely, but contains 72 recorded pupae. In the other three trials, **all 190 subsequent pupal IDs appear among the 270 Day-6 measured larvae**, leaving 80 original Day-6 weighed larvae with no later pupal record. This gives a direct within-cohort stage **measurement link**, not actual adult eclosion. Individual IDs were linked by `YearTrial×Treatment×ID`, so the same numeric ID in another trial is never misjoined.
+
+The [fixed source-fate protocol](../../provenance/reviewer_defenses/protocols/FISHER_MONARCH_DAY6_MASS_TO_PUPATION_PROGNOSIS_20261026.md) set the primary prognostic statistic as an **equal-weight average of within-six-(trial×recorded leaf)-stratum Mann–Whitney AUCs**. It asks whether a Day-6 larva that is *later seen pupating* had higher Day-6 mass than a same-trial, same-recorded-leaf larva without a pupal record. AUC=0.5 is no ranking information. Group-specific measurement is essential because 2023/2024 larval masses differ greatly.
+
+| Source YearTrial × recorded leaf label | Day-6 weighed | Pupa ID matched | Within-stratum Day-6 mass prognostic AUC |
+|---|---:|---:|---:|
+| 2023 Trial 2, Top | 34 | 19 | 0.7965 |
+| 2023 Trial 2, Bottom | 35 | 15 | 0.7800 |
+| 2024 Trial 1*, Top | 42 | 36 | 0.6806 |
+| 2024 Trial 1*, Bottom | 46 | 30 | 0.7313 |
+| 2024 Trial 2, Top | 59 | 50 | 0.5911 |
+| 2024 Trial 2, Bottom | 54 | 40 | 0.5179 |
+
+Equal-six-strata primary AUC = **0.68288**. A fixed-null 20,000 permutations (seed 20261026) shuffling recorded pupation labels **within each original trial×leaf group** while preserving its original count produced null 95% `[0.4184,0.5844]` and two-sided exploratory conditional tail **0.00005** (none of 20,000 random shuffles was at least as extreme). Mean AUC by true YearTrial varies **0.7882, 0.7059, 0.5545**: the third experimental trial shows only a weak rank relationship. Thus a within-sample association is strong against the *individual-level* conditional independence null, but generalization beyond **three real Day-6 trials** is unestablished.
+
+**Crucial source-identity robustness:** Swapping the **names** Top and Bottom in the disputed `20241` source group, without moving an animal's ID, Day-6 mass or pupation observation, changed the primary equal-six-strata AUC by only machine rounding (~2.2×10⁻¹⁶). Thus the **individual-state→subsequent-recorded-stage association** is identifiable *within the recorded source* even though the **experimental treatment-specific pupation advantage** remains unresolved. This is a *prognostic* result: Day-6 mass is measured **after** the leaf-age treatment and may reflect condition, genetics, handling and unmeasured larval vulnerabilities. We **cannot infer that making a larva heavier causes survival**, that plant nitrogen mediates the link, or that the finding predicts regional butterfly population increases.
+
+[Source-checked numeric result](../../provenance/reviewer_defenses/results/fisher_monarch_Day6_mass_pupation_ID_AUC_20261026.json) · [Exact individual linkage/permutation implementation](../../scripts/analyze_fisher_monarch_day6_mass_to_pupation_AUC_20261026.py) · [Successful original-source workflow](https://github.com/zuizui0223/chocho/actions/runs/40328362969).
+
+**Biological conclusion:** Candidate host presence, observed larval feeding, Day-6 juvenile condition, later pupation, and successful adult eclosion are separate evidence levels. Only the Day-6→pupation association within the subset can be assessed directly with individual IDs here. Neither source label contradictions nor strong rank concordance justify multiplying a global potential host-region gain by a fitted laboratory survival probability.
