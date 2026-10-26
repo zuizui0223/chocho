@@ -38,14 +38,9 @@ def render(svg,png):
     a.set_xscale("log")
     a.set_xlim(.09,4.2)
     a.set_xlabel("Alien / native caterpillar survey odds ratio (MH)")
-    a.set_title("(A) Site–year–plant family–method matched",fontweight="bold")
+    a.set_title("(A) Site–year–family–method matched",fontsize=10.8,fontweight="bold")
     a.invert_yaxis()
     a.grid(axis="x",alpha=.17)
-    for idx,row in enumerate(seasons):
-        v=data["observed"][row]
-        a.text(.12,idx-.23,
-               f"{v['matched_sites']} sites · {v['matched_strata']} strata",
-               fontsize=7.7,alpha=.75)
     difference=data["late_minus_peak_logOR"]
     margin=data["late_minus_peak_site_cluster_95_logOR"]
     secondary=data["early_minus_peak_logOR"]
@@ -59,7 +54,7 @@ def render(svg,png):
     b.set_yticks(ys,["Late minus summer","Early minus summer"])
     b.set_xlim(-2.0,2.7)
     b.set_xlabel("Difference in log(OR alien/native)")
-    b.set_title("(B) No demonstrated seasonal compensation",fontweight="bold")
+    b.set_title("(B) No clear seasonal improvement",fontsize=10.8,fontweight="bold")
     b.grid(axis="x",alpha=.17)
     b.invert_yaxis()
     fig.suptitle("Observed caterpillar larvae on woody plants: seasonal alien–native contrast\n"
