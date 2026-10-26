@@ -1,0 +1,14 @@
+# Correct original Illinois adult source rate for published >10-hour survey-duration exclusion
+
+**2026-10-26 | source method data-quality sensitivity.** Henry et al. 2025 data descriptor notes that original national trend analyses excluded survey efforts **≤0 min or >10 h continuous observation**; source `https://www.nature.com/articles/s41597-025-05513-8` Usage Notes (DOI 10.1038/s41597-025-05513-8). This correction is based on published source method, not on a target coefficient.
+
+The original source QC identified only **5 out of 14,843 unique Illinois events** with positive `duration>600` minutes (plus 59 invalid/inconsistent-duration events that the original model already excluded). Michigan had 15; Colorado 0. This posthoc correction addresses the *same main Illinois source*; it does not select a different species or favorable result.
+
+**Fixed implementation before corrected outcome calculation:**
+1. Reread the exact original Figshare v1 ZIP MD5 `3161b1c8802a0d67771b2044e18da928`; remove just Illinois events with `duration>600` (and original already rejected invalid durations), leaving all source species identities and host graph unchanged.
+2. Recreate the same Illinois 5+ surveys, 3+ 31-day seasonal bins, and 3-consecutive-year gate. Compare original eligible sites **121**, site-years **851**, original 39 positive-detection-eligible species and **640 originally qualifying temporal species pairs**. If any change prevents direct exact-roster comparison, label `NOT_IDENTICAL_COHORT_AFTER_SOURCE_QC` and do NOT call an apparent coefficient difference a replication; report source sample difference and stop.
+3. If source sample remains identical, recompute the original within-site mean-demeaned `log1p(adults/survey_hour)` pairwise temporal correlation; calculate shared-minus-nonsharing difference on the same 640 species pairs. The original figure +0.14323064 is the comparison reference, not a target to preserve.
+4. Rerun **199 exactly same deterministic host-network graph swaps** (seed 20261026 + 7919×replicate, 5×E proposed swaps, ≥100 accepted, ≥10% of viable host edges changed, ≥190 valid draws and ≥20 pairs of each type) and compare the corrected observed coefficient with the corrected null distribution. Report the corrected one-sided empirical tail as an exploratory source QA diagnostic, never an independent confirmatory test. Do not re-tune or add other effort thresholds.
+5. If source QC changes sign, substantially changes magnitude or null-extremity, retract the borderline original temporal overlap interpretation. Even if robust, do NOT infer plant competition or resource-driven butterfly growth: host biomass and actual larval use remain unavailable and previous three outcomes' multiplicity persists.
+
+No raw event IDs, site identities, count rows or precise site coordinates may be archived. Original SBus article, author attribution and CC BY 4.0 source remain pinned and reproducible.
