@@ -50,3 +50,10 @@ Source-conditional uncertainty:
 
 ## Artifacts
 Keep an exact execution script, independent tests and GitHub Actions receipt plus strictly aggregate source diagnostics on this branch. No source raw butterfly survey rows or site IDs, no author-specific data, and **no integration into frozen GEB main/PR #38/#70** before formal scientific assessment.
+
+
+## Outcome-blind reporting sensitivity (fixed before first macro outcome fit)
+
+Because the original standardized survey data largely emit species counts when detected, source-missing site×year butterfly entries are primarily **nondetections, not proven zero populations**. As a fixed secondary robustness check, refit each species×programme **only on source-recorded positive-count site×years**, requiring the same >=5 monitored sites, >=3 positive years and >=15 positive cells, and >=30 site-year measured cells if available. Retain the originally qualified species panel if the positive-only slope is identifiable; if fewer than 25 species, report NOT_EVALUABLE rather than selecting a lower threshold. Refit the same macro regression with only that subset and original covariate definitions. This changes the estimand (conditional on detection) and has survivor/effort selection; agreement is reassuring about imputed-zero dependence, but disagreement does not identify which estimator is unbiased.
+
+To prevent algebraic singularity rather than tuning statistical significance: if `n_monitored_programmes` is constant across the original eligible species panel, drop only that term (it is identical to the intercept), and record that adjustment. All other original covariates remain mandatory, and a source taxonomic family category appears only when it has >=3 original eligible species.
