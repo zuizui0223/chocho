@@ -64,10 +64,10 @@ def draw(svg,png):
     ax.grid(axis="x",alpha=.15)
     p0=cases[0]["conditional_fixed_margin_exact"]["two_sided_probability_order_p"]
     p1=cases[1]["conditional_fixed_margin_exact"]["two_sided_probability_order_p"]
-    ax.text(.97,.94,
-            f"Exact conditional p: S0 {p0:.4f}; S1 {p1:.4f} (hypothetical)",
-            transform=ax.transAxes,ha="right",va="top",fontsize=8.0,
-            bbox={"facecolor":"white","edgecolor":"none","alpha":.9})
+    ax.text(.05,.53,
+            f"Fixed-margin conditional tests\nS0 p={p0:.4f} · S1 p={p1:.4f} (hypothetical)",
+            transform=ax.transAxes,ha="left",va="center",fontsize=8.0,
+            bbox={"facecolor":"white","edgecolor":"none","alpha":.93})
     fig.suptitle("Observed monarch development on young versus old milkweed leaves\n"
                  "Source treatment-label inconsistency prevents a unique survival conclusion",
                  fontsize=13.0)
