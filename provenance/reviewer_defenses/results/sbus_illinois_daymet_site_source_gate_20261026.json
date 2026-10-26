@@ -1,0 +1,58 @@
+{
+  "schema": "chocho_illinois_weather_site_coordinate_qa_v01_20261026",
+  "status": "SOURCE_WEATHER_LINK_NOT_READY",
+  "original_sbus_dataset_doi": "10.6084/m9.figshare.27934602.v1",
+  "original_illinois_field_panel": {
+    "qualified_sites": 121,
+    "qualified_site_years": 851,
+    "matched_239_butterflies": 47,
+    "source_presence_cells": 8953,
+    "eligible_survey_method": "Illinois Butterfly Monitoring Network, 5+ events, 3+ seasonal 31-day bins, 3 consecutive eligible years"
+  },
+  "coordinate_quality": {
+    "source_eligible_sites": 121,
+    "sites_with_valid_coordinates": 121,
+    "sites_with_stable_rounded_coords_gte95pct": 121,
+    "fraction_stable_sites": 1.0,
+    "site_coord_mode_frequency_median": 1.0,
+    "sites_sharing_exact_rounded_coordinates_beyond_first": 107,
+    "coordinate_distinct_mode_count": 14,
+    "coordinate_precision_labels_counts": {
+      "Nearest 1": 80286
+    },
+    "original_rows": {
+      "original_source_rows_at_eligible_sites": 80286,
+      "valid_coordinate_rows": 80286
+    },
+    "source_site_values_coordinates_not_saved": true,
+    "site_join_gate": "SITE_WEATHER_JOIN_NOT_IDENTIFIABLE"
+  },
+  "independent_daily_weather": {
+    "endpoint": "https://daymet.ornl.gov/single-pixel/api/data",
+    "test_coordinates_public_demo_only": true,
+    "variables": [
+      "tmax",
+      "tmin",
+      "prcp",
+      "srad"
+    ],
+    "test_year": 2015,
+    "http_status": 200,
+    "status": "DAYMET_PUBLIC_DEMO_365_ROWS_PARSED",
+    "content_type": "text/csv; charset=utf-8",
+    "response_bytes": 12321,
+    "response_sha256": "06c78f3d395150f06ea82806b5474d5b978fc321111bfb44531ec484da2992f2",
+    "columns": [
+      "year",
+      "yday",
+      "prcp (mm/day)",
+      "srad (W/m^2)",
+      "tmax (deg c)",
+      "tmin (deg c)"
+    ],
+    "daily_rows": 365
+  },
+  "no_individual_site_coord_or_butterfly_count_export": true,
+  "no_abiotic_or_host_niche_effect_estimated": true,
+  "disclaimer": "Daymet weather are modelled daily grid fields, not measured local larval host plant phenology"
+}
