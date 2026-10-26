@@ -37,6 +37,13 @@ COPY_PATHS = (
 # their separate analysis branches and review packages, never the submitted pack.
 # Review the list whenever an independent analysis gains further files.
 EXCLUDE_RELATIVE = {
+    # Independently audited original published monarch individual-stage linkage; not part of anonymous GEB evidence.
+    Path("provenance/reviewer_defenses/protocols/FISHER_MONARCH_DAY6_MASS_TO_PUPATION_PROGNOSIS_20261026.md"),
+    Path("provenance/reviewer_defenses/results/fisher_monarch_Day6_mass_pupation_ID_AUC_20261026.json"),
+    Path("scripts/analyze_fisher_monarch_day6_mass_to_pupation_AUC_20261026.py"),
+    Path("scripts/render_monarch_day6_mass_pupation_AUC_20261026.py"),
+    Path("docs/exploratory/figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.svg"),
+    Path("docs/exploratory/figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.png"),
     # Published-fitness-source audit is separate exploratory prior-art integrity work, not GEB review evidence.
     Path("provenance/reviewer_defenses/protocols/MONARCH_FISHER_PUBLISHED_PROPORTION_TEST_SOURCE_AUDIT_20261026.md"),
     Path("provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json"),
