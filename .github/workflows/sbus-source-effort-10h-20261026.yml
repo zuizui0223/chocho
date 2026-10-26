@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install audit source dependency
+        run: python -m pip install 'numpy>=1.26,<3'
       - name: Check exact source survey durations against published >10 hour outlier guidance
         run: |
           python scripts/audit_sbus_source_effort_10h_20261026.py \
