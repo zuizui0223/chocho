@@ -1,0 +1,166 @@
+{
+  "schema": "chocho_CaterpillarsCount_native_alien_season_MH_site_bootstrap_v01",
+  "status": "EXPLORATORY_SEASONAL_ACTUAL_CATERPILLAR_BRANCH_OCCUPANCY",
+  "source_commit": "2c5690ac7c6dba7eca506da886c49781c37617bd",
+  "source_study_doi": "10.1002/ecs2.70615",
+  "original_source_verified_survey_peak": 68741,
+  "source_original_matched_strata": {
+    "early": {
+      "matched_strata": 106,
+      "alien_n": 544,
+      "native_n": 1321,
+      "alien_positive": 25,
+      "native_positive": 62,
+      "sites": 33,
+      "families": 16
+    },
+    "peak": {
+      "matched_strata": 157,
+      "alien_n": 1199,
+      "native_n": 2176,
+      "alien_positive": 24,
+      "native_positive": 121,
+      "sites": 52,
+      "families": 16
+    },
+    "late": {
+      "matched_strata": 137,
+      "alien_n": 593,
+      "native_n": 1127,
+      "alien_positive": 14,
+      "native_positive": 73,
+      "sites": 37,
+      "families": 14
+    }
+  },
+  "main_all_methods": {
+    "status": "ORIGINAL_SOURCE_MATCHED_SEASONAL_LARVAL_OCCUPANCY_ESTIMATE_QUALIFIED",
+    "observed": {
+      "early": {
+        "matched_strata": 106,
+        "matched_sites": 33,
+        "native_surveys": 1321,
+        "alien_surveys": 544,
+        "positive_larva_surveys": 87,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": 0.01876961303500588,
+        "OR_alien_vs_native": 1.0189468694966684,
+        "95pct_site_cluster_bootstrap_logOR": [
+          -1.1978363865735537,
+          0.056069841914840754,
+          1.1195553795526867
+        ],
+        "95pct_site_cluster_bootstrap_OR": [
+          0.3018465852404172,
+          3.0634918093427315
+        ]
+      },
+      "peak": {
+        "matched_strata": 157,
+        "matched_sites": 52,
+        "native_surveys": 2176,
+        "alien_surveys": 1199,
+        "positive_larva_surveys": 145,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": -0.575144045089705,
+        "OR_alien_vs_native": 0.562623819771149,
+        "95pct_site_cluster_bootstrap_logOR": [
+          -1.1003137719518237,
+          -0.5868170975613114,
+          -0.16694195735355116
+        ],
+        "95pct_site_cluster_bootstrap_OR": [
+          0.33276665447277964,
+          0.8462487284274834
+        ]
+      },
+      "late": {
+        "matched_strata": 137,
+        "matched_sites": 37,
+        "native_surveys": 1127,
+        "alien_surveys": 593,
+        "positive_larva_surveys": 87,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": -0.7036823809302352,
+        "OR_alien_vs_native": 0.4947600502404527,
+        "95pct_site_cluster_bootstrap_logOR": [
+          -2.023818077710831,
+          -0.6851238887968432,
+          0.38453365402224093
+        ],
+        "95pct_site_cluster_bootstrap_OR": [
+          0.13214994188321896,
+          1.468929132493456
+        ]
+      }
+    },
+    "late_minus_peak_logOR": -0.1285383358405302,
+    "early_minus_peak_logOR": 0.5939136581247109,
+    "late_minus_peak_OR_ratio": 0.8793798500065279,
+    "early_minus_peak_OR_ratio": 1.8110624429501259,
+    "late_minus_peak_site_cluster_95_logOR": [
+      -1.443804334793658,
+      -0.09917384311130853,
+      1.1041411676627573
+    ],
+    "early_minus_peak_site_cluster_95_logOR": [
+      -0.6322778202234959,
+      0.6545455873635404,
+      1.8491448509705224
+    ],
+    "late_minus_peak_positive_bootstrap_fraction": 0.42439516129032256,
+    "bootstrap_draws": 2000,
+    "bootstrap_successes": 1984,
+    "bootstrap_source_cluster_sites": 57,
+    "bootstrap_degenerate": {
+      "MH_any_zero_cell_crossproducts": 16
+    },
+    "source_frozen_years": "2010–2024",
+    "field_data_biological_unit": "branch survey; positive unidentified caterpillar",
+    "not_population_or_butterfly_species_abundance": true
+  },
+  "method_visual_only_sensitivity": {
+    "status": "NOT_IDENTIFIABLE_SITE_CLUSTER_BOOTSTRAP_DEGENERACY",
+    "observed": {
+      "early": {
+        "matched_strata": 61,
+        "matched_sites": 19,
+        "native_surveys": 997,
+        "alien_surveys": 401,
+        "positive_larva_surveys": 71,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": 0.19549506329608332
+      },
+      "peak": {
+        "matched_strata": 75,
+        "matched_sites": 27,
+        "native_surveys": 900,
+        "alien_surveys": 565,
+        "positive_larva_surveys": 50,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": -0.4340862401660529
+      },
+      "late": {
+        "matched_strata": 60,
+        "matched_sites": 19,
+        "native_surveys": 434,
+        "alien_surveys": 316,
+        "positive_larva_surveys": 30,
+        "source_gate": true,
+        "log_oddsratio_alien_to_native": -1.4409895435119882
+      }
+    },
+    "bootstrap_success": 1675,
+    "failed": {
+      "MH_any_zero_cell_crossproducts": 325
+    }
+  },
+  "limitations": [
+    "Branch arthropods classified as caterpillars include moths; not butterfly-specific host utilization",
+    "Observational native/alien plant species identity, actual host quality and seasonal growth confounded",
+    "Same site-year plant FAMILY and observation method matched; individual plant species not controlled",
+    "Not an oviposition, survival, recruitment, population abundance or invasive host arrival estimate",
+    "Raw native-vs-alien June–July difference already documented in Whitener et al. (2026)",
+    "No source raw survey/site/location/observer/plant individual rows uploaded to repository"
+  ]
+}
