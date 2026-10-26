@@ -53,3 +53,24 @@ The original published Whitener et al. native-versus-alien analysis and this exp
 - [Seasonal original-data model workflow](https://github.com/zuizui0223/chocho/actions/runs/40310452124)
 
 Separate newly published Western monarch Dryad 2026 DOI 10.5061/dryad.4j0zpc8q5 (eggs and L1–L5 on 7 milkweeds across five western states) was audited in branch analysis/monarch-host-stage-realization-20261026; metadata was verified, but the Dryad API zip path returned 401 and the publicly documented file-stream retrieval returned 403 on this runner. **No egg/larva-stage result was computed from that blocked source.** This availability failure is not biological absence and requires authenticated permission or another openly distributable source before individual butterfly-stage inference.
+
+
+## Photo-expert butterfly-species identity gate: **not adequate for a butterfly-specific inference**
+
+A separate source-blind *taxonomic identifiability* gate was frozen before checking expert photo taxa: [protocol](../../provenance/reviewer_defenses/protocols/CATERPILLARS_COUNT_EXPERT_BUTTERFLY_SPECIES_ID_GATE_20261026.md). It queried the original source's 2025-06-17 expert identifications (Git blob SHA a5d5ff967ddfc79a6e11abb7bab9fae4354e11ca), without guessing or taxonomically broadening the original 239 accepted butterfly names.
+
+[Verified expert source receipt](../../provenance/reviewer_defenses/results/caterpillars_count_expert_exact_butterfly_id_gate_20261026.json) finds **17,341** photo expert identification records, including **2,564** source-group *caterpillar* sightings; **866** of these had a source species-rank identification, spanning **101** taxa. But **only 15 sightings belonging to a single identified butterfly species** match any of the originally fixed **239 chocho butterflies** exactly. This is far below the predeclared gate of 20 individual sightings across at least 10 distinct butterfly species. It is a **source taxonomic-identifiability limitation**, not an absence of those species in nature.
+
+The first attempts failed because the expert source has the field \`StandardGroup\`, not \`Group\`. The source field mapping was corrected in the protocol and script **before the species-overlap counts were inspected**, with the source Git identity and all biological thresholds unchanged. [Corrected expert source CI](https://github.com/zuizui0223/chocho/actions/runs/40311570733) passed.
+
+**Final butterfly-specific claim:** NOT IDENTIFIABLE using this source. Do not treat the significant/suggestive broad larval Lepidoptera plant-origin signal as original-data evidence of any butterfly species’ egg-to-adult recruitment, population expansion or interspecific larval competition.
+
+## Final figure / numerical reproducibility
+
+![Observed seasonal caterpillar presence odds ratios and late/peak difference](figures/CaterpillarsCount_seasonal_native_alien_field_use_20261026.png)
+
+[Final visually inspected PNG](figures/CaterpillarsCount_seasonal_native_alien_field_use_20261026.png) · [SVG](figures/CaterpillarsCount_seasonal_native_alien_field_use_20261026.svg). The final [figure CI](https://github.com/zuizui0223/chocho/actions/runs/40311455503) passed after correcting axis-title annotation overlap, with the underlying source and bootstrap numbers unchanged.
+
+The source identity/season gate [40310078311](https://github.com/zuizui0223/chocho/actions/runs/40310078311), exact source-matched Mantel–Haenszel site-bootstrap regression [40310452124](https://github.com/zuizui0223/chocho/actions/runs/40310452124), final figure [40311455503](https://github.com/zuizui0223/chocho/actions/runs/40311455503) and expert butterfly-specific availability gate [40311570733](https://github.com/zuizui0223/chocho/actions/runs/40311570733) have all passed.
+
+The independently published, well-suited monarch milkweed/egg/L1–L5 Dryad source DOI 10.5061/dryad.4j0zpc8q5 remains source-metadata identifiable but **not anonymously downloadable** in this test: dataset ZIP REST returned HTTP 401, and current individual published file_stream returned 403. No Dryad juvenile stage rows were inspected or used to make results. Never assume the biological question was tested on that dataset.
