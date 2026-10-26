@@ -1,0 +1,9 @@
+# Separate bounded-source low-volume live point diagnostic (2026-10-26)
+
+This diagnostic is **separate from** the frozen all-26 GitHub Actions primary study. It is authorized only because the all-26 Actions runner is currently queued and does NOT supersede its original fixed protocol.
+
+Before inspecting point coordinate distances, select **ALL** 26 original source cases satisfying both: (i) source-frozen previous butterfly country-facet indexed record count <=20; and (ii) sum of source-frozen previous 44 exact candidate plant×country source-facet counts for that case <=20. Do **not** require candidate plant GBIF presence; cases with zero indexed candidate plants remain included. This deterministic pre-outcome rule yields **12** butterfly×country cases. These are a low-record-volume convenience/feasibility screen, **NOT** an unbiased sample of butterflies, host interactions or climatic opportunities.
+
+For each case retrieve the original five basisOfRecord groups and accepted original source taxon keys, original year 2010–2025, country, hasCoordinate=true, hasGeospatialIssue=false and occurrenceStatus=PRESENT; the full prior volume is expected to fit a single 300-record API page, but if current count exceeds 300 or a source query fails, label incomplete (not zero). All local coordinates are processed in memory; publish only counts. Use same 1/5/25 km great-circle and ±3-year thresholds as the parent protocol, plus source count drift and known-uncertainty 1km diagnostics. No claim of feeding, population, new climatic niche colonisation, or establishment. A failed API result must never become evidence of plant absence. Cross-check the original source roster and avoid favorable spatial selection.
+
+Do not combine this separate pilot estimate with the all-26 macro source denominator unless the full source-cohort workflow is independently complete.
