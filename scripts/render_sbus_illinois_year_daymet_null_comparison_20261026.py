@@ -53,7 +53,6 @@ def panel(ax, name, obs, source, normal_note):
           f"Exploratory upper fraction {q:.3f}")
     ax.text(.025,.965,text,transform=ax.transAxes,ha="left",va="top",
             fontsize=8.2,bbox={"facecolor":"white","edgecolor":"none","alpha":.9,"boxstyle":"round"})
-    ax.text(.98,.035,normal_note,transform=ax.transAxes,ha="right",va="bottom",fontsize=7.5)
 
 
 def draw(svg,png):
@@ -95,11 +94,13 @@ def draw(svg,png):
     )
     ax[1,1].text(.035,.96,info,transform=ax[1,1].transAxes,
                  ha="left",va="top",fontsize=10.1,linespacing=1.25)
-    ax[0,0].legend(frameon=False,fontsize=7.4,loc="lower right")
+    ax[1,1].text(.035,.055,
+                 "Bars: 199 fixed-degree network randomizations\n"
+                 "Dashed: observed data   ·   Dotted: null median",
+                 transform=ax[1,1].transAxes,ha="left",va="bottom",fontsize=8.6)
     fig.suptitle("Butterfly host-sharing annual synchrony: environment-falsification checks\n"
                  "Illinois 2000–2020 source-monitored adult encounter rates",
                  fontsize=13.3)
-    fig.supxlabel("Values are observational fixed-source correlations; all weather-site positions are coarse")
     svg.parent.mkdir(parents=True,exist_ok=True)
     png.parent.mkdir(parents=True,exist_ok=True)
     fig.savefig(svg)
