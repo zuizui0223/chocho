@@ -1,0 +1,29 @@
+# Original Fisher 2026 individual day-six mass -> subsequent pupation: ID-link gate and fixed analysis
+
+**26 October 2026 | exploratory posthoc prognosis test fixed before inspecting mass/fate association.** This adds a different question from published treatment mean effects and the contested treatment-specific survival test. It uses **real original *Danaus plexippus* individual identifiers**, not synthetic stage transitions. This is an original-data reanalysis, not an independent new study or a new causal mechanism.
+
+## Sources
+Fisher et al. (2026), *Insects*, DOI 10.3390/insects17020215. Public source `kelseyefisher/MilkweedLeafAgeMonarchSuccess` Git commit `acbb93c75e1f4810355c6ce03e6076e2303b2a98`.
+- `2324_GD_AllMass.csv`, expected git blob `3905f64bfe2667ce566a09d291e7c848378a11bf` contains `YearTrial,Treatment,ID,Mass,Stage`, where Stage in {Day 6, Pupa}.
+- `2324_GD_6DayMass.csv` blob `4f390c96c27d1635e01d6f0877bd81db84a05a0b` and `2324_GD_PupalMass.csv` blob `bf2978fb1d7070b8916378813898f771d39e79d6` allow **independent file-content cross-verification** of measurements, but they are derived from the SAME experiment and not independent biological replicates.
+- `SurviveToPupation.csv` blob `33f269e78f235cd1039394162a6871370db5e020` and `2324_GD_PupalDays.csv` blob `7066610f45f0baace4cfb679c5b7ee3355ce881f` are used only as source identity checks. They are **conflicting** in YearTrial 20241 treatment classification; the prior fully qualified [two-source scenario outcome](../results/monarch_leaf_age_pupation_stage_conversion_20261026.json) must remain unchanged.
+- Previous source inspection, before outcome association computation, found **270 Day-6 mass observations** in YearTrial 20232, 20241, 20242; **262 total pupal masses** across 4 trials; **190 individuals** with both Day-6 and pupal masses, **80 Day-6 only**, and **72 pupae without Day-6 measurement in first trial 20231**. Before modelling, independently verify every pupal individual in the three analysed trials exists in its corresponding Day-6 source group; abort if not.
+
+## Fixed scientific question
+
+**Among caterpillars demonstrably alive and measured on day six, does day-six larval mass predict subsequently observed pupation, beyond the recorded experimental trial × leaf-treatment stratum?** This is a prognostic association, not the causal treatment effect of leaf age or a proof that artificially increasing mass rescues larvae.
+
+Original unit = unique (`YearTrial`, `Treatment`, `ID`) to avoid accidental reuse of numeric IDs across blocks/leaf source. Eligible strata exactly 20232, 20241, 20242 crossed with Top and Bottom = six strata. `Pupated=1` if the same key has a source Pupa-stage mass, else zero **only when the PupalMass independent source file and source 4-trial aggregate counts verify complete pupation reporting**. Do not add 20231 pupae to Day-6 risk set or interpret 80 Day-6-only as explicit cause of death. If any contradictory duplicate ID/mass, or if all 190 pupal source IDs are not a subset of 270 Day-6 IDs, stop and mark NOT EVALUABLE.
+
+## Primary analysis, fixed before viewing outcome-mass ranking
+
+1. For each of the six YearTrial × recorded-leaf strata with both a positive and negative pupation outcome, compute **within-stratum Mann–Whitney concordance AUC** = Pr(day-six mass of a later-pupating caterpillar exceeds that of a measured non-pupating caterpillar), ties contribute 0.5. AUC=0.5 is no rank discrimination. **Primary single statistic = equally weighted mean AUC across exactly six eligible original strata**, not pooling 270 larvae as though same environment.
+2. **20,000 conditional label permutations**, seed 20261026, permute observed pupation labels only within each original stratum and preserve its original success/failure count and every measured mass. Compare primary mean AUC with its six-strata constrained permutation distribution (two-sided deviations from 0.5); report Monte Carlo percentile reference, tail and binomial Monte Carlo granularity. The permutation is a descriptive prognostic null, not a randomized intervention on larval mass.
+3. Stability: show six individual stratum AUCs, each trial's mean Top/Bottom AUC, and leave-one-original-trial-out mean AUC range. Do **not** cherry-pick the 20241 ambiguous labels, mass cutpoints, percentiles or upper/lower mass subsets. No secondary significance endpoint mining.
+4. The source treatment-label dispute in 20241 implies Top vs Bottom **biological direction remains unresolved**, but an AUC calculated **within each labelled group** is invariant to swapping the names of the two whole groups; this is the central reason for selecting this prognostic endpoint. Verify invariance computationally by swapping group labels throughout 20241 and recomputing primary AUC.
+5. Publish only grouped counts, AUCs, null scalars and original file blob checksums in chocho, **not original larva IDs**. Report exactly how much actual stage linkage is possible (270 weighed on Day-6, 190 of these represented in later pupal records, 80 without pupal measurement). Do not interpret adult eclosion or wild population establishment.
+
+## Interpretation boundary
+A source AUC above the within-trial/leaf permutation null suggests early juvenile state contains information about subsequent measured pupation after recorded leaf treatment and trial. It **does not** identify (i) an indirect mediation of milkweed leaf nitrogen on survival (posttreatment mediator), (ii) local field host phenology, (iii) introduced plant advantage, or (iv) competition among butterflies. A result in the same paper's original experiment is **not an independent experimental replication**. The source survival-label conflict is unresolved and can affect claims about which botanical leaf position benefits larvae; it cannot be resolved by a significant rank-AUC.
+
+Source QA failure -> no inference. Original GEB paper and PR #38/#70 untouched.
