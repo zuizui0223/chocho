@@ -80,7 +80,6 @@ def draw(svg,png):
            f"{st['two_sided_deviation_from_half_empirical_fraction']:.5f}",
            transform=b.transAxes,ha="left",va="top",fontsize=8.3,
            bbox={"facecolor":"white","edgecolor":"none","alpha":.9})
-    b.legend(loc="lower left",fontsize=7.4,frameon=False)
     fig.suptitle("Observed monarch day-six mass precedes later recorded pupation\n"
                  "Fisher et al. (2026) original individual source; n=270 measured, 190 pupated",
                  fontsize=13.0)
