@@ -62,10 +62,12 @@ def draw(svg,png):
     ax.set_xlabel("Trial-stratified pupation odds ratio, Top / Bottom")
     ax.set_title("(B) Source scenario determines uncertainty",fontweight="bold",fontsize=10.5)
     ax.grid(axis="x",alpha=.15)
-    for i,c in enumerate(cases):
-        p=c["conditional_fixed_margin_exact"]["two_sided_probability_order_p"]
-        ax.text(.72,i+.23,f"4-trial fixed-margin conditional p = {p:.4g}",
-                ha="left",fontsize=8.1)
+    p0=cases[0]["conditional_fixed_margin_exact"]["two_sided_probability_order_p"]
+    p1=cases[1]["conditional_fixed_margin_exact"]["two_sided_probability_order_p"]
+    ax.text(.97,.94,
+            f"Exact conditional p: S0 {p0:.4f}; S1 {p1:.4f} (hypothetical)",
+            transform=ax.transAxes,ha="right",va="top",fontsize=8.0,
+            bbox={"facecolor":"white","edgecolor":"none","alpha":.9})
     fig.suptitle("Observed monarch development on young versus old milkweed leaves\n"
                  "Source treatment-label inconsistency prevents a unique survival conclusion",
                  fontsize=13.0)
