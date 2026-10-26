@@ -116,3 +116,14 @@ Equal-six-strata primary AUC = **0.68288**. A fixed-null 20,000 permutations (se
 [Source-checked numeric result](../../provenance/reviewer_defenses/results/fisher_monarch_Day6_mass_pupation_ID_AUC_20261026.json) · [Exact individual linkage/permutation implementation](../../scripts/analyze_fisher_monarch_day6_mass_to_pupation_AUC_20261026.py) · [Successful original-source workflow](https://github.com/zuizui0223/chocho/actions/runs/40328362969).
 
 **Biological conclusion:** Candidate host presence, observed larval feeding, Day-6 juvenile condition, later pupation, and successful adult eclosion are separate evidence levels. Only the Day-6→pupation association within the subset can be assessed directly with individual IDs here. Neither source label contradictions nor strong rank concordance justify multiplying a global potential host-region gain by a fitted laboratory survival probability.
+
+
+## Original individual-mass prognostic figure and source replay QA
+
+![Within-trial individual day-six mass predicts observed subsequent pupation, with three-trial heterogeneity](figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.png)
+
+[Source-checked prognostic AUC PNG](figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.png) · [editable vector SVG](figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.svg) · [original animal-ID exact-source 20,000-label-permutation workflow](https://github.com/zuizui0223/chocho/actions/runs/40328362969) · [figure source verification](https://github.com/zuizui0223/chocho/actions/runs/40329217660).
+
+Figure A gives all six original within-trial × recorded-leaf mass→pupation AUCs, with original measured-day-six and later-observed-pupation counts. Figure B shows the **three experimental trial AUC means** and equal-six-strata primary AUC with the blue shaded **20,000 within-stratum label-shuffle null central 95% range**, not an uncertainty interval for generalizing to new trials or field populations. The 20241 leaf group names remain disputed, but renaming groups has no effect on this stratified AUC. Plot labels were visually inspected and the misleading prior legend overlapping the primary diamond marker was removed.
+
+**Follow-up decision:** this individual-stage analysis establishes a within-source **prognostic data relationship** beyond the original paper's simple treatment means. It does not resolve the 20241 pupation *treatment-specific* labels, and it is not an experimental manipulation of mass or independent population replication. Stop treating this data source as sufficient for real-world butterfly recruitment or global introduced-host conservation effects.
