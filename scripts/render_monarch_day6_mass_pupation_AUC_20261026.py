@@ -84,7 +84,7 @@ def draw(svg,png):
     fig.suptitle("Observed monarch day-six mass precedes later recorded pupation\n"
                  "Fisher et al. (2026) original individual source; n=270 measured, 190 pupated",
                  fontsize=13.0)
-    fig.supxlabel("Exploratory, original-study prognostic association; the mass and treatment are NOT randomly assigned; pupation ≠ adult emergence",
+    fig.supxlabel("Original-study prognosis, not a causal mass intervention. 20241 treatment labels unresolved. Pupation is not adult emergence.",
                   fontsize=8.4)
     svg.parent.mkdir(parents=True,exist_ok=True)
     png.parent.mkdir(parents=True,exist_ok=True)
