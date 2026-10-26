@@ -1,4 +1,7 @@
 # US butterfly adult counts × documented larval host niches: Illinois preliminary readout
+
+**POST-PILOT VERDICT (2026-10-26):** This original observational result is **not independent competition evidence**. Its relative negative peer-host contrast lies within 199 accepted butterfly–host graph nulls; omitted-composition and positive-focal-count sensitivities weaken or destabilize it. See [closed competition claim](SBUS_ILLINOIS_COMPETITION_NO_EFFECT_AFTER_SENSITIVITY_20261026.md) and the [integrated adult niche evidence](BUTTERFLY_HOST_NICHE_FIELD_EVIDENCE_SYNTHESIS_20261026.md). Do not promote the old nominal site-cluster 95% contrast as new ecological competition.
+
 **25 October 2026 | exploratory original-data pilot | no evidence of causal competition or anthropogenic-host-driven population increase is established.**
 
 ## Source provenance and identifiability
