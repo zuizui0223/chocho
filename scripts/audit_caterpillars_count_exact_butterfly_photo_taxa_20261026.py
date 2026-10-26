@@ -44,7 +44,7 @@ def run(source,base):
     with expert.open(newline="",encoding="utf-8-sig") as f:
         reader=csv.DictReader(f)
         if not {"ArthropodSightingFK","TaxonName","Rank","Group"}<=set(reader.fieldnames or []):
-            raise ValueError("Original expert survey taxonomic fields missing")
+            raise ValueError("Original expert survey taxonomic fields missing: "+repr(reader.fieldnames))
         for row in reader:
             total+=1
             animal=str(row.get("Group") or "").strip()
