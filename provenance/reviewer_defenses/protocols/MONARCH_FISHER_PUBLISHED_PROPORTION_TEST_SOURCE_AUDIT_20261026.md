@@ -1,0 +1,21 @@
+# Audit protocol — published Fisher 2026 pupation percentages, denominator and source label reconciliation
+
+**2026-10-26 | independent published-paper/source-code consistency audit**, written after reading the paper and its R code and BEFORE executing this specific audit script. This is a posthoc source integrity investigation, not a new ecological hypothesis, treatment effect or allegation of author misconduct.
+
+## Frozen independent sources
+
+- Fisher et al. (2026), Insects 17(2):215, DOI [10.3390/insects17020215](https://doi.org/10.3390/insects17020215). The published Results (section 3.2) state Day-6 survival 75.4% Top vs 74.2% Bottom, p=0.9218; pupation survival **60.8% Top vs 48.8% Bottom, χ²=1.3139, p=0.2517**. Published Methods section 2.6 says a chi-squared test for proportions was applied. These published values were verified via openly accessible MDPI article on 2026-10-26.
+- Original paper-author R code at immutable [commit acbb93c75e1f4810355c6ce03e6076e2303b2a98](https://github.com/kelseyefisher/MilkweedLeafAgeMonarchSuccess/tree/acbb93c75e1f4810355c6ce03e6076e2303b2a98), `121125_Fisher2025_MonarchMilkweedNvO_AnalysisCode.R`, Git blob `de410164236730994c559bcf115a1e64e187be18`. Lines 80–84 literally execute `chisq.test(c(74.2,75.4))`, `chisq.test(c(48.8,60.8))`. The latter is a one-dimensional two-value goodness-of-fit on percentages, not a two-group outcome table retaining 240 Top and 240 Bottom assigned larvae.
+- Author `SurviveToPupation.csv` blob `33f269e78f235cd1039394162a6871370db5e020`, `2324_GD_PupalDays.csv` blob `7066610f45f0baace4cfb679c5b7ee3355ce881f` and `2324_GD_PupalMass.csv` blob `bf2978fb1d7070b8916378813898f771d39e79d6`: the 2024 trial-1 Top/Bottom summary/individual contradiction has already been fixed as an explicit two-scenario audit in the same analysis branch.
+- Existing aggregate [source-locked exact four-block result](../results/monarch_leaf_age_pupation_stage_conversion_20261026.json): S0 original summary Top140/240 vs Bottom122/240, trial-MH OR=1.4024, conditional exact p=.0986; S1 *hypothetical* 20241 label assignment matching both pupal files Top146/240 vs Bottom116/240, trial-MH OR=1.7745, conditional exact p=.00478. No author confirmation of S1.
+
+## Checks (no data editing)
+
+1. Assert all four original-author source file Git blobs, the code's exact two raw chi-square lines, the published reported percentages and χ²/p, and exact source reproduction of original 4×2 assigned larvae.
+2. Reproduce the reported `chisq.test(c(48.8,60.8))` numerically as a one-sample goodness-of-fit chi-square on **two percentages**. Independently recompute the standard sample-denominator-informed 2×2 tests for both *S0* and *S1*, plus each trial's expected cell counts, and compare to the already qualified four-block exact test. **No switching to a preferred scenario based on statistical significance.**
+3. Quantify source percentage identity: S0 Top58.3%, Bottom50.8%; S1 Top60.8%, Bottom48.3%; published Top60.8% corresponds to 146/240, published Bottom48.8% would correspond (at rounding precision) to **117/240** if numerator/denominator 240, not the 116/240 (48.3%) in actual pupal files. Report this independently as a percentage-vs-raw-data discrepancy, not proof of author data error origin.
+4. Report original data-author test's inferential mismatch precisely: goodness-of-fit on percent values does not perform a correct two-by-two binomial comparison; the published p=.2517 cannot be used as the proportion-test p for either S0 or S1. The corrected two-scenario analyses also remain limited by only four independent experiment trials and the source treatment-label contradiction.
+5. Archive only derived source diagnostics and no original animal IDs. Prepare a neutral question for original authors indicating which treatment-specific 2024 trial-1 counts are correct and whether a proportion test should use original successes/denominators. **Do not contact original authors or publish accusations automatically.**
+6. Stop rather than search for a threshold or choose a biological effect. Author clarification of original data is needed before treating either pupation effect as resolved.
+
+GEB main/PR #38 and submission draft PR #70 remain unchanged; no new animal resource geography, wild butterfly demography or biological mechanism is inferred from source data errors.
