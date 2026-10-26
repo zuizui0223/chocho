@@ -224,77 +224,117 @@ def leaf_source_stats(root):
     return out
 
 
-def run(root):
-    raw=read_original(root,"SurviveToPupation.csv")
-    table=source_survival(raw)
+def survival_scenario(table, source_label):
     blocks=[]
     pblock={}
     for block in BLOCKS:
-        t=table[(block,"Top")]
-        b=table[(block,"Bottom")]
-        a=t["survive"]; bb=t["total"]-a; c=b["survive"]; d=b["total"]-c
+        top=table[(block,"Top")]
+        bottom=table[(block,"Bottom")]
+        a=top["survive"]
+        bb=top["total"]-a
+        c=bottom["survive"]
+        d=bottom["total"]-c
         blocks.append((a,bb,c,d))
         pblock[block]={
             "top_pupation":a,"top_denominator":a+bb,
             "bottom_pupation":c,"bottom_denominator":c+d,
             "Top_minus_Bottom_probability":a/(a+bb)-c/(c+d),
-            "within_block_OR_top_bottom":(a*d/(bb*c)) if bb*c>0 else None,
+            "within_block_OR_top_bottom":(a*d/(bb*c)) if bb*c else None,
         }
-    odds=mh_or(blocks)
-    if odds is None:
-        raise ValueError("Four source blocks have no estimable common odds")
+    common=mh_or(blocks)
+    if common is None:
+        raise ValueError("Four source trial margins fail common odds computation")
     loo=[mh_or(blocks[:i]+blocks[i+1:]) for i in range(4)]
     a=sum(s[0] for s in blocks)
     b=sum(s[1] for s in blocks)
     c=sum(s[2] for s in blocks)
     d=sum(s[3] for s in blocks)
+    return {
+        "scenario":source_label,
+        "top_survived":a,"top_assigned":a+b,
+        "bottom_survived":c,"bottom_assigned":c+d,
+        "top_pupation_rate":a/(a+b),
+        "bottom_pupation_rate":c/(c+d),
+        "pooled_risk_difference":a/(a+b)-c/(c+d),
+        "MH_common_OR_top_vs_bottom":common,
+        "within_4_trial_blocks":pblock,
+        "leave_one_trial_out_MH_OR_range":[float(min(loo)),float(max(loo))],
+        "conditional_fixed_margin_exact":two_sided_fixed_margin_hypergeometric(blocks),
+        "trial_cluster_bootstrap":robust_trial_bootstrap(blocks),
+        "source_status":"ORIGINAL_SUMMARY_AS_RECORDED" if source_label=="S0_survival_table_first"
+                        else "HYPOTHETICAL_PUPAL_RECORD_COUNT_ALTERNATIVE_NOT_AUTHOR_CORRECTION",
+    }
+
+
+def run(root):
+    raw=read_original(root,"SurviveToPupation.csv")
+    original_table=source_survival(raw)
     days=numeric_stats(read_original(root,"2324_GD_PupalDays.csv"),
                        "2324_GD_PupalDays.csv","PupaDays")
     mass=numeric_stats(read_original(root,"2324_GD_PupalMass.csv"),
                        "2324_GD_PupalMass.csv","PupalMass")
-    first_mass=numeric_stats(read_original(root,"2324_GD_6DayMass.csv"),
-                             "2324_GD_6DayMass.csv","SixDayMass")
-    if days["original_rows"] != a+c or mass["original_rows"]!=a+c:
-        raise ValueError("Source success stages counts do not equal original pupation counts")
+    early=numeric_stats(read_original(root,"2324_GD_6DayMass.csv"),
+                        "2324_GD_6DayMass.csv","SixDayMass")
+    source_success_total=sum(r["survive"] for r in original_table.values())
+    if days["original_rows"]!=source_success_total or mass["original_rows"]!=source_success_total:
+        raise ValueError("Overall pupal stage data mismatch original summary total")
+    disagreements=[]
+    alt={k:dict(v) for k,v in original_table.items()}
     for block in BLOCKS:
         for leaf in ("Top","Bottom"):
-            survived=table[(block,leaf)]["survive"]
-            if days["per_YearTrial"][block][leaf]["n_measured"]!=survived:
-                raise ValueError("PupalDays block treatment n differs from source pupation survivors")
-            if mass["per_YearTrial"][block][leaf]["n_measured"]!=survived:
-                raise ValueError("PupalMass block treatment n differs from source pupation survivors")
+            summary=original_table[(block,leaf)]["survive"]
+            day_n=days["per_YearTrial"][block][leaf]["n_measured"]
+            mass_n=mass["per_YearTrial"][block][leaf]["n_measured"]
+            if day_n!=mass_n:
+                raise ValueError("PupalDays and PupalMass source records disagree with one another")
+            if summary!=day_n:
+                disagreements.append({
+                    "YearTrial":block,"original_leaf_label":leaf,
+                    "summary_survived":summary,
+                    "pupal_days_individuals":day_n,
+                    "pupal_mass_individuals":mass_n,
+                })
+                alt[(block,leaf)]["survive"]=day_n
+    if (len(disagreements)!=2
+        or {(d["YearTrial"],d["original_leaf_label"]) for d in disagreements} !=
+        {("20241","Top"),("20241","Bottom")}):
+        raise ValueError("Source label contradictions differ from strictly documented 20241 swap")
+    if sum(v["survive"] for v in alt.values())!=source_success_total:
+        raise ValueError("Alternative incorrectly changes total number of pupae")
+    s0=survival_scenario(original_table,"S0_survival_table_first")
+    s1=survival_scenario(alt,"S1_pupal_day_and_mass_record_first_hypothesis")
     return {
-        "schema":"chocho_monarch_leaf_age_trial_block_pupation_stage_conversion_v01_20261026",
+        "schema":"chocho_monarch_leaf_age_stage_conversion_discrepant_treatments_v02_20261026",
         "source_doi":DOI,
         "original_author_git_commit":TREE,
         "exact_source_git_blobs":BLOBS,
-        "scientific_status":"POSTHOC_ORIGINAL_EXPERIMENT_CALIBRATION_NOT_NOVEL_FIELD_BUTTERFLY_RECRUITMENT",
-        "source_assigned_larvae":a+b+c+d,
+        "status":"SOURCE_TREATMENT_LABEL_INDETERMINATE_TWO_SCENARIOS_RETAINED",
+        "source_assigned_larvae":480,
         "source_experimental_blocks":len(BLOCKS),
+        "reported_pupation_successes_across_blocks":source_success_total,
         "survival_outcome":"successful_pupation_not_adult_emergence",
-        "top_total_survival":a,"top_total_assigned":a+b,
-        "bottom_total_survival":c,"bottom_total_assigned":c+d,
-        "top_pupation_rate":a/(a+b),
-        "bottom_pupation_rate":c/(c+d),
-        "pooled_top_minus_bottom_risk_difference":a/(a+b)-c/(c+d),
-        "primary_Mantel_Haenszel_trial_stratified_pupation_OR_top_vs_bottom":odds,
-        "within_4_real_trial_blocks":pblock,
-        "leave_one_YearTrial_out_OR_range":[float(min(loo)),float(max(loo))],
-        "exact_trial_conditional_test":two_sided_fixed_margin_hypergeometric(blocks),
-        "YearTrial_cluster_uncertainty":robust_trial_bootstrap(blocks),
+        "original_trial_label_disagreements":disagreements,
+        "contradiction_provenance":"Only 2024 trial1 Top/Bottom source labels inverted between summary and BOTH PupalDays/PupalMass; no source edited",
+        "experimental_survival_scenarios":{
+            "S0_original_survival_summary":s0,
+            "S1_pupal_individual_count_hypothesis":s1,
+        },
         "secondary_measured_stage_outcomes":{
-            "Day6_mass":first_mass,
+            "Day6_mass":early,
             "pupal_mass_among_successes":mass,
             "pupal_days_among_successes":days,
         },
+        "secondary_stage_20241_treatment_label_ambiguous":True,
         "plant_leaf_phenotypes":leaf_source_stats(root),
+        "scientific_status":"POSTHOC_REANALYSIS_SOURCE_PROVENANCE_ERROR_NOT_NEW_RECRUITMENT_MECHANISM",
         "limitations":[
-            "Existing authors' controlled original 2026 leaf-age experiment, not independent new ecological causal effect",
-            "Asclepias syriaca leaf position top/bottom is not alien/native plant establishment",
-            "Pupation does not imply adult eclosion or offspring recruitment",
-            "Measured growth/development conditional on source measured/surviving cohort",
-            "Four trial blocks only: individual caterpillars cannot substitute for replicated independent environments",
-            "No plant leaf area source map or climate-season region link to chocho",
+            "Published source label conflict remains unresolved pending author correction",
+            "Original experimental work belongs to Fisher et al. 2026; do not claim novel treatment biology",
+            "Four blocks, conditional exact test and bootstrap identify different uncertainties",
+            "Asclepias syriaca leaf age is not host plant relocation or alien-native status",
+            "Pupation is not adult eclosion; cannot infer new butterfly population recruitment",
+            "Growth or development values may be selection-conditioned stage outcomes",
+            "No matched larvae/habitat to global 239 butterfly resource map",
         ],
     }
 
@@ -308,17 +348,19 @@ def main():
     a.out.parent.mkdir(parents=True,exist_ok=True)
     a.out.write_text(json.dumps(r,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps({
-        "status":r["scientific_status"],
+        "status":r["status"],
+        "disagreements":r["original_trial_label_disagreements"],
         "assigned":r["source_assigned_larvae"],
-        "blocks":r["within_4_real_trial_blocks"],
-        "top_rate":r["top_pupation_rate"],
-        "bottom_rate":r["bottom_pupation_rate"],
-        "stratified_OR":r["primary_Mantel_Haenszel_trial_stratified_pupation_OR_top_vs_bottom"],
-        "trial_bootstrap":r["YearTrial_cluster_uncertainty"],
-        "exact_fixed_block_p":r["exact_trial_conditional_test"]["two_sided_probability_order_p"],
-        "stages":{k: {"n":v["original_rows"],
-                        "conditional_Top_minus_Bottom":v["equal_block_mean_Top_minus_Bottom_conditional_on_measured"]}
-                     for k,v in r["secondary_measured_stage_outcomes"].items()}
+        "scenario_results":{k:{
+            "top_rate":v["top_pupation_rate"],
+            "bottom_rate":v["bottom_pupation_rate"],
+            "MH_OR":v["MH_common_OR_top_vs_bottom"],
+            "bootstrap":v["trial_cluster_bootstrap"],
+            "exact_p":v["conditional_fixed_margin_exact"]["two_sided_probability_order_p"],
+        } for k,v in r["experimental_survival_scenarios"].items()},
+        "stages":{k:{"n":v["original_rows"],
+            "measured_Top_minus_Bottom":v["equal_block_mean_Top_minus_Bottom_conditional_on_measured"]}
+            for k,v in r["secondary_measured_stage_outcomes"].items()},
     },indent=2,ensure_ascii=False),flush=True)
 
 
