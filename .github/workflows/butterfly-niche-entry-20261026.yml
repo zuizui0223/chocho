@@ -1,0 +1,66 @@
+name: Butterfly host-climate niche entry versus analogous opportunity (source-only)
+on:
+  push:
+    branches:
+      - analysis/butterfly-niche-entry-20261026
+    paths:
+      - scripts/analyze_butterfly_niche_entry_country_20261026.py
+      - tests/test_butterfly_niche_entry_country_20261026.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_NICHE_ENTRY_COUNTRY_20261026.md
+      - .github/workflows/butterfly-niche-entry-20261026.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-frozen-source-country-contrast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install existing project dependencies and pytest
+        run: python -m pip install -e . 'pytest>=8,<10'
+      - name: Synthetic negative and positive controls
+        run: python -m pytest -q tests/test_butterfly_niche_entry_country_20261026.py
+      - name: Run fixed 229-taxon full-index GBIF vs mapped host-climate opportunity
+        run: |
+          mkdir -p _niche
+          python scripts/analyze_butterfly_niche_entry_country_20261026.py \
+            --areas provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz \
+            --design provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --country-receipt data/exploratory/gbif_country_20261020/gbif_country_facet_receipts.json.gz \
+            --output _niche/butterfly_niche_entry_country_20261026.json
+      - name: Validate outcome gate and source identity are preserved
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_niche/butterfly_niche_entry_country_20261026.json")
+          r=json.loads(p.read_text())
+          assert r["source"]["source_species"] == 235
+          assert r["source"]["source_countries"] == 140
+          assert r["source"]["complete_species"] == 229
+          assert r["source"]["source_species_country_cells"] == 32900
+          x=r["primary"]
+          assert x["status"] in ("EXPLORATORY_INFORMATION_GATE_MET","INSUFFICIENT_NICHE_ENTRY_INFORMATION")
+          assert x["positive_novel_cells"] + x["positive_analog_cells"] == x["positive_country_species_cells"]
+          assert x["novel_candidate_cells"] + x["analog_candidate_cells"] == x["candidate_country_species_cells"]
+          assert abs(r["opportunity_geography"]["novel_share_area_weighted"] - (
+            1 - r["opportunity_geography"]["analog_species_km2"] /
+            r["opportunity_geography"]["added_species_km2"]
+          )) < 1e-10
+          if x["status"] == "INSUFFICIENT_NICHE_ENTRY_INFORMATION":
+              print("RESULT NOT IDENTIFIABLE FOR BIOLOGICAL CLAIM: source metrics only")
+          print("PASS exact-source niche opportunity and non-colonisation claim gate")
+          PY
+      - name: Upload derived numerical summary only, no botanical raw source
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-niche-entry-country-20261026
+          path: _niche/butterfly_niche_entry_country_20261026.json
+          retention-days: 30
+          if-no-files-found: error
