@@ -94,10 +94,7 @@ def draw(svg,png):
     )
     ax[1,1].text(.035,.96,info,transform=ax[1,1].transAxes,
                  ha="left",va="top",fontsize=10.1,linespacing=1.25)
-    ax[1,1].text(.035,.055,
-                 "Bars: 199 fixed-degree network randomizations\n"
-                 "Dashed: observed data   ·   Dotted: null median",
-                 transform=ax[1,1].transAxes,ha="left",va="bottom",fontsize=8.6)
+    ax[0,0].legend(loc="upper right",frameon=False,fontsize=7.1)
     fig.suptitle("Butterfly host-sharing annual synchrony: environment-falsification checks\n"
                  "Illinois 2000–2020 source-monitored adult encounter rates",
                  fontsize=13.3)
