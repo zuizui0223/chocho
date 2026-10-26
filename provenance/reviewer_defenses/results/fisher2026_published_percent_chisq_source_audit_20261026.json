@@ -1,0 +1,116 @@
+{
+  "schema": "chocho_fisher2026_published_percentage_chisq_and_source_discrepancy_audit_v01",
+  "status": "ORIGINAL_PUBLISHED_TEST_DENOMINATOR_MISMATCH_AND_SOURCE_LABEL_DISCORDANCE_VERIFIED",
+  "original_article_doi": "10.3390/insects17020215",
+  "article_section": "2.6 proportion-test Methods and 3.2 larval survival Results",
+  "article_reported": {
+    "day6_top_percent": 75.4,
+    "day6_bottom_percent": 74.2,
+    "day6_chisq": 0.0096257,
+    "day6_p": 0.9218,
+    "pupation_top_percent": 60.8,
+    "pupation_bottom_percent": 48.8,
+    "pupation_chisq": 1.3139,
+    "pupation_p": 0.2517
+  },
+  "original_author_code_git_commit": "acbb93c75e1f4810355c6ce03e6076e2303b2a98",
+  "source_git_blob_sha1": {
+    "121125_Fisher2025_MonarchMilkweedNvO_AnalysisCode.R": "de410164236730994c559bcf115a1e64e187be18",
+    "SurviveToPupation.csv": "33f269e78f235cd1039394162a6871370db5e020",
+    "2324_GD_PupalDays.csv": "7066610f45f0baace4cfb679c5b7ee3355ce881f",
+    "2324_GD_PupalMass.csv": "bf2978fb1d7070b8916378813898f771d39e79d6"
+  },
+  "source_literal_R_test_calls": {
+    "day6": "chisq.test(c(74.2,75.4))",
+    "pupation": "chisq.test(c(48.8,60.8))"
+  },
+  "recomputed_on_two_published_percentages": {
+    "six_day_chisquare_goodness_of_fit": 0.009625668449197905,
+    "six_day_chisquare_goodness_of_fit_p": 0.9218445570859664,
+    "pupation_chisquare_goodness_of_fit": 1.3138686131386863,
+    "pupation_chisquare_goodness_of_fit_p": 0.25169541466155965,
+    "statistical_warning": "chisq.test(c(48.8,60.8)) uses percentages as two observed frequency values; it omits 240 assigned larvae per treatment and does not test the 2×2 survival-outcome table."
+  },
+  "published_percent_and_raw_count_denominator_check": {
+    "assigned_per_leaf_treatment": 240,
+    "published_top_60_8_most_plausible_integer_count": 146,
+    "published_bottom_48_8_rounded_integer_count_for_240": 117,
+    "stage_data_bottom_positive_actual": 116,
+    "stage_data_bottom_percentage": 48.333333333333336,
+    "summary_data_top_positive_actual": 140,
+    "summary_data_bottom_positive_actual": 122,
+    "published_bottom_percentage_is_neither_original_summary_nor_individual_record_exact_percentage": true
+  },
+  "unresolved_20241_original_source_treatment_counts": {
+    "summary_top": 30,
+    "summary_bottom": 36,
+    "pupal_days_top": 36,
+    "pupal_days_bottom": 30,
+    "pupal_mass_top": 36,
+    "pupal_mass_bottom": 30
+  },
+  "two_scenarios_no_trust_selection": [
+    {
+      "scenario": "S0_original_survival_summary",
+      "source_observations": {
+        "Top_pupated": 140,
+        "Top_assigned": 240,
+        "Bottom_pupated": 122,
+        "Bottom_assigned": 240
+      },
+      "Top_rate_percent": 58.333333333333336,
+      "Bottom_rate_percent": 50.833333333333336,
+      "difference_percentage_points": 7.5,
+      "unstratified_fisher_exact_two_sided_p": 0.1190346581661956,
+      "unstratified_fisher_exact_OR": 1.3540983606557377,
+      "unstratified_2x2_chi2_no_Yates_p": 0.09891940247901065,
+      "unstratified_2x2_chi2_no_Yates_statistic": 2.7228797534841376,
+      "unstratified_2x2_chi2_with_Yates_p": 0.11912850383216617,
+      "trial_stratified_Mantel_Haenszel_OR": 1.4023845007451567,
+      "trial_stratified_four_block_fixed_margin_exact_p": 0.09859590335585298,
+      "trial_cluster_four_block_bootstrap_95pct_OR": [
+        0.8681318681318682,
+        2.2133468149646105
+      ],
+      "source_integrity_unresolved": true,
+      "pooled_tests_ignore_trial_cluster_correlation": true
+    },
+    {
+      "scenario": "S1_hypothetical_stage_records",
+      "source_observations": {
+        "Top_pupated": 146,
+        "Top_assigned": 240,
+        "Bottom_pupated": 116,
+        "Bottom_assigned": 240
+      },
+      "Top_rate_percent": 60.833333333333336,
+      "Bottom_rate_percent": 48.333333333333336,
+      "difference_percentage_points": 12.5,
+      "unstratified_fisher_exact_two_sided_p": 0.0077810877048924785,
+      "unstratified_fisher_exact_OR": 1.6603081438004401,
+      "unstratified_2x2_chi2_no_Yates_p": 0.005956039317451075,
+      "unstratified_2x2_chi2_no_Yates_statistic": 7.563554870789271,
+      "unstratified_2x2_chi2_with_Yates_p": 0.00784849883144452,
+      "trial_stratified_Mantel_Haenszel_OR": 1.7745266781411362,
+      "trial_stratified_four_block_fixed_margin_exact_p": 0.004779671954237376,
+      "trial_cluster_four_block_bootstrap_95pct_OR": [
+        1.449438202247191,
+        2.2133468149646105
+      ],
+      "source_integrity_unresolved": true,
+      "pooled_tests_ignore_trial_cluster_correlation": true
+    }
+  ],
+  "scientific_claim": "No unique hypothesis-testing conclusion about pupation success is justified until original YearTrial20241 assignment and published percentage discrepancy are resolved by study authors.",
+  "not_implied": [
+    "Authorship wrongdoing, misconduct or intentional misreporting",
+    "A new causal milkweed phenology mechanism discovered by this source audit",
+    "Adult eclosion, field population growth, host plant introduction benefit, competition or global resource conversion rate"
+  ],
+  "author_clarification_questions": [
+    "Was YearTrial20241 Top=30 and Bottom=36 in SurviveToPupation.csv, or Top=36 and Bottom=30 in both 262-row pupal files, the correct treatment-specific pupation record?",
+    "What underlying numerator and denominator yield the published 48.8% Bottom survival to pupation (versus 116/240=48.3% recorded in the two pupal files)?",
+    "Should the chi-square analysis on hard-coded percentages be replaced by one using 4×2 original pupation successes/failures, with explicit trial structure?"
+  ],
+  "source_original_animal_ID_rows_not_republished": true
+}

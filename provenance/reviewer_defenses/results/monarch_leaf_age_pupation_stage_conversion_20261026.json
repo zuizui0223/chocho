@@ -1,0 +1,454 @@
+{
+  "schema": "chocho_monarch_leaf_age_stage_conversion_discrepant_treatments_v02_20261026",
+  "source_doi": "10.3390/insects17020215",
+  "original_author_git_commit": "acbb93c75e1f4810355c6ce03e6076e2303b2a98",
+  "exact_source_git_blobs": {
+    "SurviveToPupation.csv": "33f269e78f235cd1039394162a6871370db5e020",
+    "2324_GD_6DayMass.csv": "4f390c96c27d1635e01d6f0877bd81db84a05a0b",
+    "2324_GD_PupalDays.csv": "7066610f45f0baace4cfb679c5b7ee3355ce881f",
+    "2324_GD_PupalMass.csv": "bf2978fb1d7070b8916378813898f771d39e79d6",
+    "LeafCharacteristics.csv": "745bed22c3f3ef38736ed33effbbb7453ec154e6",
+    "PercentNitrogen.csv": "8207f3d8e2acc8845c359b2f999ec697f02171b2"
+  },
+  "status": "SOURCE_TREATMENT_LABEL_INDETERMINATE_TWO_SCENARIOS_RETAINED",
+  "source_assigned_larvae": 480,
+  "source_experimental_blocks": 4,
+  "reported_pupation_successes_across_blocks": 262,
+  "survival_outcome": "successful_pupation_not_adult_emergence",
+  "original_trial_label_disagreements": [
+    {
+      "YearTrial": "20241",
+      "original_leaf_label": "Top",
+      "summary_survived": 30,
+      "pupal_days_individuals": 36,
+      "pupal_mass_individuals": 36
+    },
+    {
+      "YearTrial": "20241",
+      "original_leaf_label": "Bottom",
+      "summary_survived": 36,
+      "pupal_days_individuals": 30,
+      "pupal_mass_individuals": 30
+    }
+  ],
+  "contradiction_provenance": "Only 2024 trial1 Top/Bottom source labels inverted between summary and BOTH PupalDays/PupalMass; no source edited",
+  "experimental_survival_scenarios": {
+    "S0_original_survival_summary": {
+      "scenario": "S0_survival_table_first",
+      "top_survived": 140,
+      "top_assigned": 240,
+      "bottom_survived": 122,
+      "bottom_assigned": 240,
+      "top_pupation_rate": 0.5833333333333334,
+      "bottom_pupation_rate": 0.5083333333333333,
+      "pooled_risk_difference": 0.07500000000000007,
+      "MH_common_OR_top_vs_bottom": 1.4023845007451567,
+      "within_4_trial_blocks": {
+        "20231": {
+          "top_pupation": 41,
+          "top_denominator": 60,
+          "bottom_pupation": 31,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.16666666666666663,
+          "within_block_OR_top_bottom": 2.0186757215619693
+        },
+        "20232": {
+          "top_pupation": 19,
+          "top_denominator": 60,
+          "bottom_pupation": 15,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.06666666666666665,
+          "within_block_OR_top_bottom": 1.3902439024390243
+        },
+        "20241": {
+          "top_pupation": 30,
+          "top_denominator": 60,
+          "bottom_pupation": 36,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": -0.09999999999999998,
+          "within_block_OR_top_bottom": 0.6666666666666666
+        },
+        "20242": {
+          "top_pupation": 50,
+          "top_denominator": 60,
+          "bottom_pupation": 40,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.16666666666666674,
+          "within_block_OR_top_bottom": 2.5
+        }
+      },
+      "leave_one_trial_out_MH_OR_range": [
+        1.2101576182136602,
+        1.8977556109725686
+      ],
+      "conditional_fixed_margin_exact": {
+        "test": "Four-block fixed-margin exact hypergeometric convolution",
+        "conditional_observed_top_pupae": 140,
+        "conditional_tail_top_high": 0.04929795167792649,
+        "conditional_tail_top_low": 0.9675792381796328,
+        "two_sided_probability_order_p": 0.09859590335585298,
+        "max_supported_top_counts": 214,
+        "min_supported_top_counts": 48,
+        "limitation": "Conditional treatment randomization does NOT estimate between-trial population variance"
+      },
+      "trial_cluster_bootstrap": {
+        "trial_clusters": 4,
+        "draws": 10000,
+        "successful": 10000,
+        "seed": 20261026,
+        "common_odds_ratio_bootstrap_95": [
+          0.8681318681318682,
+          2.2133468149646105
+        ],
+        "median_OR_bootstrap": 1.4023845007451567,
+        "paired_risk_difference_trial_bootstrap_95": [
+          -0.033333333333333326,
+          0.16666666666666669
+        ],
+        "paired_risk_difference_bootstrap_median": 0.07500000000000001,
+        "bootstrap_top_better_fraction": 0.9273,
+        "qualification": "Only 4 real experimental blocks, not general field-year/site replicates"
+      },
+      "source_status": "ORIGINAL_SUMMARY_AS_RECORDED"
+    },
+    "S1_pupal_individual_count_hypothesis": {
+      "scenario": "S1_pupal_day_and_mass_record_first_hypothesis",
+      "top_survived": 146,
+      "top_assigned": 240,
+      "bottom_survived": 116,
+      "bottom_assigned": 240,
+      "top_pupation_rate": 0.6083333333333333,
+      "bottom_pupation_rate": 0.48333333333333334,
+      "pooled_risk_difference": 0.12499999999999994,
+      "MH_common_OR_top_vs_bottom": 1.7745266781411362,
+      "within_4_trial_blocks": {
+        "20231": {
+          "top_pupation": 41,
+          "top_denominator": 60,
+          "bottom_pupation": 31,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.16666666666666663,
+          "within_block_OR_top_bottom": 2.0186757215619693
+        },
+        "20232": {
+          "top_pupation": 19,
+          "top_denominator": 60,
+          "bottom_pupation": 15,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.06666666666666665,
+          "within_block_OR_top_bottom": 1.3902439024390243
+        },
+        "20241": {
+          "top_pupation": 36,
+          "top_denominator": 60,
+          "bottom_pupation": 30,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.09999999999999998,
+          "within_block_OR_top_bottom": 1.5
+        },
+        "20242": {
+          "top_pupation": 50,
+          "top_denominator": 60,
+          "bottom_pupation": 40,
+          "bottom_denominator": 60,
+          "Top_minus_Bottom_probability": 0.16666666666666674,
+          "within_block_OR_top_bottom": 2.5
+        }
+      },
+      "leave_one_trial_out_MH_OR_range": [
+        1.6237006237006237,
+        1.9128145114101813
+      ],
+      "conditional_fixed_margin_exact": {
+        "test": "Four-block fixed-margin exact hypergeometric convolution",
+        "conditional_observed_top_pupae": 146,
+        "conditional_tail_top_high": 0.0023898359771186884,
+        "conditional_tail_top_low": 0.9987236560752779,
+        "two_sided_probability_order_p": 0.004779671954237376,
+        "max_supported_top_counts": 214,
+        "min_supported_top_counts": 48,
+        "limitation": "Conditional treatment randomization does NOT estimate between-trial population variance"
+      },
+      "trial_cluster_bootstrap": {
+        "trial_clusters": 4,
+        "draws": 10000,
+        "successful": 10000,
+        "seed": 20261026,
+        "common_odds_ratio_bootstrap_95": [
+          1.449438202247191,
+          2.2133468149646105
+        ],
+        "median_OR_bootstrap": 1.774526678141136,
+        "paired_risk_difference_trial_bootstrap_95": [
+          0.08333333333333331,
+          0.16666666666666669
+        ],
+        "paired_risk_difference_bootstrap_median": 0.125,
+        "bootstrap_top_better_fraction": 1.0,
+        "qualification": "Only 4 real experimental blocks, not general field-year/site replicates"
+      },
+      "source_status": "HYPOTHETICAL_PUPAL_RECORD_COUNT_ALTERNATIVE_NOT_AUTHOR_CORRECTION"
+    }
+  },
+  "secondary_measured_stage_outcomes": {
+    "Day6_mass": {
+      "file": "2324_GD_6DayMass.csv",
+      "original_rows": 270,
+      "value": "SixDayMass",
+      "per_YearTrial": {
+        "20231": {
+          "Top": {
+            "n_measured": 0,
+            "mean": null,
+            "median": null
+          },
+          "Bottom": {
+            "n_measured": 0,
+            "mean": null,
+            "median": null
+          }
+        },
+        "20232": {
+          "Top": {
+            "n_measured": 34,
+            "mean": 0.04628529411764706,
+            "median": 0.04655
+          },
+          "Bottom": {
+            "n_measured": 35,
+            "mean": 0.038217142857142845,
+            "median": 0.0392
+          }
+        },
+        "20241": {
+          "Top": {
+            "n_measured": 42,
+            "mean": 0.1340738095238095,
+            "median": 0.1246
+          },
+          "Bottom": {
+            "n_measured": 46,
+            "mean": 0.11370434782608695,
+            "median": 0.11315
+          }
+        },
+        "20242": {
+          "Top": {
+            "n_measured": 59,
+            "mean": 0.1419033898305085,
+            "median": 0.1334
+          },
+          "Bottom": {
+            "n_measured": 54,
+            "mean": 0.1222574074074074,
+            "median": 0.10915
+          }
+        }
+      },
+      "available_blocks_for_pair_comparison": 3,
+      "equal_block_mean_Top_minus_Bottom_conditional_on_measured": 0.01602786512710929,
+      "not_recruitment_or_survival_estimate": true
+    },
+    "pupal_mass_among_successes": {
+      "file": "2324_GD_PupalMass.csv",
+      "original_rows": 262,
+      "value": "PupalMass",
+      "per_YearTrial": {
+        "20231": {
+          "Top": {
+            "n_measured": 41,
+            "mean": 1.206658536585366,
+            "median": 1.2486
+          },
+          "Bottom": {
+            "n_measured": 31,
+            "mean": 1.1003193548387098,
+            "median": 1.0613
+          }
+        },
+        "20232": {
+          "Top": {
+            "n_measured": 19,
+            "mean": 1.2092,
+            "median": 1.2737
+          },
+          "Bottom": {
+            "n_measured": 15,
+            "mean": 1.1802666666666668,
+            "median": 1.1641
+          }
+        },
+        "20241": {
+          "Top": {
+            "n_measured": 36,
+            "mean": 1.0434416666666666,
+            "median": 1.02265
+          },
+          "Bottom": {
+            "n_measured": 30,
+            "mean": 1.0037833333333335,
+            "median": 1.0215999999999998
+          }
+        },
+        "20242": {
+          "Top": {
+            "n_measured": 50,
+            "mean": 1.0053999999999998,
+            "median": 1.024
+          },
+          "Bottom": {
+            "n_measured": 40,
+            "mean": 1.0193349999999999,
+            "median": 1.02855
+          }
+        }
+      },
+      "available_blocks_for_pair_comparison": 4,
+      "equal_block_mean_Top_minus_Bottom_conditional_on_measured": 0.04024896210333062,
+      "not_recruitment_or_survival_estimate": true
+    },
+    "pupal_days_among_successes": {
+      "file": "2324_GD_PupalDays.csv",
+      "original_rows": 262,
+      "value": "PupaDays",
+      "per_YearTrial": {
+        "20231": {
+          "Top": {
+            "n_measured": 41,
+            "mean": 13.975609756097562,
+            "median": 14.0
+          },
+          "Bottom": {
+            "n_measured": 31,
+            "mean": 15.096774193548388,
+            "median": 15.0
+          }
+        },
+        "20232": {
+          "Top": {
+            "n_measured": 19,
+            "mean": 15.157894736842104,
+            "median": 14.0
+          },
+          "Bottom": {
+            "n_measured": 15,
+            "mean": 15.6,
+            "median": 15.0
+          }
+        },
+        "20241": {
+          "Top": {
+            "n_measured": 36,
+            "mean": 13.055555555555555,
+            "median": 13.0
+          },
+          "Bottom": {
+            "n_measured": 30,
+            "mean": 14.266666666666667,
+            "median": 13.0
+          }
+        },
+        "20242": {
+          "Top": {
+            "n_measured": 50,
+            "mean": 14.44,
+            "median": 14.0
+          },
+          "Bottom": {
+            "n_measured": 40,
+            "mean": 14.85,
+            "median": 14.0
+          }
+        }
+      },
+      "available_blocks_for_pair_comparison": 4,
+      "equal_block_mean_Top_minus_Bottom_conditional_on_measured": -0.7960952029299584,
+      "not_recruitment_or_survival_estimate": true
+    }
+  },
+  "secondary_stage_20241_treatment_label_ambiguous": true,
+  "plant_leaf_phenotypes": {
+    "LeafCharacteristics.csv": {
+      "original_rows": 216,
+      "groups": {
+        "Bottom": {
+          "rows": 108,
+          "traits": {
+            "Force": {
+              "n": 108,
+              "mean": 0.8930555555555557
+            },
+            "Thickness": {
+              "n": 108,
+              "mean": 0.37998148148148153
+            },
+            "Length": {
+              "n": 108,
+              "mean": 132.41666666666666
+            },
+            "Width": {
+              "n": 108,
+              "mean": 72.12037037037037
+            }
+          }
+        },
+        "Top": {
+          "rows": 108,
+          "traits": {
+            "Force": {
+              "n": 108,
+              "mean": 0.730462962962963
+            },
+            "Thickness": {
+              "n": 108,
+              "mean": 0.42612037037037037
+            },
+            "Length": {
+              "n": 108,
+              "mean": 104.66666666666667
+            },
+            "Width": {
+              "n": 108,
+              "mean": 44.50925925925926
+            }
+          }
+        }
+      },
+      "no_individual_caterpillar_linkage": true
+    },
+    "PercentNitrogen.csv": {
+      "original_rows": 20,
+      "groups": {
+        "Bottom": {
+          "rows": 10,
+          "traits": {
+            "NitrogenPerc": {
+              "n": 10,
+              "mean": 3.0675
+            }
+          }
+        },
+        "Top": {
+          "rows": 10,
+          "traits": {
+            "NitrogenPerc": {
+              "n": 10,
+              "mean": 4.824299999999999
+            }
+          }
+        }
+      },
+      "no_individual_caterpillar_linkage": true
+    }
+  },
+  "scientific_status": "POSTHOC_REANALYSIS_SOURCE_PROVENANCE_ERROR_NOT_NEW_RECRUITMENT_MECHANISM",
+  "limitations": [
+    "Published source label conflict remains unresolved pending author correction",
+    "Original experimental work belongs to Fisher et al. 2026; do not claim novel treatment biology",
+    "Four blocks, conditional exact test and bootstrap identify different uncertainties",
+    "Asclepias syriaca leaf age is not host plant relocation or alien-native status",
+    "Pupation is not adult eclosion; cannot infer new butterfly population recruitment",
+    "Growth or development values may be selection-conditioned stage outcomes",
+    "No matched larvae/habitat to global 239 butterfly resource map"
+  ]
+}

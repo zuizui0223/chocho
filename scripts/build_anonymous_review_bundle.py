@@ -37,6 +37,26 @@ COPY_PATHS = (
 # their separate analysis branches and review packages, never the submitted pack.
 # Review the list whenever an independent analysis gains further files.
 EXCLUDE_RELATIVE = {
+    # Independently audited original published monarch individual-stage linkage; not part of anonymous GEB evidence.
+    Path("provenance/reviewer_defenses/protocols/FISHER_MONARCH_DAY6_MASS_TO_PUPATION_PROGNOSIS_20261026.md"),
+    Path("provenance/reviewer_defenses/results/fisher_monarch_Day6_mass_pupation_ID_AUC_20261026.json"),
+    Path("scripts/analyze_fisher_monarch_day6_mass_to_pupation_AUC_20261026.py"),
+    Path("scripts/render_monarch_day6_mass_pupation_AUC_20261026.py"),
+    Path("docs/exploratory/figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.svg"),
+    Path("docs/exploratory/figures/Monarch_Day6_to_pupation_prognostic_AUC_20261026.png"),
+    # Published-fitness-source audit is separate exploratory prior-art integrity work, not GEB review evidence.
+    Path("provenance/reviewer_defenses/protocols/MONARCH_FISHER_PUBLISHED_PROPORTION_TEST_SOURCE_AUDIT_20261026.md"),
+    Path("provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json"),
+    Path("scripts/audit_fisher2026_published_percent_chisq_20261026.py"),
+    # Independent, source-contradictory 2026 butterfly experiment calibration;
+    # never package this author-side source QA as GEB double-anonymous evidence.
+    Path("docs/exploratory/MONARCH_LEAF_AGE_PUPATION_SOURCE_DISCREPANCY_20261026.md"),
+    Path("docs/exploratory/figures/Monarch_leaf_age_pupation_discrepant_source_20261026.svg"),
+    Path("docs/exploratory/figures/Monarch_leaf_age_pupation_discrepant_source_20261026.png"),
+    Path("provenance/reviewer_defenses/protocols/MONARCH_LEAF_AGE_PUPATION_STAGE_CONVERSION_20261026.md"),
+    Path("provenance/reviewer_defenses/results/monarch_leaf_age_pupation_stage_conversion_20261026.json"),
+    Path("scripts/analyze_monarch_leaf_age_stage_conversion_20261026.py"),
+    Path("scripts/render_monarch_leaf_age_pupation_source_scenarios_20261026.py"),
     Path("docs/exploratory/BUTTERFLY_GLOBAL_RESOURCE_NOVELTY_PAPER_STORY_20261016.md"),
     Path("docs/exploratory/BUTTERFLY_RESOURCE_NOVELTY_FULL_DRAFT_20261017.md"),
     Path("docs/exploratory/NONTRIVIAL_MACROECOLOGICAL_FINDINGS_20261015.md"),
