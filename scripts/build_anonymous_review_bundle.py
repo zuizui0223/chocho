@@ -37,6 +37,10 @@ COPY_PATHS = (
 # their separate analysis branches and review packages, never the submitted pack.
 # Review the list whenever an independent analysis gains further files.
 EXCLUDE_RELATIVE = {
+    # Published-fitness-source audit is separate exploratory prior-art integrity work, not GEB review evidence.
+    Path("provenance/reviewer_defenses/protocols/MONARCH_FISHER_PUBLISHED_PROPORTION_TEST_SOURCE_AUDIT_20261026.md"),
+    Path("provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json"),
+    Path("scripts/audit_fisher2026_published_percent_chisq_20261026.py"),
     # Independent, source-contradictory 2026 butterfly experiment calibration;
     # never package this author-side source QA as GEB double-anonymous evidence.
     Path("docs/exploratory/MONARCH_LEAF_AGE_PUPATION_SOURCE_DISCREPANCY_20261026.md"),
