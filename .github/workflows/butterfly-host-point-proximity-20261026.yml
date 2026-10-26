@@ -1,0 +1,66 @@
+name: Butterfly-host point co-recording (fixed 26 cases, no raw coordinates)
+on:
+  push:
+    branches:
+      - analysis/butterfly-host-point-validation-20261026
+    paths:
+      - scripts/analyze_butterfly_host_point_proximity_20261026.py
+      - tests/test_butterfly_host_point_proximity_20261026.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_HOST_POINT_PROXIMITY_20261026.md
+      - .github/workflows/butterfly-host-point-proximity-20261026.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bounded-source-and-spatial-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify frozen input identities and synthetic geometric negative controls
+        run: |
+          python -m pip install "pytest>=8,<10"
+          python -m pytest -q tests/test_butterfly_host_point_proximity_20261026.py
+      - name: Retrieve exhaustive bounded GBIF point records in RAM only
+        run: |
+          mkdir -p _points
+          python scripts/analyze_butterfly_host_point_proximity_20261026.py \
+            --inventory provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_source_host_country_inventory_20261023.json \
+            --butterflies provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json \
+            --plants provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json \
+            --output _points/source_only_point_overlap_20261026.json
+      - name: Assert source completeness diagnostics and absence of raw coordinates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path("_points/source_only_point_overlap_20261026.json")
+          report=json.loads(path.read_text())
+          assert report["schema"]=="chocho_exact26_butterfly_plant_point_20261026_v01"
+          assert report["source"]["frozen_case_count"]==26
+          assert report["source"]["frozen_plant_country_queries"]==44
+          assert report["acquisition"]["total_queries"]==70
+          assert report["acquisition"]["no_raw_coordinates_preserved"]
+          assert report["scientific_information_gate"] in (
+              "DESCRIPTIVE_POINT_INDEX_FEASIBILITY",
+              "INSUFFICIENT_VALIDATED_POINT_COHORT")
+          rows=report["analysis"]["cases"]
+          assert len(rows)==26
+          assert all("lat" not in r and "lon" not in r for r in rows)
+          if report["status"]=="COMPLETE_LIVE_GBIF_SOURCE_SNAPSHOT":
+              assert report["acquisition"]["complete_taxon_country_queries"]==70
+              assert report["analysis"]["complete_original_source_positive_cases"]==26
+          else:
+              print("SOURCE GATE INCOMPLETE: no biological absence or positive/negative effect claim")
+          print("PASS: frozen source and no point coordinates/host-use claims in export")
+          PY
+      - name: Upload only country-level numerical counts and SHA receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-host-point-proximity-20261026
+          path: _points/source_only_point_overlap_20261026.json
+          retention-days: 30
+          if-no-files-found: error
