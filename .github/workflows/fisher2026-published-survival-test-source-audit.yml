@@ -1,0 +1,59 @@
+name: Fisher 2026 original paper survival percentage-test and source integrity audit
+on:
+  push:
+    branches:
+      - analysis/monarch-leaf-age-conversion-gate-20261026
+    paths:
+      - 'scripts/audit_fisher2026_published_percent_chisq_20261026.py'
+      - '.github/workflows/fisher2026-published-survival-test-source-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  exact-source-original-statistics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact conditional 2x2 statistical library
+        run: python -m pip install 'numpy>=1.26,<3' 'scipy>=1.13,<2'
+      - name: Checkout published Fisher source Git commit with original datasets and R script
+        uses: actions/checkout@v4
+        with:
+          repository: kelseyefisher/MilkweedLeafAgeMonarchSuccess
+          ref: acbb93c75e1f4810355c6ce03e6076e2303b2a98
+          path: _external/MilkweedLeafAgeMonarch
+      - name: Verify original paper percentages chi-square method and 240-denominator alternative tests
+        run: |
+          python -u scripts/audit_fisher2026_published_percent_chisq_20261026.py \
+            --source-repo _external/MilkweedLeafAgeMonarch \
+            --out provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fisher2026-original-proportion-test-data-source-integrity
+          path: provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json
+          if-no-files-found: ignore
+      - name: Archive only source-statistical diagnostics, no animal identifiers
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs=require('fs');
+            const path='provenance/reviewer_defenses/results/fisher2026_published_percent_chisq_source_audit_20261026.json';
+            const owner=context.repo.owner,repo=context.repo.repo;
+            const branch=context.ref.replace('refs/heads/','');
+            const content=Buffer.from(fs.readFileSync(path)).toString('base64');
+            let sha;
+            try{sha=(await github.rest.repos.getContent({owner,repo,path,ref:branch})).data.sha;}
+            catch(e){if(e.status!==404)throw e;}
+            const params={owner,repo,path,branch,content,
+              message:'Archive published Fisher chi-square on percentages compared with original 4-trial denominators'};
+            if(sha)params.sha=sha;
+            await github.rest.repos.createOrUpdateFileContents(params);
