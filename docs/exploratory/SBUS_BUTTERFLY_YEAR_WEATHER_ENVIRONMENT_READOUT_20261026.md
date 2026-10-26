@@ -41,3 +41,29 @@ No demonstrated **increase of butterfly breeding populations from introduced hos
 The appropriate ultimate question remains: *When does a newly redistributed host plant become an effective breeding resource versus a shared environmental cue or competitive bottleneck?* Actual test of host-mediated synchronization needs verified plant taxon and age/tissue use, timed plant biomass/leaf phenophases, larvae/egg counts, adult follow-up and replicated sites, rather than reusing a region-level static host-list model.
 
 All source counts and code kept on `analysis/sbus-environment-shock-20261026` and prior exploratory source branch; never merge into GEB submission without independent scientific author assessment.
+
+## Final qualified Daymet coarse-seasonal weather sensitivity (E1b)
+
+The pre-specified regional-weather-proxy test **COMPLETED** and passed source identity, all 14 daily gridded-weather response SHA256 comparisons, 121-site/851-site×year source cohort, all original **640** temporal butterfly pair membership checks and all **199** accepted-host family×plant-family degree-preserving null graphs.
+
+The Daymet seasonal predictor set was fixed before weather values were inspected: 21 years of daily modeled data (2000–2020) at each of the **14 public rounded source coordinate classes**; spring GDD5 (DOY 60–181) and summer precipitation (DOY 182–273). Unlike E1a's common-year effect, these are **independent meteorological model inputs**. However they are **not** 1km measured weather at 121 actual monitored sites, and GDD5 is a seasonal environmental proxy, not an observation of host plant phenology.
+
+| Same 640 pairs (62 documented-host-sharing, 578 nonsharing) | 10h source QA original | After coarse regional spring-GDD5 & summer-rain adjustment |
+|---|---:|---:|
+| Shared group mean within-site annual adult encounter-rate correlation | +0.1994716 | +0.1998833 |
+| Nonsharing group mean | +0.0561458 | +0.0522420 |
+| Shared minus nonsharing difference | **+0.1433259** | **+0.1476413** |
+| Host-degree null median | +0.0886766 | **+0.0930785** |
+| Host-degree null central 95% interval | [+0.045865,+0.143163] | **[+0.052267,+0.149143]** |
+| Exploratory empirical upper-tail fraction | .030 | **.040** |
+
+The corrected contrast increased only **+0.0043154** instead of disappearing. The median proportion of each partner's pooled within-site temporal adult rate variance statistically captured by both weather predictors was **2.01%** (14.14% of partners had in-sample seasonal weather R² >0.10). The weather-adjusted observed difference remains **inside** the host-degree structural 95% null envelope; empirical `.04` is a posthoc-tail diagnostic, not evidence of climate-immune, causally host-mediated synchrony.
+
+[Machine numeric E1b receipt](../../provenance/reviewer_defenses/results/sbus_illinois_coarse_daymet_weather_host_niche_20261026.json). [Successful source-exact workflow](https://github.com/zuizui0223/chocho/actions/runs/40304049483). An independent [Daymet daily source coverage workflow](https://github.com/zuizui0223/chocho/actions/runs/40303635788) had already archived 14 response hashes and confirmed complete 21-year daily meteorology, with no local site coordinates persisted.
+
+### Scientific stopping decision
+This independent climate model's inability to remove the positive adult cofluctuation cannot establish that common forcing is absent. The public coordinates collapse 121 survey sites into only 14 region classes; summer and spring weather are modeled pixels at rounded source coordinates, not measured microhabitat; only two prespecified seasonal dimensions were controlled, not local host biomass or species-specific phenology. The original adult-count zero assumption, shared-sites/pairs pseudoreplication, 3-endpoint multiplicity and literature HOSTS incompleteness all persist.
+
+**Main ecology conclusion:** *Butterflies sharing recorded larval hosts have an exploratory tendency toward more synchronized within-site annual adult count indices in one monitoring programme; this is not conclusively exceptional under degree-constrained host network nulls and not explained away by the limited broad-year or coarse seasonal model-weather controls used here. Local larval-host mediated dynamics and direct interspecific competition remain unidentified.* Under the original tested source-null conditions, field co-detection and next-year competition proxy both failed to exceed expected source structure. A new statistically convincing ecological mechanistic result would require **independently measured, localized, annual larval host-plant phenophases/available leaf biomass and actual larval occurrence or survival**, with more than 14 independently resolved local climate histories.
+
+Do not replace current GEB fixed-source paper's Results or infer butterfly colonization. This analysis remains exploratory in its own source branch. No further source-window cherry-picking or weather threshold retuning.
