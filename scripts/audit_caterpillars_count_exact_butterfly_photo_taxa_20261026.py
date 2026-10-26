@@ -43,11 +43,11 @@ def run(source,base):
     exact_other_species=Counter()
     with expert.open(newline="",encoding="utf-8-sig") as f:
         reader=csv.DictReader(f)
-        if not {"ArthropodSightingFK","TaxonName","Rank","Group"}<=set(reader.fieldnames or []):
+        if not {"ArthropodSightingFK","TaxonName","Rank","StandardGroup"}<=set(reader.fieldnames or []):
             raise ValueError("Original expert survey taxonomic fields missing: "+repr(reader.fieldnames))
         for row in reader:
             total+=1
-            animal=str(row.get("Group") or "").strip()
+            animal=str(row.get("StandardGroup") or "").strip()
             rank=str(row.get("Rank") or "").strip().lower()
             name=str(row.get("TaxonName") or "").strip()
             sid=str(row.get("ArthropodSightingFK") or "").strip()
