@@ -86,7 +86,7 @@ def accepted_edges(path,focal,taxon):
     return original_hostset, original,edges,viable,plantfam
 
 
-def draw_graph(original_hostset, original_pairs, all_groups, viable, plantfam, taxon, replicate):
+def draw_graph(original_hostset, original_pairs, all_groups, viable, plantfam, taxon, replicate, seed_override=None):
     # Every draw starts afresh from the same source-locked network, independent RNG.
     host_map={s:set(links) for s,links in original_hostset.items()}
     connections=set(original_pairs)
@@ -103,7 +103,7 @@ def draw_graph(original_hostset, original_pairs, all_groups, viable, plantfam, t
     if nviable < 100:
         raise ValueError("Insufficient swappable host relationships")
     accepted=0
-    rng=random.Random(SEED+7919*(replicate+1))
+    rng=random.Random(SEED+7919*(replicate+1) if seed_override is None else seed_override)
     for _ in range(SWAP_FACTOR*E):
         pos=rng.randrange(nviable)
         index=bisect.bisect_right(weight_cumulative,pos)
