@@ -1,0 +1,180 @@
+{
+  "schema": "chocho_butterfly_host_point_lowvolume_diagnostic_20261026_v01",
+  "status": "LIVE_GBIF_30_SOURCE_QUERIES_COMPLETE",
+  "note": "Independent bounded low-volume pilot only; does not replace all-26 GitHub Actions source run.",
+  "date": "2026-10-26",
+  "source_selection": "All frozen positive 26 source cases with <=20 original indexed butterfly records and <=20 sum original candidate botanical source indices. Determined before point distance results.",
+  "source_cases": 12,
+  "source_queries": 30,
+  "source_query_failures": 0,
+  "source_count_drifts": 0,
+  "old_source_butterfly_indices": 46,
+  "source_butterfly_indices": 46,
+  "candidate_plant_indices_case_weighted": 40,
+  "butterfly_indices_known_uncertainty_le_1000m": 26,
+  "metrics": {
+    "nearest_source_candidate_host_radius_km": [
+      1,
+      5,
+      25
+    ],
+    "max_edition_year_gap_years": 3,
+    "within_1km": 0,
+    "within_5km": 0,
+    "within_25km": 10,
+    "within_5km_3years_known_butterfly_and_plant_coord_uncertainty_le1000m": 0,
+    "any_candidate_plant_index_cases": 8,
+    "no_candidate_plant_index_cases": 4
+  },
+  "cases": [
+    {
+      "butterfly": "Aguna asander",
+      "country": "CU",
+      "butterfly_indices": 2,
+      "candidate_plant_indices": 2,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 0,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Aguna asander",
+      "country": "DO",
+      "butterfly_indices": 9,
+      "candidate_plant_indices": 4,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 6,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Aguna asander",
+      "country": "HT",
+      "butterfly_indices": 3,
+      "candidate_plant_indices": 1,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 3,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Anteos clorinde",
+      "country": "DO",
+      "butterfly_indices": 15,
+      "candidate_plant_indices": 2,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 3,
+      "butterfly_known_uncertainty_le1000m": 7,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Anteos clorinde",
+      "country": "HT",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 0,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 0,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Battus philenor",
+      "country": "GT",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 6,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 0,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Colias philodice",
+      "country": "HN",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 5,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 1,
+      "butterfly_known_uncertainty_le1000m": 1,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Kricogonia lyside",
+      "country": "HN",
+      "butterfly_indices": 3,
+      "candidate_plant_indices": 0,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 2,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Papilio demoleus",
+      "country": "HT",
+      "butterfly_indices": 8,
+      "candidate_plant_indices": 9,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 5,
+      "butterfly_known_uncertainty_le1000m": 6,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Papilio machaon",
+      "country": "NA",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 0,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 1,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Phoebis agarithe",
+      "country": "HT",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 11,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 1,
+      "butterfly_known_uncertainty_le1000m": 0,
+      "within5km_strict": 0
+    },
+    {
+      "butterfly": "Vanessa atalanta",
+      "country": "GA",
+      "butterfly_indices": 1,
+      "candidate_plant_indices": 0,
+      "within1km": 0,
+      "within5km": 0,
+      "within25km": 0,
+      "butterfly_known_uncertainty_le1000m": 0,
+      "within5km_strict": 0
+    }
+  ],
+  "provenance": {
+    "frozen_sources": [
+      "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_source_host_country_inventory_20261023.json",
+      "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_positive48_gadm_lifestage_facets_20261020.json",
+      "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json"
+    ],
+    "queries": "GBIF /v1/occurrence/search, source exact accepted taxonKey, ISO2 country, year 2010-2025, hasCoordinate=true, hasGeospatialIssue=false, occurrenceStatus=PRESENT, original five basisOfRecord types; limit 300.",
+    "coordinate_export": "NO_RAW_COORDINATES_OR_RECORD_IDS_STORED",
+    "source_snapshot": "Live GBIF index Oct 26 2026, no DOI-pinned download",
+    "intention": "Recomputed all preselected low-volume source cases; no outcome based source selection."
+  },
+  "red_lines": [
+    "Country and point proximity do not establish oviposition, larval host use, individual recruitment or competitive encounter.",
+    "Missing plant GBIF records are not plant absences; cultivated plants may appear in indexed botanical records.",
+    "Point proximity does not test observed butterfly climate niche entry or region-wide conservation benefit.",
+    "Case outcomes are not independent biological trials; the 12 low-volume cases are not representative of the 26 cases."
+  ]
+}
