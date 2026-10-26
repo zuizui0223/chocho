@@ -67,3 +67,21 @@ This independent climate model's inability to remove the positive adult cofluctu
 **Main ecology conclusion:** *Butterflies sharing recorded larval hosts have an exploratory tendency toward more synchronized within-site annual adult count indices in one monitoring programme; this is not conclusively exceptional under degree-constrained host network nulls and not explained away by the limited broad-year or coarse seasonal model-weather controls used here. Local larval-host mediated dynamics and direct interspecific competition remain unidentified.* Under the original tested source-null conditions, field co-detection and next-year competition proxy both failed to exceed expected source structure. A new statistically convincing ecological mechanistic result would require **independently measured, localized, annual larval host-plant phenophases/available leaf biomass and actual larval occurrence or survival**, with more than 14 independently resolved local climate histories.
 
 Do not replace current GEB fixed-source paper's Results or infer butterfly colonization. This analysis remains exploratory in its own source branch. No further source-window cherry-picking or weather threshold retuning.
+
+
+## Final source-audited visualization and workflow completion
+
+![Observed original, common-year adjusted and Daymet-coarse-weather adjusted butterfly annual synchrony versus 199 original source networks](figures/SBUS_Illinois_year_vs_Daymet_niche_null_20261026.png)
+
+[Publication-size PNG](figures/SBUS_Illinois_year_vs_Daymet_niche_null_20261026.png) · [Editable SVG](figures/SBUS_Illinois_year_vs_Daymet_niche_null_20261026.svg) · [Figure CI / source-history check](https://github.com/zuizui0223/chocho/actions/runs/40305615147).
+
+The figure's **black dashed lines** are original measured adult count-rate correlations minus nonsharing peers; **histograms** are recomputed source-graph null associations and **dotted lines** indicate their medians. Source histories and q2.5/q50/q97.5 are checked before rendering. The four-panel layout was visually inspected for overlapping annotations; only the publication-ready version is linked here.
+
+All source workflows:
+- [Original Illinois public coordinate precision and NASA weather transport](https://github.com/zuizui0223/chocho/actions/runs/40302440203): SUCCESS.
+- [14 independent rounded spatial-class Daymet daily series, 2000–2020](https://github.com/zuizui0223/chocho/actions/runs/40303635788): SUCCESS.
+- [Species-specific leave-one-site-out common-year correction](https://github.com/zuizui0223/chocho/actions/runs/40303050049): SUCCESS.
+- [Coarse independent spring GDD5/summer rain correction and 199 nulls](https://github.com/zuizui0223/chocho/actions/runs/40304049483): SUCCESS.
+- [Three-condition vector/raster evidence figure](https://github.com/zuizui0223/chocho/actions/runs/40305615147): SUCCESS.
+
+**Final status:** source-exact ecological falsification sequence concluded. The local adult time-series association remains **suggestive only**, not independent evidence of plant-mediated adult population increase or competitive interaction. No outcome window search, new taxon subset or deeper covariate tuning will be done to rescue a nominal tail. The next independent data category would need **local host plant phenology/biomass AND observed larval host use/survival**, preferably at higher-precision sampling sites, if the goal is to identify a resource-mediated causal pathway.
