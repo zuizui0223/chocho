@@ -1,0 +1,48 @@
+name: Western monarch published Dryad v10 public file gate
+on:
+  push:
+    branches:
+      - analysis/monarch-host-stage-realization-20261026
+    paths:
+      - 'scripts/audit_western_monarch_stage_host_public_dryad_20261026.py'
+      - '.github/workflows/western-monarch-original-public-dryad-v02-20261026.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-published-file-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resolve exact published Dryad version and original public file stream
+        run: |
+          python -u scripts/audit_western_monarch_stage_host_public_dryad_20261026.py \
+            --out provenance/reviewer_defenses/results/western_monarch_stage_host_public_source_gate_v02_20261026.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: monarch-real-egg-larva-milkweed-public-Dryad-source-gate-v02
+          path: provenance/reviewer_defenses/results/western_monarch_stage_host_public_source_gate_v02_20261026.json
+          if-no-files-found: ignore
+      - name: Store file metadata and aggregate source-QC only
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs=require('fs');
+            const path='provenance/reviewer_defenses/results/western_monarch_stage_host_public_source_gate_v02_20261026.json';
+            const owner=context.repo.owner,repo=context.repo.repo;
+            const branch=context.ref.replace('refs/heads/','');
+            const content=Buffer.from(fs.readFileSync(path)).toString('base64');
+            let sha;
+            try{sha=(await github.rest.repos.getContent({owner,repo,path,ref:branch})).data.sha;}
+            catch(e){if(e.status!==404)throw e;}
+            const data={owner,repo,path,branch,content,
+              message:'Archive verified public Dryad v10 original monarch juvenile and host plant dataset source quality only'};
+            if(sha)data.sha=sha;
+            await github.rest.repos.createOrUpdateFileContents(data);
