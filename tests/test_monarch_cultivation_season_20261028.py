@@ -5,7 +5,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from analyze_monarch_cultivation_season_20261028 import (
-    exact_binomial, table_strata, mh_odds_ratio, summary, group_bootstrap,
+    exact_binomial, canonical_host, table_strata, mh_odds_ratio, summary, group_bootstrap,
 )
 
 
@@ -76,3 +76,8 @@ def test_taxonomic_guard():
     assert not exact_binomial("Asclepias spp.")
     assert not exact_binomial("complex speciosa/syriaca")
     assert not exact_binomial("Cynanchum")
+    assert canonical_host("curassavica") == "Asclepias curassavica"
+    assert canonical_host("syriaca") == "Asclepias syriaca"
+    assert canonical_host("complex speciosa/syriaca") is None
+    assert canonical_host("Gomphocarpus sp.") is None
+    assert canonical_host("Oxypetalum coeruleum") == "Oxypetalum coeruleum"
