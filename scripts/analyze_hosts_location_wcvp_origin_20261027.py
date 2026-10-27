@@ -103,7 +103,13 @@ def load_country_atoms(atoms_path, atoms_manifest_path, countries_path):
         raise ValueError("Not original WCVP/TDWG country crosswalk")
     if manifest["atom_rows"] != 969 or summary["country_count"] != 247:
         raise ValueError("Area atoms or political country roster has changed")
-    atom_meta = {r["country"]: r for r in manifest["countries"]}
+    atom_meta = {r["country"]: dict(r) for r in manifest["countries"]}
+    original_country_meta = {r["country"]: r for r in summary["countries"]}
+    if set(atom_meta) != set(original_country_meta):
+        raise ValueError("Country atom source codes do not match original mapping")
+    for iso, m in atom_meta.items():
+        m["is_geo_safe"] = bool(original_country_meta[iso]["iso_eligible"])
+        m["original_mapping_flags"] = original_country_meta[iso].get("mapping_flags", [])
     by_country = defaultdict(list)
     for row in read_rows(atoms_path):
         country, parts = row["country"], row["wgsrpd3_members"].split("|")
@@ -152,7 +158,7 @@ def per_region(pid, region, native, current):
 def dominant_country(pid, country, *, threshold, atoms, metadata, native, current):
     """Area-dominance over WHOLE country, not botanical-region counts."""
     m = metadata.get(country)
-    if not m or country not in atoms or \
+    if not m or country not in atoms or not m.get("is_geo_safe", False) or \
        float(m["guard_coverage"]) < .95-1e-9 or \
        not m.get("area_identity_checks") == "PASS":
         return "COUNTRY_MAPPING_UNSAFE"
