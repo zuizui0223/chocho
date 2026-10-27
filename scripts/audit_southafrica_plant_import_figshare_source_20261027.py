@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Public DOI-identified South African plant import interception source schema audit.
 
-Figshare DOI 10.6084/m9.figshare.14393723; source original paper
+Figshare COLLECTION DOI 10.6084/m9.figshare.c.5180681; source original paper
 Scientific Data 2021 Saccaggi et al DOI 10.1038/s41597-021-00869-z.
 Pre-analysis source schema only. Confidential importer/exporter record IDs,
 raw sample rows and exact identifiers are not published in the output.
@@ -14,8 +14,8 @@ from urllib.error import URLError,HTTPError
 from urllib.request import Request,urlopen
 
 SCHEMA="chocho_southafrica_plant_import_Lepidoptera_source_schema_20261027_v01"
-PUBLIC_ARTICLE_ID=14393723
-PUBLIC_API=f"https://api.figshare.com/v2/articles/{PUBLIC_ARTICLE_ID}"
+PUBLIC_COLLECTION_ID=5180681
+PUBLIC_API=f"https://api.figshare.com/v2/collections/{PUBLIC_COLLECTION_ID}/articles"
 EXPECTED_FILES=("List of contaminants","Metadata of contaminants")
 
 
@@ -92,9 +92,26 @@ def field_values(path,raw):
 def run():
     raw,url,_=source_get(PUBLIC_API)
     obj=json.loads(raw)
-    if str(obj.get("id")) != str(PUBLIC_ARTICLE_ID) or not obj.get("files"):
-        raise ValueError("Not original Figshare 14393723 public dataset")
-    files=[f for f in obj["files"] if f["name"].lower().endswith(".csv")]
+    articles=obj if isinstance(obj,list) else obj.get("articles",obj.get("items",[]))
+    if not isinstance(articles,list) or not articles:
+        raise ValueError("Original Figshare collection c.5180681 has no articles")
+    member_articles=[]
+    files=[]
+    for article in articles:
+        article_id=article.get("id")
+        if not isinstance(article_id,int):
+            raise ValueError("Invalid original Figshare collection member article id")
+        raw_details,_,_=source_get(f"https://api.figshare.com/v2/articles/{article_id}")
+        details=json.loads(raw_details)
+        member_articles.append({
+            "figshare_article_ID":article_id,
+            "article_title":details.get("title"),
+            "article_original_file_names":[v.get("name") for v in details.get("files",[])],
+        })
+        for item in details.get("files",[]):
+            if str(item.get("name","")).lower().endswith(".csv"):
+                files.append({**item,"origin_article_ID":article_id,
+                              "origin_article_title":details.get("title")})
     if len(files)<2:
         raise ValueError("Original source expects two CSV files")
     outputs=[]
@@ -111,6 +128,8 @@ def run():
         info=field_values(item["name"],payload)
         info.update({
             "original_figshare_file_id":item["id"],
+            "original_source_article_ID":item["origin_article_ID"],
+            "original_source_article_title":item["origin_article_title"],
             "original_figshare_file_download_url":item["download_url"],
             "effective_download_url":actual,
             "original_figshare_file_md5":item.get("computed_md5") or item.get("supplied_md5"),
@@ -121,10 +140,10 @@ def run():
         "schema":SCHEMA,
         "status":"PUBLIC_FIGSHARE_CONSIGNMENT_AND_CONTAMINANT_SOURCE_SCHEMAS_COMPLETE",
         "original_public_paper_DOI":"10.1038/s41597-021-00869-z",
-        "original_public_dataset_DOI":"10.6084/m9.figshare.14393723",
-        "figshare_article_metadata_SHA256":sha(raw),
-        "figshare_article_ID":obj["id"],
-        "figshare_title":obj.get("title"),
+        "original_public_dataset_DOI":"10.6084/m9.figshare.c.5180681",
+        "figshare_collection_members_SHA256":sha(raw),
+        "figshare_collection_ID":PUBLIC_COLLECTION_ID,
+        "figshare_collection_article_inventory":member_articles,
         "metadata_download_API":PUBLIC_API,
         "original_files":outputs,
         "grain_warnings":[
@@ -146,6 +165,6 @@ if __name__=="__main__":
     args.output.write_text(json.dumps(report,indent=2,ensure_ascii=False,sort_keys=True)+"\n")
     print(json.dumps({
         "status":report["status"],
-        "source_article":report["figshare_title"],
+        "source_articles":report["figshare_collection_article_inventory"],
         "source_sheets":report["original_files"]
     },sort_keys=True,ensure_ascii=False))
