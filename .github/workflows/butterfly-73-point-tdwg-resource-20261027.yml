@@ -1,0 +1,101 @@
+name: All 73 butterfly points inside original host-resource climate regions
+on:
+  push:
+    branches: [analysis/butterfly-climate-entry-point-20261027]
+    paths:
+      - scripts/audit_butterfly_73_point_tdwg_resource_20261027.py
+      - tests/test_butterfly_73_point_tdwg_resource_20261027.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_73_POINT_WGSRPD_RESOURCE_20261027.md
+      - .github/workflows/butterfly-73-point-tdwg-resource-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-tdwg-chelsa-source-with-butterfly-observations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source-compatible original scientific and polygon dependencies
+        run: |
+          python -m pip install -e . 'pytest>=8,<10' 'shapely>=2,<3'
+      - name: Verify synthetic geographies and genuine biological inference gates
+        run: |
+          python -m pytest -q tests/test_butterfly_73_point_entry_roster_20261027.py \
+            tests/test_butterfly_73_point_source_20261027.py \
+            tests/test_butterfly_73_point_tdwg_resource_20261027.py
+      - name: Restore the same frozen author-only original HOSTS/WCVP/CHELSA/TDWG source used in PR46
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Authenticate exact source zip SHA, original manifests and guard extraction against traversal
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          source=Path("_retrieval/author_only")
+          SHA="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          matches=[f for f in source.rglob("*.zip") if hashlib.sha256(f.read_bytes()).hexdigest()==SHA]
+          assert len(matches)==1, "AUTHOR_ONLY_SOURCE_MISSING_OR_HASH_CHANGED"
+          extracted=Path("_retrieval/extracted_source")
+          extracted.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(matches[0]) as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  p=Path(name)
+                  assert not p.is_absolute() and ".." not in p.parts
+              z.extractall(extracted)
+          assert (extracted/"SOURCE_MANIFEST.json").is_file()
+          assert (extracted/"inputs/level3.geojson").is_file()
+          print("PASS original exact SHA-pinned, author-only source has documented TDWG3 polygons")
+          PY
+      - name: Independently recreate the same 73 classified positive source units without accessing coordinates
+        run: |
+          mkdir -p _mapped
+          python scripts/derive_butterfly_73_point_entry_roster_20261027.py \
+            --areas provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz \
+            --design provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --country-receipt data/exploratory/gbif_country_20261020/gbif_country_facet_receipts.json.gz \
+            --output _mapped/73_positive_country_source_roster.json
+      - name: Reconstruct 239 species and classify all accepted butterfly occurrence points by exact WCVP host-resource climate regions
+        run: |
+          python scripts/audit_butterfly_73_point_tdwg_resource_20261027.py \
+            --source-root _retrieval/extracted_source \
+            --roster _mapped/73_positive_country_source_roster.json \
+            --output _mapped/73_butterfly_point_tdwg_source_climate_audit.json
+      - name: Validate no raw author-only plant polygons or GBIF exact observation locations exported
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("_mapped/73_butterfly_point_tdwg_source_climate_audit.json").read_text())
+          assert x["schema"]=="chocho_73_butterfly_point_tdwg_host_climate_20261027_v01"
+          assert x["source_original_country_butterfly_cases"]==73
+          assert len(x["cases"])==73
+          assert x["no_raw_coordinates_or_raw_geometries_exported"]
+          assert x["original_source_geo_model"]["regions"]==365
+          assert x["original_source_geo_model"]["climate_evaluable_butterflies"]==235
+          assert all("lat" not in q and "lon" not in q for q in x["cases"])
+          if x["status"]=="COMPLETE_73_POINT_TO_REGIONAL_RESOURCE_MAPPING":
+              assert x["new_live_source_complete_cases"]==73
+              assert x["new_live_index_count_complete_cases"]==6076
+          else:
+              print("INCOMPLETE SOURCE: source-point match counts are diagnostics only, no ecological effect claim")
+          print("PASS host-climate source provenance and region-class conservation")
+          PY
+      - name: Archive derived region-class counts only, not raw WCVP or individual GBIF locations
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-73-point-to-regional-host-climate-source-20261027
+          path: _mapped/73_butterfly_point_tdwg_source_climate_audit.json
+          retention-days: 30
+          if-no-files-found: error

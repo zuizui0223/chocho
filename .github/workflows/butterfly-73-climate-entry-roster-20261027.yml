@@ -1,0 +1,56 @@
+name: Source-locked PR72 73 butterfly climate-entry case roster
+on:
+  push:
+    branches: [analysis/butterfly-climate-entry-point-20261027]
+    paths:
+      - scripts/derive_butterfly_73_point_entry_roster_20261027.py
+      - tests/test_butterfly_73_point_entry_roster_20261027.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_73_POINT_CLIMATE_ENTRY_20261027.md
+      - .github/workflows/butterfly-73-climate-entry-roster-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-73-prepoint-roster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install frozen analytical and test dependencies
+        run: python -m pip install -e . 'pytest>=8,<10'
+      - name: Source-independent conditional cohort tests
+        run: python -m pytest -q tests/test_butterfly_73_point_entry_roster_20261027.py
+      - name: Reconstruct original PR72 73 host-resource climate classes with immutable input Git blobs
+        run: |
+          mkdir -p _point_roster
+          python scripts/derive_butterfly_73_point_entry_roster_20261027.py \
+            --areas provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz \
+            --design provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --country-receipt data/exploratory/gbif_country_20261020/gbif_country_facet_receipts.json.gz \
+            --output _point_roster/pr72_exact_73_point_followup_roster_20261027.json
+      - name: Verify no new butterfly point locations were inspected during cohort freeze
+        run: |
+          python - <<'PY'
+          import json
+          p="_point_roster/pr72_exact_73_point_followup_roster_20261027.json"
+          d=json.load(open(p))
+          x=d["summary"]
+          assert (x["positive_country_species_cases"],x["novel_resource_country_cases"],x["analog_resource_country_cases"]) == (73,32,41)
+          assert x["distinct_butterfly_species"]==20
+          assert x["paired_source_eligible_country_species_candidates"] == 2646
+          assert len({(r["species"],r["country"]) for r in d["roster"]}) == 73
+          assert all("lat" not in r and "lon" not in r for r in d["roster"])
+          print("PASS frozen 73 accepted source positive cases without opening any observation bodies")
+          PY
+      - name: Upload source-only positive cohort identities and source volume gates
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original-73-climate-class-positive-country-roster-20261027
+          path: _point_roster/pr72_exact_73_point_followup_roster_20261027.json
+          retention-days: 30
+          if-no-files-found: error
