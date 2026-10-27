@@ -18,6 +18,7 @@ on:
       - "pyproject.toml"
       - ".github/workflows/paper-ci.yml"
   pull_request:
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
