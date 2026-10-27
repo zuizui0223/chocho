@@ -71,12 +71,15 @@ def original_survey_plant_panel(path):
     out=[]
     for row in rows:
         name=normalize_binomial(row["Plant species"])
+        if name is None and row["Plant species"].strip()!="Zanthoxylum":
+            raise ValueError("Unfrozen source plant identity below species rank")
+        taxon_resolution="GENUS_ONLY_UNSCORABLE" if name is None else "SPECIES_BINOMIAL"
         if name is None:
-            raise ValueError("Source 100-plant species binomial unverified")
+            name=row["Plant species"].strip()
         if any(name==x["field_plant_binomial"] for x in out):
             raise ValueError("Duplicate original field plant species")
         origin=row["Origin"].strip().lower()
-        if origin not in ("native","alien",""):
+        if origin not in ("native","alien"):
             raise ValueError("Unrecognized original USDA field plant origin")
         n=int(row["n_Surveys"])
         if n<40:
@@ -91,7 +94,8 @@ def original_survey_plant_panel(path):
             "field_plant_binomial":name,
             "field_plant_family":row["Family"].strip(),
             "field_plant_genus":name.split()[0],
-            "original_USDA_origin":origin or "source_origin_unspecified",
+            "field_plant_taxonomic_resolution":taxon_resolution,
+            "original_USDA_origin":origin,
             "field_original_n_surveys":n,
             "field_original_n_branches":int(row["n_Branches"]),
             "field_original_n_sites":int(row["n_Sites"]),
@@ -99,12 +103,14 @@ def original_survey_plant_panel(path):
             "field_reconstructed_positive_survey_events":larvae,
         })
     original_status=Counter(x["original_USDA_origin"] for x in out)
-    if original_status!={"native":85,"alien":14,"source_origin_unspecified":1}:
+    if original_status!={"native":86,"alien":14}:
         raise ValueError("Original public source plant native/alien/unknown composition changed")
     return out,{
         "public_original_table_sha256":hashlib.sha256(raw).hexdigest(),
         "public_original_table_git_blob":git_blob_sha(raw),
         "original_100_plants_by_USDA_origin":dict(original_status),
+        "original100_genus_only_taxa":sum(r["field_plant_taxonomic_resolution"]=="GENUS_ONLY_UNSCORABLE" for r in out),
+        "original100_species_level_rows":sum(r["field_plant_taxonomic_resolution"]=="SPECIES_BINOMIAL" for r in out),
         "original100_surveys":sum(r["field_original_n_surveys"] for r in out),
     }
 
@@ -163,12 +169,12 @@ def join(survey,by_name,by_pid,ambiguous,other):
     qc=Counter()
     for row in survey:
         name=row["field_plant_binomial"]
-        matches=by_name.get(name,set())
-        status="EXACT_SOURCE_239_ACCEPTED_PLANT_MATCH" if (
-            len(matches)==1 and name not in ambiguous) else (
-                "AMBIGUOUS_SOURCE_ACCEPTED_PLANT_MATCH" if matches
-                else "NO_EXACT_239_SOURCE_ACCEPTED_PLANT_MATCH"
-            )
+        matches=by_name.get(name,set()) if row["field_plant_taxonomic_resolution"]=="SPECIES_BINOMIAL" else set()
+        status=("GENUS_ONLY_UNSCORABLE" if row["field_plant_taxonomic_resolution"]!="SPECIES_BINOMIAL"
+                else "EXACT_SOURCE_239_ACCEPTED_PLANT_MATCH" if (
+                    len(matches)==1 and name not in ambiguous) else (
+                    "AMBIGUOUS_SOURCE_ACCEPTED_PLANT_MATCH" if matches
+                    else "NO_EXACT_239_SOURCE_ACCEPTED_PLANT_MATCH"))
         count=len(by_pid[next(iter(matches))]) if (
             status=="EXACT_SOURCE_239_ACCEPTED_PLANT_MATCH") else None
         qc[status]+=1
@@ -253,6 +259,7 @@ def solve_logit(X,successes,trials,*,ridge=RIDGE):
 
 def model_records(rows,predictor,*,include_zero=False):
     available=[r for r in rows if r["original_USDA_origin"] in ("native","alien")
+               and r["field_plant_taxonomic_resolution"]=="SPECIES_BINOMIAL"
                and (include_zero or r["original239_accepted_HOSTS_match_status"]==
                     "EXACT_SOURCE_239_ACCEPTED_PLANT_MATCH")]
     if predictor=="original239":
@@ -430,7 +437,7 @@ def run(args):
         "external_field_plant_rows":[
             {k:r[k] for k in (
                 "field_plant_binomial","field_plant_family","field_plant_genus",
-                "original_USDA_origin","field_original_n_surveys",
+                "field_plant_taxonomic_resolution","original_USDA_origin","field_original_n_surveys",
                 "field_original_n_sites","field_original_caterpillar_pct",
                 "field_reconstructed_positive_survey_events",
                 "original239_accepted_HOSTS_match_status",
