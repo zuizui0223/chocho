@@ -66,6 +66,29 @@ def plant_footprints(rows):
     return dest
 
 
+
+def added_resource_credits_for_one_species(host_ids,native,contemporary):
+    """One unit split among all documented host plants in that new region."""
+    home=set()
+    present=defaultdict(list)
+    for plant in host_ids:
+        home.update(native.get(plant,set()))
+        for region in contemporary.get(plant,set()):
+            present[region].append(plant)
+    new=set(present)-home
+    credit=Counter()
+    for region in new:
+        contributors=present[region]
+        if not contributors:
+            raise ValueError("The new resource unit lacks documented host plants")
+        weight=1/len(contributors)
+        for plant in contributors:
+            credit[plant]+=weight
+    if not math.isclose(sum(credit.values()),len(new),abs_tol=1e-8):
+        raise ValueError("Species-level fractional resource identity failed")
+    return new,credit
+
+
 def fractional_plant_credits(species, links, native, contemporary):
     """Allocate one added butterfly-region resource unit among its hosts."""
     names=defaultdict(set)
@@ -86,25 +109,12 @@ def fractional_plant_credits(species, links, native, contemporary):
     expanded=0
     for sp in sorted(focal):
         h=source_hosts.get(sp,set())
-        natives=set()
-        contributors=defaultdict(list)
-        for pid in h:
-            natives.update(native.get(pid,set()))
-            for area in contemporary.get(pid,set()):
-                contributors[area].append(pid)
-        current=set(contributors)
-        added=current-natives
+        added,individual=added_resource_credits_for_one_species(h,native,contemporary)
         if len(added)!=int(next(s for s in species if s["species"]==sp)["introduced_added_units"]):
             raise ValueError("Old source range-enlargement unit for butterfly differs "+sp)
         resource[sp]=len(added)
         expanded+=int(bool(added))
-        for area in added:
-            pids=contributors[area]
-            if not pids:
-                raise ValueError("An added source area lacks any documented host")
-            weight=1/len(pids)
-            for pid in pids:
-                credits[pid]+=weight
+        credits.update(individual)
     if len(credits)!=670 or sum(resource.values())!=14553 or expanded!=206:
         raise ValueError("Original 239/206/14553/670 HOSTS/WCVP resource reconstruction changed")
     if not math.isclose(sum(credits.values()),14553,abs_tol=1e-6):
