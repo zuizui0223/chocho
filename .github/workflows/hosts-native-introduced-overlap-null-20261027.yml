@@ -10,6 +10,13 @@ on:
       - tests/test_hosts_location_wcvp_origin_20261027.py
       - provenance/reviewer_defenses/protocols/HOSTS_LOCATION_WCVP_ORIGIN_20261027.md
       - .github/workflows/hosts-native-introduced-overlap-null-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-location-bias-model-20261027]
+    paths:
+      - scripts/analyze_hosts_native_introduced_pair_overlap_null_20261027.py
+      - tests/test_hosts_native_introduced_pair_overlap_null_20261027.py
+      - provenance/reviewer_defenses/protocols/HOSTS_NATIVE_INTRODUCED_SOURCE_OVERLAP_NULL_20261027.md
+      - .github/workflows/hosts-native-introduced-overlap-null-20261027.yml
   workflow_dispatch:
 permissions:
   contents: read
