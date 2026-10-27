@@ -11,7 +11,8 @@ import audit_southafrica_plant_import_figshare_source_20261027 as f
 def test_true_original_2021_figshare_collection_not_wrong_2022_article():
     assert f.PUBLIC_COLLECTION_ID==5180681
     assert f.PUBLIC_API=="https://api.figshare.com/v2/collections/5180681/articles"
-    assert f.EXPECTED_FILES==("List of contaminants","Metadata of contaminants")
+    assert f.EXPECTED_FILES==("Saccaggi et al 1 list of contaminants on SA plant imports.csv",
+                              "Saccaggi et al Metadata of contaminants on SA plant imports.csv")
 
 
 def test_semicolon_sample_vocabulary_preserves_source_NA_and_zero():
@@ -32,9 +33,9 @@ def fixture():
     c2="Taxon;Order;status\nPieris rapae;Lepidoptera;absent\n".encode()
     collection=[{"id":10001,"title":"Original 2021 samples"}]
     detail={"id":10001,"title":"Original 2021 source tables","files":[
-        {"id":111,"name":"List of contaminants on SA plant imports 1994-2019.csv",
+        {"id":111,"name":"Saccaggi et al 1 list of contaminants on SA plant imports.csv",
          "size":len(c1),"download_url":"https://figshare.test/111"},
-        {"id":112,"name":"Metadata of contaminants on SA plant imports 1994-2019.csv",
+        {"id":112,"name":"Saccaggi et al Metadata of contaminants on SA plant imports.csv",
          "size":len(c2),"download_url":"https://figshare.test/112"},
     ]}
     return c1,c2,collection,detail
