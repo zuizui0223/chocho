@@ -90,7 +90,7 @@ def test_model_can_have_multiple_plants_and_source_holdout_sites():
     assert X.shape[1]==26
     assert len(y)==len(n)==len(grouped)
     assert np.linalg.matrix_rank(X)==X.shape[1]
-    model=fit_site_year_model(grouped)
+    model=fit_site_year_model(grouped,bootstrap_draws=19)
     assert model["status"]=="DESCRIPTIVE_SOURCE_SITE_YEAR_FIXED_EFFECT_MODEL_ONLY"
     assert math.isfinite(model["original_239_HOSTS_consumers_perSD_adjusted_odds_ratio"])
     assert model["leave_one_entire_survey_site_out"]["sites_validated"]==12
