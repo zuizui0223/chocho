@@ -1,0 +1,62 @@
+name: Posthoc Chile NZ Puerto Rico larval-host evidence and introduced plant shared-resource case test
+on:
+  push:
+    branches: [analysis/invasive-larval-host-evidence-20261027]
+    paths:
+      - data/exploratory/invasive_butterfly_larval_evidence_posthoc_addendum_20261027.csv
+      - scripts/analyze_invasive_larval_evidence_posthoc_addendum_20261027.py
+      - tests/test_invasive_larval_evidence_posthoc_addendum_20261027.py
+      - provenance/reviewer_defenses/protocols/INVASIVE_BUTTERFLY_LARVAL_EVIDENCE_POSTHOC_ADDENDUM_20261027.md
+      - .github/workflows/invasive-butterfly-posthoc-host-evidence-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-native-introduced-overlap-null-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preserve-original-13-firstpass-and-add-located-reports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Test exact original 13 event identities and new posthoc locality evidence hierarchy
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_invasive_larval_host_primary_evidence_20261027.py tests/test_invasive_larval_evidence_posthoc_addendum_20261027.py
+      - name: Keep original first-pass audit immutable; recompute distinct posthoc addendum
+        run: |
+          mkdir -p _addendum
+          python scripts/analyze_invasive_larval_evidence_posthoc_addendum_20261027.py \
+            --events data/exploratory/invasive_butterfly_verified_entry_events_20261027.csv \
+            --firstpass-evidence data/exploratory/invasive_butterfly_independent_larval_stages_20261027.csv \
+            --addendum data/exploratory/invasive_butterfly_larval_evidence_posthoc_addendum_20261027.csv \
+            --output _addendum/posthoc_13_events_invasion_larval_host_20261027.json
+      - name: Verify first-pass 3 cases not silently replaced and all six new sources retained
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_addendum/posthoc_13_events_invasion_larval_host_20261027.json"))
+          assert x["schema"]=="chocho_invasive_13_event_posthoc_larval_evidence_addendum_20261027_v1"
+          assert x["original_first_pass_field_supported_site_events"]==3
+          assert x["original_13_invasion_recipient_events"]==13
+          assert x["posthoc_addendum_cited_source_rows"]==6
+          assert x["posthoc_exact_site_additional_events"]==2
+          assert x["posthoc_country_only_immatures_additional_events"]==2
+          assert x["site_resolved_any_field_larval_host_evidence_events"]==5
+          assert x["country_or_site_resolved_any_field_larval_host_evidence_events"]==7
+          assert x["events_remaining_without_recipient_field_juvenile_host_evidence"]==6
+          assert x["context_other_native_competitor_and_native_consumer_host_reports"]==2
+          assert "POSTHOC" in x["status"]
+          assert not any("proven_new_host_switch" in str(z) for z in x.values())
+          print("PASS v1 kept at three; v2 located vs region-reported cases separately")
+          PY
+      - name: Archive source-cited 13 event addendum plus explicit controls
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-invasive-butterfly-posthoc-larval-host-evidence-20261027
+          path: _addendum/posthoc_13_events_invasion_larval_host_20261027.json
+          retention-days: 30
+          if-no-files-found: error
