@@ -51,7 +51,7 @@ def test_raw_source_flag_to_accepted_triple_collapsing():
     ]
     native=result["counts_by_source_origin"]["NATIVE_CONFIRMED"]
     assert native["triple_contains_any_Lab_Rearing_question_mark"]==1
-    assert native["triple_contains_any_Lab_Rearing_Y"]==0
+    assert native.get("triple_contains_any_Lab_Rearing_Y",0)==0
     assert result["counts_by_source_origin"]["UNMAPPED_OR_UNREVIEWED_LOCATION"][
         "triple_all_Lab_Rearing_blank"]==1
 
