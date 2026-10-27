@@ -1,0 +1,60 @@
+name: Match original 239 butterfly resource portfolios to actual alien insect establishment 2024
+on:
+  push:
+    branches: [analysis/established-insects-zenodo-species-20261027]
+    paths:
+      - scripts/analyze_zenodo_2024_established_butterflies_original239_20261027.py
+      - tests/test_zenodo_2024_established_butterflies_original239_20261027.py
+      - provenance/reviewer_defenses/protocols/INTERNATIONAL_INVASIVE_INSECT_ESTABLISHMENT_ZENODO_20261027.md
+      - .github/workflows/zenodo-established-butterfly-original239-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source-alien-establishment-positive-list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test positive-only taxon and location identity, no false failed invasions
+        run: |
+          python -m pip install 'pytest>=8,<10' 'numpy>=1.24,<3'
+          python -m pytest -q tests/test_zenodo_2024_established_butterflies_original239_20261027.py
+      - name: Fetch and hash frozen Zenodo 2024 actual alien establishment species×region originals
+        run: |
+          mkdir -p _zenodo
+          python scripts/analyze_zenodo_2024_established_butterflies_original239_20261027.py \
+            --original239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --output _zenodo/zenodo_2024_original239_established_nonnative_butterflies_20261027.json
+      - name: Guarantee source original 239 and 13047 positive establishment rows
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_zenodo/zenodo_2024_original239_established_nonnative_butterflies_20261027.json"))
+          assert x["schema"]=="chocho_239_butterfly_original_Zenodo_positive_alien_establishment_20261027_v01"
+          assert x["source_zenodo"]["record_id"]==11519262
+          assert x["source_zenodo"]["original_version"]=="0.2.1"
+          assert x["source_original239"]["original_239_butterflies"]==239
+          assert x["source_original239"]["original_added_host_resource_units"]==14553
+          assert x["source_original239"]["original_expanded_butterflies"]==206
+          y=x["source_positive_matches"]
+          assert y["all_source_all_taxa_order_positive_rows"]
+          assert y["original_239_nonlisted_species_cannot_be_called_failed_or_untransported"]
+          assert len(y["source_positive_original239_species"]) == y[
+            "original_239_butterflies_matched_as_established_non_native_in_at_least_one_source_region"]
+          assert sum(a["source_rows"] for a in x["source_zenodo"]["sources"].values())==34771
+          assert "failed_arrivals" not in json.dumps(x).lower()
+          print("PASS 239 original butterflies vs source independently documented alien establishment positives, no invented absence")
+          PY
+      - name: Archive original alien-positive butterfly×region catalogue and source receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-239-Zenodo2024-species-region-alien-establishment-overlap-20261027
+          path: _zenodo/zenodo_2024_original239_established_nonnative_butterflies_20261027.json
+          retention-days: 30
+          if-no-files-found: error

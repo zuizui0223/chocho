@@ -1,0 +1,105 @@
+name: Original 239 butterfly Hawaii native vs introduced host opportunity source-saturation check
+on:
+  push:
+    branches: [analysis/established-insects-zenodo-species-20261027]
+    paths:
+      - scripts/audit_Hawaii_all239_WCVP_host_opportunity_baseline_20261027.py
+      - tests/test_Hawaii_all239_WCVP_host_opportunity_baseline_20261027.py
+      - provenance/reviewer_defenses/protocols/HAWAII_ALL239_WCVP_OPPORTUNITY_BASELINE_20261027.md
+      - .github/workflows/Hawaii-all239-host-resource-baseline-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-239-opportunity-saturation-not-arrival-success:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test WCVP wild native/introduced/unknown status and no false butterfly absence
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_Hawaii_established_2024_butterfly_WCVP_host_coverage_20261027.py
+      - name: Restore original ten positive Hawaii aliens with source-checked WCVP wild host status
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-Zenodo2024-Hawaii-10-alien-butterfly-WCVP-host-coverage-20261027
+          run-id: 40499612707
+          github-token: ${{ github.token }}
+          path: _hawaii_source_positive
+      - name: Restore original 239 butterfly HOSTS/WCVP author-only original signed source archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_zip
+      - name: Strict original source archive SHA and nested source content safety
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile,io,json
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for p in Path("_author_zip").rglob("*.zip"):
+              raw=p.read_bytes()
+              if hashlib.sha256(raw).hexdigest()==expected:
+                  found.append(raw)
+              else:
+                  with zipfile.ZipFile(p) as z:
+                      for n in z.namelist():
+                          if n.endswith(".zip"):
+                              payload=z.read(n)
+                              if hashlib.sha256(payload).hexdigest()==expected:
+                                  found.append(payload)
+          assert len(found)==1,"Missing exact original accepted WCVP + HOSTS source"
+          dest=Path("_source")
+          dest.mkdir(exist_ok=True)
+          with zipfile.ZipFile(io.BytesIO(found[0])) as z:
+              assert z.testzip() is None
+              for n in z.namelist():
+                  t=Path(n)
+                  assert not t.is_absolute() and ".." not in t.parts
+              z.extractall(dest)
+          meta=json.loads((dest/"SOURCE_MANIFEST.json").read_text())
+          assert meta["inputs_count"]==11
+          for name,digest in meta["sha256"].items():
+              assert hashlib.sha256((dest/name).read_bytes()).hexdigest()==digest
+          print("PASS original 11-author input SHA / no original HOSTS raw rows exported")
+          PY
+      - name: Reconstruct ORIGINAL 239 Hawaii wild host opportunity and compare ten positive aliens without calling remaining 229 failures
+        run: |
+          mkdir -p _hawaii_background
+          python scripts/audit_Hawaii_all239_WCVP_host_opportunity_baseline_20261027.py \
+            --source-root _source \
+            --Hawaii-positive _hawaii_source_positive/original_10_Hawaii_alien_butterfly_source_WCVP_host_support_20261027.json \
+            --output _hawaii_background/all239_Hawaii_WCVP_source_opportunity_saturation_20261027.json
+      - name: Validate original 239 richness bins and artificial source reference cannot be interpreted as failed arrivals
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("_hawaii_background/all239_Hawaii_WCVP_source_opportunity_saturation_20261027.json"))
+          assert r["schema"]=="chocho_original239_Hawaii_intro_host_opportunity_background_20261027_v01"
+          assert r["source_orig_239_host_count"]==239
+          assert sum(r["original_239_source_host_coverage"].values())==239
+          ref=r["confirmed_10_positive_richness_stratified_reference"]
+          assert ref["source_Zenodo_10_original_positive_aliens"]==10
+          assert ref["source_observed_10_with_Hawaii_wild_introduced_host"]==10
+          assert len(ref["original_source_bins"])==4
+          assert sum(x["source_Zenodo_Hawaii_established_species_in_bin"] for x in ref["original_source_bins"])==10
+          assert ref["reference_is_noncausal_missing_insect_arrival_exposure"]
+          print("PASS original all239 Hawaii WCVP native/introduction source saturation without false establishment failures")
+          PY
+      - name: Archive only original butterfly resource source structure and artificial null, never author-only accepted host identities
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-all239-Hawaii-source-resource-saturation-20261027
+          path: _hawaii_background/all239_Hawaii_WCVP_source_opportunity_saturation_20261027.json
+          retention-days: 30
+          if-no-files-found: error
