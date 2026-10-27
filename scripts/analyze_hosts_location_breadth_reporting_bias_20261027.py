@@ -194,7 +194,7 @@ def bootstrap_by_genus(rows, *, field="family", indices=None, standard=None,
             "odds_ratio_per_original_SD":float(np.exp(original[name][1])),
             "bootstrap":report.get(name),
         }
-        for name in OUTCOMES
+        for name in yy
     }
     for a,bname in (
         ("introduced_plant_region_host_report","native_plant_region_host_report"),
