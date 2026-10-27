@@ -37,12 +37,15 @@ jobs:
           expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
           sources=[]
           for f in Path("_source").rglob("*.zip"):
-              with zipfile.ZipFile(f) as z:
-                  for e in z.infolist():
-                      if e.filename.endswith(".zip"):
-                          b=z.read(e)
-                          if hashlib.sha256(b).hexdigest()==expected:
-                              sources.append(b)
+              if hashlib.sha256(f.read_bytes()).hexdigest()==expected:
+                  sources.append(f.read_bytes())
+              else:
+                  with zipfile.ZipFile(f) as z:
+                      for e in z.infolist():
+                          if e.filename.endswith(".zip"):
+                              b=z.read(e)
+                              if hashlib.sha256(b).hexdigest()==expected:
+                                  sources.append(b)
           assert len(sources)==1
           Path("_verified.zip").write_bytes(sources[0])
           with zipfile.ZipFile("_verified.zip") as z:
