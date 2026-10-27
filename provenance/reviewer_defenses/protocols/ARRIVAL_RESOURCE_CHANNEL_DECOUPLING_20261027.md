@@ -1,0 +1,33 @@
+# Arrival channels and host-resource opportunities: source-locked feasibility protocol
+
+**2026-10-27 — posthoc mechanism pilot**, frozen before the new transport-mode ledger is compared numerically with the chocho resource-contribution credits. Separate draft branch stacked on PR #80, with the original GEB manuscript and main unaffected.
+
+## Central ecological hypothesis
+
+A host plant can change the **postarrival resource opportunity** of a butterfly without simultaneously causing the butterfly's **arrival**. The insect propagule must survive a pathway (egg/larva/pupa/adult, commodity, time, destination and inspection), while a plant can become established as a host after moving as seed, a cutting, a rooted plant, sod, nursery contamination, produce or another propagule. The two pathways can overlap or be independent, and their correlation could be positive, near zero or negative.
+
+**This is a conceptual two-channel model, NOT a claim that every high-contribution grass travels exclusively as seed or that each ornamental host is a verified original invasion vector.**
+
+## CRITICAL source error in an earlier proposed test
+
+Original source `provenance/reviewer_defenses/results/butterfly_occurrence_resource_validation_v0.1.json`, `data/frozen/figure_sources/occurrence_resource_validation_species.csv` and `scripts/analyze_butterfly_occurrence_overlap_null.py` show **115 butterfly-species×WGSRPD3 units ALL have butterfly observations outside native-host resource envelopes**. Of those **66 have reconstructed introduced-host opportunity**, **49 do not**. Therefore **49 are NOT unobserved butterfly cases**, and 66/115 cannot be transformed into a presence/absence test of arrival. These 115 units are deliberately conditioned on contemporary butterfly presence. Under these records there is no observed-versus-absent binary response for that design.
+
+Another potential outcome dataset, 229 original GBIF-complete butterfly species×140 countries in PR #51/#72, has many nominal *zero indexed* species×country counts, but GBIF zero is **no indexed record, not surveyed absence**. It could only support a source-effort controlled observation-feasibility pilot, not proven arrival or established population, and country source cases selected by host resource can induce ascertainment bias.
+
+## Stage 1 (deliverable now): source-independent channel feasibility and host opportunity
+
+1. Reproduce the **original GEB 239 species**, **2596 original accepted butterfly×WCVP host pairs**, **14,553 added butterfly×WGSRPD3 resource units**, **670 source contributing WCVP host plants**, from the exact source archive of original GitHub Actions #39006554609, inner ZIP SHA256 `408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323`, with 11 source member hash checks. Recompute exact fractional host-credit contribution: each butterfly×new resource unit gives total **one**, split equally among the qualifying introduced hosts. Verify 206/239 expanded butterflies, top 10 plants ≈25.1% and top 38 ≈50.6%. The classification step cannot change these original results.
+2. A **manually cited and explicitly posthoc pilot** on the ORIGINAL top ten WCVP accepted host species (ranked by their resource credits, NOT selected because their mode suits the theory). Every ledger row contains exact accepted botanical binomial, source evidence URL(s), supported seed-planting / seed-dispersal, supported nursery-container association, supported live sod/sprigs/planting materials, and type of horticultural/crop relevance. A mode supported in a **source site** is NOT proof that this plant was exported internationally in that form. Several modes can be supported for the SAME species.
+3. Provide separate flags: `documented_seed_establishment_or_seed_spread`, `documented_live_sod_sprigs_or_rooted_plant_establishment`, `documented_nursery_container_weed_association`, `documented_local_seedling_transplantation`, `verified_transboundary_commodity_route` and `verified_associated_butterfly_immature_interception`. The last two require direct species×source/destination×time trade or interception evidence. For this 10-host pilot, unless such evidence is actually documented, they remain **UNVERIFIED**, not negative/zero. No weighting by trade volume from cultivation advice.
+4. Compute overlap of fractional resource credits with documented modes and a **nonexclusive mode coverage**; because multiple modes can hold, percentages of overlapping modes MUST NOT be added to 100%. Source-route-UNVERIFIED is not a `seed-only` or `no arrival` counterfactual.
+5. Maintain top 10 relative to entire 14,553-unit original source denominator and classify all other 660 resource-contributing hosts as **NOT_YET_AUDITED**. No statement that majority of global opportunities are seed-only, no inference from top10 labels to the top38 or all 670.
+
+## Stage 2 (not yet identifiable without exposure data)
+
+A true arrival×resource test needs `butterfly × destination × year` and independently observed pre-establishment arrivals/interceptions or dated first local wild juvenile detections, alongside actual `host plant × imported live commodity route × origin × destination × year`, commodity quantity and non-host adult/flight arrival channels, plus survey effort and repeated wild establishment. A candidate model distinguishes first arrival and subsequent establishment with host resource geography and recipient climate. **Adult flight, seed contamination, product/fruit shipments, landscaping turf and live nursery stock are alternative vectors**; lack of one vector is not a zero-arrival assertion.
+
+The original 97 established European non-native Lepidoptera (Lopez-Vaamonde et al. 2010/2012) **includes many moths**, and “nearly all via plants or plant products” does NOT imply all on live potted plants. The 52.5% parks/gardens is an association with human-made *habitats after establishment*, not a quantified vector fraction. Current horticultural phytosanitary review states plants are major Lepidoptera routes but food/fruit/seed and adult dispersal are also possible. The route biological proxy must be verified independently.
+
+## Information and publication gate
+
+No arrival-effect coefficient or orphan-opportunity share without independently measured route exposure and validated absence/detection, because all 115 previously cited units are observed, and botanical propagation mode alone is not shipment vector. Any route contribution finding from top ten plants is a descriptive feasibility/calibration, not population-level introduction success. No raw author-only HOSTS/WCVP interaction matrix or personal locality records exported. Leave main/GEB frozen.
