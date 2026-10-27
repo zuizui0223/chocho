@@ -1,0 +1,68 @@
+name: All 73 butterfly climate opportunity positive countries - source point audit
+on:
+  push:
+    branches: [analysis/butterfly-climate-entry-point-20261027]
+    paths:
+      - scripts/audit_butterfly_73_point_source_20261027.py
+      - tests/test_butterfly_73_point_source_20261027.py
+      - .github/workflows/butterfly-73-point-source-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  complete-all-original-73-source-positives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original project numpy dependency and regression test runner
+        run: python -m pip install -e . 'pytest>=8,<10'
+      - name: Source-independent observation gate tests
+        run: |
+          python -m pytest -q tests/test_butterfly_73_point_entry_roster_20261027.py tests/test_butterfly_73_point_source_20261027.py
+      - name: Independently rebuild exact PR72 73-positive source cohort
+        run: |
+          mkdir -p _point_cohort
+          python scripts/derive_butterfly_73_point_entry_roster_20261027.py \
+            --areas provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz \
+            --design provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --country-receipt data/exploratory/gbif_country_20261020/gbif_country_facet_receipts.json.gz \
+            --output _point_cohort/pr72_exact_73_point_followup_roster_20261027.json
+      - name: Bounded real GBIF query for all 73 positive butterfly-country source cases
+        run: |
+          python scripts/audit_butterfly_73_point_source_20261027.py \
+            --roster _point_cohort/pr72_exact_73_point_followup_roster_20261027.json \
+            --output _point_cohort/gbif_positive73_point_source_20261027.json
+      - name: Fail closed on incomplete scientific evidence and protect source coordinates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_point_cohort/gbif_positive73_point_source_20261027.json")
+          report=json.loads(p.read_text())
+          assert report["schema"] == "chocho_source_verified_73_positive_butterfly_points_20261027_v01"
+          assert len(report["cases"]) == 73
+          assert report["point_climate_not_measured"] is True
+          assert all("lat" not in r and "lon" not in r for r in report["cases"])
+          if report["status"] == "COMPLETE_ALL_73_NEW_LIVE_GBIF_QUERY_SNAPSHOT":
+              assert report["cases_complete"] == 73
+              assert report["class_summary"]["novel"]["complete_cases"] == 32
+              assert report["class_summary"]["analogue"]["complete_cases"] == 41
+          else:
+              print("SOURCE INCOMPLETE: never infer ecological absence from GBIF query failures")
+          print("PASS original source cohort, live completeness diagnosis and no coordinate leakage")
+          PY
+      - name: Store derived country/class metadata and checksum receipts only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-73-positive-butterfly-point-source-20261027
+          path: |
+            _point_cohort/pr72_exact_73_point_followup_roster_20261027.json
+            _point_cohort/gbif_positive73_point_source_20261027.json
+          retention-days: 30
+          if-no-files-found: error
