@@ -52,7 +52,7 @@ def hypergeom(N, K, m):
     start = max(0,m-(N-K))
     end=min(m,K)
     denom=math.comb(N,m)
-    pmf={k:math.comb(K,k)*math.comb(N-K,m-k)/den
+    pmf={k:math.comb(K,k)*math.comb(N-K,m-k)/denom
          for k in range(start,end+1)}
     if not math.isclose(sum(pmf.values()),1.,rel_tol=1e-10,abs_tol=1e-10):
         raise ValueError("Source node hypergeom normalization failed")
@@ -202,7 +202,7 @@ def source_nodes(hosts_path, accepted, family_by_plant, focal):
     return result,dict(totals)
 
 
-def classify_nodes(nodes, cutoff, atoms, atom_meta, regions, native, current):
+def classify_nodes(nodes, cutoff, atoms, atom_meta, regions, native, current, *, require_original_source=True):
     source_qc=Counter()
     cache={}
     out=[]
@@ -218,12 +218,12 @@ def classify_nodes(nodes, cutoff, atoms, atom_meta, regions, native, current):
             raise ValueError("Unregistered WCVP original plant source status")
         source_qc[status]+=node["distinct_original_239_butterfly_consumers"]
         out.append({**node,"source_plant_region_origin":status})
-    if cutoff==.95 and any(source_qc[k]!=v for k,v in
+    if require_original_source and cutoff==.95 and any(source_qc[k]!=v for k,v in
                            (("NATIVE_CONFIRMED",399),
                             ("INTRODUCED_CONFIRMED",179),
                             ("WCVP_UNLISTED",303))):
         raise ValueError("Original WCVP accepted HOSTS source geography changed")
-    if sum(source_qc.values())!=3586:
+    if require_original_source and sum(source_qc.values())!=3586:
         raise ValueError("Source butterfly-host×Location edges not conserved")
     return out,dict(source_qc)
 
