@@ -1,0 +1,126 @@
+{
+  "schema": "chocho_field_caterpillar_realization_filter_source_summary_20261027_v01",
+  "source_status": "ORIGINAL_AUTHORED_AND_EXTERNAL_PUBLIC_DATA_RUNS_SUCCESS",
+  "date": "2026-10-27",
+  "primary_inference": "Source-documentation richness of butterfly larval host links did not improve external all-Lepidoptera branch caterpillar detections when tested on held-out genera and sites. It is not a test of butterfly-specific host fitness.",
+  "public_reference": {
+    "authors": "Whitener C & Hurlbert AH",
+    "year": 2026,
+    "journal": "Ecosphere",
+    "doi": "10.1002/ecs2.70615",
+    "github_repo": "hurlbertlab/caterpillars-on-plants",
+    "commit": "2c5690ac7c6dba7eca506da886c49781c37617bd",
+    "table_S2_git_blob": "bc0d66a2fa2e44c4c1d959fa4700f4256cbb238e",
+    "original_published_full_dataset_native_caterpillar_pct": 8.1,
+    "original_published_full_dataset_alien_caterpillar_pct": 2.2,
+    "native_alien_result_is_previously_published": true
+  },
+  "chocho_source": {
+    "butterfly_taxa": 239,
+    "source_accepted_host_pairs": 2596,
+    "original_WCVP_HOSTS_source_zip_sha256": "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323",
+    "original_HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+  },
+  "table_S2_100taxa": {
+    "original_source_entries": 100,
+    "native_entries": 86,
+    "alien_entries": 14,
+    "unresolved_species_taxon": "Zanthoxylum (genus-only native entry)",
+    "valid_original_field_species_binomials": 99,
+    "original239_accepted_host_linked_species": 30,
+    "original239_linked_native_species": 27,
+    "original239_linked_alien_species": 3,
+    "original239_matched_source_surveys": 11621,
+    "original239_matched_source_caterpillar_detections": 1070,
+    "source_host_portfolio_species_binomial_model": {
+      "OR_per_1SD_log1p_source_documented_butterfly_consumer_count": 0.9204205133761891,
+      "genus_cluster_bootstrap_499_95pct_OR_interval": [
+        0.7733135982186172,
+        1.079116930824714
+      ],
+      "LOPO_genus_incremental_log_score_per_1000_surveys": -0.2016261180028498,
+      "heldout_plant_genera": 20
+    },
+    "documented_source_zero_on_other_species_not_biological_zero": {
+      "field_taxa": 99,
+      "OR_per_1SD": 1.0633436280281263,
+      "leave_genus_out_log_score_gain_per1000_surveys": -0.162764291640488
+    },
+    "all_lepidoptera_original_HOSTS_reporting_control": {
+      "field_taxa": 99,
+      "OR_per_1SD": 1.1410997744627538,
+      "genus_bootstrap_95pct_OR_interval": [
+        0.9988221013684638,
+        1.3678014150390136
+      ],
+      "LOPO_genus_log_score_gain_per_1000_surveys": -0.07541710491778075
+    }
+  },
+  "full_public_raw_branch_survey_source": {
+    "raw_arthropod_rows": 274530,
+    "quality_accepted_unique_survey_IDs": 68561,
+    "source_author_reported_related_IDs": 68741,
+    "difference_source_cleaning_IDs": 180,
+    "full_source_unique_sites": 212,
+    "source_original_years": 14,
+    "valid_USDA_native_branch_survey_IDs": 65111,
+    "valid_USDA_alien_branch_survey_IDs": 3450,
+    "matched_all_site_years": {
+      "strata": 126,
+      "sites": 71,
+      "native_surveys": 28215,
+      "native_caterpillar_detection_events": 2189,
+      "alien_surveys": 3371,
+      "alien_caterpillar_detection_events": 76,
+      "descriptive_mantel_haenszel_native_vs_alien_OR": 2.210504109419961
+    },
+    "matched_original239_host_linked_site_years": {
+      "strata": 38,
+      "sites": 22,
+      "distinct_matched_plants": 37,
+      "native_plants": 28,
+      "alien_plants": 9,
+      "plant_genera": 20,
+      "native_surveys": 1209,
+      "native_caterpillar_detection_events": 88,
+      "alien_surveys": 824,
+      "alien_caterpillar_detection_events": 34,
+      "total_source_surveys": 2033,
+      "total_positive_caterpillar_survey_IDs": 122,
+      "site_year_fixed_effects_model": {
+        "OR_per_1SD_log1p_documented_original239_butterfly_consumer_count": 1.1279775669548011,
+        "posthoc_resampled_site_blocks": 199,
+        "completed_draws": 199,
+        "site_block_percentile95_OR_interval": [
+          0.5297915056646852,
+          1.5100812249419564
+        ],
+        "plant_native_vs_alien_adjusted_OR": 2.5250511835361142,
+        "plant_origin_OR_site_block_percentile95_interval": [
+          1.3772481576652114,
+          3.892842661427442
+        ],
+        "leave_entire_site_out_valid_sites": 22,
+        "leave_entire_site_out_prediction_surveys": 2033,
+        "incremental_log_score_gain_per1000_heldout_surveys": -0.08729812110276673
+      }
+    }
+  },
+  "ci": {
+    "tableS2_source_run": "https://github.com/zuizui0223/chocho/actions/runs/40476370333",
+    "raw_survey_and_matched_site_run": "https://github.com/zuizui0223/chocho/actions/runs/40477558557",
+    "site_year_bootstrap_source_run": "https://github.com/zuizui0223/chocho/actions/runs/40478643768",
+    "final_raw_site_ci_negative_tests_passed": 13,
+    "artifact": "https://github.com/zuizui0223/chocho/actions/runs/40478643768/artifacts/12721980854"
+  },
+  "red_lines": [
+    "Field caterpillar detections are moths AND butterflies, not 239 taxa linked individually.",
+    "These field native-versus-alien caterpillar detection differences were already published by Whitener and Hurlbert 2026.",
+    "Counts in the fixed 100-species Table S2 subset must not be substituted for those in the larger source dataset.",
+    "No exact original 239 host source link does NOT prove a plant is unable to support any butterflies.",
+    "Neither the survey ID nor the site-year is an independent randomized treatment for alien plants.",
+    "Bootstrap percentile intervals at 22 sites cannot remove cross-taxonomic response mismatch, plant confounding, observer effort or survey phenology.",
+    "The source does not quantify wild larval survival, butterfly recruitment, competition, invasive establishment or an evolved climatic niche shift.",
+    "Original site identifiers, original raw WCVP accepted butterfly-host links, source survey individuals and exact locations are not exposed in this aggregate."
+  ]
+}
