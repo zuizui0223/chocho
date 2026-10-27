@@ -35,12 +35,19 @@ jobs:
           ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
           path: _original_HOSTS
           persist-credentials: false
+      - name: Restore exact original 239 source taxon roster from original country macro analysis
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          path: _frozen_country_source
+          persist-credentials: false
       - name: Audit full 140485 original rows and 4695 original-239 butterfly rows
         run: |
           mkdir -p _stage
           python scripts/audit_hosts_lab_rearing_damage_source_20261027.py \
             --hosts-resource _original_HOSTS/resource.csv \
-            --239-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --239-manifest _frozen_country_source/data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
             --output _stage/original_hosts_lab_rearing_damage_metadata_20261027.json
       - name: Confirm the original 239 source row counts and absence of inferred ecological stages
         run: |
