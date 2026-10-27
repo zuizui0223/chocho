@@ -1,0 +1,54 @@
+name: Monarch native-host cultivation × winter larval-record composition
+on:
+  push:
+    branches:
+      - analysis/monarch-cultivation-origin-20261028
+    paths:
+      - scripts/analyze_monarch_cultivation_season_20261028.py
+      - tests/test_monarch_cultivation_season_20261028.py
+      - .github/workflows/monarch-native-host-cultivation-winter-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  frozen-source-matched-season:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Test source-independent matched strata and no pseudocount rules
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q             tests/test_monarch_annotated_host_source_20261028.py             tests/test_monarch_cultivation_season_20261028.py
+      - name: Independently download SHA-locked ORIGINAL 12,942-row public thinned source and run frozen analysis
+        run: |
+          mkdir -p _monarch/results
+          python scripts/analyze_monarch_cultivation_season_20261028.py             --output _monarch/results/monarch_cultivation_winter_source_MH_20261028.json
+      - name: Validate exact-source cohort and no individual/observer export
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path('_monarch/results/monarch_cultivation_winter_source_MH_20261028.json')
+          x=json.loads(f.read_text())
+          assert x['schema']=='chocho_monarch_native_host_cultivation_winter_MH_20261028_v01'
+          assert x['source']['author_thinned_rows']==12942
+          assert x['source']['original_zip_sha256']=='4e4def63669b34738bcbfb8ba32ccf6c61d02cc6992b8f1ebfa8bc350a3987db'
+          assert x['source']['source_quality']['source_rows']==12942
+          assert x['decision'] in (
+            'SOURCE_SUPPORTED_RECORD_COMPOSITION_NOT_ECOLOGICAL_CAUSAL',
+            'INSUFFICIENT_MATCHED_NATIVE_HOST_CULTIVATION_RECORDING_EVIDENCE')
+          source=f.read_text().lower()
+          assert not any(z in source for z in ('"observer":','"longitude":','"latitude":','"uri":'))
+          print('PASS public source and exact inferential limitations',x['decision'])
+          PY
+      - name: Upload metadata-only derived comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-monarch-native-host-cultivation-winter-20261028
+          path: _monarch/results/monarch_cultivation_winter_source_MH_20261028.json
+          retention-days: 30
+          if-no-files-found: error
