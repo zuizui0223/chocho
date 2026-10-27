@@ -16,6 +16,14 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 SCHEMA = "chocho_13_invasion_event_larval_host_independent_evidence_20261027_v1"
+FROZEN_ORIGINAL_EVENTS = frozenset({
+    ("Pieris rapae", "CA"), ("Pieris rapae", "NZ"), ("Pieris rapae", "AU"),
+    ("Thymelicus lineola", "CA"), ("Pieris brassicae", "CL"),
+    ("Danaus plexippus", "US-HI"), ("Danaus plexippus", "AU"),
+    ("Danaus plexippus", "NZ"), ("Papilio demoleus", "DO"),
+    ("Papilio demoleus", "PR"), ("Papilio xuthus", "US-HI"),
+    ("Cacyreus marshalli", "ES"), ("Chilades pandava", "GU"),
+})
 EVENT_COLS = ("species", "in_original_239", "native_region_statement",
               "recipient_region", "recipient_code", "first_year_lower",
               "first_year_upper", "establishment_by_year", "date_interpretation",
@@ -65,7 +73,7 @@ def ensure_url(url, *, missing_allowed=False):
 
 def score(event_rows, evidence_rows):
     keys={(r["species"], r["recipient_code"]):r for r in event_rows}
-    if len(event_rows)!=13 or len(keys)!=13 or \
+    if set(keys) != FROZEN_ORIGINAL_EVENTS or len(event_rows)!=13 or \
        len({r["species"] for r in event_rows})!=8:
         raise ValueError("Original frozen 13 events / eight species altered")
     core={r["species"] for r in event_rows if r["in_original_239"]=="true"}
