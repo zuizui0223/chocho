@@ -26,6 +26,8 @@ def count_file(archive, member):
     distributions={x:Counter() for x in FIELDS}
     distinct={x:set() for x in ("host","hex_id","year")}
     missing=Counter()
+    format_audit=Counter()
+    host_names=Counter()
     n=0
     with archive.open(member) as stream:
         csvr=csv.DictReader(io.TextIOWrapper(stream,encoding="utf-8-sig",newline=""))
@@ -40,6 +42,18 @@ def count_file(archive, member):
                 if normalized in MISSING:
                     missing[field]+=1
                 distributions[field][normalized]+=1
+            # Inspect original format only; deliberately do NOT use phenology outcomes.
+            import re
+            host=str(row.get("host") or "").strip()
+            state=str(row.get("State") or "").strip()
+            hexagon=str(row.get("hex_id") or "").strip()
+            format_audit["valid_host_label"]+=int(host.lower() not in MISSING)
+            format_audit["exact_binomial"]+=int(bool(re.fullmatch(r"[A-Z][a-z]+ [a-z][a-z-]*",host)))
+            format_audit["state_nonempty"]+=int(state.lower() not in MISSING)
+            format_audit["hex_nonempty"]+=int(hexagon.lower() not in MISSING)
+            format_audit["host_state_hex_present"]+=int(host.lower() not in MISSING and state.lower() not in MISSING and hexagon.lower() not in MISSING)
+            if host.lower() not in MISSING:
+                host_names[host[:100]]+=1
             for field in distinct:
                 if field not in columns:
                     continue
@@ -54,6 +68,8 @@ def count_file(archive, member):
         "geographic_hexagon_labels":len(distinct["hex_id"]),
         "source_calendar_years":len(distinct["year"]),
         "missing_label_counts":dict(sorted(missing.items())),
+        "format_diagnostics":dict(sorted(format_audit.items())),
+        "public_host_taxon_names_and_counts":dict(sorted(host_names.items())),
         "source_columns_present":{f:(f in columns) for f in (FIELDS+("hex_id","week","year","month","observed_on","latitude","longitude","observer"))},
     }
 
