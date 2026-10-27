@@ -155,7 +155,7 @@ def mh_odds_ratio(strata):
 
 
 def group_bootstrap(strata, iterations=999):
-    if not strata: return {"valid_draws":0,"interval":None}
+    if not strata or iterations<=0: return {"valid_draws":0,"interval":None}
     by_state=defaultdict(list)
     for s in strata:
         if "state" not in s: return {"valid_draws":0,"interval":None}
@@ -192,7 +192,8 @@ def summary(strata, *, keys, require_state_bootstrap=True, iterations=999):
         states.add(s["state"])
         if "host" in s: taxa.add(s["host"])
     n=sum(count.values())
-    strict_gate = (len(strata)>=20 and len(taxa)>=10 and len(states)>=10
+    taxon_gate = len(taxa)>=10 if "host" in keys else True
+    strict_gate = (len(strata)>=20 and taxon_gate and len(states)>=10
                    and count["a"]>=15 and count["c"]>=15 and
                    (not by_state or max(by_state.values())/n<.5))
     odds=mh_odds_ratio(strata)
