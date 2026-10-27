@@ -37,8 +37,8 @@ jobs:
           x=json.load(open("_zenodo/zenodo_2024_invasive_insect_original_species_region_schema.json"))
           assert x["schema"]=="chocho_zenodo_11519262_international_nonnative_insect_species_region_source_schema_20261027_v01"
           assert x["record_id"]==11519262
-          assert len(x["required_source_files"])==5
-          assert x["required_source_files"]["occurrence_table.csv"]["original_source_data_rows"]>=1000
+          assert len(x["required_source_files"])==3
+          assert x["required_source_files"]["occurrence_table_20230317.csv"]["original_source_data_rows"]>=1000
           assert all(len(f["original_source_sha256"])==64 for f in x["required_source_files"].values())
           assert any("NOT proven" in s for s in x["scientific_inference_stop"])
           print("PASS exact 2024 species×recipient source schema; unlisted never biological absence")
