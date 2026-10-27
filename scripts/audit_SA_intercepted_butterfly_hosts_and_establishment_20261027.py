@@ -74,6 +74,8 @@ def interpret(rows,metadata,known):
         raise ValueError("Source Spodoptera historical/modern status changed")
     records=defaultdict(Counter)
     stage=defaultdict(Counter)
+    stage_by_commodity=defaultdict(Counter)
+    stage_by_material=defaultdict(Counter)
     originals=defaultdict(lambda:{"commodity":Counter(),"year":Counter(),
                                   "crop":Counter(),"regime":Counter(),
                                   "stage":Counter(),"exact_crop_host_yes":0,
@@ -94,6 +96,8 @@ def interpret(rows,metadata,known):
         )
         records[group_type][commodity]+=1
         stage[group_type][explicit_stage_label(value)]+=1
+        stage_by_commodity[commodity][explicit_stage_label(value)]+=1
+        stage_by_material[group][explicit_stage_label(value)]+=1
         if tax in EXACT_SOURCE_BUTTERFLIES or tax==SOURCE_2021_META_LATER_ESTABLISHED_MOTH:
             d=originals[tax]
             d["commodity"][commodity]+=1
@@ -149,6 +153,10 @@ def interpret(rows,metadata,known):
             typ:dict(items) for typ,items in records.items()},
         "all_positive_Lepidoptera_explicit_stages_by_source_taxon_category":{
             typ:dict(items) for typ,items in stage.items()},
+        "all_positive_Lepidoptera_stages_by_original_commodity":{
+            kind:dict(stages) for kind,stages in stage_by_commodity.items()},
+        "all_positive_Lepidoptera_stages_by_material_class":{
+            kind:dict(stages) for kind,stages in stage_by_material.items()},
         "intercepted_exact_original_239_butterfly_names":
             sorted(EXACT_SOURCE_BUTTERFLIES),
         "intercepted_species_and_metadata_recent_establishment":named,
@@ -213,7 +221,9 @@ def main():
             if r["identified_lepidoptera_name"]==SOURCE_2021_META_LATER_ESTABLISHED_MOTH
         ],
         "positive_taxonomic_stage_distribution":
-            r["all_positive_Lepidoptera_explicit_stages_by_source_taxon_category"]
+            r["all_positive_Lepidoptera_explicit_stages_by_source_taxon_category"],
+        "positive_stage_by_commodity":r["all_positive_Lepidoptera_stages_by_original_commodity"],
+        "positive_stage_by_material":r["all_positive_Lepidoptera_stages_by_material_class"]
     },sort_keys=True))
 
 
