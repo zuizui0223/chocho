@@ -135,14 +135,15 @@ def interpret(rows,metadata,known):
                 d["exact_crop_binomial_unknown"] if is_butterfly else None),
             "recording_scope":"intercepted_order_insect_positive_specimen_not_founder_or_wild_larval_feeding",
         })
-    sp=next(z for z in named if z["identified_lepidoptera_name"]==
-            SOURCE_2021_META_LATER_ESTABLISHED_MOTH)
-    source_year=[int(y) for y in sp["original_source_year_counts"] if y.isdigit()]
-    before2017=sum(n for yr,n in sp["original_source_year_counts"].items()
-                   if yr.isdigit() and int(yr)<2017)
-    sp["source_positive_samples_pre_2017"]=before2017
-    sp["source_earliest_positive_year"]=min(source_year) if source_year else None
-    sp["source_2017_year_in_current_status_is_metadata_not_specimen_date"]=True
+    sp=next((z for z in named if z["identified_lepidoptera_name"]==
+            SOURCE_2021_META_LATER_ESTABLISHED_MOTH),None)
+    if sp is not None:
+        source_year=[int(y) for y in sp["original_source_year_counts"] if y.isdigit()]
+        before2017=sum(n for yr,n in sp["original_source_year_counts"].items()
+                       if yr.isdigit() and int(yr)<2017)
+        sp["source_positive_samples_pre_2017"]=before2017
+        sp["source_earliest_positive_year"]=min(source_year) if source_year else None
+        sp["source_2017_year_in_current_status_is_metadata_not_specimen_date"]=True
     return {
         "all_positive_Lepidoptera_commodity_types_by_source_taxon_category":{
             typ:dict(items) for typ,items in records.items()},
@@ -154,6 +155,7 @@ def interpret(rows,metadata,known):
         "historical_absent_to_present_moth":moth["scientificName"],
         "moth_SA_historical_status":moth["SA.occurenceStatus.historical"],
         "moth_SA_current_status":moth["SA.occurenceStatus.current"],
+        "moth_has_unambiguous_original_sample_positive":sp is not None,
         "original_SA_taxon_data_without_link_to_specific_established_descendants":True,
     }
 
