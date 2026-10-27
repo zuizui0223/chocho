@@ -1,0 +1,56 @@
+name: Invasive butterflies independent field-larval host versus laboratory capacity evidence
+on:
+  push:
+    branches: [analysis/invasive-larval-host-evidence-20261027]
+    paths:
+      - data/exploratory/invasive_butterfly_independent_larval_stages_20261027.csv
+      - scripts/audit_invasive_larval_host_primary_evidence_20261027.py
+      - tests/test_invasive_larval_host_primary_evidence_20261027.py
+      - provenance/reviewer_defenses/protocols/INVASIVE_BUTTERFLY_INDEPENDENT_LARVAL_HOST_20261027.md
+      - .github/workflows/invasive-larval-host-evidence-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-native-introduced-overlap-null-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-13-events-field-vs-laboratory-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Test field larvae, cultivated host genus uncertainty and missing source gates
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_invasive_larval_host_primary_evidence_20261027.py
+      - name: Reconcile all 13 original invasion events and curated publication-stage source evidence
+        run: |
+          mkdir -p _evidence
+          python scripts/audit_invasive_larval_host_primary_evidence_20261027.py \
+            --events data/exploratory/invasive_butterfly_verified_entry_events_20261027.csv \
+            --evidence data/exploratory/invasive_butterfly_independent_larval_stages_20261027.csv \
+            --output _evidence/invasive_butterfly_larval_host_stages_20261027.json
+      - name: Assert that controlled-host development and pest reviews are not promoted into wild local use
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("_evidence/invasive_butterfly_larval_host_stages_20261027.json").read_text())
+          assert d["schema"]=="chocho_13_invasion_event_larval_host_independent_evidence_20261027_v1"
+          assert d["original_event_count"]==13
+          assert d["curated_independent_publication_evidence_rows"]==15
+          assert sum(int(e["event_compatible_field_host_evidence"]) for e in d["original_events"]) == d["original_events_with_strict_field_larval_host_evidence"]
+          assert "site_or_citation_interactions" not in d
+          assert d["case_evidence_source_independence"].endswith("NOT_IDENTIFIABLE")
+          print("PASS 13 source-event candidate records; no confirmed evolutionary host adoption inferred")
+          PY
+      - name: Archive concise field/lab/review evidence status and original source URLs
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-invasive-butterfly-larval-host-evidence-20261027
+          path: _evidence/invasive_butterfly_larval_host_stages_20261027.json
+          retention-days: 30
+          if-no-files-found: error
