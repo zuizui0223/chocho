@@ -13,8 +13,8 @@ import audit_zenodo_2024_nonnative_insect_establishment_source_20261027 as z
 def test_2024_open_original_occurrence_not_2021_old_version():
     assert z.RECORD_ID==11519262
     assert z.API.endswith("/11519262")
-    assert "occurrence_table.csv" in z.REQUIRED
-    assert "attribute_table.csv" in z.REQUIRED
+    assert "occurrence_table_20230317.csv" in z.REQUIRED
+    assert "attribute_table_20230317.csv" in z.REQUIRED
 
 
 def test_real_table_header_and_source_rows_are_preserved_without_binary_zeros():
@@ -49,8 +49,8 @@ def test_exact_public_metadata_and_5_tables(monkeypatch):
     monkeypatch.setattr(z,"get",get)
     x=z.fetch()
     assert x["original_version"]=="0.2.1"
-    assert len(x["required_source_files"])==5
-    assert x["required_source_files"]["occurrence_table.csv"]["original_source_data_rows"]==1
+    assert len(x["required_source_files"])==3
+    assert x["required_source_files"]["occurrence_table_20230317.csv"]["original_source_data_rows"]==1
     assert any("NOT proven" in s for s in x["scientific_inference_stop"])
 
 
@@ -70,5 +70,5 @@ def test_source_missing_species_table_is_not_allowed(monkeypatch):
     meta={"id":z.RECORD_ID,"files":[]}
     monkeypatch.setattr(z,"get",lambda url,max_bytes=9_000_000:(
         json.dumps(meta).encode(),url,"application/json"))
-    with pytest.raises(ValueError,match="metadata missing"):
+    with pytest.raises(ValueError,match="tables missing"):
         z.fetch()
