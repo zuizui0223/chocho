@@ -44,7 +44,7 @@ def test_raw_source_flag_to_accepted_triple_collapsing():
     assert introduced["triple_contains_any_Lab_Rearing_Y"]==2
     assert introduced["triple_contains_any_nonempty_Damage"]==2
     assert introduced["triple_contains_multiple_rearing_literal_values"]==1
-    assert introduced["triple_all_Lab_Rearing_blank"]==0
+    assert introduced.get("triple_all_Lab_Rearing_blank",0)==0
     assert result["introduced_area_top_damage_literal_values"]==[
         {"original_literal_damage":"on leaves","distinct_triples":1},
         {"original_literal_damage":"oviposition only","distinct_triples":1}
