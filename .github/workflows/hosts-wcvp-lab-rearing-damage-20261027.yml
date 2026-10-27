@@ -1,0 +1,125 @@
+name: Original HOSTS WCVP Lab Rearing and Damage audit in butterfly recipient regions
+on:
+  push:
+    branches: [analysis/invasive-larval-host-evidence-20261027]
+    paths:
+      - scripts/audit_hosts_wcvp_lab_rearing_damage_20261027.py
+      - tests/test_hosts_wcvp_lab_rearing_damage_20261027.py
+      - provenance/reviewer_defenses/protocols/HOSTS_WCVP_LAB_REARING_DAMAGE_20261027.md
+      - .github/workflows/hosts-wcvp-lab-rearing-damage-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-native-introduced-overlap-null-20261027]
+    paths:
+      - scripts/audit_hosts_wcvp_lab_rearing_damage_20261027.py
+      - tests/test_hosts_wcvp_lab_rearing_damage_20261027.py
+      - .github/workflows/hosts-wcvp-lab-rearing-damage-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-HOSTS-rearing-evidence-by-introduced-WCVP-region:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate original rearing uncertainty, damage and host reporting source units
+        run: |
+          python -m pip install -e . 'pytest>=8,<10'
+          python -m pytest -q tests/test_hosts_wcvp_lab_rearing_damage_20261027.py tests/test_hosts_location_wcvp_origin_20261027.py
+      - name: Retrieve exact location-bearing original HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore original 239-butterfly author-only HOSTS/WCVP source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval
+      - name: Retrieve exact disjoint country-TDWG area crosswalk from original GBIF country analysis commit
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          path: _country_source
+          persist-credentials: false
+      - name: Check original source archive content signatures and extract private source
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for outer in Path("_retrieval").rglob("*.zip"):
+              b=outer.read_bytes()
+              if hashlib.sha256(b).hexdigest()==expected:
+                  found.append(b)
+              else:
+                  with zipfile.ZipFile(outer) as z:
+                      for e in z.infolist():
+                          if e.filename.endswith(".zip"):
+                              inner=z.read(e)
+                              if hashlib.sha256(inner).hexdigest()==expected:
+                                  found.append(inner)
+          assert len(found)==1,"Original author-only HOSTS/WCVP archive missing or changed"
+          Path("_original_source.zip").write_bytes(found[0])
+          with zipfile.ZipFile("_original_source.zip") as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  rel=Path(name)
+                  assert not rel.is_absolute() and ".." not in rel.parts
+              dest=Path("_author_source")
+              dest.mkdir(exist_ok=True)
+              z.extractall(dest)
+          assert (Path("_author_source")/"SOURCE_MANIFEST.json").is_file()
+          assert (Path("_author_source")/"inputs/original/insect_host_accepted.csv").is_file()
+          print("PASS original source author-only ZIP SHA, safe extraction")
+          PY
+      - name: Source-locked original 239 butterfly HOSTS Lab Rearing metadata by WCVP origin
+        run: |
+          mkdir -p _stage_status
+          python scripts/audit_hosts_wcvp_lab_rearing_damage_20261027.py \
+            --hosts-resource _original_HOSTS/resource.csv \
+            --author-source _author_source \
+            --country-atoms _country_source/data/exploratory/gbif_country_20261020/country_area_atoms.csv \
+            --country-atoms-manifest _country_source/data/exploratory/gbif_country_20261020/country_area_atoms_summary.json \
+            --country-summary _country_source/data/exploratory/gbif_country_20261020/country_wgsrpd_summary.json \
+            --output _stage_status/hosts_239_wcvp_lab_rearing_damage_origin_20261027.json
+      - name: Validate original WCVP source triple margins and no unsupported larval fitness
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("_stage_status/hosts_239_wcvp_lab_rearing_damage_origin_20261027.json").read_text())
+          assert d["schema"]=="chocho_hosts_location_wcvp_239_lab_rearing_damage_source_audit_20261027_v1"
+          assert d["status"]=="ORIGINAL_HOSTS_LAB_REARING_DAMAGE_LITERAL_METADATA_ONLY"
+          flow=d["source_row_flow"]
+          assert (flow["all_host_source_rows"],flow["full_species_source_rows"],
+                  flow["focal_239_source_rows"],flow["accepted_focal_source_rows"])==(
+                  140485,86826,4695,3898)
+          for cutoff,expected in (("0.95",179),("0.8",197)):
+              v=d["source95_and_sensitivity80"][cutoff]
+              intro=v["counts_by_source_origin"]["INTRODUCED_CONFIRMED"]
+              assert intro["source_distinct_butterfly_host_Location_triples"]==expected
+              assert sum(r["source_distinct_butterfly_host_Location_triples"]
+                         for r in v["counts_by_source_origin"].values())==3586
+              assert intro.get("triple_contains_any_Lab_Rearing_Y",0)<=expected
+              assert intro.get("triple_contains_any_nonempty_Damage",0)<=expected
+          assert not any("host_adoption_rate" in str(v) for v in d.values())
+          print("PASS exact original WCVP origin and source Lab Rearing/Damage flags; no independent field-host proof")
+          PY
+      - name: Preserve aggregate source flags only, no raw original HOSTS pairs or locations
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-HOSTS-WCVP-lab-rearing-damage-origin-20261027
+          path: _stage_status/hosts_239_wcvp_lab_rearing_damage_origin_20261027.json
+          retention-days: 30
+          if-no-files-found: error
