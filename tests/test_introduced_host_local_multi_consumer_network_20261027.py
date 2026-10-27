@@ -107,7 +107,7 @@ def test_wcvp_native_unlisted_status_by_region_not_guessed_from_country():
     atoms={"US":[(("HAW",),100)]}
     metadata={"US":{"country_area_km2":100,"guard_coverage":1,
                     "is_geo_safe":True,"area_identity_checks":"PASS"}}
-    x,edgecounts=classify_nodes(data,.95,atoms,metadata,{"HAW"},
+    x,edgecounts=classify_nodes(data,.80,atoms,metadata,{"HAW"},
         native={"x":{"HAW"}},
         current={"x":{"HAW"},"y":{"HAW"}})
     assert [v["source_plant_region_origin"] for v in x]==[
