@@ -26,7 +26,7 @@ SOURCE_SHA="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
 
 
 def aggregate_groups(surveys,sites_years):
-    accepted={(x["site"],x["year"]) for x in sites_years}
+    accepted={(x["site_year_key"][0],x["site_year_key"][1]) for x in sites_years}
     grouped=defaultdict(lambda:{"n":0,"pos":0})
     for r in surveys:
         if r["host_239"] is None or (r["site"],r["year"]) not in accepted:
