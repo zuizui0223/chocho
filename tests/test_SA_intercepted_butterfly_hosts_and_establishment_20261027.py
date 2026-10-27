@@ -108,3 +108,18 @@ def test_unverified_original_establishment_status_fails():
         m.interpret(original_rows(),meta,{
             "Pieris brassicae":set(),"Lampides boeticus":set()
         })
+
+
+def test_larval_stage_by_commodity_never_imputed_from_taxon_label():
+    r=m.interpret(original_rows(),source_metadata(),{
+        "Pieris brassicae":{"Brassica oleracea"},
+        "Lampides boeticus":{"Cajanus cajan"},
+    })
+    by_type=r["all_positive_Lepidoptera_stages_by_original_commodity"]
+    assert by_type["Grain"]["EXPLICIT_LARVAL_STAGE"]==1
+    assert by_type["Grain"]["LIFE_STAGE_UNSPECIFIED"]==1
+    assert by_type["Cuttings: leafy"]["LIFE_STAGE_UNSPECIFIED"]==1
+    assert sum(sum(x.values()) for x in by_type.values())==178
+    source=r["all_positive_Lepidoptera_stages_by_material_class"]
+    assert source["SEED_GRAIN"]["EXPLICIT_LARVAL_STAGE"]==1
+    assert "EXPLICIT_LARVAL_STAGE" not in source["LIVE_PROPAGATION"]
