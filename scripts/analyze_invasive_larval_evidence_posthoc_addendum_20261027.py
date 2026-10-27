@@ -44,7 +44,8 @@ LEVELS={
     "OTHER_CONSUMER_SHARED_HOST_EVIDENCE",
     "NATIVE_BUTTERFLY_REGION_COMPARATOR",
 }
-ORIGINS={"INTRODUCED_PLANT_WCVP_Kew","INTRODUCED_CULTIGEN_Kew"}
+ORIGINS={"INTRODUCED_PLANT_WCVP_Kew","INTRODUCED_CULTIGEN_Kew",
+         "NONNATIVE_PLANT_NATIVE_PERU_LOCAL_WCVP_STATUS_UNVERIFIED"}
 EXACT_ORIGINAL_ADDENDUM={
     "A01":("Pieris brassicae","CL","INVASION_RECIPIENT_SITE"),
     "A02":("Pieris rapae","NZ","INVASION_RECIPIENT_SITE"),
@@ -72,6 +73,8 @@ def parse_addendum(path):
             raise ValueError("Original posthoc evidence source case identity changed")
         if r["host_origin_status"] not in ORIGINS:
             raise ValueError("Original accepted host origin Kew evidence absent")
+        if r["event_relation"].startswith("INVASION") and            r["host_origin_status"]=="NONNATIVE_PLANT_NATIVE_PERU_LOCAL_WCVP_STATUS_UNVERIFIED":
+            raise ValueError("Recipient host WCVP introduction cannot be inferred from remote comparator locality")
         if r["independent_juvenile_evidence_class"] not in EXACT_SITE|COUNTRY_ONLY|CONTEXT:
             raise ValueError("Unverified larval evidence class")
         if r["event_relation"]=="INVASION_RECIPIENT_SITE" and \
