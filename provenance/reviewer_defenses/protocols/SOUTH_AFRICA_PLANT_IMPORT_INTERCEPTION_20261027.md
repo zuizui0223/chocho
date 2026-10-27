@@ -3,7 +3,7 @@
 **2026-10-27 source addendum, frozen before first reading original South African Figshare CSV rows.** This source complements, but cannot be imputed into, the 239-butterfly GEB resource map. Keep original manuscript/main untouched; draft PR #83.
 
 ## Dataset identity (source not outcome)
-Saccaggi, Arendse, Wilson & Terblanche (2021), *Scientific Data* 8:83, DOI `10.1038/s41597-021-00869-z`, public Figshare `10.6084/m9.figshare.14393723`. Original 1994–2019 South African import-laboratory records of plant-product interceptions: 26,291 initially recorded consignments, **25,279** finalized sample records, **13,731** contaminant observations, and two public CSV source products:
+Saccaggi, Arendse, Wilson & Terblanche (2021), *Scientific Data* 8:83, DOI `10.1038/s41597-021-00869-z`, public Figshare `10.6084/m9.figshare.c.5180681`. Original 1994–2019 South African import-laboratory records of plant-product interceptions: 26,291 initially recorded consignments, **25,279** finalized sample records, **13,731** contaminant observations, and two public CSV source products:
 - `List of contaminants on SA plant imports 1994–2019.csv` (raw sample×commodity×origin×time and 79 typed taxon result fields). Source result `NA` is **not tested**, source `0` is **tested but not detected**. Never turn `NA` into tested negative.
 - `Metadata of contaminants on SA plant imports 1994–2019.csv` (taxon species and higher group, whether recorded in South Africa at interception and since established). Publication reports **7 species across all taxa** initially not established in South Africa that later established, but does NOT state how many are Lepidoptera. Cannot assume this count for butterflies.
 
