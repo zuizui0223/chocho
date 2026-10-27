@@ -1,0 +1,72 @@
+name: Original 24 alien recipient host-portfolio pruning and independent pathway case audit
+on:
+  push:
+    branches: [analysis/recipient-host-pruning-pathway-20261027]
+    paths:
+      - scripts/analyze_original24_host_pruning_independent_route_cases_20261027.py
+      - tests/test_original24_host_pruning_independent_route_cases_20261027.py
+      - data/exploratory/recipient_island_pathway_resource_case_evidence_20261027.csv
+      - provenance/reviewer_defenses/protocols/RECIPIENT_HOST_PORTFOLIO_PRUNING_AND_PATHWAY_20261027.md
+      - .github/workflows/recipient-host-pruning-pathway-20261027.yml
+  pull_request:
+    branches: [analysis/invasion-recipients-wcvp-host-opportunity-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-source-24-recipient-host-pruning-and-cited-route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Synthetic source missingness, repeated species and pathway evidence controls
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_original24_host_pruning_independent_route_cases_20261027.py
+      - name: Restore EXACT source-verified WCVP original 35 established-alien recipient summary
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-35-alien-recipients-WCVP-host-geography-source-audit-20261027
+          run-id: 40520186343
+          github-token: ${{ github.token }}
+          path: _source35
+      - name: Recalculate actual original 24 source-local available introduced wild HOSTS taxa and independent route case evidence
+        run: |
+          mkdir -p _recipient_pruning
+          python scripts/analyze_original24_host_pruning_independent_route_cases_20261027.py \
+            --original-profile _source35/zenodo2024_35_aliens_WCVP_host_region_profiles_20261027.json \
+            --independent-cases data/exploratory/recipient_island_pathway_resource_case_evidence_20261027.csv \
+            --output _recipient_pruning/original24_aliens_local_hosts_and_independent_route_cases_20261027.json
+      - name: Ensure original positive-only 35/24 geography, no biological absent inference, and correct source
+        run: |
+          python - <<'PY'
+          import json
+          p="_recipient_pruning/original24_aliens_local_hosts_and_independent_route_cases_20261027.json"
+          x=json.load(open(p))
+          assert x["schema"]=="chocho_24_receiver_host_pruning_independent_pathway_cases_20261027_v01"
+          q=x["aggregate_source_original24"]
+          assert q["n_original_strict_geographic_source_positive_cases"]==24
+          assert q["n_distinct_original_butterfly_taxa_in_24_cases"]==14
+          assert q["n_distinct_source_receiving_areas"]==7
+          assert q["n_with_at_most_3_introduced_wild_hosts"]==8
+          assert q["source_local_intro_species_median"]==8
+          assert q["n_with_any_native_wild_host_alternative"]==9
+          assert q["n_original_taxa_with_two_or_more_strict_alien_recipient_geographies"]==5
+          assert len(x["independent_two_invasion_route_context_cases"])==2
+          assert all(s["carrier_host_identification_status"]=="UNVERIFIED_NOT_ZERO" 
+                     for s in x["independent_two_invasion_route_context_cases"])
+          assert x["source"]["original_2024_species_alien_establishment_positive_only"]
+          assert len(x["source_original35_other_11_geographically_proxy_or_unscorable"])==11
+          print("PASS original 35/24 source host bottlenecks and separately sourced Calpodes/Leptosia route context")
+          PY
+      - name: Export aggregate original-species positive portfolio counts and original pathway URLs only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-24-recipients-introduced-host-pruning-pathway-cases-20261027
+          path: _recipient_pruning/original24_aliens_local_hosts_and_independent_route_cases_20261027.json
+          retention-days: 30
+          if-no-files-found: error
