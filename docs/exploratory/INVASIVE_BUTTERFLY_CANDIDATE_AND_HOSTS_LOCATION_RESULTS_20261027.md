@@ -55,7 +55,23 @@ An observed butterfly point in an alien receiving area can be tagged by three or
 
 These combine into documented host-continuity/novel-host/focal-host-native status × climate-analog/novel × wild-recruitment confirmed/unknown. In particular, a *Cacyreus marshalli* on introduced *Pelargonium* and a *Chilades pandava* larva on native Guam *Cycas micronesica* instantiate sharply contrasting **qualitative mechanisms**, but their numerical contributions cannot be estimated from this five-species HOSTS Location subset alone.
 
-## 4. Next empirical gate (not yet completed)
+## 4. Full original 257-label geography scope gate (completed)
+
+[Source-pinned run #40438692867](https://github.com/zuizui0223/chocho/actions/runs/40438692867) passed with **257/257** source labels and **86,826/86,826** species-level HOSTS report rows conserved, and regression tests for country/subnational/realm, historical and interception names. Original label scope is:
+
+| First-pass label scope | Source rows | Interpretation |
+|---|---:|---|
+| Exact named country or coded territory | **43,507** | Can be linked to a country polygon, but WCVP status may vary within it |
+| Biogeographic region or multicountry | **37,550** | Cannot assign a unique national WCVP host origin |
+| Exact subnational or island locality | **4,192** | Requires original botanical polygon intersection (e.g. Hawaii vs mainland USA; West Malaysia vs Sabah) |
+| Historical/multinational names | 487 | Requires historical-boundary adjudication |
+| Explicit interception | 276 | Not treated as evidence of wild larval use |
+| Provisional location labels | 144 | Excluded from primary status |
+| Unreviewed labels | 670 | Need manual resolution; never force to a country |
+
+The fraction with an initially **single-country/territory label is 50.1%**, not the fraction safely classifiable as WCVP-native or introduced. Another **43.2%** is explicitly region/multicountry. All records remain in the source denominator; no location label was silently discarded or classified as a botanical origin. [Full source-only 257-label scope receipt](https://github.com/zuizui0223/chocho/actions/runs/40438692867/artifacts/12704809380).
+
+## 5. Next empirical gate: WCVP plant-origin status (not yet completed)
 
 The correct follow-up reconstructs all 257 Location labels (country vs specific botanical L3 vs historical/multiple countries vs broad biogeographic regions vs interceptions). Against WCVP native/current extant accepted plant codes, label each confidently georeferenced `butterfly × accepted host × report region` as native, introduced, unlisted, mixed or uncertain **without recoding the 0 location records as zero ecological use**.
 
