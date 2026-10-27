@@ -1,0 +1,28 @@
+# Next source-registered endpoint: site-year matched Caterpillars Count! field larvae against original HOSTS resource opportunity
+
+**27 October 2026. Frozen before inspecting new site/date-conditioned caterpillar outcomes from the original raw fullDataset.** Continues draft chocho PR #81; the prior 100-plant Table S2 cross-dataset analysis is already completed and its results must not be overwritten. All original submitted GEB manuscript sources remain untouched.
+
+## Original source
+
+- Original independent raw field study [Whitener & Hurlbert, Ecosphere 2026, DOI 10.1002/ecs2.70615]; exact **hurlbertlab/caterpillars-on-plants@2c5690ac7c6dba7eca506da886c49781c37617bd**. `data/fullDataset_2025-04-18.csv`, `data/plant_origin_status.csv`, `data/inferredPlantNames_2024-08-20.csv`, author's original `code/arthropods_on_plants.r`, `data/Table_S2.csv`. No source raw individual survey latitude/longitude or observer identities re-exported.
+- Original authors' analysis uses June-July Julian day **152–212**, eastern NA **longitude >= −100**, dry leaves only, non-Coweeta sites, and `sciName` or an inferable name only with `Species=="N/A"` and source plant name confidence >=2; the original calculation is part of the author's published work, not a new source-agnostic ecological result.
+- Original author plant native/alien status from `plant_origin_status.csv` official `scientificName`, `nativeStatus`, `plantOrigin` (USDA), not WCVP. One original published Table S2 entry is genus-only *Zanthoxylum* and must not be assigned any original 239 accepted host species link.
+- Original chocho 239 accepted HOSTS source SHA256 `408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323` and original HOSTS taxon source commit `808e0b869f9ec1adf8efff87cf6a395adda103e0`. Source 239 accepted butterfly host links fixed 2596.
+
+## Intended raw survey unit
+
+- Primary unique original field-survey **ID**, nested within site `Name`, year `Year`, fixed date `julianday`, branch `PlantFK`, and source plant species `sciName`. Duplicate long-format arthropod rows per survey must not be independent survey effort.
+- Primary larval encounter: `Group=="caterpillar"` with `Quantity>0` in any raw arthropod row sharing original survey ID. Missing any caterpillar line after filtering a valid surveyed branch means no caterpillar **indexed** in that survey, not proof no larvae exist at site.
+- Native/alien plant origin from author's USDA status only, source safe exact original plant name; no genus-only plant gets an accepted species-level `chocho` host link. Do not reinterpret origin with broad WCVP country distribution on this USA plant field.
+- Primary matched environment is **site×year** with ≥5 original native and ≥5 original alien branch surveys *on at least one distinct plant species on each side* within original June-July restriction. Secondary tighter match **site×year×7-day Julian week** with ≥2 each. Require 10 independent source sites and ≥20 site-year matched strata before generalized effect; if failed, report inability to identify.
+- Main site-year matched contrast: within each stratum, compute caterpillar-positive survey proportions for native and alien woody plants, with paired difference, total surveys, and source-original plant genera/family breadth, but do not treat all survey IDs as independent ecological experiments. Label it a published effect re-evaluation rather than novel.
+- New cross-data conditioned **source-host opportunity filter**: for fields on original plant taxa that precisely match original 239 accepted HOSTS host IDs, compare source known butterfly consumer count with caterpillar-positive surveys within the same site-year. Minimum ≥15 linked field plant species, ≥3 alien and ≥3 native and ≥10 plant genera (same as previous Table S2 source gate), plus ≥10 paired site-year strata containing both origins and ≥10 distinct original source sites. If these fail, do not claim butterfly-consumer forecasting or a species-specific effect.
+- Optionally model binomial counts by species×site×year with stratum fixed effects, USDA origin and log1p source 239 consumer count; and compare to model with origin only using blocked held-out site prediction. Do not report a fitted model if source controls are rank deficient or no matched original source support.
+- Sensitivities: excluding unmatched host plant source names (source-only link cohort), exact source genus-only rejection, and table S2 aggregated published plant detector as a consistency check. The raw field survey data has moths and butterflies both and CANNOT identify actual first instar survival, fitness, competing species, real host-switch evolution or resident-versus-invader butterfly niches.
+- Do not mix the full 68k source survey denominator with the Table S2 fixed 100-plant>=40-survey panel. Source article's own published native/alien main result 8.1% vs 2.2% is prior work, not new discovery.
+
+## Data interpretation and output
+
+Caterpillar field **presence** is distinct from ability to complete development. There are repeated site/year/branch observations, partial plant names, photos/long table duplicate rows, and native-vs-alien plant identity confounding. Fit no naive iid survey p values. Source wild site matching can strengthen exposure control but does not randomize host origin. Any mismatch with published 68,741 original filtered ID rows must be audited rather than hand-filtered to match a paper result.
+
+Outputs are only per-site-year anonymized counts, source SHA, species-level agreement counts and ecological-information gate; no raw personal/site coordinates or source plant-identified site records if location could be recovered.
