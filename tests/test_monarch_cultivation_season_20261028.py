@@ -30,9 +30,9 @@ def test_native_host_same_host_state_year_matching():
     assert len(strata)==1 and qc["source_qualified_records"]==23
     a=strata[0]
     assert (a["a"],a["b"],a["c"],a["d"]) == (6,4,2,8)
-    assert mh_odds_ratio(strata)==6.0
+    assert mh_odds_ratio(strata)==pytest.approx(6.0)
     out=summary(strata,keys=("host","state","year"),iterations=99)
-    assert out["mh_recording_composition_odds_ratio"]==6
+    assert out["mh_recording_composition_odds_ratio"]==pytest.approx(6.0)
     assert out["source_information_gate"]=="FAIL_PREDECLARED_SOURCE_SUPPORT"
 
 
