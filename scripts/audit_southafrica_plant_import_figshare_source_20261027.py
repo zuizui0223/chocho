@@ -101,7 +101,7 @@ def run():
     for prefix in EXPECTED_FILES:
         chosen=[f for f in files if f["name"].lower().startswith(prefix.lower())]
         if len(chosen)!=1:
-            raise ValueError("Original published pair CSV missing or ambiguous: "+prefix)
+            raise ValueError("Original published pair CSV missing or ambiguous: "+prefix+"; actual original Figshare CSV names: "+repr([f["name"] for f in files]))
         item=chosen[0]
         payload,actual,mime=source_get(item["download_url"])
         if item.get("size") and len(payload)!=item["size"]:
