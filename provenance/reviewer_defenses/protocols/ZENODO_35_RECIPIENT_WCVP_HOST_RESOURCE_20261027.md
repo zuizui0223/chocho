@@ -1,0 +1,34 @@
+# Positive-only recipient-specific butterfly invasion/host plant geography beyond Hawaii
+
+Frozen 2026-10-27 BEFORE the 35-record source host opportunity computation. Stacked analysis branch on original draft PR #84, author-only original GEB/main unchanged.
+
+## Question, data, non-negotiable limitations
+
+The fixed 2024 Zenodo v0.2.1 original alien established insect occurrence roster had **18 exact** original chocho-239 Lepidoptera names representing **35 positive species × original reported receiving-area entries**. Hawaii 10/10 independently documented aliens have some WCVP HAW **introduced WILD** plant species in their global known HOSTS list. This does NOT imply original imported commodity type, a field-larva/host report in Hawaii, establishment probability or that the introduced host plants were available at the date of first butterfly arrival.
+
+The new test maps ALL original 35 source-positive records into original TDWG/WCVP plant geography without inventing subregion boundaries. Source:
+- Zenodo original occurrence table sha256 05483a2a9a7c926fb5105c44058ee52a4598039dc82c5bb10d1db284b3b66fe7, original source-only 18 accepted taxa result artifact from CI #40498879270. 2024 records with eradicated=Yes and strange first date e.g. Hawaii 1758 are retained as historical source flags and NOT treated as ongoing breeding.
+- Original 239 accepted butterfly×host botanical WCVP source: inner author's signed ZIP SHA256 408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323, all eleven source member hashes, same 2596 accepted butterfly×plant pairs and 14,553 source introduced-added butterfly×WGSRPD3 units. Original botanical Level3 polygons in inputs/level3.geojson and source region LEVEL3_NAM, LEVEL3_COD.
+- Exact original disjoint area atoms country_area_atoms.csv and SHA-validated companion country_area_atoms_summary.json, country_wgsrpd_summary.json at source commit 4104c784ddcf97318c4a1bb8bd949b3147628494. Require original source iso_eligible=true and guard_coverage≥95% for country spans. Source Chile coverage ~94.966% is BELOW 95% and must FAIL primary rather than rounding upward; 90% geographic coverage is a prespecified sensitivity but not the new primary.
+
+## Geographic mapping, outcome-blind
+
+Exactly 11 Zenodo names:
+- True source botanical Level3 zone: Hawaii → HAW (Hawaii), Ogasawara → OGA (Ogasawara-shoto), Galapagos → GAL (Galápagos), Korea → KOR (Korea; peninsula source botanical region but may include N/S political state).
+- Source country area-atoms: Japan → JP, New Zealand → NZ, South Africa → ZA, Chile → CL. These are broad original Zenodo recipient political geographies; original accepted WCVP botanical L3 atoms in one country are unioned, NOT one selected arbitrary unit. Accept only when original ISO eligible and ≥95% mapped whole-country area, with source-level atom overlap retained. Prespecified sensitivity ≥90% mapped area. A host plant counts as source regionally potentially present INTRODUCED when >=1% of the original country land area is covered by accepted WCVP introduced (nonnative extant wild) source botanical regions, and NATIVE when >=1% land is covered by WCVP native; both can be true at different source botanical patches, and the independent source does not locate where the actual butterfly was found. Threshold 1% fixed before source test; no continuous area-weighted habitat availability is inferred. Country unmapped/ambiguous original disjoint atoms are NOT plant-absent evidence.
+- Explicit coarse botanical-only sensitivity: Okinawa → NNS (Nansei-shoto), because botanically NNS includes Ryukyu/Nansei area broader than Okinawa Prefecture, so report BOTANICAL_PROXY_ONLY; exclude from primary 35 source-local claims.
+- Unscorable broad records: Europe and North America cannot be represented by ONE WCVP Level3 unit or as single country; record REGION_TOO_BROAD and do not interpret as without host.
+- Unknown Zenodo zone names fail source identity gate. Preserve overlap/nesting, e.g. Japan and Okinawa/Ogasawara zones may not be independent. Japan as an unqualified country observation is not necessarily located on main Honshu; country union has a higher spatial grain.
+
+## Outputs fixed in advance
+
+- Every original 35 positive species×zone independently labelled mapped exact L3, country source 95%, source country-below-coverage, botanical-proxy, or broad/unscorable. Verify 35 identities, 11 zone names and independently calculated 10 Hawaii positive host identities.
+- For mapped primary cases ONLY, classify globally accepted larval host species as WCVP plant native wild, introduced wild or wild unlisted in recipient. Output source host counts per named Zenodo positive butterfly×zone, with no actual host plant IDs in artifacts. A source recognized global butterfly×plant host association does NOT prove the insect uses this plant locally, at any year, or has completed development there.
+- Count zones with source plants introduced, native, both, no WCVP wild support; cases with no source introduced host are priority mechanistic exceptions, BUT not proof hosts are absent biologically or that establishment required a novel host (cultivated hosts/poor WCVP mapping/native hosts/historical source dates).
+- Crucial baseline: for EACH mapped Zenodo receiving zone, determine original accepted 239 SOURCE butterflies with ≥1 known introduced WCVP wild host. Compare source-positive fractions to the 239-host universe and optionally an artificial within-original documented-host-species-count-bin (1–5,6–20,21–50,≥51) hypergeometric expectation. This is a source-documentation reference, NOT arrival/establishment risk: 239 source butterflies are not transportable candidate invasion attempts. Regions and species repeated across positive rows are not independent replicates.
+- Preserve eradicated, indoors_or_outdoors, intentional_release, source year fields and suspicious <=1800 years; do NOT count eradicated as currently extant, or years as dated insect interception. No p values for 35 because nonlisted species×region records lack population-controlled true nonestablishment.
+- The global resource +54.9% main and original source original host pool are unchanged. External transport evidence from South Africa #83 only two already present butterflies, cannot be causally linked to the Zenodo established list on commodity alone.
+
+## Source-value quality barriers
+
+Fail on original SHA drift, missing true Level3 region names, positive 35/18 roster drift, wrong original WCVP 2596 accepted pairs, broken country source overlap or any hidden unlisted = failed conversion. Main >=95% source mapping, sensitivity >=90% only. No raw copyrighted accepted host-by-butterfly edges, original protected botanical geometries or customs shipment identifiers exported. Source factual conclusions only, not an original invasion causal effect.
