@@ -86,7 +86,7 @@ def load_climate_from_zip(archive, workdir):
                 raise ValueError("BIO1 and BIO12 source grids not identical")
             transform=ds.transform
             data=ds.read(1,masked=True)
-        clean=np.asarray(data.filled(np.nan),dtype=np.float32)
+        clean=np.asarray(data.astype(np.float32).filled(np.nan),dtype=np.float32)
         clean[~np.isfinite(clean)] = np.nan
         climate[key]=clean
         source[key+"_sha256"]=checksummed_file(f)
