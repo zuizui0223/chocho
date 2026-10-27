@@ -92,7 +92,7 @@ def test_full_index_not_wrongly_treated_as_independent_populations():
 
 
 def test_exhaustive_page_and_overbudget_gates():
-    valid, ok = retrieve_case(case(), Fetcher([
+    valid = retrieve_case(case(), Fetcher([
         {"count": 2, "results": [record(1), record(2)]}
     ]), remaining=100)
     assert valid["full_source_status"] == "COMPLETE_NEW_LIVE_GBIF_POINTS"
