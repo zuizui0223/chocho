@@ -1,0 +1,92 @@
+name: Original HOSTS Location coverage for 5 invasive butterflies
+on:
+  push:
+    branches: [analysis/hosts-location-pathways-20261027]
+    paths:
+      - scripts/audit_invasive_hosts_location_coverage_20261027.py
+      - .github/workflows/invasive-butterfly-host-location-coverage-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-source-host-geographical-recording-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Retrieve exact original HOSTS Location-bearing interaction source
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore original 239 accepted HOSTS/WCVP pair source archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _source
+      - name: Verify exact source archive and all 11 source input hashes
+        run: |
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          sources=[]
+          for f in Path("_source").rglob("*.zip"):
+              if hashlib.sha256(f.read_bytes()).hexdigest()==expected:
+                  sources.append(f.read_bytes())
+              else:
+                  with zipfile.ZipFile(f) as z:
+                      for e in z.infolist():
+                          if e.filename.endswith(".zip"):
+                              b=z.read(e)
+                              if hashlib.sha256(b).hexdigest()==expected:
+                                  sources.append(b)
+          assert len(sources)==1
+          Path("_verified.zip").write_bytes(sources[0])
+          with zipfile.ZipFile("_verified.zip") as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  p=Path(name)
+                  assert not p.is_absolute() and ".." not in p.parts
+              dest=Path("_verified")
+              dest.mkdir(exist_ok=True)
+              z.extractall(dest)
+          m=json.loads(Path("_verified/SOURCE_MANIFEST.json").read_text())
+          assert m["inputs_count"]==11
+          for name,value in m["sha256"].items():
+              assert hashlib.sha256((Path("_verified")/name).read_bytes()).hexdigest()==value
+          assert (Path("_verified")/"inputs/original/insect_host_accepted.csv").is_file()
+          print("PASS original source 239 pairs and 11 member SHA checks")
+          PY
+      - name: Join raw source species and Location with originally accepted plant IDs
+        run: |
+          mkdir -p _location
+          python scripts/audit_invasive_hosts_location_coverage_20261027.py \
+            --hosts-resource _original_HOSTS/resource.csv \
+            --accepted-original-host-pairs _verified/inputs/original/insect_host_accepted.csv \
+            --source-original-species _verified/inputs/anthropogenic_species_metrics.csv \
+            --output _location/source5_invasive_hosts_location_coverage_20261027.json
+      - name: Source counts and absence are not ecological tests
+        run: |
+          python - <<'PY'
+          import json
+          p="_location/source5_invasive_hosts_location_coverage_20261027.json"
+          x=json.load(open(p))
+          assert x["schema"]=="chocho_5_candidate_invasive_butterflies_location_evidence_20261027_v01"
+          assert x["eligible_species"]==5 and len(x["taxa"])==5
+          assert all("native_status_not_yet_classified" in r for r in x["taxa"])
+          assert all("accepted_plant_name_id" not in str(r) for r in x["taxa"])
+          print("PASS source-only coverage statistics, no introduced-host evidence invented")
+          PY
+      - name: Upload derived source-specific geographic record counts, not raw HOSTS links
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-five-invasive-butterfly-HOSTS-location-coverage-20261027
+          path: _location/source5_invasive_hosts_location_coverage_20261027.json
+          retention-days: 30
+          if-no-files-found: error

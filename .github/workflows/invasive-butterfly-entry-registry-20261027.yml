@@ -1,0 +1,90 @@
+name: Original 239 butterfly invasive-entry evidence register audit
+on:
+  push:
+    branches: [analysis/hosts-location-pathways-20261027]
+    paths:
+      - data/exploratory/invasive_butterfly_verified_entry_events_20261027.csv
+      - scripts/validate_invasive_butterfly_entry_events_20261027.py
+      - tests/test_invasive_butterfly_entry_events_20261027.py
+      - .github/workflows/invasive-butterfly-entry-registry-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-239-membership-and-first-record-chronology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run register tests independently from published status claims
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_invasive_butterfly_entry_events_20261027.py
+      - name: Restore original author-only 239 species source manifest
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _source
+      - name: Exact-source two-layer ZIP audit and safe extraction
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          SHA="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          outer=list(Path("_source").rglob("*.zip"))
+          found=[]
+          for p in outer:
+              with zipfile.ZipFile(p) as o:
+                  for entry in o.infolist():
+                      if entry.filename.endswith(".zip"):
+                          b=o.read(entry)
+                          if hashlib.sha256(b).hexdigest()==SHA:
+                              Path("_source_original.zip").write_bytes(b)
+                              found.append(entry.filename)
+              if hashlib.sha256(p.read_bytes()).hexdigest()==SHA:
+                  Path("_source_original.zip").write_bytes(p.read_bytes())
+                  found.append(p.name)
+          assert len(found)==1,found
+          out=Path("_original")
+          out.mkdir(exist_ok=True)
+          with zipfile.ZipFile("_source_original.zip") as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  r=Path(name)
+                  assert not r.is_absolute() and ".." not in r.parts
+              z.extractall(out)
+          assert (out/"inputs/anthropogenic_species_metrics.csv").is_file()
+          print("PASS original exact source 239 manifest")
+          PY
+      - name: Audit 13 entry events using the actual original 239 taxon roster
+        run: |
+          mkdir -p _events
+          python scripts/validate_invasive_butterfly_entry_events_20261027.py \
+            --csv data/exploratory/invasive_butterfly_verified_entry_events_20261027.csv \
+            --source-original-species _original/inputs/anthropogenic_species_metrics.csv \
+            --output _events/invasive_butterfly_entry_registry_source_audit.json
+      - name: Verify original panel and epidemiological event not conflated
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_events/invasive_butterfly_entry_registry_source_audit.json"))
+          assert x["status"].startswith("HISTORICAL_ENTRY_EVENTS")
+          assert x["source_original_239_species_verified"]==239
+          assert (x["distinct_candidate_butterfly_species"],x["distinct_species_recipient_event_count"])==(8,13)
+          assert (x["candidate_in_original_239"],x["candidate_outside_original_239"])==(5,3)
+          assert len(x["event_identities_no_raw_coordinates"])==13
+          print("PASS 8 butterflies, 13 documented recipient events; 5 original panel, 3 extensions")
+          PY
+      - name: Store concise candidate evidence accounting only, not WCVP/HOSTS sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-13-invasion-butterfly-candidate-events-20261027
+          path: _events/invasive_butterfly_entry_registry_source_audit.json
+          retention-days: 30
+          if-no-files-found: error
