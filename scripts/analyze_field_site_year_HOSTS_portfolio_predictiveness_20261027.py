@@ -76,10 +76,10 @@ def assess_source_field_link_counts(grouped,*,require_source_gate=True):
     }
 
 
-def build_X(grouped,*,with_site_year=False):
+def build_X(grouped,*,with_site_year=False,standard=None):
     name_count={r["plant"]:r["source_239_butterfly_consumers"] for r in grouped}
     orig=np.array([math.log1p(n) for n in name_count.values()])
-    mu=float(orig.mean());sd=float(orig.std(ddof=1))
+    mu,sd=(float(orig.mean()),float(orig.std(ddof=1))) if standard is None else standard
     if sd<=1e-12:
         raise ValueError("Original 239 documented consumers lack variance")
     y=np.array([r["positive_caterpillar_events"] for r in grouped],float)
@@ -131,7 +131,65 @@ def blocked_leave_site_out(grouped):
     }
 
 
-def fit_site_year_model(grouped):
+def posthoc_source_site_block_bootstrap(grouped, *, standard, reps=199, seed=20261027):
+    """Exploratory uncertainty check at SITE replication grain.
+
+    Resample original survey sites with replacement, multiply their original
+    survey counts by frequency, re-estimate the site/year intercepts. Do not
+    interpret bootstrap percentile coverage as an ecological randomization.
+    """
+    names=sorted({r["site"] for r in grouped})
+    if len(names)<10:
+        return {"status":"INSUFFICIENT_ORIGINAL_SOURCE_SITES","draws":reps}
+    rng=np.random.default_rng(seed)
+    effects=[]
+    origin=[]
+    failed=Counter()
+    for _ in range(reps):
+        indexes=rng.integers(0,len(names),len(names))
+        weights=Counter(names[int(k)] for k in indexes)
+        resample=[]
+        for r in grouped:
+            weight=weights.get(r["site"],0)
+            if not weight:
+                continue
+            resample.append({
+                **r,
+                "n_field_surveys":r["n_field_surveys"]*weight,
+                "positive_caterpillar_events":r["positive_caterpillar_events"]*weight
+            })
+        if len({r["site"] for r in resample})<10:
+            failed["fewer_than10_source_sites"]+=1
+            continue
+        try:
+            X,y,n,_,_=build_X(resample,with_site_year=True,standard=standard)
+            if len(resample)<X.shape[1]+5 or np.linalg.matrix_rank(X)<X.shape[1]:
+                failed["source_rank_or_event_count"]+=1
+                continue
+            betas=solve_logit(X,y,n)
+            effects.append(float(betas[2]))
+            origin.append(float(betas[1]))
+        except (ValueError,np.linalg.LinAlgError):
+            failed["numerical_nonconvergence"]+=1
+    success=len(effects)
+    if success<.9*reps:
+        return {
+            "status":"SITE_BLOCK_BOOTSTRAP_BELOW90PCT_CONVERGENCE",
+            "draws":reps,"completed_draws":success,"failed_draws_by_reason":dict(failed)
+        }
+    a=np.quantile(effects,[.025,.975])
+    b=np.quantile(origin,[.025,.975])
+    return {
+        "status":"DESCRIPTIVE_SITE_BLOCK_SOURCE_BOOTSTRAP",
+        "draws":reps,"completed_draws":success,"failed_draws_by_reason":dict(failed),
+        "source239_host_count_log_odds_beta_95pct_percentile_interval":a.tolist(),
+        "source239_host_count_OR_95pct_percentile_interval":[float(math.exp(x)) for x in a],
+        "plant_native_vs_alien_OR_95pct_percentile_interval":[float(math.exp(x)) for x in b],
+        "source_site_level_resampling_not_randomized_host_plant_origin":True
+    }
+
+
+def fit_site_year_model(grouped, *, bootstrap_draws=199):
     qc=assess_source_field_link_counts(grouped)
     if qc["model_information_gate"]!="SOURCE_LINKED_PLANT_AND_SITE_YEAR_SUPPORT":
         return {"source_gate":qc,"status":"NO_MODEL_INSUFFICIENT_MATCHED_SOURCE_SUPPORT"}
@@ -163,6 +221,8 @@ def fit_site_year_model(grouped):
         "source_native_vs_alien_plants_adjusted_odds_ratio":float(math.exp(betas[1])),
         "source_origin_only_native_vs_alien_odds_ratio":float(math.exp(origin_only[1])),
         "leave_one_entire_survey_site_out":blocked_leave_site_out(grouped),
+        "posthoc_source_site_block_bootstrap":posthoc_source_site_block_bootstrap(
+            grouped,standard=norm,reps=bootstrap_draws),
     })
     return out
 
@@ -228,6 +288,7 @@ def run(args):
         "siteyear_OR_per_SD":model.get("original_239_HOSTS_consumers_perSD_adjusted_odds_ratio"),
         "siteyear_origin_OR":model.get("source_native_vs_alien_plants_adjusted_odds_ratio"),
         "heldout_sites":model.get("leave_one_entire_survey_site_out"),
+        "posthoc_site_block_bootstrap":model.get("posthoc_source_site_block_bootstrap"),
         "design_condition_number":model.get("condition_number")
     },sort_keys=True))
 
