@@ -1,0 +1,52 @@
+name: Original 2024 species-level nonnative insect establishment Zenodo schema audit
+on:
+  push:
+    branches: [analysis/established-insects-zenodo-species-20261027]
+    paths:
+      - scripts/audit_zenodo_2024_nonnative_insect_establishment_source_20261027.py
+      - tests/test_zenodo_2024_nonnative_insect_establishment_source_20261027.py
+      - provenance/reviewer_defenses/protocols/INTERNATIONAL_INVASIVE_INSECT_ESTABLISHMENT_ZENODO_20261027.md
+      - .github/workflows/zenodo-original-established-insects-source-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-exact-2024-nonnative-species-by-recipient-region:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify original species×recipient and metadata/MD5 file contracts without network
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_zenodo_2024_nonnative_insect_establishment_source_20261027.py
+      - name: Download 2024 v0.2.1 Zenodo species×region nonnative insect establishment public CSV originals
+        run: |
+          mkdir -p _zenodo
+          python scripts/audit_zenodo_2024_nonnative_insect_establishment_source_20261027.py \
+            --output _zenodo/zenodo_2024_invasive_insect_original_species_region_schema.json
+      - name: Confirm public versioned 2024 record and no inferred failed establishments
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_zenodo/zenodo_2024_invasive_insect_original_species_region_schema.json"))
+          assert x["schema"]=="chocho_zenodo_11519262_international_nonnative_insect_species_region_source_schema_20261027_v01"
+          assert x["record_id"]==11519262
+          assert len(x["required_source_files"])==5
+          assert x["required_source_files"]["occurrence_table.csv"]["original_source_data_rows"]>=1000
+          assert all(len(f["original_source_sha256"])==64 for f in x["required_source_files"].values())
+          assert any("NOT proven" in s for s in x["scientific_inference_stop"])
+          print("PASS exact 2024 species×recipient source schema; unlisted never biological absence")
+          PY
+      - name: Archive original public-only source row schemas and SHA fingerprints
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-insect-original-2024-zenodo-establishment-schema-20261027
+          path: _zenodo/zenodo_2024_invasive_insect_original_species_region_schema.json
+          retention-days: 30
+          if-no-files-found: error
