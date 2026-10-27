@@ -30,9 +30,22 @@ SOURCE_ROWS = 12942
 SEED = 20261028
 
 
+def canonical_host(name):
+    """Source vocabulary: standalone epithets denote Asclepias in the author table.
+
+    Preserve explicit non-Asclepias binomials, reject genus-only and ambiguous
+    genus sp./hybrid/complex labels. No outcome, locality or origin used.
+    """
+    name = str(name or "").strip()
+    if re.fullmatch(r"[a-z][a-z-]*", name):
+        return "Asclepias " + name
+    if re.fullmatch(r"[A-Z][a-z]+ [a-z][a-z-]*", name):
+        return name
+    return None
+
+
 def exact_binomial(name):
-    """Exclude unresolved genus/complex/multispecies host labels."""
-    return bool(re.fullmatch(r"[A-Z][a-z]+ [a-z][a-z-]*", name))
+    return canonical_host(name) is not None
 
 
 def read_source(archive):
@@ -57,7 +70,8 @@ def read_source(archive):
             if not 1 <= month <= 12 or not 1980 <= year <= 2025:
                 quality["invalid_calendar"] += 1
                 continue
-            host = str(row["host"] or "").strip()
+            host_source_label = str(row["host"] or "").strip()
+            host = canonical_host(host_source_label)
             state = str(row["State"] or "").strip()
             hexagon = str(row["hex_id"] or "").strip()
             confidence = str(row["confidence"] or "").strip().lower()
@@ -66,8 +80,11 @@ def read_source(archive):
             origin = str(row["native_status"] or "").strip().lower()
             setting = str(row["setting"] or "").strip().lower()
             eastwest = str(row["EW"] or "").strip().lower()
-            if not state or not hexagon or not exact_binomial(host):
-                quality["missing_region_or_unresolved_host"] += 1
+            if not state or not hexagon:
+                quality["missing_region_identifier"] += 1
+                continue
+            if host is None:
+                quality["unresolved_original_host_taxon_label"] += 1
                 continue
             if confidence not in {"certain", "high", "medium"}:
                 quality["unqualified_host_confidence"] += 1
