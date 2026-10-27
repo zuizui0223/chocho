@@ -278,6 +278,27 @@ def observations(hosts_path, accepted_map, focal, *, native, current, atoms,
         matched_intro_pairs = intro_pairs & pairs_native
         sampled_native = Counter(sp for sp,pid in pairs_native)
         sampled_intro = Counter(sp for sp,pid in intro_pairs)
+        species_triple = defaultdict(Counter)
+        for (sp, pid, loc), origin in all_triples.items():
+            species_triple[sp][origin] += 1
+        species_status_records = []
+        for sp in sorted(focal):
+            by_sp = species_triple[sp]
+            species_status_records.append({
+                "species": sp,
+                "source_accepted_raw_rows": int(raw_counts.get(sp, 0)),
+                "source_unique_accepted_host_location_triples": int(sum(by_sp.values())),
+                "source_mapped_native_triples": int(by_sp["NATIVE_CONFIRMED"]),
+                "source_mapped_introduced_triples": int(by_sp["INTRODUCED_CONFIRMED"]),
+                "source_WCVP_unlisted_triples": int(by_sp["WCVP_UNLISTED"]),
+                "source_mixed_or_unsafe_triples": int(sum(n for key, n in by_sp.items()
+                    if key not in {"NATIVE_CONFIRMED","INTRODUCED_CONFIRMED","WCVP_UNLISTED"})),
+                "source_native_accepted_pairs": sum(x[0] == sp for x in pairs_native),
+                "source_introduced_accepted_pairs": sum(x[0] == sp for x in intro_pairs),
+                "source_introduced_pairs_also_reported_native": sum(
+                    x[0] == sp for x in matched_intro_pairs),
+                "has_any_introduced_area_host_report": sp in sampled_intro,
+            })
         for r in read_rows(hosts_path):
             sp = ((r.get("Insect Genus") or "").strip() + " " +
                   (r.get("Insect Species") or "").strip())
@@ -332,6 +353,7 @@ def observations(hosts_path, accepted_map, focal, *, native, current, atoms,
                 for name,n in family_intro.most_common(15)
             ],
             "predeclared_source_labels":by_country,
+            "per_butterfly_aggregate_only": species_status_records,
             "observational_warning": (
                 "Introduced-record-only host pairs are NOT confirmed newly "
                 "adopted larval hosts. Absent native HOSTS citation is missing "
@@ -374,6 +396,13 @@ def run(args):
     rows=observations(args.hosts_resource,accepted,focal,native=native,
                       current=current,atoms=atoms,atom_metadata=atom_meta,
                       source_regions=regions,families=families)
+    source_metrics={r["species"]:r for r in roster}
+    for cutoff in ("0.95","0.8"):
+        for rec in rows["primary_and_sensitivity"][cutoff]["per_butterfly_aggregate_only"]:
+            m=source_metrics[rec["species"]]
+            rec["original_source_resolved_host_species"]=int(m["resolved_host_species"])
+            rec["original_source_host_family_count"]=float(m["host_family_count"])
+            rec["original_source_introduced_added_resource_units"]=int(m["introduced_added_units"])
     obj={
         "schema":SCHEMA,
         "status":"SOURCE_LOCKED_RETROSPECTIVE_ORIGIN_RECORDS_NO_HOST_ADOPTION_CLAIM",
