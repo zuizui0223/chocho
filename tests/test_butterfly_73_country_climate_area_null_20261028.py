@@ -105,3 +105,24 @@ def test_frozen_bounds_must_match_source_and_all_20_species(tmp_path):
     path.write_text(json.dumps(original))
     with pytest.raises(ValueError,match="source identity"):
         load_bounds(path,cases())
+
+
+def test_source_verified_real_country_climate_area_null_receipt_is_not_host_effect():
+    root = Path(__file__).resolve().parents[1]
+    receipt = root / 'provenance/reviewer_defenses/results/butterfly_73_country_land_climate_null_20261028.json'
+    r = json.loads(receipt.read_text(encoding='utf8'))
+    assert r['schema'] == 'chocho_73_country_land_climate_area_null_20261028_v01'
+    assert (r['original_observation_cases'],r['original_GBIF_point_indices']) == (73,6076)
+    assert r['country_geography']['source_countries'] == 51
+    assert r['main']['cases_used_before_pairing'] == 73
+    assert r['main']['paired_species'] == 10
+    assert r['main']['p_values'] is None
+    assert r['source']['natural_earth_50m_exact_sha256'] == 'b8d421aca6e9e08e8cdf09cc26af111cc3e0deba4fe915611d58ade71e8a4db0'
+    assert r['main']['mean_observed_country_class_difference'] == pytest.approx(.42415155141720556)
+    assert r['main']['mean_geographic_country_class_difference'] == pytest.approx(.41068989706675174)
+    assert r['main']['mean_observed_minus_country_area_reference'] == pytest.approx(.013461654350453805)
+    assert r['main']['geography_adjusted_species_directions'] == {'positive':5,'negative':5,'zero':0}
+    assert all('lat' not in row and 'lon' not in row and 'observer' not in row
+               for row in r['case_summary'])
+    assert 'NOT GBIF survey effort' in r['main']['inference_gate'] or \
+           'Not GBIF observation-effort matched' in r['main']['inference_gate']

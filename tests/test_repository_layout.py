@@ -191,6 +191,7 @@ def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
         "butterfly_crop_exclusion_sensitivity_v0.1.json",
         "butterfly_host_specialization_hierarchy_protocol_v0.1.json",
         "butterfly_resource_envelope_protocol_v0.1.json",
+        "BUTTERFLY_73_COUNTRY_LAND_CLIMATE_NULL_RESULTS_20261028.md",
         "butterfly_resource_expansion_mechanism_protocol_v0.1.json",
         # Exploratory country and point-climate continuation documents; not GEB v0.2 claims.
         "BUTTERFLY_73_PAIRED_POINT_CLIMATE_ATTRITION_20261028.md",
