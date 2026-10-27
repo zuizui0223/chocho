@@ -1,0 +1,144 @@
+name: HOSTS Location WCVP butterfly source reporting-effort and host breadth nulls
+on:
+  push:
+    branches: [analysis/hosts-location-wcvp-origin-20261027]
+    paths:
+      - scripts/analyze_hosts_location_wcvp_origin_20261027.py
+      - scripts/analyze_hosts_location_breadth_reporting_bias_20261027.py
+      - tests/test_hosts_location_breadth_reporting_bias_20261027.py
+      - provenance/reviewer_defenses/protocols/HOSTS_LOCATION_BREADTH_REPORTING_BIAS_20261027.md
+      - tests/test_hosts_location_wcvp_origin_20261027.py
+      - provenance/reviewer_defenses/protocols/HOSTS_LOCATION_WCVP_ORIGIN_20261027.md
+      - .github/workflows/hosts-location-bias-model-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  effort-controlled-introduced-host-reporting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate geography and false host adoption negative controls
+        run: |
+          python -m pip install -e . 'pytest>=8,<10'
+          python -m pytest -q tests/test_hosts_location_wcvp_origin_20261027.py tests/test_hosts_location_breadth_reporting_bias_20261027.py
+      - name: Retrieve exact location-bearing original HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore original 239-butterfly author-only HOSTS/WCVP source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval
+      - name: Retrieve exact disjoint country-TDWG area crosswalk from original GBIF country analysis commit
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          path: _country_source
+          persist-credentials: false
+      - name: Check original source archive content signatures and extract private source
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for outer in Path("_retrieval").rglob("*.zip"):
+              b=outer.read_bytes()
+              if hashlib.sha256(b).hexdigest()==expected:
+                  found.append(b)
+              else:
+                  with zipfile.ZipFile(outer) as z:
+                      for e in z.infolist():
+                          if e.filename.endswith(".zip"):
+                              inner=z.read(e)
+                              if hashlib.sha256(inner).hexdigest()==expected:
+                                  found.append(inner)
+          assert len(found)==1,"Original author-only HOSTS/WCVP archive missing or changed"
+          Path("_original_source.zip").write_bytes(found[0])
+          with zipfile.ZipFile("_original_source.zip") as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  rel=Path(name)
+                  assert not rel.is_absolute() and ".." not in rel.parts
+              dest=Path("_author_source")
+              dest.mkdir(exist_ok=True)
+              z.extractall(dest)
+          assert (Path("_author_source")/"SOURCE_MANIFEST.json").is_file()
+          assert (Path("_author_source")/"inputs/original/insect_host_accepted.csv").is_file()
+          print("PASS original source author-only ZIP SHA, safe extraction")
+          PY
+      - name: Compute report-location plant origin by 95 percent whole-country area and 80 percent sensitivity
+        run: |
+          mkdir -p _origin
+          python scripts/analyze_hosts_location_wcvp_origin_20261027.py \
+            --hosts-resource _original_HOSTS/resource.csv \
+            --author-source _author_source \
+            --country-atoms _country_source/data/exploratory/gbif_country_20261020/country_area_atoms.csv \
+            --country-atoms-manifest _country_source/data/exploratory/gbif_country_20261020/country_area_atoms_summary.json \
+            --country-summary _country_source/data/exploratory/gbif_country_20261020/country_wgsrpd_summary.json \
+            --output _origin/hosts_location_wcvp_origin_239_butterflies_20261027.json
+      - name: Check original source units and no undocumented host-switch labels in result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_origin/hosts_location_wcvp_origin_239_butterflies_20261027.json")
+          x=json.loads(p.read_text())
+          assert x["schema"]=="chocho_original_hosts_location_wcvp_plant_origin_20261027_v01"
+          assert x["status"]=="SOURCE_LOCKED_RETROSPECTIVE_ORIGIN_RECORDS_NO_HOST_ADOPTION_CLAIM"
+          assert x["result"]["record_flow"]["source_all_raw_rows"]==140485
+          assert x["result"]["record_flow"]["source_full_species_binomial_rows"]==86826
+          assert x["source"]["geography"]["atom_count"]==969
+          for v in x["result"]["primary_and_sensitivity"].values():
+              assert sum(v["triples_by_plant_origin"].values())==v["unique_species_host_location_triples"]
+              assert (v["introduced_triples_with_same_pair_documented_in_native_area"]+
+                      v["introduced_triples_without_native_area_pair_report"]==
+                      v["confirmed_introduced_plant_area_triples"])
+              assert (v["introduced_pairs_also_documented_in_native_area"]+
+                      v["introduced_pairs_without_native_area_report"]==
+                      v["introduced_distinct_species_host_pairs"])
+          assert "triples" not in x or isinstance(x["triples"],int)
+          print("PASS 239 accepted HOSTS taxa, WCVP native region source, missingness and no inferred host adoption")
+          PY
+      - name: Model introduced source host reporting against global diet breadth, native reporting and generic observation bias
+        run: |
+          python scripts/analyze_hosts_location_breadth_reporting_bias_20261027.py \
+            --source-aggregate _origin/hosts_location_wcvp_origin_239_butterflies_20261027.json \
+            --output _origin/hosts_location_breadth_reporting_bias_20261027.json
+      - name: Guard statistical interpretation and source genus resampling
+        run: |
+          python - <<'PY'
+          import json
+          original=json.load(open("_origin/hosts_location_wcvp_origin_239_butterflies_20261027.json"))
+          x=json.load(open("_origin/hosts_location_breadth_reporting_bias_20261027.json"))
+          assert x["schema"]=="chocho_239_hosts_location_breadth_reporting_bias_20261027_v01"
+          assert x["source_239_original_butterflies"]==239
+          assert x["source_original_introduced_plant_location_reports"]==62
+          assert x["primary_host_family_breadth"]["source_genus_clusters"]>25
+          assert x["primary_host_family_breadth"]["bootstrap_draws"]==499
+          assert len(original["result"]["primary_and_sensitivity"]["0.95"]["per_butterfly_aggregate_only"])==239
+          assert x["status"] in ("EXPLORATORY_DOCUMENTATION_BIAS_ONLY","UNIDENTIFIED_SOURCE_EVIDENCE_COARSE")
+          print("PASS: 239 original source butterfly model, genus bootstrap and no ecological adoption claim")
+          PY
+      - name: Upload summary totals by geographic source label, no raw accepted host interaction edges
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-hosts-location-breadth-reporting-bias-20261027
+          path: |
+            _origin/hosts_location_wcvp_origin_239_butterflies_20261027.json
+            _origin/hosts_location_breadth_reporting_bias_20261027.json
+          retention-days: 30
+          if-no-files-found: error
