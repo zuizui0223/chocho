@@ -22,9 +22,9 @@ from urllib.request import Request, urlopen
 SCHEMA="chocho_zenodo_11519262_international_nonnative_insect_species_region_source_schema_20261027_v01"
 RECORD_ID=11519262
 API=f"https://zenodo.org/api/records/{RECORD_ID}"
-REQUIRED={"occurrence_table.csv","attribute_table.csv",
-          "metatada_occurrence_table.csv","metatada_attribute_table.csv",
-          "metatada_taxonomy_table.csv"}
+REQUIRED={"occurrence_table_20230317.csv",
+          "attribute_table_20230317.csv",
+          "source_table_20230317.csv"}
 
 
 def get(url,max_bytes=9_000_000):
@@ -108,7 +108,7 @@ def fetch():
         members=list(members.values())
     names={r.get("key") or r.get("filename") for r in members}
     if not REQUIRED<=names:
-        raise ValueError("2024 Zenodo original species/attribute metadata missing; available="+repr(sorted(names)))
+        raise ValueError("2024 Zenodo original dated 20230317 occurrence/attribute/source tables missing; available="+repr(sorted(names)))
     byname={}
     for item in members:
         name=item.get("key") or item.get("filename")
