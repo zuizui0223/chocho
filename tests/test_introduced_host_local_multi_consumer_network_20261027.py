@@ -109,7 +109,7 @@ def test_wcvp_native_unlisted_status_by_region_not_guessed_from_country():
                     "is_geo_safe":True,"area_identity_checks":"PASS"}}
     x,edgecounts=classify_nodes(data,.80,atoms,metadata,{"HAW"},
         native={"x":{"HAW"}},
-        current={"x":{"HAW"},"y":{"HAW"}})
+        current={"x":{"HAW"},"y":{"HAW"}},require_original_source=False)
     assert [v["source_plant_region_origin"] for v in x]==[
         "NATIVE_CONFIRMED","INTRODUCED_CONFIRMED","WCVP_UNLISTED"]
     assert edgecounts=={"NATIVE_CONFIRMED":2,
