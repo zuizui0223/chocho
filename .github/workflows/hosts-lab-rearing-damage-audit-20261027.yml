@@ -1,0 +1,73 @@
+name: Audit HOSTS original Lab Rearing and Damage field missingness for 239 butterflies
+on:
+  push:
+    branches: [analysis/invasive-larval-host-evidence-20261027]
+    paths:
+      - scripts/audit_hosts_lab_rearing_damage_source_20261027.py
+      - tests/test_hosts_lab_rearing_damage_source_20261027.py
+      - .github/workflows/hosts-lab-rearing-damage-audit-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-native-introduced-overlap-null-20261027]
+    paths:
+      - scripts/audit_hosts_lab_rearing_damage_source_20261027.py
+      - tests/test_hosts_lab_rearing_damage_source_20261027.py
+      - .github/workflows/hosts-lab-rearing-damage-audit-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-metadata-stage-validity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check non-imputation of empty and nonstandard HOSTS lab metadata
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_hosts_lab_rearing_damage_source_20261027.py
+      - name: Check out exactly the same source HOSTS as all earlier chocho WCVP analyses
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore exact original 239 source taxon roster from original country macro analysis
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          path: _frozen_country_source
+          persist-credentials: false
+      - name: Audit full 140485 original rows and 4695 original-239 butterfly rows
+        run: |
+          mkdir -p _stage
+          python scripts/audit_hosts_lab_rearing_damage_source_20261027.py \
+            --hosts-resource _original_HOSTS/resource.csv \
+            --239-manifest _frozen_country_source/data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --output _stage/original_hosts_lab_rearing_damage_metadata_20261027.json
+      - name: Confirm the original 239 source row counts and absence of inferred ecological stages
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_stage/original_hosts_lab_rearing_damage_metadata_20261027.json"))
+          assert x["schema"]=="chocho_pinned_hosts_lab_rearing_damage_metadata_audit_20261027_v1"
+          assert x["row_flow"]["original_all_records"]==140485
+          assert x["row_flow"]["original_complete_species_rows"]==86826
+          assert x["row_flow"]["original_239_taxon_rows"]==4695
+          p=x["by_population"]["original_239_source_butterflies"]
+          for label in ("Lab Rearing","Damage"):
+              assert sum(p[label]["all_value_frequencies"].values())==4695
+          assert x["status"]=="SOURCE_FIELD_COMPLETENESS_AND_VALUE_INVENTORY_NO_LARVAL_HOST_USE_ASSERTION"
+          print("PASS source Lab Rearing/Damage completeness; no field larval use claims")
+          PY
+      - name: Upload source literal metadata summaries only, no raw butterfly-host identity rows
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original-hosts-lab-rearing-damage-20261027
+          path: _stage/original_hosts_lab_rearing_damage_metadata_20261027.json
+          retention-days: 30
+          if-no-files-found: error
