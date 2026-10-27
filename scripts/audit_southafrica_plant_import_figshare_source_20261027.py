@@ -16,7 +16,8 @@ from urllib.request import Request,urlopen
 SCHEMA="chocho_southafrica_plant_import_Lepidoptera_source_schema_20261027_v01"
 PUBLIC_COLLECTION_ID=5180681
 PUBLIC_API=f"https://api.figshare.com/v2/collections/{PUBLIC_COLLECTION_ID}/articles"
-EXPECTED_FILES=("List of contaminants","Metadata of contaminants")
+EXPECTED_FILES=("Saccaggi et al 1 list of contaminants on SA plant imports.csv",
+                "Saccaggi et al Metadata of contaminants on SA plant imports.csv")
 
 
 def source_get(url,maximum=60_000_000):
