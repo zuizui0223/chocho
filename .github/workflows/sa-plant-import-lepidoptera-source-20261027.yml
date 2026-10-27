@@ -1,0 +1,52 @@
+name: South African original import consignment insect interception source
+on:
+  push:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+    paths:
+      - scripts/audit_southafrica_plant_import_figshare_source_20261027.py
+      - tests/test_southafrica_plant_import_figshare_source_20261027.py
+      - provenance/reviewer_defenses/protocols/SOUTH_AFRICA_PLANT_IMPORT_INTERCEPTION_20261027.md
+      - .github/workflows/sa-plant-import-lepidoptera-source-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-resource-channel-decoupling-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-anonymous-South-African-consignment-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: No-network source contract and test/NA differential
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_southafrica_plant_import_figshare_source_20261027.py
+      - name: Acquire published Figshare primary-source consignment and taxonomic metadata tables
+        run: |
+          mkdir -p _figshare
+          python scripts/audit_southafrica_plant_import_figshare_source_20261027.py \
+            --output _figshare/SA_import_original_two_sheets_source_schema_20261027.json
+      - name: Validate exact DOI, source sizes and anonymized output
+        run: |
+          python - <<'PY'
+          import json
+          p="_figshare/SA_import_original_two_sheets_source_schema_20261027.json"
+          x=json.load(open(p))
+          assert x["schema"]=="chocho_southafrica_plant_import_Lepidoptera_source_schema_20261027_v01"
+          assert x["original_public_dataset_DOI"]=="10.6084/m9.figshare.c.5180681"
+          assert len(x["original_files"])==2
+          assert all(y["source_row_count"]>100 for y in x["original_files"])
+          assert all(len(y["original_source_member_sha256"])==64 for y in x["original_files"])
+          print("PASS source original anonymized sample and taxon table lineage; no false NA negatives")
+          PY
+      - name: Archive public original schema and sample/taxon metadata only, not raw consignment identifiers
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-SA-plant-import-original-interception-source-schema-20261027
+          path: _figshare/SA_import_original_two_sheets_source_schema_20261027.json
+          retention-days: 30
+          if-no-files-found: error

@@ -1,0 +1,95 @@
+name: Original intercepted Lepidoptera host commodity exact butterfly taxon and establishment-time audit
+on:
+  push:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+    paths:
+      - scripts/audit_SA_intercepted_butterfly_hosts_and_establishment_20261027.py
+      - tests/test_SA_intercepted_butterfly_hosts_and_establishment_20261027.py
+      - provenance/reviewer_defenses/protocols/SOUTH_AFRICA_PLANT_IMPORT_INTERCEPTION_20261027.md
+      - .github/workflows/sa-import-butterfly-host-commodity-case-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-resource-channel-decoupling-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-original-239-butterfly-cargo-and-original-SA-invasive-moth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source-host stage, taxonomy and missing-establishment negative tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_SA_intercepted_butterfly_hosts_and_establishment_20261027.py
+      - name: Restore exact original GEB accepted HOSTS/WCVP source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval
+      - name: Verify original author-only source inner ZIP SHA and 11 constituent members
+        run: |
+          python - <<'PY'
+          import zipfile,hashlib
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for f in Path("_retrieval").rglob("*.zip"):
+              raw=f.read_bytes()
+              if hashlib.sha256(raw).hexdigest()==expected:
+                  found.append(raw)
+              else:
+                  with zipfile.ZipFile(f) as outer:
+                      for name in outer.namelist():
+                          if name.endswith(".zip"):
+                              payload=outer.read(name)
+                              if hashlib.sha256(payload).hexdigest()==expected:
+                                  found.append(payload)
+          assert len(found)==1,"Original author-only host source changed"
+          root=Path("_author_source");root.mkdir(exist_ok=True)
+          from io import BytesIO
+          with zipfile.ZipFile(BytesIO(found[0])) as z:
+              assert z.testzip() is None
+              assert not any(Path(n).is_absolute() or ".." in Path(n).parts for n in z.namelist())
+              z.extractall(root)
+          import json
+          m=json.loads((root/"SOURCE_MANIFEST.json").read_text())
+          assert m["inputs_count"]==11
+          for name,digest in m["sha256"].items():
+              assert hashlib.sha256((root/name).read_bytes()).hexdigest()==digest
+          print("PASS original 239 accepted source WCVP, original HOSTS pair identities only in runner RAM")
+          PY
+      - name: Match exact original-239 butterfly interception names against imported original crop/commodity and established moth chronology
+        run: |
+          mkdir -p _arrival_cases
+          python scripts/audit_SA_intercepted_butterfly_hosts_and_establishment_20261027.py \
+            --original239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --original-host-source _author_source \
+            --output _arrival_cases/SA_intercepted_2_original_butterflies_vs_host_commodities_20261027.json
+      - name: Ensure no stage/arrival/establishment event has been invented
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("_arrival_cases/SA_intercepted_2_original_butterflies_vs_host_commodities_20261027.json"))
+          assert r["schema"]=="chocho_SA_original_intercepted_butterflies_host_commodity_pair_20261027_v01"
+          assert r["status"]=="EXACT_TWO_ORIGINAL_BUTTERFLIES_INTERCEPTED_SOURCE_POSITIVE_BY_COMMODITY_NOT_ESTABLISHMENT"
+          assert r["data"]["intercepted_exact_original_239_butterfly_names"]==["Lampides boeticus","Pieris brassicae"]
+          assert r["data"]["original_SA_taxon_data_without_link_to_specific_established_descendants"]
+          assert len(r["source"]["original_SA_samples_sha256"])==64
+          assert r["source"]["original_WCVP_accepted_join_qc"]["source_ambiguous_accepted_id_names"]==0
+          assert not any("importer.code" in str(x) for x in r["data"]["intercepted_species_and_metadata_recent_establishment"])
+          print("PASS original 239 butterfly import-case evidence without converting same crop or taxon into feeding or establishment")
+          PY
+      - name: Archive derived taxon/commodity evidence counts only, no original consignment IDs or copyrighted host matrices
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-SA-exact-butterfly-intercepted-crop-commodity-20261027
+          path: _arrival_cases/SA_intercepted_2_original_butterflies_vs_host_commodities_20261027.json
+          retention-days: 30
+          if-no-files-found: error

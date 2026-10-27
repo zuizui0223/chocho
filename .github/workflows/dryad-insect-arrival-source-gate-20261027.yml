@@ -1,0 +1,52 @@
+name: Original Dryad insect commodity interception and Lepidoptera establishment source-gate
+on:
+  push:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+    paths:
+      - scripts/audit_original_insect_arrival_dryad_schema_20261027.py
+      - tests/test_original_insect_arrival_dryad_schema_20261027.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_ARRIVAL_DRYAD_SPECIES_AND_TRANSPORT_20261027.md
+      - .github/workflows/dryad-insect-arrival-source-gate-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-resource-channel-decoupling-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  two-original-external-source-grains:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate sources by synthetic schemas before public source retrieval
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_original_insect_arrival_dryad_schema_20261027.py
+      - name: Fetch ORIGINAL public Dryad DOI bundles and inspect taxon/commodity stages without inventing species-level joins
+        run: |
+          mkdir -p _external
+          python scripts/audit_original_insect_arrival_dryad_schema_20261027.py \
+            --output _external/dryad_insect_arrival_original_schema_audit_20261027.json
+      - name: Ensure original DOI, ZIP SHA, and all four required files
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_external/dryad_insect_arrival_original_schema_audit_20261027.json"))
+          assert x["schema"]=="chocho_original_public_dryad_insect_two_stage_grain_audit_20261027_v01"
+          assert x["status"].startswith("COMPLETE_ORIGINAL_TWO_PUBLIC_DATASET")
+          assert x["source_datasets"]["insect_flows_2023"]["dataset_doi"]=="doi:10.5061/dryad.dv41ns243"
+          assert x["source_datasets"]["lepidoptera_establishment_2022"]["dataset_doi"]=="doi:10.5061/dryad.31zcrjdnw"
+          for source in x["source_datasets"].values():
+              assert len(source["public_source_archive_SHA256"])==64
+          print("PASS two public source original dataset checksums, species-vs-commodity grain distinctions")
+          PY
+      - name: Archive public source schemas and exact source fingerprints, not raw interception identities
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-insect-arrival-establishment-dryad-schema-20261027
+          path: _external/dryad_insect_arrival_original_schema_audit_20261027.json
+          retention-days: 30
+          if-no-files-found: error
