@@ -37,7 +37,7 @@ jobs:
           p="_figshare/SA_import_original_two_sheets_source_schema_20261027.json"
           x=json.load(open(p))
           assert x["schema"]=="chocho_southafrica_plant_import_Lepidoptera_source_schema_20261027_v01"
-          assert x["original_public_dataset_DOI"]=="10.6084/m9.figshare.14393723"
+          assert x["original_public_dataset_DOI"]=="10.6084/m9.figshare.c.5180681"
           assert len(x["original_files"])==2
           assert all(y["source_row_count"]>100 for y in x["original_files"])
           assert all(len(y["original_source_member_sha256"])==64 for y in x["original_files"])
