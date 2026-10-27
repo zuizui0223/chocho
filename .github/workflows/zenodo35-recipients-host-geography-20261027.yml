@@ -1,0 +1,121 @@
+name: Source 35 alien butterfly recipient WCVP host opportunities beyond Hawaii
+on:
+  push:
+    branches: [analysis/invasion-recipients-wcvp-host-opportunity-20261027]
+    paths:
+      - scripts/analyze_zenodo35_recipient_WCVP_host_opportunities_20261027.py
+      - tests/test_zenodo35_recipient_WCVP_host_opportunities_20261027.py
+      - provenance/reviewer_defenses/protocols/ZENODO_35_RECIPIENT_WCVP_HOST_RESOURCE_20261027.md
+      - .github/workflows/zenodo35-recipients-host-geography-20261027.yml
+  pull_request:
+    branches: [analysis/established-insects-zenodo-species-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-239-WCVP-source-35-invasion-zones:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Region-specific wild hosts source geometry tests and false absence guard
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_zenodo35_recipient_WCVP_host_opportunities_20261027.py
+      - name: Restore 18 exact original 239 butterfly alien established positive source records
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-239-Zenodo2024-species-region-alien-establishment-overlap-20261027
+          run-id: 40498879270
+          github-token: ${{ github.token }}
+          path: _zenodo_positive
+      - name: Restore original source 239 accepted WCVP/HOSTS inventory
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_source_zip
+      - name: Restore SHA-frozen original disjoint ISO country-to-WGSRPD3 atom mapping
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          persist-credentials: false
+          path: _original_country_geo
+      - name: Verify original author-only 11 signed constituent files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile,io,json
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          inner=[]
+          for f in Path("_author_source_zip").rglob("*.zip"):
+              raw=f.read_bytes()
+              if hashlib.sha256(raw).hexdigest()==expected:
+                  inner.append(raw)
+              else:
+                  with zipfile.ZipFile(f) as outer:
+                      for name in outer.namelist():
+                          if name.endswith(".zip"):
+                              data=outer.read(name)
+                              if hashlib.sha256(data).hexdigest()==expected:
+                                  inner.append(data)
+          assert len(inner)==1, "Original accepted host WCVP ZIP sha mismatch"
+          root=Path("_source")
+          root.mkdir(exist_ok=True)
+          with zipfile.ZipFile(io.BytesIO(inner[0])) as z:
+              assert z.testzip() is None
+              for filename in z.namelist():
+                  p=Path(filename)
+                  assert not p.is_absolute() and ".." not in p.parts
+              z.extractall(root)
+          manifest=json.loads((root/"SOURCE_MANIFEST.json").read_text())
+          assert manifest["inputs_count"]==11
+          for filename,digest in manifest["sha256"].items():
+              assert hashlib.sha256((root/filename).read_bytes()).hexdigest()==digest
+          print("PASS original GEB 11 constituent source SHA and accepted 2596 butterfly host links")
+          PY
+      - name: Calculate all exact 35 positive alien butterfly receiving WCVP host profiles and all239 source background
+        run: |
+          mkdir -p _receiving
+          python scripts/analyze_zenodo35_recipient_WCVP_host_opportunities_20261027.py \
+            --author-source _source \
+            --zenodo-2024-positive-json _zenodo_positive/zenodo_2024_original239_established_nonnative_butterflies_20261027.json \
+            --country-atoms _original_country_geo/data/exploratory/gbif_country_20261020/country_area_atoms.csv \
+            --country-atoms-manifest _original_country_geo/data/exploratory/gbif_country_20261020/country_area_atoms_summary.json \
+            --country-summary _original_country_geo/data/exploratory/gbif_country_20261020/country_wgsrpd_summary.json \
+            --output _receiving/zenodo2024_35_aliens_WCVP_host_region_profiles_20261027.json
+      - name: Verify all source 35 individuals and no false failed invasions
+        run: |
+          python - <<'PY'
+          import json
+          x=json.load(open("_receiving/zenodo2024_35_aliens_WCVP_host_region_profiles_20261027.json"))
+          assert x["schema"]=="chocho_original239_zenodo35_recipient_host_opportunity_20261027_v01"
+          assert x["source"]["original_2024_positive_species_recipient_records"]==35
+          assert x["source"]["original_accepted_butterfly_host_pairs"]==2596
+          main=x["geographic_source_guard95_and_sensitivity90"]["0.95"]
+          other=x["geographic_source_guard95_and_sensitivity90"]["0.9"]
+          assert main["source_positive35_mapped_geography_counts"]=={
+             "MAIN_COMPARABLE":24,"SENSITIVITY_BOTANICAL_PROXY":3,
+             "UNSCORABLE_ORIGINAL_SOURCE_GEOGRAPHY":8}
+          assert other["source_positive35_mapped_geography_counts"]=={
+             "MAIN_COMPARABLE":25,"SENSITIVITY_BOTANICAL_PROXY":3,
+             "UNSCORABLE_ORIGINAL_SOURCE_GEOGRAPHY":7}
+          assert sum(main["source_positive35_principal_recipient_known_host_support"].values())==24
+          assert all(r["NO_butterfly_arrival_or_nonestablishment_data_for_this_reference"]
+                     for r in (v["source_239_taxon_BREADTH_matched_source_reference"]
+                       for v in main["per_recipient_positive_and_original239_background"]))
+          print("PASS source region 35 original positives, 24 safe, 3 proxies, Chile 94.966% unsafe at 95; no false successful invasion inference")
+          PY
+      - name: Archive source original accepted host/recipient counts only, not original accepted pair identities or historical customs identifiers
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-35-alien-recipients-WCVP-host-geography-source-audit-20261027
+          path: _receiving/zenodo2024_35_aliens_WCVP_host_region_profiles_20261027.json
+          retention-days: 30
+          if-no-files-found: error
