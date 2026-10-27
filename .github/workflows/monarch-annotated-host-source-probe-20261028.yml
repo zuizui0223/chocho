@@ -1,0 +1,45 @@
+name: Monarch original annotated larval host archive source audit
+on:
+  push:
+    branches:
+      - analysis/monarch-cultivation-origin-20261028
+    paths:
+      - scripts/audit_monarch_annotated_host_source_20261028.py
+      - tests/test_monarch_annotated_host_source_20261028.py
+      - .github/workflows/monarch-annotated-host-source-probe-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bounded-public-source-schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source-independent security and schema tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_monarch_annotated_host_source_20261028.py
+      - name: Probe the author-linked public Dropbox folder as read-only
+        id: probe
+        continue-on-error: true
+        run: |
+          mkdir -p _source_audit
+          python scripts/audit_monarch_annotated_host_source_20261028.py             --output _source_audit/freedman_monarch_public_source_schema_20261028.json
+      - name: Upload strictly metadata-only acquisition receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-monarch-public-host-schema-only-20261028
+          path: _source_audit/freedman_monarch_public_source_schema_20261028.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Fail closed on blocked or incomplete source
+        run: |
+          if [ "${{ steps.probe.outcome }}" != "success" ]; then
+            echo "Source blocked: cannot infer butterflies or host choice from unavailable data."
+            exit 1
+          fi

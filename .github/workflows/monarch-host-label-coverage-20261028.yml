@@ -1,0 +1,31 @@
+name: Monarch host cultivation and origin source label coverage
+on:
+  push:
+    branches:
+      - analysis/monarch-cultivation-origin-20261028
+    paths:
+      - scripts/audit_monarch_host_label_categories_20261028.py
+      - .github/workflows/monarch-host-label-coverage-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-label-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source immutable public archive and audit only categorical metadata
+        run: |
+          mkdir -p _monarch
+          python scripts/audit_monarch_host_label_categories_20261028.py             --output _monarch/monarch_host_label_coverage_20261028.json
+      - name: Upload redacted source-label coverage (no records)
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-monarch-original-host-label-coverage-20261028
+          path: _monarch/monarch_host_label_coverage_20261028.json
+          retention-days: 30
+          if-no-files-found: error
