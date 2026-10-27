@@ -1,0 +1,65 @@
+name: Butterfly 73 same-country land-climate opportunity null
+on:
+  push:
+    branches: [analysis/butterfly-country-climate-land-null-20261028]
+    paths:
+      - scripts/analyze_butterfly_73_country_climate_area_null_20261028.py
+      - tests/test_butterfly_73_country_climate_area_null_20261028.py
+      - data/exploratory/butterfly_73_native_host_worldclim_reference_bounds_20261028.json
+      - .github/workflows/butterfly-73-country-land-climate-null-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  geography-only-climate-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned scientific analysis requirements
+        run: |
+          python -m pip install -e '.[analysis,test]'
+      - name: Validate geographic null and source gates without network
+        run: |
+          python -m pytest -q tests/test_butterfly_73_country_climate_area_null_20261028.py tests/test_butterfly_73_paired_point_climate_20261028.py
+      - name: Retrieve and verify same original WorldClim and pinned Natural Earth geometry
+        run: |
+          mkdir -p _geo_null/input _geo_null/output
+          curl -fLsS --retry 3 --connect-timeout 30 --max-time 240 \
+            https://geodata.ucdavis.edu/climate/worldclim/2_1/base/wc2.1_10m_bio.zip \
+            -o _geo_null/input/worldclim10m.zip
+          curl -fLsS --retry 3 --connect-timeout 30 --max-time 180 \
+            https://raw.githubusercontent.com/nvkelso/natural-earth-vector/117488dc884bad03366ff727eca013e434615127/geojson/ne_50m_admin_0_map_units.geojson \
+            -o _geo_null/input/natural_earth_50m.geojson
+          printf '00513224583665ec0f2f955a4ec252730c4deb2004cce9e793492a3f26df4dcf  _geo_null/input/worldclim10m.zip\n' | sha256sum -c -
+          printf 'b8d421aca6e9e08e8cdf09cc26af111cc3e0deba4fe915611d58ade71e8a4db0  _geo_null/input/natural_earth_50m.geojson\n' | sha256sum -c -
+      - name: Measure country land climate availability for all frozen 73 butterfly cases
+        run: |
+          python scripts/analyze_butterfly_73_country_climate_area_null_20261028.py \
+            --natural-earth _geo_null/input/natural_earth_50m.geojson \
+            --worldclim-zip _geo_null/input/worldclim10m.zip \
+            --output _geo_null/output/butterfly_73_country_climate_area_null_20261028.json
+      - name: No raw occurrence locations, no invented causal inference
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('_geo_null/output/butterfly_73_country_climate_area_null_20261028.json').read_text())
+          assert d['schema']=='chocho_73_country_land_climate_area_null_20261028_v01'
+          assert (d['original_observation_cases'],d['original_GBIF_point_indices'])==(73,6076)
+          assert d['source']['input_73_case_csv_sha256']=='e5d229bea32f93055d486d59a174bcca73ac8c7d6638e253d068238e5af764dc'
+          assert d['source']['worldclim_1970_2000_zip_sha256']=='00513224583665ec0f2f955a4ec252730c4deb2004cce9e793492a3f26df4dcf'
+          assert d['main']['p_values'] is None
+          assert all(not any(k in row for k in ('latitude','longitude','decimalLatitude','decimalLongitude','observer')) for row in d['case_summary'])
+          print('PASS 73 source cases and independent country-area climate null; no butterfly physiological niche or larval use claim')
+          PY
+      - name: Upload only aggregate environmental null and interpretation gates
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-73-country-land-climate-area-null-20261028
+          path: _geo_null/output/butterfly_73_country_climate_area_null_20261028.json
+          retention-days: 30
+          if-no-files-found: error
