@@ -160,6 +160,19 @@ def aggregate(samples):
         if ident:original_sample_ids.add(ident)
     if {k:counts[k] for k in EXPECTED_STATUS}!=EXPECTED_STATUS:
         raise ValueError("Original public raw Lepidoptera test NA/0/positive source margins changed")
+    regime_tagged=Counter()
+    for key in ("audit","intervention","PEQ"):
+        regime_tagged.update(per_source[key])
+    if detection_count(regime_tagged)["original_raw_samples"]!=26291:
+        raise ValueError("Original paper pre-screen 26291 with source sample regime was not recovered")
+    if (regime_tagged.get("DETECTED_LEPIDOPTERA",0),
+        regime_tagged.get("TESTED_NEGATIVE",0),
+        regime_tagged.get("NOT_TESTED",0))!=(175,15673,10443):
+        raise ValueError("Source missing-regime tail rows must not become real Lepidoptera interceptions")
+    if per_source["MISSING_REGIME"]!=Counter({
+        "DETECTED_LEPIDOPTERA":3,"MISSING_ASSESSMENT":1
+    }):
+        raise ValueError("Four original sample-source missing rows changed; prevent spurious positives")
     if sum(original_commodity.values())!=26295 or len(original_commodity)!=31:
         raise ValueError("Original 30 commodity labels plus 1 missing changed")
     def output_counts(d):
@@ -167,6 +180,9 @@ def aggregate(samples):
                 sorted(d.items(),key=lambda x:str(x[0]))]
     return {
         "all_source_rows":detection_count(counts),
+        "original_source_regime_eligible_26291_rows":detection_count(regime_tagged),
+        "original_four_source_regime_unidentified_footer_or_unclassified_rows":
+            detection_count(per_source["MISSING_REGIME"]),
         "source_duplicate_nonblank_catalog_number_counts":
             counts["duplicated_nonblank_catalogNumber"],
         "by_sample_source":output_counts(per_source),
