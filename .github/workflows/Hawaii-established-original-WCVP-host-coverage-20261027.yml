@@ -1,0 +1,104 @@
+name: Hawaii alien-established butterflies versus original WCVP native or introduced host ranges
+on:
+  push:
+    branches: [analysis/established-insects-zenodo-species-20261027]
+    paths:
+      - scripts/audit_Hawaii_established_2024_butterfly_WCVP_host_coverage_20261027.py
+      - tests/test_Hawaii_established_2024_butterfly_WCVP_host_coverage_20261027.py
+      - provenance/reviewer_defenses/protocols/HAWAII_ALIEN_BUTTERFLIES_HOST_WCVP_SOURCE_OVERLAY_20261027.md
+      - .github/workflows/Hawaii-established-original-WCVP-host-coverage-20261027.yml
+  pull_request:
+    branches: [analysis/arrival-interception-establishment-dryad-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-original-host-source-island-overlap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test WCVP wild native/introduced/unknown status and no false butterfly absence
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_Hawaii_established_2024_butterfly_WCVP_host_coverage_20261027.py
+      - name: Restore unchanged source-confirmed 18 nonnative butterflies including exactly 10 Hawaii positives
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-239-Zenodo2024-species-region-alien-establishment-overlap-20261027
+          run-id: 40498879270
+          github-token: ${{ github.token }}
+          path: _zenodo_positive
+      - name: Restore original 239 butterfly HOSTS/WCVP author-only original signed source archive
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_zip
+      - name: Strict original source archive SHA and nested source content safety
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile,io,json
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for p in Path("_author_zip").rglob("*.zip"):
+              raw=p.read_bytes()
+              if hashlib.sha256(raw).hexdigest()==expected:
+                  found.append(raw)
+              else:
+                  with zipfile.ZipFile(p) as z:
+                      for n in z.namelist():
+                          if n.endswith(".zip"):
+                              payload=z.read(n)
+                              if hashlib.sha256(payload).hexdigest()==expected:
+                                  found.append(payload)
+          assert len(found)==1,"Missing exact original accepted WCVP + HOSTS source"
+          dest=Path("_source")
+          dest.mkdir(exist_ok=True)
+          with zipfile.ZipFile(io.BytesIO(found[0])) as z:
+              assert z.testzip() is None
+              for n in z.namelist():
+                  t=Path(n)
+                  assert not t.is_absolute() and ".." not in t.parts
+              z.extractall(dest)
+          meta=json.loads((dest/"SOURCE_MANIFEST.json").read_text())
+          assert meta["inputs_count"]==11
+          for name,digest in meta["sha256"].items():
+              assert hashlib.sha256((dest/name).read_bytes()).hexdigest()==digest
+          print("PASS original 11-author input SHA / no original HOSTS raw rows exported")
+          PY
+      - name: Test Hawaii established positive butterflies against ORIGINAL accepted WCVP botanical region HAW
+        run: |
+          mkdir -p _hawaii
+          python scripts/audit_Hawaii_established_2024_butterfly_WCVP_host_coverage_20261027.py \
+            --zenodo-positive-json _zenodo_positive/zenodo_2024_original239_established_nonnative_butterflies_20261027.json \
+            --author-source _source \
+            --output _hawaii/original_10_Hawaii_alien_butterfly_source_WCVP_host_support_20261027.json
+      - name: Stop if original 10 independently confirmed alien butterflies or botanical source identity changed
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("_hawaii/original_10_Hawaii_alien_butterfly_source_WCVP_host_support_20261027.json"))
+          assert r["schema"]=="chocho_zenodo_2024_10_aliens_Hawaii_original_WCVP_hosts_20261027_v01"
+          assert r["documented_2024_Hawaii_aliens_from_original_239"]==10
+          assert r["source"]["original_Hawaii_region_geometry_verified_once"]
+          assert r["source"]["original_accepted_WCVP_pair_count"]==2596
+          classes=r["positive_source_Hawaii_butterfly_host_coverage_classes"]
+          assert sum(classes.values())==10
+          assert len(r["individual_source_positive_Hawaii_butterflies"])==10
+          assert all("does_NOT_identify_actual_Hawaii_larval_host_use" in x for x in r["individual_source_positive_Hawaii_butterflies"])
+          print("PASS 10 source-alien Hawaii butterflies, no WCVP garden/impossible colonization or inferred host switching")
+          PY
+      - name: Upload aggregate ten-butterfly source host counts only, no accepted plant IDs or original full WCVP
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-Zenodo2024-Hawaii-10-alien-butterfly-WCVP-host-coverage-20261027
+          path: _hawaii/original_10_Hawaii_alien_butterfly_source_WCVP_host_support_20261027.json
+          retention-days: 30
+          if-no-files-found: error
