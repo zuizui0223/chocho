@@ -93,6 +93,7 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_butterfly_73_point_tdwg_resource_20261027.py"),
     Path("tests/test_butterfly_73_worldclim_point_niche_20261027.py"),
     Path("tests/test_butterfly_niche_entry_country_20261026.py"),
+    Path("tests/test_butterfly_host_point_proximity_20261026.py"),
     Path("tests/test_butterfly_73_paired_point_climate_20261028.py"),
     Path("scripts/analyze_butterfly_73_paired_point_climate_20261028.py"),
     Path("data/exploratory/butterfly_73_worldclim_case_counts_20261027.csv"),
