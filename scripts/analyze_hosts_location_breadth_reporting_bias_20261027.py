@@ -125,7 +125,7 @@ def design(rows, *, feature="family", standard=None):
 
 
 def bootstrap_by_genus(rows, *, field="family", indices=None, standard=None,
-                       draws=BOOT, seed=SEED):
+                       draws=BOOT, seed=SEED, outcome_names=None):
     if indices is None:
         indices = np.arange(len(rows), dtype=int)
     indices = np.array(indices, dtype=int)
@@ -136,9 +136,13 @@ def bootstrap_by_genus(rows, *, field="family", indices=None, standard=None,
     names=sorted(genera)
     if len(names)<10:
         raise ValueError("Insufficient genus-cluster replication")
+    if outcome_names is None:
+        outcome_names = tuple(OUTCOMES)
+    if not set(outcome_names) <= set(OUTCOMES):
+        raise ValueError("Unknown fixed source reporting outcome")
     yy = {
         name: np.array([int(r[field]>0) for r in rows], dtype=float)
-        for name, field in OUTCOMES.items()
+        for name, field in OUTCOMES.items() if name in outcome_names
     }
     original = {
         name: regression(y[indices], x[indices]) for name, y in yy.items()
@@ -165,7 +169,7 @@ def bootstrap_by_genus(rows, *, field="family", indices=None, standard=None,
             ("introduced_plant_region_host_report",
              "WCVP_unlisted_plant_region_host_report"),
         ):
-            if bb.get(a) is not None and bb.get(bname) is not None:
+            if a in bb and bname in bb and bb.get(a) is not None and bb.get(bname) is not None:
                 estimates[a+"__minus__"+bname].append(bb[a]-bb[bname])
     report = {}
     for key, values in estimates.items():
@@ -196,6 +200,8 @@ def bootstrap_by_genus(rows, *, field="family", indices=None, standard=None,
         ("introduced_plant_region_host_report","native_plant_region_host_report"),
         ("introduced_plant_region_host_report","WCVP_unlisted_plant_region_host_report"),
     ):
+        if a not in original or bname not in original:
+            continue
         diff = float(original[a][1]-original[bname][1])
         labels[a+"__minus__"+bname]={
             "log_odds_coeff_difference":diff,
@@ -233,7 +239,11 @@ def main():
                      if r["source_mapped_native_triples"]>0]
     native_sensitivity=bootstrap_by_genus(
         rows,field="family",indices=native_evidence,
-        standard=original_mean_sd,seed=SEED+101)
+        standard=original_mean_sd,seed=SEED+101,
+        outcome_names=(
+            "introduced_plant_region_host_report",
+            "WCVP_unlisted_plant_region_host_report",
+        ))
     inf_status = (
         "EXPLORATORY_DOCUMENTATION_BIAS_ONLY" if (
             primary["source_genus_clusters"]>=25 and
