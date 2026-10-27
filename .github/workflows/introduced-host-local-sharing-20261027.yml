@@ -121,6 +121,19 @@ jobs:
           assert not "raw_butterfly_plant_pairs" in d
           print("PASS fixed original 239 host nodes, source matched null and no competition claims")
           PY
+      - name: Verify original GEB manuscript/review CI only follows main-targeting pull requests
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for path in (
+              ".github/workflows/paper-ci.yml",
+              ".github/workflows/build-anonymous-review-bundle.yml",
+          ):
+              text=Path(path).read_text()
+              assert "  pull_request:\n    branches: [main]\n" in text
+              assert "  push:\n    branches: [main]\n" in text
+          print("PASS: exploration branch keeps GEB review packaging out of exploratory science CI; original main-targeting gate intact")
+          PY
       - name: Upload only source aggregate co-reported butterfly host node counts
         uses: actions/upload-artifact@v4
         with:
