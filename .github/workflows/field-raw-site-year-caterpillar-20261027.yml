@@ -109,7 +109,7 @@ jobs:
       - name: Cross-check original butterfly host portfolios against independent 2026 woody branch surveys
         run: |
           mkdir -p _field_filter
-          python scripts/audit_field_raw_site_year_caterpillar_20261027.py \
+          python scripts/analyze_field_caterpillar_host_realization_filter_20261027.py \
             --author-source _original_source \
             --original-hosts-resource _original_HOSTS/resource.csv \
             --external-plant-table _external_field/data/Table_S2.csv \
