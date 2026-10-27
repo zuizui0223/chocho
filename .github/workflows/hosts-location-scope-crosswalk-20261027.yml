@@ -1,0 +1,60 @@
+name: Conservative original HOSTS Location country/subregion/realm crosswalk
+on:
+  push:
+    branches: [analysis/hosts-location-pathways-20261027]
+    paths:
+      - scripts/build_hosts_location_scope_crosswalk_20261027.py
+      - tests/test_hosts_location_scope_crosswalk_20261027.py
+      - .github/workflows/hosts-location-scope-crosswalk-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-HOSTS-all-257-labels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify explicit country/subnational/realm/provisional labels
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_hosts_location_scope_crosswalk_20261027.py
+      - name: Retrieve source commit with all original 257 recorded labels
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _source_HOSTS
+          persist-credentials: false
+      - name: Classify all original species-level HOSTS Location strings, without guessing WCVP status
+        run: |
+          mkdir -p _scope
+          python scripts/build_hosts_location_scope_crosswalk_20261027.py \
+            --original-hosts-resource _source_HOSTS/resource.csv \
+            --output _scope/hosts_original_257_location_scope_dictionary_20261027.json
+      - name: Confirm source row conservation and no unsupported geographical classification
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_scope/hosts_original_257_location_scope_dictionary_20261027.json")
+          r=json.loads(p.read_text())
+          assert r["schema"]=="chocho_original_HOSTS_location_scope_dictionary_v01"
+          assert r["distinct_location_labels"]==257
+          assert r["source_species_level_annotated_rows"]==86826
+          assert len(r["source_verified_label_entries"])==257
+          assert all(x["wgsrpd3_source_region_code"] is None for x in r["source_verified_label_entries"])
+          assert all(x["plant_native_or_introduced_status"]=="NOT_CLASSIFIED" for x in r["source_verified_label_entries"])
+          assert sum(r["row_counts_by_scope"].values())==86826
+          print("PASS original 257-label geography scope dictionary; requires subsequent exact WCVP validation")
+          PY
+      - name: Publish aggregate region-name mapping QC only, no HOSTS plant/insect raw records
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-257-HOSTS-location-geometry-scope-20261027
+          path: _scope/hosts_original_257_location_scope_dictionary_20261027.json
+          retention-days: 30
+          if-no-files-found: error
