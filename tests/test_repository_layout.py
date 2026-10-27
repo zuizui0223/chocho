@@ -192,6 +192,13 @@ def test_active_protocol_and_result_surfaces_are_whitelisted() -> None:
         "butterfly_host_specialization_hierarchy_protocol_v0.1.json",
         "butterfly_resource_envelope_protocol_v0.1.json",
         "butterfly_resource_expansion_mechanism_protocol_v0.1.json",
+        # Exploratory country and point-climate continuation documents; not GEB v0.2 claims.
+        "BUTTERFLY_73_PAIRED_POINT_CLIMATE_ATTRITION_20261028.md",
+        "BUTTERFLY_73_POINT_CLIMATE_RESOURCE_RESULTS_20261027.md",
+        "BUTTERFLY_HOST_POINT_PROXIMITY_RESULT_20261026.md",
+        "BUTTERFLY_NICHE_ENTRY_RESULT_20261026.md",
+        "BUTTERFLY_POINT_LOWVOLUME_DIAGNOSTIC_PROTOCOL_20261026.md",
+        "BUTTERFLY_POINT_LOWVOLUME_DIAGNOSTIC_RESULT_20261026.md",
     }
 
     result_names = {
