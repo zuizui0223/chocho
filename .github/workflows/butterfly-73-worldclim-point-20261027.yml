@@ -1,0 +1,120 @@
+name: All 73 butterfly points vs same-product WorldClim native-host climate
+on:
+  push:
+    branches: [analysis/butterfly-climate-entry-point-20261027]
+    paths:
+      - scripts/audit_butterfly_73_worldclim_point_niche_20261027.py
+      - tests/test_butterfly_73_worldclim_point_niche_20261027.py
+      - provenance/reviewer_defenses/protocols/BUTTERFLY_73_WORLDCLIM_POINT_NATIVE_HOST_20261027.md
+      - .github/workflows/butterfly-73-worldclim-point-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  single-climate-product-butterfly-and-native-host-pixels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install approved existing project analysis and raster dependencies
+        run: |
+          python -m pip install -e . 'pytest>=8,<10' 'shapely>=2,<3' 'rasterio>=1.4,<2'
+      - name: WorldClim source-independent missing-pixel and same-product regression tests
+        run: |
+          python -m pytest -q tests/test_butterfly_73_worldclim_point_niche_20261027.py \
+            tests/test_butterfly_73_point_tdwg_resource_20261027.py
+      - name: Retrieve author-only original HOSTS/WCVP/CHELSA/TDWG sources (do not redistribute)
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval/author_only
+      - name: Verify original author-only zip digest and safe extraction
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          root=Path("_retrieval/author_only")
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          files=[x for x in root.rglob("*.zip")
+                 if hashlib.sha256(x.read_bytes()).hexdigest()==expected]
+          assert len(files)==1,"Original frozen author-only source changed"
+          dest=Path("_retrieval/source")
+          dest.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(files[0]) as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  r=Path(name)
+                  assert not r.is_absolute() and ".." not in r.parts
+              z.extractall(dest)
+          assert (dest/"SOURCE_MANIFEST.json").is_file()
+          assert (dest/"inputs/level3.geojson").is_file()
+          print("PASS original author-only data integrity")
+          PY
+      - name: Download original publicly documented WorldClim 2.1 1970-2000 BIO10m archive, do not commit
+        run: |
+          mkdir -p _worldclim
+          curl -fLsS --retry 3 --connect-timeout 30 --max-time 240 \
+            "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/wc2.1_10m_bio.zip" \
+            -o _worldclim/wc2.1_10m_bio.zip
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          file=Path("_worldclim/wc2.1_10m_bio.zip")
+          assert file.stat().st_size>1000000 and file.stat().st_size<500000000
+          with zipfile.ZipFile(file) as z:
+              assert z.testzip() is None
+              n=set(z.namelist())
+              assert len([x for x in n if x.endswith(".tif")]) == 19
+              assert {"wc2.1_10m_bio_1.tif","wc2.1_10m_bio_12.tif"}<=n
+          print("Official WorldClim source ZIP sha256",hashlib.sha256(file.read_bytes()).hexdigest())
+          PY
+      - name: Rebuild exact source 73 taxon and country climate classes
+        run: |
+          mkdir -p _worldclim/derived
+          python scripts/derive_butterfly_73_point_entry_roster_20261027.py \
+            --areas provenance/reviewer_defenses/results/gbif_country_20261020/country_resource_area_audit.csv.gz \
+            --design provenance/reviewer_defenses/results/gbif_country_20261020/country_design_audit.json \
+            --counts data/exploratory/gbif_country_20261020/gbif_country_counts.csv \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --country-receipt data/exploratory/gbif_country_20261020/gbif_country_facet_receipts.json.gz \
+            --output _worldclim/derived/pr72_source73.json
+      - name: Compute same WorldClim pixel BIO1 BIO12 in butterfly observations and native-host regional baseline
+        run: |
+          python scripts/audit_butterfly_73_worldclim_point_niche_20261027.py \
+            --worldclim-zip _worldclim/wc2.1_10m_bio.zip \
+            --source-root _retrieval/source \
+            --roster _worldclim/derived/pr72_source73.json \
+            --output _worldclim/derived/73_worldclim_source_consistent_point_niche.json
+      - name: Validate source cohort and non-claim gates without saving raw occurrences or full climate pixels
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_worldclim/derived/73_worldclim_source_consistent_point_niche.json")
+          x=json.loads(p.read_text())
+          assert x["schema"]=="chocho_73_butterfly_worldclim_point_native_host_climate_20261027_v01"
+          assert x["source_73_positive_country_cohort_verified"]
+          assert x["cases_total"]==73 and len(x["cases"])==73
+          assert x["no_raw_coordinates_or_full_worldclim_rasters_exported"]
+          assert all("lat" not in a and "lon" not in a for a in x["cases"])
+          assert x["source"]["model"].startswith("WorldClim 2.1")
+          if x["status"]=="COMPLETE_73_SAME_WORLDCLIM_PRODUCT_POINT_AND_HOST_BASELINE":
+              assert x["cases_complete"]==73
+              assert sum(z["live_count"] for z in x["cases"])==6076
+          else:
+              print("SOURCE/BASELINE INCOMPLETE; report descriptive quality limits only")
+          print("PASS point vs native HOST product provenance, no colonization claim")
+          PY
+      - name: Upload only derived case climate comparisons and exact source checksums
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-73-worldclim-point-and-native-host-climate-20261027
+          path: _worldclim/derived/73_worldclim_source_consistent_point_niche.json
+          retention-days: 30
+          if-no-files-found: error
