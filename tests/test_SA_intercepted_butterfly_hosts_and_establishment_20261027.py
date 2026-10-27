@@ -74,6 +74,14 @@ def test_crop_source_name_matching_never_equates_with_larval_feeding():
     assert sum(x["positive_original_plant_sample_rows"] for x in candidates)==2
     assert sum(x["original_crop_binomial_exact_to_original_known_HOSTS_plant_pair"]
                for x in candidates)==2
+    known_status=next(q for q in candidates
+                      if q["identified_lepidoptera_name"]=="Pieris brassicae")
+    assert known_status["source_metadata_SA_species_status_available"]
+    assert known_status["source_metadata_SA_historical_record_status"]=="absent"
+    unknown_status=next(q for q in candidates
+                        if q["identified_lepidoptera_name"]=="Lampides boeticus")
+    assert not unknown_status["source_metadata_SA_species_status_available"]
+    assert unknown_status["source_metadata_SA_historical_record_status"] is None
     assert r["original_SA_taxon_data_without_link_to_specific_established_descendants"]
 
 
