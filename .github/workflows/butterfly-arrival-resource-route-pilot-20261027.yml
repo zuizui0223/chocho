@@ -1,0 +1,106 @@
+name: Butterfly arrival vector versus plant resource channel source feasibility
+on:
+  push:
+    branches: [analysis/arrival-resource-channel-decoupling-20261027]
+    paths:
+      - scripts/audit_butterfly_arrival_vs_host_resource_routes_20261027.py
+      - tests/test_butterfly_arrival_vs_host_resource_routes_20261027.py
+      - data/exploratory/arrival_resource_top10_propagation_route_pilot_20261027.csv
+      - provenance/reviewer_defenses/protocols/ARRIVAL_RESOURCE_CHANNEL_DECOUPLING_20261027.md
+      - .github/workflows/butterfly-arrival-resource-route-pilot-20261027.yml
+  pull_request:
+    branches: [analysis/introduced-host-local-sharing-20261027]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-HOSTS-WCVP-resources-and-butterfly-arrival-vector-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test fixed original observed115, fractional geography and nonexclusive transport mode controls
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_butterfly_arrival_vs_host_resource_routes_20261027.py
+      - name: Restore only original fixed 239 accepted HOSTS WCVP author-only source bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _source_reference
+      - name: Verify original input inner zip exact SHA and member manifests before any result
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile,hashlib,json
+          EXPECTED="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for f in Path("_source_reference").rglob("*.zip"):
+              raw=f.read_bytes()
+              if hashlib.sha256(raw).hexdigest()==EXPECTED:
+                  found.append(raw)
+              else:
+                  with zipfile.ZipFile(f) as outer:
+                      for member in outer.infolist():
+                          if member.filename.endswith(".zip"):
+                              data=outer.read(member)
+                              if hashlib.sha256(data).hexdigest()==EXPECTED:
+                                  found.append(data)
+          assert len(found)==1, "Original accepted HOSTS WCVP author-only source missing or altered"
+          src=Path("_original")
+          src.mkdir(exist_ok=True)
+          with zipfile.ZipFile(__import__("io").BytesIO(found[0])) as z:
+              assert z.testzip() is None
+              for member in z.namelist():
+                  p=Path(member)
+                  assert not p.is_absolute() and ".." not in p.parts
+              z.extractall(src)
+          manifest=json.loads((src/"SOURCE_MANIFEST.json").read_text())
+          assert manifest["inputs_count"]==11
+          for name,signed in manifest["sha256"].items():
+              assert hashlib.sha256((src/name).read_bytes()).hexdigest()==signed
+          print("PASS source SHA, 11 constituent member files and original WCVP accepted plant records")
+          PY
+      - name: Verify that source 115 already observed butterfly records cannot be used as an arrival presence/absence model
+        run: |
+          mkdir -p _arrival
+          python scripts/audit_butterfly_arrival_vs_host_resource_routes_20261027.py \
+            --author-source _original \
+            --route-ledger data/exploratory/arrival_resource_top10_propagation_route_pilot_20261027.csv \
+            --original-observed115-receipt provenance/reviewer_defenses/results/butterfly_occurrence_resource_validation_v0.1.json \
+            --original-observed32-species-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+            --output _arrival/butterfly_arrival_resource_top10_modes_20261027.json
+      - name: Validate all 14553 source new units and no false insect arrivals in output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("_arrival/butterfly_arrival_resource_top10_modes_20261027.json").read_text())
+          assert x["schema"]=="chocho_arrival_resource_decoupling_top10_posthoc_feasibility_20261027_v01"
+          assert x["source"]["source_species"]==239
+          assert x["source"]["source_original_accepted_butterfly_host_pairs"]==2596
+          assert x["source"]["original_expanded_butterfly_species"]==206
+          assert x["source"]["original_added_butterfly_region_resource_units"]==14553
+          assert x["source"]["source_distinct_contributing_plant_species"]==670
+          assert len(x["source_route_pilot"]["original_top10"])==10
+          assert x["corrected_original_occurrence_panel"]["butterfly_occurrence_outcome_by_original_115_units"]=="ALL_115_OBSERVED"
+          assert x["corrected_original_occurrence_panel"]["observed_units_not_recovered_by_any_reconstructed_current_host_range"]==49
+          assert all(r["actual_species_level_international_plant_shipment_observed"] is None
+                     and r["butterfly_egg_or_larva_imported_with_this_plant_documented"] is None
+                     for r in x["source_route_pilot"]["original_top10"])
+          assert not any("false_absent_butterflies" in k for k in x)
+          print("PASS exact resource credit and source route taxonomy; no false 49 unobserved cells")
+          PY
+      - name: Upload only original rank-level source credit and citation-propagation metadata; no original copyrighted host pair matrices
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-butterfly-arrival-vs-host-resource-two-channel-pilot-20261027
+          path: _arrival/butterfly_arrival_resource_top10_modes_20261027.json
+          retention-days: 30
+          if-no-files-found: error
