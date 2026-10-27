@@ -17,7 +17,7 @@ import analyze_field_caterpillar_host_realization_filter_20261027 as m
 def field_origin_fixture():
     rows=[]
     for i in range(100):
-        genus="Zanthoxylum" if i==85 else "Genus"+chr(65+i//3)+chr(65+i%3)
+        genus="Zanthoxylum" if i==85 else "Genus"+chr(65+(i//26)%26)+chr(65+i%26)
         name=genus if i==85 else genus+" speciosa"
         origin="alien" if i>=86 else "native"
         n=40
