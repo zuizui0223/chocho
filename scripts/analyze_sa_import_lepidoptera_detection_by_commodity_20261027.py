@@ -80,7 +80,7 @@ def commodity_class(raw):
     if not v:
         return "OTHER_OR_UNRESOLVED"
     low=v.lower()
-    if (low.startswith(("cuttings","cutting","in vitro","plantlets",
+    if (low.startswith(("cuttings","cutting","in vitro","ex vitro","plantlets",
                         "live plant","rooted plant")) or low in {
         "plants","bulbs","rhizomes","tubers","roots","plantlets","cuttings",
         "tissue culture","planting material"}):
