@@ -1,0 +1,213 @@
+name: chocho raw field caterpillar presence paired within site-years and original 239 HOSTS names
+on:
+  push:
+    branches: [analysis/field-caterpillar-realization-filter-20261027]
+    paths:
+      - scripts/audit_field_raw_site_year_caterpillar_20261027.py
+      - scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_raw_site_year_caterpillar_20261027.py
+      - provenance/reviewer_defenses/protocols/FIELD_RAW_SITE_YEAR_CATERPILLAR_REALIZATION_20261027.md
+      - .github/workflows/field-raw-site-year-caterpillar-20261027.yml
+  pull_request:
+    branches: [analysis/introduced-host-local-sharing-20261027]
+    paths:
+      - scripts/audit_field_raw_site_year_caterpillar_20261027.py
+      - scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_raw_site_year_caterpillar_20261027.py
+      - .github/workflows/field-raw-site-year-caterpillar-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  raw-independent-branch-survey-sites-and-year-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline species identity, source rearing and survey prediction negative tests
+        run: |
+          python -m pip install -e . 'pytest>=8,<10'
+          python -m pytest -q tests/test_field_raw_site_year_caterpillar_20261027.py tests/test_field_caterpillar_host_realization_filter_20261027.py tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - name: Checkout independent 2026 published field larvae study at exact original commit
+        uses: actions/checkout@v4
+        with:
+          repository: hurlbertlab/caterpillars-on-plants
+          ref: 2c5690ac7c6dba7eca506da886c49781c37617bd
+          path: _external_field
+          persist-credentials: false
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            data/Table_S2.csv
+            data/fullDataset_2025-04-18.csv
+            data/plant_origin_status.csv
+            data/inferredPlantNames_2024-08-20.csv
+          sparse-checkout-cone-mode: false
+      - name: Verify exact public field input identity and field survey taxonomy grain
+        run: |
+          python - <<'PY'
+          import hashlib,csv
+          from pathlib import Path
+          path=Path("_external_field/data/Table_S2.csv")
+          raw=path.read_bytes()
+          sha=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+          assert sha=="bc0d66a2fa2e44c4c1d959fa4700f4256cbb238e",sha
+          rows=list(csv.DictReader(path.open(newline="")))
+          assert len(rows)==100
+          assert sum(r["Origin"]=="native" for r in rows)==86
+          assert sum(r["Origin"]=="alien" for r in rows)==14
+          assert sum(r["Plant species"]=="Zanthoxylum" for r in rows)==1
+          print("PASS independent source 100 woody survey taxa; 99 species and one genus-only Zanthoxylum")
+          PY
+      - name: Retrieve original author-only accepted WCVP HOSTS source inputs without republishing
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval
+      - name: Checkout original pinned full HOSTS source rearing register
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore original exact SHA-verified author-only inner source ZIP
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for outer in Path("_retrieval").rglob("*.zip"):
+              data=outer.read_bytes()
+              if hashlib.sha256(data).hexdigest()==expected:
+                  found.append(data)
+              else:
+                  with zipfile.ZipFile(outer) as z:
+                      for f in z.infolist():
+                          if f.filename.endswith(".zip"):
+                              nested=z.read(f)
+                              if hashlib.sha256(nested).hexdigest()==expected:
+                                  found.append(nested)
+          assert len(found)==1,"Original 239 HOSTS/WCVP author-only data unavailable or SHA changed"
+          out=Path("_original_source")
+          out.mkdir(exist_ok=True)
+          with zipfile.ZipFile(__import__("io").BytesIO(found[0])) as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  p=Path(name)
+                  assert not p.is_absolute() and ".." not in p.parts
+              z.extractall(out)
+          assert (out/"SOURCE_MANIFEST.json").is_file()
+          assert (out/"inputs/original/insect_host_accepted.csv").is_file()
+          print("PASS original 239 accepted WCVP host input fixed by original SHA and source manifest")
+          PY
+      - name: Cross-check original butterfly host portfolios against independent 2026 woody branch surveys
+        run: |
+          mkdir -p _field_filter
+          python scripts/analyze_field_caterpillar_host_realization_filter_20261027.py \
+            --author-source _original_source \
+            --original-hosts-resource _original_HOSTS/resource.csv \
+            --external-plant-table _external_field/data/Table_S2.csv \
+            --output _field_filter/field_caterpillar_realization_vs_239_HOSTS_20261027.json
+      - name: Check botanical cross-source coverage and do not infer absent larvae or butterfly species
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_field_filter/field_caterpillar_realization_vs_239_HOSTS_20261027.json")
+          d=json.loads(p.read_text())
+          assert d["schema"]=="chocho_original239_host_opportunity_external_field_larval_filter_20261027_v01"
+          assert d["source"]["external_public_commit"]=="2c5690ac7c6dba7eca506da886c49781c37617bd"
+          assert d["source"]["accepted_original_239"]["original_239_accepted_species_plant_pairs"]==2596
+          assert len(d["external_field_plant_rows"])==100
+          assert sum(x["field_plant_taxonomic_resolution"]=="GENUS_ONLY_UNSCORABLE" for x in d["external_field_plant_rows"])==1
+          assert d["original_100_field_plants_by_origin"]["native"]["field_survey_plant_species"]==86
+          assert d["original_100_field_plants_by_origin"]["alien"]["field_survey_plant_species"]==14
+          assert sum(d["source_link_quality"].values())==100
+          assert all("accepted_plant_name_id" not in z for z in d["external_field_plant_rows"])
+          for model in d["statistical_source_model"].values():
+              assert model["prespecified_information_gate"] in (
+                  "SOURCE_LINKED_FIELD_MODEL_INFORMATION_OK",
+                  "INSUFFICIENT_EXACT_MATCH_NATIVE_ALIEN_SUPPORT"
+              )
+              if model["prespecified_information_gate"]=="INSUFFICIENT_EXACT_MATCH_NATIVE_ALIEN_SUPPORT":
+                  assert "source_host_count_per_SD_adjusted_odds_ratio" not in model
+          print("PASS source-specific validated 239 butterfly host portfolio / all-Lepidoptera field proxy")
+          PY
+      - name: Analyze full raw caterpillar survey IDs and source-matched site-year plant-origin pairs without exposing sites
+        run: |
+          mkdir -p _raw_field
+          python scripts/audit_field_raw_site_year_caterpillar_20261027.py \
+            --author-source _original_source \
+            --original-raw _external_field/data/fullDataset_2025-04-18.csv \
+            --origin _external_field/data/plant_origin_status.csv \
+            --inferred _external_field/data/inferredPlantNames_2024-08-20.csv \
+            --output _raw_field/field_site_year_native_alien_caterpillar_source_20261027.json
+      - name: Validate original IDs, field site-year support and keep mismatches observable
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("_raw_field/field_site_year_native_alien_caterpillar_source_20261027.json"))
+          assert d["schema"]=="chocho_external_field_plant_site_year_pairing_20261027_v01"
+          assert d["source"]["external_commit"]=="2c5690ac7c6dba7eca506da886c49781c37617bd"
+          assert d["source"]["original_239_accepted_host_links"]==2596
+          assert d["source_unique_surveys"]["survey_IDs_final_quality_gate"]>0
+          for key in ("matched_site_year_both_origins",
+                      "matched_site_7day_week_both_origins",
+                      "original_239_source_exact_plant_linked_site_year_both_origins"):
+              x=d[key]
+              assert x["source_site_year_paired_evidence_information_gate"] in (
+                  "SUFFICIENT_CONTEXT_STRATA_FOR_DESCRIPTIVE_PAIRING",
+                  "INSUFFICIENT_MATCHED_SITES_OR_YEARS")
+              assert x["native_larval_positive_events"]<=x["source_native_survey_events_in_matched_contexts"]
+              assert x["alien_larval_positive_events"]<=x["source_alien_survey_events_in_matched_contexts"]
+          assert "individual_survey_ID" not in d
+          assert "source_site_coordinates" not in d
+          print("PASS source year/week original ID de-duplication; absence is indexed nondetection, not larval survival")
+          PY
+      - name: Test incremental original 239 HOSTS portfolio predictor within matched site-years and held-out survey sites
+        run: |
+          python scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py \
+            --author-source _original_source \
+            --original-raw _external_field/data/fullDataset_2025-04-18.csv \
+            --origin _external_field/data/plant_origin_status.csv \
+            --inferred _external_field/data/inferredPlantNames_2024-08-20.csv \
+            --output _raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json
+      - name: Honor original source site-year/plant crosslink information gate and no biological inference
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("_raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json"))
+          assert d["schema"]=="chocho_original_239_field_siteyear_HOSTS_portfolio_incremental_prediction_20261027_v01"
+          assert d["source"]["original_239_host_plant_links"]==2596
+          assert d["stage2_original_source_matched_site_year_population"]["matched_site_year_or_week_strata"]==38
+          assert d["stage2_original_source_matched_site_year_population"]["independent_field_sites_with_matching_both_plant_origins"]==22
+          assert d["source_field_taxonomy_and_site_year_support"]["model_information_gate"] in (
+              "SOURCE_LINKED_PLANT_AND_SITE_YEAR_SUPPORT",
+              "INSUFFICIENT_MATCHED_BUTTERFLY_HOST_SOURCE_FIELD_SUPPORT")
+          assert d["status"] in (
+              "DESCRIPTIVE_SOURCE_SITE_YEAR_FIXED_EFFECT_MODEL_ONLY",
+              "NO_MODEL_INSUFFICIENT_MATCHED_SOURCE_SUPPORT",
+              "NO_MODEL_RANK_OR_SMALL_STRATA",
+              "NO_MODEL_NUMERICAL_IDENTIFIABILITY")
+          assert "raw_site_names" not in d and "source_coordinate" not in d
+          print("PASS source accepted 239 butterfly linked plant matched site-year predictor, no wild adaptation inference")
+          PY
+      - name: Upload derived matched site/year counts and source QA only, no survey locations or raw rows
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-239-raw-field-site-year-caterpillar-20261027
+          path: |
+            _raw_field/field_site_year_native_alien_caterpillar_source_20261027.json
+            _raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json
+          retention-days: 30
+          if-no-files-found: error
