@@ -77,7 +77,7 @@ def evaluate(register_path, source_species):
     if len(events) != 13 or len(by_species) != 8 or \
        len({s for s in by_species if s in source_species}) != 5:
         raise ValueError("The preselected 8-species / 13-event roster changed")
-    if set(by_species) - source_species != {"Cacyreus marshalli", "Chilades pandava", "Papilio xuthus"}:
+    if set(by_species) - set(source_species) != {"Cacyreus marshalli", "Chilades pandava", "Papilio xuthus"}:
         raise ValueError("Missing named source-offpanel test species")
     if any(e["species"] == "Danaus plexippus" and
            e["route_status"] == "confirmed_human_transport" for e in ids):
