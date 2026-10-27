@@ -59,6 +59,10 @@ Sources: [Sarto i Monteys historical account of UK *Cacyreus* interception, 1992
 
 The often-cited European review covered **97 non-native Lepidoptera, including MANY MOTHS**, not 97 strictly butterflies, and found almost all introduced by plants or PLANT PRODUCTS, not necessarily living potted host material. **52.5% in gardens/parks** is a postestablishment habitat association, NOT a proportion moved internationally on live plants. [Lopez-Vaamonde et al., BioRisk](https://doi.org/10.3897/biorisk.4.50); [Augustin et al., EPPO Bulletin](https://doi.org/10.1111/epp.2600). Hence these percentages cannot supply the missing live-plant shipment exposure denominator.
 
+## Additional source-ontology limitation: wild WCVP distributions omit purely cultivated hosts
+
+The original GEB WCVP resource envelope includes accepted host **native, extant and introduced wild** botanical distribution units, not every planted garden/crop/nursery plant record. An insect carried in a living **horticultural consignment** may find a cultivated host in a city or nursery whose population is NOT naturalized, and therefore is *missing* from a WCVP-introduced wild resource map. Conversely, an introduced wild grass in the WCVP map may supply abundant larval leaves despite an arrival via adult dispersal, hay packing or another unrelated commodity. Thus using WCVP wild records as a complete measure of botanical arrival vectors or urban/crop establishment resources would be a second source-ontology error. A verified study must preserve separately **trade of live planting material**, **planted-only (non-wild) host landscapes**, and **naturalized wild host footprints**. Neither the 25.10% seed propagation coverage nor the original 54.9% opportunity increase is a direct cross-border trade fraction.
+
 ## 4. Next identifiable macro experiment
 
 A valid species×destination×year model must distinguish:
