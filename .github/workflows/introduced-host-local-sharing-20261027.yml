@@ -1,0 +1,143 @@
+name: Original 239 butterflies introduced plant multi-consumer host sharing and source-label null
+on:
+  push:
+    branches: [analysis/introduced-host-local-sharing-20261027]
+    paths:
+      - scripts/analyze_introduced_host_local_multi_consumer_network_20261027.py
+      - tests/test_introduced_host_local_multi_consumer_network_20261027.py
+      - provenance/reviewer_defenses/protocols/INTRODUCED_HOST_LOCAL_SHARING_20261027.md
+      - .github/workflows/introduced-host-local-sharing-20261027.yml
+  pull_request:
+    branches: [analysis/invasive-larval-host-evidence-20261027]
+    paths:
+      - scripts/analyze_introduced_host_local_multi_consumer_network_20261027.py
+      - tests/test_introduced_host_local_multi_consumer_network_20261027.py
+      - .github/workflows/introduced-host-local-sharing-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-plant-location-host-sharing-and-conditional-source-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test original source plant node sharing, native-introduced status and exact matched source null
+        run: |
+          python -m pip install -e . 'pytest>=8,<10'
+          python -m pytest -q tests/test_introduced_host_local_multi_consumer_network_20261027.py tests/test_hosts_location_wcvp_origin_20261027.py
+      - name: Retrieve exact location-bearing original HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _original_HOSTS
+          persist-credentials: false
+      - name: Restore original 239-butterfly author-only HOSTS/WCVP source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _retrieval
+      - name: Retrieve exact disjoint country-TDWG area crosswalk from original GBIF country analysis commit
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: 4104c784ddcf97318c4a1bb8bd949b3147628494
+          path: _country_source
+          persist-credentials: false
+      - name: Check original source archive content signatures and extract private source
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          expected="408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+          found=[]
+          for outer in Path("_retrieval").rglob("*.zip"):
+              b=outer.read_bytes()
+              if hashlib.sha256(b).hexdigest()==expected:
+                  found.append(b)
+              else:
+                  with zipfile.ZipFile(outer) as z:
+                      for e in z.infolist():
+                          if e.filename.endswith(".zip"):
+                              inner=z.read(e)
+                              if hashlib.sha256(inner).hexdigest()==expected:
+                                  found.append(inner)
+          assert len(found)==1,"Original author-only HOSTS/WCVP archive missing or changed"
+          Path("_original_source.zip").write_bytes(found[0])
+          with zipfile.ZipFile("_original_source.zip") as z:
+              assert z.testzip() is None
+              for name in z.namelist():
+                  rel=Path(name)
+                  assert not rel.is_absolute() and ".." not in rel.parts
+              dest=Path("_author_source")
+              dest.mkdir(exist_ok=True)
+              z.extractall(dest)
+          assert (Path("_author_source")/"SOURCE_MANIFEST.json").is_file()
+          assert (Path("_author_source")/"inputs/original/insect_host_accepted.csv").is_file()
+          print("PASS original source author-only ZIP SHA, safe extraction")
+          PY
+      - name: Source-frozen WCVP plant-origin host-sharing network and exact matched artificial references
+        run: |
+          mkdir -p _host_sharing
+          python scripts/analyze_introduced_host_local_multi_consumer_network_20261027.py \
+            --hosts-resource _original_HOSTS/resource.csv \
+            --author-source _author_source \
+            --country-atoms _country_source/data/exploratory/gbif_country_20261020/country_area_atoms.csv \
+            --country-atoms-manifest _country_source/data/exploratory/gbif_country_20261020/country_area_atoms_summary.json \
+            --country-summary _country_source/data/exploratory/gbif_country_20261020/country_wgsrpd_summary.json \
+            --output _host_sharing/239_original_host_location_multiconsumer_source_audit_20261027.json
+      - name: Validate source edge conservation, exact source categories and no inferences of competition
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("_host_sharing/239_original_host_location_multiconsumer_source_audit_20261027.json").read_text())
+          assert d["schema"]=="chocho_239_geographically_documented_butterfly_local_shared_hosts_20261027_v01"
+          assert d["source"]["original_butterfly_species"]==239
+          assert d["source"]["original_total_unique_accepted_butterfly_host_Location_edges"]==3586
+          assert d["no_independent_field_competition_claim"]
+          original=d["original_WCVP_country_dominance"][".95"]
+          assert original["source_original_butterfly_host_Location_edge_counts_by_status"]["INTRODUCED_CONFIRMED"]==179
+          assert original["source_original_butterfly_host_Location_edge_counts_by_status"]["NATIVE_CONFIRMED"]==399
+          assert original["source_original_butterfly_host_Location_edge_counts_by_status"]["WCVP_UNLISTED"]==303
+          for thresh in (".95",".80"):
+              data=d["original_WCVP_country_dominance"][thresh]
+              q=data["plant_Location_source_nodes_by_origin"]
+              assert sum(v["documented_butterfly_Location_host_edges"] for v in q.values())==3586
+              for status in ("INTRODUCED_CONFIRMED","WCVP_UNLISTED"):
+                  for test in data["source_origin_reference"][status].values():
+                      assert test["reference_target_status"]==status
+                      assert test["information_gate"] in (
+                          "SOURCE_REFERENCE_WITH_EXCHANGEABLE_LABELS",
+                          "INSUFFICIENT_MATCHED_ORIGIN_GEOGRAPHY_INFORMATION")
+                      assert not "ecological_p_value" in str(test).lower()
+          assert not "raw_butterfly_plant_pairs" in d
+          print("PASS fixed original 239 host nodes, source matched null and no competition claims")
+          PY
+      - name: Verify original GEB manuscript/review CI only follows main-targeting pull requests
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for path in (
+              ".github/workflows/paper-ci.yml",
+              ".github/workflows/build-anonymous-review-bundle.yml",
+          ):
+              text=Path(path).read_text()
+              assert "  pull_request:\n    branches: [main]\n" in text
+              assert "  push:\n    branches: [main]\n" in text
+          print("PASS: exploration branch keeps GEB review packaging out of exploratory science CI; original main-targeting gate intact")
+          PY
+      - name: Upload only source aggregate co-reported butterfly host node counts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-introduced-host-multiconsumer-local-sharing-20261027
+          path: _host_sharing/239_original_host_location_multiconsumer_source_audit_20261027.json
+          retention-days: 30
+          if-no-files-found: error
