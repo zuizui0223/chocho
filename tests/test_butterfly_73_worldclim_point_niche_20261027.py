@@ -38,7 +38,7 @@ def test_same_product_native_host_and_point_climate_percentiles():
     result=native_reference("Sp a",{"Sp a":{"native":native}},grid,x)
     assert result["status"]=="VALID_NATIVE_HOST_RESOURCE_WORLDCLIM_REFERENCE"
     assert result["source_native_worldclim_valid_pixels"]==64
-    assert result["bounds"]["area_weighted_5_95"]["bio1"][0] < 1
+    assert 0 <= result["bounds"]["area_weighted_5_95"]["bio1"][0] < result["bounds"]["area_weighted_5_95"]["bio1"][1] <= 6.3
     p=extract_climate(x,89.91,-179.91)
     assert p==(0.0,100.0)
     assert outside_rectangle(p, result["bounds"]["area_weighted_5_95"])
