@@ -6,6 +6,12 @@ on:
       - scripts/audit_hosts_lab_rearing_damage_source_20261027.py
       - tests/test_hosts_lab_rearing_damage_source_20261027.py
       - .github/workflows/hosts-lab-rearing-damage-audit-20261027.yml
+  pull_request:
+    branches: [analysis/hosts-native-introduced-overlap-null-20261027]
+    paths:
+      - scripts/audit_hosts_lab_rearing_damage_source_20261027.py
+      - tests/test_hosts_lab_rearing_damage_source_20261027.py
+      - .github/workflows/hosts-lab-rearing-damage-audit-20261027.yml
   workflow_dispatch:
 permissions:
   contents: read
