@@ -47,14 +47,20 @@ def load_primary_file(alias):
     content,actual,ctype=source_get(URLS[alias])
     if sha(content)!=SOURCE_SHA[alias]:
         raise ValueError("Public original Figshare source byte SHA changed: "+alias)
-    rows=list(csv.DictReader(io.StringIO(content.decode("utf-8-sig")),delimiter=";"))
+    try:
+        source_text=content.decode("utf-8-sig")
+        decoding="utf-8-sig"
+    except UnicodeDecodeError:
+        source_text=content.decode("latin-1")
+        decoding="latin-1 byte-preserving fallback (original byte SHA retained)"
+    rows=list(csv.DictReader(io.StringIO(source_text),delimiter=";"))
     if alias=="sample" and len(rows)!=26295:
         raise ValueError("Original raw laboratory source 26,295-row grain changed")
     if alias=="metadata" and len(rows)!=878:
         raise ValueError("Original taxon metadata 878-row grain changed")
     return rows,{"source_download":URLS[alias],"member_SHA256":sha(content),
                  "source_bytes":len(content),"original_source_rows":len(rows),
-                 "field_names":list(rows[0])}
+                 "field_names":list(rows[0]),"original_text_decode":decoding}
 
 
 def lepidoptera_result(value):
