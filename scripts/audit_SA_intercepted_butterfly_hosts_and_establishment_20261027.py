@@ -114,13 +114,27 @@ def interpret(rows,metadata,known):
         raise ValueError("External intercepted exact-source GEB butterfly set changed")
     if sum(sum(v.values()) for v in records.values())!=178:
         raise ValueError("Original positive Lepidoptera source cell count changed")
+    by_source_species_status=defaultdict(list)
+    for source_row in metadata:
+        if (source_row.get("order") or "").strip()=="Lepidoptera":
+            by_source_species_status[(source_row.get("scientificName") or "").strip()].append(source_row)
     named=[]
     for tax in sorted(originals):
         d=originals[tax]
         is_butterfly=tax in EXACT_SOURCE_BUTTERFLIES
+        status_matches=by_source_species_status.get(tax,[])
+        status_metadata=status_matches[0] if len(status_matches)==1 else None
         named.append({
             "identified_lepidoptera_name":tax,
             "in_original_GEB_239_butterflies":is_butterfly,
+            "source_metadata_SA_species_status_available":status_metadata is not None,
+            "source_metadata_SA_historical_record_status":(
+                status_metadata.get("SA.occurenceStatus.historical")
+                if status_metadata else None),
+            "source_metadata_SA_current_record_status":(
+                status_metadata.get("SA.occurenceStatus.current")
+                if status_metadata else None),
+            "source_metadata_SA_record_presence_is_not_indigenous_origin":True,
             "positive_original_plant_sample_rows":sum(d["commodity"].values()),
             "original_imported_commodity_type_counts":dict(d["commodity"]),
             "original_imported_commodity_class_counts":dict(Counter({
