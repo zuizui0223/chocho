@@ -1,0 +1,49 @@
+name: Source-frozen HOSTS Location label discovery (no outcome selection)
+on:
+  push:
+    branches: [analysis/hosts-location-pathways-20261027]
+    paths:
+      - scripts/audit_hosts_location_source_20261027.py
+      - .github/workflows/hosts-location-inventory-20261027.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-hosts-location-catalogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout exact upstream HOSTS mirror snapshot (not current mutable main)
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _upstream_original_HOSTS
+          persist-credentials: false
+      - name: Original species-level Location metadata audit
+        run: |
+          mkdir -p _location
+          python scripts/audit_hosts_location_source_20261027.py \
+            --source _upstream_original_HOSTS/resource.csv \
+            --output _location/original_hosts_location_inventory_20261027.json
+      - name: Assert no original individual interaction records are exported
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("_location/original_hosts_location_inventory_20261027.json").read_text())
+          assert j["schema"]=="chocho_source_hosts_location_inventory_20261027_v01"
+          assert len(j["source"]["raw_resource_sha256"])==64
+          assert j["record_flow"]["raw_records"]>=1000
+          assert j["distinct_nonempty_location_labels"]>=10
+          assert all(set(r)=={"label","rows"} for r in j["top_160_location_labels_species_rows"])
+          print("PASS original HOSTS source location aggregation, no individual host interaction export")
+          PY
+      - name: Upload compact aggregated Location label frequencies only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-hosts-location-original-source-inventory-20261027
+          path: _location/original_hosts_location_inventory_20261027.json
+          retention-days: 30
+          if-no-files-found: error
