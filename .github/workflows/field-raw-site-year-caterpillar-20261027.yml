@@ -4,6 +4,8 @@ on:
     branches: [analysis/field-caterpillar-realization-filter-20261027]
     paths:
       - scripts/audit_field_raw_site_year_caterpillar_20261027.py
+      - scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
       - tests/test_field_raw_site_year_caterpillar_20261027.py
       - provenance/reviewer_defenses/protocols/FIELD_RAW_SITE_YEAR_CATERPILLAR_REALIZATION_20261027.md
       - .github/workflows/field-raw-site-year-caterpillar-20261027.yml
@@ -11,6 +13,8 @@ on:
     branches: [analysis/introduced-host-local-sharing-20261027]
     paths:
       - scripts/audit_field_raw_site_year_caterpillar_20261027.py
+      - scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
+      - tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
       - tests/test_field_raw_site_year_caterpillar_20261027.py
       - .github/workflows/field-raw-site-year-caterpillar-20261027.yml
   workflow_dispatch:
@@ -29,7 +33,7 @@ jobs:
       - name: Offline species identity, source rearing and survey prediction negative tests
         run: |
           python -m pip install -e . 'pytest>=8,<10'
-          python -m pytest -q tests/test_field_raw_site_year_caterpillar_20261027.py tests/test_field_caterpillar_host_realization_filter_20261027.py
+          python -m pytest -q tests/test_field_raw_site_year_caterpillar_20261027.py tests/test_field_caterpillar_host_realization_filter_20261027.py tests/test_field_site_year_HOSTS_portfolio_predictiveness_20261027.py
       - name: Checkout independent 2026 published field larvae study at exact original commit
         uses: actions/checkout@v4
         with:
@@ -170,10 +174,40 @@ jobs:
           assert "source_site_coordinates" not in d
           print("PASS source year/week original ID de-duplication; absence is indexed nondetection, not larval survival")
           PY
+      - name: Test incremental original 239 HOSTS portfolio predictor within matched site-years and held-out survey sites
+        run: |
+          python scripts/analyze_field_site_year_HOSTS_portfolio_predictiveness_20261027.py \
+            --author-source _original_source \
+            --original-raw _external_field/data/fullDataset_2025-04-18.csv \
+            --origin _external_field/data/plant_origin_status.csv \
+            --inferred _external_field/data/inferredPlantNames_2024-08-20.csv \
+            --output _raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json
+      - name: Honor original source site-year/plant crosslink information gate and no biological inference
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("_raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json"))
+          assert d["schema"]=="chocho_original_239_field_siteyear_HOSTS_portfolio_incremental_prediction_20261027_v01"
+          assert d["source"]["original_239_host_plant_links"]==2596
+          assert d["stage2_original_source_matched_site_year_population"]["matched_site_year_or_week_strata"]==38
+          assert d["stage2_original_source_matched_site_year_population"]["independent_field_sites_with_matching_both_plant_origins"]==22
+          assert d["source_field_taxonomy_and_site_year_support"]["model_information_gate"] in (
+              "SOURCE_LINKED_PLANT_AND_SITE_YEAR_SUPPORT",
+              "INSUFFICIENT_MATCHED_BUTTERFLY_HOST_SOURCE_FIELD_SUPPORT")
+          assert d["status"] in (
+              "DESCRIPTIVE_SOURCE_SITE_YEAR_FIXED_EFFECT_MODEL_ONLY",
+              "NO_MODEL_INSUFFICIENT_MATCHED_SOURCE_SUPPORT",
+              "NO_MODEL_RANK_OR_SMALL_STRATA",
+              "NO_MODEL_NUMERICAL_IDENTIFIABILITY")
+          assert "raw_site_names" not in d and "source_coordinate" not in d
+          print("PASS source accepted 239 butterfly linked plant matched site-year predictor, no wild adaptation inference")
+          PY
       - name: Upload derived matched site/year counts and source QA only, no survey locations or raw rows
         uses: actions/upload-artifact@v4
         with:
           name: chocho-239-raw-field-site-year-caterpillar-20261027
-          path: _raw_field/field_site_year_native_alien_caterpillar_source_20261027.json
+          path: |
+            _raw_field/field_site_year_native_alien_caterpillar_source_20261027.json
+            _raw_field/field_site_year_original239_HOSTS_incremental_prediction_20261027.json
           retention-days: 30
           if-no-files-found: error
