@@ -97,6 +97,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/analyze_butterfly_73_country_climate_area_null_20261028.py"),
     Path("docs/exploratory/BUTTERFLY_73_COUNTRY_LAND_CLIMATE_NULL_RESULTS_20261028.md"),
     Path("provenance/reviewer_defenses/results/butterfly_73_country_land_climate_null_20261028.json"),
+    Path("scripts/audit_monarch_annotated_host_source_20261028.py"),
+    Path("tests/test_monarch_annotated_host_source_20261028.py"),
     Path("tests/test_butterfly_73_country_climate_area_null_20261028.py"),
     Path("provenance/reviewer_defenses/protocols/BUTTERFLY_73_COUNTRY_LAND_CLIMATE_NULL_20261028.md"),
     Path("tests/test_butterfly_73_paired_point_climate_20261028.py"),
