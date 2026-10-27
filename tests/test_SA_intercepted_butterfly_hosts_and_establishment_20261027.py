@@ -104,7 +104,7 @@ def test_invasion_metadata_with_no_exact_sample_stays_unlinked():
 def test_unverified_original_establishment_status_fails():
     meta=source_metadata()
     meta[0]["SA.occurenceStatus.current"]="absent"
-    with pytest.raises(ValueError,match="source changed"):
+    with pytest.raises(ValueError,match="status changed"):
         m.interpret(original_rows(),meta,{
             "Pieris brassicae":set(),"Lampides boeticus":set()
         })
