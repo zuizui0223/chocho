@@ -41,6 +41,9 @@ jobs:
           assert r["status"]=="SOURCE_COMPLETE_RAW_LAB_SAMPLE_LEPIDOPTERA_COMMODITY_CONDITIONAL_DETECTION"
           assert r["samples"]["all_source_rows"]["original_raw_samples"]==26295
           assert r["samples"]["all_source_rows"]["lepidoptera_tested_samples"]==15851
+          assert r["samples"]["original_source_regime_eligible_26291_rows"]["original_raw_samples"]==26291
+          assert r["samples"]["original_source_regime_eligible_26291_rows"]["detected_Lepidoptera_sample_rows"]==175
+          assert r["samples"]["original_four_source_regime_unidentified_footer_or_unclassified_rows"]["detected_Lepidoptera_sample_rows"]==3
           assert r["samples"]["all_source_rows"]["detected_Lepidoptera_sample_rows"]==178
           assert r["samples"]["all_source_rows"]["lepidoptera_NOT_TESTED_samples"]==10443
           assert r["Lepidoptera_taxon_metadata"]["butterfly_taxon_population_frozen"]==239
