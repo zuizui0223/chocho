@@ -1,0 +1,36 @@
+name: UK LTMN exact historical visited-transect and species-count denominator audit
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_historical_event_join_20261028.py
+      - tests/test_uk_ltmn_historical_event_join_20261028.py
+      - .github/workflows/uk-ltmn-historical-visit-join-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-ltmn-visit-denominator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source read-only binary XLS and synthetic non-detection checks
+        run: |
+          python -m pip install "xlrd>=2.0.2,<3" "pytest>=8,<10"
+          python -m pytest -q tests/test_uk_ltmn_historical_event_join_20261028.py
+      - name: Audit original SHA-locked 23k visit and 156k butterfly count rows in memory
+        run: |
+          mkdir -p _ltmn
+          python scripts/audit_uk_ltmn_historical_event_join_20261028.py \
+            --output _ltmn/uk_original_visit_and_explicit_species_count_20261028.json
+      - name: Upload only years, unique sample counts, and absence-semantics caveats
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-true-visit-original-count-denominator-audit-20261028
+          path: _ltmn/uk_original_visit_and_explicit_species_count_20261028.json
+          retention-days: 30
+          if-no-files-found: error
