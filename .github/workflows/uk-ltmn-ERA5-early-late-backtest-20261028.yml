@@ -1,0 +1,54 @@
+name: UK historical repeated-transect out-of-time ERA5 weather prediction baseline
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_ERA5_historical_baseline_20261028.py
+      - tests/test_uk_ltmn_ERA5_historical_baseline_20261028.py
+      - .github/workflows/uk-ltmn-ERA5-early-late-backtest-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-uk-weather-backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original source read-only inputs and historical model tests
+        run: |
+          python -m pip install 'xlrd>=2.0.2,<3' 'pyproj>=3.6,<4' 'scikit-learn>=1.5,<2' 'numpy>=1.26' 'pytest>=8,<10'
+          python -m pytest -q tests/test_uk_ltmn_ERA5_historical_baseline_20261028.py
+      - name: Retrieve original UKBMS 19 repeated sites daily ERA5 1976–2021 and run 5 spatial-temporal folds
+        run: |
+          mkdir -p _uk_climate_backtest
+          python scripts/audit_uk_ltmn_ERA5_historical_baseline_20261028.py \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --output _uk_climate_backtest/UK_LTMN_ERA5_19site_early_late_original_detection_20261028.json
+      - name: Verify time and source cohort, no local plant presence claim or site leaks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('_uk_climate_backtest/UK_LTMN_ERA5_19site_early_late_original_detection_20261028.json').read_text())
+          assert x['schema']=='chocho_UK_19_LTMN_original_visit_ERA5_1976_2021_outoftime_detection_v01'
+          assert x['source']['n_ERA5_source_transects']==19
+          assert x['source']['source_original_species']==27
+          assert x['source']['ERA5_days_per_site']==16802
+          assert len(x['validation']['five_independent_unseen_site_and_era_folds'])==5
+          assert not x['model']['no_claim_host_mediated_range_expansion'] is False
+          text=Path('_uk_climate_backtest/UK_LTMN_ERA5_19site_early_late_original_detection_20261028.json').read_text().lower()
+          for token in ('"ukbms_siteno":','"site_id":','"easting":','"northing":','"latitude":','"longitude":','"recorder_name":'):
+            assert token not in text,token
+          print('PASS historical ERA5 source complete, no host causal claims')
+          PY
+      - name: Upload derived scores and original source data fingerprints only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-19site-historical-ERA5-climate-only-backtest-20261028
+          path: _uk_climate_backtest/UK_LTMN_ERA5_19site_early_late_original_detection_20261028.json
+          retention-days: 30
+          if-no-files-found: error
