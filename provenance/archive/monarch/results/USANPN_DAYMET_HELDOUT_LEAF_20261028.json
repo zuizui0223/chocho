@@ -1,0 +1,171 @@
+{
+  "cv": {
+    "n_sites": 72,
+    "n_species": 5,
+    "n_states": 23,
+    "no_statistical_p_value_or_demographic_effect": true,
+    "positive_weather_increment_folds": 5,
+    "required_positive_folds": 4,
+    "site_equal_baseline_log_loss": 0.34374811484548873,
+    "site_equal_daymet_log_loss": 0.31834208650962575,
+    "site_equal_delta_brier_baseline_minus_daymet": 0.008281282713790729,
+    "site_equal_delta_log_loss_baseline_minus_daymet": 0.025406028335862998,
+    "source_independent_site_folds": [
+      {
+        "fold": 0,
+        "heldout_brier_lift": 0.008849843849298267,
+        "heldout_log_loss_lift": 0.025259588697291835,
+        "seasonal_geography_brier": 0.110491246896044,
+        "seasonal_geography_log_loss": 0.3668231105533584,
+        "seasonal_weather_brier": 0.10164140304674574,
+        "seasonal_weather_log_loss": 0.3415635218560666,
+        "test_no_visits": 2958,
+        "test_plant_visits": 5387,
+        "test_sites": 12,
+        "test_yes_visits": 2429
+      },
+      {
+        "fold": 1,
+        "heldout_brier_lift": 0.01022087836472095,
+        "heldout_log_loss_lift": 0.02387966371009892,
+        "seasonal_geography_brier": 0.09219546598198075,
+        "seasonal_geography_log_loss": 0.30613514772022404,
+        "seasonal_weather_brier": 0.0819745876172598,
+        "seasonal_weather_log_loss": 0.2822554840101251,
+        "test_no_visits": 1609,
+        "test_plant_visits": 3800,
+        "test_sites": 18,
+        "test_yes_visits": 2191
+      },
+      {
+        "fold": 2,
+        "heldout_brier_lift": 0.01007225357843737,
+        "heldout_log_loss_lift": 0.033196649443918425,
+        "seasonal_geography_brier": 0.09417904121740343,
+        "seasonal_geography_log_loss": 0.31695891207675864,
+        "seasonal_weather_brier": 0.08410678763896606,
+        "seasonal_weather_log_loss": 0.2837622626328402,
+        "test_no_visits": 1548,
+        "test_plant_visits": 3309,
+        "test_sites": 15,
+        "test_yes_visits": 1761
+      },
+      {
+        "fold": 3,
+        "heldout_brier_lift": 0.003664798080442247,
+        "heldout_log_loss_lift": 0.01415137879326428,
+        "seasonal_geography_brier": 0.11964641456973704,
+        "seasonal_geography_log_loss": 0.3993975293556003,
+        "seasonal_weather_brier": 0.1159816164892948,
+        "seasonal_weather_log_loss": 0.385246150562336,
+        "test_no_visits": 1841,
+        "test_plant_visits": 3935,
+        "test_sites": 14,
+        "test_yes_visits": 2094
+      },
+      {
+        "fold": 4,
+        "heldout_brier_lift": 0.007975957064124933,
+        "heldout_log_loss_lift": 0.03078584494372133,
+        "seasonal_geography_brier": 0.1016307796657478,
+        "seasonal_geography_log_loss": 0.34550809162623636,
+        "seasonal_weather_brier": 0.09365482260162286,
+        "seasonal_weather_log_loss": 0.31472224668251503,
+        "test_no_visits": 2072,
+        "test_plant_visits": 4339,
+        "test_sites": 13,
+        "test_yes_visits": 2267
+      }
+    ],
+    "status": "HELD_OUT_WEATHER_PREDICTIVE_INCREMENT_REPLICATED"
+  },
+  "daymet_aggregate_sha256": "c7106c4950bc5aaba24f163eb70011fd8a446feea80fba6d8d82ef45817b8525",
+  "daymet_complete_sites": 72,
+  "daymet_data_not_exported": true,
+  "daymet_original_full_site_request_count": 72,
+  "daymet_rejected_sites": 0,
+  "decision": "HELD_OUT_WEATHER_PREDICTIVE_INCREMENT_REPLICATED",
+  "eligible_response_weather": {
+    "accepted_plant_date_outcome_and_weather": 20770,
+    "missing_previous_30_day_weather_or_Daymet_leap_calendar": 198
+  },
+  "interpretation_limits": [
+    "Held-out-site weather prediction is observational predictive evidence, not temperature causation",
+    "Nature's Notebook monitored plants are a nonrandom sample; missing leaves visits never encoded no",
+    "Weather changes may be confounded with observation dates, horticultural management, irrigation, state or elevation",
+    "This result does not predict actual future leaf senescence from 20-year monthly CMIP6",
+    "No milkweed edible biomass, monarch egg/larval survival or monarch population model is estimated",
+    "Source coordinates, individual observations and Daymet daily climate are not redistributed"
+  ],
+  "model_specification": {
+    "ridge_C": 0.1,
+    "seasonal_harmonics": 2,
+    "site_equal_training_and_heldout_scoring": true,
+    "site_folds": 5,
+    "source_season_year_and_latlon_baseline": true,
+    "training_fold_only_scaling": true,
+    "weather_additions": [
+      "mean30_temperature_C",
+      "log1p_sum30_precip_mm",
+      "n30days_tmin_below_0C"
+    ]
+  },
+  "original_plant_site_individual_identifiers_and_locations_not_exported": true,
+  "phenology_future_climate_projection_authorized": true,
+  "quality_after_complete_weather": {
+    "host_species": 5,
+    "no_statuses": 10028,
+    "response_days": 20770,
+    "site_identifiers_not_exported": true,
+    "sites": 72,
+    "source_species_counts": {
+      "Asclepias curassavica": 256,
+      "Asclepias fascicularis": 0,
+      "Asclepias incarnata": 2502,
+      "Asclepias speciosa": 928,
+      "Asclepias syriaca": 11733,
+      "Asclepias tuberosa": 5351
+    },
+    "states": 23,
+    "yes_statuses": 10742
+  },
+  "schema": "chocho_usanpn_daymet_site_holdout_leaf_20261028_v01",
+  "study_source": {
+    "daymet_citation": "https://doi.org/10.3334/ORNLDAAC/2361",
+    "daymet_public_service": "https://daymet.ornl.gov/single-pixel/api/data",
+    "daymet_years": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "source_site_effort_selection": {
+      "eligible_distinct_site_count": 117,
+      "eligible_site_species_groups_by_species": {
+        "Asclepias curassavica": 4,
+        "Asclepias fascicularis": 0,
+        "Asclepias incarnata": 21,
+        "Asclepias speciosa": 9,
+        "Asclepias syriaca": 72,
+        "Asclepias tuberosa": 40
+      },
+      "source_selected_site_count": 72,
+      "source_selected_state_or_weather_not_used_to_rank": true
+    },
+    "usanpn": {
+      "excluded_nonstable_site_geometries": 0,
+      "no_site_id_observer_or_coordinates_exported": true,
+      "original_accepted_plant_date_records": 27057,
+      "original_observations": 30476,
+      "registered_species_count": 6,
+      "source_complete_years": 8,
+      "source_registry_sha256": "13e99af4e7d7931618bdc9ddbb5afdc840c27c842b4005a8f6b551664e8d68cd",
+      "source_year_receipt_sha256": "6684a9082bcf9e90c4c735e0f26b2287cb98971a585515e8036f24c1bcf1bfc4"
+    },
+    "weather_day_lookback": 30
+  }
+}

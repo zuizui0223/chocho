@@ -108,6 +108,7 @@ EXCLUDE_RELATIVE = {
     Path("scripts/simulate_usanpn_milkweed_cmip6_leaf_window_20261028.py"),
     Path("scripts/probe_usanpn_daymet_weather_source_20261028.py"),
     Path("scripts/audit_usanpn_daymet_leaf_prediction_20261028.py"),
+    Path("tests/test_usanpn_daymet_frozen_result_20261028.py"),
     Path("tests/test_usanpn_daymet_leaf_prediction_20261028.py"),
     Path("tests/test_usanpn_cmip6_frozen_receipt_20261028.py"),
     Path("tests/test_usanpn_cmip6_leaf_window_20261028.py"),
