@@ -1,0 +1,41 @@
+name: NASA POWER original daily UK historical climate alternative source probe
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/probe_uk_nasa_power_1981_2021_20261028.py
+      - tests/test_uk_nasa_power_1981_2021_20261028.py
+      - .github/workflows/uk-nasa-power-history-probe-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-source-no-site-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source-independent NASA calendar tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_uk_nasa_power_1981_2021_20261028.py
+      - name: Check NASA original public 1981–2021 daily T and precipitation without any UKBMS site
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _nasa_power
+          python scripts/probe_uk_nasa_power_1981_2021_20261028.py \
+            --output _nasa_power/NASA_POWER_original_1981to2021_public_source_probe_20261028.json
+      - name: Upload only calendar, valid count, source SHA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-NASA-POWER-historical-1981-2021-source-probe-20261028
+          path: _nasa_power/NASA_POWER_original_1981to2021_public_source_probe_20261028.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Guard against use of blocked source
+        run: test "${{ steps.source.outcome }}" = success
