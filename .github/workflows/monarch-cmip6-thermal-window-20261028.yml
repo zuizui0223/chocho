@@ -1,0 +1,79 @@
+name: Monarch CMIP6 monthly thermal opportunity and host persistence scenarios
+on:
+  push:
+    branches: [analysis/monarch-cmip6-thermal-host-window-20261028]
+    paths:
+      - scripts/simulate_monarch_cmip6_thermal_window_20261028.py
+      - tests/test_monarch_cmip6_thermal_window_20261028.py
+      - .github/workflows/monarch-cmip6-thermal-window-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  strict-monthly-public-climate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 42
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source-backed raster dependencies and tests
+        run: |
+          python -m pip install -e '.[test,analysis]'
+          python -m pytest -q tests/test_monarch_cmip6_thermal_window_20261028.py
+      - name: Download full fixed WorldClim v2.1 and CMIP6 monthly temperature archives
+        run: |
+          set -euo pipefail
+          mkdir -p _cmip6/raw
+          for variable in tmin tmax; do
+            file="wc2.1_10m_${variable}.zip"
+            curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+              "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/${file}" \
+              -o "_cmip6/raw/${file}"
+          done
+          for model in MIROC6 IPSL-CM6A-LR; do
+            for ssp in ssp126 ssp585; do
+              for period in 2041-2060 2081-2100; do
+                for variable in tmin tmax; do
+                  file="wc2.1_10m_${variable}_${model}_${ssp}_${period}.zip"
+                  curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+                    "https://geodata.ucdavis.edu/climate/worldclim/2_1/fut/10m/${file}" \
+                    -o "_cmip6/raw/${file}"
+                done
+              done
+            done
+          done
+          test "$(find _cmip6/raw -type f -name '*.zip' | wc -l)" -eq 18
+      - name: Compute fixed-source climate thermal opportunities and persistence thresholds
+        run: |
+          python scripts/simulate_monarch_cmip6_thermal_window_20261028.py \
+            --climate-dir _cmip6/raw \
+            --output _cmip6/derived/monarch_cmip6_thermal_window_20261028.json
+      - name: Verify eight scenario outputs, source-gating and no precise location release
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_cmip6/derived/monarch_cmip6_thermal_window_20261028.json')
+          a=json.loads(p.read_text(encoding='utf-8'))
+          assert a['schema']=='chocho_monarch_cmip6_recorded_locality_thermal_opportunity_v01'
+          assert len(a['scenarios'])==8
+          assert len(a['archives'])==18
+          assert a['source']['monarch_author_zip_sha256']=='4e4def63669b34738bcbfb8ba32ccf6c61d02cc6992b8f1ebfa8bc350a3987db'
+          assert a['source']['author_spatially_thinned_hexes']>=30
+          assert a['inference_gate']['absolute_population_predictions_authorized'] is False
+          for s in a['scenarios']:
+            assert s['groups']['all']['n_100km_hex_localities']==a['baseline']['all']['n_100km_hex_localities']
+          raw=p.read_text(encoding='utf-8').lower()
+          for banned in ('"uri":','"observer":','"latitude":','"longitude":','"hex_id":','"index1":'):
+            assert banned not in raw,banned
+          print('PASS source-matched CMIP6 and no-leaf ecological firewall')
+          PY
+      - name: Upload aggregate-only source digests and potential thermal opportunities
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-monarch-cmip6-winter-gdd-conditional-20261028
+          path: _cmip6/derived/monarch_cmip6_thermal_window_20261028.json
+          retention-days: 30
+          if-no-files-found: error
