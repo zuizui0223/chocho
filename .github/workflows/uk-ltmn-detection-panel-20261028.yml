@@ -1,0 +1,54 @@
+name: UK LTMN source-matched 19-transect historical butterfly detected-visit comparison
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_butterfly_detection_panel_20261028.py
+      - tests/test_uk_ltmn_butterfly_detection_panel_20261028.py
+      - .github/workflows/uk-ltmn-detection-panel-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-verified-site-era-butterflies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original source OLE XLS reader and synthetic survey denominators
+        run: |
+          python -m pip install "xlrd>=2.0.2,<3" "pytest>=8,<10"
+          python -m pytest -q tests/test_uk_ltmn_butterfly_detection_panel_20261028.py
+      - name: Compute effort-gated fixed UK 27 butterflies on 19 geocoded early-late transects
+        run: |
+          mkdir -p _ltmn
+          python scripts/audit_uk_ltmn_butterfly_detection_panel_20261028.py \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --output _ltmn/uk_ltmn_same_transect_focal_source_detection_20261028.json
+      - name: Check original survey counts and absence semantic guard
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_ltmn/uk_ltmn_same_transect_focal_source_detection_20261028.json')
+          x=json.loads(p.read_text())
+          assert x["schema"]=="chocho_uk_LTMN_19_source_transect_conditional_butterfly_detection_20261028_v01"
+          assert x["source"]["n_original_fixed_longterm_geocoded_transects"]==19
+          assert len(x["original_site_comparable_focal_butterflies"])==27
+          assert x["inference"]["not_biological_absence_or_colonization"]
+          assert not x["inference"]["human_maintained_host_plant_status_not_measured"] is False
+          body=p.read_text().lower()
+          for token in ('"ukbms_siteno":','"longitude":','"latitude":','"easting":','"northing":','"recorder_name":'):
+            assert token not in body
+          print("PASS source, site fixed exposure and no biological absence")
+          PY
+      - name: Publish only species-summed source site-equal detection changes
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-19-repeated-transect-survey-detection-20261028
+          path: _ltmn/uk_ltmn_same_transect_focal_source_detection_20261028.json
+          retention-days: 30
+          if-no-files-found: error
