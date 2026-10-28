@@ -35,8 +35,13 @@ def test_original_daymet_monthly_delta_recreates_daily_mean_and_frost_no_future_
     changed=shift_history_to_future(weather,warming[123]['tmin'],warming[123]['tmax'])
     assert set(changed)==set(weather)
     assert next(iter(changed.values()))==(2.,12.,4.)
-    broken={123:{'tmin':{m:11. for m in MONTHS},'tmax':{m:0. for m in MONTHS}}}
-    with pytest.raises(ValueError,match='inverted'):climate_features_for_dates(actual,{123:weather},broken)
+    # The **failed original** separate-min/max anomaly would invert this day.
+    # The explicitly *post-source revised* mean warming shift must preserve DTR.
+    diverging={123:{'tmin':{m:11. for m in MONTHS},'tmax':{m:0. for m in MONTHS}}}
+    physical=climate_features_for_dates(actual,{123:weather},diverging)
+    assert physical.tolist()==[[9.5,0.]]
+    reconstructed=shift_history_to_future(weather,diverging[123]['tmin'],diverging[123]['tmax'])
+    assert all((hi-lo)==10. for lo,hi,_ in reconstructed.values())
 
 
 def test_ood_is_frozen_historical_quantile():

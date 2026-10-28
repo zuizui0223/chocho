@@ -103,10 +103,14 @@ def shift_history_to_future(daily, delta_tmin_by_month, delta_tmax_by_month):
     """Only shift original daily temperatures; keep same days and precipitation."""
     shifted={}
     for day,(tmin,tmax,precip) in daily.items():
-        a=float(tmin)+float(delta_tmin_by_month[day.month])
-        b=float(tmax)+float(delta_tmax_by_month[day.month])
+        # Explicit post-source DTR-preserving *mean warming* scenario.
+        # Do not separately shift original historical Tmin and Tmax: monthly
+        # future anomaly changes in DTR can invert individual source daily pairs.
+        common_shift=.5*(float(delta_tmin_by_month[day.month])+float(delta_tmax_by_month[day.month]))
+        a=float(tmin)+common_shift
+        b=float(tmax)+common_shift
         if not (np.isfinite(a) and np.isfinite(b) and a<=b+1e-3):
-            raise ValueError('Future anomaly yields inverted Tmin/Tmax day, refuse imputation')
+            raise ValueError('Source daily temperature or CMIP6 monthly mean anomaly invalid')
         shifted[day]=(a,b,float(precip))
     return shifted
 
@@ -122,10 +126,11 @@ def climate_features_for_dates(dates,source_weather,delta_by_station):
         for k in range(WEATHER_DAYS):
             day=when-timedelta(days=k)
             tmin,tmax,prcp=original[day]
-            lo=float(tmin)+float(delt['tmin'][day.month])
-            hi=float(tmax)+float(delt['tmax'][day.month])
+            common_shift=.5*(float(delt['tmin'][day.month])+float(delt['tmax'][day.month]))
+            lo=float(tmin)+common_shift
+            hi=float(tmax)+common_shift
             if not (math.isfinite(lo) and math.isfinite(hi) and lo <= hi+1e-3):
-                raise ValueError('CMIP6 monthly anomaly creates inverted daily tmin/tmax; no silent repair')
+                raise ValueError('Source daily temperature or CMIP6 monthly mean anomaly invalid')
             avg+=.5*(lo+hi)
             nfrost+=int(lo<0)
         out[i,0]=avg/WEATHER_DAYS
@@ -302,10 +307,13 @@ def run(args):
         },
         'model':{'statistical_model':'historical original temp+frost L2 logistic C=.1',
                  'site_equal_train_weights':True,'fitted_on_original_2018to2025_only':True,
-                 'temperature_change':'WorldClim CMIP6 future minus historical monthly tmin/tmax each climate grid',
+                 'temperature_change':'POSTHOC_DTR_PRESERVING_MONTHLY_MEAN_TEMPERATURE_DELTA_SCENARIO: 0.5*(CMIP6 delta tmin + CMIP6 delta tmax) added to original Daymet tmin AND tmax',
                  'daily_weather':'original 2018–2025 Daymet daily sequences with monthly temp deltas',
-                 'frost_count':'recomputed original daily Tmin plus model monthly Tmin delta',
+                 'frost_count':'recomputed after identical mean-temperature monthly anomaly applied to each daily Tmin and Tmax',
                  'daily_precipitation_source':'original historical Daymet, held fixed',
+                 'daily_diurnal_temperature_range_held_fixed':True,
+                 'post_source_compatibility_amendment':'USANPN_CMIP6_DTR_PRESERVING_SOURCE_AMENDMENT_20261028.md',
+                 'GCM_predicted_change_in_DTR_not_modeled':True,
                  'no_future_realized_plant_leaf_period_inferred':True,
                  'site_equal_historical_source_visit_sample_not_random':True,
                  'zero_anomaly_feature_and_model_prediction_identity_passed':True,
