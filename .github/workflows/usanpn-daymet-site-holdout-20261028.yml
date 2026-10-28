@@ -1,0 +1,68 @@
+name: USA-NPN milkweed live-leaf Daymet weather held-out-site prediction
+on:
+  push:
+    branches: [analysis/monarch-npn-daymet-leaf-prediction-20261028]
+    paths:
+      - scripts/audit_usanpn_daymet_leaf_prediction_20261028.py
+      - tests/test_usanpn_daymet_leaf_prediction_20261028.py
+      - .github/workflows/usanpn-daymet-site-holdout-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-verified-leaf-site-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original project and fixed prediction dependencies
+        run: |
+          python -m pip install -e '.[test]' 'scikit-learn==1.8.0'
+      - name: Fail-closed source-independent climate calendar, model and site-leakage tests
+        run: |
+          python -m pytest -q tests/test_usanpn_daymet_leaf_prediction_20261028.py
+      - name: Retrieve original NPN direct Leaves and bounded NASA/ORNL daily weather, then hold out source stations
+        id: empirical
+        continue-on-error: true
+        run: |
+          mkdir -p _daymet/derived
+          python scripts/audit_usanpn_daymet_leaf_prediction_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --npn-source provenance/archive/monarch/results/USANPN_MILKWEED_STATUS_2018_2025.json \
+            --output _daymet/derived/USANPN_DAYMET_HELDOUT_LEAF_20261028.json
+      - name: Verify no raw source station or observation details are exported
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path('_daymet/derived/USANPN_DAYMET_HELDOUT_LEAF_20261028.json')
+          if not f.is_file():
+              raise SystemExit('No source result: fail closed')
+          x=json.loads(f.read_text(encoding='utf-8'))
+          assert x['schema']=='chocho_usanpn_daymet_site_holdout_leaf_20261028_v01'
+          assert x['daymet_data_not_exported'] is True
+          assert x['original_plant_site_individual_identifiers_and_locations_not_exported'] is True
+          assert x['study_source']['usanpn']['original_accepted_plant_date_records']==27057
+          assert x['study_source']['usanpn']['source_complete_years']==8
+          lower=f.read_text(encoding='utf-8').lower()
+          assert not any(w in lower for w in ('"site_id":','"individual_id":','"latitude":','"longitude":','"observer":','"uri":','"site":'))
+          print('PASS USA-NPN original source and no individual monitoring records serialized')
+          PY
+      - name: Upload only site-aggregated predictive skill, or explicit source blocker
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-daymet-site-holdout-leaf-20261028
+          path: _daymet/derived/USANPN_DAYMET_HELDOUT_LEAF_20261028.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Do not claim a successful empirical source unless source stage passed
+        run: |
+          if [ '${{ steps.empirical.outcome }}' != 'success' ]; then
+             echo 'Daymet/NPN source failed original precommitted coverage or transport gate; no biological association claim.'
+             exit 1
+          fi
