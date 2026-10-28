@@ -1,0 +1,58 @@
+name: European 39 butterflies historical GBIF source-only feasibility
+on:
+  push:
+    branches: [analysis/europe-butterfly-host-hindcast-20261028]
+    paths:
+      - scripts/audit_europe_historical_butterfly_gbif_source_20261028.py
+      - tests/test_europe_historical_butterfly_gbif_source_20261028.py
+      - .github/workflows/europe-butterfly-historical-gbif-facet-source-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  old-vs-late-europe-gbif-source-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Synthetic source-identity and incomplete-facet regression tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_europe_historical_butterfly_gbif_source_20261028.py
+      - name: Prove GBIF accepts two source facets without downloading individual records
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.request import Request,urlopen
+          import sys
+          sys.path.insert(0,'scripts')
+          from audit_europe_historical_butterfly_gbif_source_20261028 import read_panel,request_url,validate_facets
+          panel,digest=read_panel(Path('data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json'))
+          url=request_url(panel[0]['taxon_key'],'1970,1990')
+          with urlopen(Request(url,headers={'User-Agent':'chocho-europe-historical-gbif-facets/0.1'}),timeout=40) as response:
+              assert response.status==200
+              content=response.read(300001)
+          assert len(content)<=300000
+          result=validate_facets(json.loads(content))
+          assert len(panel)==39
+          print('PASS historical GBIF country + recording-basis facets source; records=',result['count'])
+          PY
+      - name: Query frozen 39 butterflies x three historical periods, source facets only
+        run: |
+          mkdir -p _eurohistorical
+          python scripts/audit_europe_historical_butterfly_gbif_source_20261028.py \
+            --manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --output _eurohistorical/europe_39_butterfly_historical_facets_20261028.json \
+            --max-workers 3
+      - name: Upload source-only historical record eligibility and reporting-basis shift
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-europe-39-historical-GBIF-facet-source-gate-20261028
+          path: _eurohistorical/europe_39_butterfly_historical_facets_20261028.json
+          if-no-files-found: warn
+          retention-days: 30
