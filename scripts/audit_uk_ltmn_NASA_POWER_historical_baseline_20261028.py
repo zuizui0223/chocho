@@ -31,7 +31,10 @@ NASA_POWER_URL="https://power.larc.nasa.gov/api/temporal/daily/point"
 ALL_YEARS=(1981,2021)
 DAYS_EXPECTED=(dt.date(2021,12,31)-dt.date(1981,1,1)).days+1
 SEED=20261028
-C=.1def original_nasa_power_site_weather(lat,lon,request_fn=None):
+C=.1
+
+
+def original_nasa_power_site_weather(lat,lon,request_fn=None):
     """Read exact NASA POWER 1981–2021 daily T2M / PRECTOTCORR, not ERA5."""
     params={"latitude":f"{lat:.5f}","longitude":f"{lon:.5f}",
             "start":"19810101","end":"20211231","parameters":"T2M,PRECTOTCORR",
@@ -83,8 +86,6 @@ def nasa_site_effort(visits,geocoded):
            if all(len(v[era])>=10 and len(period_years[site][era])>=3 for era in PERIODS)}
     return all_events,valid,period_events
 
-
-lib.sha256(body).hexdigest(),invalid
 
 def prior30(weather,when):
     arr=[weather.get(when-dt.timedelta(days=i)) for i in range(30)]
