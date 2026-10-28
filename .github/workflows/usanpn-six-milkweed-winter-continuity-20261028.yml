@@ -1,0 +1,38 @@
+name: USA-NPN winter milkweed leaf month-continuity and common-region source gate
+on:
+  push:
+    branches:
+      - analysis/monarch-usanpn-live-leaves-20261028
+    paths:
+      - scripts/analyze_usanpn_winter_leaf_continuity_20261028.py
+      - tests/test_usanpn_winter_leaf_continuity_20261028.py
+      - .github/workflows/usanpn-six-milkweed-winter-continuity-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fixed-source-winter-four-month-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline winter cross-year and missing-month regression controls
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_usanpn_winter_leaf_continuity_20261028.py
+      - name: Source-locked winter November–February repeated site and geographic overlap diagnostic
+        run: |
+          mkdir -p _npn
+          python scripts/analyze_usanpn_winter_leaf_continuity_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --output _npn/usanpn_winter_leaf_continuity_and_overlap_20261028.json
+      - name: Preserve only aggregate coverage/overlap and source receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-winter-leaf-continuity-20261028
+          path: _npn/usanpn_winter_leaf_continuity_and_overlap_20261028.json
+          retention-days: 30
+          if-no-files-found: error

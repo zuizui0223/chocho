@@ -1,0 +1,38 @@
+name: USA-NPN six milkweed exact live-leaves phenophase registry
+on:
+  push:
+    branches:
+      - analysis/monarch-usanpn-live-leaves-20261028
+    paths:
+      - scripts/audit_usanpn_milkweed_registry_20261028.py
+      - tests/test_usanpn_milkweed_registry_20261028.py
+      - .github/workflows/usanpn-milkweed-leaves-registry-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  registry-source-before-observation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test-only dependencies
+        run: python -m pip install 'pytest>=8,<10'
+      - name: Verify fail-closed species and phenophase identity tests
+        run: python -m pytest -q tests/test_usanpn_milkweed_registry_20261028.py
+      - name: Check fixed USA-NPN taxonomy and Leaves definitions (no biological observations)
+        run: |
+          mkdir -p _npn
+          python scripts/audit_usanpn_milkweed_registry_20261028.py \
+            --output _npn/usanpn_six_milkweed_leaf_registry_20261028.json
+      - name: Upload source-only IDs and quality receipt, no site/user data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-six-milkweed-leaves-registry-20261028
+          path: _npn/usanpn_six_milkweed_leaf_registry_20261028.json
+          retention-days: 30
+          if-no-files-found: warn
