@@ -1,0 +1,41 @@
+name: UK LTMN original transect visits and species counts public-source gate
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_public_transect_source_20261028.py
+      - tests/test_uk_public_transect_source_20261028.py
+      - .github/workflows/uk-public-transect-source-gate-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-transect-data-not-gbif-occurrence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Source-independent format and no-unobserved-zero tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_uk_public_transect_source_20261028.py
+      - name: Read-only bounded verified publisher download schema audit
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _uk_public_source
+          python scripts/audit_uk_public_transect_source_20261028.py \
+            --output _uk_public_source/uk_public_original_data_source_gate_20261028.json
+      - name: Upload only original-source formats and field names
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-real-transect-visit-and-count-source-only-20261028
+          path: _uk_public_source/uk_public_original_data_source_gate_20261028.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Fail on no verified original source
+        run: test "${{ steps.source.outcome }}" = "success"
