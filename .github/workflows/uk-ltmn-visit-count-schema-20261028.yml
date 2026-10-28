@@ -1,0 +1,33 @@
+name: UK LTMN original butterfly visit and count schema audit
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_xls_schema_20261028.py
+      - .github/workflows/uk-ltmn-visit-count-schema-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-verified-original-spreadsheets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install read-only original OLE data decoder
+        run: python -m pip install "xlrd>=2.0.2,<3"
+      - name: Audit header and data shape of exactly verified UKBMS LTMN source
+        run: |
+          mkdir -p _ltmn_schema
+          python scripts/audit_uk_ltmn_xls_schema_20261028.py \
+            --output _ltmn_schema/ukbms_ltmn_original_visit_count_schema_20261028.json
+      - name: Publish only non-identifying sheet/header metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-original-visit-count-schema-only-20261028
+          path: _ltmn_schema/ukbms_ltmn_original_visit_count_schema_20261028.json
+          retention-days: 30
+          if-no-files-found: error
