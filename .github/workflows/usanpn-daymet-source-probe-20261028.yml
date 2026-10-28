@@ -1,0 +1,30 @@
+name: Verify public NASA Daymet daily climate API for NPN leaf phenology
+on:
+  push:
+    branches: [analysis/monarch-npn-daymet-leaf-prediction-20261028]
+    paths:
+      - scripts/probe_usanpn_daymet_weather_source_20261028.py
+      - .github/workflows/usanpn-daymet-source-probe-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Probe source with public example site only
+        run: |
+          mkdir -p _daymet
+          python scripts/probe_usanpn_daymet_weather_source_20261028.py --output _daymet/daymet_source_probe_20261028.json
+      - name: Retain only API metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-daymet-public-API-probe-20261028
+          path: _daymet/daymet_source_probe_20261028.json
+          retention-days: 15
