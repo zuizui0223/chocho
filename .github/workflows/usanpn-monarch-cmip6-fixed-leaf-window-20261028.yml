@@ -1,0 +1,83 @@
+name: NPN same-site observed month Leaves × CMIP6 winter thermal overlay
+on:
+  push:
+    branches: [analysis/monarch-usanpn-cmip6-leaf-overlay-20261028]
+    paths:
+      - scripts/simulate_usanpn_milkweed_cmip6_leaf_window_20261028.py
+      - tests/test_usanpn_cmip6_leaf_window_20261028.py
+      - .github/workflows/usanpn-monarch-cmip6-fixed-leaf-window-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-source-common-site-leaf-climate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 42
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original CMIP6 + NPN source scientific tests
+        run: |
+          python -m pip install -e '.[test,analysis]'
+          python -m pytest -q \
+            tests/test_usanpn_cmip6_leaf_window_20261028.py \
+            tests/test_usanpn_frozen_leaf_receipts_20261028.py
+      - name: Download immutable original 18 WorldClim monthly temperature archives
+        run: |
+          set -euo pipefail
+          mkdir -p _cmip6/raw
+          for variable in tmin tmax; do
+            file="wc2.1_10m_${variable}.zip"
+            curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+              "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/${file}" \
+              -o "_cmip6/raw/${file}"
+          done
+          for model in MIROC6 IPSL-CM6A-LR; do
+            for ssp in ssp126 ssp585; do
+              for period in 2041-2060 2081-2100; do
+                for variable in tmin tmax; do
+                  file="wc2.1_10m_${variable}_${model}_${ssp}_${period}.zip"
+                  curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+                    "https://geodata.ucdavis.edu/climate/worldclim/2_1/fut/10m/${file}" \
+                    -o "_cmip6/raw/${file}"
+                done
+              done
+            done
+          done
+          test "$(find _cmip6/raw -type f -name '*.zip' | wc -l)" -eq 18
+      - name: Score real CMIP6 9 panels against exact USA-NPN monitored milkweed site-months
+        run: |
+          mkdir -p _npn/results
+          python scripts/simulate_usanpn_milkweed_cmip6_leaf_window_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --npn-source provenance/archive/monarch/results/USANPN_MILKWEED_STATUS_2018_2025.json \
+            --cmip6-source provenance/archive/monarch/results/monarch_cmip6_thermal_window_20261028.json \
+            --climate-dir _cmip6/raw \
+            --output _npn/results/usanpn_monarch_cmip6_leaf_month_overlay_20261028.json
+      - name: Verify exact two-species source, 9 climate panels and no original locations exported
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_npn/results/usanpn_monarch_cmip6_leaf_month_overlay_20261028.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['schema']=='chocho_usanpn_same_site_cmip6_fixed_monthly_leaf_scenarios_20261028_v01'
+          assert x['status']=='EXPLORATORY_REAL_CMIP6_FIXED_OBSERVED_LEAF_MONTH_SITE_OVERLAY'
+          assert len(x['baseline_and_eight_scenarios'])==9
+          assert len(x['CMIP6_original_source_archive_sha256'])==18
+          assert x['source']['source_year_replies_exact_sha_verified']==8
+          assert x['inference']['original_monarch_840_hexes_directly_joined'] is False
+          assert x['inference']['leaf_availability_future_projected'] is False
+          s=p.read_text().lower()
+          assert not any(k in s for k in ('"site_id":','"individual_id":','"latitude":','"longitude":','"observer":','"uri":'))
+          print('PASS correct source, common climate, no location/individual release')
+          PY
+      - name: Upload aggregate-only NPN site-equal 9 scenario predictions
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-site-cmip6-month-leaf-20261028
+          path: _npn/results/usanpn_monarch_cmip6_leaf_month_overlay_20261028.json
+          retention-days: 30
+          if-no-files-found: error
