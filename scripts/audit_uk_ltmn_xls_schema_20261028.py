@@ -60,6 +60,12 @@ def run(path):
             m={"sheet_number":len(sheets)+1,"original_rows":sh.nrows,
                "original_columns":sh.ncols}
             m.update(headers_only(sh))
+            # Only names of original field headers, never original source rows.
+            if m.get("source_header_status")=="LIKELY_FIELD_HEADER":
+                head=m["header_row_1based"]-1
+                m["field_names_all_columns"]=[
+                    str(v).strip()[:80] for v in sh.row_values(head)
+                ]
             sheets.append(m)
         result["inputs"][key]={"sha256":SOURCES[key][1],"bytes":len(data),
                               "format":"OLE_XLS","sheets":sheets}
