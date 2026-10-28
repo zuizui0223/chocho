@@ -58,3 +58,27 @@ def test_reporting_country_window_eligibility_not_true_colonization():
     assert summarize(panel,r,completed=False)['historical_source_eligibility_gate']=='FAIL_SOURCE_INFORMATION_OR_INCOMPLETE'
     r[0]['countries']['GB']=0
     assert 'GB' in z['paired_species_by_country']
+
+
+def test_frozen_39_roster_retains_unresolved_without_guessing(tmp_path,monkeypatch):
+    import json,hashlib
+    import audit_europe_historical_butterfly_gbif_source_20261028 as module
+    originals=[]
+    for i,name in enumerate(ORIGINAL_ROSTER,1):
+        if name=='Lasiommata megera':
+            originals.append({'species':name,'status':'TAXON_UNRESOLVED'})
+        else:
+            originals.append({'species':name,'status':'PARTIAL_FETCH_NOT_ELIGIBLE',
+                              'taxon':{'key':i,'match_type':'EXACT'}})
+    originals.extend({'species':f'Other filler {i}','status':'COMPLETE',
+                      'taxon':{'key':100000+i}} for i in range(200))
+    raw=(json.dumps({'schema':module.MANIFEST_SCHEMA,
+         'species_requested':239,'species_receipts':originals})+'\n').encode()
+    path=tmp_path/'source.json';path.write_bytes(raw)
+    monkeypatch.setattr(module,'MANIFEST_SHA256',hashlib.sha256(raw).hexdigest())
+    panel,_=module.read_panel(path)
+    assert len(panel)==39
+    unresolved=[x for x in panel if x['taxon_key'] is None]
+    assert unresolved==[{'species':'Lasiommata megera','taxon_key':None,
+                        'taxon_identity':None,'original_retrieval_status':'TAXON_UNRESOLVED'}]
+    assert sum(type(x['taxon_key']) is int for x in panel)==38

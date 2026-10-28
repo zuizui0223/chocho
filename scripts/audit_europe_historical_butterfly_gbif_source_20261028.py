@@ -75,8 +75,15 @@ def read_panel(path: Path) -> tuple[list[dict], str]:
     taxon_ids = []
     for name in ORIGINAL_ROSTER:
         item = by_name.get(name)
-        if item is None or item.get('status') == 'TAXON_UNRESOLVED':
-            raise ValueError(f'Fixed European name unavailable in original 239: {name}')
+        if item is None:
+            raise ValueError(f'Fixed European name not in original 239 at all: {name}')
+        if item.get('status') == 'TAXON_UNRESOLVED':
+            # Keep the prospectively selected taxon in the complete 39-species
+            # denominator as UNSCORABLE. Never live-rematch or substitute it.
+            panel.append({'species':name,'taxon_key':None,
+                          'taxon_identity':None,
+                          'original_retrieval_status':'TAXON_UNRESOLVED'})
+            continue
         taxon = item.get('taxon') or {}
         key = taxon.get('key')
         if type(key) is not int or key <= 0:
@@ -251,7 +258,8 @@ def summarize(panel: list[dict], results: list[dict], *, completed:bool) -> dict
 
 def run(manifest:Path, output:Path, max_workers:int=3) -> dict:
     panel,digest=read_panel(manifest)
-    requests=[(p['species'],p['taxon_key'],window) for p in panel for window in WINDOWS]
+    requests=[(p['species'],p['taxon_key'],window) for p in panel
+              if type(p['taxon_key']) is int for window in WINDOWS]
     limiter=RateLimiter(MAX_RATE)
     results=[]
     with ThreadPoolExecutor(max_workers=max_workers) as exe:
@@ -269,6 +277,8 @@ def run(manifest:Path, output:Path, max_workers:int=3) -> dict:
          'source_manifest_sha256':digest,
          'GBIF_original_239_species_count':239,
          'fixed_europe_candidate_species_count':len(panel),
+         'resolved_original_taxa':sum(type(x['taxon_key']) is int for x in panel),
+         'original_taxon_unresolved_names':[x['species'] for x in panel if x['taxon_key'] is None],
          'fixed_eligible_countries':list(COUNTRIES),
          'windows':WINDOWS,
          'fixed_candidate_panel':panel,
