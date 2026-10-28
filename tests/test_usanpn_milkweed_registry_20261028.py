@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 import pytest
-sys.path.insert(0,str(Path(__file__).resolve().parent))
+sys.path.insert(0,str(Path(__file__).resolve().parents[1] / "scripts"))
 from audit_usanpn_milkweed_registry_20261028 import candidates,registry_match,leaves_id,discover,SPECIES,YEARS
 
 def test_registry_not_substring_or_common_name():
