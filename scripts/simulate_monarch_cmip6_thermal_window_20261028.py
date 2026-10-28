@@ -251,6 +251,34 @@ def validate_climate(minima,maxima):
                 f'tmax_q05_50_95={np.quantile(y,[.05,.5,.95]).tolist()}')
 
 
+def climate_validity_mask(minima,maxima):
+    """Physical quality mask before thermal outcomes; never repair anomalous TIFs.
+
+    Invalid original climate pixels are excluded from the COMMON sampling
+    frame of the present plus all future models, not merely one future.
+    """
+    if set(minima)!=set(range(1,13)) or set(maxima)!=set(range(1,13)):
+        raise ValueError('Incomplete annual climate source')
+    good=np.ones_like(np.asarray(minima[1]),dtype=bool)
+    bad=Counter()
+    for month in range(1,13):
+        x=np.asarray(minima[month],dtype=float)
+        y=np.asarray(maxima[month],dtype=float)
+        if x.shape!=good.shape or y.shape!=good.shape:
+            raise ValueError('Mismatched climate-source monthly pixel support')
+        nonfinite=~np.isfinite(x)|~np.isfinite(y)
+        inverted=x>y+1e-3
+        implausibly_low=x < -90
+        implausibly_high=y > 75
+        invalid=nonfinite|inverted|implausibly_low|implausibly_high
+        good &= ~invalid
+        for key,mask in [('nonfinite',nonfinite),('tmin_above_tmax',inverted),
+                         ('tmin_below_minus90',implausibly_low),
+                         ('tmax_above_75',implausibly_high)]:
+            if np.any(mask):bad[f'{month:02d}_{key}']=int(np.sum(mask))
+    return good,dict(sorted(bad.items()))
+
+
 def scenario_thermal(minima,maxima,development_base=LOWER_C,development_cap=UPPER_C):
     validate_climate(minima,maxima)
     if not (0 < development_base < development_cap <= 40):
@@ -348,11 +376,10 @@ def compute(args):
     report['source']['temperature_encoding_factor_from_original_july_tmax']=fixed_scale
     base_min={m:base_raw['tmin'][m]*fixed_scale for m in range(1,13)}
     base_max={m:base_raw['tmax'][m]*fixed_scale for m in range(1,13)}
-    baseline=scenario_thermal(base_min,base_max)
-    base_summary={g:summarize_group(baseline,indices) for g,indices in sorted(group_pixels.items())}
-    if base_summary['all']['n_100km_hex_localities']!=len(centers):
-        raise ValueError('Original 100-km hex source sampling unit lost in raster join')
-    report['baseline']=base_summary
+    # Download all eight physical scenarios before opening thermal outcomes.
+    # A source pixel that violates Tmin<=Tmax for any month in any model is
+    # dropped from EVERY baseline/future panel, not fixed or relabeled.
+    climate_panels=[('1970-2000','baseline','historical',base_min,base_max)]
     for model in MODELS:
         for ssp in SSPS:
             for period in PERIODS:
@@ -366,22 +393,69 @@ def compute(args):
                         raise ValueError('Historical/future temperature encoding mismatch')
                     scenario[var]={m:raw[m]*scale for m in range(1,13)}
                     report['archives'][path.name]={'sha256':digest,'bytes':path.stat().st_size}
-                # Physical-input source QC before interpreting any thermal outcome.
-                print(json.dumps({'climate_pair_qc':{'gcm':model,'ssp':ssp,'period':period,
-                  'winter_january_tmin_median':float(np.median(scenario['tmin'][1])),
-                  'winter_january_tmax_median':float(np.median(scenario['tmax'][1])),
-                  'july_tmin_median':float(np.median(scenario['tmin'][7])),
-                  'july_tmax_median':float(np.median(scenario['tmax'][7])),
-                  'fixed_storage_factor':fixed_scale}},sort_keys=True))
-                future=scenario_thermal(scenario['tmin'],scenario['tmax'])
-                bygroup={g:summarize_group(future,indices) for g,indices in sorted(group_pixels.items())}
-                for key in bygroup:
-                    a=base_summary[key];b=bygroup[key]
+                climate_panels.append((model,ssp,period,scenario['tmin'],scenario['tmax']))
+    original_pixel_count=len(unique_pixels)
+    common=np.ones(original_pixel_count,dtype=bool)
+    quality=[]
+    for model,ssp,period,tmin,tmax in climate_panels:
+        valid,problems=climate_validity_mask(tmin,tmax)
+        quality.append({'gcm':model,'ssp':ssp,'period':period,
+                        'invalid_physical_pixel_count':int(np.sum(~valid)),
+                        'problem_counts_by_month_type':problems})
+        common &= valid
+    remaining=int(np.sum(common));dropped=original_pixel_count-remaining
+    if remaining==0 or dropped/original_pixel_count>.01:
+        raise ValueError(f'Pre-outcome physical raster QA excludes {dropped}/{original_pixel_count} pixels >1%; source not scored: {quality}')
+    # Remap original fixed source-hex rows to the shared physical valid pixel
+    # index. The 1% QC cap and fully common support are explicit *post-source*
+    # audit rules and are not treated as pre-registered ecology.
+    kept=np.flatnonzero(common)
+    old_to_new={int(old):i for i,old in enumerate(kept)}
+    group_pixels={g:[old_to_new[i] for i in indices if i in old_to_new]
+                  for g,indices in group_pixels.items()}
+    fixed_hex=group_pixels['all']
+    if len(fixed_hex)<MIN_QUALIFIED_SOURCE_HEX:
+        raise ValueError('Too few source localities on common climate support')
+    report['source']['original_sampled_worldclim_pixels_before_common_qa']=original_pixel_count
+    report['source']['sampled_worldclim_pixels_after_common_qa']=remaining
+    report['source']['source_hexes_after_common_climate_qa']=len(fixed_hex)
+    report['source']['source_hexes_excluded_due_to_any_physical_climate_qc']=len(centers)-len(fixed_hex)
+    report['source']['common_source_climate_quality_audit']={
+        'status':'VALID_SOURCE_GEOGRAPHY_COMMON_TO_ALL_9_PERIOD_MODEL_PANELS',
+        'excluded_pixel_count':dropped,'excluded_pixel_fraction':dropped/original_pixel_count,
+        'invalid_source_pixel_is_never_temperature_imputed':True,
+        'post_source_1percent_QC_guard':True,
+        'model_month_source_bad_counts':quality,
+    }
+    print(json.dumps({'physical_QC_only':report['source']['common_source_climate_quality_audit'],
+                      'n_source_hexes_after_common_QC':len(fixed_hex)},sort_keys=True))
+    scenario_panels=[]
+    for model,ssp,period,tmin,tmax in climate_panels:
+        # Apply identical source geography to baseline and all future runs.
+        clean_min={m:tmin[m][common] for m in range(1,13)}
+        clean_max={m:tmax[m][common] for m in range(1,13)}
+        thermal=scenario_thermal(clean_min,clean_max)
+        if model=='1970-2000':
+            baseline=thermal
+            base_summary={g:summarize_group(thermal,indices)
+                          for g,indices in sorted(group_pixels.items())}
+            if base_summary['all']['n_100km_hex_localities']!=len(fixed_hex):
+                raise ValueError('Original source-hex unit lost after common climate QA')
+            report['baseline']=base_summary
+        else:
+            bygroup={g:summarize_group(thermal,indices)
+                     for g,indices in sorted(group_pixels.items())}
+            for key in bygroup:
+                a=base_summary[key];b=bygroup[key]
+                if b['thermal_fraction_ge_323'] is not None and a['thermal_fraction_ge_323'] is not None:
                     b['delta_thermal_fraction_ge_323_vs_1970_2000']=(
                         b['thermal_fraction_ge_323']-a['thermal_fraction_ge_323'])
                     b['delta_winter_gdd_mean_vs_1970_2000']=b['winter_gdd_mean']-a['winter_gdd_mean']
-                report['scenarios'].append({'gcm':model,'ssp':ssp,'period':period,'groups':bygroup})
-    if len(report['scenarios'])!=8 or any(s['groups']['all']['n_100km_hex_localities']!=len(centers)
+                else:
+                    b['delta_thermal_fraction_ge_323_vs_1970_2000']=None
+                    b['delta_winter_gdd_mean_vs_1970_2000']=None
+            report['scenarios'].append({'gcm':model,'ssp':ssp,'period':period,'groups':bygroup})
+    if len(report['scenarios'])!=8 or any(s['groups']['all']['n_100km_hex_localities']!=len(fixed_hex)
                                          for s in report['scenarios']):
         raise ValueError('Incomplete ensemble or changing study-source support')
     report['inference_gate']={

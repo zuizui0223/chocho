@@ -9,7 +9,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from simulate_monarch_cmip6_thermal_window_20261028 import (
     DAYS, WINTER, ONE_GENERATION_GDD,archive_name,
     grid_cell,month_from_file,choose_temperature_scale,scenario_thermal,
-    validate_climate,summarize_group,_sample_tif_band,
+    validate_climate,summarize_group,_sample_tif_band,climate_validity_mask,
 )
 
 
@@ -87,3 +87,16 @@ def test_original_12_file_vs_future_12_band_geotiff_input_contract():
     assert month_from_file('wc2.1_10m_tmin_01.tif')==1
     assert month_from_file('wc2.1_10m_tmin_IPSL-CM6A-LR_ssp126_2041-2060.tif') is None
     assert callable(_sample_tif_band)
+
+
+def test_physical_QC_excludes_same_raster_pixel_from_every_scenario():
+    tmin,tmax=fake_climate(15.,n=4)
+    tmin[12][1]=100.
+    valid,counts=climate_validity_mask(tmin,tmax)
+    assert valid.tolist()==[True,False,True,True]
+    assert counts['12_tmin_above_tmax']==1
+    with pytest.raises(ValueError,match='month=12'):
+        scenario_thermal(tmin,tmax)
+    clean_lo={m:v[valid] for m,v in tmin.items()}
+    clean_hi={m:v[valid] for m,v in tmax.items()}
+    assert summarize_group(scenario_thermal(clean_lo,clean_hi),[0,1,2])['n_100km_hex_localities']==3
