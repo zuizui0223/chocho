@@ -239,8 +239,16 @@ def validate_climate(minima,maxima):
         y=np.asarray(maxima[month],dtype=float)
         if x.shape != y.shape or not np.all(np.isfinite(x)) or not np.all(np.isfinite(y)):
             raise ValueError('Climate paired source missing')
-        if np.any(x > y+1e-3) or np.any(x < -90) or np.any(y > 75):
-            raise ValueError('Physically implausible monthly source climate')
+        mismatch=int(np.sum(x > y+1e-3))
+        below=int(np.sum(x < -90))
+        above=int(np.sum(y > 75))
+        if mismatch or below or above:
+            # Output climate aggregate range only; never source localities/hex IDs.
+            raise ValueError('Physically implausible monthly source climate '
+                f'month={month}, paired={len(x)}, below_minus90={below}, '
+                f'max_above75={above}, min_gt_max={mismatch}, '
+                f'tmin_q05_50_95={np.quantile(x,[.05,.5,.95]).tolist()}, '
+                f'tmax_q05_50_95={np.quantile(y,[.05,.5,.95]).tolist()}')
 
 
 def scenario_thermal(minima,maxima,development_base=LOWER_C,development_cap=UPPER_C):
@@ -358,6 +366,13 @@ def compute(args):
                         raise ValueError('Historical/future temperature encoding mismatch')
                     scenario[var]={m:raw[m]*scale for m in range(1,13)}
                     report['archives'][path.name]={'sha256':digest,'bytes':path.stat().st_size}
+                # Physical-input source QC before interpreting any thermal outcome.
+                print(json.dumps({'climate_pair_qc':{'gcm':model,'ssp':ssp,'period':period,
+                  'winter_january_tmin_median':float(np.median(scenario['tmin'][1])),
+                  'winter_january_tmax_median':float(np.median(scenario['tmax'][1])),
+                  'july_tmin_median':float(np.median(scenario['tmin'][7])),
+                  'july_tmax_median':float(np.median(scenario['tmax'][7])),
+                  'fixed_storage_factor':fixed_scale}},sort_keys=True))
                 future=scenario_thermal(scenario['tmin'],scenario['tmax'])
                 bygroup={g:summarize_group(future,indices) for g,indices in sorted(group_pixels.items())}
                 for key in bygroup:
