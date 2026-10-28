@@ -9,7 +9,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from simulate_monarch_cmip6_thermal_window_20261028 import (
     DAYS, WINTER, ONE_GENERATION_GDD,archive_name,
     grid_cell,month_from_file,choose_temperature_scale,scenario_thermal,
-    validate_climate,summarize_group,
+    validate_climate,summarize_group,_sample_tif_band,
 )
 
 
@@ -79,3 +79,11 @@ def test_two_original_hexes_sharing_one_climate_pixel_still_count_as_two_source_
     counted=summarize_group(climate,[0,0,1])
     assert counted['n_100km_hex_localities']==3
     assert counted['winter_thermal_323_count']==3
+
+
+def test_original_12_file_vs_future_12_band_geotiff_input_contract():
+    # WorldClim's future CMIP6 archive is a single 12-band GeoTIFF,
+    # unlike the base archive (12 month-specific TIFs).
+    assert month_from_file('wc2.1_10m_tmin_01.tif')==1
+    assert month_from_file('wc2.1_10m_tmin_IPSL-CM6A-LR_ssp126_2041-2060.tif') is None
+    assert callable(_sample_tif_band)

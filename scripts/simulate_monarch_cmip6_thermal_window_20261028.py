@@ -159,38 +159,59 @@ def month_from_file(filename):
     return int(m.group(1)) if m and 1<=int(m.group(1))<=12 else None
 
 
+def _validate_temperature_grid(ds):
+    if ds.crs.to_epsg()!=4326 or (ds.height,ds.width)!=(1080,2160):
+        raise ValueError('Unexpected WorldClim WGS84 10-minute grid')
+    tf=ds.transform
+    if not(math.isclose(tf.a,1/6,abs_tol=1e-7) and
+           math.isclose(-tf.e,1/6,abs_tol=1e-7) and
+           math.isclose(tf.c,-180,abs_tol=1e-6) and
+           math.isclose(tf.f,90,abs_tol=1e-6)):
+        raise ValueError('WorldClim grid origin mismatch')
+
+
+def _sample_tif_band(ds, band, pairlist):
+    _validate_temperature_grid(ds)
+    rows=[r for r,c in pairlist];cols=[c for r,c in pairlist]
+    data=ds.read(band,masked=True)
+    if np.any(np.ma.getmaskarray(data)[rows,cols]):
+        raise ValueError('Missing climate raster pixel at fixed source locale')
+    raw=np.asarray(data[rows,cols],dtype=float)
+    if not np.all(np.isfinite(raw)):
+        raise ValueError('Non-finite WorldClim source climate pixel')
+    return raw,float(ds.scales[band-1])
+
+
 def read_sampled_archive(path, pairs, scale=None):
-    """Read source monthly tiff pixels; return raw values then externally scale."""
+    """WorldClim historical: 12 single-band TIFs; CMIP6: one 12-band TIF.
+
+    Both are valid source representations of 12 months. Fail closed on mixed,
+    incomplete or ambiguous archives, without substituting climate variables.
+    """
     path=Path(path)
     if path.stat().st_size<100000 or path.stat().st_size>200000000:
         raise ValueError('Unexpected WorldClim archive size')
     pairlist=sorted(set(pairs))
-    vals={}
-    scales={}
+    vals={};scales={}
     with ZipFile(path) as z:
         members=[x for x in z.namelist() if x.lower().endswith('.tif')]
-        names={month_from_file(m):m for m in members}
-        if len(members)!=12 or set(names)!=set(range(1,13)):
-            raise ValueError('WorldClim monthly archive must contain 12 distinct months')
-        for month in range(1,13):
-            with MemoryFile(z.read(names[month])) as mem, mem.open() as ds:
-                if ds.crs.to_epsg()!=4326 or (ds.height,ds.width)!=(1080,2160):
-                    raise ValueError('Unexpected WorldClim WGS84 10-minute grid')
-                tf=ds.transform
-                if not(math.isclose(tf.a,1/6,abs_tol=1e-7) and
-                       math.isclose(-tf.e,1/6,abs_tol=1e-7) and
-                       math.isclose(tf.c,-180,abs_tol=1e-6) and
-                       math.isclose(tf.f,90,abs_tol=1e-6)):
-                    raise ValueError('WorldClim grid origin mismatch')
-                d=ds.read(1,masked=True)
-                raw=np.asarray(d[pairlist and [r for r,c in pairlist] or [],
-                                 pairlist and [c for r,c in pairlist] or []],dtype=float)
-                if np.any(np.ma.getmaskarray(d)[[r for r,c in pairlist],[c for r,c in pairlist]]):
-                    raise ValueError('Missing climate raster pixel at fixed source locale')
-                if not np.all(np.isfinite(raw)):
-                    raise ValueError('Non-finite WorldClim source climate pixel')
-                vals[month]=raw
-                scales[month]=float(ds.scales[0])
+        if len(members)==12:
+            names={month_from_file(m):m for m in members}
+            if set(names)!=set(range(1,13)):
+                raise ValueError('12-file WorldClim monthly archive has ambiguous months')
+            for month in range(1,13):
+                with MemoryFile(z.read(names[month])) as mem, mem.open() as ds:
+                    if ds.count!=1:
+                        raise ValueError('Expected single-band monthly original GeoTIFF')
+                    vals[month],scales[month]=_sample_tif_band(ds,1,pairlist)
+        elif len(members)==1:
+            with MemoryFile(z.read(members[0])) as mem, mem.open() as ds:
+                if ds.count!=12:
+                    raise ValueError(f'Expected 12-band CMIP6 source TIF; found {ds.count} bands')
+                for month in range(1,13):
+                    vals[month],scales[month]=_sample_tif_band(ds,month,pairlist)
+        else:
+            raise ValueError(f'WorldClim source invalid TIFF count {len(members)}, expected 12 single files or one 12-band TIF')
     return vals,scales,sha256_file(path),pairlist
 
 
