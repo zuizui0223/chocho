@@ -1,0 +1,30 @@
+name: UK LTMN original survey site coordinates source field check
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_site_crosswalk_20261028.py
+      - .github/workflows/uk-ltmn-original-site-crosswalk-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-site-metadata-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Confirm original XLSX site crosswalk fields, no site IDs exported
+        run: |
+          mkdir -p _ltmn
+          python scripts/audit_uk_ltmn_site_crosswalk_20261028.py \
+            --output _ltmn/uk_ltmn_original_site_crosswalk_header_20261028.json
+      - name: Upload strictly field-name-only original crosswalk provenance
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-original-transect-crosswalk-header-only-20261028
+          path: _ltmn/uk_ltmn_original_site_crosswalk_header_20261028.json
+          retention-days: 30
