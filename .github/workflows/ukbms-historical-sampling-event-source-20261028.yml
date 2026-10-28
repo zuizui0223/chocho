@@ -1,0 +1,36 @@
+name: Check UKBMS historical monitoring event schema in GBIF
+on:
+  push:
+    branches: [analysis/europe-butterfly-host-hindcast-20261028]
+    paths:
+      - scripts/audit_ukbms_historical_event_source_20261028.py
+      - tests/test_ukbms_historical_event_source_20261028.py
+      - .github/workflows/ukbms-historical-sampling-event-source-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-historical-source-not-true-absence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Synthetic source and event field controls
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_ukbms_historical_event_source_20261028.py
+      - name: Audit fixed UKBMS dataset 1970-90 and 2010-24 historical record and explicit negative schema
+        run: |
+          mkdir -p _ukbms
+          python scripts/audit_ukbms_historical_event_source_20261028.py --output _ukbms/UKBMS_historical_event_source_gate_20261028.json
+      - name: Upload only aggregate source counts and field presence QC, never original records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UKBMS-historical-event-source-gate-20261028
+          path: _ukbms/UKBMS_historical_event_source_gate_20261028.json
+          if-no-files-found: warn
+          retention-days: 30
