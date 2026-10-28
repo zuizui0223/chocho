@@ -1,0 +1,86 @@
+name: USA-NPN milkweed observed-leaf conditional future CMIP6 temperature anomaly
+on:
+  push:
+    branches: [analysis/monarch-cmip6-dynamic-leaf-anomaly-20261028]
+    paths:
+      - scripts/simulate_usanpn_daymet_cmip6_leaf_delta_20261028.py
+      - tests/test_usanpn_daymet_cmip6_leaf_delta_20261028.py
+      - .github/workflows/usanpn-daymet-cmip6-dynamic-leaf-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-daily-weather-plus-cmip6-anomaly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 42
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original project climate/statistical dependencies
+        run: |
+          python -m pip install -e '.[analysis,test]' 'scikit-learn>=1.5,<2'
+          python -m pytest -q tests/test_usanpn_daymet_cmip6_leaf_delta_20261028.py
+      - name: Download exactly 18 original source-locked WorldClim CMIP6 monthly temperature ZIPs
+        run: |
+          set -euo pipefail
+          mkdir -p _dynamic/raw
+          for variable in tmin tmax; do
+            file="wc2.1_10m_${variable}.zip"
+            curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+              "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/${file}" \
+              -o "_dynamic/raw/${file}"
+          done
+          for model in MIROC6 IPSL-CM6A-LR; do
+            for ssp in ssp126 ssp585; do
+              for period in 2041-2060 2081-2100; do
+                for variable in tmin tmax; do
+                  file="wc2.1_10m_${variable}_${model}_${ssp}_${period}.zip"
+                  curl -fLsS --retry 3 --connect-timeout 25 --max-time 300 \
+                    "https://geodata.ucdavis.edu/climate/worldclim/2_1/fut/10m/${file}" \
+                    -o "_dynamic/raw/${file}"
+                done
+              done
+            done
+          done
+          test "$(find _dynamic/raw -type f -name '*.zip' | wc -l)" -eq 18
+      - name: Re-fetch Daymet 72 original site histories and source-authenticated NPN leaves; run eight future temperature deltas
+        run: |
+          mkdir -p _dynamic/results
+          python scripts/simulate_usanpn_daymet_cmip6_leaf_delta_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --npn-source provenance/archive/monarch/results/USANPN_MILKWEED_STATUS_2018_2025.json \
+            --original-result provenance/archive/monarch/results/USANPN_DAYMET_HELDOUT_LEAF_20261028.json \
+            --component-result provenance/archive/monarch/results/USANPN_DAYMET_COMPONENT_YEAR_HOLDOUT_20261028.json \
+            --cmip6-original provenance/archive/monarch/results/monarch_cmip6_thermal_window_20261028.json \
+            --climate-dir _dynamic/raw \
+            --output _dynamic/results/USANPN_DAYMET_CMIP6_DYNAMIC_LEAF_20261028.json
+      - name: Verify bounded original source and no precise site/individual exposure
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_dynamic/results/USANPN_DAYMET_CMIP6_DYNAMIC_LEAF_20261028.json')
+          x=json.loads(p.read_text())
+          assert x['schema']=='chocho_usanpn_daymet_cmip6_temperature_delta_leaf_visit_v01'
+          assert len(x['panels'])==9
+          assert x['source']['original_effort_only_selected_sites']==72
+          assert x['source']['original_weather_model_visits']==20770
+          assert x['source']['original_source_archives_verified']==18
+          assert x['source']['source_2018_2025_response_years_verified']==8
+          assert x['model']['zero_anomaly_feature_and_model_prediction_identity_passed']
+          assert x['interpretation']['future_leaf_presence_is_a_model_counterfactual']
+          assert not x['interpretation']['true_monarch_larval_survival_or_population_forecast']
+          text=p.read_text().lower()
+          for token in ('"site_id":','"individual_id":','"lat":','"lon":','"latitude":','"longitude":','"observer":','"observation_date":','"uri":'):
+            assert token not in text,token
+          print('PASS sourced, bounded, physically audited, no site/raw observation disclosure')
+          PY
+      - name: Upload only abstract source score groups and extrapolation flags
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-daymet-cmip6-dynamic-leaf-20261028
+          path: _dynamic/results/USANPN_DAYMET_CMIP6_DYNAMIC_LEAF_20261028.json
+          retention-days: 30
+          if-no-files-found: error

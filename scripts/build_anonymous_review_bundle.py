@@ -109,6 +109,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/probe_usanpn_daymet_weather_source_20261028.py"),
     Path("scripts/audit_usanpn_daymet_leaf_prediction_20261028.py"),
     Path("scripts/audit_usanpn_daymet_weather_drivers_20261028.py"),
+    Path("scripts/simulate_usanpn_daymet_cmip6_leaf_delta_20261028.py"),
+    Path("tests/test_usanpn_daymet_cmip6_leaf_delta_20261028.py"),
     Path("tests/test_usanpn_daymet_weather_driver_frozen_20261028.py"),
     Path("tests/test_usanpn_daymet_weather_drivers_20261028.py"),
     Path("tests/test_usanpn_daymet_frozen_result_20261028.py"),
