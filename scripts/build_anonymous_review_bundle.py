@@ -103,6 +103,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/simulate_monarch_cmip6_thermal_window_20261028.py"),
     Path("scripts/freeze_monarch_cmip6_summary_20261028.py"),
     Path("scripts/audit_usanpn_milkweed_registry_20261028.py"),
+    Path("scripts/audit_usanpn_milkweed_leaf_status_20261028.py"),
+    Path("tests/test_usanpn_milkweed_leaf_status_20261028.py"),
     Path("tests/test_usanpn_milkweed_registry_20261028.py"),
     Path("tests/test_monarch_cmip6_frozen_result_20261028.py"),
     Path("tests/test_monarch_cmip6_thermal_window_20261028.py"),

@@ -1,0 +1,42 @@
+name: USA-NPN six milkweed observed live-leaf winter site-year gate
+on:
+  push:
+    branches:
+      - analysis/monarch-usanpn-live-leaves-20261028
+    paths:
+      - scripts/audit_usanpn_milkweed_leaf_status_20261028.py
+      - tests/test_usanpn_milkweed_leaf_status_20261028.py
+      - .github/workflows/usanpn-six-milkweed-leaf-status-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-verified-leaf-yes-no:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test-only dependencies
+        run: python -m pip install 'pytest>=8,<10'
+      - name: Synthetic observation identity, date and negative-status controls
+        run: |
+          python -m pytest -q \
+            tests/test_usanpn_milkweed_registry_20261028.py \
+            tests/test_usanpn_milkweed_leaf_status_20261028.py
+      - name: Retrieve only six source-registered milkweed live-leaf observations 2018–2025
+        run: |
+          mkdir -p _npn
+          python scripts/audit_usanpn_milkweed_leaf_status_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --output _npn/usanpn_six_milkweed_leaf_status_20261028.json
+      - name: Upload redacted species-year-month and winter quality-gate receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-2018to2025-six-milkweed-live-leaf-status-20261028
+          path: _npn/usanpn_six_milkweed_leaf_status_20261028.json
+          retention-days: 30
+          if-no-files-found: warn
