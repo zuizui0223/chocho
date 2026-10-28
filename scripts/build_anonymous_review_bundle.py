@@ -100,6 +100,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/audit_monarch_annotated_host_source_20261028.py"),
     Path("scripts/audit_monarch_host_label_categories_20261028.py"),
     Path("scripts/analyze_monarch_cultivation_season_20261028.py"),
+    Path("scripts/simulate_monarch_cmip6_thermal_window_20261028.py"),
+    Path("tests/test_monarch_cmip6_thermal_window_20261028.py"),
     Path("tests/test_monarch_cultivation_receipt_20261028.py"),
     Path("tests/test_monarch_cultivation_season_20261028.py"),
     Path("tests/test_monarch_annotated_host_source_20261028.py"),
