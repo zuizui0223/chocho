@@ -1,0 +1,70 @@
+name: USA-NPN milkweed Daymet temperature and precipitation independent transfer gates
+on:
+  push:
+    branches: [analysis/monarch-daymet-weather-driver-20261028]
+    paths:
+      - scripts/audit_usanpn_daymet_weather_drivers_20261028.py
+      - tests/test_usanpn_daymet_weather_drivers_20261028.py
+      - .github/workflows/usanpn-daymet-weather-driver-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-weather-component-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned offline source forecast dependencies
+        run: |
+          python -m pip install -e '.[test]' 'scikit-learn==1.8.0'
+      - name: Synthetic component selection and time-test controls
+        run: |
+          python -m pytest -q tests/test_usanpn_daymet_weather_drivers_20261028.py
+      - name: Reopen original eight-year NPN records and fixed 72-site Daymet daily source
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _daymet_drivers
+          python scripts/audit_usanpn_daymet_weather_drivers_20261028.py \
+            --registry provenance/archive/monarch/results/usanpn_six_milkweed_leaf_registry_20261028.json \
+            --npn-source provenance/archive/monarch/results/USANPN_MILKWEED_STATUS_2018_2025.json \
+            --previous provenance/archive/monarch/results/USANPN_DAYMET_HELDOUT_LEAF_20261028.json \
+            --output _daymet_drivers/USANPN_DAYMET_COMPONENT_YEAR_HOLDOUT_20261028.json
+      - name: Verify 72 original station frame and no raw or individual source export
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('_daymet_drivers/USANPN_DAYMET_COMPONENT_YEAR_HOLDOUT_20261028.json')
+          if not p.exists():raise SystemExit('Weather source evaluation absent: no model claim')
+          d=json.loads(p.read_text())
+          assert d['schema']=='chocho_usanpn_daymet_component_year_holdout_20261028_v01'
+          assert d['original_frozen_source']['original_usa_npn_source_status_records']==27057
+          assert d['original_frozen_source']['actual_weather_stations']==72
+          assert d['original_frozen_source']['original_usable_plant_visits_with_weather']==20770
+          assert d['inference']['raw_monitoring_station_coordinates_individuals_and_daily_weather_not_exported']
+          text=p.read_text().lower()
+          assert not any(k in text for k in ('"site_id":','"individual_id":','"latitude":','"longitude":','"observer":','"uri":'))
+          assert d['decision'] in ('PASS_TEMPERATURE_COMPONENT_SPATIAL_AND_TEMPORAL_PREDICTION',
+                                  'FAIL_TEMPERATURE_COMPONENT_SPATIAL_OR_TEMPORAL_PREDICTION')
+          print('PASS source-locked weather comparison; epistemic negative result permitted')
+          PY
+      - name: Upload aggregate-only source model ablations and temporal holdout
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-usanpn-daymet-temperature-and-year-holdout-20261028
+          path: _daymet_drivers/USANPN_DAYMET_COMPONENT_YEAR_HOLDOUT_20261028.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Fail closed if original weather sources unavailable
+        run: |
+          if [ '${{ steps.source.outcome }}' != 'success' ]; then
+            echo 'Original Daymet/NPN source or source-locked prediction was not reproduced.'
+            exit 1
+          fi
