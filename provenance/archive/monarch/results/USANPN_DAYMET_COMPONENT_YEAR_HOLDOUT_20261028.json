@@ -1,0 +1,250 @@
+{
+  "decision": "PASS_TEMPERATURE_COMPONENT_SPATIAL_AND_TEMPORAL_PREDICTION",
+  "inference": {
+    "no_future_leaf_senescence_or_monarch_generation_estimated": true,
+    "raw_monitoring_station_coordinates_individuals_and_daily_weather_not_exported": true,
+    "site_folds_are_out_of_station": true,
+    "weather_prediction_is_not_temperature_causation": true,
+    "year_holdout_is_out_of_time_same_original_sites": true
+  },
+  "models": {
+    "Daymet_source_DOI": "https://doi.org/10.3334/ORNLDAAC/2361",
+    "L2_logistic_C": 0.1,
+    "baseline_calendar_harmonics": 2,
+    "site_equal_weights": true,
+    "training_fold_only_standardization": true,
+    "weather_window_days": 30
+  },
+  "original_frozen_source": {
+    "actual_host_taxa": 5,
+    "actual_weather_stations": 72,
+    "original_72_weather_site_aggregate_sha256": "c7106c4950bc5aaba24f163eb70011fd8a446feea80fba6d8d82ef45817b8525",
+    "original_result_sha256": "52a0f857202f79db874c512549af54c05b001beea65d68e67b9f2d81b2e1c014",
+    "original_usa_npn_source_status_records": 27057,
+    "original_usable_plant_visits_with_weather": 20770,
+    "source_years": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ]
+  },
+  "schema": "chocho_usanpn_daymet_component_year_holdout_20261028_v01",
+  "validation": {
+    "component_temperature_predictive_cv_gate": true,
+    "not_future_leaf_climate_effect_or_monarch_population": true,
+    "site_fold_aggregate": {
+      "all_weather": {
+        "positive_folds": 5,
+        "site_equal_heldout_logloss_improvement": 0.02540602833586231
+      },
+      "precipitation": {
+        "positive_folds": 1,
+        "site_equal_heldout_logloss_improvement": -0.0017336352997370944
+      },
+      "temperature_and_frost": {
+        "positive_folds": 5,
+        "site_equal_heldout_logloss_improvement": 0.024561908003269912
+      }
+    },
+    "site_folds": [
+      {
+        "fold": 0,
+        "metrics": {
+          "all_weather": {
+            "delta_brier_vs_reference": 0.008849843849297837,
+            "delta_log_loss_vs_reference": 0.025259588697290503,
+            "site_equal_brier": 0.10164140304674617,
+            "site_equal_log_loss": 0.34156352185606803
+          },
+          "precipitation": {
+            "delta_brier_vs_reference": -0.00010802680084924521,
+            "delta_log_loss_vs_reference": -0.0005675897875024871,
+            "site_equal_brier": 0.11059927369689325,
+            "site_equal_log_loss": 0.367390700340861
+          },
+          "reference": {
+            "site_equal_brier": 0.110491246896044,
+            "site_equal_log_loss": 0.36682311055335853
+          },
+          "temperature_and_frost": {
+            "delta_brier_vs_reference": 0.008236892607691518,
+            "delta_log_loss_vs_reference": 0.023161414256687995,
+            "site_equal_brier": 0.10225435428835249,
+            "site_equal_log_loss": 0.34366169629667054
+          }
+        },
+        "test_plant_visits": 5387,
+        "test_sites": 12
+      },
+      {
+        "fold": 1,
+        "metrics": {
+          "all_weather": {
+            "delta_brier_vs_reference": 0.010220878364720604,
+            "delta_log_loss_vs_reference": 0.0238796637100977,
+            "site_equal_brier": 0.08197458761726015,
+            "site_equal_log_loss": 0.2822554840101264
+          },
+          "precipitation": {
+            "delta_brier_vs_reference": -0.0003772270653087523,
+            "delta_log_loss_vs_reference": -0.0006216916576353704,
+            "site_equal_brier": 0.0925726930472895,
+            "site_equal_log_loss": 0.30675683937785947
+          },
+          "reference": {
+            "site_equal_brier": 0.09219546598198075,
+            "site_equal_log_loss": 0.3061351477202241
+          },
+          "temperature_and_frost": {
+            "delta_brier_vs_reference": 0.010618606914938197,
+            "delta_log_loss_vs_reference": 0.024653055773544597,
+            "site_equal_brier": 0.08157685906704255,
+            "site_equal_log_loss": 0.2814820919466795
+          }
+        },
+        "test_plant_visits": 3800,
+        "test_sites": 18
+      },
+      {
+        "fold": 2,
+        "metrics": {
+          "all_weather": {
+            "delta_brier_vs_reference": 0.010072253578437135,
+            "delta_log_loss_vs_reference": 0.03319664944391759,
+            "site_equal_brier": 0.08410678763896627,
+            "site_equal_log_loss": 0.283762262632841
+          },
+          "precipitation": {
+            "delta_brier_vs_reference": -0.0007332343850632028,
+            "delta_log_loss_vs_reference": -0.0015186205825649113,
+            "site_equal_brier": 0.09491227560246661,
+            "site_equal_log_loss": 0.3184775326593235
+          },
+          "reference": {
+            "site_equal_brier": 0.0941790412174034,
+            "site_equal_log_loss": 0.3169589120767586
+          },
+          "temperature_and_frost": {
+            "delta_brier_vs_reference": 0.010751826256503005,
+            "delta_log_loss_vs_reference": 0.034448106377370336,
+            "site_equal_brier": 0.0834272149609004,
+            "site_equal_log_loss": 0.28251080569938825
+          }
+        },
+        "test_plant_visits": 3309,
+        "test_sites": 15
+      },
+      {
+        "fold": 3,
+        "metrics": {
+          "all_weather": {
+            "delta_brier_vs_reference": 0.003664798080442344,
+            "delta_log_loss_vs_reference": 0.014151378793264335,
+            "site_equal_brier": 0.1159816164892947,
+            "site_equal_log_loss": 0.38524615056233596
+          },
+          "precipitation": {
+            "delta_brier_vs_reference": -2.185117519759583e-05,
+            "delta_log_loss_vs_reference": 0.0001458867595542923,
+            "site_equal_brier": 0.11966826574493464,
+            "site_equal_log_loss": 0.399251642596046
+          },
+          "reference": {
+            "site_equal_brier": 0.11964641456973704,
+            "site_equal_log_loss": 0.3993975293556003
+          },
+          "temperature_and_frost": {
+            "delta_brier_vs_reference": 0.0031629804139555323,
+            "delta_log_loss_vs_reference": 0.01129957784185709,
+            "site_equal_brier": 0.11648343415578151,
+            "site_equal_log_loss": 0.3880979515137432
+          }
+        },
+        "test_plant_visits": 3935,
+        "test_sites": 14
+      },
+      {
+        "fold": 4,
+        "metrics": {
+          "all_weather": {
+            "delta_brier_vs_reference": 0.007975957064124947,
+            "delta_log_loss_vs_reference": 0.03078584494372133,
+            "site_equal_brier": 0.09365482260162288,
+            "site_equal_log_loss": 0.31472224668251503
+          },
+          "precipitation": {
+            "delta_brier_vs_reference": -0.002530747969925376,
+            "delta_log_loss_vs_reference": -0.0066217938606839,
+            "site_equal_brier": 0.1041615276356732,
+            "site_equal_log_loss": 0.35212988548692026
+          },
+          "reference": {
+            "site_equal_brier": 0.10163077966574782,
+            "site_equal_log_loss": 0.34550809162623636
+          },
+          "temperature_and_frost": {
+            "delta_brier_vs_reference": 0.00718687912393598,
+            "delta_log_loss_vs_reference": 0.028603824291140056,
+            "site_equal_brier": 0.09444390054181184,
+            "site_equal_log_loss": 0.3169042673350963
+          }
+        },
+        "test_plant_visits": 4339,
+        "test_sites": 13
+      }
+    ],
+    "temperature_conditional_scenario_model_gate": "PASS_TEMPERATURE_COMPONENT_SPATIAL_AND_TEMPORAL_PREDICTION",
+    "temperature_year_holdout_predictive_gate": true,
+    "time_holdout": {
+      "metrics": {
+        "all_weather": {
+          "delta_brier_vs_reference": 0.0006626989296149716,
+          "delta_log_loss_vs_reference": 0.004507043559980495,
+          "site_equal_brier": 0.09022971206388894,
+          "site_equal_log_loss": 0.3002469190177725
+        },
+        "precipitation": {
+          "delta_brier_vs_reference": -0.00019815937689937613,
+          "delta_log_loss_vs_reference": -0.0004718952750095706,
+          "site_equal_brier": 0.09109057037040329,
+          "site_equal_log_loss": 0.30522585785276257
+        },
+        "reference": {
+          "site_equal_brier": 0.09089241099350391,
+          "site_equal_log_loss": 0.304753962577753
+        },
+        "temperature_and_frost": {
+          "delta_brier_vs_reference": 0.0016768929596711474,
+          "delta_log_loss_vs_reference": 0.007424999681556188,
+          "site_equal_brier": 0.08921551803383276,
+          "site_equal_log_loss": 0.2973289628961968
+        }
+      },
+      "n_test_explicit_no": 2677,
+      "n_test_explicit_yes": 2521,
+      "n_test_plant_visits": 5198,
+      "n_test_sites": 49,
+      "n_test_species": 5,
+      "n_training_plant_visits": 15572,
+      "source_gate": "PASS_TIME_HOLDOUT_INFORMATION",
+      "test_years": [
+        2024,
+        2025
+      ],
+      "time_holdout_repeats_original_sites_so_not_an_independent_geographic_sample": true,
+      "train_years": [
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ]
+    }
+  }
+}
