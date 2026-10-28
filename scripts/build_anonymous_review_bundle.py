@@ -99,6 +99,8 @@ EXCLUDE_RELATIVE = {
     Path("provenance/reviewer_defenses/results/butterfly_73_country_land_climate_null_20261028.json"),
     Path("scripts/audit_europe_historical_butterfly_gbif_source_20261028.py"),
     Path("scripts/audit_ukbms_historical_event_source_20261028.py"),
+    Path("scripts/audit_uk_public_transect_source_20261028.py"),
+    Path("tests/test_uk_public_transect_source_20261028.py"),
     Path("tests/test_ukbms_historical_frozen_result_20261028.py"),
     Path("tests/test_ukbms_historical_event_source_20261028.py"),
     Path("tests/test_europe_historical_facets_frozen_receipt_20261028.py"),
