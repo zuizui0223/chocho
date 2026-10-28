@@ -1,0 +1,133 @@
+{
+  "dataset_metadata": {
+    "license": "http://creativecommons.org/licenses/by/4.0/legalcode",
+    "publishingOrganizationKey": "179ccc1f-7315-4925-9725-69377ca8b6d4",
+    "source_receipt": {
+      "query_url": "https://api.gbif.org/v1/dataset/1e266c3d-92ef-4d5a-8e4a-c04742c772c3",
+      "source_response_bytes": 7467,
+      "source_response_sha256": "834720b4ff11609b0ccaf28e1dc4266558c35173597756fcc4c61d0fd671e002"
+    },
+    "title": "UK Butterfly Monitoring Scheme (UKBMS)"
+  },
+  "dataset_registration": "1e266c3d-92ef-4d5a-8e4a-c04742c772c3",
+  "inference": {
+    "GBIF_absent_occurrence_status_is_not_complete_survey_non_detections": true,
+    "explicit_same_site_survey_visits_with_non_detections_verified": false,
+    "host_climate_hindcast_estimated": false,
+    "note": "Original source schema only. UKBMS monitored transect visit records may require a separate licence.",
+    "raw_individual_visitor_or_site_records_saved": false,
+    "site_year_occupancy_inferred": false
+  },
+  "original_occurrence_identifiers_locations_photographs_exported": false,
+  "schema": "chocho_UKBMS_historical_event_and_absence_GBIF_source_audit_v01",
+  "status": "UKBMS_GBIF_DATASET_HISTORICAL_SOURCE_AUDITED",
+  "windows": {
+    "1970_1990": {
+      "explicit_GBIF_ABSENT_occurrence_records": 0,
+      "historical_zero_detections_identified": false,
+      "presence_records_in_GBIF_index": 595688,
+      "source_checksums": {
+        "absent": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=1970%2C1990&occurrenceStatus=ABSENT&limit=0",
+          "source_response_bytes": 77,
+          "source_response_sha256": "842e210a1dc11a43b863a7438d0b8ae273f0182c290a7c64e760c176778cc9fa"
+        },
+        "field_sample": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=1970%2C1990&occurrenceStatus=PRESENT&limit=12",
+          "source_response_bytes": 59198,
+          "source_response_sha256": "90b9ddf09c6308af6da488eb153a03c88c1ac24cadafc664412f7c2fa02e531e"
+        },
+        "presence": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=1970%2C1990&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=100",
+          "source_response_bytes": 647,
+          "source_response_sha256": "0e0b05814672a8a39340c37f4eb6811e03775f0d06092c89c35f97e26d0fb11b"
+        }
+      },
+      "source_field_availability_from_fixed_first_12_rows": {
+        "number_with_field_nonblank": {
+          "basisOfRecord": 12,
+          "eventDate": 12,
+          "eventID": 0,
+          "individualCount": 0,
+          "locationID": 12,
+          "occurrenceStatus": 12,
+          "samplingProtocol": 0
+        },
+        "recording_source_samples_are_not_a_site_visit_design": true,
+        "returned_sample_rows": 12
+      },
+      "year_index_counts": {
+        "1973": 1559,
+        "1974": 1356,
+        "1975": 1635,
+        "1976": 18317,
+        "1977": 14876,
+        "1978": 22638,
+        "1979": 32527,
+        "1980": 32554,
+        "1981": 29207,
+        "1982": 45918,
+        "1983": 39138,
+        "1984": 46655,
+        "1985": 36946,
+        "1986": 41134,
+        "1987": 41033,
+        "1988": 45619,
+        "1989": 67049,
+        "1990": 77527
+      }
+    },
+    "2010_2024": {
+      "explicit_GBIF_ABSENT_occurrence_records": 0,
+      "historical_zero_detections_identified": false,
+      "presence_records_in_GBIF_index": 6293165,
+      "source_checksums": {
+        "absent": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=2010%2C2024&occurrenceStatus=ABSENT&limit=0",
+          "source_response_bytes": 77,
+          "source_response_sha256": "842e210a1dc11a43b863a7438d0b8ae273f0182c290a7c64e760c176778cc9fa"
+        },
+        "field_sample": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=2010%2C2024&occurrenceStatus=PRESENT&limit=12",
+          "source_response_bytes": 57968,
+          "source_response_sha256": "b09ea990225c91ac08f48f810e4b5934a17ff62fb55eb0ac967f77295070cd69"
+        },
+        "presence": {
+          "query_url": "https://api.gbif.org/v1/occurrence/search?datasetKey=1e266c3d-92ef-4d5a-8e4a-c04742c772c3&country=GB&hasCoordinate=true&year=2010%2C2024&occurrenceStatus=PRESENT&limit=0&facet=year&facetLimit=100",
+          "source_response_bytes": 576,
+          "source_response_sha256": "6ea9809e176d18c30bfeb9acd9d19ab818ad023e29dd09205681b98672aee0fe"
+        }
+      },
+      "source_field_availability_from_fixed_first_12_rows": {
+        "number_with_field_nonblank": {
+          "basisOfRecord": 12,
+          "eventDate": 12,
+          "eventID": 0,
+          "individualCount": 0,
+          "locationID": 12,
+          "occurrenceStatus": 12,
+          "samplingProtocol": 0
+        },
+        "recording_source_samples_are_not_a_site_visit_design": true,
+        "returned_sample_rows": 12
+      },
+      "year_index_counts": {
+        "2010": 297699,
+        "2011": 321100,
+        "2012": 203458,
+        "2013": 335230,
+        "2014": 392188,
+        "2015": 400560,
+        "2016": 357683,
+        "2017": 442491,
+        "2018": 526168,
+        "2019": 564351,
+        "2020": 410395,
+        "2021": 462529,
+        "2022": 529556,
+        "2023": 614581,
+        "2024": 435176
+      }
+    }
+  }
+}
