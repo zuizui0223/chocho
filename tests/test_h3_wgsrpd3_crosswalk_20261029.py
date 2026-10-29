@@ -34,11 +34,12 @@ def test_center_within_very_small_source_area_mapped_but_not_100percent_of_hex()
     # A tiny original botanical area centred within the H3 cell: only a small
     # fraction of the coarse grid cell is botanically mapped.
     small=project(box(lon-.02,lat-.02,lon+.02,lat+.02))
-    record,overlap=simulate({'TST':(small,'1')},h)
+    record,overlap,atoms=simulate({'TST':(small,'1')},h)
     assert record['center_wgsrpd3']=='TST'
     assert record['dominant_area_wgsrpd3']=='TST'
     assert record['mapped_land_fraction_of_cell']<.02
     assert len(overlap)==1 and overlap[0]['wgsrpd3']=='TST'
+    assert len(atoms)==1 and atoms[0]['wgsrpd3_members']=='TST'
 
 
 def test_island_polygon_without_any_hex_center_is_retained():
@@ -50,7 +51,7 @@ def test_island_polygon_without_any_hex_center_is_retained():
     island=project(box(lon-.03,lat-.03,lon+.03,lat+.03))
     item=simulate({'ISL':(island,'1')},h)
     assert item is not None
-    row,overlap=item
+    row,overlap,atoms=item
     assert row['coastal_cell_center_outside_tdwg']==1
     assert row['center_wgsrpd3']==''
     assert row['mapped_land_fraction_of_cell']<.05
@@ -66,11 +67,12 @@ def test_boundary_not_silently_forced_to_one_botanical_region():
     right=project(box(mid,ymin-.2,xmax+.2,ymax+.2))
     item=simulate({'AAA':(left,'1'),'BBB':(right,'1')},h)
     assert item is not None
-    row,pairs=item
+    row,pairs,atoms=item
     assert row['multiple_region_boundary']==1
     assert len(pairs)==2
     assert sum(v['cell_fraction'] for v in pairs)==pytest.approx(1,abs=.01)
     assert 0<row['dominant_mapped_land_fraction']<1
+    assert sum(a['cell_fraction'] for a in atoms)==pytest.approx(1,abs=.01)
 
 
 def test_antimeridian_cell_is_not_giant_false_polygon():
@@ -83,7 +85,7 @@ def test_antimeridian_cell_is_not_giant_false_polygon():
     patch=project(box(target-.03,lat-.03,target+.03,lat+.03))
     out=simulate({'DAT':(patch,'1')},h)
     if out is not None:
-        row,pairs=out
+        row,pairs,atoms=out
         assert row['mapped_land_fraction_of_cell']<.04
         assert all(0<=p['cell_fraction']<=1.015 for p in pairs)
 
@@ -93,3 +95,20 @@ def test_no_actual_source_polygon_is_not_a_planted_host_presence():
     project,_=projector()
     remote=project(box(-11,49,-10,50))
     assert simulate({'REM':(remote,'1')},h) is None
+
+
+def test_partially_overlapping_botanical_regions_are_appropriately_disjoint():
+    h=h3.latlng_to_cell(53,2,4)
+    polygon,(lon,lat)=h3_cell_polygon(h)
+    xmin,ymin,xmax,ymax=polygon.bounds
+    project,_=projector()
+    # Two source polygons overlap across the central band; source row fractions
+    # SUM > 100%, but disjoint atomic membership must add to physical land.
+    left=project(box(xmin-.15,ymin-.15,lon+.12,ymax+.15))
+    right=project(box(lon-.12,ymin-.15,xmax+.15,ymax+.15))
+    row,raw,atoms=simulate({'A':(left,'1'),'B':(right,'1')},h)
+    assert sum(x['cell_fraction'] for x in raw)>1.10
+    assert len(atoms)==3
+    assert {'A','A|B','B'}=={x['wgsrpd3_members'] for x in atoms}
+    assert sum(x['cell_fraction'] for x in atoms)==pytest.approx(1,abs=.01)
+    assert row['source_region_overlap_excess_fraction']>0.10

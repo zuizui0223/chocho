@@ -74,7 +74,8 @@ jobs:
           assert r['per_h3_land_fraction_is_not_actual_host_plant_presence']
           assert r['no_species_host_status_or_remote_sensing_values_joined_yet']
           for name,key in [('global_h3r4_wgsrpd3_cells_20261029.csv.gz','cell_csv_gzip_sha256'),
-                           ('global_h3r4_wgsrpd3_overlap_20261029.csv.gz','cell_region_overlaps_gzip_sha256')]:
+                           ('global_h3r4_wgsrpd3_overlap_20261029.csv.gz','cell_region_overlaps_gzip_sha256'),
+                           ('global_h3r4_wgsrpd3_atoms_20261029.csv.gz','disjoint_atoms_gzip_sha256')]:
               path=root/name
               assert hashlib.sha256(path.read_bytes()).hexdigest()==r[key]
               with gzip.open(path,'rt',newline='') as f:
@@ -92,6 +93,7 @@ jobs:
           path: |
             _h3_output/global_h3r4_wgsrpd3_cells_20261029.csv.gz
             _h3_output/global_h3r4_wgsrpd3_overlap_20261029.csv.gz
+            _h3_output/global_h3r4_wgsrpd3_atoms_20261029.csv.gz
             _h3_output/global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json
           retention-days: 60
           if-no-files-found: error

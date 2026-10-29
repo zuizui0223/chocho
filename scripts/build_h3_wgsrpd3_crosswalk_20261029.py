@@ -20,6 +20,8 @@ from shapely.geometry import Point,Polygon,shape
 from shapely.ops import transform,unary_union
 from shapely.strtree import STRtree
 
+from build_country_area_atoms_20261020 import atom_areas
+
 SCHEMA='chocho_global_h3r4_WGSRPD3_fractional_geometry_bridge_20261029_v01'
 RES=4
 EXPECTED_REGIONS=369
@@ -150,6 +152,21 @@ def fractional_cell(cell,tree,geoms,codes,project):
     # mapped land. Raw centre result remains separate from that area assignment.
     majority=dominant if dominant_fraction>.50 and len(rank)==1 or (
         dominant_fraction>.50 and areas[rank[0]]>areas[rank[1]]+1e-5) else ''
+    # Geographic memberships can overlap; disjoint membership atoms preserve
+    # source union areas and make downstream native vs introduced resources
+    # additive WITHOUT silently double-counting border areas.
+    if len(positive)==1:
+        only=next(iter(positive))
+        atoms={(only,):mapped_area}
+    else:
+        atoms=atom_areas(projected,positive)
+        if not math.isclose(sum(atoms.values()),mapped_area,rel_tol=1e-7,abs_tol=10.):
+            raise ValueError('Disjoint WGSRPD atoms do not reconstruct the cell union area '+cell)
+    atom_rows=[{'h3_r4':cell,'wgsrpd3_members':'|'.join(members),
+                'cell_fraction':area/cell_area,
+                'mapped_land_fraction':area/mapped_area,
+                'atomic_intersection_km2':area/1e6}
+               for members,area in sorted(atoms.items()) if area>=MIN_INTERSECTION_M2]
     rows=[{'h3_r4':cell,'wgsrpd3':code,'cell_fraction':areas[code]/cell_area,
            'mapped_land_fraction':areas[code]/mapped_area,'intersection_km2':areas[code]/1e6}
           for code in sorted(areas)]
@@ -164,7 +181,7 @@ def fractional_cell(cell,tree,geoms,codes,project):
        'multiple_region_boundary':int(len(rows)>1),
        'coastal_cell_center_outside_tdwg':int(len(center_codes)==0),
        'source_region_overlap_excess_fraction':sum(areas.values())/cell_area-mapped_area/cell_area,
-     },rows
+     },rows,atom_rows
 
 
 def all_global_h3_cells(res=RES):
@@ -192,12 +209,14 @@ def run(args):
     # non-reproducible gzip timestamps to permit byte-identical replay.
     cells_path=outdir/'global_h3r4_wgsrpd3_cells_20261029.csv.gz'
     rows_path=outdir/'global_h3r4_wgsrpd3_overlap_20261029.csv.gz'
+    atoms_path=outdir/'global_h3r4_wgsrpd3_atoms_20261029.csv.gz'
     cc=['h3_r4','center_wgsrpd3','center_match_count','dominant_area_wgsrpd3',
         'dominant_mapped_land_fraction','mapped_land_fraction_of_cell',
         'cell_area_km2','mapped_area_km2','n_intersecting_wgsrpd3',
         'multiple_region_boundary','coastal_cell_center_outside_tdwg',
         'source_region_overlap_excess_fraction']
     rc=['h3_r4','wgsrpd3','cell_fraction','mapped_land_fraction','intersection_km2']
+    ac=['h3_r4','wgsrpd3_members','cell_fraction','mapped_land_fraction','atomic_intersection_km2']
     # Two output streams are created simultaneously to avoid recomputing global
     # intersections. Gzip header contains no timestamp or original filename.
     import contextlib
@@ -205,20 +224,27 @@ def run(args):
     with contextlib.ExitStack() as stack:
         a=stack.enter_context(cells_path.open('wb'))
         b=stack.enter_context(rows_path.open('wb'))
+        c=stack.enter_context(atoms_path.open('wb'))
         ag=stack.enter_context(gzip.GzipFile(filename='',fileobj=a,mode='wb',compresslevel=7,mtime=0))
         bg=stack.enter_context(gzip.GzipFile(filename='',fileobj=b,mode='wb',compresslevel=7,mtime=0))
+        cg=stack.enter_context(gzip.GzipFile(filename='',fileobj=c,mode='wb',compresslevel=7,mtime=0))
         tw=stack.enter_context(io.TextIOWrapper(ag,encoding='utf-8',newline=''))
         rw=stack.enter_context(io.TextIOWrapper(bg,encoding='utf-8',newline=''))
+        aw=stack.enter_context(io.TextIOWrapper(cg,encoding='utf-8',newline=''))
         cw=csv.DictWriter(tw,fieldnames=cc);cw.writeheader()
         ow=csv.DictWriter(rw,fieldnames=rc);ow.writeheader()
+        atom_writer=csv.DictWriter(aw,fieldnames=ac);atom_writer.writeheader()
         for cell in all_global_h3_cells():
             counters['global_H3_r4_cells_tested']+=1
             mapped=fractional_cell(cell,tree,geoms,codes,project)
             if not mapped:continue
-            row,overlap=mapped
-            cw.writerow(row);ow.writerows(overlap)
+            row,overlap,atoms=mapped
+            cw.writerow(row);ow.writerows(overlap);atom_writer.writerows(atoms)
             counters['cells_any_tdwg_land_intersection']+=1
             counters['cell_region_positive_overlap_rows']+=len(overlap)
+            counters['source_disjoint_membership_atom_rows']+=len(atoms)
+            counters['source_cells_with_actual_region_area_overlap']+=int(row['source_region_overlap_excess_fraction']>1e-6)
+            counters['cells_with_multiple_code_atomic_membership']+=int(any('|' in a['wgsrpd3_members'] for a in atoms))
             counters['boundary_mixed_region_cells']+=row['multiple_region_boundary']
             counters['coastal_cells_without_tdwg_centroid']+=row['coastal_cell_center_outside_tdwg']
             counters['cells_center_multiple_wgsrpd3']+=int(row['center_match_count']>1)
@@ -254,6 +280,9 @@ def run(args):
         'maximum_source_region_overlap_excess_fraction':max_excess,
         'cell_csv_gzip_sha256':digest(cells_path),
         'cell_region_overlaps_gzip_sha256':digest(rows_path),
+        'disjoint_atoms_gzip_sha256':digest(atoms_path),
+        'disjoint_atoms_csv_filename':atoms_path.name,
+        'disjoint_atoms_union_verification':'The sum of atom areas equals the union of source-region land within each H3; support can be aggregated by selecting any atom containing a specified WCVP region once.',
         'cell_csv_filename':cells_path.name,'cell_region_csv_filename':rows_path.name,
         'source_raw_geometry_not_exported':True,
         'per_h3_land_fraction_is_not_actual_host_plant_presence':True,
