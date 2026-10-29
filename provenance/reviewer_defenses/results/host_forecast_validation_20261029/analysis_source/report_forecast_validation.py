@@ -19,7 +19,7 @@ for mode,(ja,en) in names.items():
     for model,values in receipt['results'].items():metric_rows.append({'mode':mode,'model':model,**values})
 pd.DataFrame(metric_rows).to_csv(O/'forecast_validation_all_metrics.csv',index=False)
 lines=['# 広域・多種のチョウ記録分布変化：予測検証の統合結果','',
-    '**進行中。** 未完了の検証を成功と扱わない。'+('未完了：'+'、'.join(pending)+'。' if pending else '全予測比較の集計は完了。全体目標の完了は別途、成果物と方法の監査で判断する。'),'',
+    ('**進行中。** 未完了：'+'、'.join(pending)+'。' if pending else '**設定した予測比較・感度分析の集計は完了。** 全体の完了監査は `forecast_completion_audit_ja.md` を参照。'),'',
     '候補225種。主解析は観測支持を満たす155種。学習は2011–2014年→2015–2018年、評価は2015–2018年→2019–2022年。目的変数は観測努力を標準化した記録確率で、真の占有・新規定着ではない。食草資料は静的な地域資源であり、食草の移動や現地個体数を測定していない。','',
     '## 食草を追加したときの予測誤差','',
     'M3は背景＋気候＋土地被覆、M4はM3＋食草資源指標、M5はM4＋食草の科組成。以下は種を等しく重み付けしたMSE。小さいほどよい。異なる感度条件の絶対誤差は、対象と目的変数が異なる場合があるため直接ランキングしない。','',
@@ -42,6 +42,13 @@ lines+=['','区間は学習済み予測を固定し、種×5度空間ブロッ�
 for mode,receipt in available.items():
     r=receipt['results'];a=r['persistence'];b=r['M5_host_composition']
     lines.append(f"| {names[mode][0]} | {a['species_equal_mse']:.6f} | {b['species_equal_mse']:.6f} | {a['species_equal_mae']:.6f} | {b['species_equal_mae']:.6f} |")
+if not pending:
+    lines+=['','## 感度分析で残った追加価値','',
+        '各条件内部でM3とM5を比較した。種数は全条件で155種を維持し、対象の種×メッシュ組数の違いを上表に示した。条件間の改善率を順位付けして最良条件を選択していない。','']
+    for mode in ['temporal_effort20','temporal_radius250','temporal_exclude_top_provider','temporal_precision100']:
+        a=available[mode]['results']['M3_both']['species_equal_mse'];b=available[mode]['results']['M5_host_composition']['species_equal_mse']
+        lines.append(f'- {names[mode][0]}：MSEを{100*(a-b)/a:.2f}%減少。')
+    lines+=['','4条件ともMSE・MAEの差の固定予測再抽出区間はゼロをまたがなかった。これは既知種の記録分布予測に食草情報を加える価値の頑健性を支持するが、観測偏りの完全除去や食草の因果効果を示すものではない。']
 if len(available)>=2:
     fig,axes=plt.subplots(1,2,figsize=(12,max(4,1.5+.55*len(available))),sharey=True)
     for ax,metric in zip(axes,['mse','mae']):

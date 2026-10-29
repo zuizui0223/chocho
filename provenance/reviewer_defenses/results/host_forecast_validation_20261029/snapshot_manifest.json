@@ -6,36 +6,38 @@
     "spatial",
     "spatial_buffer100",
     "temporal_effort20",
-    "temporal_radius250"
+    "temporal_radius250",
+    "temporal_exclude_top_provider",
+    "temporal_precision100"
   ],
-  "metric_checks": 70,
+  "metric_checks": 98,
   "raw_data_included": false,
   "path_sanitization": "Local workspace prefixes replaced; quantitative fields unchanged",
   "files": [
     {
       "file": "forecast_validation_results_ja.md",
-      "sha256": "ffa67a2c4d7a895ff2463068735de0a428baa82f119e7a8d42ee562c1c6c61f2",
-      "source_sha256": "b3a73d06ba18e5f8e9d9f3a81095debf7183e3fe84d84967f5bf76b86c015848"
+      "sha256": "70c724c42c557e8f700e18159cfa7f28e60f5700805312febcc96071574f94de",
+      "source_sha256": "42a6d9313844729904e5aa3e6efdb2521cc90f059c040dc27971bacae002f02b"
     },
     {
       "file": "forecast_validation_transfer.png",
-      "sha256": "fd3bf7f075bf30fb2cbaa5f93e0ef208c5a2267e82473a550c3303b57db09491",
-      "source_sha256": "fd3bf7f075bf30fb2cbaa5f93e0ef208c5a2267e82473a550c3303b57db09491"
+      "sha256": "0c627a8ffc2c0e92ca3536eb7d141f130c17131fd8e3babde039cab5cf89f2f4",
+      "source_sha256": "0c627a8ffc2c0e92ca3536eb7d141f130c17131fd8e3babde039cab5cf89f2f4"
     },
     {
       "file": "forecast_validation_all_metrics.csv",
-      "sha256": "9c93cd45245361d4d78fde1396a383f4a2ef626a2e885b807b98606ebda59108",
-      "source_sha256": "7e0769b2729ce08b657a1ede970875d122047e1c10c616e1b2355f6a2eca496c"
+      "sha256": "f2d7ca751d6f1fcc353488fd09b2becc5fda75fb7ea9eda614e311d559c1a57f",
+      "source_sha256": "7788eb0ebdce38df96270ff6b45992045a5f6054f16a98a2aa4727762b7f6750"
     },
     {
       "file": "forecast_paired_comparisons.csv",
-      "sha256": "59d39dd71871dd8f47c992adfb0b14d9e768748dc97c1ad9e762804dbcb0cd83",
-      "source_sha256": "c43a8bb65f80a3e1e3274f6f376fce9b3da845f9542ea1ec0381c3b00eb051d0"
+      "sha256": "ba9be387e085acc778b3b89615b1ec8842ddcded9d08d959b19e24bca2b56fd4",
+      "source_sha256": "cea85088fa71b2d2c8e63aac763d145fcc00b28f50933038cf2ce8e3a636de0c"
     },
     {
       "file": "forecast_metric_validation.json",
-      "sha256": "b7809b2383c40fd62d00e0ae00018435603af4d65ec3bf73ff878b7e120c84dc",
-      "source_sha256": "6e7eebb75685503bafb3e444e52fd0c67750b3332fe8b9513519c84ae6e62717"
+      "sha256": "649b512832f88bf0b7ecbc38b20e6283d8fa9ecc0884ff34e8784d079d3d35e4",
+      "source_sha256": "2ee220602c9e6d48d7af49ef4fc645f4826ee769d5b6ea7d0942f88ebd868a01"
     },
     {
       "file": "forecast_model_lock.json",
@@ -54,8 +56,8 @@
     },
     {
       "file": "forecast_all_225_final_coverage.csv",
-      "sha256": "05a4b4ff88399112c279c0011e47e22a9b448150bb965e8d4efc5eaf7790380d",
-      "source_sha256": "457e98ad27da347ed441b25b90f7e17de1686ccfd46757a256d97cd41f8fd6ea"
+      "sha256": "2e3971ec9cff2194b0462ba53f63fb580cd0127f9ebde01dbb39f54c7df95c01",
+      "source_sha256": "76ae712157cec3beff1baed5083e1ce8f5e9b54ee523d534ab74881e15a87240"
     },
     {
       "file": "forecast_all_225_disposition.csv",
@@ -64,8 +66,8 @@
     },
     {
       "file": "forecast_coverage_reconciliation.json",
-      "sha256": "24609bca7d00fcd132650192588e834d4831ffd75ccf45861b310ee037826f31",
-      "source_sha256": "93bc0e437673d3c5191ca397238f42763265ef6bbf518689fbcb0824b775e1c5"
+      "sha256": "210be1ef21763d156d24a5eeda32ead63301b588d1a98d787add17faf34779cd",
+      "source_sha256": "31e1072ec416b9caf1baf2f1fdd6321485d07b88a8762089f221ccd531bd8163"
     },
     {
       "file": "forecast_selection_validation.json",
@@ -178,6 +180,16 @@
       "source_sha256": "ef98b72384c769ed73cd124ef0bcdbcb1ba6f941dea5af68dcc34b9f2a606f0b"
     },
     {
+      "file": "forecast_completion_audit_ja.md",
+      "sha256": "e056244d2f41ebadb1fe9baa4446255b2e1d17ab7ec53bbd266eb3e7db4f7f0e",
+      "source_sha256": "e056244d2f41ebadb1fe9baa4446255b2e1d17ab7ec53bbd266eb3e7db4f7f0e"
+    },
+    {
+      "file": "forecast_sensitivity_all_225_support.csv",
+      "sha256": "5d3b4f7910a7c7a883c710edf858bd7dd8b4a8ce213771ffac1d34f7f6a3076c",
+      "source_sha256": "64120e84c0eafa7a5bac50b56bd7be566753ad441d203c44ab556ef65a162bc4"
+    },
+    {
       "file": "forecast_temporal_results.json",
       "sha256": "f5303e00c52a9d5dea82f990a8e86bff16fea041d2a1c827729cf102f9c83ac2",
       "source_sha256": "92a0a0f5f50026133455690ae6b96aa422213baf23d94c2a28f7324b61f2ba0a"
@@ -206,6 +218,16 @@
       "file": "forecast_temporal_radius250_results.json",
       "sha256": "b6d8e6b0a064a040eed7c1f434ebd8ec494c14eceeccca6a214f9121d6c958d6",
       "source_sha256": "039b3a283e9a225a11594896401c93c705e5587c31a7cdc30e5b89816f087979"
+    },
+    {
+      "file": "forecast_temporal_exclude_top_provider_results.json",
+      "sha256": "6a2e00321a0ef027131a90a0eced4d4bba6f629d1b8869c29c2d7eb77fa93831",
+      "source_sha256": "b65e056618e225904a8650da7272ba194c76bbae6a8b7128a31cfc7b7a40a5d1"
+    },
+    {
+      "file": "forecast_temporal_precision100_results.json",
+      "sha256": "1fac06a6564958128a7191ceb61c43e51d22ffb28cedab02603fda25f56de4f2",
+      "source_sha256": "88ae81147b79bea80e0b27724e4b2f41a30fb50c841633fde311406daa9e2af9"
     },
     {
       "file": "analysis_source/fit_forecast.py",
@@ -249,7 +271,7 @@
     },
     {
       "file": "analysis_source/report_forecast_validation.py",
-      "sha256": "798ade98454ca8ebf204fcfe770d9d47d17e07eb883e4d153c2429d2dba93c74"
+      "sha256": "3f57338e5e678bd0e0041fdaa88c62e14f171f2ff45aa69f3e267a28c4cc0d76"
     }
   ]
 }
