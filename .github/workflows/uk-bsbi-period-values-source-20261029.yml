@@ -1,0 +1,41 @@
+name: Check every BSBI 3497 original historical plant period flag and hectad encoding
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-join-20261029]
+    paths:
+      - scripts/audit_bsbi_original_period_values_20261029.py
+      - tests/test_bsbi_original_period_values_20261029.py
+      - .github/workflows/uk-bsbi-period-values-source-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-complete-source-codebook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Strict original-period independent tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_original_period_values_20261029.py
+      - name: Download source from original publisher (no repost of plant records)
+        run: |
+          mkdir -p _bsbi/raw
+          curl -fLsS --retry 2 --connect-timeout 20 --max-time 150 \
+            'https://zenodo.org/records/10998003/files/PA2020_10by10kmSquareData.zip?download=1' \
+            -o _bsbi/raw/PA2020_10by10kmSquareData.zip
+      - name: Count original 3497 taxon csv historical date-flag vocabularies
+        run: |
+          python scripts/audit_bsbi_original_period_values_20261029.py \
+            --original-zip _bsbi/raw/PA2020_10by10kmSquareData.zip \
+            --output _bsbi/original_3497_dateclass_source_vocabulary_20261029.json
+      - name: Save only aggregate categorical codebook with source fingerprint
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-BSBI-3497-original-plant-period-value-vocab-20261029
+          path: _bsbi/original_3497_dateclass_source_vocabulary_20261029.json
+          retention-days: 30
