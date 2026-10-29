@@ -27,7 +27,7 @@ def test_wpi_requires_actual_wgs84_coordinates():
     src=check_wpi_metadata(metadata,ids,point)
     assert src["source_feature_count"]==3200
     assert src["real_commodity_flow_or_ship_calls_not_recorded"]
-    point["features"][0]["geometry"]={"x":400,"y":12}
+    point["features"]=[{"geometry":{"x":400,"y":12}} for _ in range(10)]
     with pytest.raises(ValueError,match="geometry"):
         check_wpi_metadata(metadata,ids,point)
 
