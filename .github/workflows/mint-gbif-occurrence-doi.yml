@@ -1,4 +1,4 @@
-name: Remote sensing 225-taxon GBIF source
+name: Temporal 225-taxon GBIF source
 on:
   workflow_dispatch:
 permissions:
@@ -16,10 +16,10 @@ jobs:
         env:
           GBIF_USERNAME: ${{ secrets.GBIF_USERNAME }}
           GBIF_PASSWORD: ${{ secrets.GBIF_PASSWORD }}
-        run: python scripts/request_remote_sensing_gbif.py
+        run: python scripts/request_temporal_gbif.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: remote-sensing-gbif-source-20261029
+          name: temporal-gbif-source-20261029
           path: artifacts/
           retention-days: 90
