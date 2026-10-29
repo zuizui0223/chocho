@@ -55,22 +55,46 @@ def check_wpi_metadata(metadata,ids,sample):
         raise ValueError("WPI original port index source count missing/outside expected range")
     if not isinstance(sample.get("features"),list) or not sample["features"]:
         raise ValueError("WPI sample data lacks original locations")
-    ok=0
+    def pair_ok(lat,lon):
+        try:
+            a=float(lat);b=float(lon)
+            return -90<=a<=90 and -180<=b<=180 and a==a and b==b
+        except (TypeError,ValueError):
+            return False
+    geometry_ok=0
+    attribute_ok=0
+    attribute_conflict=0
+    sample_n=len(sample["features"])
     for row in sample["features"]:
         if not isinstance(row,dict):continue
         geom=row.get("geometry") or {}
-        lon=geom.get("x");lat=geom.get("y")
-        if isinstance(lon,(int,float)) and isinstance(lat,(int,float)) and -180<=lon<=180 and -90<=lat<=90:
-            ok+=1
-    if ok<min(5,len(sample["features"])):
-        raise ValueError("WPI 4326 source geometry conversion invalid")
+        attr={str(k).upper():v for k,v in (row.get("attributes") or {}).items()}
+        geom_valid=pair_ok(geom.get("y"),geom.get("x"))
+        attr_valid=pair_ok(attr.get("LATITUDE"),attr.get("LONGITUDE"))
+        geometry_ok+=int(geom_valid)
+        attribute_ok+=int(attr_valid)
+        if geom_valid and attr_valid:
+            attribute_conflict+=int(abs(float(geom["y"])-float(attr["LATITUDE"]))>1. or
+                                    abs(float(geom["x"])-float(attr["LONGITUDE"]))>1.)
+    if max(geometry_ok,attribute_ok)<min(5,sample_n):
+        raise ValueError("WPI both spatial geometry and original LATITUDE/LONGITUDE source attributes invalid")
+    # In this global projected layer the FeatureServer's outSR=4326 may not
+    # preserve all global points correctly. Original WPI decimal coordinates
+    # are audited separately; refuse to silently replace them with dubious
+    # transformed geometry.
+    if attribute_ok>=min(5,sample_n):
+        policy="ORIGINAL_WPI_LATITUDE_LONGITUDE_ATTRIBUTES"
+    else:
+        policy="ARCGIS_OUTSR_4326_POINTS"
+    # Source conflicts remain visible and must be resolved before *all* points
+    # are used as geodetic sites in a downstream port-distance calculation.
     return {"port_service_uri":WPI,
             "layer_name":metadata.get("name",""),
             "layer_description_n_source_fields":len(fields),
             "source_feature_count":len(keys),
             "original_objectid_field":key,
             "source_fields_available":sorted(fields),
-            "small_probe_points_in_WGS84":ok,
+            "sample_points":sample_n,\n            "sample_valid_ArcGIS_4326_geometry":geometry_ok,\n            "sample_valid_original_attribute_latlon":attribute_ok,\n            "sample_geometry_vs_attribute_mismatch_over_1deg":attribute_conflict,\n            "preferred_position_source":policy,
             "last_update_202511_is_not_opening_date":True,
             "real_commodity_flow_or_ship_calls_not_recorded":True}
 
@@ -102,7 +126,7 @@ def run(output,manifest_path):
                          "returnGeometry":"true","outSR":"4326","outFields":"*",
                          "objectIds":",".join(map(str,oid[:10]))}))
         sample=json.loads(sample_raw)
-        result["ports"]=check_wpi_metadata(metadata,ids,sample)
+        result["ports"]=check_wpi_metadata(metadata,ids,sample)\n        result["ports"]["full_original_coordinates_not_yet_decoded_or_verified"]=True
         result["port_metadata_sha256"]=hashlib.sha256(metadata_raw).hexdigest()
         result["port_ID_set_sha256"]=hashlib.sha256(ids_raw).hexdigest()
     except (OSError,ValueError,KeyError,json.JSONDecodeError) as e:
