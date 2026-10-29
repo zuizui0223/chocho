@@ -1,0 +1,45 @@
+name: Source-author HOSTS 27 UK butterflies exact name matching to BSBI 2020
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_original_hosts_name_match_20261029.py
+      - tests/test_bsbi_original_hosts_name_match_20261029.py
+      - .github/workflows/uk-bsbi-original-hosts-source-name-join-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  transient-author-host-and-bsbi-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Pure source name and no-synonym tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_original_hosts_name_match_20261029.py
+      - name: Retrieve user-author only immutable original HOSTS source artifact (transient, no republishing)
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _source_author_only
+      - name: Exact source integrity and original HOSTS vs BSBI named botanical taxon matching
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_original_hosts_name_match_20261029.py \
+            --author-artifact-zip _source_author_only/dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip \
+            --output _bsbi/uk_original_HOSTS_27_butterflies_BSBI_source_name_coverage_20261029.json
+      - name: Upload aggregate-only name matching, not author HOSTS or BSBI rows
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-original-HOSTS-to-BSBI-3500-plant-name-source-coverage-20261029
+          path: _bsbi/uk_original_HOSTS_27_butterflies_BSBI_source_name_coverage_20261029.json
+          retention-days: 30
+          if-no-files-found: error
