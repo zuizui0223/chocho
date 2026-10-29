@@ -1,0 +1,128 @@
+{
+  "acquisition": {
+    "complete_butterfly_source_count": 467,
+    "complete_plant_source_count": 3597,
+    "complete_source_queries": 70,
+    "hard_stopped": false,
+    "http_attempts_including_retries": 132,
+    "new_retrieval_not_original_snapshot_replay": true,
+    "rate_limit_retries": 0,
+    "raw_coordinates_occurrence_ids_or_response_bodies_preserved": false,
+    "retrieved_occurrence_rows": 4064,
+    "runtime": "Transient-memory local subprocess, separately authorized continuation; not old Actions pipeline",
+    "source_queries_with_count_drift": 2,
+    "total_source_queries": 70
+  },
+  "contract_sha256": "0c2af9a1a50397c4a9a70b7a669974a1286bc1df8b9093946958fd60ef01b152",
+  "diagnostic_original8260": {
+    "all70_sources_complete": true,
+    "butterfly_indices_in_scope_complete_sources": 341,
+    "butterfly_indices_with_any3year_source_host": 287,
+    "case_island_windows_with_any3year_corecording": 17,
+    "complete_case_island_window_rows": 52,
+    "complete_source_subset": {
+      "butterfly_indices_with_any3year_source_host": 287,
+      "case_island_windows_with_any3year_corecording": 17,
+      "islands_with_any3year_corecording": 3,
+      "same_year_corecorded_butterfly_indices": 160,
+      "source_cases_with_any3year_corecording": 12,
+      "strict_butterfly_indices_with_any3year_strict_source_host": 184
+    },
+    "islands_with_any3year_corecording": 3,
+    "same_year_corecorded_butterfly_indices": 160,
+    "source_cases_with_any3year_corecording": 12,
+    "strict_butterfly_indices_with_any3year_strict_source_host": 184,
+    "unique_plant_country_indices_in_scope_complete_sources": 3324,
+    "unknown_sources_are_never_encoded_as_zero": true
+  },
+  "executed_utc": "2026-10-29T13:51:58.260099+00:00",
+  "first_source_query_utc": "2026-10-29T13:48:34.628675+00:00",
+  "geography": {
+    "diagnostic_island_rule": "All original dissolved GSHHG L1 landmasses with area>=5km2 and <7000000km2; five continental units excluded",
+    "diagnostic_island_universe_count": 8260,
+    "diagnostic_universe_sha256": "5f2f16c80b7c3c509dd951b6f27ea68446d857a3ecec88fed1b97beba9915168",
+    "geometry_policy": "Exact unsimplified source polygons and frozen selection hashes; no outcome-based island replacement",
+    "gshhg_url": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+    "gshhg_zip_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+    "level": 1,
+    "primary_frozen96_count": 96,
+    "resolution": "h",
+    "selection_file": "data/exploratory/island_expansion_20261029/expanded_island_panel_selection.json",
+    "selection_file_sha256": "5ccc868b89973b8142a7fdb4b3014c4394f134596ae2ef58e1179eaab68f5243",
+    "selection_sha256": "db0f49c244309716b22e05ea5eeddd7d48749e46f46d2757114d98cf0df4df72"
+  },
+  "interpretation": [
+    "Primary96 remains the pre-existing geography-selected panel with no replacement.",
+    "All8260 is a separate descriptive inventory of records from already selected positive26 country cases; it is not a new representative cohort or effect test.",
+    "Any-point containment establishes source spatial record presence only; an uncertain point can lie outside the true island.",
+    "Strict containment is conditional on the reported coordinate uncertainty covering actual error and on supplied GSHHG geometry; it does not cover source shoreline age, map accuracy or omitted lakes.",
+    "Same island and within3calendar years is observational co-recording, not feeding, host use, wild plant availability, arrival, recruitment, climate niche expansion or causality.",
+    "The two output windows follow butterfly year; candidate plant years may cross the2017/2018 boundary within the fixed2010-2025 acquisition range.",
+    "No matched source records is no indexed co-detection, not biological absence. Failed or capped sources remain incomplete.",
+    "The current COL XR island panel is a different taxonomic namespace; this acquisition retains original numeric GBIF Backbone keys explicitly."
+  ],
+  "last_source_query_utc": "2026-10-29T13:51:56.987118+00:00",
+  "outputs": {
+    "frozen96_case_island_window_corecords.csv": {
+      "bytes": 667133,
+      "sha256": "6be6c596e162186ac33c9d0382112c9c28ac18dc9d4399169e351f6d65c62d91"
+    },
+    "frozen_original_island_universe.csv": {
+      "bytes": 960785,
+      "sha256": "ceaf86b1c2f198f051169cee0fd87547f4f283391f6885afd7c7cfc4c7d89cce"
+    },
+    "original46_edge_island_window_inventory.csv": {
+      "bytes": 14265,
+      "sha256": "5eb8df44a5e7bb2f0940f9bb02be1365407743d362dca6484487886d54948a62"
+    },
+    "original8260_positive_source_case_inventory.csv": {
+      "bytes": 7650,
+      "sha256": "331e32fd54cebdcaa99abca4a1a4a3ef421251d960fcfcb2b085a259b21bf743"
+    },
+    "source_island_query_lock.json": {
+      "bytes": 64106,
+      "sha256": "ea2f473e797aec78d95c0539a008c915a9aad0e07296f906607fc077025e78d7"
+    },
+    "source_island_year_counts.csv": {
+      "bytes": 23333,
+      "sha256": "1d83825b2a86d2e6e65f118e9eb798f221969db6fab8a2db2f89c6630dbfeccd"
+    },
+    "source_query_receipts.json": {
+      "bytes": 204219,
+      "sha256": "ab81ba9e5301d8223ffd523fba6e7ef606fb1fcb7c391bae73fd9ec930b5fb5e"
+    }
+  },
+  "primary_frozen96": {
+    "all70_sources_complete": true,
+    "butterfly_indices_in_scope_complete_sources": 0,
+    "butterfly_indices_with_any3year_source_host": 0,
+    "case_island_windows_with_any3year_corecording": 0,
+    "complete_case_island_window_rows": 4992,
+    "complete_source_subset": {
+      "butterfly_indices_with_any3year_source_host": 0,
+      "case_island_windows_with_any3year_corecording": 0,
+      "islands_with_any3year_corecording": 0,
+      "same_year_corecorded_butterfly_indices": 0,
+      "source_cases_with_any3year_corecording": 0,
+      "strict_butterfly_indices_with_any3year_strict_source_host": 0
+    },
+    "islands_with_any3year_corecording": 0,
+    "same_year_corecorded_butterfly_indices": 0,
+    "source_cases_with_any3year_corecording": 0,
+    "strict_butterfly_indices_with_any3year_strict_source_host": 0,
+    "unique_plant_country_indices_in_scope_complete_sources": 13,
+    "unknown_sources_are_never_encoded_as_zero": true
+  },
+  "schema": "chocho_original26_host_exact_island_corecords_20261029_v1",
+  "source": {
+    "frozen_butterfly_source_count": 467,
+    "frozen_case_count": 26,
+    "frozen_plant_country_queries": 44,
+    "frozen_plant_source_count": 3595,
+    "frozen_unique_host_species": 24,
+    "original_butterfly_GADM_sha256": "11953efec0b0882ead95b4fd9272608d15b0512c532e630d68e22a94a5bb9ac5",
+    "original_inventory_sha256": "a850b160e2a3ca5f33f2e18eca0edd6eb8e2867821883e41501b77c66ca88098",
+    "original_plant_GADM_sha256": "12c080ed90a12ffa7738f18a8ee7435c8281ddde0714c9c60f326748a94226c2"
+  },
+  "status": "COMPLETE_NEW_LIVE_70_SOURCE_ISLAND_JOIN"
+}

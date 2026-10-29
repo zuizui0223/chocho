@@ -1,5 +1,7 @@
 # Island-barrier continuation: 96 islands, taxonomy bridge and support limits
 
+**Subsequent work:** [baseline-only120-island census, recorded-source distance and fresh point-to-island host co-recording](ISLAND_BASELINE_HOST_RESULTS_20261029.md). The findings and gates recorded below remain unchanged.
+
 **Result:** the fixed panel now contains **96 physical islands and 192 complete island-period queries**, totaling **194,860 indexed butterfly records**. There are **28 islands with at least three recorded species in both periods**, up from ten in the 24-island pilot. The stricter prespecified recording screen retains only **23 late-period islands**; the near-continent/far-WPI comparison contains just **one**. Every prespecified model fails its support gate, so no isolation, port or host effect coefficient is reported.
 
 The geographic diagnostic advances the hypothesis itself: among 48 continental-remote selected islands, **29 lie within 100 km of another landmass >=1,000 km²**. Direct continental distance and local sea-crossing distance should remain distinct. Neither distance establishes an occupied butterfly source population.

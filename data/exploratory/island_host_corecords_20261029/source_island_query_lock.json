@@ -1,0 +1,1155 @@
+{
+  "contract": {
+    "caps": {
+      "http_attempts_including_retries": 200,
+      "minimum_call_start_spacing_seconds": 1.5,
+      "per_query_records": 5000,
+      "queries": 70,
+      "total_retrieved_records": 12000
+    },
+    "geography": {
+      "diagnostic_island_rule": "All original dissolved GSHHG L1 landmasses with area>=5km2 and <7000000km2; five continental units excluded",
+      "diagnostic_island_universe_count": 8260,
+      "diagnostic_universe_sha256": "5f2f16c80b7c3c509dd951b6f27ea68446d857a3ecec88fed1b97beba9915168",
+      "geometry_policy": "Exact unsimplified source polygons and frozen selection hashes; no outcome-based island replacement",
+      "gshhg_url": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+      "gshhg_zip_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "level": 1,
+      "primary_frozen96_count": 96,
+      "resolution": "h",
+      "selection_file": "data/exploratory/island_expansion_20261029/expanded_island_panel_selection.json",
+      "selection_file_sha256": "5ccc868b89973b8142a7fdb4b3014c4394f134596ae2ef58e1179eaab68f5243",
+      "selection_sha256": "db0f49c244309716b22e05ea5eeddd7d48749e46f46d2757114d98cf0df4df72"
+    },
+    "implementation_script_sha256": "ffd660c4b3f0d330881a91de08e26275a6e1099a7a20e4e298820addcb2b2529",
+    "implementation_tests_sha256": "06a1d68a5b17190b1491e1847a72d2956c8b8fff8e0255480e22a4b622bf063d",
+    "matching_rule": "Same exact physical island and absolute source year difference<=3; butterfly year assigns output window; hosts may cross window boundary within2010-2025",
+    "new_runtime": "Transient-memory local subprocess, separately authorized continuation; not old Actions pipeline",
+    "original_source_edges": [
+      {
+        "butterfly": "Aguna asander",
+        "candidate_host_binomial": "Bauhinia variegata",
+        "country": "CU",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "butterfly": "Aguna asander",
+        "candidate_host_binomial": "Bauhinia variegata",
+        "country": "DO",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "butterfly": "Aguna asander",
+        "candidate_host_binomial": "Bauhinia variegata",
+        "country": "HT",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "butterfly": "Anteos clorinde",
+        "candidate_host_binomial": "Senna spectabilis",
+        "country": "CU",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "butterfly": "Anteos clorinde",
+        "candidate_host_binomial": "Senna spectabilis",
+        "country": "DO",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "butterfly": "Anteos clorinde",
+        "candidate_host_binomial": "Senna spectabilis",
+        "country": "HT",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "butterfly": "Battus philenor",
+        "candidate_host_binomial": "Aristolochia littoralis",
+        "country": "GT",
+        "wcvp_accepted_id": "2651580"
+      },
+      {
+        "butterfly": "Calycopis cecrops",
+        "candidate_host_binomial": "Mangifera indica",
+        "country": "VE",
+        "wcvp_accepted_id": "2362842"
+      },
+      {
+        "butterfly": "Colias philodice",
+        "candidate_host_binomial": "Medicago sativa",
+        "country": "GT",
+        "wcvp_accepted_id": "2369031"
+      },
+      {
+        "butterfly": "Colias philodice",
+        "candidate_host_binomial": "Trifolium repens",
+        "country": "GT",
+        "wcvp_accepted_id": "2439997"
+      },
+      {
+        "butterfly": "Colias philodice",
+        "candidate_host_binomial": "Trifolium pratense",
+        "country": "GT",
+        "wcvp_accepted_id": "2440043"
+      },
+      {
+        "butterfly": "Colias philodice",
+        "candidate_host_binomial": "Trifolium repens",
+        "country": "HN",
+        "wcvp_accepted_id": "2439997"
+      },
+      {
+        "butterfly": "Colias philodice",
+        "candidate_host_binomial": "Glycine max",
+        "country": "HN",
+        "wcvp_accepted_id": "2827366"
+      },
+      {
+        "butterfly": "Colobura dirce",
+        "candidate_host_binomial": "Cassia fistula",
+        "country": "VE",
+        "wcvp_accepted_id": "2703160"
+      },
+      {
+        "butterfly": "Danaus plexippus",
+        "candidate_host_binomial": "Asclepias syriaca",
+        "country": "DE",
+        "wcvp_accepted_id": "501428"
+      },
+      {
+        "butterfly": "Danaus plexippus",
+        "candidate_host_binomial": "Asclepias syriaca",
+        "country": "SE",
+        "wcvp_accepted_id": "501428"
+      },
+      {
+        "butterfly": "Epargyreus clarus",
+        "candidate_host_binomial": "Robinia pseudoacacia",
+        "country": "GB",
+        "wcvp_accepted_id": "2428246"
+      },
+      {
+        "butterfly": "Epargyreus clarus",
+        "candidate_host_binomial": "Phaseolus vulgaris",
+        "country": "GB",
+        "wcvp_accepted_id": "2538166"
+      },
+      {
+        "butterfly": "Euploea core",
+        "candidate_host_binomial": "Asclepias syriaca",
+        "country": "DE",
+        "wcvp_accepted_id": "501428"
+      },
+      {
+        "butterfly": "Historis acheronta",
+        "candidate_host_binomial": "Mangifera indica",
+        "country": "CU",
+        "wcvp_accepted_id": "2362842"
+      },
+      {
+        "butterfly": "Historis acheronta",
+        "candidate_host_binomial": "Mangifera indica",
+        "country": "VE",
+        "wcvp_accepted_id": "2362842"
+      },
+      {
+        "butterfly": "Kricogonia lyside",
+        "candidate_host_binomial": "Guaiacum officinale",
+        "country": "HN",
+        "wcvp_accepted_id": "2833809"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Ziziphus mauritiana",
+        "country": "CU",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Triphasia trifolia",
+        "country": "CU",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus japonica",
+        "country": "CU",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus maxima",
+        "country": "CU",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus medica",
+        "country": "CU",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Glycosmis parviflora",
+        "country": "CU",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Ziziphus mauritiana",
+        "country": "DO",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Triphasia trifolia",
+        "country": "DO",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus japonica",
+        "country": "DO",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus maxima",
+        "country": "DO",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus medica",
+        "country": "DO",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Glycosmis parviflora",
+        "country": "DO",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Ziziphus mauritiana",
+        "country": "HT",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Triphasia trifolia",
+        "country": "HT",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus japonica",
+        "country": "HT",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus maxima",
+        "country": "HT",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Citrus medica",
+        "country": "HT",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "butterfly": "Papilio demoleus",
+        "candidate_host_binomial": "Glycosmis parviflora",
+        "country": "HT",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "butterfly": "Papilio machaon",
+        "candidate_host_binomial": "Achillea millefolium",
+        "country": "NA",
+        "wcvp_accepted_id": "2908230"
+      },
+      {
+        "butterfly": "Phoebis agarithe",
+        "candidate_host_binomial": "Pithecellobium dulce",
+        "country": "DO",
+        "wcvp_accepted_id": "2539025"
+      },
+      {
+        "butterfly": "Phoebis agarithe",
+        "candidate_host_binomial": "Pithecellobium dulce",
+        "country": "HT",
+        "wcvp_accepted_id": "2539025"
+      },
+      {
+        "butterfly": "Pieris brassicae",
+        "candidate_host_binomial": "Rapistrum rugosum",
+        "country": "NA",
+        "wcvp_accepted_id": "2422602"
+      },
+      {
+        "butterfly": "Pieris brassicae",
+        "candidate_host_binomial": "Capsella bursa-pastoris",
+        "country": "NA",
+        "wcvp_accepted_id": "2697999"
+      },
+      {
+        "butterfly": "Vanessa atalanta",
+        "candidate_host_binomial": "Boehmeria nivea",
+        "country": "GA",
+        "wcvp_accepted_id": "2678359"
+      }
+    ],
+    "plan_file": "provenance/archive/host_hindcast/ISLAND_BASELINE_HOST_PLAN_20261029.md",
+    "plan_sha256": "67c25d1f28ff9f98def1122fc0fa0b4782062e08cf3dae5497cd3806795a82e6",
+    "raw_biological_response_or_coordinate_persistence": false,
+    "schema": "chocho_original26_host_exact_island_corecords_20261029_v1",
+    "source": {
+      "frozen_butterfly_source_count": 467,
+      "frozen_case_count": 26,
+      "frozen_plant_country_queries": 44,
+      "frozen_plant_source_count": 3595,
+      "frozen_unique_host_species": 24,
+      "original_butterfly_GADM_sha256": "11953efec0b0882ead95b4fd9272608d15b0512c532e630d68e22a94a5bb9ac5",
+      "original_inventory_sha256": "a850b160e2a3ca5f33f2e18eca0edd6eb8e2867821883e41501b77c66ca88098",
+      "original_plant_GADM_sha256": "12c080ed90a12ffa7738f18a8ee7435c8281ddde0714c9c60f326748a94226c2"
+    },
+    "source_queries": [
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 1944574,
+        "kind": "butterfly",
+        "label": "Aguna asander",
+        "original_faceted_index_count": 2,
+        "query_id": "butterfly|Aguna asander|CU",
+        "source_identity": "Aguna asander",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1944574&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 1944574,
+        "kind": "butterfly",
+        "label": "Aguna asander",
+        "original_faceted_index_count": 9,
+        "query_id": "butterfly|Aguna asander|DO",
+        "source_identity": "Aguna asander",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1944574&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 1944574,
+        "kind": "butterfly",
+        "label": "Aguna asander",
+        "original_faceted_index_count": 3,
+        "query_id": "butterfly|Aguna asander|HT",
+        "source_identity": "Aguna asander",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1944574&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 1919130,
+        "kind": "butterfly",
+        "label": "Anteos clorinde",
+        "original_faceted_index_count": 34,
+        "query_id": "butterfly|Anteos clorinde|CU",
+        "source_identity": "Anteos clorinde",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1919130&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 1919130,
+        "kind": "butterfly",
+        "label": "Anteos clorinde",
+        "original_faceted_index_count": 15,
+        "query_id": "butterfly|Anteos clorinde|DO",
+        "source_identity": "Anteos clorinde",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1919130&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 1919130,
+        "kind": "butterfly",
+        "label": "Anteos clorinde",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Anteos clorinde|HT",
+        "source_identity": "Anteos clorinde",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1919130&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 5141342,
+        "kind": "butterfly",
+        "label": "Battus philenor",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Battus philenor|GT",
+        "source_identity": "Battus philenor",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5141342&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "VE",
+        "gbif_species_key": 1922851,
+        "kind": "butterfly",
+        "label": "Calycopis cecrops",
+        "original_faceted_index_count": 2,
+        "query_id": "butterfly|Calycopis cecrops|VE",
+        "source_identity": "Calycopis cecrops",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1922851&country=VE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 5137672,
+        "kind": "butterfly",
+        "label": "Colias philodice",
+        "original_faceted_index_count": 4,
+        "query_id": "butterfly|Colias philodice|GT",
+        "source_identity": "Colias philodice",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5137672&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HN",
+        "gbif_species_key": 5137672,
+        "kind": "butterfly",
+        "label": "Colias philodice",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Colias philodice|HN",
+        "source_identity": "Colias philodice",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5137672&country=HN&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "VE",
+        "gbif_species_key": 5129251,
+        "kind": "butterfly",
+        "label": "Colobura dirce",
+        "original_faceted_index_count": 56,
+        "query_id": "butterfly|Colobura dirce|VE",
+        "source_identity": "Colobura dirce",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5129251&country=VE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DE",
+        "gbif_species_key": 5133088,
+        "kind": "butterfly",
+        "label": "Danaus plexippus",
+        "original_faceted_index_count": 2,
+        "query_id": "butterfly|Danaus plexippus|DE",
+        "source_identity": "Danaus plexippus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5133088&country=DE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "SE",
+        "gbif_species_key": 5133088,
+        "kind": "butterfly",
+        "label": "Danaus plexippus",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Danaus plexippus|SE",
+        "source_identity": "Danaus plexippus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5133088&country=SE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GB",
+        "gbif_species_key": 1947915,
+        "kind": "butterfly",
+        "label": "Epargyreus clarus",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Epargyreus clarus|GB",
+        "source_identity": "Epargyreus clarus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1947915&country=GB&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DE",
+        "gbif_species_key": 5136713,
+        "kind": "butterfly",
+        "label": "Euploea core",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Euploea core|DE",
+        "source_identity": "Euploea core",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5136713&country=DE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 1896932,
+        "kind": "butterfly",
+        "label": "Historis acheronta",
+        "original_faceted_index_count": 23,
+        "query_id": "butterfly|Historis acheronta|CU",
+        "source_identity": "Historis acheronta",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1896932&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "VE",
+        "gbif_species_key": 1896932,
+        "kind": "butterfly",
+        "label": "Historis acheronta",
+        "original_faceted_index_count": 14,
+        "query_id": "butterfly|Historis acheronta|VE",
+        "source_identity": "Historis acheronta",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1896932&country=VE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HN",
+        "gbif_species_key": 1920581,
+        "kind": "butterfly",
+        "label": "Kricogonia lyside",
+        "original_faceted_index_count": 3,
+        "query_id": "butterfly|Kricogonia lyside|HN",
+        "source_identity": "Kricogonia lyside",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1920581&country=HN&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 1938069,
+        "kind": "butterfly",
+        "label": "Papilio demoleus",
+        "original_faceted_index_count": 35,
+        "query_id": "butterfly|Papilio demoleus|CU",
+        "source_identity": "Papilio demoleus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1938069&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 1938069,
+        "kind": "butterfly",
+        "label": "Papilio demoleus",
+        "original_faceted_index_count": 199,
+        "query_id": "butterfly|Papilio demoleus|DO",
+        "source_identity": "Papilio demoleus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1938069&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 1938069,
+        "kind": "butterfly",
+        "label": "Papilio demoleus",
+        "original_faceted_index_count": 8,
+        "query_id": "butterfly|Papilio demoleus|HT",
+        "source_identity": "Papilio demoleus",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1938069&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "NA",
+        "gbif_species_key": 8225376,
+        "kind": "butterfly",
+        "label": "Papilio machaon",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Papilio machaon|NA",
+        "source_identity": "Papilio machaon",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=8225376&country=NA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 1919652,
+        "kind": "butterfly",
+        "label": "Phoebis agarithe",
+        "original_faceted_index_count": 24,
+        "query_id": "butterfly|Phoebis agarithe|DO",
+        "source_identity": "Phoebis agarithe",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1919652&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 1919652,
+        "kind": "butterfly",
+        "label": "Phoebis agarithe",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Phoebis agarithe|HT",
+        "source_identity": "Phoebis agarithe",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1919652&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "NA",
+        "gbif_species_key": 1920506,
+        "kind": "butterfly",
+        "label": "Pieris brassicae",
+        "original_faceted_index_count": 25,
+        "query_id": "butterfly|Pieris brassicae|NA",
+        "source_identity": "Pieris brassicae",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1920506&country=NA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GA",
+        "gbif_species_key": 1898286,
+        "kind": "butterfly",
+        "label": "Vanessa atalanta",
+        "original_faceted_index_count": 1,
+        "query_id": "butterfly|Vanessa atalanta|GA",
+        "source_identity": "Vanessa atalanta",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=1898286&country=GA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE&facet=gadmLevel1Gid&facet=lifeStage&facet=establishmentMeans"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3190638,
+        "kind": "plant",
+        "label": "Mangifera indica",
+        "original_faceted_index_count": 46,
+        "query_id": "plant|2362842|CU",
+        "source_identity": "2362842",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190638&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2362842"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "VE",
+        "gbif_species_key": 3190638,
+        "kind": "plant",
+        "label": "Mangifera indica",
+        "original_faceted_index_count": 45,
+        "query_id": "plant|2362842|VE",
+        "source_identity": "2362842",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190638&country=VE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2362842"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 9151957,
+        "kind": "plant",
+        "label": "Medicago sativa",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2369031|GT",
+        "source_identity": "2369031",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=9151957&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2369031"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "NA",
+        "gbif_species_key": 5373368,
+        "kind": "plant",
+        "label": "Rapistrum rugosum",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2422602|NA",
+        "source_identity": "2422602",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5373368&country=NA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2422602"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GB",
+        "gbif_species_key": 5352251,
+        "kind": "plant",
+        "label": "Robinia pseudoacacia",
+        "original_faceted_index_count": 3203,
+        "query_id": "plant|2428246|GB",
+        "source_identity": "2428246",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5352251&country=GB&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2428246"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 5358748,
+        "kind": "plant",
+        "label": "Trifolium repens",
+        "original_faceted_index_count": 30,
+        "query_id": "plant|2439997|GT",
+        "source_identity": "2439997",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5358748&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2439997"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HN",
+        "gbif_species_key": 5358748,
+        "kind": "plant",
+        "label": "Trifolium repens",
+        "original_faceted_index_count": 5,
+        "query_id": "plant|2439997|HN",
+        "source_identity": "2439997",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5358748&country=HN&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2439997"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 8324121,
+        "kind": "plant",
+        "label": "Trifolium pratense",
+        "original_faceted_index_count": 1,
+        "query_id": "plant|2440043|GT",
+        "source_identity": "2440043",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=8324121&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2440043"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3039424,
+        "kind": "plant",
+        "label": "Ziziphus mauritiana",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2470728|CU",
+        "source_identity": "2470728",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3039424&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 3039424,
+        "kind": "plant",
+        "label": "Ziziphus mauritiana",
+        "original_faceted_index_count": 1,
+        "query_id": "plant|2470728|DO",
+        "source_identity": "2470728",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3039424&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 3039424,
+        "kind": "plant",
+        "label": "Ziziphus mauritiana",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2470728|HT",
+        "source_identity": "2470728",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3039424&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2470728"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 2957438,
+        "kind": "plant",
+        "label": "Senna spectabilis",
+        "original_faceted_index_count": 3,
+        "query_id": "plant|2491716|CU",
+        "source_identity": "2491716",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2957438&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 2957438,
+        "kind": "plant",
+        "label": "Senna spectabilis",
+        "original_faceted_index_count": 2,
+        "query_id": "plant|2491716|DO",
+        "source_identity": "2491716",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2957438&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 2957438,
+        "kind": "plant",
+        "label": "Senna spectabilis",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2491716|HT",
+        "source_identity": "2491716",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2957438&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2491716"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3190406,
+        "kind": "plant",
+        "label": "Triphasia trifolia",
+        "original_faceted_index_count": 2,
+        "query_id": "plant|2514763|CU",
+        "source_identity": "2514763",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190406&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 3190406,
+        "kind": "plant",
+        "label": "Triphasia trifolia",
+        "original_faceted_index_count": 8,
+        "query_id": "plant|2514763|DO",
+        "source_identity": "2514763",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190406&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 3190406,
+        "kind": "plant",
+        "label": "Triphasia trifolia",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2514763|HT",
+        "source_identity": "2514763",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190406&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2514763"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GB",
+        "gbif_species_key": 5350452,
+        "kind": "plant",
+        "label": "Phaseolus vulgaris",
+        "original_faceted_index_count": 4,
+        "query_id": "plant|2538166|GB",
+        "source_identity": "2538166",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5350452&country=GB&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2538166"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 2962831,
+        "kind": "plant",
+        "label": "Pithecellobium dulce",
+        "original_faceted_index_count": 14,
+        "query_id": "plant|2539025|DO",
+        "source_identity": "2539025",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2962831&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2539025"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 2962831,
+        "kind": "plant",
+        "label": "Pithecellobium dulce",
+        "original_faceted_index_count": 11,
+        "query_id": "plant|2539025|HT",
+        "source_identity": "2539025",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2962831&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2539025"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GT",
+        "gbif_species_key": 2873993,
+        "kind": "plant",
+        "label": "Aristolochia littoralis",
+        "original_faceted_index_count": 6,
+        "query_id": "plant|2651580|GT",
+        "source_identity": "2651580",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2873993&country=GT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2651580"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 2953251,
+        "kind": "plant",
+        "label": "Bauhinia variegata",
+        "original_faceted_index_count": 2,
+        "query_id": "plant|2672176|CU",
+        "source_identity": "2672176",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2953251&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 2953251,
+        "kind": "plant",
+        "label": "Bauhinia variegata",
+        "original_faceted_index_count": 4,
+        "query_id": "plant|2672176|DO",
+        "source_identity": "2672176",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2953251&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 2953251,
+        "kind": "plant",
+        "label": "Bauhinia variegata",
+        "original_faceted_index_count": 1,
+        "query_id": "plant|2672176|HT",
+        "source_identity": "2672176",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2953251&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2672176"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "GA",
+        "gbif_species_key": 2984359,
+        "kind": "plant",
+        "label": "Boehmeria nivea",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2678359|GA",
+        "source_identity": "2678359",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=2984359&country=GA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2678359"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "NA",
+        "gbif_species_key": 5375388,
+        "kind": "plant",
+        "label": "Capsella bursa-pastoris",
+        "original_faceted_index_count": 2,
+        "query_id": "plant|2697999|NA",
+        "source_identity": "2697999",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5375388&country=NA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2697999"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "VE",
+        "gbif_species_key": 5357108,
+        "kind": "plant",
+        "label": "Cassia fistula",
+        "original_faceted_index_count": 12,
+        "query_id": "plant|2703160|VE",
+        "source_identity": "2703160",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5357108&country=VE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2703160"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3831801,
+        "kind": "plant",
+        "label": "Citrus japonica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724150|CU",
+        "source_identity": "2724150",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3831801&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 3831801,
+        "kind": "plant",
+        "label": "Citrus japonica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724150|DO",
+        "source_identity": "2724150",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3831801&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 3831801,
+        "kind": "plant",
+        "label": "Citrus japonica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724150|HT",
+        "source_identity": "2724150",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3831801&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724150"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3190160,
+        "kind": "plant",
+        "label": "Citrus maxima",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724206|CU",
+        "source_identity": "2724206",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190160&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 3190160,
+        "kind": "plant",
+        "label": "Citrus maxima",
+        "original_faceted_index_count": 1,
+        "query_id": "plant|2724206|DO",
+        "source_identity": "2724206",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190160&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 3190160,
+        "kind": "plant",
+        "label": "Citrus maxima",
+        "original_faceted_index_count": 3,
+        "query_id": "plant|2724206|HT",
+        "source_identity": "2724206",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190160&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724206"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 3190157,
+        "kind": "plant",
+        "label": "Citrus medica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724208|CU",
+        "source_identity": "2724208",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190157&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 3190157,
+        "kind": "plant",
+        "label": "Citrus medica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724208|DO",
+        "source_identity": "2724208",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190157&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 3190157,
+        "kind": "plant",
+        "label": "Citrus medica",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2724208|HT",
+        "source_identity": "2724208",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3190157&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2724208"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HN",
+        "gbif_species_key": 5359660,
+        "kind": "plant",
+        "label": "Glycine max",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2827366|HN",
+        "source_identity": "2827366",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=5359660&country=HN&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2827366"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "CU",
+        "gbif_species_key": 7732678,
+        "kind": "plant",
+        "label": "Glycosmis parviflora",
+        "original_faceted_index_count": 2,
+        "query_id": "plant|2827632|CU",
+        "source_identity": "2827632",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=7732678&country=CU&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DO",
+        "gbif_species_key": 7732678,
+        "kind": "plant",
+        "label": "Glycosmis parviflora",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2827632|DO",
+        "source_identity": "2827632",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=7732678&country=DO&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HT",
+        "gbif_species_key": 7732678,
+        "kind": "plant",
+        "label": "Glycosmis parviflora",
+        "original_faceted_index_count": 6,
+        "query_id": "plant|2827632|HT",
+        "source_identity": "2827632",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=7732678&country=HT&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2827632"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "HN",
+        "gbif_species_key": 3986813,
+        "kind": "plant",
+        "label": "Guaiacum officinale",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2833809|HN",
+        "source_identity": "2833809",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3986813&country=HN&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2833809"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "NA",
+        "gbif_species_key": 3120060,
+        "kind": "plant",
+        "label": "Achillea millefolium",
+        "original_faceted_index_count": 0,
+        "query_id": "plant|2908230|NA",
+        "source_identity": "2908230",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3120060&country=NA&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "2908230"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "DE",
+        "gbif_species_key": 3170247,
+        "kind": "plant",
+        "label": "Asclepias syriaca",
+        "original_faceted_index_count": 86,
+        "query_id": "plant|501428|DE",
+        "source_identity": "501428",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3170247&country=DE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "501428"
+      },
+      {
+        "checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c",
+        "country": "SE",
+        "gbif_species_key": 3170247,
+        "kind": "plant",
+        "label": "Asclepias syriaca",
+        "original_faceted_index_count": 95,
+        "query_id": "plant|501428|SE",
+        "source_identity": "501428",
+        "source_url": "https://api.gbif.org/v1/occurrence/search?taxonKey=3170247&country=SE&year=2010%2C2025&hasCoordinate=true&hasGeospatialIssue=false&occurrenceStatus=PRESENT&limit=0&facet=gadmLevel1Gid&facetLimit=300&basisOfRecord=HUMAN_OBSERVATION&basisOfRecord=PRESERVED_SPECIMEN&basisOfRecord=OBSERVATION&basisOfRecord=MACHINE_OBSERVATION&basisOfRecord=OCCURRENCE",
+        "wcvp_accepted_id": "501428"
+      }
+    ],
+    "strict_uncertainty_rule": "Reported WGS84 uncertainty disk conservatively enclosed by min-curvature spherical-cap rectangle; entire rectangle strictly inside exact source polygon; missing is unknown; dateline/polar wraps uncertified",
+    "taxonomy": {
+      "current_COL_bridge_checklist_key_not_queried_here": "7ddf754f-d193-4cc9-b351-99906754a03b",
+      "old_numeric_keys_never_replaced_by_COL_keys": true,
+      "original_source_checklist_key": "d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
+    },
+    "window_rule": {
+      "2010_2017": [
+        2010,
+        2017
+      ],
+      "2018_2025": [
+        2018,
+        2025
+      ]
+    }
+  },
+  "contract_sha256": "0c2af9a1a50397c4a9a70b7a669974a1286bc1df8b9093946958fd60ef01b152",
+  "locked_before_first_source_query_utc": "2026-10-29T13:48:34.597473+00:00"
+}
