@@ -1,0 +1,36 @@
+name: Read nested BSBI Plant Atlas 2020 dated 10km distribution schema
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_nested_hectad_layout_20261029.py
+      - tests/test_bsbi_nested_hectad_layout_20261029.py
+      - .github/workflows/uk-bsbi-nested-hectad-schema-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-nested-plant-grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline nested ZIP source and no-record-disclosure tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_nested_hectad_layout_20261029.py
+      - name: Read exact MD5-locked original nested BSBI data class header only
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_nested_hectad_layout_20261029.py \
+            --output _bsbi/bsbi_PA2020_nested_dateclass_source_schema_20261029.json
+      - name: Upload source field metadata only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-BSBI-PA2020-original-nested-hectad-dateclass-schema-20261029
+          path: _bsbi/bsbi_PA2020_nested_dateclass_source_schema_20261029.json
+          retention-days: 30
+          if-no-files-found: error

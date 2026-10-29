@@ -1,0 +1,66 @@
+name: UK butterflies actual 1987–95 training × historical pre1987 BSBI hosts → 2005–21 hindcast
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_uk_bsbi_historical_host_increment_20261029.py
+      - tests/test_uk_bsbi_historical_host_increment_20261029.py
+      - .github/workflows/uk-bsbi-history-host-vs-nonhost-hindcast-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-original-host-increment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source scientific dependencies and run no-network science tests
+        run: |
+          python -m pip install 'xlrd>=2.0.2,<3' 'numpy>=1.26' 'scikit-learn>=1.5,<2' 'pyproj>=3.6,<4' 'pytest>=8,<10'
+          python -m pytest -q tests/test_uk_bsbi_historical_host_increment_20261029.py
+      - name: Retrieve original author HOSTS source without publication
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_only
+      - name: Recreate exactly original 19 UKBMS sites and 1981–2021 NASA daily weather, fit 1987–95 botanical-host and nonhost models
+        run: |
+          mkdir -p _historic_host
+          python scripts/audit_uk_bsbi_historical_host_increment_20261029.py \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --author-artifact-zip _author_only/dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip \
+            --output _historic_host/uk_bsbi_host_pre1987_1987train_2005test_20261029.json
+      - name: Verify no host management, no source-data leakage and identical original source
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('_historic_host/uk_bsbi_host_pre1987_1987train_2005test_20261029.json')
+          x=json.loads(p.read_text())
+          assert x['schema']=='chocho_UK_BSBI_pre1987_host_late_2005to2021_survey_hindcast_v01'
+          assert x['source']['original_repeat_monitoring_transects']==19
+          assert x['source']['source_botanical_hectads']==16
+          assert x['source']['historical_host_support_eligible_butterflies']>=10
+          assert len(x['comparisons']['geographically_unseen_hectad_fold_scores'])==5
+          assert not x['human_maintained_host_plants_identified']
+          assert not x['future_butterfly_range_or_population_predicted']
+          assert x['host_plant_nonrecord_is_not_true_absence']
+          s=p.read_text().lower()
+          for token in ('"ukbms_siteno":','"hectad":','"latitude":','"longitude":','"easting":','"northing":','"recorder_name":'):
+            assert token not in s,token
+          print('PASS original data exact source and historical host-vs-nonhost prediction firewall')
+          PY
+      - name: Upload aggregated original historical and heldout-hectad predictive scores only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-1987to1995-historical-BSBI-host-2005to2021-actual-survey-hindcast-20261029
+          path: _historic_host/uk_bsbi_host_pre1987_1987train_2005test_20261029.json
+          retention-days: 30
+          if-no-files-found: error

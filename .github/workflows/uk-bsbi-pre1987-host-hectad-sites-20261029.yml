@@ -1,0 +1,45 @@
+name: UK 19 matched transects × original pre-1987 BSBI host-plant recorded geography
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_original_host_hectad_opportunity_20261029.py
+      - tests/test_bsbi_original_host_hectad_opportunity_20261029.py
+      - .github/workflows/uk-bsbi-pre1987-host-hectad-sites-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-prehistoric-host-landscape-identification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Offline OSGB location and strict date-class/absence tests
+        run: |
+          python -m pip install 'xlrd>=2.0.2,<3' 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_original_host_hectad_opportunity_20261029.py
+      - name: Retrieve immutable original author-only HOSTS source transiently
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_only
+      - name: Join historical BSBI plant presence, before 1987, to original repeatedly surveyed UKBMS transects
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_original_host_hectad_opportunity_20261029.py \
+            --author-artifact-zip _author_only/dist/source/butterfly_resource_novelty_anonymous_OFFLINE_source_v01.zip \
+            --output _bsbi/bsbi_preatlas1987_hosts_19_UKBMS_transects_20261029.json
+      - name: Upload only aggregated source information support and taxon-level counts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-original-pre1987-hosts-at-19-transects-presence-only-20261029
+          path: _bsbi/bsbi_preatlas1987_hosts_19_UKBMS_transects_20261029.json
+          retention-days: 30
+          if-no-files-found: error
