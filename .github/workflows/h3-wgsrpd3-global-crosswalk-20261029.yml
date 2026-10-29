@@ -31,7 +31,7 @@ jobs:
           run-id: 39006554609
           github-token: ${{ github.token }}
           path: _h3_source/author_only
-      - name: Verify and safely extract exact original 365 WGSRPD3 geometry source
+      - name: Verify and safely extract exact original 369 WGSRPD3 geometry source
         run: |
           python - <<'PY'
           import hashlib,zipfile
@@ -70,7 +70,7 @@ jobs:
           assert r['status']=='SOURCE_VERIFIED_GLOBAL_H3R4_WGSRPD3_AREA_CROSSWALK_COMPLETE'
           assert r['h3_resolution']==4
           assert r['all_H3_planet_cells_including_sea_tested']==288122
-          assert r['regions_with_at_least_one_area_intersection']==365
+          assert r['regions_with_at_least_one_area_intersection']==369
           assert r['per_h3_land_fraction_is_not_actual_host_plant_presence']
           assert r['no_species_host_status_or_remote_sensing_values_joined_yet']
           for name,key in [('global_h3r4_wgsrpd3_cells_20261029.csv.gz','cell_csv_gzip_sha256'),
