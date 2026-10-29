@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "cells": 5282,
+  "annual_rows": 63384,
+  "period_rows": 15846,
+  "climate_cells": 1101,
+  "periods": {
+    "0": [
+      2011,
+      2014
+    ],
+    "1": [
+      2015,
+      2018
+    ],
+    "2": [
+      2019,
+      2022
+    ]
+  },
+  "features_per_period": 42,
+  "forecast_rule": "Transition 0->1 uses period0 features only; transition1->2 uses period1 features only. Realised period2 environment excluded from forecast input; available only for separately labelled hindcast.",
+  "resolution_caveat": "MERRA2 climate 0.5x0.625 degree; 10km landcover area-weighted from source 3km fractions; no microclimate or fine connectivity claim"
+}

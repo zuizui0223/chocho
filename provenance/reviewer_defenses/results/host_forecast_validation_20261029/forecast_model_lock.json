@@ -1,0 +1,20 @@
+{
+  "status": "LOCKED_BEFORE_MODEL_FIT",
+  "date_jst": "2026-10-29",
+  "response": "Probability of at least one focal-species record in a sample of 10 target-group recording days, calculated by finite-population rarefaction. This is a standardized recording-distribution indicator, NOT true occupancy or confirmed colonization.",
+  "recording_day_unit": "cell x provider x date; pooled observers; not complete lists or standardized visits",
+  "primary_accessible_domain": "Within 500 km of a focal-species record cell from 2001-2014; fixed without later records. Sensitivity 250 and 1000 km if needed.",
+  "cell_filters": "Unique WGSRPD center, no multiple intersected WGSRPD regions; baseline2011-2014 unclassified fraction <=0.05; predeclared 5282-cell forecast pool.",
+  "training": "2011-2014 predictors -> 2015-2018 response; both periods >=10 recording days for evaluable training rows",
+  "test": "2015-2018 predictors -> 2019-2022 response; baseline >=10 days for predictions; future >=10 days for scoring only; never filter training by future availability",
+  "forecast_features": "Baseline occurrence indicator, baseline effort and observing-season distribution, geographic location, log distance to pre2015 records; baseline environment and within-baseline environmental trends; static contemporary host indicators. No realised future environment or future effort as predictors.",
+  "models": ["persistence", "M0_background", "M1_climate", "M2_landcover", "M3_both", "M4_host_resources", "M5_host_composition"],
+  "random_forest": {"n_estimators": 160, "max_depth": 12, "min_samples_leaf": 40, "max_features": 0.7, "random_state": 20261029, "n_jobs": 4},
+  "tuning": "Fixed settings, no tuning against final holdout. Any later change must be labelled post-hoc sensitivity.",
+  "scoring": "Species-equally-weighted MSE/MAE and per-species error. Compare against persistence. Also evaluate changes and initially unrecorded cells; never claim all zeros are absences.",
+  "generality": "Separate temporal, held-species, and held-spatial-block evaluations. Spatial block membership must keep shared climate cells together; species IDs not predictors. Fit all preprocessing inside each training split.",
+  "uncertainty": "Species and spatial clustering; bootstrap uncertainty in incremental test errors, not causal intervals.",
+  "sensitivities_required": ["provider dominance and provider turnover", "coordinate precision", "recording effort thresholds/rarefaction", "spatial dependency and accessible-domain restriction", "host count versus composition"],
+  "historical_knowledge_limit": "Current static host catalogue and retrospective2026 observation archive do not represent an actual forecast issued2018.",
+  "goal_status": "Active; model execution, validations, figures, and results pending"
+}
