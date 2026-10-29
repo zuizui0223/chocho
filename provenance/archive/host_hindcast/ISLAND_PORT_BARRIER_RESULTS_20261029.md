@@ -1,5 +1,7 @@
 # Island, port and barrier continuation — measured results, 29 October 2026
 
+**Later continuation:** the [96-island expansion and taxonomy bridge](ISLAND_EXPANSION_RESULTS_20261029.md) supersede the pilot's observation-coverage status below. This file retains the original 24-island results and full 8,260-island geographic census.
+
 **Current result:** geographic exposures are now measured for all 8,260 source islands ≥5 km², and an independent 24-island × two-period butterfly recording pilot has been acquired completely. The existing country panel cannot supply the intended within-island host comparison. The new pilot is too sparse for the full isolation × port × host test: only 10 of its 24 islands have at least three recorded species in both periods. No butterfly port, host or colonisation effect is estimated here.
 
 This continues exploratory PR #102 from `a8416af4151e16ae7050240348765f9528d20748`. The prior head already passed paper CI and reviewer-bundle checks; its old source failures were repaired. The original GEB manuscript is unchanged.
