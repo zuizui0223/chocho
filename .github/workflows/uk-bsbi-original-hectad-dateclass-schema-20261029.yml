@@ -1,0 +1,36 @@
+name: BSBI original nested hectad-dateclass source and Dryad host relationships catalogue
+on:
+  push:
+    branches: [analysis/uk-pre2000-host-atlas-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_nested_era_host_schema_20261029.py
+      - tests/test_bsbi_nested_era_host_schema_20261029.py
+      - .github/workflows/uk-bsbi-original-hectad-dateclass-schema-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-distribution-schema-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify nested ZIP defensive controls without reading plant observations
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_nested_era_host_schema_20261029.py
+      - name: Audit exact original nested hectad period field structure
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_nested_era_host_schema_20261029.py \
+            --output _bsbi/bsbi_hectad_dateclass_and_dryad_host_catalogue_20261029.json
+      - name: Upload ONLY field names and file checksums
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-BSBI-historical-hectad-dateclass-inner-schema-20261029
+          path: _bsbi/bsbi_hectad_dateclass_and_dryad_host_catalogue_20261029.json
+          retention-days: 30
+          if-no-files-found: error
