@@ -17,7 +17,8 @@ def inspect(src):
     actual=hashlib.sha256(src).hexdigest()
     if actual!=SHA:raise ValueError("Official GSHHG release zip SHA256 mismatched")
     with zipfile.ZipFile(io.BytesIO(src)) as z:
-        # The source SHA256 pins the complete official 149,157,845-byte ZIP.\n        # Avoid decompressing unrelated full-resolution coastline members during source audit.
+        # The source SHA256 pins the complete official 149,157,845-byte ZIP.
+        # Avoid decompressing unrelated full-resolution coastline members during source audit.
         names=z.namelist()
         l1=[n for n in names if n.replace("\\","/").endswith("GSHHS_h_L1.shp")]
         if len(l1)!=1:raise ValueError("Original high-resolution shoreline level1 not found")
@@ -26,7 +27,8 @@ def inspect(src):
             if prefix+suf not in names:raise ValueError("Incomplete original shoreline shapefile")
         if sum(x.file_size for x in z.infolist())>2_000_000_000:
             raise ValueError("GSHHG original decompression beyond bound")
-        l1_shp_bytes=z.getinfo(l1[0]).file_size\n        if l1_shp_bytes>150_000_000:raise ValueError("Unexpected GSHHS high L1 original shapefile size")
+        l1_shp_bytes=z.getinfo(l1[0]).file_size
+        if l1_shp_bytes>150_000_000:raise ValueError("Unexpected GSHHS high L1 original shapefile size")
         readme=[n for n in names if n.lower().endswith("license.txt")]
     return {"source":"GSHHG 2.3.7 original shorelines, high resolution L1",
         "official_sha256":SHA,
