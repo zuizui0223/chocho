@@ -13,6 +13,7 @@ from urllib.request import Request,urlopen
 from collections import Counter
 import geopandas as gpd
 import numpy as np
+import pandas as pd
 from shapely import make_valid
 from shapely.ops import unary_union
 from audit_island_gshhg_original_source_20261029 import URL,SHA,MAX_SIZE
@@ -30,7 +31,7 @@ def dissolve_original(frame):
     if not id_col:
         raise ValueError("GSHHG original source polygon ID field missing")
     original=frame[[id_col,"geometry"]].copy()
-    ids=gpd.pd.to_numeric(original[id_col],errors="coerce")
+    ids=pd.to_numeric(original[id_col],errors="coerce")
     if not (np.isfinite(ids)&(ids>=0)&(ids%1==0)).all():
         raise ValueError("Original source island identity ambiguous")
     original[id_col]=ids.astype("int64")
