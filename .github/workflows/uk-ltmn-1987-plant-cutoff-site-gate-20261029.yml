@@ -1,0 +1,35 @@
+name: Verify UK LTMN early-era visit effort after 1986 historical BSBI plant cutoff
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_uk_ltmn_1987_source_site_eligibility_20261029.py
+      - tests/test_uk_ltmn_1987_source_site_eligibility_20261029.py
+      - .github/workflows/uk-ltmn-1987-plant-cutoff-site-gate-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  survey-effort-only-after-host-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Read-only original site and visit data parser
+        run: |
+          python -m pip install 'pytest>=8,<10' 'xlrd>=2.0.2,<3'
+          python -m pytest -q tests/test_uk_ltmn_1987_source_site_eligibility_20261029.py
+      - name: Count original survey routes after 1986 host-map cutoff and before 2005 held-out test
+        run: |
+          mkdir -p _cutoff
+          python scripts/audit_uk_ltmn_1987_source_site_eligibility_20261029.py \
+            --output _cutoff/ukbms_1987to1995_original_host_cutoff_survey_sites_20261029.json
+      - name: Upload only original source survey effort aggregates
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-1987to95-prehost-cutoff-original-survey-effort-only-20261029
+          path: _cutoff/ukbms_1987to1995_original_host_cutoff_survey_sites_20261029.json
+          retention-days: 30
