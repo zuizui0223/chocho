@@ -1,0 +1,36 @@
+name: UK pre2000 BSBI plant source period-code and original NHM HOSTS link availability
+on:
+  push:
+    branches: [analysis/uk-pre2000-host-atlas-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_hectad_values_nhm_source_20261029.py
+      - tests/test_bsbi_hectad_values_nhm_source_20261029.py
+      - .github/workflows/uk-bsbi-historical-host-hectad-source-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-plant-hectad-to-19-transect-data-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install read-only original UK visit XLS + source-independent BNG transform tests
+        run: |
+          python -m pip install 'pytest>=8,<10' 'xlrd>=2.0.2,<3'
+          python -m pytest -q tests/test_bsbi_hectad_values_nhm_source_20261029.py
+      - name: Verify full published 3497 plant distribution files, six eras, 19 source UK transects, NHM host CSV availability
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_hectad_values_nhm_source_20261029.py \
+            --output _bsbi/uk_bsbi_original_19_transects_period_coding_source_20261029.json
+      - name: Source-only periods/metadata no original botanical/visit rows
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-19-transects-BSBI-plant-dateclass-and-NHM-HOSTS-20261029
+          path: _bsbi/uk_bsbi_original_19_transects_period_coding_source_20261029.json
+          retention-days: 30
+          if-no-files-found: error
