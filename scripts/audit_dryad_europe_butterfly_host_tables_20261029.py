@@ -79,8 +79,18 @@ def inspect(path):
         for name,size in FILES.items():
             row=catalog[name]
             fid=row.get('id')
+            # Published Dryad file identity may be in _links.self instead
+            # of a numeric top-level id. Resolve only original source links.
+            if not (isinstance(fid,int) and fid>0):
+                rel=(row.get('_links') or {}).get('self',{}).get('href','')
+                if isinstance(fid,str) and fid.isdecimal():
+                    fid=int(fid)
+                else:
+                    m=re.search(r'/files/(\\d+)(?:$|[/?#])',str(rel))
+                    if m:fid=int(m.group(1))
             if not isinstance(fid,int) or fid<=0:
-                raise ValueError('Published Dryad file id absent')
+                raise ValueError('Original published Dryad file reference unsupported; keys='+
+                    ','.join(sorted(str(k) for k in row.keys()))[:200])
             md={'original_file':name,'original_file_id':fid,'published_size_bytes':row.get('size'),
                 'source_download_status':'NOT_ATTEMPTED'}
             try:
