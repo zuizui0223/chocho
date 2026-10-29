@@ -18,13 +18,6 @@ MAX_ARCHIVE=18_000_000
 MAX_UNPACKED=3_000_000_000
 MAX_MEMBER=2_600_000_000
 
-def audit_zip(path:Path):
-    if not path.is_file() or path.stat().st_size>MAX_ARCHIVE:
-        raise ValueError("Expected bounded original source archive missing or too large")
-    digest=hashlib.md5(path.read_bytes()).hexdigest()
-    if digest!=MD5:
-        raise ValueError("Publisher file MD5 differs; no biological inference allowed")
-
 def nested_source_metadata(nested_zip:bytes):
     """Safe source nested ZIP: inspect member types and source headers only."""
     from collections import Counter
@@ -46,7 +39,7 @@ def nested_source_metadata(nested_zip:bytes):
                 with inner.open(item) as handle:
                     txt=io.TextIOWrapper(handle,encoding="utf-8-sig",errors="replace",newline="")
                     line=txt.readline()
-                    delim="\\t" if "\\t" in line and line.count("\\t")>line.count(",") else ","
+                    delim="\t" if "\t" in line and line.count("\t")>line.count(",") else ","
                     header=next(csv.reader([line],delimiter=delim),[])
                     header_examples.append({"original_file_index":len(header_examples)+1,
                         "source_member_name":item.filename[-150:],
@@ -58,6 +51,15 @@ def nested_source_metadata(nested_zip:bytes):
             "nested_suffix_counts":dict(sorted(suffix_count.items())),
             "nested_first_member_names":source_names,
             "nested_text_header_examples":header_examples}
+
+
+
+def audit_zip(path:Path):
+    if not path.is_file() or path.stat().st_size>MAX_ARCHIVE:
+        raise ValueError("Expected bounded original source archive missing or too large")
+    digest=hashlib.md5(path.read_bytes()).hexdigest()
+    if digest!=MD5:
+        raise ValueError("Publisher file MD5 differs; no biological inference allowed")
 
     output=[]
     with zipfile.ZipFile(path) as z:
