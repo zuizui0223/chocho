@@ -1,0 +1,99 @@
+name: 1981–95 to 2005–21 UK butterfly climate vs dated wild larval-host out-of-time source test
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-join-20261029]
+    paths:
+      - scripts/analyze_UK_NASA_BSBI_historical_wildhost_hindcast_20261029.py
+      - tests/test_UK_NASA_BSBI_historical_wildhost_hindcast_20261029.py
+      - .github/workflows/uk-nasa-bsbi-historical-wildhost-comparison-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  dated-wild-host-outoftime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Scientific validity controls and exact original source parsers
+        run: |
+          python -m pip install 'pytest>=8,<10' 'xlrd>=2.0.2,<3' 'pyproj>=3.6,<4' 'numpy>=1.26' 'scikit-learn>=1.5,<2'
+          python -m pytest -q \
+            tests/test_UK_NASA_BSBI_historical_wildhost_hindcast_20261029.py \
+            tests/test_bsbi_UK_host_hectad_coverage_20261029.py
+      - name: Retrieve original author-only host source SHA frozen
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _historic/author
+      - name: Retrieve original NASA POWER early-late climate negative baseline aggregate, do not change cohort
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-UK-LTMN-NASA-POWER-historical-1981to2021-backtest-20261028
+          run-id: 40802452296
+          github-token: ${{ github.token }}
+          path: _historic/nasa_source
+      - name: Verify and extract only known approved original archive into ephemeral CI
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          paths=[x for x in Path('_historic/author').rglob('*.zip')
+                if hashlib.sha256(x.read_bytes()).hexdigest()=='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323']
+          assert len(paths)==1
+          with zipfile.ZipFile(paths[0]) as z:
+            assert z.testzip() is None
+            for n in z.namelist():
+              p=Path(n)
+              assert not p.is_absolute() and '..' not in p.parts
+            z.extractall('_historic/original_author')
+          assert Path('_historic/original_author/inputs/original/insect_host_accepted.csv').is_file()
+          assert len(list(Path('_historic/nasa_source').rglob('*.json')))==1
+          PY
+      - name: Download BSBI publisher original 3,497 taxa 10km date-class source
+        run: |
+          mkdir -p _historic/raw
+          curl -fLsS --retry 2 --connect-timeout 20 --max-time 150 \
+            'https://zenodo.org/records/10998003/files/PA2020_10by10kmSquareData.zip?download=1' \
+            -o _historic/raw/PA2020_10by10kmSquareData.zip
+      - name: Independently recompute strict early/late original UKBMS × NASA POWER and wild-source BSBI M0/M1 scores
+        run: |
+          mkdir -p _historic/results
+          python scripts/analyze_UK_NASA_BSBI_historical_wildhost_hindcast_20261029.py \
+            --original-source _historic/original_author \
+            --bsbi-zip _historic/raw/PA2020_10by10kmSquareData.zip \
+            --original-nasa-result _historic/nasa_source/UK_LTMN_NASA_POWER_1981to2021_historical_butterflies_20261028.json \
+            --output _historic/results/uk_original_nasa_bsbi_pre1970_wild_host_retrodiction_20261029.json
+      - name: Verify original source gates and prevent any source-site or future host leakage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_historic/results/uk_original_nasa_bsbi_pre1970_wild_host_retrodiction_20261029.json')
+          x=json.loads(p.read_text())
+          assert x['schema']=='chocho_uk_ltmn_NASA_POWER_bsbi_pre1970_host_source_hindcast_20261029_v01'
+          assert x['original_source']['source_ukbms_repeated_transects']==19
+          assert x['original_source']['source_butterfly_species']==27
+          assert x['original_source']['BSBI_source_exact_accepted_plant_host_taxa']>=15
+          assert len(x['validation']['five_original_heldout_site_late_era_source_scores'])==5
+          assert len(x['validation']['nine_frozen_nonhost_plant_portfolio_negative_controls'])==9
+          assert x['model']['BSBI_0_is_true_plant_absence'] is False
+          assert x['model']['no_human_maintained_larval_hosts_or_climate_mediation_claim']
+          text=p.read_text().lower()
+          for forbidden in ('"ukbms_siteno":','"easting":','"northing":','"latitude":','"longitude":','"hectad":','"observer":'):
+            assert forbidden not in text,forbidden
+          print('PASS original exact-epoch sources, no managed-host claim and privacy')
+          PY
+      - name: Upload only 27 species/model score aggregates and 9 placebo controls
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-BSBI-original-pre1970-wild-host-prediction-20261029
+          path: _historic/results/uk_original_nasa_bsbi_pre1970_wild_host_retrodiction_20261029.json
+          retention-days: 30
+          if-no-files-found: error
