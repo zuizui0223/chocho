@@ -1,5 +1,7 @@
 # Isolation × islands × ports: source-first geography and identification gates
 
+**Continuation:** source gates have now been followed by actual coastline/port measurements, a biological support audit and a complete 24-island × two-window recording pilot. See [measured results and current limits](ISLAND_PORT_BARRIER_RESULTS_20261029.md). The hypotheses below remain biological tests to be completed, not conclusions from source verification.
+
 2026-10-29. New exploratory spatial continuation from source-geography-only PR #100, **separate** from verified-recording-forecast PR #101 and the frozen GEB manuscript/main.
 
 ## Scientific question, not yet a conclusion

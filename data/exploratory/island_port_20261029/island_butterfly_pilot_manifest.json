@@ -1,0 +1,2899 @@
+{
+  "completeness": "All positive species/basis/dataset/year facet bins paged until exhausted; constant totals; duplicate checks; dataset/year sums equal total; species/basis residuals explicit; original first page reacquired and compared. Query failures remain missing.",
+  "endpoint": "https://api.gbif.org/v1/occurrence/search/predicate",
+  "finished_utc": "2026-10-29T12:03:35.741950+00:00",
+  "interpretation": "Current retrospective GBIF recording counts; zero means no qualifying indexed records, never absence or failed arrival. Current taxonomy and post-event digitisation are not an as-of-2017 snapshot. Static WPI 2025 ports are not pre-outcome transport exposure. No host/port effect fitted.",
+  "request_contract_geometry_redacted": {
+    "facetLimit": 100,
+    "facetMinCount": 1,
+    "facetMultiSelect": false,
+    "facetOffset": 0,
+    "facets": [
+      "SPECIES_KEY",
+      "BASIS_OF_RECORD",
+      "DATASET_KEY",
+      "YEAR"
+    ],
+    "limit": 0,
+    "offset": 0,
+    "parameters": {
+      "CHECKLIST_KEY": [
+        "7ddf754f-d193-4cc9-b351-99906754a03b"
+      ]
+    },
+    "predicate": {
+      "predicates": [
+        {
+          "checklistKey": "7ddf754f-d193-4cc9-b351-99906754a03b",
+          "key": "TAXON_KEY",
+          "type": "equals",
+          "value": "5G9"
+        },
+        {
+          "key": "YEAR",
+          "type": "greaterThanOrEquals",
+          "value": "2010"
+        },
+        {
+          "key": "YEAR",
+          "type": "lessThanOrEquals",
+          "value": "2017"
+        },
+        {
+          "key": "HAS_COORDINATE",
+          "type": "equals",
+          "value": "true"
+        },
+        {
+          "key": "HAS_GEOSPATIAL_ISSUE",
+          "type": "equals",
+          "value": "false"
+        },
+        {
+          "key": "OCCURRENCE_STATUS",
+          "type": "equals",
+          "value": "PRESENT"
+        },
+        {
+          "geometry": "<exact source geometry, held in cache only>",
+          "type": "within"
+        }
+      ],
+      "type": "and"
+    }
+  },
+  "results": [
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.364926+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "ddc9ae8a4727e1fa6bca69621b6a897e022899713cef2ffb6f5569bec4c1ed2b",
+      "island_key": "gshhg237_04bdf98df7faa519",
+      "selection_stratum": "20_to_100:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "61a548e6939fa0087d79dd0e64bc412d785a9be5fbc5d7893a92ca0f88fae4cb",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:24.990414+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "61a548e6939fa0087d79dd0e64bc412d785a9be5fbc5d7893a92ca0f88fae4cb",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:25.340724+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.364350+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:35.734353+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "ddc9ae8a4727e1fa6bca69621b6a897e022899713cef2ffb6f5569bec4c1ed2b",
+      "island_key": "gshhg237_04bdf98df7faa519",
+      "selection_stratum": "20_to_100:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "315d849373e0be730cbae8380134bc29a110d22f4d7205269453e1f604acc226",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:03:34.275699+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "315d849373e0be730cbae8380134bc29a110d22f4d7205269453e1f604acc226",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:03:35.733942+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.365029+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.353883+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "513a6ea28e0046c76a715939a410ae7ef683a037bffcd3e021a47bc9b7eff43e",
+      "island_key": "gshhg237_04cf1780af1a390d",
+      "selection_stratum": "100_to_1000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "fa2a110ba9699d7f2a4c001463227ace37fbd5a3e43a22171117084e08211065",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:15.209753+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "fa2a110ba9699d7f2a4c001463227ace37fbd5a3e43a22171117084e08211065",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:15.627893+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.353361+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.354527+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "513a6ea28e0046c76a715939a410ae7ef683a037bffcd3e021a47bc9b7eff43e",
+      "island_key": "gshhg237_04cf1780af1a390d",
+      "selection_stratum": "100_to_1000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "d47e52d09b50f5efea105af63585b3994a231b133fb12398453928679d0f3537",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:16.107344+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "d47e52d09b50f5efea105af63585b3994a231b133fb12398453928679d0f3537",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:16.562821+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.353996+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:35.735046+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "2947b3ebf7584efc931079e0e04ad6b8a581f7aea2f00aa1645b3f309443b380",
+      "island_key": "gshhg237_16451a0abb98931a",
+      "selection_stratum": "20_to_100:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "82bf1f9d5aa3fd6a9f4d716cf8d6f4b1807b67be70e007cbf255912f1da6a179",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:25.588238+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "82bf1f9d5aa3fd6a9f4d716cf8d6f4b1807b67be70e007cbf255912f1da6a179",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:25.849988+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:35.734476+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:35.735716+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "2947b3ebf7584efc931079e0e04ad6b8a581f7aea2f00aa1645b3f309443b380",
+      "island_key": "gshhg237_16451a0abb98931a",
+      "selection_stratum": "20_to_100:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "51092c7543904677b1a53bfa545e2740f961fc301d589206ab4cf3d241ec1383",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:26.211242+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "51092c7543904677b1a53bfa545e2740f961fc301d589206ab4cf3d241ec1383",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:26.457670+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:35.735256+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 6,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 6
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 5,
+          "a244eea4-a8e0-4b54-9da5-3e9757ef5ab7": 1
+        },
+        "SPECIES_KEY": {
+          "6CB8P": 1,
+          "6NHN5": 1,
+          "9DZ64": 1,
+          "DGLT": 1,
+          "LYQ5Z": 2
+        },
+        "YEAR": {
+          "2014": 5,
+          "2017": 1
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.352683+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "0feb08f89b4621c9bd0455668eedd68d7b23835e9640a06cf5a2a41f1c06a874",
+      "island_key": "gshhg237_184a18f5b8d5525b",
+      "selection_stratum": "100_to_1000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "dfeef2950a3a0ccd32b45a631ee9fdc16cba76deda4dd0bb978453f33b6f80b3",
+          "response_sha256": "1b20df5541bc90ffc42d64113ff7953e995b73ab0dbb88db84505cb15f46c8ff",
+          "retrieved_utc": "2026-10-29T12:01:16.397977+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "dfeef2950a3a0ccd32b45a631ee9fdc16cba76deda4dd0bb978453f33b6f80b3",
+          "response_sha256": "1b20df5541bc90ffc42d64113ff7953e995b73ab0dbb88db84505cb15f46c8ff",
+          "retrieved_utc": "2026-10-29T12:01:16.712049+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.352169+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 59,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 59
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 36,
+          "a244eea4-a8e0-4b54-9da5-3e9757ef5ab7": 3,
+          "c5af860a-0395-4e3f-8ef9-8681025b1dcb": 1,
+          "e0d7dc2b-2494-449d-b1b2-9d9b717e64ee": 19
+        },
+        "SPECIES_KEY": {
+          "3KLG6": 8,
+          "4GKJ8": 3,
+          "4N353": 1,
+          "6CB8P": 8,
+          "6NHN5": 1,
+          "6W69T": 1,
+          "6ZZVK": 3,
+          "7DQKL": 1,
+          "7DQKP": 1,
+          "9DZ64": 10,
+          "CTSNR": 2,
+          "DGLT": 8,
+          "H5SG": 4,
+          "L3KN": 1,
+          "LYQ5Z": 6,
+          "T8RTX": 1
+        },
+        "YEAR": {
+          "2018": 1,
+          "2020": 2,
+          "2021": 1,
+          "2022": 5,
+          "2023": 25,
+          "2024": 14,
+          "2025": 11
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.353294+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "0feb08f89b4621c9bd0455668eedd68d7b23835e9640a06cf5a2a41f1c06a874",
+      "island_key": "gshhg237_184a18f5b8d5525b",
+      "selection_stratum": "100_to_1000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "bd0bee2bfdf4753e723eb1a9f1d98089ab2bc50dd0761c8ebbdb69cef6f311c2",
+          "response_sha256": "7973d353b0bbd115edf8846192bb279dc39d79dc45c50b2ef8cfb22350b21ce8",
+          "retrieved_utc": "2026-10-29T12:01:16.561017+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "bd0bee2bfdf4753e723eb1a9f1d98089ab2bc50dd0761c8ebbdb69cef6f311c2",
+          "response_sha256": "7973d353b0bbd115edf8846192bb279dc39d79dc45c50b2ef8cfb22350b21ce8",
+          "retrieved_utc": "2026-10-29T12:01:16.845511+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.352769+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.359041+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "57fb8c9271e3623f733429703bf09de694f3f1dfcea86768dc6e2c761d78c467",
+      "island_key": "gshhg237_2f506a9fbfcd9ee5",
+      "selection_stratum": "20_to_100:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "797f69cbf9e769008decaaaba5d578f0dec6a27283ae0a697cc273270214ea5c",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:19.812352+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "797f69cbf9e769008decaaaba5d578f0dec6a27283ae0a697cc273270214ea5c",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:20.113352+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.358633+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 2,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 2
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 2
+        },
+        "SPECIES_KEY": {
+          "343SJ": 1,
+          "98XMS": 1
+        },
+        "YEAR": {
+          "2023": 2
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.359679+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "57fb8c9271e3623f733429703bf09de694f3f1dfcea86768dc6e2c761d78c467",
+      "island_key": "gshhg237_2f506a9fbfcd9ee5",
+      "selection_stratum": "20_to_100:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "a26997884cd8b1aa1924dcaa8bc1cd33758ea4bc3e8818a4800d67b167ab608f",
+          "response_sha256": "da524b542da712277a06c45ac739e009bf1cec21178f1f4046f013481781e377",
+          "retrieved_utc": "2026-10-29T12:01:20.237762+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "a26997884cd8b1aa1924dcaa8bc1cd33758ea4bc3e8818a4800d67b167ab608f",
+          "response_sha256": "da524b542da712277a06c45ac739e009bf1cec21178f1f4046f013481781e377",
+          "retrieved_utc": "2026-10-29T12:01:22.813093+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.359161+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.362565+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "6d08d90b86292f79f1553ad44abe5c8ee75953aec5b8d91e800d8b649e52bdbb",
+      "island_key": "gshhg237_36766d3e46b870db",
+      "selection_stratum": "20_to_100:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "7a450dded957b9437c38eea6ee878c076357d817b328c6d5e7915257e48be045",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.475176+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "7a450dded957b9437c38eea6ee878c076357d817b328c6d5e7915257e48be045",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.789501+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.362150+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 2,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 2
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 2
+        },
+        "SPECIES_KEY": {
+          "9385D": 2
+        },
+        "YEAR": {
+          "2018": 2
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.363177+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "6d08d90b86292f79f1553ad44abe5c8ee75953aec5b8d91e800d8b649e52bdbb",
+      "island_key": "gshhg237_36766d3e46b870db",
+      "selection_stratum": "20_to_100:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "a03dfae1e8eeece11176784e19bd201cc10f101383137a8aa7a043ca83d5b3fa",
+          "response_sha256": "ff1765ef9f39d829ed12798f46ae689d6fa3920da9e160d0faa25361e7919601",
+          "retrieved_utc": "2026-10-29T12:01:23.728417+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "a03dfae1e8eeece11176784e19bd201cc10f101383137a8aa7a043ca83d5b3fa",
+          "response_sha256": "ff1765ef9f39d829ed12798f46ae689d6fa3920da9e160d0faa25361e7919601",
+          "retrieved_utc": "2026-10-29T12:01:24.220402+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.362635+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 5,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 5
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 1,
+          "8a863029-f435-446a-821e-275f4f641165": 4
+        },
+        "SPECIES_KEY": {
+          "3CM5C": 2,
+          "6NHMK": 1,
+          "75M8P": 1,
+          "CJFP": 1
+        },
+        "YEAR": {
+          "2012": 1,
+          "2013": 1,
+          "2014": 2,
+          "2016": 1
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:35.736534+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "6b3d4098a0e7b56c1e882e2b3a65483566af33a9e1ad873a57066053281fa1b3",
+      "island_key": "gshhg237_3d070e8dd2bd73f1",
+      "selection_stratum": "20_to_100:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "d6877eab4628518df43f11c92845bd9145f16a512fe29cd9b3100032012f7b73",
+          "response_sha256": "7d186dd1dff463a6ee60066bf0d76fb0d196882fe2d07c9aa4b2704d1445d001",
+          "retrieved_utc": "2026-10-29T12:01:29.146158+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "d6877eab4628518df43f11c92845bd9145f16a512fe29cd9b3100032012f7b73",
+          "response_sha256": "7d186dd1dff463a6ee60066bf0d76fb0d196882fe2d07c9aa4b2704d1445d001",
+          "retrieved_utc": "2026-10-29T12:01:29.894740+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:35.735772+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 12,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 12
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 12
+        },
+        "SPECIES_KEY": {
+          "343SJ": 1,
+          "3CM5C": 2,
+          "3KQHR": 1,
+          "6JN96": 1,
+          "6NHMK": 2,
+          "75LXT": 1,
+          "9385D": 1,
+          "98XMS": 1,
+          "CJFP": 2
+        },
+        "YEAR": {
+          "2018": 1,
+          "2024": 5,
+          "2025": 6
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:35.737210+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "6b3d4098a0e7b56c1e882e2b3a65483566af33a9e1ad873a57066053281fa1b3",
+      "island_key": "gshhg237_3d070e8dd2bd73f1",
+      "selection_stratum": "20_to_100:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "ca6d3be53a22a1971d908b1c0140902744d265d619262f2c463fe31f41f3d400",
+          "response_sha256": "29d1cefcdd7c647ae8bcf78bd6e61e7abf60b8dbfc5b9c2741ab7156e56e735e",
+          "retrieved_utc": "2026-10-29T12:01:29.307647+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "ca6d3be53a22a1971d908b1c0140902744d265d619262f2c463fe31f41f3d400",
+          "response_sha256": "29d1cefcdd7c647ae8bcf78bd6e61e7abf60b8dbfc5b9c2741ab7156e56e735e",
+          "retrieved_utc": "2026-10-29T12:01:29.769699+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:35.736605+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 5,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 3,
+          "MATERIAL_SAMPLE": 1,
+          "PRESERVED_SPECIMEN": 1
+        },
+        "DATASET_KEY": {
+          "040c5662-da76-4782-a48e-cdea1892d14c": 1,
+          "042051f6-e602-4281-8ac3-d683811f0631": 1,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 3
+        },
+        "SPECIES_KEY": {
+          "4CKLC": 1,
+          "6MTJ5": 2,
+          "7CW39": 1
+        },
+        "YEAR": {
+          "2011": 1,
+          "2014": 1,
+          "2015": 3
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.351288+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "bbd87ba2607b06252cad1ee4b22e2ad930c49b840b6d0105a048c532c800b131",
+      "island_key": "gshhg237_49524b474fd12f59",
+      "selection_stratum": "100_to_1000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "08f75a36dfad94773ec437e03e9bef08d778e97227baba2f0061915b169a8341",
+          "response_sha256": "576cbc9d15adb3fa92579a2fb0e9a5d9ba4ca239ef393c81914c03c0d3519c99",
+          "retrieved_utc": "2026-10-29T12:01:13.479002+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "08f75a36dfad94773ec437e03e9bef08d778e97227baba2f0061915b169a8341",
+          "response_sha256": "576cbc9d15adb3fa92579a2fb0e9a5d9ba4ca239ef393c81914c03c0d3519c99",
+          "retrieved_utc": "2026-10-29T12:01:13.891318+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.350762+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 1,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 2,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 2
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 2
+        },
+        "SPECIES_KEY": {
+          "3NWQF": 1,
+          "7D7RF": 1
+        },
+        "YEAR": {
+          "2024": 1,
+          "2025": 1
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.352046+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "bbd87ba2607b06252cad1ee4b22e2ad930c49b840b6d0105a048c532c800b131",
+      "island_key": "gshhg237_49524b474fd12f59",
+      "selection_stratum": "100_to_1000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "ac190cb5d721826686936fecb63521245c03ab6b362f2b990e82658549fe5ed3",
+          "response_sha256": "42e68420d28c8c38f1d7bb00d506f0cb405d5dec0e486e0b5f68c8b0307ab8b4",
+          "retrieved_utc": "2026-10-29T12:01:13.741465+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "ac190cb5d721826686936fecb63521245c03ab6b362f2b990e82658549fe5ed3",
+          "response_sha256": "42e68420d28c8c38f1d7bb00d506f0cb405d5dec0e486e0b5f68c8b0307ab8b4",
+          "retrieved_utc": "2026-10-29T12:01:14.006234+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.351479+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 18,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 18
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 14,
+          "6ac3f774-d9fb-4796-b3e9-92bf6c81c084": 3,
+          "8a863029-f435-446a-821e-275f4f641165": 1
+        },
+        "SPECIES_KEY": {
+          "343SP": 6,
+          "4GKJ8": 3,
+          "6CB8P": 1,
+          "7DQKL": 7,
+          "94BW8": 1
+        },
+        "YEAR": {
+          "2010": 1,
+          "2011": 1,
+          "2013": 1,
+          "2014": 4,
+          "2015": 2,
+          "2016": 3,
+          "2017": 6
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.335038+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "0e97f1a85cbce08eaea83f022bccba1fe8cac9b0c093e25e678bf4368372a50b",
+      "island_key": "gshhg237_4baf3db8567b8d16",
+      "selection_stratum": "1000_to_20000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "ad47a7ba7ae9e4451a1c5aec5bd2692241fb843a5a8ba5c451636d17da35d6fc",
+          "response_sha256": "f41d4c9c06f6b418cd588f8eeaa7d7286b8cf56bb8554ce5dc80ff0b681f0c1b",
+          "retrieved_utc": "2026-10-29T12:01:05.962481+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "ad47a7ba7ae9e4451a1c5aec5bd2692241fb843a5a8ba5c451636d17da35d6fc",
+          "response_sha256": "f41d4c9c06f6b418cd588f8eeaa7d7286b8cf56bb8554ce5dc80ff0b681f0c1b",
+          "retrieved_utc": "2026-10-29T12:01:06.230174+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.334372+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 142,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 140,
+          "MATERIAL_SAMPLE": 2
+        },
+        "DATASET_KEY": {
+          "040c5662-da76-4782-a48e-cdea1892d14c": 2,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 136,
+          "8a863029-f435-446a-821e-275f4f641165": 4
+        },
+        "SPECIES_KEY": {
+          "343SP": 33,
+          "4GKJ8": 21,
+          "6CB8P": 7,
+          "7DQKL": 36,
+          "94BW8": 18
+        },
+        "YEAR": {
+          "2018": 5,
+          "2019": 11,
+          "2021": 15,
+          "2022": 8,
+          "2023": 20,
+          "2024": 28,
+          "2025": 55
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.335715+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "0e97f1a85cbce08eaea83f022bccba1fe8cac9b0c093e25e678bf4368372a50b",
+      "island_key": "gshhg237_4baf3db8567b8d16",
+      "selection_stratum": "1000_to_20000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "a841baaac78d65cea6a0d2f8b10ed209e5dcea0666266716f72f8dd0f9291d8e",
+          "response_sha256": "9453aa3baa722083794aadaf8050d92bb344cd62a1cb60f15eac223de161cf27",
+          "retrieved_utc": "2026-10-29T12:01:06.641024+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "a841baaac78d65cea6a0d2f8b10ed209e5dcea0666266716f72f8dd0f9291d8e",
+          "response_sha256": "9453aa3baa722083794aadaf8050d92bb344cd62a1cb60f15eac223de161cf27",
+          "retrieved_utc": "2026-10-29T12:01:07.160610+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.335107+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 27,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.355140+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9d8903d3e49fd81530cf037965c31201ba83047df243e4f3d067ff33865eb379",
+      "island_key": "gshhg237_4c93e5ddb80b8368",
+      "selection_stratum": "100_to_1000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "a884b0fb4bcc45e9fa1ab1264ce693ff586ddc2ee170eb640da2cc9e60cd11c6",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:17.101429+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "a884b0fb4bcc45e9fa1ab1264ce693ff586ddc2ee170eb640da2cc9e60cd11c6",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:17.547351+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.354590+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.355741+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9d8903d3e49fd81530cf037965c31201ba83047df243e4f3d067ff33865eb379",
+      "island_key": "gshhg237_4c93e5ddb80b8368",
+      "selection_stratum": "100_to_1000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "fd308771759220c661f84a7a0c38f3066ea488f8e5411a2369bb04efb6323f1a",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:17.124250+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "fd308771759220c661f84a7a0c38f3066ea488f8e5411a2369bb04efb6323f1a",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:17.545091+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.355283+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 1,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 1
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 1
+        },
+        "SPECIES_KEY": {
+          "343SP": 1
+        },
+        "YEAR": {
+          "2017": 1
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.357817+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "b4267a3e93290e995fdd08401d9d1200c27e06f8e6003e57067a3df73e8e5b97",
+      "island_key": "gshhg237_70eeb153f0ef8e08",
+      "selection_stratum": "100_to_1000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "6c0ae2ef87dd6bfa38260fd647b5b869603b8348ebf00c280ace9ad6d189b94e",
+          "response_sha256": "d929e36d3d718bd8ca01d329ff318adff3af5e9dd336e382e9cca2e5c5c49390",
+          "retrieved_utc": "2026-10-29T12:01:17.770782+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "6c0ae2ef87dd6bfa38260fd647b5b869603b8348ebf00c280ace9ad6d189b94e",
+          "response_sha256": "d929e36d3d718bd8ca01d329ff318adff3af5e9dd336e382e9cca2e5c5c49390",
+          "retrieved_utc": "2026-10-29T12:01:20.147860+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.357396+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.358412+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "b4267a3e93290e995fdd08401d9d1200c27e06f8e6003e57067a3df73e8e5b97",
+      "island_key": "gshhg237_70eeb153f0ef8e08",
+      "selection_stratum": "100_to_1000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "79793c843aa1a5fa880dc59529c945ca0ade7edb0202b0aae5000b6fa7b26a6f",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:18.884546+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "79793c843aa1a5fa880dc59529c945ca0ade7edb0202b0aae5000b6fa7b26a6f",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:19.273174+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.357927+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.341115+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "7e3c5e12546760cd7a7b87fc1530479a450e19a723422ea9ecf43927dcc45576",
+      "island_key": "gshhg237_7adea057b6560be8",
+      "selection_stratum": "1000_to_20000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "41aaa72a27f6ae95d65114a9080436d46acc0045f9a448c9aa4f7d187ea94314",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:08.272221+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "41aaa72a27f6ae95d65114a9080436d46acc0045f9a448c9aa4f7d187ea94314",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:08.673176+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.340040+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.342011+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "7e3c5e12546760cd7a7b87fc1530479a450e19a723422ea9ecf43927dcc45576",
+      "island_key": "gshhg237_7adea057b6560be8",
+      "selection_stratum": "1000_to_20000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "2ee5d41498016b8811bb31f2f71263da7107e7e2bb724d969872414fff5add39",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:08.630139+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "2ee5d41498016b8811bb31f2f71263da7107e7e2bb724d969872414fff5add39",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:09.095641+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.341204+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 32,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 32
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 29,
+          "8a863029-f435-446a-821e-275f4f641165": 2,
+          "cf3bdc30-370c-48d3-8fff-b587a39d72d6": 1
+        },
+        "SPECIES_KEY": {
+          "343SP": 2,
+          "4GKJ8": 9,
+          "6CB8P": 10,
+          "7DQKL": 5
+        },
+        "YEAR": {
+          "2010": 3,
+          "2012": 3,
+          "2013": 2,
+          "2014": 5,
+          "2015": 3,
+          "2016": 3,
+          "2017": 13
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.348464+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "d8c1155b78c693ca10a1c38c6d3e8726eb5f8562addbdb463c8ff357c5dc19c1",
+      "island_key": "gshhg237_7ef4f4535fbe0bdb",
+      "selection_stratum": "100_to_1000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "389e8c46089bbe47c5d0634ae99d787f2ea2f06dcc5277ef95496748b84d4fc7",
+          "response_sha256": "b501b2e6b8c67bc363c35138bd10f83a721ebb371c6fafaccfacf126e8695b90",
+          "retrieved_utc": "2026-10-29T12:01:10.539627+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "389e8c46089bbe47c5d0634ae99d787f2ea2f06dcc5277ef95496748b84d4fc7",
+          "response_sha256": "b501b2e6b8c67bc363c35138bd10f83a721ebb371c6fafaccfacf126e8695b90",
+          "retrieved_utc": "2026-10-29T12:01:12.987744+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.347604+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 6,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 320,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 315,
+          "MATERIAL_SAMPLE": 5
+        },
+        "DATASET_KEY": {
+          "040c5662-da76-4782-a48e-cdea1892d14c": 5,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 309,
+          "8a863029-f435-446a-821e-275f4f641165": 5,
+          "cf3bdc30-370c-48d3-8fff-b587a39d72d6": 1
+        },
+        "SPECIES_KEY": {
+          "343SP": 9,
+          "3KLG6": 2,
+          "4GKJ8": 55,
+          "6CB8P": 108,
+          "7DQKL": 29,
+          "94BW8": 1
+        },
+        "YEAR": {
+          "2018": 15,
+          "2019": 33,
+          "2020": 13,
+          "2021": 14,
+          "2022": 37,
+          "2023": 88,
+          "2024": 51,
+          "2025": 69
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.349250+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "d8c1155b78c693ca10a1c38c6d3e8726eb5f8562addbdb463c8ff357c5dc19c1",
+      "island_key": "gshhg237_7ef4f4535fbe0bdb",
+      "selection_stratum": "100_to_1000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "9b88c7b2ac61d21aee30604f737a98d5371ced1b212a58827388c1fbd1e0bede",
+          "response_sha256": "4ab9ceb19a745313e299fde1dbfb45ef233912e5d85f59f239852b88f4093f14",
+          "retrieved_utc": "2026-10-29T12:01:10.729369+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "9b88c7b2ac61d21aee30604f737a98d5371ced1b212a58827388c1fbd1e0bede",
+          "response_sha256": "4ab9ceb19a745313e299fde1dbfb45ef233912e5d85f59f239852b88f4093f14",
+          "retrieved_utc": "2026-10-29T12:01:10.975452+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.348687+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 116,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.361419+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9fea89a306438af158a1aef225990f41a9134fd8abdec0b34bfa238ffbb0e3a0",
+      "island_key": "gshhg237_808dd5f75a39a7dc",
+      "selection_stratum": "20_to_100:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "8d7234286bacc4889d4ab7dbb292ccd462a07dee3f274cb536798eea57010859",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.106812+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "8d7234286bacc4889d4ab7dbb292ccd462a07dee3f274cb536798eea57010859",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.438542+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.360963+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.362023+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9fea89a306438af158a1aef225990f41a9134fd8abdec0b34bfa238ffbb0e3a0",
+      "island_key": "gshhg237_808dd5f75a39a7dc",
+      "selection_stratum": "20_to_100:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "840a27c1890d4c0b1078cfb5ec5f13b76e50ff9b2dcfb448567e0fd76d493373",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.402444+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "840a27c1890d4c0b1078cfb5ec5f13b76e50ff9b2dcfb448567e0fd76d493373",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.631003+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.361569+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.342717+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "32709d9dd4c5ea1b2422de5b5ee3d0a4578de530e0aa2b281ae4675a0ae5005d",
+      "island_key": "gshhg237_857c858de70360f7",
+      "selection_stratum": "1000_to_20000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "a14d863293e10358f43deb9121ebeca1e861b3c0e54fe4293fb83f6a3f0b8704",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:09.103985+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "a14d863293e10358f43deb9121ebeca1e861b3c0e54fe4293fb83f6a3f0b8704",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:09.428022+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.342193+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.343466+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "32709d9dd4c5ea1b2422de5b5ee3d0a4578de530e0aa2b281ae4675a0ae5005d",
+      "island_key": "gshhg237_857c858de70360f7",
+      "selection_stratum": "1000_to_20000:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "428bee634d44d99c3ab4ea3df55c4fa7113ece7115a36331c57c5bb2a24a2880",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:09.097409+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "428bee634d44d99c3ab4ea3df55c4fa7113ece7115a36331c57c5bb2a24a2880",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:09.423884+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.342993+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.350027+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "2855fc588f9526ee24a36176ea69283b6291025b54e67a25f19864eb766e384d",
+      "island_key": "gshhg237_99b534e313697241",
+      "selection_stratum": "100_to_1000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "260dc1945e3055084a5156de89ef10dfcea182c58ab6f10cab676b074e85d0fb",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:11.397360+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "260dc1945e3055084a5156de89ef10dfcea182c58ab6f10cab676b074e85d0fb",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:11.611055+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.349327+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.350630+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "2855fc588f9526ee24a36176ea69283b6291025b54e67a25f19864eb766e384d",
+      "island_key": "gshhg237_99b534e313697241",
+      "selection_stratum": "100_to_1000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "039d21ce086be687a8bdad48317aa75cf8394eb11208d84f6c33fde4adf3892e",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:11.905580+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "039d21ce086be687a8bdad48317aa75cf8394eb11208d84f6c33fde4adf3892e",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:14.434606+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.350100+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 54,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 50,
+          "PRESERVED_SPECIMEN": 4
+        },
+        "DATASET_KEY": {
+          "092cad26-523a-417a-8d8b-59af1da50e3c": 4,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 28,
+          "8a863029-f435-446a-821e-275f4f641165": 22
+        },
+        "SPECIES_KEY": {
+          "3CM5C": 2,
+          "3CZ9C": 1,
+          "3CZ9F": 1,
+          "3CZ9G": 1,
+          "3NWR5": 2,
+          "3NWZ8": 1,
+          "5D5T4": 2,
+          "5ZML5": 5,
+          "64MJ5": 1,
+          "6BV9T": 2,
+          "6NHMK": 2,
+          "6S2RP": 2,
+          "7728N": 1,
+          "93X4J": 3,
+          "956M8": 2,
+          "98XMS": 2,
+          "9J92": 2,
+          "L9WD": 1,
+          "M7B35": 1
+        },
+        "YEAR": {
+          "2010": 4,
+          "2017": 50
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.356416+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "1cc119756f9f7ee1a9656da78cbf13824ae84fc3c4107288e8c800089abf52dd",
+      "island_key": "gshhg237_aa7a4f7d334424c2",
+      "selection_stratum": "100_to_1000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "7ce80aa45d2324375e43cc3775d6370dd857c01894ecce553f747d9c7781ca78",
+          "response_sha256": "96a5a79be7062851b35c5ea2860a62342527c27eabee0748e947e8c75e039a19",
+          "retrieved_utc": "2026-10-29T12:01:19.293963+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "7ce80aa45d2324375e43cc3775d6370dd857c01894ecce553f747d9c7781ca78",
+          "response_sha256": "96a5a79be7062851b35c5ea2860a62342527c27eabee0748e947e8c75e039a19",
+          "retrieved_utc": "2026-10-29T12:01:19.814244+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.355855+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 20,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 56,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 56
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 42,
+          "8a863029-f435-446a-821e-275f4f641165": 14
+        },
+        "SPECIES_KEY": {
+          "38V8P": 1,
+          "3CM5C": 2,
+          "3NWR5": 1,
+          "3RPST": 1,
+          "3RPXS": 3,
+          "3Z82W": 1,
+          "4FRCY": 1,
+          "5D5T4": 5,
+          "5VBM7": 2,
+          "5XXRH": 2,
+          "6JN96": 1,
+          "6KP4L": 6,
+          "6KS2Q": 1,
+          "6NHMJ": 2,
+          "6NHMK": 1,
+          "6S2RF": 1,
+          "75LXT": 2,
+          "75M9V": 3,
+          "79BLW": 1,
+          "7QZYB": 2,
+          "9385D": 1,
+          "98XMS": 3,
+          "9J66": 2,
+          "CJFP": 1,
+          "NZHF": 1,
+          "NZHG": 2,
+          "RVM4": 1
+        },
+        "YEAR": {
+          "2018": 1,
+          "2019": 1,
+          "2020": 11,
+          "2021": 18,
+          "2022": 5,
+          "2023": 6,
+          "2024": 8,
+          "2025": 6
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.357238+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "1cc119756f9f7ee1a9656da78cbf13824ae84fc3c4107288e8c800089abf52dd",
+      "island_key": "gshhg237_aa7a4f7d334424c2",
+      "selection_stratum": "100_to_1000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "018b5fc625737d26cd7c88de8cf57bd73d85ac42862bde45b4d3e5b24700db4f",
+          "response_sha256": "f567b2746f7f468919cae20ff2731cdfb34e7b561c0f8ba510a7755305de586b",
+          "retrieved_utc": "2026-10-29T12:01:17.923949+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "018b5fc625737d26cd7c88de8cf57bd73d85ac42862bde45b4d3e5b24700db4f",
+          "response_sha256": "f567b2746f7f468919cae20ff2731cdfb34e7b561c0f8ba510a7755305de586b",
+          "retrieved_utc": "2026-10-29T12:01:18.494270+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.356519+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 6,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.363728+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "c35367ec193770b987e6a0d0b272d12e4c73545227f7bab9acc4e5e28b131a49",
+      "island_key": "gshhg237_cd1b20532713db8c",
+      "selection_stratum": "20_to_100:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "2e6c643006b85973c95b8c2a9e127173dd5ec62bc49f4a0c48c576a066e7bc12",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:24.199956+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "2e6c643006b85973c95b8c2a9e127173dd5ec62bc49f4a0c48c576a066e7bc12",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:24.514660+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.363298+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.364285+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "c35367ec193770b987e6a0d0b272d12e4c73545227f7bab9acc4e5e28b131a49",
+      "island_key": "gshhg237_cd1b20532713db8c",
+      "selection_stratum": "20_to_100:under100:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "29b0ad0bbb7138a979cb4e5caec85214638f07bd462684533e8fe9b4b85076a8",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:26.426931+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "29b0ad0bbb7138a979cb4e5caec85214638f07bd462684533e8fe9b4b85076a8",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:26.660474+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.363848+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 29,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 1,
+          "PRESERVED_SPECIMEN": 28
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 1,
+          "c6117afd-cb3d-49e1-b484-ac82f0780b98": 28
+        },
+        "SPECIES_KEY": {
+          "48ZB7": 9,
+          "48ZBC": 5,
+          "4HRRC": 1,
+          "566YY": 14
+        },
+        "YEAR": {
+          "2014": 5,
+          "2015": 7,
+          "2016": 3,
+          "2017": 14
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.346371+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "ac02ca9a4f12b36bcfc3e3952cc6dd5105e2393ef735d4dedd82aff9c2c55384",
+      "island_key": "gshhg237_d43fef970f703537",
+      "selection_stratum": "1000_to_20000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "878b5fd39812713880ad721df48935d7dc8bfe93c617d671a3bbbb7f3eae436e",
+          "response_sha256": "b362d4153c409bae319a2a446c8152d8f8536c9f04fe5c7d94ad7d8044849aae",
+          "retrieved_utc": "2026-10-29T12:01:09.706451+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "878b5fd39812713880ad721df48935d7dc8bfe93c617d671a3bbbb7f3eae436e",
+          "response_sha256": "b362d4153c409bae319a2a446c8152d8f8536c9f04fe5c7d94ad7d8044849aae",
+          "retrieved_utc": "2026-10-29T12:01:10.009693+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.345824+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 124,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 99,
+          "MATERIAL_SAMPLE": 3,
+          "PRESERVED_SPECIMEN": 22
+        },
+        "DATASET_KEY": {
+          "040c5662-da76-4782-a48e-cdea1892d14c": 3,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 97,
+          "84a649ce-ff81-420d-9c41-aa1de59e3766": 1,
+          "c6117afd-cb3d-49e1-b484-ac82f0780b98": 22,
+          "e3ce628e-9683-4af7-b7a9-47eef785d3bb": 1
+        },
+        "SPECIES_KEY": {
+          "343SJ": 1,
+          "34G73": 4,
+          "3L4XH": 1,
+          "3LB7Y": 29,
+          "3S3BV": 1,
+          "46LTT": 6,
+          "48ZB7": 8,
+          "48ZBC": 14,
+          "4CK3K": 1,
+          "4HRRC": 6,
+          "566YY": 2,
+          "566Z4": 5,
+          "6CB8P": 2,
+          "6NHNY": 2,
+          "6TLXW": 2,
+          "9344J": 8,
+          "945HG": 1,
+          "94BVZ": 3,
+          "94BW2": 11,
+          "9F2Q8": 6,
+          "9F2Q9": 4,
+          "L9WL": 2
+        },
+        "YEAR": {
+          "2018": 2,
+          "2019": 4,
+          "2020": 19,
+          "2021": 10,
+          "2022": 37,
+          "2023": 9,
+          "2024": 26,
+          "2025": 17
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.347150+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "ac02ca9a4f12b36bcfc3e3952cc6dd5105e2393ef735d4dedd82aff9c2c55384",
+      "island_key": "gshhg237_d43fef970f703537",
+      "selection_stratum": "1000_to_20000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "17dda55219f5c8e816f4c19fea5afa37446669900a8e2875fe53925e8987b3e2",
+          "response_sha256": "b6a5b3ca0e37dbbe5fb6c830f7191fa976ef82d74f0643ea2e6fdedd84823047",
+          "retrieved_utc": "2026-10-29T12:01:10.539683+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "17dda55219f5c8e816f4c19fea5afa37446669900a8e2875fe53925e8987b3e2",
+          "response_sha256": "b6a5b3ca0e37dbbe5fb6c830f7191fa976ef82d74f0643ea2e6fdedd84823047",
+          "retrieved_utc": "2026-10-29T12:01:13.109265+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.346480+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 5,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 233,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 24,
+          "PRESERVED_SPECIMEN": 209
+        },
+        "DATASET_KEY": {
+          "24a02aae-d6b8-40c8-8f90-64eb3e780f2b": 56,
+          "28c04664-55cb-445d-9a1c-d34c80a8d8b3": 11,
+          "2aad3bc7-4765-40ea-b478-3ac3cb53ff72": 23,
+          "38af1774-d162-49d1-8c17-ea50e952b1bf": 8,
+          "442647f8-8883-462d-901f-115f0753969d": 17,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 24,
+          "76471ac1-dde9-4b57-aa77-f305503bc4db": 4,
+          "97f4b716-f055-42a5-947b-205f5db0de77": 63,
+          "ab67e429-389c-43a7-8799-36c67ece82d6": 6,
+          "affbcc64-f91b-4f3e-8456-e91b7c690499": 1,
+          "b23c2479-214f-4160-9f98-bd3831ab131b": 1,
+          "d7c0b774-b885-4aaf-9f0f-b9666bff6041": 8,
+          "e40070cf-6626-4cd0-8e85-cfe6067aecb0": 3,
+          "ed6df385-67ec-4872-ad25-e6e76ca2dcb1": 1,
+          "f4b6dedb-5a10-4512-bcd2-0c72a8f9e394": 6,
+          "fb9863f4-68cf-4e90-bc4d-2b15bdebf889": 1
+        },
+        "SPECIES_KEY": {
+          "32F2D": 2,
+          "33JL6": 1,
+          "343SX": 2,
+          "3444L": 2,
+          "34G8D": 2,
+          "34G8L": 4,
+          "34GDF": 2,
+          "3CZ94": 63,
+          "3F8XT": 1,
+          "3PCDD": 1,
+          "3PCDF": 2,
+          "45JG5": 1,
+          "4BPG6": 6,
+          "4CKDD": 1,
+          "4CKMX": 20,
+          "4CKRD": 4,
+          "4DL92": 1,
+          "4DL97": 7,
+          "4N44Y": 1,
+          "53NK4": 1,
+          "5BG6D": 1,
+          "5XK89": 3,
+          "69FMK": 1,
+          "6F4R7": 2,
+          "6KRBC": 9,
+          "6KRP4": 10,
+          "6KS2G": 1,
+          "6L3QN": 3,
+          "6TLX4": 27,
+          "6TLY7": 4,
+          "74WB2": 2,
+          "79BJ4": 3,
+          "7CW2W": 4,
+          "92XWP": 2,
+          "953YW": 5,
+          "9D43N": 1,
+          "9F2B3": 1,
+          "FWJY": 9,
+          "RVM8": 17,
+          "VH4Q": 1
+        },
+        "YEAR": {
+          "2010": 147,
+          "2011": 2,
+          "2012": 61,
+          "2013": 7,
+          "2014": 1,
+          "2015": 7,
+          "2016": 3,
+          "2017": 5
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.336786+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "a6d756b35f75e47851bf2c1ac8f2b499390273134ca6d6f4f285d01b80ac194d",
+      "island_key": "gshhg237_e8ca9c42f6d3f947",
+      "selection_stratum": "1000_to_20000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "01e966bbf9ea38994f8afd54658e88d6e524e0fe6499f8e2a3fdc6b4c6906145",
+          "response_sha256": "28a44aa51835c77c2a0f1d3b0883da46c3c8f909e424df6e7b704e27fb854b54",
+          "retrieved_utc": "2026-10-29T12:01:07.156249+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "01e966bbf9ea38994f8afd54658e88d6e524e0fe6499f8e2a3fdc6b4c6906145",
+          "response_sha256": "28a44aa51835c77c2a0f1d3b0883da46c3c8f909e424df6e7b704e27fb854b54",
+          "retrieved_utc": "2026-10-29T12:01:07.454951+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.335869+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 3,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 275,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 239,
+          "PRESERVED_SPECIMEN": 36
+        },
+        "DATASET_KEY": {
+          "24a02aae-d6b8-40c8-8f90-64eb3e780f2b": 5,
+          "2aad3bc7-4765-40ea-b478-3ac3cb53ff72": 9,
+          "38af1774-d162-49d1-8c17-ea50e952b1bf": 1,
+          "4d236e9c-fa04-4a94-9356-382c9f7c84c0": 1,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 238,
+          "76471ac1-dde9-4b57-aa77-f305503bc4db": 1,
+          "97f4b716-f055-42a5-947b-205f5db0de77": 1,
+          "a71c3da3-4cf3-48f2-a468-f2c0b3189db2": 2,
+          "ab67e429-389c-43a7-8799-36c67ece82d6": 6,
+          "affbcc64-f91b-4f3e-8456-e91b7c690499": 2,
+          "e40070cf-6626-4cd0-8e85-cfe6067aecb0": 3,
+          "ed6df385-67ec-4872-ad25-e6e76ca2dcb1": 1,
+          "f4b6dedb-5a10-4512-bcd2-0c72a8f9e394": 1,
+          "fb9863f4-68cf-4e90-bc4d-2b15bdebf889": 4
+        },
+        "SPECIES_KEY": {
+          "32F2D": 5,
+          "33JKC": 10,
+          "33JKZ": 3,
+          "33JL6": 4,
+          "343SN": 2,
+          "343SQ": 6,
+          "343SX": 9,
+          "3444L": 10,
+          "34G8D": 2,
+          "34G8L": 1,
+          "34GD4": 2,
+          "35N2R": 1,
+          "39DKR": 2,
+          "3BBDG": 3,
+          "3CZ92": 1,
+          "3CZ94": 2,
+          "3CZ9G": 1,
+          "3F8XT": 2,
+          "3JVLQ": 1,
+          "3JY94": 2,
+          "3NWQ8": 5,
+          "3NWQF": 4,
+          "3NWQL": 1,
+          "3NWR5": 1,
+          "3NWY9": 2,
+          "3PCDF": 12,
+          "3PCDL": 4,
+          "3QKYV": 3,
+          "3QKYY": 3,
+          "3S3BV": 2,
+          "44SDQ": 2,
+          "44SG9": 1,
+          "4BPG6": 7,
+          "4BPG7": 5,
+          "4CHBP": 4,
+          "4CHC2": 4,
+          "4CK2R": 1,
+          "4CK33": 1,
+          "4CKDD": 2,
+          "4CKRD": 2,
+          "4D6RQ": 5,
+          "4FL9Y": 1,
+          "4FRCT": 1,
+          "4MXRF": 6,
+          "4RJFV": 1,
+          "54GQ3": 5,
+          "55FMM": 2,
+          "5BG6D": 1,
+          "5CT2F": 2,
+          "5D5T3": 1,
+          "5XFBF": 1,
+          "5XK89": 3,
+          "67BLZ": 1,
+          "69FML": 2,
+          "6CHQJ": 2,
+          "6KRBC": 2,
+          "6KS2G": 6,
+          "6L3QF": 1,
+          "6MR52": 3,
+          "6MX7J": 1,
+          "6NHN8": 7,
+          "6NJQB": 3,
+          "6TLX4": 4,
+          "6TLY7": 6,
+          "74WB2": 8,
+          "79BJ4": 2,
+          "7BGF3": 4,
+          "7CW2W": 5,
+          "92XWP": 4,
+          "935TZ": 3,
+          "93QD5": 1,
+          "944ML": 5,
+          "953YW": 8,
+          "9DPCK": 1,
+          "9F25M": 1,
+          "9F2B3": 1,
+          "9F2Q9": 1,
+          "FWHT": 1,
+          "FWJH": 1,
+          "FWJY": 3,
+          "GL34": 1,
+          "GL44": 1,
+          "RVM8": 3,
+          "RVXX": 2,
+          "VH4Q": 2
+        },
+        "YEAR": {
+          "2018": 40,
+          "2019": 10,
+          "2020": 2,
+          "2021": 10,
+          "2022": 103,
+          "2023": 11,
+          "2024": 71,
+          "2025": 28
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.338102+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "a6d756b35f75e47851bf2c1ac8f2b499390273134ca6d6f4f285d01b80ac194d",
+      "island_key": "gshhg237_e8ca9c42f6d3f947",
+      "selection_stratum": "1000_to_20000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "0f212076b34477808af84e6f7891b594782698d84cdb2fe7969f9bf111d25dd0",
+          "response_sha256": "ce594d2cdfbc7f90cbf276a2d46db271a5baca681cbb5146be3e3e5b02986adc",
+          "retrieved_utc": "2026-10-29T12:01:07.365319+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "0f212076b34477808af84e6f7891b594782698d84cdb2fe7969f9bf111d25dd0",
+          "response_sha256": "ce594d2cdfbc7f90cbf276a2d46db271a5baca681cbb5146be3e3e5b02986adc",
+          "retrieved_utc": "2026-10-29T12:01:07.680148+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.336863+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 15,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.360266+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "eb9cd13b2ce0c853d0a2c964b21b46efd215b0d79908708555ecb2842ebb40a1",
+      "island_key": "gshhg237_f29740eb57024ab1",
+      "selection_stratum": "20_to_100:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "955f1f0470fe08f85a89af59141ba2c7f518164838db3af5f98f8381f459b98b",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:22.677440+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "955f1f0470fe08f85a89af59141ba2c7f518164838db3af5f98f8381f459b98b",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:22.997715+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.359747+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 0,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {},
+        "DATASET_KEY": {},
+        "SPECIES_KEY": {},
+        "YEAR": {}
+      },
+      "finished_utc": "2026-10-29T12:03:33.360854+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "eb9cd13b2ce0c853d0a2c964b21b46efd215b0d79908708555ecb2842ebb40a1",
+      "island_key": "gshhg237_f29740eb57024ab1",
+      "selection_stratum": "20_to_100:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "222d5860a5bc2407cc6c008b4a7174d58be80bb57e197bfa943896da7714e15e",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:22.816326+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "222d5860a5bc2407cc6c008b4a7174d58be80bb57e197bfa943896da7714e15e",
+          "response_sha256": "f63de0df3a709f7124e7190e99d95324627428de0c17c055f07ade40a933f222",
+          "retrieved_utc": "2026-10-29T12:01:23.086391+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.360419+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 201,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 201
+        },
+        "DATASET_KEY": {
+          "3e545dcd-1cd1-4aea-bfe3-eed23e83774e": 16,
+          "3ee49939-9282-4767-85f2-6726d415d4bb": 22,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 22,
+          "54facf62-bf0c-43e7-9972-4fdc407fa6c5": 12,
+          "6ac3f774-d9fb-4796-b3e9-92bf6c81c084": 2,
+          "6ae46c3b-5bc7-43cf-af5e-365317885fb9": 16,
+          "7247dc2e-b862-4555-b533-7701d183271b": 1,
+          "76cff260-eb1c-40a0-9cea-140ab0236dcf": 1,
+          "8a863029-f435-446a-821e-275f4f641165": 1,
+          "a244eea4-a8e0-4b54-9da5-3e9757ef5ab7": 92,
+          "f33f946c-9960-4015-8d11-90d715ea9b73": 16
+        },
+        "SPECIES_KEY": {
+          "37TXP": 3,
+          "3CZ96": 5,
+          "3CZ99": 1,
+          "3JH3C": 6,
+          "3KLG6": 7,
+          "3NWR5": 2,
+          "3Y88G": 9,
+          "4GKJ8": 8,
+          "4RVTZ": 1,
+          "5663J": 2,
+          "5663K": 2,
+          "59PP2": 5,
+          "5VMPG": 3,
+          "6CB8P": 18,
+          "6KL8S": 5,
+          "6NHN5": 14,
+          "6NHN7": 11,
+          "6W69T": 2,
+          "6WQFK": 2,
+          "6X2FK": 3,
+          "7DQKL": 2,
+          "7DQKP": 8,
+          "7G6CN": 1,
+          "9DZ64": 21,
+          "CTSNR": 4,
+          "DGLT": 18,
+          "H5SG": 11,
+          "L3KN": 16,
+          "LYQ5Z": 8,
+          "Q6L98": 1
+        },
+        "YEAR": {
+          "2010": 7,
+          "2011": 2,
+          "2012": 19,
+          "2013": 30,
+          "2014": 10,
+          "2015": 29,
+          "2016": 25,
+          "2017": 79
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.339077+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "962023482264023b87f10360e861b06f8d9a1700c31acc12c0a0c3344d403d99",
+      "island_key": "gshhg237_f752e77c73e90eb8",
+      "selection_stratum": "1000_to_20000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "9e402de36a6b2313b8c9b1d34eec46847b6db341c04e95bcdcb7f268ee33090b",
+          "response_sha256": "6f2451e490510fba3d9085281605c1412c62b1bc3de534f54587172b4fd184df",
+          "retrieved_utc": "2026-10-29T12:01:07.622756+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "9e402de36a6b2313b8c9b1d34eec46847b6db341c04e95bcdcb7f268ee33090b",
+          "response_sha256": "6f2451e490510fba3d9085281605c1412c62b1bc3de534f54587172b4fd184df",
+          "retrieved_utc": "2026-10-29T12:01:08.205352+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.338311+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 2,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 1468,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 1457,
+          "MATERIAL_SAMPLE": 9,
+          "PRESERVED_SPECIMEN": 2
+        },
+        "DATASET_KEY": {
+          "040c5662-da76-4782-a48e-cdea1892d14c": 9,
+          "12cc65e6-7e95-4f27-b079-0f666854792d": 16,
+          "1fd029b7-4e44-4f6e-8cc5-240e4f238116": 1,
+          "328ca73a-4809-41b8-ba24-0fae5d87926c": 7,
+          "39d928e2-0123-4b37-ac0f-83431684cf50": 5,
+          "453d270b-fc27-4740-8e01-95f4067b3ac4": 12,
+          "50694c16-4d02-4fca-bc72-fac2e51b9b1d": 22,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 642,
+          "50cf53ad-5115-445f-ac3f-c4d676a2d480": 13,
+          "69655118-a775-448b-9513-e29cb8999f49": 14,
+          "7247dc2e-b862-4555-b533-7701d183271b": 6,
+          "7db53ec6-1fba-4f45-82f9-4cfb5381a676": 66,
+          "871d18ff-5591-443e-b9bf-56666875f586": 123,
+          "8a863029-f435-446a-821e-275f4f641165": 1,
+          "92bffa2e-e69b-4b1e-87ec-c88c41072eed": 32,
+          "9c0ee051-1bc5-486f-aa00-dcfdaef49eca": 12,
+          "a244eea4-a8e0-4b54-9da5-3e9757ef5ab7": 161,
+          "a7910107-b902-401c-989a-3b4e70c9070d": 11,
+          "b386b65a-2738-4f02-a6f5-160b6b26a345": 1,
+          "c00cdc19-a059-40db-bb51-7e99dc607ca5": 8,
+          "c5af860a-0395-4e3f-8ef9-8681025b1dcb": 237,
+          "cf3bdc30-370c-48d3-8fff-b587a39d72d6": 1,
+          "d015960f-0a2d-4c6c-bbb0-e049a7978a62": 20,
+          "e0d7dc2b-2494-449d-b1b2-9d9b717e64ee": 2,
+          "e1b5fd93-dbbd-4989-91e0-ba906332aeb6": 44,
+          "fe99edff-54d8-43b9-a25d-57964403efa6": 2
+        },
+        "SPECIES_KEY": {
+          "37TXP": 39,
+          "3CZ96": 17,
+          "3CZ99": 2,
+          "3JH3C": 5,
+          "3KLG6": 64,
+          "3M5K8": 15,
+          "3NWR5": 4,
+          "3TXV6": 4,
+          "3XVHR": 1,
+          "3Y88G": 39,
+          "484ZD": 9,
+          "4CGBR": 3,
+          "4GKHZ": 12,
+          "4GKJ8": 41,
+          "4RVTZ": 7,
+          "5663K": 13,
+          "56679": 7,
+          "566CM": 1,
+          "566RH": 1,
+          "59PP2": 20,
+          "5VMPG": 12,
+          "5XZ73": 5,
+          "69YV3": 1,
+          "6CB8P": 70,
+          "6FMBY": 2,
+          "6FQ2X": 5,
+          "6FQ39": 1,
+          "6KL8S": 66,
+          "6L326": 1,
+          "6LB5S": 1,
+          "6MNTJ": 7,
+          "6NHN5": 93,
+          "6NHN7": 41,
+          "6PJCK": 2,
+          "6PJCL": 16,
+          "6QJ6G": 1,
+          "6W69T": 20,
+          "6WQFK": 12,
+          "6X2FK": 19,
+          "6ZZVK": 13,
+          "75MDQ": 24,
+          "77TXT": 4,
+          "792FJ": 30,
+          "7DQKL": 24,
+          "7DQKP": 51,
+          "7G6CN": 29,
+          "9385D": 4,
+          "9862": 4,
+          "9DZ64": 120,
+          "CTSNR": 33,
+          "CTSNS": 2,
+          "DCXV": 2,
+          "DGLT": 150,
+          "H5SG": 88,
+          "J3LH": 4,
+          "L3KN": 145,
+          "LYQ5Z": 42,
+          "MKFNG": 2,
+          "Q6L98": 5,
+          "T8RTX": 3
+        },
+        "YEAR": {
+          "2018": 138,
+          "2019": 101,
+          "2020": 183,
+          "2021": 311,
+          "2022": 260,
+          "2023": 66,
+          "2024": 140,
+          "2025": 269
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.339835+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "962023482264023b87f10360e861b06f8d9a1700c31acc12c0a0c3344d403d99",
+      "island_key": "gshhg237_f752e77c73e90eb8",
+      "selection_stratum": "1000_to_20000:atleast500:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "2d14ed073b38d9fdc5dd568ccacd6651ac26b2b5c7a2edda3d73c95db4050ea1",
+          "response_sha256": "acc7fe7af91936cdb5d1a89989ad3c720c837d080ea7c5e1b5003b611fcbdf2e",
+          "retrieved_utc": "2026-10-29T12:01:08.077064+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "2d14ed073b38d9fdc5dd568ccacd6651ac26b2b5c7a2edda3d73c95db4050ea1",
+          "response_sha256": "acc7fe7af91936cdb5d1a89989ad3c720c837d080ea7c5e1b5003b611fcbdf2e",
+          "retrieved_utc": "2026-10-29T12:01:08.628957+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.339181+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 10,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 721,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 721
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 154,
+          "6ac3f774-d9fb-4796-b3e9-92bf6c81c084": 1,
+          "cf3bdc30-370c-48d3-8fff-b587a39d72d6": 566
+        },
+        "SPECIES_KEY": {
+          "3CSHW": 2,
+          "3CSK3": 13,
+          "3G6KZ": 14,
+          "3L4K7": 2,
+          "3PLDM": 15,
+          "3WHT6": 12,
+          "3WJ52": 12,
+          "486GN": 12,
+          "48XCH": 3,
+          "4CK7W": 11,
+          "4CKMZ": 5,
+          "4HRQW": 12,
+          "4HRRC": 36,
+          "4KYLZ": 21,
+          "4KYM2": 20,
+          "4KYM7": 17,
+          "4L8XP": 5,
+          "4L8Y7": 5,
+          "4YKGD": 30,
+          "537KQ": 2,
+          "5ZJDL": 13,
+          "5ZJQB": 3,
+          "68NV3": 12,
+          "69YY8": 6,
+          "6CB8P": 10,
+          "6FQJL": 9,
+          "6G2JK": 2,
+          "6GS7C": 8,
+          "6PQKL": 12,
+          "6QB7P": 28,
+          "6VDFN": 44,
+          "6YWVK": 28,
+          "7BY3J": 29,
+          "7FFL6": 34,
+          "9385D": 30,
+          "94BW8": 34,
+          "97FCX": 26,
+          "9DXWK": 17,
+          "9FKQS": 10,
+          "DPJD": 6,
+          "FJKHP": 24,
+          "FLF28": 2,
+          "L2LFM": 1,
+          "MGWJ9": 3,
+          "RH3S": 4,
+          "S2KNS": 1,
+          "SWDQ": 32,
+          "V4P4X": 1,
+          "VBHYH": 1,
+          "X2F6": 3,
+          "X2FL": 9,
+          "X2G9": 23
+        },
+        "YEAR": {
+          "2010": 4,
+          "2011": 32,
+          "2012": 320,
+          "2013": 61,
+          "2014": 63,
+          "2015": 145,
+          "2016": 23,
+          "2017": 73
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.344491+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9dfc2c9444726d4022a8a77353aaff88b20dc9adeedeacee447ceb4b59ff2027",
+      "island_key": "gshhg237_f8e7324caae52195",
+      "selection_stratum": "1000_to_20000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "3f6462a2aafa48d6298eb9d2d7059fb22dd8fce95fdee228c2d2ff1c98011cea",
+          "response_sha256": "92f6453f31551eb11282278c4635d937a0187a6b12a8b584e45cf98d98d8eff9",
+          "retrieved_utc": "2026-10-29T12:01:09.579124+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "3f6462a2aafa48d6298eb9d2d7059fb22dd8fce95fdee228c2d2ff1c98011cea",
+          "response_sha256": "92f6453f31551eb11282278c4635d937a0187a6b12a8b584e45cf98d98d8eff9",
+          "retrieved_utc": "2026-10-29T12:01:09.981835+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.343559+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 7,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 2607,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 2607
+        },
+        "DATASET_KEY": {
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 2491,
+          "cf3bdc30-370c-48d3-8fff-b587a39d72d6": 116
+        },
+        "SPECIES_KEY": {
+          "3CSHW": 15,
+          "3CSK3": 14,
+          "3G6KZ": 40,
+          "3L4K7": 13,
+          "3PLDM": 10,
+          "3WHT6": 26,
+          "3WJ52": 1,
+          "486GN": 23,
+          "48XCH": 1,
+          "4CK77": 2,
+          "4CK7W": 221,
+          "4CKMZ": 36,
+          "4HRQW": 38,
+          "4HRRC": 84,
+          "4K2DW": 2,
+          "4KYLZ": 3,
+          "4KYM2": 4,
+          "4KYM7": 11,
+          "4L8XP": 2,
+          "4L8Y7": 24,
+          "4L8YD": 1,
+          "4YKG9": 1,
+          "4YKGD": 70,
+          "537KQ": 1,
+          "5ZJQB": 37,
+          "68NV3": 1,
+          "69YY8": 31,
+          "6CB8P": 728,
+          "6FQJL": 1,
+          "6G2JK": 1,
+          "6GS7C": 37,
+          "6PQKL": 21,
+          "6QB7P": 138,
+          "6QB84": 28,
+          "6R6VM": 3,
+          "6VDFN": 131,
+          "6YWVK": 74,
+          "7BY3J": 54,
+          "7FFL6": 50,
+          "9385D": 28,
+          "94BW8": 22,
+          "97FCX": 99,
+          "9DXWK": 84,
+          "9FKQS": 38,
+          "DPJD": 20,
+          "FJKHP": 3,
+          "FJKHV": 1,
+          "FLF28": 17,
+          "PV263": 14,
+          "PVMR": 6,
+          "RH3S": 1,
+          "S2KNS": 14,
+          "SWDQ": 118,
+          "V4P4X": 32,
+          "VBHYH": 22,
+          "VBJZ5": 2,
+          "WB89": 1,
+          "X2FL": 5,
+          "X2G9": 77
+        },
+        "YEAR": {
+          "2018": 82,
+          "2019": 154,
+          "2020": 321,
+          "2021": 381,
+          "2022": 534,
+          "2023": 214,
+          "2024": 606,
+          "2025": 315
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.345649+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "9dfc2c9444726d4022a8a77353aaff88b20dc9adeedeacee447ceb4b59ff2027",
+      "island_key": "gshhg237_f8e7324caae52195",
+      "selection_stratum": "1000_to_20000:under100:within50",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "c439c8b5ae178b515d6976cba864fdd66a8e7bb3a906bb69c775096af542179a",
+          "response_sha256": "ff67f27087f059a42d5980eb8f06589eba00a339bc83d3f56b70eeede9678455",
+          "retrieved_utc": "2026-10-29T12:01:09.859951+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "c439c8b5ae178b515d6976cba864fdd66a8e7bb3a906bb69c775096af542179a",
+          "response_sha256": "ff67f27087f059a42d5980eb8f06589eba00a339bc83d3f56b70eeede9678455",
+          "retrieved_utc": "2026-10-29T12:01:10.308879+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.344613+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 25,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    },
+    {
+      "count": 5,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 2,
+          "PRESERVED_SPECIMEN": 3
+        },
+        "DATASET_KEY": {
+          "4bfac3ea-8763-4f4b-a71a-76a6f5f243d3": 1,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 2,
+          "fb9863f4-68cf-4e90-bc4d-2b15bdebf889": 2
+        },
+        "SPECIES_KEY": {
+          "6N292": 1,
+          "6T8CG": 2,
+          "FWJ2": 2
+        },
+        "YEAR": {
+          "2012": 1,
+          "2014": 2,
+          "2017": 2
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.333095+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "5813d02503e0f16883e0ffc9c437edd463c508b1f4864db116f9739b9a0fcd49",
+      "island_key": "gshhg237_fbeca2be79d054e7",
+      "selection_stratum": "1000_to_20000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "50a70e4e7186468050ad1eeedc81ddcd820c4400e67e28bead76d2ef47d17acf",
+          "response_sha256": "bf8c4f1914b9c78bed5688419b943a1be302bc20d1ac55094d7165f78ddfba1b",
+          "retrieved_utc": "2026-10-29T12:01:06.157018+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "50a70e4e7186468050ad1eeedc81ddcd820c4400e67e28bead76d2ef47d17acf",
+          "response_sha256": "bf8c4f1914b9c78bed5688419b943a1be302bc20d1ac55094d7165f78ddfba1b",
+          "retrieved_utc": "2026-10-29T12:01:06.616959+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.332295+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2010_2017"
+    },
+    {
+      "count": 43,
+      "facet_pages": 1,
+      "facets": {
+        "BASIS_OF_RECORD": {
+          "HUMAN_OBSERVATION": 3,
+          "PRESERVED_SPECIMEN": 40
+        },
+        "DATASET_KEY": {
+          "24a02aae-d6b8-40c8-8f90-64eb3e780f2b": 11,
+          "28c04664-55cb-445d-9a1c-d34c80a8d8b3": 10,
+          "2aad3bc7-4765-40ea-b478-3ac3cb53ff72": 3,
+          "38af1774-d162-49d1-8c17-ea50e952b1bf": 2,
+          "442647f8-8883-462d-901f-115f0753969d": 1,
+          "50c9509d-22c7-4a22-a47d-8c48425ef4a7": 3,
+          "ab67e429-389c-43a7-8799-36c67ece82d6": 2,
+          "d21c9a7a-949e-4318-9079-1748253e48a9": 5,
+          "ed6df385-67ec-4872-ad25-e6e76ca2dcb1": 3,
+          "f4b6dedb-5a10-4512-bcd2-0c72a8f9e394": 3
+        },
+        "SPECIES_KEY": {
+          "34GC5": 2,
+          "4BPG6": 2,
+          "4CJZM": 4,
+          "4CK33": 3,
+          "6F52V": 1,
+          "6F6KF": 1,
+          "6KRBC": 1,
+          "6KRP4": 2,
+          "6N2T2": 1,
+          "6T8CG": 4,
+          "6TLXW": 1,
+          "6TM9X": 3,
+          "6XBJ4": 3,
+          "93BHD": 5,
+          "FWJ2": 9,
+          "RVM8": 1
+        },
+        "YEAR": {
+          "2019": 43
+        }
+      },
+      "finished_utc": "2026-10-29T12:03:33.333952+00:00",
+      "first_page_recheck_passed": true,
+      "geometry_sha256": "5813d02503e0f16883e0ffc9c437edd463c508b1f4864db116f9739b9a0fcd49",
+      "island_key": "gshhg237_fbeca2be79d054e7",
+      "selection_stratum": "1000_to_20000:atleast500:beyond100",
+      "source_pages": [
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": false,
+          "request_sha256": "61efffe20f1687129a83bdf5468565b7c7eae25d54122e3891615f91ee040eab",
+          "response_sha256": "75e116862699533062db3b1446a43987296979ac59f4e67ab14799d6d72031d1",
+          "retrieved_utc": "2026-10-29T12:01:06.115452+00:00"
+        },
+        {
+          "facet_offset": 0,
+          "is_first_page_recheck": true,
+          "request_sha256": "61efffe20f1687129a83bdf5468565b7c7eae25d54122e3891615f91ee040eab",
+          "response_sha256": "75e116862699533062db3b1446a43987296979ac59f4e67ab14799d6d72031d1",
+          "retrieved_utc": "2026-10-29T12:01:06.641552+00:00"
+        }
+      ],
+      "started_utc": "2026-10-29T12:03:33.333217+00:00",
+      "status": "COMPLETE",
+      "unassigned_facet_records": {
+        "BASIS_OF_RECORD": 0,
+        "DATASET_KEY": 0,
+        "SPECIES_KEY": 0,
+        "YEAR": 0
+      },
+      "window": "2018_2025"
+    }
+  ],
+  "schema": "chocho_true_island_Papilionoidea_recording_pilot_20261029_v1",
+  "selection_locked_utc": "2026-10-29T12:01:05.062680+00:00",
+  "selection_sha256": "552410a030feb6e9058e6becf1fb6efa3c3d36c539b9060d5a565f1db6aa6656",
+  "summary": {
+    "cached_http_error_responses": 15,
+    "complete_both_windows_islands": 24,
+    "complete_island_windows": 48,
+    "complete_positive_record_island_windows": 25,
+    "complete_windows_without_species_bins": 23,
+    "complete_zero_record_island_windows": 23,
+    "failed_island_windows": 0,
+    "islands_atleast3_species_bins_each_window": 10,
+    "islands_with_atleast_one_complete_zero_record_window": 13,
+    "islands_zero_records_both_windows": 10,
+    "positive_records_without_any_species_bin_windows": 0,
+    "records_by_window": {
+      "2010_2017": 1310,
+      "2018_2025": 5112
+    },
+    "records_without_species_bin": 243,
+    "requested_island_windows": 48,
+    "requested_islands": 24
+  },
+  "taxonomy": {
+    "checklistKey": "7ddf754f-d193-4cc9-b351-99906754a03b",
+    "name": "Papilionoidea",
+    "original_239_numeric_keys_not_combined": true,
+    "rank": "SUPERFAMILY",
+    "taxonKey": "5G9"
+  },
+  "windows": [
+    [
+      2010,
+      2017
+    ],
+    [
+      2018,
+      2025
+    ]
+  ]
+}
