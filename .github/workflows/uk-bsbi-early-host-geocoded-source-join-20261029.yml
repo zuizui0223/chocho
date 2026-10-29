@@ -1,0 +1,83 @@
+name: Match original chocho 27 butterfly hosts to pre1970 BSBI 10km wild plant evidence at historic UK transects
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-join-20261029]
+    paths:
+      - scripts/audit_bsbi_UK_host_hectad_coverage_20261029.py
+      - tests/test_bsbi_UK_host_hectad_coverage_20261029.py
+      - .github/workflows/uk-bsbi-early-host-geocoded-source-join-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-UK-host-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 21
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: BNG grid geometry and exact botanical taxon matching tests
+        run: |
+          python -m pip install 'pytest>=8,<10' 'xlrd>=2.0.2,<3' 'pyproj>=3.6,<4' 'numpy>=1.26' 'scikit-learn>=1.5,<2'
+          python -m pytest -q tests/test_bsbi_UK_host_hectad_coverage_20261029.py
+      - name: Retrieve approved author-only HOSTS original identity file source
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _historical_host/author
+      - name: Validate and decompress only in CI private memory / disk
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          paths=[f for f in Path('_historical_host/author').rglob('*.zip')
+              if hashlib.sha256(f.read_bytes()).hexdigest()=='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323']
+          assert len(paths)==1,"Original authorized HOSTS/WCVP source missing"
+          with zipfile.ZipFile(paths[0]) as z:
+            assert z.testzip() is None
+            for name in z.namelist():
+              p=Path(name)
+              assert not p.is_absolute() and '..' not in p.parts
+            z.extractall('_historical_host/source')
+          assert Path('_historical_host/source/inputs/original/insect_host_accepted.csv').is_file()
+          PY
+      - name: Download exact publisher BSBI 3497 plant species 10km source
+        run: |
+          mkdir -p _historical_host/raw
+          curl -fLsS --retry 2 --connect-timeout 20 --max-time 150 \
+            'https://zenodo.org/records/10998003/files/PA2020_10by10kmSquareData.zip?download=1' \
+            -o _historical_host/raw/PA2020_10by10kmSquareData.zip
+      - name: Join original WCVP accepted species and dated BSBI host records to UKBMS original effort-selected transects
+        run: |
+          mkdir -p _historical_host/results
+          python scripts/audit_bsbi_UK_host_hectad_coverage_20261029.py \
+            --source-root _historical_host/source \
+            --bsbi-zip _historical_host/raw/PA2020_10by10kmSquareData.zip \
+            --output _historical_host/results/UK_BSBI_original_pre1970_wild_hosts_20261029.json
+      - name: Reject any raw site or botanical record export
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_historical_host/results/UK_BSBI_original_pre1970_wild_hosts_20261029.json')
+          x=json.loads(p.read_text())
+          assert x['schema']=='chocho_bsbi_exact_historic_wildhost_source_UK_BMS_20261029_v01'
+          assert x['BSBI_3497_taxa_CSVs_verified']==3497
+          assert 15<=x['source_ukbms_transect_count']<=19
+          assert x['DO_NOT_CLAIM']['plant_taxon_x_hectad_and_UKBMS_site_data_exported'] is False
+          for token in ('"ukbms_siteno":','"easting":','"northing":','"hectad":','"locationid":'):
+            assert token not in p.read_text().lower(),token
+          print("PASS source provenance and strict pre1970 no-cultivation claims")
+          PY
+      - name: Upload aggregate-only original wild-host and botanical-effort coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-BSBI-pre1970-original-host-10km-site-coverage-20261029
+          path: _historical_host/results/UK_BSBI_original_pre1970_wild_hosts_20261029.json
+          retention-days: 30
+          if-no-files-found: error
