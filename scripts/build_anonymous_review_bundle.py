@@ -124,6 +124,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/audit_island_port_original_sources_20261029.py"),
     Path("scripts/audit_island_gshhg_original_source_20261029.py"),
     Path("tests/test_island_port_original_sources_20261029.py"),
+    Path("scripts/audit_gshhg_island_source_census_20261029.py"),
+    Path("tests/test_gshhg_island_source_census_20261029.py"),
     Path("tests/test_island_gshhg_original_source_20261029.py"),
     Path("tests/test_h3_wgsrpd3_crosswalk_20261029.py"),
     Path("tests/test_butterfly_73_country_climate_area_null_20261028.py"),
