@@ -1,0 +1,63 @@
+name: Recover author-only chocho 27 UKBMS butterfly accepted larval host identifiers safely
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-join-20261029]
+    paths:
+      - scripts/audit_chocho_author_UK_host_identity_20261029.py
+      - tests/test_chocho_author_UK_host_identity_20261029.py
+      - .github/workflows/uk-chocho-original-author-host-identity-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  frozen-original-host-map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source invariant non-fabrication tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_chocho_author_UK_host_identity_20261029.py
+      - name: Retrieve original author-only SHA-frozen HOSTS/WCVP metadata from previous approved repo Action
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _author_source/downloaded
+      - name: Verify source archive fingerprint and extract solely to ephemeral CI folder
+        run: |
+          python - <<'PY'
+          import zipfile,hashlib
+          from pathlib import Path
+          root=Path('_author_source/downloaded')
+          matches=[x for x in root.rglob('*.zip') if hashlib.sha256(x.read_bytes()).hexdigest()=='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323']
+          assert len(matches)==1,"Original source artifact missing or digest changed"
+          with zipfile.ZipFile(matches[0]) as z:
+            assert z.testzip() is None
+            for name in z.namelist():
+              p=Path(name)
+              assert not p.is_absolute() and '..' not in p.parts
+            z.extractall('_author_source/source')
+          assert Path('_author_source/source/SOURCE_MANIFEST.json').is_file()
+          print('PASS original author-only primary HOSTS source SHA; no raw source published')
+          PY
+      - name: Check exact accepted host identity source for fixed 27 UKBMS taxa
+        run: |
+          mkdir -p _author_source/derived
+          python scripts/audit_chocho_author_UK_host_identity_20261029.py \
+            --source-root _author_source/source \
+            --output _author_source/derived/uk_author_host_identity_coverage_20261029.json
+      - name: Publish only source identity counts and original audit fingerprint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-author-only-hosts-identity-coverage-20261029
+          path: _author_source/derived/uk_author_host_identity_coverage_20261029.json
+          retention-days: 30
+          if-no-files-found: warn
