@@ -130,7 +130,8 @@ def run(output,manifest_path):
                          "returnGeometry":"true","outSR":"4326","outFields":"*",
                          "objectIds":",".join(map(str,oid[:10]))}))
         sample=json.loads(sample_raw)
-        result["ports"]=check_wpi_metadata(metadata,ids,sample)\n        result["ports"]["full_original_coordinates_not_yet_decoded_or_verified"]=True
+        result["ports"]=check_wpi_metadata(metadata,ids,sample)
+        result["ports"]["full_original_coordinates_not_yet_decoded_or_verified"]=True
         result["port_metadata_sha256"]=hashlib.sha256(metadata_raw).hexdigest()
         result["port_ID_set_sha256"]=hashlib.sha256(ids_raw).hexdigest()
     except (OSError,ValueError,KeyError,json.JSONDecodeError) as e:
