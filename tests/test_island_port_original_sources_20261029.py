@@ -31,6 +31,22 @@ def test_wpi_requires_actual_wgs84_coordinates():
     with pytest.raises(ValueError,match="geometry"):
         check_wpi_metadata(metadata,ids,point)
 
+def test_original_port_attribute_coordinates_work_when_ArcGIS_global_outSR_fails():
+    metadata={"geometryType":"esriGeometryPoint","name":"WPI 2025",
+              "fields":[{"name":v} for v in
+                        ("OBJECTID","LATITUDE","LONGITUDE","PORT_NAME","COUNTRY")]}
+    ids={"objectIdFieldName":"OBJECTID","objectIds":list(range(1,3201))}
+    sample={"features":[{
+          "geometry":{"x":900000,"y":800000},
+          "attributes":{"LATITUDE":35.2,"LONGITUDE":139.7}}
+          for _ in range(10)]}
+    audited=check_wpi_metadata(metadata,ids,sample)
+    assert audited["preferred_position_source"]=="ORIGINAL_WPI_LATITUDE_LONGITUDE_ATTRIBUTES"
+    assert audited["sample_valid_ArcGIS_4326_geometry"]==0
+    assert audited["sample_valid_original_attribute_latlon"]==10
+    assert audited["real_commodity_flow_or_ship_calls_not_recorded"]
+
+
 def test_no_future_ports_means_no_establishment_inference():
     with pytest.raises(ValueError):
         check_wpi_metadata({"geometryType":"esriGeometryPoint","fields":[]}, {}, {})
