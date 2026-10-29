@@ -24,6 +24,41 @@ def audit_zip(path:Path):
     digest=hashlib.md5(path.read_bytes()).hexdigest()
     if digest!=MD5:
         raise ValueError("Publisher file MD5 differs; no biological inference allowed")
+
+def nested_source_metadata(nested_zip:bytes):
+    """Safe source nested ZIP: inspect member types and source headers only."""
+    from collections import Counter
+    with zipfile.ZipFile(io.BytesIO(nested_zip)) as inner:
+        members=[x for x in inner.infolist() if not x.is_dir()]
+        if not members or sum(x.file_size for x in members)>MAX_UNPACKED:
+            raise ValueError("Original nested source exceeds uncompressed size limit")
+        suffix_count=Counter()
+        header_examples=[]
+        source_names=[]
+        for item in members:
+            p=Path(item.filename)
+            if p.is_absolute() or ".." in p.parts or item.file_size>MAX_MEMBER:
+                raise ValueError("Unsafe original inner ZIP member")
+            suffix=p.suffix.lower()
+            suffix_count[suffix]+=1
+            if len(source_names)<20:source_names.append(item.filename[-180:])
+            if suffix in (".csv",".tsv",".txt") and len(header_examples)<8:
+                with inner.open(item) as handle:
+                    txt=io.TextIOWrapper(handle,encoding="utf-8-sig",errors="replace",newline="")
+                    line=txt.readline()
+                    delim="\\t" if "\\t" in line and line.count("\\t")>line.count(",") else ","
+                    header=next(csv.reader([line],delimiter=delim),[])
+                    header_examples.append({"original_file_index":len(header_examples)+1,
+                        "source_member_name":item.filename[-150:],
+                        "header_fields":[str(v).strip()[:100] for v in header][:75],
+                        "source_text_delimiter":delim,
+                        "original_file_uncompressed_bytes":item.file_size})
+        return {"nested_member_count":len(members),
+            "nested_uncompressed_bytes":sum(x.file_size for x in members),
+            "nested_suffix_counts":dict(sorted(suffix_count.items())),
+            "nested_first_member_names":source_names,
+            "nested_text_header_examples":header_examples}
+
     output=[]
     with zipfile.ZipFile(path) as z:
         if z.testzip() is not None:
@@ -42,6 +77,8 @@ def audit_zip(path:Path):
             m={"original_member_name":item.filename[-180:],
                "suffix":suffix,"compressed_bytes":item.compress_size,
                "original_uncompressed_bytes":item.file_size}
+            if suffix==".zip" and item.file_size<=MAX_ARCHIVE:
+                m["nested_original_source_metadata"]=nested_source_metadata(z.read(item))
             if suffix in (".csv",".tsv",".txt"):
                 with z.open(item) as raw:
                     text=io.TextIOWrapper(raw,encoding="utf-8-sig",errors="replace",newline="")
