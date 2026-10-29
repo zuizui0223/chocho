@@ -94,7 +94,11 @@ def check_wpi_metadata(metadata,ids,sample):
             "source_feature_count":len(keys),
             "original_objectid_field":key,
             "source_fields_available":sorted(fields),
-            "sample_points":sample_n,\n            "sample_valid_ArcGIS_4326_geometry":geometry_ok,\n            "sample_valid_original_attribute_latlon":attribute_ok,\n            "sample_geometry_vs_attribute_mismatch_over_1deg":attribute_conflict,\n            "preferred_position_source":policy,
+            "sample_points":sample_n,
+            "sample_valid_ArcGIS_4326_geometry":geometry_ok,
+            "sample_valid_original_attribute_latlon":attribute_ok,
+            "sample_geometry_vs_attribute_mismatch_over_1deg":attribute_conflict,
+            "preferred_position_source":policy,
             "last_update_202511_is_not_opening_date":True,
             "real_commodity_flow_or_ship_calls_not_recorded":True}
 
