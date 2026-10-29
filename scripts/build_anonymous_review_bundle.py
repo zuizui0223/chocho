@@ -114,6 +114,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/probe_uk_nasa_power_1981_2021_20261028.py"),
     Path("tests/test_uk_nasa_power_1981_2021_20261028.py"),
     Path("scripts/audit_uk_ltmn_NASA_POWER_historical_baseline_20261028.py"),
+    Path("scripts/audit_bsbi_atlas_and_clarke_source_20261029.py"),
+    Path("tests/test_bsbi_atlas_and_clarke_source_20261029.py"),
     Path("tests/test_uk_ltmn_nasa_power_frozen_result_20261029.py"),
     Path("tests/test_uk_ltmn_NASA_POWER_historical_baseline_20261028.py"),
     Path("tests/test_uk_public_transect_source_20261028.py"),
