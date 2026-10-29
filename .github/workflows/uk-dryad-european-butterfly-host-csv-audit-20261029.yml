@@ -1,0 +1,41 @@
+name: Original Dryad European butterfly larval host-source CSV availability gate
+on:
+  push:
+    branches: [analysis/uk-pre2000-host-atlas-hindcast-20261029]
+    paths:
+      - scripts/audit_dryad_europe_butterfly_host_tables_20261029.py
+      - tests/test_dryad_europe_butterfly_host_tables_20261029.py
+      - .github/workflows/uk-dryad-european-butterfly-host-csv-audit-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-european-larval-host-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test no-HTML-host-substitution and no-original-row release
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_dryad_europe_butterfly_host_tables_20261029.py
+      - name: Exact original Clarke Dryad version and public CSV downloads
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _dryad
+          python scripts/audit_dryad_europe_butterfly_host_tables_20261029.py \
+            --output _dryad/uk_clarke_original_europe_butterfly_host_source_20261029.json
+      - name: Store only verified original headers and row counts with blocker details
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-original-Clarke-Dryad-EU-butterfly-host-CSV-20261029
+          path: _dryad/uk_clarke_original_europe_butterfly_host_source_20261029.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Fail closed for missing original host relation data
+        run: test "${{ steps.source.outcome }}" = 'success'

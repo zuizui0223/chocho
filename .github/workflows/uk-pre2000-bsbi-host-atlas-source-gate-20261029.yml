@@ -1,0 +1,41 @@
+name: UK BSBI pre-2000 plant atlas and European butterfly host catalogue original sources
+on:
+  push:
+    branches: [analysis/uk-pre2000-host-atlas-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_atlas_and_clarke_source_20261029.py
+      - tests/test_bsbi_atlas_and_clarke_source_20261029.py
+      - .github/workflows/uk-pre2000-bsbi-host-atlas-source-gate-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  only-original-botanical-source-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Source-agnostic archive and no-plant-record leakage regressions
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_atlas_and_clarke_source_20261029.py
+      - name: Download exact source MD5-pinned BSBI atlas; audit only file headers and Dryad catalogue metadata
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_atlas_and_clarke_source_20261029.py \
+            --output _bsbi/uk_bsbi_dateclass_native_and_clarke_source_gate_20261029.json
+      - name: Publish only original-source binary hashes / field names / provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-BSBI-pre2000-historical-host-source-20261029
+          path: _bsbi/uk_bsbi_dateclass_native_and_clarke_source_gate_20261029.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: No source means no historical host analysis
+        run: test "${{ steps.source.outcome }}" = 'success'
