@@ -1,0 +1,36 @@
+name: All 3689 original World Port Index 2025 latitude-longitude and identity gate
+on:
+  push:
+    branches: [analysis/island-isolation-port-geography-20261029]
+    paths:
+      - scripts/audit_world_port_index_complete_20261029.py
+      - tests/test_world_port_index_complete_20261029.py
+      - .github/workflows/island-world-port-index-full-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-all-original-wpi-port-coordinates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: No-network source-ID and geographic validity tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_world_port_index_complete_20261029.py
+      - name: Audit 3689 original WPI features in ID-pinned chunks and report only aggregate
+        run: |
+          mkdir -p _world_ports
+          python scripts/audit_world_port_index_complete_20261029.py \
+            --output _world_ports/2025_original_WPI_all_ports_coordinate_quality_20261029.json
+      - name: Upload only aggregate 2025 position quality and source identities
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-world-port-index202511-all-3689-source-coordinate-gate
+          path: _world_ports/2025_original_WPI_all_ports_coordinate_quality_20261029.json
+          retention-days: 30
+          if-no-files-found: error
