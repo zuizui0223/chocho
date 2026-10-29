@@ -1,0 +1,57 @@
+name: UK butterfly temporal hindcast using actual NASA POWER daily source 1981–2021
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_NASA_POWER_historical_baseline_20261028.py
+      - tests/test_uk_ltmn_NASA_POWER_historical_baseline_20261028.py
+      - .github/workflows/uk-ltmn-NASA-POWER-historical-backtest-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-1981to1995-training-late-2005to2021-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original NASA source model and source-independent tests
+        run: |
+          python -m pip install 'xlrd>=2.0.2,<3' 'pyproj>=3.6,<4' 'scikit-learn>=1.5,<2' 'numpy>=1.26' 'pytest>=8,<10'
+          python -m pytest -q tests/test_uk_ltmn_NASA_POWER_historical_baseline_20261028.py
+      - name: Re-fetch original UKBMS visits and NASA 1981–2021 daily weather at effort-selected original georeferenced transects
+        run: |
+          mkdir -p _uk_nasa
+          python scripts/audit_uk_ltmn_NASA_POWER_historical_baseline_20261028.py \
+            --original-manifest data/exploratory/gbif_country_20261020/original_239_taxon_manifest.json \
+            --output _uk_nasa/UK_LTMN_NASA_POWER_1981to2021_historical_butterflies_20261028.json
+      - name: Reject 1976-era / ERA5 accidental reuse and preserve absence firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_uk_nasa/UK_LTMN_NASA_POWER_1981to2021_historical_butterflies_20261028.json')
+          o=json.loads(p.read_text())
+          assert o['schema']=='chocho_UK_LTMN_NASA_POWER_1981_2021_outoftime_detection_v01'
+          assert 15<=o['source']['n_NASA_POWER_source_transects']<=19
+          assert o['source']['NASA_POWER_days_per_site']==14975
+          assert o['source']['source_original_time_split_early']==[1981,1995]
+          assert o['source']['source_original_time_split_late']==[2005,2021]
+          assert o['source']['source_original_species']==27
+          assert len(o['validation']['five_independent_unseen_site_and_era_folds'])==5
+          assert o['model']['no_claim_host_mediated_range_expansion']
+          raw=p.read_text().lower()
+          for token in ('"ukbms_siteno":','"site_id":','"easting":','"northing":','"latitude":','"longitude":','"recorder_name":'):
+            assert token not in raw,token
+          print('PASS original distinct NASA period and no host mediation claim')
+          PY
+      - name: Publish survey-normalized prediction scores without original site identifiers
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-NASA-POWER-historical-1981to2021-backtest-20261028
+          path: _uk_nasa/UK_LTMN_NASA_POWER_1981to2021_historical_butterflies_20261028.json
+          retention-days: 30
+          if-no-files-found: error

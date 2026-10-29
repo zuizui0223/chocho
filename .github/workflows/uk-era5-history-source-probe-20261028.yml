@@ -1,0 +1,32 @@
+name: ERA5 source 1976-2021 for UK historical butterfly transects
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/probe_uk_era5_historical_weather_20261028.py
+      - .github/workflows/uk-era5-history-source-probe-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reanalysis-source-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify fixed historic ERA5 weather source with public test point only
+        run: |
+          mkdir -p _era5
+          python scripts/probe_uk_era5_historical_weather_20261028.py \
+            --output _era5/uk_era5_original_1976to2021_source_probe_20261028.json
+      - name: Publish only provider and calendar metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-ERA5-1976to2021-source-only-probe-20261028
+          path: _era5/uk_era5_original_1976to2021_source_probe_20261028.json
+          retention-days: 30
+          if-no-files-found: warn

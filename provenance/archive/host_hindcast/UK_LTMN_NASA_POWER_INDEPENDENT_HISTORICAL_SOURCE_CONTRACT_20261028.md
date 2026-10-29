@@ -1,0 +1,15 @@
+# Independent NASA POWER historical climate alternative, not a repair of ERA5
+
+2026-10-28. Source-response and time-epoch contract before source-specific butterfly prediction results.
+
+Original ERA5 Open-Meteo request for 1976–2021 on 19 exact historical UKBMS LTMN repeated sites **failed due to source HTTP 429** in [source-only original action #40637366687](https://github.com/zuizui0223/chocho/actions/runs/40637366687). Do not repeatedly poll the provider, bypass rate limits or fabricate an ERA5 hindcast.
+
+NASA Prediction Of Worldwide Energy Resources (POWER), https://power.larc.nasa.gov/docs/services/api/temporal/daily/, is an independent NASA public source, meteorological DAILY 1981–present. Its output is materially different from ERA5 (MERRA-2 based, coarser 0.5°×0.625° meteorological fields). No 1976–1980 climate observations are available from NASA POWER. Consequently source-compatible training must change to **1981–1995**; test **2005–2021** unchanged. This is a *new separately identified historical model*, not a substitution reproducing the originally prespecified 1976–95 ERA5 experiment. Report the change prominently, no direct numerical equivalence.
+
+Use original 19 candidate LTMN repeated and geocoded transects, the same original 27 chocho common↔scientific name concordance, original visit×species count files and 3-other-butterfly focal-independent survey qualifications. Before opening NASA future-target butterfly prediction performance, select a new effort-eligible panel solely on original verified visits in **1981–95** and **2005–21**: min 10 April–September visits spread ≥3 years *in each era*. Require ≥10 repeated valid geography transects or fail the new information gate. Keep all 19 original names in denominator as excluded/source-status where missing, never cherry-pick by detection or model improvement.
+
+Initial NASA POWER public point probe uses solely **public synthetic reference 52°N, 1°W**, not an LTMN original site; exact daily 1981–2021 request, community AG, parameters `T2M,PRECTOTCORR`, timezone UTC (POWER daily UTC), start 19810101 and end 20211231. Valid response requires full source calendar, T2M °C and precipitation mm/day, original provider metadata, <10% missing, no fabricated source dates. Original data are credited to NASA POWER project.
+
+If source works, recreate original **M0** species×DOY×latlon×linear year logit vs **M1** M0+preceding 30-day NASA daily temperature/precipitation exactly as original source ERA5 code other than provider and early window. L2 C=0.1; site×species equal training/score weights; 5 held-out-site folds. Mandatory true out-of-time dates and no source data or current host predictors used to train. Rejected historical source ERA5 does NOT count as negative ecological finding.
+
+Do not claim temperature effects caused historical changes or that host plants mediated warming: original site actual larval host taxa and human cultivation history are still absent, even though contemporary global chocho catalogue exists. Validate with historic dated host records separately before any M0 vs M0+host fit. Original frozen GEB and main unchanged.

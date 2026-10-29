@@ -1,0 +1,36 @@
+name: UK LTMN pre-post monitored butterfly transects and geocoded habitat crosswalk
+on:
+  push:
+    branches: [analysis/uk-public-transect-event-hindcast-20261028]
+    paths:
+      - scripts/audit_uk_ltmn_site_geography_20261028.py
+      - tests/test_uk_ltmn_site_geography_20261028.py
+      - .github/workflows/uk-ltmn-site-geography-20261028.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-site-crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Read-only original XLS and synthetic panel criteria
+        run: |
+          python -m pip install "xlrd>=2.0.2,<3" "pytest>=8,<10"
+          python -m pytest -q tests/test_uk_ltmn_site_geography_20261028.py
+      - name: Audit SHA-pinned Natural England site metadata and original weekly survey visits
+        run: |
+          mkdir -p _uk_site
+          python scripts/audit_uk_ltmn_site_geography_20261028.py \
+            --output _uk_site/uk_original_historical_site_resource_geography_20261028.json
+      - name: Upload only aggregate spatial sample size and habitat categories
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-UK-LTMN-geocoded-repeat-transect-source-20261028
+          path: _uk_site/uk_original_historical_site_resource_geography_20261028.json
+          retention-days: 30
+          if-no-files-found: error

@@ -1,0 +1,147 @@
+{
+  "ecological_decision": "CLIMATE_BASELINE_TESTED_ONLY_HOST_EFFECT_NOT_ESTIMATED",
+  "model": {
+    "missing_species_name_is_conditional_nondetection_not_true_absence": true,
+    "name": "L2 logistic C=.1, species/DOY harmonic/latlon/year baseline versus + actual prior30 NASA_POWER weather",
+    "no_NASA_POWER_raw_daily_series_or_site_geolocation_exported": true,
+    "no_all_taxa_full_checklist_certificate": true,
+    "no_claim_host_mediated_range_expansion": true,
+    "no_larval_host_presence_or_human_management_predictors": true,
+    "no_site_identity_predictor": true,
+    "original_NASA_POWER_weather_at_visited_historic_date_not_contemporary_climatology": true,
+    "same_original_15_to_19_effort_eligible_site_panel_in_train_and_test_years": true,
+    "training_only_standardization": true
+  },
+  "original_taxon_source": {
+    "mapped_target_species": 27,
+    "source_original_239_accepted_key_manifest_sha256": "18f84371cf2a9a71ca06202fac2246d9aa3df0465bd973d06b4e9e8bfa58e8d2",
+    "unresolved_wall_taxon_is_excluded": true
+  },
+  "schema": "chocho_UK_LTMN_NASA_POWER_1981_2021_outoftime_detection_v01",
+  "source": {
+    "NASA_POWER_days_per_site": 14975,
+    "NASA_POWER_product": "NASA POWER original daily T2M and PRECTOTCORR, 1981\u20132021, coarse MERRA-2-based weather fields",
+    "early_late_source_labels": {
+      "detected_early": 23060,
+      "detected_late": 29456,
+      "eligible_early": 115249,
+      "eligible_late": 138577,
+      "unqualified_visit_by_other_butterflies": 44578
+    },
+    "n_NASA_POWER_dated_invalid_days_all_sites": 0,
+    "n_NASA_POWER_source_transects": 19,
+    "original_NASA_POWER_source_response_sha256_sorted_unlinked_to_locations": [
+      "0e533cca4978cad8fa5c15042ae4a5c9bafe904158ff13734417610db6f344b3",
+      "11b9416c0069efc453e3c67043bf4dfd8beb617b098bcee2515ee100c24d03bb",
+      "18a78b2dd9a153b15c76d17daa29c889f5bc2cf8c45987d7ab4bcc59e955d0d1",
+      "3c2b566fd104b1b08b92c2718797287e1360b24298b9d5a2439029d9ea5daf46",
+      "3f3fc9365b29ea7bc7af5d45432e845e2f5a5c3971965760ebf53e3429d87236",
+      "6cad3602d1609d4edb3ef8bb8bf4d952ae672ab2f39f274de1e6f6afb1d678bb",
+      "74308c5d1b78c27680b8cb2278999c38ce2073731a2ab6098abedd9738e3853b",
+      "7e66b5a32cfc5848fc8b8ded045d2f33366a2b6273d51c03429ad494cc8dc019",
+      "884b55cee37f02939dba61c264e7791d6774760481000af5121cfca88da5f149",
+      "8abfe4812a7bf76adbb68f56b54dfe1979f6df36e747056b118f54e23081e0ad",
+      "a3844ad267d675631804c4867925ef0660b9e9413d362cb5ea7353dba0535986",
+      "b73913c3c1b6ee4087945fe11ee948b98399c6246eebb1c5bafbc4a4b0a21cdf",
+      "bd21a85b076ac352811b9b5c8865f4ae3c41b7bbaa750ff4aecf1883813e5efc",
+      "c834dbfee28ee6445a0aff4938b223a12110f859ca6ac2211ad57046c8bb7981",
+      "d88aa0871b342e83315411e144edfebc0af849da968de45b1626c9abf4af2fbe",
+      "ddbb158c3b8db6012175fb88c073eba24866a3e65cbeceb13db62c270f295bc9",
+      "e21a4212441243c3bfdfa606f0db4702b8d0253d99413ee8ba905d4344c47478",
+      "e760e0b43c092f2762afe1b650975a03de9d02247b119279f021f3b13eefe23d",
+      "fdcace02d2c1aadf754b153c59b1a4e93b8d48292bcbb3eac133282450111d36"
+    ],
+    "original_UKBMS_counts_sha256": "6afcc7d03eba0b657ae0e3a0d9da217b88df3ff39da66d7359df7fbb062ead3f",
+    "original_UKBMS_site_metadata_sha256": "e38853b775ecadf39332a8412e2a4a2fa3c83512cf7218e4f1eda172dd83c9cd",
+    "original_UKBMS_visits_sha256": "c23945feb1568b4b60ac139136c485c234699710eae395a104e0be92a958a84d",
+    "source_observed_detection_labels": 52516,
+    "source_original_species": 27,
+    "source_original_time_split_early": [
+      1981,
+      1995
+    ],
+    "source_original_time_split_late": [
+      2005,
+      2021
+    ],
+    "source_original_transects": 19,
+    "source_paired_visit_species_labels": 253826
+  },
+  "status": "SOURCE_VERIFIED_UK_ORIGINAL_TRANSECT_HISTORICAL_CLIMATE_BACKTEST",
+  "validation": {
+    "NASA_POWER_past30_temperature_precip": {
+      "brier": 0.13545885410335765,
+      "logloss": 0.418667830344853,
+      "n_source_visit_species_labels": 138577,
+      "site_species_cells": 513,
+      "sites": 19
+    },
+    "extrapolation_weather_prediction_gate": "WEATHER_SPATIOTEMPORAL_HINDCAST_NOT_RELIABLY_BETTER",
+    "five_fold_positive_weather_gain": 1,
+    "five_independent_unseen_site_and_era_folds": [
+      {
+        "NASA_POWER_weather_brier": 0.15898268104920102,
+        "NASA_POWER_weather_logloss": 0.4826435053827484,
+        "fold": 1,
+        "late_test_original_visit_species_labels": 35461,
+        "n_heldout_entire_source_sites": 4,
+        "no_weather_brier": 0.15352858596419286,
+        "no_weather_logloss": 0.4647180923636353,
+        "trained_early_source_visit_species_labels": 87556,
+        "weather_increment_logloss": -0.0179254130191131
+      },
+      {
+        "NASA_POWER_weather_brier": 0.12169338893052062,
+        "NASA_POWER_weather_logloss": 0.39656949068331493,
+        "fold": 2,
+        "late_test_original_visit_species_labels": 26040,
+        "n_heldout_entire_source_sites": 4,
+        "no_weather_brier": 0.12202419764790816,
+        "no_weather_logloss": 0.3947268410897301,
+        "trained_early_source_visit_species_labels": 89783,
+        "weather_increment_logloss": -0.001842649593584822
+      },
+      {
+        "NASA_POWER_weather_brier": 0.12914071968120114,
+        "NASA_POWER_weather_logloss": 0.4000139111991372,
+        "fold": 3,
+        "late_test_original_visit_species_labels": 20604,
+        "n_heldout_entire_source_sites": 4,
+        "no_weather_brier": 0.1273216891759582,
+        "no_weather_logloss": 0.39393669642963036,
+        "trained_early_source_visit_species_labels": 94665,
+        "weather_increment_logloss": -0.006077214769506845
+      },
+      {
+        "NASA_POWER_weather_brier": 0.1583179659319642,
+        "NASA_POWER_weather_logloss": 0.48216173228279763,
+        "fold": 4,
+        "late_test_original_visit_species_labels": 33748,
+        "n_heldout_entire_source_sites": 4,
+        "no_weather_brier": 0.1548198455504959,
+        "no_weather_logloss": 0.4707581314731581,
+        "trained_early_source_visit_species_labels": 90238,
+        "weather_increment_logloss": -0.011403600809639536
+      },
+      {
+        "NASA_POWER_weather_brier": 0.12401880335815921,
+        "NASA_POWER_weather_logloss": 0.4048702317238749,
+        "fold": 5,
+        "late_test_original_visit_species_labels": 22724,
+        "n_heldout_entire_source_sites": 3,
+        "no_weather_brier": 0.12430159473656469,
+        "no_weather_logloss": 0.4049428601010251,
+        "trained_early_source_visit_species_labels": 98754,
+        "weather_increment_logloss": 7.262837715021897e-05
+      }
+    ],
+    "late_minus_early_outoftime_original_site_score_improvement": -0.008663711223873716,
+    "no_weather": {
+      "brier": 0.13274849222408394,
+      "logloss": 0.4100041191209793,
+      "n_source_visit_species_labels": 138577,
+      "site_species_cells": 513,
+      "sites": 19
+    }
+  }
+}
