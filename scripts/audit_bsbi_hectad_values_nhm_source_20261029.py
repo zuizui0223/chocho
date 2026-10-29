@@ -34,8 +34,17 @@ def nested_distributions_scan(original:bytes, original_uk_public_grid_codes:set[
     if hashlib.md5(original).hexdigest()!=OUTER_MD5 or hashlib.sha256(original).hexdigest()!=OUTER_SHA:
         raise ValueError('BSBI original MD5/SHA256 mismatch')
     with zipfile.ZipFile(io.BytesIO(original)) as outer:
-        raw=outer.read(EXPECTED_NESTED)
-        lookup=outer.read('nameLookup.csv')
+        # Original publisher archives store resources in an enclosing directory.
+        # Resolve by unique safe basename, never guess a new biological source.
+        def unique_original_bytes(basename):
+            matching=[name for name in outer.namelist()
+                      if Path(name).name==basename and
+                         not Path(name).is_absolute() and '..' not in Path(name).parts]
+            if len(matching)!=1:
+                raise ValueError(f"Original BSBI archived member not uniquely found: {basename}")
+            return outer.read(matching[0])
+        raw=unique_original_bytes(EXPECTED_NESTED)
+        lookup=unique_original_bytes('nameLookup.csv')
     meta={'nested_sha256':hashlib.sha256(raw).hexdigest(),'nameLookup_sha256':hashlib.sha256(lookup).hexdigest()}
     lo=list(csv.DictReader(io.StringIO(lookup.decode('utf-8-sig',errors='replace'))))
     lookup_headers=list(lo[0]) if lo else []
