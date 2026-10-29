@@ -1,0 +1,41 @@
+name: BSBI Plant Atlas 2020 original dated host geography source audit
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_bsbi_historical_hectad_source_20261029.py
+      - tests/test_bsbi_historical_hectad_source_20261029.py
+      - .github/workflows/uk-bsbi-dated-hectad-source-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-published-plant-hectad:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Offline ZIP source and no-hectad-disclosure tests
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_bsbi_historical_hectad_source_20261029.py
+      - name: Bounded original BSBI Zenodo download, MD5 and historical schema
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _bsbi
+          python scripts/audit_bsbi_historical_hectad_source_20261029.py \
+            --output _bsbi/bsbi_hectad_original_source_schema_20261029.json
+      - name: Upload metadata-only historical plant source schema
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-BSBI-PA2020-original-historical-hectad-source-schema-20261029
+          path: _bsbi/bsbi_hectad_original_source_schema_20261029.json
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Fail closed if source absent
+        run: test "${{ steps.source.outcome }}" = "success"
