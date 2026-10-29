@@ -1,0 +1,99 @@
+name: Global H3 r4 to source-locked WGSRPD3 geographic bridge
+on:
+  push:
+    branches:
+      - analysis/h3-wgsrpd3-grid-bridge-20261029
+    paths:
+      - scripts/build_h3_wgsrpd3_crosswalk_20261029.py
+      - tests/test_h3_wgsrpd3_crosswalk_20261029.py
+      - .github/workflows/h3-wgsrpd3-global-crosswalk-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-global-grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Original source mapping and synthetic geographic dateline/island tests
+        run: |
+          python -m pip install 'h3>=4.2,<5' 'shapely>=2.1,<3' 'pyproj>=3.6,<4' 'pytest>=8,<10'
+          python -m pytest -q tests/test_h3_wgsrpd3_crosswalk_20261029.py
+      - name: Retrieve exact original author-only source artifact without publishing it
+        uses: actions/download-artifact@v4
+        with:
+          name: butterfly-author-anonymous-offline-source-replication-v01
+          run-id: 39006554609
+          github-token: ${{ github.token }}
+          path: _h3_source/author_only
+      - name: Verify and safely extract exact original 369 WGSRPD3 geometry source
+        run: |
+          python - <<'PY'
+          import hashlib,zipfile
+          from pathlib import Path
+          source=Path('_h3_source/author_only')
+          expected='408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323'
+          zips=[p for p in source.rglob('*.zip') if hashlib.sha256(p.read_bytes()).hexdigest()==expected]
+          assert len(zips)==1, 'Original author-only source digest missing/changed'
+          out=Path('_h3_source/extracted')
+          out.mkdir(parents=True,exist_ok=True)
+          with zipfile.ZipFile(zips[0]) as archive:
+              assert archive.testzip() is None
+              for name in archive.namelist():
+                  p=Path(name)
+                  assert not p.is_absolute() and '..' not in p.parts, 'Source zip path traversal'
+              archive.extractall(out)
+          assert (out/'SOURCE_MANIFEST.json').exists()
+          assert (out/'inputs/level3.geojson').is_file()
+          print('PASS original source archived inputs retained private in runner',zips[0].name)
+          PY
+      - name: Enumerate ALL global 288122 H3 r4 cells, quantify WGSRPD3 boundary overlap
+        run: |
+          mkdir -p _h3_output
+          python scripts/build_h3_wgsrpd3_crosswalk_20261029.py \
+            --tdwg _h3_source/extracted/inputs/level3.geojson \
+            --previous-crosswalk data/exploratory/gbif_country_20261020/country_wgsrpd_summary.json \
+            --output-dir _h3_output
+      - name: Validate single spatial grain, geometry source, and derived-only release
+        run: |
+          python - <<'PY'
+          import csv,gzip,hashlib,json
+          from pathlib import Path
+          root=Path('_h3_output')
+          r=json.loads((root/'global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json').read_text())
+          assert r['schema']=='chocho_global_h3r4_WGSRPD3_fractional_geometry_bridge_20261029_v01'
+          assert r['status']=='SOURCE_VERIFIED_GLOBAL_H3R4_WGSRPD3_AREA_CROSSWALK_COMPLETE'
+          assert r['h3_resolution']==4
+          assert r['all_H3_planet_cells_including_sea_tested']==288122
+          assert r['regions_with_at_least_one_area_intersection']==369
+          assert r['per_h3_land_fraction_is_not_actual_host_plant_presence']
+          assert r['no_species_host_status_or_remote_sensing_values_joined_yet']
+          for name,key in [('global_h3r4_wgsrpd3_cells_20261029.csv.gz','cell_csv_gzip_sha256'),
+                           ('global_h3r4_wgsrpd3_overlap_20261029.csv.gz','cell_region_overlaps_gzip_sha256'),
+                           ('global_h3r4_wgsrpd3_atoms_20261029.csv.gz','disjoint_atoms_gzip_sha256')]:
+              path=root/name
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==r[key]
+              with gzip.open(path,'rt',newline='') as f:
+                  reader=csv.DictReader(f)
+                  assert 'h3_r4' in reader.fieldnames
+                  first=next(reader)
+                  assert first['h3_r4'].startswith('84')
+          assert not (root/'level3.geojson').exists()
+          print('PASS original geometry source, global source bridge and no raw botanical polygon export')
+          PY
+      - name: Upload compressed H3 geometry bridge and source fingerprint, no raw source polygons
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-global-h3r4-wgsrpd3-geometry-only-20261029
+          path: |
+            _h3_output/global_h3r4_wgsrpd3_cells_20261029.csv.gz
+            _h3_output/global_h3r4_wgsrpd3_overlap_20261029.csv.gz
+            _h3_output/global_h3r4_wgsrpd3_atoms_20261029.csv.gz
+            _h3_output/global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json
+          retention-days: 60
+          if-no-files-found: error

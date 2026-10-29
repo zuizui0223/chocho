@@ -1,0 +1,70 @@
+name: Publish verified source-only H3 regional bridge to analysis branch
+on:
+  push:
+    branches: [analysis/h3-wgsrpd3-grid-bridge-20261029]
+    paths:
+      - .github/workflows/h3-publish-verified-source-artifact-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  copy-exact-derived-geometry-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download EXACT original successful source-derived result artifact (no botanical raw geometry)
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-global-h3r4-wgsrpd3-geometry-only-20261029
+          run-id: 40815812202
+          github-token: ${{ github.token }}
+          path: _h3_derived_source
+      - name: Independently check all derived full-data checksums, source and no raw input release
+        run: |
+          python - <<'PY'
+          import hashlib,json,csv,gzip
+          from pathlib import Path
+          p=Path('_h3_derived_source')
+          s=json.loads((p/'global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json').read_text())
+          assert s['schema']=='chocho_global_h3r4_WGSRPD3_fractional_geometry_bridge_20261029_v01'
+          assert s['status']=='SOURCE_VERIFIED_GLOBAL_H3R4_WGSRPD3_AREA_CROSSWALK_COMPLETE'
+          assert s['original_source']['tdwg_geojson_sha256']=='c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840'
+          assert s['coverage']['global_H3_r4_cells_tested']==288122
+          assert s['coverage']['cells_any_tdwg_land_intersection']==89161
+          assert s['coverage']['source_disjoint_membership_atom_rows']==102660
+          assert s['regions_with_at_least_one_area_intersection']==369
+          for name,digest in [
+            ('global_h3r4_wgsrpd3_cells_20261029.csv.gz','9f6299358d836e0f09b7e47766f7b698b33f9d3303d95e1764b3d170f1bdf98d'),
+            ('global_h3r4_wgsrpd3_overlap_20261029.csv.gz','edfe8906ed8c7543b6a0b42f12cba5dac5830b19a6a487d7b834a4ff033b4fd8'),
+            ('global_h3r4_wgsrpd3_atoms_20261029.csv.gz','783b3b3a52f2fb27cf61d2b1be1b56bbe7e806ccdb6289e3f5090b0090d770ba')]:
+             f=p/name
+             assert f.is_file() and f.stat().st_size<10000000
+             assert hashlib.sha256(f.read_bytes()).hexdigest()==digest
+             with gzip.open(f,'rt') as z:
+                 r=csv.DictReader(z)
+                 assert r.fieldnames and 'h3_r4' in r.fieldnames
+                 assert next(r)['h3_r4'].startswith('84')
+          forbidden=[x for x in p.iterdir() if x.suffix.lower() in ('.geojson','.shp','.dbf')]
+          assert not forbidden,forbidden
+          print('PASS exact original-source derived-only non-sensitive H3 data; no source polygons')
+          PY
+      - name: Keep derived tables durable on this specific independent analysis branch
+        run: |
+          set -euo pipefail
+          mkdir -p data/exploratory/h3_r4_wgsrpd3_20261029
+          cp _h3_derived_source/*.gz data/exploratory/h3_r4_wgsrpd3_20261029/
+          cp _h3_derived_source/global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json \
+            data/exploratory/h3_r4_wgsrpd3_20261029/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/exploratory/h3_r4_wgsrpd3_20261029
+          if git diff --cached --quiet; then
+            echo 'Identical original-source binary tables already committed'
+          else
+            git commit -m 'Archive source-verified complete H3 r4 WGSRPD3 cells and disjoint atomic memberships'
+            git push origin HEAD:refs/heads/analysis/h3-wgsrpd3-grid-bridge-20261029
+          fi
