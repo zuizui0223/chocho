@@ -21,8 +21,9 @@ AUTHOR_EDGES="inputs/original/insect_host_accepted.csv"
 SCHEMA="chocho_BSBI_PA2020_original_HOSTS_27_species_name_matching_audit_20261029_v01"
 
 def get_host_edges(path:Path):
-    with zipfile.ZipFile(path) as outer:
-        source=outer.read(AUTHOR_INNER)
+    # actions/download-artifact extracts the GitHub artifact outer ZIP and
+    # exposes the SHA-locked author-only inner ZIP directly in dist/source/.
+    source=path.read_bytes()
     if hashlib.sha256(source).hexdigest()!=AUTHOR_SHA:
         raise ValueError("User-author original HOSTS spatial source SHA mismatch")
     with zipfile.ZipFile(io.BytesIO(source)) as inner:
