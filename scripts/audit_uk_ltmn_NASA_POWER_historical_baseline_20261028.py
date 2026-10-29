@@ -27,6 +27,7 @@ from audit_uk_ltmn_butterfly_detection_panel_20261028 import (
 SCHEMA="chocho_UK_LTMN_NASA_POWER_1981_2021_outoftime_detection_v01"
 PERIODS={"early":(1981,1995),"late":(2005,2021)}
 SOURCE_PANEL_MIN=15
+OTHER_BUTTERFLY_GATE=3  # Frozen other-butterfly source-effort gate, independent of focal status
 NASA_POWER_URL="https://power.larc.nasa.gov/api/temporal/daily/point"
 ALL_YEARS=(1981,2021)
 DAYS_EXPECTED=(dt.date(2021,12,31)-dt.date(1981,1,1)).days+1
@@ -247,7 +248,7 @@ def run(args):
         "original_UKBMS_visits_sha256":"c23945feb1568b4b60ac139136c485c234699710eae395a104e0be92a958a84d",
         "original_UKBMS_counts_sha256":"6afcc7d03eba0b657ae0e3a0d9da217b88df3ff39da66d7359df7fbb062ead3f",
         "original_UKBMS_site_metadata_sha256":"e38853b775ecadf39332a8412e2a4a2fa3c83512cf7218e4f1eda172dd83c9cd",
-        "NASA_POWER_product":"Open-Meteo historical archive, NASA_POWER model fixed, 1981–2021 daily tmean and precipitation",
+        "NASA_POWER_product":"NASA POWER original daily T2M and PRECTOTCORR, 1981–2021, coarse MERRA-2-based weather fields",
         "n_NASA_POWER_source_transects":len(weather),"NASA_POWER_days_per_site":DAYS_EXPECTED,
         "n_NASA_POWER_dated_invalid_days_all_sites":bad_source,
         "original_NASA_POWER_source_response_sha256_sorted_unlinked_to_locations":sorted(digests),
@@ -264,7 +265,7 @@ def run(args):
         "training_only_standardization":True,
         "no_site_identity_predictor":True,
         "original_NASA_POWER_weather_at_visited_historic_date_not_contemporary_climatology":True,
-        "same_original_19_site_panel_in_train_and_test_years":True,
+        "same_original_15_to_19_effort_eligible_site_panel_in_train_and_test_years":True,
         "no_all_taxa_full_checklist_certificate":True,
         "missing_species_name_is_conditional_nondetection_not_true_absence":True,
         "no_larval_host_presence_or_human_management_predictors":True,
