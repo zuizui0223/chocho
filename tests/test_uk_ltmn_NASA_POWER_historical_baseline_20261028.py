@@ -5,7 +5,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
 import numpy as np
 import pytest
 from audit_uk_ltmn_NASA_POWER_historical_baseline_20261028 import (
-    prior30,original_nasa_power_site_weather,score_site_species,flight_features,weights_equal_site_species)
+    prior30,original_nasa_power_site_weather,score_site_species,flight_features,weights_equal_site_species,OTHER_BUTTERFLY_GATE,nasa_site_effort,site_weather_covariate_panel)
 
 def test_30days_only_past_weather():
     day=dt.date(1980,5,31)
@@ -37,3 +37,14 @@ def test_historical_season_features_no_future_outcomes():
     a=flight_features("Aglais urticae",dt.date(1989,5,2),53.,-2.)
     assert len(a)>len([53.,-2.])
     assert a[0]==1.
+
+def test_other_butterfly_visit_gate_constant_and_era_sites():
+    assert OTHER_BUTTERFLY_GATE==3
+    from datetime import date
+    def original_visit(site,year):
+        return {"UKBMS_SITENO":site,"YEAR":year,"MONTH":6,"DAY":2,"START_TIME":0.5}
+    rows=[original_visit("A",year) for year in (1982,1983,1984,2008,2009,2010)]
+    # No two eras survive 10-walk minimum: eligibility is based on visits only.
+    source,sites,period=nasa_site_effort(iter(rows),{"A":(200000,300000,("grassland",""))})
+    assert sites==set() and len(source)==6
+    assert len(period["A"]["early"])==3 and len(period["A"]["late"])==3
