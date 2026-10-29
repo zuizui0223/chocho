@@ -117,6 +117,8 @@ EXCLUDE_RELATIVE = {
     Path("scripts/audit_bsbi_atlas_and_clarke_source_20261029.py"),
     Path("scripts/audit_bsbi_nested_era_host_schema_20261029.py"),
     Path("scripts/audit_bsbi_hectad_values_nhm_source_20261029.py"),
+    Path("scripts/audit_dryad_europe_butterfly_host_tables_20261029.py"),
+    Path("tests/test_dryad_europe_butterfly_host_tables_20261029.py"),
     Path("tests/test_bsbi_hectad_values_nhm_source_20261029.py"),
     Path("tests/test_bsbi_nested_era_host_schema_20261029.py"),
     Path("tests/test_bsbi_atlas_and_clarke_source_20261029.py"),
