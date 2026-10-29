@@ -1,0 +1,43 @@
+name: NASA POWER original 19 UKBMS site source numeric-versus-response-drift audit
+on:
+  push:
+    branches: [analysis/uk-bsbi-dated-host-hindcast-20261029]
+    paths:
+      - scripts/audit_uk_nasa_source_drift_20261029.py
+      - .github/workflows/uk-nasa-19source-drift-diagnostic-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-source-independent-diagnosis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Original NASA source dependencies and source-only audit
+        run: |
+          python -m pip install 'xlrd>=2.0.2,<3' 'scikit-learn>=1.5,<2' 'numpy>=1.26' 'pyproj>=3.6,<4'
+      - name: Retrieve original previous 19-site NASA source receipt (not site-specific weather)
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-UK-LTMN-NASA-POWER-historical-1981to2021-backtest-20261028
+          run-id: 40802452296
+          github-token: ${{ github.token }}
+          path: _old_source
+      - name: Distinguish source wrapper changes from current daily numeric instability without scoring butterflies
+        run: |
+          mkdir -p _diagnostic
+          python scripts/audit_uk_nasa_source_drift_20261029.py \
+            --original-result _old_source/UK_LTMN_NASA_POWER_1981to2021_historical_butterflies_20261028.json \
+            --output _diagnostic/nasa_19_uk_sites_source_numeric_drift_20261029.json
+      - name: Upload only aggregate source digests and reproducibility diagnosis
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-NASA-UK19-original-source-numeric-vs-wrapper-drift-20261029
+          path: _diagnostic/nasa_19_uk_sites_source_numeric_drift_20261029.json
+          retention-days: 30
+          if-no-files-found: error
