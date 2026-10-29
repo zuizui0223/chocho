@@ -86,7 +86,7 @@ def inspect(path):
                 if isinstance(fid,str) and fid.isdecimal():
                     fid=int(fid)
                 else:
-                    m=re.search(r'/files/(\\d+)(?:$|[/?#])',str(rel))
+                    m=re.search(r'/files/(\d+)(?:$|[/?#])',str(rel))
                     if m:fid=int(m.group(1))
             if not isinstance(fid,int) or fid<=0:
                 raise ValueError('Original published Dryad file reference unsupported; keys='+
