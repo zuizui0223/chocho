@@ -22,7 +22,7 @@ from shapely.strtree import STRtree
 
 SCHEMA='chocho_global_h3r4_WGSRPD3_fractional_geometry_bridge_20261029_v01'
 RES=4
-EXPECTED_REGIONS=365
+EXPECTED_REGIONS=369
 # Full planet: exactly 2 + 120*7**4, including the 12 pentagons.
 EXPECTED_H3_CELLS=2+120*7**4
 MIN_INTERSECTION_M2=1.0
@@ -74,7 +74,7 @@ def load_source(input_geojson,source_summary):
         if g.is_empty:raise ValueError('Empty original WGSRPD3 region '+code)
         groups[code].append(g)
     if len(groups)!=EXPECTED_REGIONS:
-        raise ValueError('Expected fixed 365-region original WGSRPD3, got '+str(len(groups)))
+        raise ValueError('Expected fixed 369-region original WGSRPD3, got '+str(len(groups)))
     project,t=projector()
     out={}
     for code,parts in sorted(groups.items()):
