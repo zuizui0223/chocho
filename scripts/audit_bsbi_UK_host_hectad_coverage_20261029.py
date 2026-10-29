@@ -88,7 +88,7 @@ def exact_bsbi_accepted_files(names, filenames):
     qc["ambiguous_exact_species_names"]=len(ambiguous)
     return single,dict(qc)
 
-def site_historical_host_coverage(source_root, original_bsbi):
+def site_historical_host_coverage(source_root, original_bsbi, *, return_internal=False):
     exact_host=native_host_edges(source_root)
     cross,cross_qc=read_crosswalk()
     all_events,sites,visits=nasa_site_effort(
@@ -203,6 +203,15 @@ def site_historical_host_coverage(source_root, original_bsbi):
           "plant_taxon_x_hectad_and_UKBMS_site_data_exported":False,
         },
     }
+    if return_internal:
+        # Internal model-only source series, never included in public JSON.
+        return result,{
+            "site_to_hectad":hectad_by_site,
+            "original_pre1970_site_botanical_effort":{site:effort_pre1970.get(hectad_by_site[site],0) for site in sites},
+            "pre1970_observed_bsbi_plant_names_by_site":{site:frozenset(host_presence[hectad_by_site[site]]["early"]) for site in sites},
+            "exact_source_host_plant_names_by_butterfly":{sp:frozenset(exact_host[sp]&matched_names) for sp in CROSSWALK},
+            "all_source_plant_name_pool":frozenset(matched_names),
+        }
     return result
 
 if __name__=="__main__":
