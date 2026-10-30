@@ -1,5 +1,6 @@
 """Crosswalk checks: genus is NOT species-level shipping evidence."""
 import importlib.util
+import json
 import pathlib
 import pytest
 
@@ -14,6 +15,8 @@ def test_port_seed_crosswalk_does_not_equate_congeners():
     if "_anonymous_stage" in ROOT.parts:
         pytest.skip("Exploratory island source is intentionally excluded from blinded GEB export")
     x=audit.crosswalk(ROOT)
+    stored=ROOT/"provenance/reviewer_defenses/results/maritime_host_steppingstone_20261030/container_seed_host_crosswalk.json"
+    assert json.loads(stored.read_text(encoding="utf-8")) == x
     assert x["verified_species_level_identity_for_container_plant_vs_port_host"]==0
     assert x["genus_level_overlapping_focal_groups"]==2
     focal={r["container_study_taxon"]:r for r in x["four_focal_taxon_crosswalk"]}
