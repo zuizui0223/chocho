@@ -4,6 +4,7 @@ from __future__ import annotations
 import importlib.util
 import math
 from pathlib import Path
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 PATH = ROOT / "scripts/analyze_island_recorded_host_exact_20261030.py"
@@ -40,6 +41,10 @@ def test_forced_zero_and_forced_positive():
 
 
 def test_frozen_reproducible_fiber_and_no_drift():
+    # Anonymous-stage intentionally excludes exploratory provenance/data.
+    # Only that explicitly documented export stage can skip this data test.
+    if "_anonymous_stage" in ROOT.parts:
+        pytest.skip("Original exploratory input is intentionally absent from anonymous GEB snapshot")
     result = module.run(ROOT)
     s = result["host_recording_statistic"]
     assert result["original_candidate_cells"] == 2385
