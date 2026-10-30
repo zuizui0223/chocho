@@ -1,5 +1,7 @@
 # Island recorded source distance and original host roster follow up
 
+**Subsequent work:** [dated early-host evidence and latitude-zone source-distance reanalysis](ISLAND_DATED_HOST_LATITUDE_RESULTS_20261030.md). The original results and source recovery below remain unchanged.
+
 **Distance result:** under the previously frozen recorded-source comparison, later-positive species–island pairs are nearer early recorded source candidates than uniformly drawn configurations with the same species-by-longitude and island margins. The transformed-distance ratios are **0.488, 0.550 and 0.588** in the three fixed scenarios. Exact integer table counting and 100,000 independent draws per scenario now provide qualified upper bounds on the conditional lower-tail probabilities. The main distance contrast is geographically concentrated: **72.8% comes from the 90°W–0° longitude block**. This supports a conditional recording association, while climate, range structure and observation remain competing explanations.
 
 **Host result:** the original 230-taxon catalogue is now recovered as 2,524 source links; the early 93 taxa have all 1,440 expected links. This is the input roster for a future local-resource comparison, not a test of island plant presence.

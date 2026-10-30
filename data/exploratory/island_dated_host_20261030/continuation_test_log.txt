@@ -1,0 +1,20 @@
+........................................................................ [ 11%]
+........................................................................ [ 22%]
+........................................................................ [ 34%]
+........................................................................ [ 45%]
+................................................................... [ 56%]
+........................................................................ [ 67%]
+........................................................................ [ 79%]
+........................................................................ [ 90%]
+............................................................             [100%]
+=============================== warnings summary ===============================
+tests/test_country_wgsrpd_crosswalk_20261020.py::test_near_antimeridian_source_vertex_does_not_wrap_across_globe
+  /workspace/scratch/10d2ad986b7b/chocho/scripts/build_country_wgsrpd_crosswalk_20261020.py:84: DeprecationWarning: The 'shapely.ops.transform()' function is deprecated. Use 'shapely.transform()' or 'shapely.transform_coordseq()' instead. See https://shapely.readthedocs.io/en/latest/manual.html#shapely.ops.transform for more details.
+    return lambda geometry: transform(transformer.transform, geometry)
+
+tests/test_h3_wgsrpd3_crosswalk_20261029.py: 19 warnings
+  /workspace/scratch/10d2ad986b7b/chocho/scripts/build_h3_wgsrpd3_crosswalk_20261029.py:55: DeprecationWarning: The 'shapely.ops.transform()' function is deprecated. Use 'shapely.transform()' or 'shapely.transform_coordseq()' instead. See https://shapely.readthedocs.io/en/latest/manual.html#shapely.ops.transform for more details.
+    return lambda g: transform(t.transform,g),t
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+631 passed, 20 warnings, 5 subtests passed in 15.72s

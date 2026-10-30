@@ -1,0 +1,62 @@
+{
+  "api_schema_adaptation": "If acceptedUsage omits status, a separate exact accepted-canonical-name match must return usage.status=ACCEPTED and the same string key, species rank, Plantae, source family and no competing exact concept. Missing verification remains unresolved.",
+  "duplicate_concept_policy": "All source IDs and edges retained; deduplicate eligible accepted concepts per butterfly when joining occurrence facets. Collisions do not themselves make an unambiguous synonym invalid.",
+  "finished_utc": "2026-10-30T02:24:55.897863+00:00",
+  "interpretation": "Catalogue-compatible taxonomy only; it does not establish island host availability, introduced status or feeding.",
+  "missing_state_policy": "Unqueried source names, failed requests and rejected matches are unresolved taxonomy, never biological zero.",
+  "output_sha256": {
+    "plant_taxonomy_bridge.csv": "23ae32b4b09b4f38b5ce5357cd56ea3e2c880dffb52f2584becaed6f6da03b2b",
+    "plant_taxonomy_collisions.csv": "0b67420f1e17f4a8984fb9a726dde9cec92bb1e5118be7d946ffa9267239ef68",
+    "plant_taxonomy_raw_responses.tar.gz": "24805b7161711538e30f443b5d784efad1b9038a6036a710b4eb482b0dca7039"
+  },
+  "request_bounds": {
+    "attempts_per_request_max": 3,
+    "global_minimum_request_start_interval_seconds": 1.05,
+    "response_bytes_max": 8000000,
+    "timeout_seconds": 45
+  },
+  "schema": "chocho_early93_current_plant_taxonomy_20261030_v1",
+  "source_sha256": {
+    "data/exploratory/island_host_roster_20261030/baseline93_host_coverage.csv": "f702ce482ca6b6411bb4530aa8b829400300cb5ef2464e367eef4e5a365ce9aa",
+    "data/exploratory/island_host_roster_20261030/original230_host_edges.csv": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+    "data/exploratory/island_host_roster_20261030/plant_taxon_query_candidates.csv": "a1cc87b20fbd19415fa81ca4269b8414b0c32167bb6033ca0425354c89c1906f"
+  },
+  "started_utc": "2026-10-30T02:24:55.450711+00:00",
+  "status": "FINISHED",
+  "summary": {
+    "accepted_verification_failures": 0,
+    "accepted_verification_http_attempts": 29,
+    "accepted_verification_requests": 29,
+    "conservative_join_eligible_rows": 695,
+    "duplicate_accepted_concept_groups": 0,
+    "early_butterfly_count": 93,
+    "early_catalogue_edges": 1440,
+    "failed_rows": 0,
+    "primary_http_attempts": 1040,
+    "queried_rows": 1040,
+    "rejection_reason_counts": {
+      "accepted_status_not_verified": 5,
+      "competing_exact_current_species_concepts": 339,
+      "not_exact_match": 1,
+      "not_species_rank": 2,
+      "source_family_not_verified": 2,
+      "submitted_canonical_name_not_exact": 1,
+      "unqueried_infraspecific_or_unresolved_source_name": 22
+    },
+    "source_query_eligible_rows": 1040,
+    "source_rows": 1062,
+    "source_rows_in_duplicate_accepted_concept_groups": 0,
+    "successful_rows": 1040,
+    "unique_eligible_accepted_concepts": 695,
+    "unqueried_source_name_rows": 22
+  },
+  "taxonomy": {
+    "checklistKey": "7ddf754f-d193-4cc9-b351-99906754a03b",
+    "endpoint": "https://api.gbif.org/v2/species/match",
+    "family": "exact source family per request",
+    "kingdom": "Plantae",
+    "strict": true,
+    "taxonRank": "SPECIES",
+    "verbose": true
+  }
+}

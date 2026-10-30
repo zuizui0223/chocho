@@ -1,0 +1,90 @@
+{
+  "analysis_script_sha256": "1008675a8948f514c7bfcbbcd280bd16cb3c1d4ebf3b77e7afa17b9fe92f7c05",
+  "catalogue_summary": {
+    "all_source_names_resolved_butterflies": 4,
+    "butterflies": 93,
+    "butterflies_with_at_least_one_resolved_host": 84,
+    "source_links": 1440,
+    "taxonomy_source_missing_butterflies": 0
+  },
+  "inputs": {
+    "early_plants_resolved_manifest.json": "a38711cb91afbe7aae86d24477ed046db1101849b4e60bb9d1fdea6d899cf915",
+    "plant_taxonomy_bridge.csv": "23ae32b4b09b4f38b5ce5357cd56ea3e2c880dffb52f2584becaed6f6da03b2b",
+    "plant_taxonomy_manifest.json": "680ad64ecaff0ad4f9cb8dd30e428371f1a08c5cc05c6391934a446254ca3af9"
+  },
+  "limitations": [
+    "Species and year facets are separate margins; records are known within2010–2017, not species-specific dates or simultaneous butterfly–plant observations.",
+    "Known host means source-catalogue compatibility plus a current exact accepted-concept plant record; no observed feeding or larval development.",
+    "No matched indexed host record is not biological absence, including when all source names resolve.",
+    "Unresolved source names, uncertain geography, incomplete recording and cultivation remain possible.",
+    "Introduced/native plant status and historical port/shipping exposure were not established.",
+    "Descriptive co-recording fractions are not an independent host effect, especially with geographically structured ranges and recording."
+  ],
+  "output_sha256": {
+    "dated_host_butterfly_catalogue_coverage.csv": "958592af6ee654fdf5567974338e0736b13e01ac7c5d96c6ac1739ac5f4528cb",
+    "dated_host_primary_risk_cells.csv": "cf34d03f3d01242bd182557114dca711f3efd47e0d1d066e6d7d0548c22ecbe8",
+    "dated_host_target_support.csv": "25e462ec3c328f5469e4b229fda0cbde54d7eb49a5f0bc5dafaed2e401aae9e8"
+  },
+  "plan_sha256": "6c22fd892df15b3b6c1884d026d4dae55cd5df6cc16690f62aad1fc4c39d7793",
+  "plant_acquisition_summary": {
+    "botanical_support_islands": 16,
+    "complete_zero_islands": 0,
+    "completed_islands": 28,
+    "indexed_plant_records": 728040,
+    "missing_islands": 0,
+    "pending_islands": 0,
+    "requested_islands": 28
+  },
+  "primary_summary": {
+    "all_candidate_cells": 2385,
+    "all_later_positive_cells": 66,
+    "complete_plant_query_cells": 2385,
+    "complete_plant_query_later_positive_cells": 66,
+    "confirmed_host_cells": 336,
+    "confirmed_host_fraction_among_complete": 0.14088050314465408,
+    "descriptive_only_no_independent_host_effect_estimated": true,
+    "later_positive_confirmed_host_cells": 20,
+    "later_positive_confirmed_host_fraction_among_complete": 0.30303030303030304,
+    "later_positive_plant_query_missing_cells": 0,
+    "plant_query_missing_cells": 0,
+    "record_status_counts": {
+      "NO_MATCH_COMPLETE_RESOLVED_CATALOGUE": 88,
+      "NO_MATCH_UNRESOLVED_HOST_CATALOGUE": 1961,
+      "RECORDED_KNOWN_HOST": 336
+    }
+  },
+  "schema": "chocho_original93_fixed28_early_host_recording_20261030_v1",
+  "source_pins": {
+    "data/exploratory/island_host_roster_20261030/baseline93_host_coverage.csv": "f702ce482ca6b6411bb4530aa8b829400300cb5ef2464e367eef4e5a365ce9aa",
+    "data/exploratory/island_host_roster_20261030/original230_host_edges.csv": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+    "data/exploratory/island_host_roster_20261030/plant_taxon_query_candidates.csv": "a1cc87b20fbd19415fa81ca4269b8414b0c32167bb6033ca0425354c89c1906f"
+  },
+  "status": "COMPLETE_DERIVED_RECORDING_JOIN_WITH_EXPLICIT_MISSING_STATES",
+  "taxonomy_acquisition_summary": {
+    "accepted_verification_failures": 0,
+    "accepted_verification_http_attempts": 29,
+    "accepted_verification_requests": 29,
+    "conservative_join_eligible_rows": 695,
+    "duplicate_accepted_concept_groups": 0,
+    "early_butterfly_count": 93,
+    "early_catalogue_edges": 1440,
+    "failed_rows": 0,
+    "primary_http_attempts": 1040,
+    "queried_rows": 1040,
+    "rejection_reason_counts": {
+      "accepted_status_not_verified": 5,
+      "competing_exact_current_species_concepts": 339,
+      "not_exact_match": 1,
+      "not_species_rank": 2,
+      "source_family_not_verified": 2,
+      "submitted_canonical_name_not_exact": 1,
+      "unqueried_infraspecific_or_unresolved_source_name": 22
+    },
+    "source_query_eligible_rows": 1040,
+    "source_rows": 1062,
+    "source_rows_in_duplicate_accepted_concept_groups": 0,
+    "successful_rows": 1040,
+    "unique_eligible_accepted_concepts": 695,
+    "unqueried_source_name_rows": 22
+  }
+}
