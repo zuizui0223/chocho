@@ -1,0 +1,28 @@
+{
+  "status": "EXPLORATORY_RULES_FIXED_BEFORE_COMPUTATION",
+  "hosts": [
+    "Medicago sativa",
+    "Robinia pseudoacacia",
+    "Plantago lanceolata",
+    "Capsella bursa-pastoris",
+    "Hesperis matronalis",
+    "Malus domestica"
+  ],
+  "unit": "butterfly species x WGSRPD region",
+  "predictor": "fraction of complete single-region port queries recording focal host as alien candidate",
+  "region_scope": "only regions with at least one alien-candidate port record for focal host; no inferred absent-host regions",
+  "outcomes": [
+    "mean target minus baseline recording probability",
+    "mean target minus M3 climate-landcover prediction",
+    "mean target minus M5 host prediction"
+  ],
+  "minimum_cells_per_species_region": 5,
+  "minimum_regions_per_species_correlation": 5,
+  "period": "2015-2018 baseline to 2019-2022 target",
+  "limits": [
+    "pooled2001-2024 plants cannot establish pre-expansion resources",
+    "unadjusted exploratory correlations, not causal or prospective",
+    "conditional on focal host recorded in region",
+    "same host resource shared among butterflies means species correlations are dependent"
+  ]
+}
