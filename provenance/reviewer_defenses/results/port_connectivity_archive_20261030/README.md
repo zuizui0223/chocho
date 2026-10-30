@@ -1,0 +1,2 @@
+# Reproduction
+Run scripts from original project work/barriers/ directory. Acquire archived PLSCIQ then audit joins using existing WPI and plant inventory. Join script requires pycountry in project work/deps or the active Python environment. Raw observations and detailed provider catalogue are not redistributed pending primary source terms verification. Audit JSON records archive version and page hashes. No ecological effect is estimated in this snapshot.
