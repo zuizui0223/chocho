@@ -1,0 +1,1206 @@
+{
+  "coverage": {
+    "2010_2017": {
+      "atleast3_species_islands": 29,
+      "complete_windows": 96,
+      "exclusion_reason_counts": {
+        "fewer_than_required_recorded_years": 70,
+        "species_assignment_below_90pct": 64,
+        "too_few_species_assigned_records": 78
+      },
+      "primary_eligible_islands": 14,
+      "records": 103723,
+      "selected_islands": 96,
+      "species_assigned_records": 103528,
+      "zero_record_islands": 59
+    },
+    "2018_2025": {
+      "atleast3_species_islands": 37,
+      "complete_windows": 96,
+      "exclusion_reason_counts": {
+        "fewer_than_required_recorded_years": 63,
+        "species_assignment_below_90pct": 58,
+        "too_few_species_assigned_records": 68
+      },
+      "primary_eligible_islands": 23,
+      "records": 91137,
+      "selected_islands": 96,
+      "species_assigned_records": 90191,
+      "zero_record_islands": 52
+    },
+    "paired": {
+      "both_windows_atleast3_species": 28,
+      "both_windows_primary_eligible": 14
+    }
+  },
+  "influence": [],
+  "interpretation": "Pilot-informed exploratory finite-record assemblage association only. Records are not individuals or visits; empty records are not absences. Rarefaction does not remove selective recording, source bias, spatial habitat/climate differences, or make the purposive panel representative. Longitude blocks are not biological realms; 500/1000km connected components are dependence approximations, not validated independent populations.",
+  "models": {
+    "early_m20": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 8,
+        "under100": 5
+      },
+      "definition": {
+        "sample_records": 20,
+        "window": "2010_2017"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 8,
+        "under100": 6
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 0,
+        "atleast500:within50": 8,
+        "under100:beyond100": 0,
+        "under100:within50": 6
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 12,
+      "islands": 14,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 20,
+      "standardized_condition_number": 5.700143333691611,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "late_atleast5_years": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 10,
+        "under100": 8
+      },
+      "definition": {
+        "min_years": 5,
+        "sample_records": 20,
+        "window": "2018_2025"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 14,
+        "under100": 9
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 4,
+        "atleast500:within50": 10,
+        "under100:beyond100": 1,
+        "under100:within50": 8
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 17,
+      "islands": 23,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 20,
+      "standardized_condition_number": 6.319725599681902,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "late_dominant_dataset_atmost90pct": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 6,
+        "under100": 6
+      },
+      "definition": {
+        "max_dataset": 0.9,
+        "sample_records": 20,
+        "window": "2018_2025"
+      },
+      "design_rank": 6,
+      "gap_class_counts": {
+        "atleast500": 8,
+        "under100": 7
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 1,
+        "atleast500:within50": 7,
+        "under100:beyond100": 1,
+        "under100:within50": 6
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class",
+        "fewer_than_12_geographic_clusters"
+      ],
+      "geographic_clusters": 11,
+      "islands": 15,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 6,
+      "sample_records": 20,
+      "standardized_condition_number": 2.86933936079316,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "late_human_atleast90pct": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 10,
+        "under100": 6
+      },
+      "definition": {
+        "min_human": 0.9,
+        "sample_records": 20,
+        "window": "2018_2025"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 13,
+        "under100": 7
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 4,
+        "atleast500:within50": 9,
+        "under100:beyond100": 1,
+        "under100:within50": 6
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 15,
+      "islands": 20,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 20,
+      "standardized_condition_number": 5.996024455996576,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "late_m10": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 11,
+        "under100": 9
+      },
+      "definition": {
+        "sample_records": 10,
+        "window": "2018_2025"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 16,
+        "under100": 10
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 5,
+        "atleast500:within50": 11,
+        "under100:beyond100": 1,
+        "under100:within50": 9
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands"
+      ],
+      "geographic_clusters": 19,
+      "islands": 26,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 10,
+      "standardized_condition_number": 6.3897113818086675,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "late_m50": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 9,
+        "under100": 7
+      },
+      "definition": {
+        "sample_records": 50,
+        "window": "2018_2025"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 12,
+        "under100": 8
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 2,
+        "atleast500:within50": 10,
+        "under100:beyond100": 0,
+        "under100:within50": 8
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 15,
+      "islands": 20,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 50,
+      "standardized_condition_number": 5.931549542257313,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "primary_1000km_clusters": {
+      "cluster_column": "cluster_1000",
+      "clusters_per_gap_class": {
+        "atleast500": 10,
+        "under100": 6
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 14,
+        "under100": 9
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 4,
+        "atleast500:within50": 10,
+        "under100:beyond100": 1,
+        "under100:within50": 8
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 14,
+      "islands": 23,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 20,
+      "standardized_condition_number": 6.319725599681902,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "primary_late_m20": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 10,
+        "under100": 8
+      },
+      "definition": {
+        "sample_records": 20,
+        "window": "2018_2025"
+      },
+      "design_rank": 7,
+      "gap_class_counts": {
+        "atleast500": 14,
+        "under100": 9
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 4,
+        "atleast500:within50": 10,
+        "under100:beyond100": 1,
+        "under100:within50": 8
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class"
+      ],
+      "geographic_clusters": 17,
+      "islands": 23,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 7,
+      "sample_records": 20,
+      "standardized_condition_number": 6.319725599681902,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": false
+    },
+    "secondary_port_late_m20": {
+      "cluster_column": "cluster_500",
+      "clusters_per_gap_class": {
+        "atleast500": 10,
+        "under100": 8
+      },
+      "design_rank": 8,
+      "gap_class_counts": {
+        "atleast500": 14,
+        "under100": 9
+      },
+      "gap_port_counts": {
+        "atleast500:beyond100": 4,
+        "atleast500:within50": 10,
+        "under100:beyond100": 1,
+        "under100:within50": 8
+      },
+      "gate_failures": [
+        "fewer_than_30_eligible_islands",
+        "fewer_than_10_islands_per_gap_class",
+        "fewer_than_3_islands_per_gap_port_cell"
+      ],
+      "geographic_clusters": 17,
+      "islands": 23,
+      "longitude_blocks_with_both_gap_classes": 3,
+      "parameters": 8,
+      "sample_records": 20,
+      "standardized_condition_number": 6.600010004809053,
+      "status": "NOT_FIT_SUPPORT_GATE",
+      "with_port": true
+    }
+  },
+  "output_sha256": {
+    "expanded_island_analysis_support.csv": "a2b7f754b409a633d270869a6bdee166f015464f2703d34f3ef6a5c2f455b0e0",
+    "expanded_island_recording_metrics.csv": "3d30297daa4ba5214ba929a1b754b581f231a347aa6d85586593f8be8eb614b6"
+  },
+  "plan_sha256": "6374bdf4f93b83173ec8c9c94a447fb96bd376963d14ddf8de7827643255319a",
+  "schema": "chocho_frozen_expanded_island_recorded_richness_20261029_v1",
+  "selected_geographic_clusters": {
+    "1000_km": [
+      {
+        "cluster_id": "r1000_gshhg237_00cf6cda3699e8b8",
+        "diameter_km": 2017.6253608364407,
+        "island_keys": [
+          "gshhg237_00cf6cda3699e8b8",
+          "gshhg237_52b2b6a34f13df9b",
+          "gshhg237_5c617c5ff00144d5",
+          "gshhg237_67863b9d6256b956",
+          "gshhg237_7adea057b6560be8",
+          "gshhg237_7cb338f7a74f60a1",
+          "gshhg237_9b51143d6a324fde",
+          "gshhg237_bd3d3395083f6d72",
+          "gshhg237_bef0edcba8556d98",
+          "gshhg237_ff6113d6b8cb2428"
+        ],
+        "islands": 10
+      },
+      {
+        "cluster_id": "r1000_gshhg237_04bdf98df7faa519",
+        "diameter_km": 2472.7369577310824,
+        "island_keys": [
+          "gshhg237_04bdf98df7faa519",
+          "gshhg237_0f4c2473ea51c2a2",
+          "gshhg237_2f506a9fbfcd9ee5",
+          "gshhg237_d672bb7b76b5ba18",
+          "gshhg237_debefd0c60cb8944",
+          "gshhg237_e8ca9c42f6d3f947",
+          "gshhg237_ebeb91e82d5aaae4",
+          "gshhg237_fbeca2be79d054e7",
+          "gshhg237_ff21f9590d54d4a5"
+        ],
+        "islands": 9
+      },
+      {
+        "cluster_id": "r1000_gshhg237_04cf1780af1a390d",
+        "diameter_km": 293.15651308332576,
+        "island_keys": [
+          "gshhg237_04cf1780af1a390d",
+          "gshhg237_0750dee2c15a5e09",
+          "gshhg237_70eeb153f0ef8e08",
+          "gshhg237_fd7351c1259ac89d"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r1000_gshhg237_0667315a23db9839",
+        "diameter_km": 1668.9000827657794,
+        "island_keys": [
+          "gshhg237_0667315a23db9839",
+          "gshhg237_3c58026612a9987c",
+          "gshhg237_811a6bd8b790283b",
+          "gshhg237_bf4ca963f7fe90ed"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r1000_gshhg237_11329f38de300e05",
+        "diameter_km": 1622.1348046461187,
+        "island_keys": [
+          "gshhg237_11329f38de300e05",
+          "gshhg237_99b534e313697241",
+          "gshhg237_b141a506642a94bb",
+          "gshhg237_b5d12597e805d51b"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r1000_gshhg237_15c1e39f89911639",
+        "diameter_km": 750.0005462930424,
+        "island_keys": [
+          "gshhg237_15c1e39f89911639",
+          "gshhg237_3b90d5795507b76a",
+          "gshhg237_fe5eac31e1423d61"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r1000_gshhg237_16451a0abb98931a",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_16451a0abb98931a"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_169d328ca6dad119",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_169d328ca6dad119"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_184a18f5b8d5525b",
+        "diameter_km": 55.44507936041141,
+        "island_keys": [
+          "gshhg237_184a18f5b8d5525b",
+          "gshhg237_f752e77c73e90eb8"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_1a8d600094a33ee4",
+        "diameter_km": 1036.519444486981,
+        "island_keys": [
+          "gshhg237_1a8d600094a33ee4",
+          "gshhg237_36766d3e46b870db",
+          "gshhg237_5fff30688123fc4b",
+          "gshhg237_61d001548529c27c",
+          "gshhg237_ae38479f05cc871c"
+        ],
+        "islands": 5
+      },
+      {
+        "cluster_id": "r1000_gshhg237_1bfac64b8452f8b2",
+        "diameter_km": 709.8260072335914,
+        "island_keys": [
+          "gshhg237_1bfac64b8452f8b2",
+          "gshhg237_2a28e03c77c11c0d"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_1cbc484b220fe02f",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_1cbc484b220fe02f"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_2a7280fb7638e005",
+        "diameter_km": 1345.0711046229314,
+        "island_keys": [
+          "gshhg237_2a7280fb7638e005",
+          "gshhg237_2c0e588a2f86c969",
+          "gshhg237_a2f61a8620cd5274",
+          "gshhg237_b8e44007d52355fb",
+          "gshhg237_bd263d7f9e352e0b"
+        ],
+        "islands": 5
+      },
+      {
+        "cluster_id": "r1000_gshhg237_30234d32ae51b383",
+        "diameter_km": 1841.7771720027959,
+        "island_keys": [
+          "gshhg237_30234d32ae51b383",
+          "gshhg237_3ca754b5d371d3f6",
+          "gshhg237_4c93e5ddb80b8368",
+          "gshhg237_8771cc53c83f154a",
+          "gshhg237_a440965c10dc2f49",
+          "gshhg237_aa7a4f7d334424c2"
+        ],
+        "islands": 6
+      },
+      {
+        "cluster_id": "r1000_gshhg237_3c881870b994b727",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_3c881870b994b727"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_3d070e8dd2bd73f1",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_3d070e8dd2bd73f1"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_3fea754895eb9d47",
+        "diameter_km": 1398.8938763214915,
+        "island_keys": [
+          "gshhg237_3fea754895eb9d47",
+          "gshhg237_4d6213895aa8637a",
+          "gshhg237_83d1b78ee4c3d32a",
+          "gshhg237_857c858de70360f7",
+          "gshhg237_b6b133b3fe554977",
+          "gshhg237_e8ebee0e466607c3",
+          "gshhg237_f55db19611d5f244"
+        ],
+        "islands": 7
+      },
+      {
+        "cluster_id": "r1000_gshhg237_40f3bf06df8e4aef",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_40f3bf06df8e4aef"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_42bc250bb841d38d",
+        "diameter_km": 753.8099678564896,
+        "island_keys": [
+          "gshhg237_42bc250bb841d38d",
+          "gshhg237_f29740eb57024ab1"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_46e5f9cd367c749f",
+        "diameter_km": 84.12271181006795,
+        "island_keys": [
+          "gshhg237_46e5f9cd367c749f",
+          "gshhg237_cd1b20532713db8c"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_49524b474fd12f59",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_49524b474fd12f59"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_4baf3db8567b8d16",
+        "diameter_km": 83.39148327917032,
+        "island_keys": [
+          "gshhg237_4baf3db8567b8d16",
+          "gshhg237_7ef4f4535fbe0bdb"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_4dbf385289bcf888",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_4dbf385289bcf888"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_52abafd96c733901",
+        "diameter_km": 30.806987968812283,
+        "island_keys": [
+          "gshhg237_52abafd96c733901",
+          "gshhg237_d1b8d23c6e0a4d9c"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_59e11912368de580",
+        "diameter_km": 802.532253221105,
+        "island_keys": [
+          "gshhg237_59e11912368de580",
+          "gshhg237_61619b64b45c7238",
+          "gshhg237_94f00678b644e64b"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r1000_gshhg237_6aa954b703d67add",
+        "diameter_km": 490.60044270039765,
+        "island_keys": [
+          "gshhg237_6aa954b703d67add",
+          "gshhg237_f8e7324caae52195"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_707b74564cfa618e",
+        "diameter_km": 123.53340524511388,
+        "island_keys": [
+          "gshhg237_707b74564cfa618e",
+          "gshhg237_bfd6ea00462fe7a8"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_7ec50ff364e1ff89",
+        "diameter_km": 1473.4029977403366,
+        "island_keys": [
+          "gshhg237_7ec50ff364e1ff89",
+          "gshhg237_8d21bc6d0e1f6592",
+          "gshhg237_bbb042f88d3e439d",
+          "gshhg237_f381231b61a6532c"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r1000_gshhg237_808dd5f75a39a7dc",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_808dd5f75a39a7dc"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_8af3a33eebe31779",
+        "diameter_km": 749.3051478179347,
+        "island_keys": [
+          "gshhg237_8af3a33eebe31779",
+          "gshhg237_d43fef970f703537"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r1000_gshhg237_d686ca8f569ef0d9",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_d686ca8f569ef0d9"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_e36159c76d7ec13a",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e36159c76d7ec13a"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_e4d0d988affccf27",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e4d0d988affccf27"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_e6931223aee5d927",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e6931223aee5d927"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r1000_gshhg237_fcf62468b351ef62",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_fcf62468b351ef62"
+        ],
+        "islands": 1
+      }
+    ],
+    "500_km": [
+      {
+        "cluster_id": "r500_gshhg237_00cf6cda3699e8b8",
+        "diameter_km": 116.0399653179699,
+        "island_keys": [
+          "gshhg237_00cf6cda3699e8b8",
+          "gshhg237_9b51143d6a324fde",
+          "gshhg237_bef0edcba8556d98"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r500_gshhg237_04bdf98df7faa519",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_04bdf98df7faa519"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_04cf1780af1a390d",
+        "diameter_km": 293.15651308332576,
+        "island_keys": [
+          "gshhg237_04cf1780af1a390d",
+          "gshhg237_0750dee2c15a5e09",
+          "gshhg237_70eeb153f0ef8e08",
+          "gshhg237_fd7351c1259ac89d"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r500_gshhg237_0667315a23db9839",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_0667315a23db9839"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_0f4c2473ea51c2a2",
+        "diameter_km": 57.803903453357314,
+        "island_keys": [
+          "gshhg237_0f4c2473ea51c2a2",
+          "gshhg237_ebeb91e82d5aaae4"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_11329f38de300e05",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_11329f38de300e05"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_15c1e39f89911639",
+        "diameter_km": 750.0005462930424,
+        "island_keys": [
+          "gshhg237_15c1e39f89911639",
+          "gshhg237_3b90d5795507b76a",
+          "gshhg237_fe5eac31e1423d61"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r500_gshhg237_16451a0abb98931a",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_16451a0abb98931a"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_169d328ca6dad119",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_169d328ca6dad119"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_184a18f5b8d5525b",
+        "diameter_km": 55.44507936041141,
+        "island_keys": [
+          "gshhg237_184a18f5b8d5525b",
+          "gshhg237_f752e77c73e90eb8"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_1a8d600094a33ee4",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_1a8d600094a33ee4"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_1bfac64b8452f8b2",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_1bfac64b8452f8b2"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_1cbc484b220fe02f",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_1cbc484b220fe02f"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_2a28e03c77c11c0d",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_2a28e03c77c11c0d"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_2a7280fb7638e005",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_2a7280fb7638e005"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_2c0e588a2f86c969",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_2c0e588a2f86c969"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_2f506a9fbfcd9ee5",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_2f506a9fbfcd9ee5"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_30234d32ae51b383",
+        "diameter_km": 474.4196297558,
+        "island_keys": [
+          "gshhg237_30234d32ae51b383",
+          "gshhg237_8771cc53c83f154a"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_36766d3e46b870db",
+        "diameter_km": 247.76034799024183,
+        "island_keys": [
+          "gshhg237_36766d3e46b870db",
+          "gshhg237_5fff30688123fc4b",
+          "gshhg237_61d001548529c27c",
+          "gshhg237_ae38479f05cc871c"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r500_gshhg237_3c58026612a9987c",
+        "diameter_km": 920.3380666156156,
+        "island_keys": [
+          "gshhg237_3c58026612a9987c",
+          "gshhg237_811a6bd8b790283b",
+          "gshhg237_bf4ca963f7fe90ed"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r500_gshhg237_3c881870b994b727",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_3c881870b994b727"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_3ca754b5d371d3f6",
+        "diameter_km": 116.78317080144042,
+        "island_keys": [
+          "gshhg237_3ca754b5d371d3f6",
+          "gshhg237_aa7a4f7d334424c2"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_3d070e8dd2bd73f1",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_3d070e8dd2bd73f1"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_3fea754895eb9d47",
+        "diameter_km": 411.6367953035373,
+        "island_keys": [
+          "gshhg237_3fea754895eb9d47",
+          "gshhg237_83d1b78ee4c3d32a",
+          "gshhg237_857c858de70360f7",
+          "gshhg237_f55db19611d5f244"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r500_gshhg237_40f3bf06df8e4aef",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_40f3bf06df8e4aef"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_42bc250bb841d38d",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_42bc250bb841d38d"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_46e5f9cd367c749f",
+        "diameter_km": 84.12271181006795,
+        "island_keys": [
+          "gshhg237_46e5f9cd367c749f",
+          "gshhg237_cd1b20532713db8c"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_49524b474fd12f59",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_49524b474fd12f59"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_4baf3db8567b8d16",
+        "diameter_km": 83.39148327917032,
+        "island_keys": [
+          "gshhg237_4baf3db8567b8d16",
+          "gshhg237_7ef4f4535fbe0bdb"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_4c93e5ddb80b8368",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_4c93e5ddb80b8368"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_4d6213895aa8637a",
+        "diameter_km": 384.3754901930253,
+        "island_keys": [
+          "gshhg237_4d6213895aa8637a",
+          "gshhg237_e8ebee0e466607c3"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_4dbf385289bcf888",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_4dbf385289bcf888"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_52abafd96c733901",
+        "diameter_km": 30.806987968812283,
+        "island_keys": [
+          "gshhg237_52abafd96c733901",
+          "gshhg237_d1b8d23c6e0a4d9c"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_52b2b6a34f13df9b",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_52b2b6a34f13df9b"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_59e11912368de580",
+        "diameter_km": 69.56757596132285,
+        "island_keys": [
+          "gshhg237_59e11912368de580",
+          "gshhg237_94f00678b644e64b"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_5c617c5ff00144d5",
+        "diameter_km": 626.4504675225469,
+        "island_keys": [
+          "gshhg237_5c617c5ff00144d5",
+          "gshhg237_67863b9d6256b956",
+          "gshhg237_7adea057b6560be8",
+          "gshhg237_7cb338f7a74f60a1",
+          "gshhg237_ff6113d6b8cb2428"
+        ],
+        "islands": 5
+      },
+      {
+        "cluster_id": "r500_gshhg237_61619b64b45c7238",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_61619b64b45c7238"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_6aa954b703d67add",
+        "diameter_km": 490.60044270039765,
+        "island_keys": [
+          "gshhg237_6aa954b703d67add",
+          "gshhg237_f8e7324caae52195"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_707b74564cfa618e",
+        "diameter_km": 123.53340524511388,
+        "island_keys": [
+          "gshhg237_707b74564cfa618e",
+          "gshhg237_bfd6ea00462fe7a8"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_7ec50ff364e1ff89",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_7ec50ff364e1ff89"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_808dd5f75a39a7dc",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_808dd5f75a39a7dc"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_8af3a33eebe31779",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_8af3a33eebe31779"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_8d21bc6d0e1f6592",
+        "diameter_km": 189.09618840597327,
+        "island_keys": [
+          "gshhg237_8d21bc6d0e1f6592",
+          "gshhg237_bbb042f88d3e439d"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_99b534e313697241",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_99b534e313697241"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_a2f61a8620cd5274",
+        "diameter_km": 248.88699972705385,
+        "island_keys": [
+          "gshhg237_a2f61a8620cd5274",
+          "gshhg237_b8e44007d52355fb",
+          "gshhg237_bd263d7f9e352e0b"
+        ],
+        "islands": 3
+      },
+      {
+        "cluster_id": "r500_gshhg237_a440965c10dc2f49",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_a440965c10dc2f49"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_b141a506642a94bb",
+        "diameter_km": 400.8078489667302,
+        "island_keys": [
+          "gshhg237_b141a506642a94bb",
+          "gshhg237_b5d12597e805d51b"
+        ],
+        "islands": 2
+      },
+      {
+        "cluster_id": "r500_gshhg237_b6b133b3fe554977",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_b6b133b3fe554977"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_bd3d3395083f6d72",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_bd3d3395083f6d72"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_d43fef970f703537",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_d43fef970f703537"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_d672bb7b76b5ba18",
+        "diameter_km": 610.2619886930453,
+        "island_keys": [
+          "gshhg237_d672bb7b76b5ba18",
+          "gshhg237_debefd0c60cb8944",
+          "gshhg237_e8ca9c42f6d3f947",
+          "gshhg237_ff21f9590d54d4a5"
+        ],
+        "islands": 4
+      },
+      {
+        "cluster_id": "r500_gshhg237_d686ca8f569ef0d9",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_d686ca8f569ef0d9"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_e36159c76d7ec13a",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e36159c76d7ec13a"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_e4d0d988affccf27",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e4d0d988affccf27"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_e6931223aee5d927",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_e6931223aee5d927"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_f29740eb57024ab1",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_f29740eb57024ab1"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_f381231b61a6532c",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_f381231b61a6532c"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_fbeca2be79d054e7",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_fbeca2be79d054e7"
+        ],
+        "islands": 1
+      },
+      {
+        "cluster_id": "r500_gshhg237_fcf62468b351ef62",
+        "diameter_km": 0,
+        "island_keys": [
+          "gshhg237_fcf62468b351ef62"
+        ],
+        "islands": 1
+      }
+    ]
+  },
+  "source_manifest_sha256": "612c4f5e981a045637fcd66cf1353241f5ef70ddbfd63da9719e92c504404040",
+  "source_selection_sha256": "5ccc868b89973b8142a7fdb4b3014c4394f134596ae2ef58e1179eaab68f5243"
+}

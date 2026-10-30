@@ -1,0 +1,38 @@
+name: Original Natural Earth island land and NGA World Port Index 2025 source eligibility
+on:
+  push:
+    branches: [analysis/island-isolation-port-geography-20261029]
+    paths:
+      - scripts/audit_island_port_original_sources_20261029.py
+      - tests/test_island_port_original_sources_20261029.py
+      - .github/workflows/island-port-original-source-gate-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  physical-geography-and-port-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test geographic port/island source gates (no network)
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_island_port_original_sources_20261029.py
+      - name: Verify source original 10m land ZIP and OCHA WPI 2025 original port feature count
+        run: |
+          mkdir -p _island_port
+          python scripts/audit_island_port_original_sources_20261029.py \
+            --manifest data/exploratory/h3_r4_wgsrpd3_20261029/global_h3r4_wgsrpd3_crosswalk_manifest_20261029.json \
+            --output _island_port/island_port_original_source_receipt_20261029.json
+      - name: Publish ONLY original source SHA, schema and access status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-island-isolation-port-original-geography-20261029
+          path: _island_port/island_port_original_source_receipt_20261029.json
+          retention-days: 30
+          if-no-files-found: warn

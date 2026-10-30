@@ -1,0 +1,36 @@
+name: Original GSHHG v2.3.7 true landmass island census with 5 and 20 km² gates
+on:
+  push:
+    branches: [analysis/island-isolation-port-geography-20261029]
+    paths:
+      - scripts/audit_gshhg_island_source_census_20261029.py
+      - tests/test_gshhg_island_source_census_20261029.py
+      - .github/workflows/island-gshhg-true-landmass-census-20261029.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-landmass-census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Island source-independent sibling-dissolution and area gates
+        run: |
+          python -m pip install 'geopandas>=1.0,<2' 'numpy>=1.26' 'pytest>=8,<10'
+          python -m pytest -q tests/test_gshhg_island_source_census_20261029.py
+      - name: Audit official exact-GSHHG source landmasses and island area thresholds
+        run: |
+          mkdir -p _census
+          python scripts/audit_gshhg_island_source_census_20261029.py \
+            --output _census/original_GSHHG_237_island_area_census_20261029.json
+      - name: Upload only complete source area-class counts and original SHA
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original-GSHHG-landmass-island-census-20261029
+          path: _census/original_GSHHG_237_island_area_census_20261029.json
+          retention-days: 30
+          if-no-files-found: error

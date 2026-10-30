@@ -1,0 +1,120 @@
+{
+  "conclusion": "Taxonomic compatibility can connect original butterfly labels to current recording keys. Existing regional, GADM1 and point-proximity evidence must not be assigned to sampled islands without original coordinates/geometry, timing and plant evidence checks. Current taxonomy matches do not establish actual local host availability or host use.",
+  "coordinate_availability_audit": {
+    "checked_local_scope": [
+      "repository data/ and provenance/",
+      "workspace data-file extensions zip/parquet/feather/jsonl/ndjson",
+      "/tmp/chocho-island-gbif-cache",
+      "/tmp/chocho-island-expansion-gbif-cache",
+      "/tmp/chocho-island-sources"
+    ],
+    "direct_existing_point_to96_island_join_currently_executable": false,
+    "next_required_input": "Original coordinate-level botanical/butterfly records, or a separately authorized fresh point acquisition using the archived exact taxon-country source queries. Country/GADM facets alone cannot recover point membership.",
+    "observed": "No stored decimalLatitude/decimalLongitude fields or point-level host/butterfly input files found in the checked data/provenance/task caches. Current island occurrence responses have results=[] and facets only. GSHHG/WPI files contain geography/ports, not botanical occurrence points.",
+    "point_analysis_script": "scripts/analyze_butterfly_host_point_proximity_20261026.py",
+    "point_analysis_script_sha256": "3a75334bd56fc9edf85307f1bff15707b2df1eea318709ed4c96ccbd8c4f8890",
+    "source_script_policy": "Unredacted coordinates stay in GitHub Actions memory ONLY; exported acquisition no_raw_coordinates_preserved=true."
+  },
+  "current_panel_island_host_availability_join_validated": false,
+  "existing_botanical_observation_evidence": {
+    "cases_with_GADM1_butterfly_plant_overlap": 19,
+    "geographic_grain": "GADM1/country facets for the original26 selected positive country cases; no keyed link to current24/96 GSHHG islands",
+    "indexed_plant_country_records": 3595,
+    "plant_country_pairs": 44,
+    "source_original_zip_sha256": "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323"
+  },
+  "existing_juvenile_annotation_evidence": {
+    "interpretation": "Missing host annotations are missing evidence, not no feeding or no recruitment.",
+    "records_checked": 39,
+    "records_with_candidate_binomial_and_host_action_word": 0,
+    "records_with_exact_candidate_plant_binomial": 0
+  },
+  "existing_point_proximity_evidence": {
+    "cohort": {
+      "butterfly_country_cases": 26,
+      "butterfly_host_plant_country_edges": 46,
+      "countries": 11,
+      "distinct_plant_taxa": 24,
+      "original_butterfly_taxa": 16,
+      "query_total": 70,
+      "source_country_count_drifts": 0,
+      "source_queries_complete": 70,
+      "source_records_unique_butterfly": 467,
+      "source_records_unique_plant_country": 3595,
+      "unique_original_plant_country_queries": 44
+    },
+    "derived_artifact": "https://github.com/zuizui0223/chocho/actions/runs/40344793069/artifacts/12661970857",
+    "grain": "Derived point-proximity aggregates in original26 country cases. Raw point/record identities are not present in this public summary; it does not resolve current island membership.",
+    "strict_uncertainty_within5km_3years_indices": 34,
+    "validated_host_use_literal_annotations": 0,
+    "within5km_3years_butterfly_record_indices": 75,
+    "workflow_run": "https://github.com/zuizui0223/chocho/actions/runs/40344793069"
+  },
+  "regional_source": {
+    "added_positive_butterfly_country_cells": 26,
+    "candidate_butterfly_country_plant_links": 46,
+    "distinct_WCVP_plant_IDs": 24,
+    "geographic_grain": "WGSRPD3 introduced host-plant ranges and derived country flags, not individual island plant presence",
+    "specific_WCVP_ID_examples": [
+      {
+        "butterfly": "Aguna asander",
+        "country": "CU",
+        "source_candidate_plants": [
+          {
+            "accepted_names": [
+              "Bauhinia variegata"
+            ],
+            "source_introduced_WGSRPD3": [
+              "CUB"
+            ],
+            "source_name_gate": "EXACT_SOURCE_BINOMIAL_NEEDS_GBIF_TAXON_RESOLUTION",
+            "wcvp_accepted_id": "2672176"
+          }
+        ]
+      },
+      {
+        "butterfly": "Anteos clorinde",
+        "country": "CU",
+        "source_candidate_plants": [
+          {
+            "accepted_names": [
+              "Senna spectabilis"
+            ],
+            "source_introduced_WGSRPD3": [
+              "CUB"
+            ],
+            "source_name_gate": "EXACT_SOURCE_BINOMIAL_NEEDS_GBIF_TAXON_RESOLUTION",
+            "wcvp_accepted_id": "2491716"
+          }
+        ]
+      }
+    ]
+  },
+  "schema": "chocho_original_host_evidence_grain_audit_20261029_v1",
+  "sources": {
+    "juvenile_annotations": {
+      "path": "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_juvenile_host_annotation_coverage_20261023.json",
+      "schema": "gbif_original39_juvenile_host_annotation_coverage_20261023_v1",
+      "sha256": "147dbacb5935f227ea3ad8924bc7201a4e7b377b9b5c1a8a6cdcfa25940c54b6",
+      "status": "COMPLETE_39_METADATA_COVERAGE_NOT_HOST_USE"
+    },
+    "plant_gadm": {
+      "path": "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_host_gadm_source_20261023.json",
+      "schema": "chocho_all26_gbif_plant_gadm1_feasibility_20261023_v1",
+      "sha256": "12c080ed90a12ffa7738f18a8ee7435c8281ddde0714c9c60f326748a94226c2",
+      "status": "ALL26_BOTANICAL_GADM_QUERIES_COMPLETE"
+    },
+    "point_proximity": {
+      "path": "provenance/reviewer_defenses/results/butterfly_host_point_proximity_summary_20261026.json",
+      "schema": "chocho_butterfly_accepted_host_point_source_summary_20261026_v01",
+      "sha256": "baefa811c58400b6aceeb6319d8abe7b9ed721ad05b5f43263643cde1ff5e191",
+      "status": "COMPLETE_SOURCE_VERIFIED_GITHUB_ACTIONS"
+    },
+    "regional_candidates": {
+      "path": "provenance/reviewer_defenses/results/gbif_country_20261020/gbif_all26_source_host_country_inventory_20261023.json",
+      "schema": "chocho_all26_positive_country_source_hosts_v1",
+      "sha256": "a850b160e2a3ca5f33f2e18eca0edd6eb8e2867821883e41501b77c66ca88098",
+      "status": "SOURCE_ONLY_ALL26_NO_GBIF_PLANT_RECORDS"
+    }
+  }
+}

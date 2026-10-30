@@ -1,0 +1,101 @@
+{
+  "locked_before_plant_occurrence_queries_utc": "2026-10-30T02:05:47.822834+00:00",
+  "spec": {
+    "acquisition_script_sha256": "b42b8cb7c2e39ec016c40cb03546e5286464346ab29b480e4cd01625aac9724a",
+    "plan_sha256": "6c22fd892df15b3b6c1884d026d4dae55cd5df6cc16690f62aad1fc4c39d7793",
+    "query_contract": {
+      "facetLimit": 100,
+      "facetMinCount": 1,
+      "facetMultiSelect": false,
+      "facetOffset": 0,
+      "facets": [
+        "SPECIES_KEY",
+        "BASIS_OF_RECORD",
+        "DATASET_KEY",
+        "YEAR"
+      ],
+      "limit": 0,
+      "offset": 0,
+      "parameters": {
+        "CHECKLIST_KEY": [
+          "7ddf754f-d193-4cc9-b351-99906754a03b"
+        ]
+      },
+      "predicate": {
+        "predicates": [
+          {
+            "checklistKey": "7ddf754f-d193-4cc9-b351-99906754a03b",
+            "key": "TAXON_KEY",
+            "type": "equals",
+            "value": "P"
+          },
+          {
+            "key": "YEAR",
+            "type": "greaterThanOrEquals",
+            "value": "2010"
+          },
+          {
+            "key": "YEAR",
+            "type": "lessThanOrEquals",
+            "value": "2017"
+          },
+          {
+            "key": "HAS_COORDINATE",
+            "type": "equals",
+            "value": "true"
+          },
+          {
+            "key": "HAS_GEOSPATIAL_ISSUE",
+            "type": "equals",
+            "value": "false"
+          },
+          {
+            "key": "OCCURRENCE_STATUS",
+            "type": "equals",
+            "value": "PRESENT"
+          },
+          {
+            "geometry": "<exact frozen unsimplified CCW WKT>",
+            "type": "within"
+          }
+        ],
+        "type": "and"
+      }
+    },
+    "source_pins": {
+      "data/exploratory/island_expansion_20261029/expanded_island_panel_selection.json": "5ccc868b89973b8142a7fdb4b3014c4394f134596ae2ef58e1179eaab68f5243",
+      "data/exploratory/island_recorded_sources_20261029/recorded_source_target_support.csv": "9bbf0d50f1a42b82879f23ef966a6de4a6dc36f5dc03cc92e5c511fc6bad3e74"
+    },
+    "target_geometry_sha256": {
+      "gshhg237_0667315a23db9839": "9db6f18d7e2eb71b4d44e5dac1974c33756d11b86f6cbb3b93372ee39782ec9d",
+      "gshhg237_184a18f5b8d5525b": "0feb08f89b4621c9bd0455668eedd68d7b23835e9640a06cf5a2a41f1c06a874",
+      "gshhg237_30234d32ae51b383": "a29cacd3ebbd9b2dcb83350bdb4f894bf3faa821cb6c6aecfee935d1ef37ea8c",
+      "gshhg237_3c58026612a9987c": "8c0a2522ce0879adec883f1a71202644e6fcb934586b63618d2e909538d71048",
+      "gshhg237_3ca754b5d371d3f6": "65ad7dfa5976d5f4bd9d821a606594e010e50987cbf58d55d7ff4ccf4dfd4817",
+      "gshhg237_3d070e8dd2bd73f1": "6b3d4098a0e7b56c1e882e2b3a65483566af33a9e1ad873a57066053281fa1b3",
+      "gshhg237_4baf3db8567b8d16": "0e97f1a85cbce08eaea83f022bccba1fe8cac9b0c093e25e678bf4368372a50b",
+      "gshhg237_4d6213895aa8637a": "1270913336f3dff8bde8cabab43a6ee4e6686ca5b31d40b36a6b67487b9f2535",
+      "gshhg237_4dbf385289bcf888": "fb2ab294a1a4d557828214fb7994012e9acfd49b09c463206f8cfdeae5acde61",
+      "gshhg237_52abafd96c733901": "fb1ebb09860b503ed1c106f7886cbeb1433997e1db43898cab27a9b66b8b9ffc",
+      "gshhg237_52b2b6a34f13df9b": "ac130f021fe531a03ec3609fc2c10513c3f95a767e039388b05c49506744877a",
+      "gshhg237_5fff30688123fc4b": "0da0b523f5e05999a5c91a2ea9a81a3320789e539a35ca85290a28413c648385",
+      "gshhg237_61d001548529c27c": "c83244e63f7946570606d3a8aacfce2dcca6a57a75c89454fb230cc3be12704a",
+      "gshhg237_7ef4f4535fbe0bdb": "d8c1155b78c693ca10a1c38c6d3e8726eb5f8562addbdb463c8ff357c5dc19c1",
+      "gshhg237_811a6bd8b790283b": "9f49d01bd3b820a9a9f94683afac566f91195addd2a10b2e031de40aabb550aa",
+      "gshhg237_8d21bc6d0e1f6592": "14f030c77a67a9c7ca928a709cf317f8c093381175fce108b2be7d97828947d8",
+      "gshhg237_aa7a4f7d334424c2": "1cc119756f9f7ee1a9656da78cbf13824ae84fc3c4107288e8c800089abf52dd",
+      "gshhg237_bbb042f88d3e439d": "9366b89533d8adcf2ef8c76a56ebfc2c04cef703ea60548acc8ede334196291a",
+      "gshhg237_bf4ca963f7fe90ed": "d0c400339e7efb528f3eb4ee84ca23ac304d77afecb28ceb224be68255f241df",
+      "gshhg237_d43fef970f703537": "ac02ca9a4f12b36bcfc3e3952cc6dd5105e2393ef735d4dedd82aff9c2c55384",
+      "gshhg237_debefd0c60cb8944": "f2f3e7b95b474f7da9312c7841fd0e533bb64563165e8b412b9bf8d5b017f4c6",
+      "gshhg237_e36159c76d7ec13a": "800f8780ecbdd6b593137fa699a27cb144270c1c12acaf4a448e18e8af2e6028",
+      "gshhg237_e8ca9c42f6d3f947": "a6d756b35f75e47851bf2c1ac8f2b499390273134ca6d6f4f285d01b80ac194d",
+      "gshhg237_f752e77c73e90eb8": "962023482264023b87f10360e861b06f8d9a1700c31acc12c0a0c3344d403d99",
+      "gshhg237_f8e7324caae52195": "9dfc2c9444726d4022a8a77353aaff88b20dc9adeedeacee447ceb4b59ff2027",
+      "gshhg237_fbeca2be79d054e7": "5813d02503e0f16883e0ffc9c437edd463c508b1f4864db116f9739b9a0fcd49",
+      "gshhg237_fcf62468b351ef62": "4144b5ec0b8c8497d3eed4f3a593fc8b4639fae355b695f8ec016352e040daeb",
+      "gshhg237_fe5eac31e1423d61": "d659f8da666259fa4f800bebb829821a8b23d8f8bba81b923a945f670a6e495e"
+    },
+    "target_roster_already_selected_using_later_butterfly_richness": true
+  }
+}

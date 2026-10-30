@@ -1,0 +1,160 @@
+{
+  "analysis_date_JST": "2026-10-30",
+  "baseline_scope": "Only positive 2010_2017 expanded96 species facets define the93 coverage taxa; no late selection.",
+  "catalogue_scope": "Original source HOSTS accepted IDs only; no BCE addition; all230 conservative taxa.",
+  "executed_utc": "2026-10-30T00:29:31.583979+00:00",
+  "interpretation": "Source catalogue associations and identity coverage only. These are not island plant presence, dated introduction, actual feeding, recruitment, or occurrence absence. Current butterfly synonym mappings do not independently validate unchanged host concepts.",
+  "no_occurrence_queries_performed": true,
+  "no_raw_provider_rows_or_coordinates_exported": true,
+  "output_allowlist": [
+    "baseline93_host_coverage.csv",
+    "original230_host_edges.csv",
+    "original230_host_roster_manifest.json",
+    "original239_host_count_alignment.csv",
+    "plant_taxon_query_candidates.csv"
+  ],
+  "output_sha256": {
+    "baseline93_host_coverage.csv": "f702ce482ca6b6411bb4530aa8b829400300cb5ef2464e367eef4e5a365ce9aa",
+    "original230_host_edges.csv": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+    "original239_host_count_alignment.csv": "68711366dc9aa1be2a5eff7ded881535cb9fbe98de2654302371bf3781fe7368",
+    "plant_taxon_query_candidates.csv": "a1cc87b20fbd19415fa81ca4269b8414b0c32167bb6033ca0425354c89c1906f"
+  },
+  "plant_occurrence_taxonomy_resolution_performed": false,
+  "provenance": {
+    "execution": {
+      "GITHUB_JOB": "original230-derived-host-roster",
+      "GITHUB_REF": "refs/heads/analysis/island-isolation-port-geography-20261029",
+      "GITHUB_REPOSITORY": "zuizui0223/chocho",
+      "GITHUB_RUN_ATTEMPT": "1",
+      "GITHUB_RUN_ID": "40979986160",
+      "GITHUB_SHA": "ef86ac353cce571c2765fb5f8ebe49e18e06ca6e",
+      "GITHUB_WORKFLOW": "Original230 source-verified host roster (2026-10-30 JST)",
+      "GITHUB_WORKFLOW_REF": "zuizui0223/chocho/.github/workflows/island-original230-host-roster.yml@refs/heads/analysis/island-isolation-port-geography-20261029"
+    },
+    "local_input_sha256": {
+      "data/exploratory/island_expansion_20261029/expanded_island_panel_species_key_facets.csv": "061f9ce3cf21e4d64572456e0ffbbb88022fbccfe9aa924d5f02062027c97db6",
+      "data/exploratory/island_taxonomy_20261029/original239_to_colxr_bridge.csv": "cd8b2cb8e0279a5b940e46267c67f0bb9843d2e1c54f38bc405ec30a95fe6eb2",
+      "data/frozen/figure_sources/anthropogenic_species_metrics.csv": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+      "provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9"
+    },
+    "python_version": "3.12.15",
+    "script_sha256": "8566b26054767f970764dd3caf7a6e1d173c9b8319469164990603b329745191",
+    "source_archive": {
+      "archive_members_extracted": 0,
+      "archived_code_executed": false,
+      "inner_zip_bytes": 3255228,
+      "inner_zip_sha256": "408cb206d7ce4056cee1fbf614762e1a6efb3db4650ff7c2663a7d6d6003e323",
+      "input_member_sha256": {
+        "inputs/anthropogenic_species_metrics.csv": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+        "inputs/original/insect_host_accepted.csv": "0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9"
+      },
+      "manifest_members_verified": 28,
+      "source_manifest_sha256": "06ac6ec3ce506421a6006f994dba7549a0daa74caf3da5318af7a889cb5ff819",
+      "upstream_source_pins": {
+        "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+        "TDWG": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+        "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+      }
+    },
+    "source_artifact": {
+      "artifact_created_utc": "2026-10-17T05:41:00Z",
+      "artifact_expires_utc": "2026-11-16T05:40:59Z",
+      "artifact_id": 12090584135,
+      "artifact_name": "butterfly-author-anonymous-offline-source-replication-v01",
+      "metadata_verified_utc": "2026-10-30T00:29:31.016314+00:00",
+      "outer_archive_bytes_rehashed_by_this_script": false,
+      "outer_artifact_bytes_from_api_metadata": 3250938,
+      "outer_artifact_sha256_from_api_metadata": "a784770f5a215bffb32393c127b66e7320e8ed7ac9b36f921bb9c056f3497a36",
+      "repository": "zuizui0223/chocho",
+      "run_head_sha": "d53e04fb361701265139ba77b8bca56689da6532",
+      "run_id": 39006554609,
+      "run_url": "https://github.com/zuizui0223/chocho/actions/runs/39006554609"
+    }
+  },
+  "query_eligibility_definition": "Unambiguous exact source binomial and family; separate GBIF taxon resolution is still required.",
+  "schema": "chocho_original230_source_host_roster_20261030_v1",
+  "status": "COMPLETE_ORIGINAL230_SOURCE_CATALOGUE_NOT_LOCAL_HOST_USE",
+  "summary": {
+    "baseline_catalog_edges": 1440,
+    "baseline_original_names_sha256": "5652125feea89ce2a9228cc19daa6d1e3128784903fa360d15f4a659e4501e1f",
+    "baseline_taxa": 93,
+    "baseline_taxa_with_all_catalog_edges_recovered": 93,
+    "baseline_taxa_with_unresolved_plant_names": 22,
+    "candidate_exact_name_query_ids": 1642,
+    "eligible_taxa": 230,
+    "excluded_taxa": 9,
+    "exported_catalog_edges": 2524,
+    "original_catalog_edges": 2596,
+    "original_taxa": 239,
+    "unique_source_plant_ids": 1677,
+    "unresolved_candidate_ids": 35
+  },
+  "taxonomy_audit": {
+    "butterfly_current_usage_statuses": {
+      "ACCEPTED": 212,
+      "SYNONYM": 18
+    },
+    "excluded_original_concepts": [
+      {
+        "original_name": "Agraulis vanillae",
+        "reasons": "not_exact_match|not_species_rank|submitted_canonical_name_not_exact"
+      },
+      {
+        "original_name": "Amblyscirtes vialis",
+        "reasons": "competing_exact_current_species_concepts"
+      },
+      {
+        "original_name": "Issoria lathonia",
+        "reasons": "competing_exact_current_species_concepts"
+      },
+      {
+        "original_name": "Lasiommata maera",
+        "reasons": "competing_exact_current_species_concepts"
+      },
+      {
+        "original_name": "Limenitis camilla",
+        "reasons": "not_exact_match|not_species_rank|submitted_canonical_name_not_exact"
+      },
+      {
+        "original_name": "Lycaena phlaeas",
+        "reasons": "competing_exact_current_species_concepts"
+      },
+      {
+        "original_name": "Oeneis bore",
+        "reasons": "current_accepted_key_collision"
+      },
+      {
+        "original_name": "Oeneis polixenes",
+        "reasons": "current_accepted_key_collision"
+      },
+      {
+        "original_name": "Pararge aegeria",
+        "reasons": "competing_exact_current_species_concepts"
+      }
+    ],
+    "plant_ambiguity_flag_counts": {
+      "NOT_EXACT_SPECIES_BINOMIAL": 35
+    },
+    "plant_identity_conflicts_checked_across_original_source_table": true,
+    "source_accepted_id_representations": {
+      "accepted_forms": [
+        "positive_digit_string",
+        "scientific_notation_exact_positive_integer"
+      ],
+      "format_counts": {
+        "all_source_rows": {
+          "digits": 53445,
+          "scientific_notation": 4
+        },
+        "original_taxon_rows": {
+          "digits": 2632,
+          "scientific_notation": 1
+        }
+      },
+      "join_and_deduplication_key": "Original source ID string, not its numeric value",
+      "numeric_normalization_performed": false,
+      "original_source_id_strings_preserved": true,
+      "outer_whitespace_trimmed": true
+    }
+  }
+}

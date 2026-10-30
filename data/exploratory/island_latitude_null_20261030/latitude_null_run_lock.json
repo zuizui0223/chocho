@@ -1,0 +1,45 @@
+{
+  "input_sha256": {
+    "data/exploratory/island_expansion_20261029/expanded_island_panel_selection.csv": "05c370d6fb63c623c48714ce14b377639c446d523bc742e4f93dfbb96d562538",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_coast_pairs.csv": "d83803dd3f976069533da40ff1c20f6602386b699de3dd744f37096e63f03545",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_diagnostic.json": "372fec4a1035132c17eec67c5392c5eab0727d3c596edb2d4f2b45b88b6ecebb",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_fixed_margins.csv": "e472a2dcb0977a02dda1f313bc66ab32d0c096a2b74d505c764791b1b15ecbd0",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_risk_cells.csv": "a8c7905f1ef6e187b2647d5ed39f1a5a67f901b94a5aab3a86b6358969f72fb4",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_run_lock.json": "a0124d968516c1d9a5b5cffb1ba6d6dd7f5826cedccd81c188c9d2e295735619",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_target_support.csv": "9bbf0d50f1a42b82879f23ef966a6de4a6dc36f5dc03cc92e5c511fc6bad3e74",
+    "data/exploratory/island_source_exact_null_20261030/exact_null_diagnostic.json": "9b2b21478c6a73dce547328995628f58e7d3c0f351649a037c7fee9fa74c939c",
+    "provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9",
+    "scripts/analyze_island_source_exact_null_20261030.py": "ae37f7902910c86d3ec9173824920f110636bcd0989dc9c41249d40c37f349f0"
+  },
+  "max_attempted_pattern_transitions_per_block": 2000000,
+  "max_memo_states_per_block": 100000,
+  "no_reruns_or_budget_extensions": true,
+  "numpy_version": "2.3.5",
+  "plan_sha256": "3acbcac76c4a4d554426da2d8d0a652b20fb19db841fb4e6ac50f9fcd136e277",
+  "python_version": "3.12.14",
+  "samples_per_scenario": 100000,
+  "sampling_with_replacement": true,
+  "scenario_order_and_seeds": [
+    {
+      "analysis": "primary",
+      "seed": 2026103011
+    },
+    {
+      "analysis": "source_records_ge3",
+      "seed": 2026103012
+    },
+    {
+      "analysis": "late_records_ge2",
+      "seed": 2026103013
+    }
+  ],
+  "schema": "chocho_latitude_null_first_run_lock_20261030_v1",
+  "script_sha256": "048cc2b194f1e69b539f8c412357cdc548c355ed67c13bf885f8c1ecbff777d4",
+  "started_utc": "2026-10-30T02:06:00.601131+00:00",
+  "tail_tie_tolerance": 1e-12,
+  "zones": {
+    "north_extratropical": "latitude > 23.5",
+    "south_extratropical": "latitude < -23.5",
+    "tropical": "-23.5 <= latitude <= 23.5"
+  }
+}

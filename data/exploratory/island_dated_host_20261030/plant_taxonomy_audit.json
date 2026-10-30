@@ -1,0 +1,136 @@
+{
+  "actual_first_http_attempt_utc": "2026-10-30T02:06:03.698567+00:00",
+  "actual_last_http_attempt_utc": "2026-10-30T02:24:45.298627+00:00",
+  "all_archived_bodies_and_requests_verified": true,
+  "all_candidate_duplicate_accepted_concept_groups": 0,
+  "all_candidate_duplicate_accepted_concept_source_ids": {},
+  "all_http_attempts": 1069,
+  "all_request_receipts": 1069,
+  "archive_byte_replay_identical": true,
+  "archive_entries": 3207,
+  "archived_acquisition_script_path": "plant_taxonomy_acquisition_script.py.txt",
+  "archived_acquisition_script_sha256": "5f26c60c1a2b743b4463e4e1744cee20f2ca8f4e923c1a7cd8f2bcb774862f75",
+  "butterflies_with_any_eligible_accepted_concept": 84,
+  "catalogue_edge_taxonomic_states": {
+    "eligible": 865,
+    "unresolved": 575
+  },
+  "checks": [
+    "all1062sourceIDs_retained",
+    "all1440catalogueEdges_mapped",
+    "all1040primaryURLs_exact",
+    "22unqueriedNames_haveNoRequests",
+    "allScientificDecisions_replayed",
+    "eligibleRows_independentGateAssertions",
+    "allResponseHashes_verified",
+    "archiveDeterministicByteReplay",
+    "allRequestStarts_measured_UTC_limitReported",
+    "requestContractUnchanged_afterConservativeHomonymCorrection"
+  ],
+  "early_butterfly_count": 93,
+  "early_catalogue_edges": 1440,
+  "eligible_accepted_concept_groups": 695,
+  "eligible_deduplicated_butterfly_accepted_concept_edges": 865,
+  "eligible_duplicate_accepted_concept_groups": 0,
+  "manifest_sha256": "680ad64ecaff0ad4f9cb8dd30e428371f1a08c5cc05c6391934a446254ca3af9",
+  "maximum_observed_utc_threshold_shortfall_seconds": 0.00016217231750492722,
+  "observed_minimum_request_start_interval_seconds": 1.0498378276824951,
+  "observed_utc_intervals_below_1_05_seconds": 6,
+  "original_acquisition_script_sha256": "5f26c60c1a2b743b4463e4e1744cee20f2ca8f4e923c1a7cd8f2bcb774862f75",
+  "primary_query_status_counts": {
+    "SUCCESS": 1040,
+    "UNQUERIED_SOURCE_NAME": 22
+  },
+  "request_timing_limit": "The code enforces 1.05 seconds between monotonic start markers; receipts record UTC after each marker. Six UTC intervals are up to 162 microseconds shorter. Monotonic markers were not archived, so the strict threshold cannot independently be verified from UTC receipts. Raw evidence is preserved unchanged.",
+  "schema": "chocho_plant_taxonomy_archive_and_fixed_source_audit_20261030_v1",
+  "scientific_gate_strictness_delta": {
+    "affected_rows": [
+      {
+        "accepted_key": "6P99B",
+        "competing_exact_keys": "7K8RF",
+        "query_name": "Lepidium campestre",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2337827"
+      },
+      {
+        "accepted_key": "4DY8M",
+        "competing_exact_keys": "5K8SV",
+        "query_name": "Passiflora biflora",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2559602"
+      },
+      {
+        "accepted_key": "VL824",
+        "competing_exact_keys": "5L7GQ",
+        "query_name": "Scabiosa atropurpurea",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2593568"
+      },
+      {
+        "accepted_key": "M9CF",
+        "competing_exact_keys": "5FYFW",
+        "query_name": "Boehmeria cylindrica",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2678186"
+      },
+      {
+        "accepted_key": "R4LD",
+        "competing_exact_keys": "5G7NW",
+        "query_name": "Cardamine pratensis",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2700274"
+      },
+      {
+        "accepted_key": "ZNBR",
+        "competing_exact_keys": "5GPTX",
+        "query_name": "Crotalaria capensis",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2743410"
+      },
+      {
+        "accepted_key": "ZP3K",
+        "competing_exact_keys": "5NCHV",
+        "query_name": "Crotalaria saltiana",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2744513"
+      },
+      {
+        "accepted_key": "3MQN7",
+        "competing_exact_keys": "9F343",
+        "query_name": "Hosackia crassifolia",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2853709"
+      },
+      {
+        "accepted_key": "6V8D2",
+        "competing_exact_keys": "5KBFC",
+        "query_name": "Petroselinum crispum",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2898243"
+      },
+      {
+        "accepted_key": "4N8W7",
+        "competing_exact_keys": "5KPJ5",
+        "query_name": "Prunus ilicifolia",
+        "rejection_reasons": "competing_exact_current_species_concepts",
+        "wcvp_accepted_id": "2959943"
+      }
+    ],
+    "all_cached_request_response_bytes_unchanged": true,
+    "final_eligible_source_rows": 695,
+    "network_attempts_during_reprocessing": 0,
+    "newly_rejected_source_rows": 10,
+    "original_eligible_source_rows": 705,
+    "raw_archive_sha256_unchanged": "24805b7161711538e30f443b5d784efad1b9038a6036a710b4eb482b0dca7039"
+  },
+  "scientific_reprocessing": "Exact species-usage alternatives with distinct accepted keys are competing even when the accepted target is infraspecific; all requests and raw response bytes are unchanged.",
+  "script_sha256": "53410a0a99843a36967a96cac3a4c9a0ee4ff5fd6aeecb67dfe8f7f25745e9f6",
+  "source_pins": {
+    "data/exploratory/island_host_roster_20261030/baseline93_host_coverage.csv": "f702ce482ca6b6411bb4530aa8b829400300cb5ef2464e367eef4e5a365ce9aa",
+    "data/exploratory/island_host_roster_20261030/original230_host_edges.csv": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+    "data/exploratory/island_host_roster_20261030/plant_taxon_query_candidates.csv": "a1cc87b20fbd19415fa81ca4269b8414b0c32167bb6033ca0425354c89c1906f"
+  },
+  "source_rows": 1062,
+  "status": "PASS_WITH_UTC_REQUEST_TIMESTAMP_LIMITATION",
+  "tests_sha256": "98fa50c4ff03c56e687babd3a9354b29bea5cfdcea857350d43c308ed2098bb2"
+}
