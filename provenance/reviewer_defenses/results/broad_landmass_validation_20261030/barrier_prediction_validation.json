@@ -1,0 +1,59 @@
+{
+  "checks": [
+    {
+      "mode": "temporal",
+      "model": "persistence",
+      "metric": "mse",
+      "max_error": 0.0
+    },
+    {
+      "mode": "temporal",
+      "model": "persistence",
+      "metric": "mae",
+      "max_error": 4.163336342344337e-17
+    },
+    {
+      "mode": "temporal",
+      "model": "M5_host_composition",
+      "metric": "mse",
+      "max_error": 0.0
+    },
+    {
+      "mode": "temporal",
+      "model": "M5_host_composition",
+      "metric": "mae",
+      "max_error": 2.7755575615628914e-17
+    },
+    {
+      "mode": "temporal",
+      "model": "B1_history",
+      "metric": "mse",
+      "max_error": 0.0
+    },
+    {
+      "mode": "temporal",
+      "model": "B1_history",
+      "metric": "mae",
+      "max_error": 0.0
+    },
+    {
+      "mode": "temporal",
+      "model": "B2_landmass",
+      "metric": "mse",
+      "max_error": 6.938893903907228e-18
+    },
+    {
+      "mode": "temporal",
+      "model": "B2_landmass",
+      "metric": "mae",
+      "max_error": 2.7755575615628914e-17
+    },
+    {
+      "mode": "temporal",
+      "original_targets_and_M5_identical": true,
+      "prediction_sha256": "e1e12dfc614a3b5250e161393b744a958394d17fa9e2afe58a57a4aff566b1d0"
+    }
+  ],
+  "scope": "Saved prediction arithmetic and row identity only, not validation of ecological mechanism or model fitting",
+  "status": "PASS"
+}

@@ -1,0 +1,18 @@
+{
+  "status": "FIXED_BEFORE_NEW_MODEL_FIT",
+  "date": "2026-10-29",
+  "scope": "Post-hoc extension of original225 candidate /155 eligible species cohort; same temporal transitions and spatial folds as existing forecast",
+  "models": {
+    "M5": "Reuse previously saved host-composition predictions without refitting",
+    "B1_history": "M5 features plus log distance to all preceding records at each origin, log counts of unique preceding record cells within50km and100km",
+    "B2_landmass": "B1 plus log landmass area, unknown landmass flag, same-landmass prior-record flag, log nearest same-landmass prior-record distance capped20000km, log count same-landmass records within100km"
+  },
+  "history": "2001-2014 for2011-14 predictors;2001-2018 for2015-18 predictors. Historical cell counts are detection and effort dependent, not population sizes.",
+  "missing": "Unassigned centres retained with explicit flag, log area0; same-landmass flag0 and distance20000 when unknown/no same-landmass prior record. Report classified-only sensitivity separately.",
+  "geography": "GSHHG2.3.7 high-resolution level1 with sibling_id unifying dateline parts. Static proxy, no actual sea crossing or least-cost path claim.",
+  "settings": "Reuse forecast_model_lock.json random_forest settings, species-equal weights, no tuning",
+  "scores": "Species mean MSE and MAE; same evaluation rows; temporal and held spatial blocks; mainland/noncontinental and previously unrecorded subsets",
+  "ports": "Excluded from first forecasting comparison: available inventory is2019, later than predictor origins.",
+  "DEM": "Excluded from first comparison pending acquisition and historical-source review",
+  "interpretation": "Incremental predictive value of recorded-distribution history and coarse landmass membership; not causal dispersal or transport"
+}
