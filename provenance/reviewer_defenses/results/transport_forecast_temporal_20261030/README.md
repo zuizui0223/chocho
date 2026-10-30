@@ -1,0 +1,2 @@
+# Reproduction
+Scripts run in original work/barriers/ location. Build and verify transport features, run fit_transport_forecast.py temporal, then summarize_transport_forecast.py temporal. Existing panel, M5 predictions, coordinate audit and archived port source are required and remain local. Exact input hashes are in receipts. Spatial/species evaluations are separate and not certified by this temporal snapshot. This is retrospective sensitivity with2019 geocoding, not an actual historical forecast.
