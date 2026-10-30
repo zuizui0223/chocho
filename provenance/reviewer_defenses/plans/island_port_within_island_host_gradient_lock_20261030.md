@@ -1,5 +1,8 @@
 # Island-port ecological gateway: within-island harbor-gradient diagnostic (2026-10-30)
 
+**Primary research question was superseded:** [maritime alien-host rescue and stepping-stone hypothesis](maritime_host_rescue_steppingstone_20261030.md). This archived urbanization-gradient specification is **secondary descriptive support only**, not a test of ship-borne seed transport, nonharbor enrichment, butterfly establishment or stepping-stone movement. The earlier fixed specification and any exploratory outputs remain intact.
+
+
 **Stage:** focused exploratory test of the first gateway prerequisite. The full harbor-versus-nonharbor host-plant comparison is **not possible yet** with existing published snapshots, because only harbor-centered botanical inventories are available. Do not confuse this proxy test with harbor-specific plant establishment, transport or subsequent butterfly invasion.
 
 ## Source and pre-outcome feasibility (audited before the first new gradient coefficient)
