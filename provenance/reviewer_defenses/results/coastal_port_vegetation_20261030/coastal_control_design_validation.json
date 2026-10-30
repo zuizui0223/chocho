@@ -1,0 +1,21 @@
+{
+  "status": "GEOMETRY_VALIDATED_NOT_VEGETATION_RESULT",
+  "original_points": 8767,
+  "retained_points": 8342,
+  "spacing_removed": 425,
+  "ports": 1441,
+  "islands": 541,
+  "pairs_with3plus": 1470,
+  "input_sha256": "6ec04645571aa26589b293b2b73f24ff51026f39ccb2e31fddc2ff494a2bd998",
+  "checks": [
+    "all control points strictly inside claimed original-coordinate landmass",
+    "all anchors offset250m geodesically",
+    "all points >=5km from catalogued ports (haversine)",
+    "retain >=2km geodesic spacing within each port-island group before reading vegetation"
+  ],
+  "limitations": [
+    "geometry resolution and position uncertainty remain",
+    "not random shoreline sampling",
+    "near-port probe and offshore control shoreline distances are not exactly matched"
+  ]
+}
