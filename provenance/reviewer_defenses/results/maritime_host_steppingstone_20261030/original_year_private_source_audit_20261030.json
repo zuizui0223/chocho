@@ -1,0 +1,93 @@
+{
+  "schema": "chocho_local_original_island_chronology_execution_receipt_20261030_v1",
+  "source_kind": "locally_supplied_untracked_raw_parquet_NOT_PUBLISHED",
+  "local_original_year_parquet_sha256": "8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f",
+  "rows": 83573,
+  "unique_species": 224,
+  "unique_island_ids": 3384,
+  "year_min": 2001,
+  "year_max": 2024,
+  "occurrence_records_sum": 14425536,
+  "all_raw_rows_unique_by_species_island_year": true,
+  "parquet_columns": [
+    "speciesKey",
+    "landmass_id",
+    "year",
+    "records",
+    "precise1km_records",
+    "landmass_area_km2"
+  ],
+  "parquet_physical_codec": "SNAPPY",
+  "parquet_page_encoding": "RLE_DICTIONARY",
+  "resolver_source_git_blob": "f60e9d3c7b75b032727dbd1b8c5c8055ae7f4b82",
+  "dated_host_screen_git_blob": "1455d93681cf99c4e7d891873a08e5109ee0cc44",
+  "species_key_mapping_source_git_blob": "efbc770469a720e2dea82478db2f6196ba03b353",
+  "runtime_note": "Byte-identical source resolver's full_year_resolution ran on rows decoded locally; pyarrow/fastparquet not installed here. Original parquet was not uploaded to GitHub. CI can replay the derived selected-year rows, not independently reread the private file.",
+  "near_island_pair_baselines": [
+    {
+      "island_pair": [
+        "169",
+        "276"
+      ],
+      "all_candidate_butterflies_shared_any_year": 31,
+      "both_islands_first_indexed_2011_2022": 2,
+      "both_islands_new_with_upstream_re_record_before_later_first": 2,
+      "other_nonfocal_new_butterflies_same_pair": 0
+    },
+    {
+      "island_pair": [
+        "276",
+        "715"
+      ],
+      "all_candidate_butterflies_shared_any_year": 23,
+      "both_islands_first_indexed_2011_2022": 1,
+      "both_islands_new_with_upstream_re_record_before_later_first": 1,
+      "other_nonfocal_new_butterflies_same_pair": 0
+    }
+  ],
+  "selected_annual_observation_opportunities": [
+    {
+      "island": "276",
+      "year": 2015,
+      "butterfly_species_recorded": 15,
+      "butterfly_occurrence_records": 46
+    },
+    {
+      "island": "276",
+      "year": 2016,
+      "butterfly_species_recorded": 22,
+      "butterfly_occurrence_records": 51
+    },
+    {
+      "island": "276",
+      "year": 2020,
+      "butterfly_species_recorded": 21,
+      "butterfly_occurrence_records": 306
+    },
+    {
+      "island": "169",
+      "year": 2018,
+      "butterfly_species_recorded": 27,
+      "butterfly_occurrence_records": 634
+    },
+    {
+      "island": "169",
+      "year": 2019,
+      "butterfly_species_recorded": 29,
+      "butterfly_occurrence_records": 890
+    },
+    {
+      "island": "715",
+      "year": 2020,
+      "butterfly_species_recorded": 14,
+      "butterfly_occurrence_records": 48
+    },
+    {
+      "island": "715",
+      "year": 2021,
+      "butterfly_species_recorded": 20,
+      "butterfly_occurrence_records": 117
+    }
+  ],
+  "cannot_fit_host_causal_effect_or_confirm_ship_route_from_this_snapshot": true
+}
