@@ -1,0 +1,12 @@
+{
+  "status": "EXPLORATORY_NULL_FIXED_BEFORE_SIMULATIONS",
+  "fixed": "same51 islands, same1275 pairs, observed shared alien plant sets, observed butterfly records",
+  "network": "full local accepted all225 butterfly-host edges, duplicate edges removed",
+  "null": "bipartite double-edge swaps preserving each butterfly degree and each host degree; candidate swap rejected if either crossed edge already exists or endpoints coincide",
+  "seed": 20261030,
+  "draws": 199,
+  "burn_attempts_per_edge": 10,
+  "between_draw_attempts_per_edge": 5,
+  "metrics": "fraction of both-new species-pair entries sharing >=1 matching host; species-equal fraction among82 species with both-new pairs",
+  "limits": "Structural null only. Does not preserve phylogeny, plant family specialization, geography-specific host acceptance, climate or observational bias. MCMC draws need not be independent. Do not treat this as causal evidence, arrival timing, observed feeding or transport. No ordinary independent-pair p-value."
+}
