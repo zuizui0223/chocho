@@ -10,8 +10,10 @@ parser.add_argument('mode',choices=['temporal','species','spatial'],default='tem
 parser.add_argument('--sensitivity',choices=['effort20','radius250','exclude_top_provider','precision100'])
 parser.add_argument('--joint',action='store_true')
 args=parser.parse_args();mode=args.mode
-if args.joint and (args.sensitivity or mode=='species'):
- parser.error('Joint comparison currently supports only primary temporal/spatial runs')
+if args.joint and (mode=='species' or (args.sensitivity and args.sensitivity!='effort20')):
+ parser.error('Joint comparison supports primary temporal/spatial and temporal effort20 only')
+if args.joint and args.sensitivity:
+ joint_sensitivity_lock=json.loads((O/'joint_effort20_lock.json').read_text())
 if args.sensitivity is not None:
  if mode!='temporal' or args.sensitivity not in {'effort20','exclude_top_provider'}:
   parser.error('Only locked temporal effort20 and exclude_top_provider transport sensitivities are supported')
@@ -52,6 +54,7 @@ family=[c for c in p.columns if c.startswith('host_family_')]
 full=base+cl+lc+host+family
 models={'T0_port_location':full+extra[:2],'T1_port_connectivity':full+extra}
 if args.joint:models={'J1_natural_transport':full+natural+extra}
+if args.joint and args.sensitivity:models={'B5_sea_terrain':full+natural,**models}
 all_features=list(dict.fromkeys(x for cols in models.values() for x in cols))
 runname=('joint_' if args.joint else 'transport_')+runname
 def transition(period):
@@ -88,7 +91,8 @@ assert np.array_equal(old.target.to_numpy(),out.target.to_numpy())
 out['M5_host_composition']=old.M5_host_composition.to_numpy();results['M5_host_composition'],_=evaluate(out.M5_host_composition)
 if args.joint:
  for prefix,column in [('sea','B5_sea_terrain'),('transport','T1_port_connectivity')]:
-  reference=pd.read_parquet(W/f'predictions_{prefix}_{mode}.parquet')
+  if args.sensitivity and prefix=='sea':continue
+  reference=pd.read_parquet(W/f'predictions_{prefix}_{baseline_runname}.parquet')
   np.testing.assert_array_equal(reference[['speciesKey','cell','target']],out[['speciesKey','cell','target']])
   np.testing.assert_allclose(reference.M5_host_composition,out.M5_host_composition)
   out[column]=reference[column].to_numpy();results[column],_=evaluate(out[column])
@@ -118,6 +122,7 @@ for name,features in models.items():
   receipt.update(sensitivity_lock_sha256=hashlib.sha256((O/'transport_observation_sensitivity_lock.json').read_bytes()).hexdigest(),input_panel_sha256=hashlib.sha256(panel_path.read_bytes()).hexdigest(),baseline_predictions_sha256=hashlib.sha256((W/f'predictions_{baseline_runname}.parquet').read_bytes()).hexdigest())
  if args.joint:
   receipt.update(joint_lock_sha256=hashlib.sha256((O/'natural_transport_joint_lock.json').read_bytes()).hexdigest(),natural_feature_sha256={s:hashlib.sha256((R/'work/barriers'/s).read_bytes()).hexdigest() for s,_,_ in natural_sources},fitted_features=all_features)
+  if args.sensitivity:receipt.update(joint_sensitivity_lock_sha256=hashlib.sha256((O/'joint_effort20_lock.json').read_bytes()).hexdigest(),fitted_model_features=models)
  (O/f'forecast_{runname}_results.json').write_text(json.dumps(receipt,indent=2))
  print(name,results[name],'seconds',round(time.monotonic()-started,1),flush=True)
 receipt['status']='COMPLETE';(O/f'forecast_{runname}_results.json').write_text(json.dumps(receipt,indent=2));print('COMPLETE',runname,flush=True)
