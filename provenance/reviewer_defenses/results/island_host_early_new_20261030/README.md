@@ -1,0 +1,2 @@
+# Reproduction
+Run scripts in original work/barriers/ project location. The prior island_host_null snapshot supplies base family-null results and locks. Run --family --earlier, --family --earlier --common, and --family --common, then summarize_island_host_early_new.py. Detailed observed-pair outputs and restricted source host network remain local. This is retrospective compatibility, not a forecast or transport mechanism.
