@@ -1,0 +1,105 @@
+{
+  "schema": "chocho_island_host_recording_exact_verified_summary_20261030_v1",
+  "scope": "Exploratory post-pilot recording co-location, not biological host absence and not an independent host effect",
+  "original_candidate_pairs": 2385,
+  "original_positive_pairs": 66,
+  "primary_uniform_exact": {
+    "observed_H": 20,
+    "null_expected_H": 17.06018423356553,
+    "null_sd_H": 1.46783154074609,
+    "score_min": 12,
+    "score_max": 22,
+    "full_fiber": 147117600,
+    "upper_tail_count": 6487980,
+    "inclusive_upper_tail_probability": 0.04410063785706129,
+    "H_histogram": {
+      "12": 37600,
+      "13": 788200,
+      "14": 4843340,
+      "15": 15454180,
+      "16": 30405260,
+      "17": 38986040,
+      "18": 32688900,
+      "19": 17426100,
+      "20": 5513820,
+      "21": 914760,
+      "22": 59400
+    },
+    "observed_variable_positive_host_count": 11,
+    "observed_forced_positive_host_count": 9
+  },
+  "leave_one_informative_block_out": {
+    "longitude_1:tropical": {
+      "observed_H": 14,
+      "expected_H": 12.1,
+      "tables": 2800,
+      "upper_tail_tables": 180,
+      "tail_probability": 0.06428571428571428
+    },
+    "longitude_3:north_extratropical": {
+      "observed_H": 16,
+      "expected_H": 14.56018423356553,
+      "tables": 5254200,
+      "upper_tail_tables": 1121180,
+      "tail_probability": 0.21338738532983137
+    },
+    "longitude_3:tropical": {
+      "observed_H": 19,
+      "expected_H": 16.460184233565528,
+      "tables": 14711760,
+      "upper_tail_tables": 977490,
+      "tail_probability": 0.06644276415602213
+    }
+  },
+  "distance_co_recording_uniform_finite_law": {
+    "observed_D": 490.5505767931783,
+    "null_expected_D": 507.1927755914901,
+    "correlation_H_D": -0.1488477943734855
+  },
+  "distance_tilt_post_result_sensitivity": {
+    "family": "P_lambda(T) proportional to exp(-lambda*D(T)) on exactly the same fixed fiber, lambda>=0",
+    "lambda_fit_by_matching_expected_D": 0.7611080093702449,
+    "target_observed_D": 490.5505767931783,
+    "profiles": [
+      {
+        "multiplier": 0,
+        "lambda": 0,
+        "expected_H": 17.06018423356553,
+        "H_ge20_probability": 0.04410063785706128
+      },
+      {
+        "multiplier": 0.5,
+        "lambda": 0.38055400468512246,
+        "expected_H": 17.558692552166665,
+        "H_ge20_probability": 0.0807992912932002
+      },
+      {
+        "multiplier": 1,
+        "lambda": 0.7611080093702449,
+        "expected_H": 18.049327866145973,
+        "H_ge20_probability": 0.1305459571904408
+      },
+      {
+        "multiplier": 2,
+        "lambda": 1.5222160187404898,
+        "expected_H": 18.39813378489574,
+        "H_ge20_probability": 0.17167160521996666
+      }
+    ],
+    "not_valid_exact_composite_null_p_value": true
+  },
+  "inferential_caveats": {
+    "no_true_host_absence_controls": true,
+    "informative_host_blocks": 3,
+    "plant_record_effort_and_source_distance_not_completely_separable": true,
+    "port_additive_effect_invariant_under_fixed_island_margins": true,
+    "source_islands_are_recorded_not_verified_reproducing_populations": true,
+    "exploratory_multiple_hypotheses": true
+  },
+  "script": "scripts/analyze_island_recorded_host_exact_20261030.py",
+  "plans": [
+    "provenance/archive/host_hindcast/ISLAND_RECORDED_HOST_EXACT_PLAN_20261030.md",
+    "provenance/archive/host_hindcast/ISLAND_RECORDED_HOST_DISTANCE_SENSITIVITY_PLAN_20261030.md"
+  ],
+  "report": "provenance/archive/host_hindcast/ISLAND_RECORDED_HOST_EXACT_RESULTS_20261030.md"
+}
