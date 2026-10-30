@@ -1,0 +1,24 @@
+{
+  "created": "2026-10-30T04:12:26.105622+00:00",
+  "status": "EXPLORATORY_SPEC_BEFORE_FIT_AFTER_DESCRIPTIVE_PLOTS",
+  "response": "2019-2022 recording probability, adjusted for 2015-2018 baseline",
+  "population": "existing island subset of 155 eligible species; 225 candidates retained in original disposition",
+  "model": "species-by-landmass fixed effects weighted least squares, species equal total weight",
+  "exposure": "log1p(distance to 2019 port), interaction with introduced_share centered at .5",
+  "controls": [
+    "baseline recording probability",
+    "log1p prior and subsequent recording days",
+    "prior and subsequent provider dominance",
+    "baseline temperature and precipitation plus temporal trends",
+    "baseline cropland,built,tree cover plus temporal trends"
+  ],
+  "sensitivities": [
+    "exclude Great Britain and Ireland",
+    "small provider dominance change abs<=.1"
+  ],
+  "inference": "two-way species and 5-degree spatial-block cluster covariance; few-island limits retained; no causal mediation or transport inference",
+  "host_scale": "species-region static introduced host proportion, not local plants",
+  "fixed_effect_elimination": "weighted within species-landmass centering; drop zero-variation columns; report rank/condition",
+  "primary_association": "log port distance x introduced host proportion",
+  "not_forecast": true
+}
