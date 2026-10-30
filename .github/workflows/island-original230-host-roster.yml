@@ -1,0 +1,117 @@
+name: Original230 source-verified host roster (2026-10-30 JST)
+
+on:
+  push:
+    branches:
+      - analysis/island-isolation-port-geography-20261029
+    paths:
+      - scripts/derive_original230_host_roster_20261030.py
+      - tests/test_original230_host_roster_20261030.py
+      - .github/workflows/island-original230-host-roster.yml
+      - provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: original230-host-roster-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  original230-derived-host-roster:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Test identity, complete counts, ambiguity and derived-only release
+        run: |
+          python -m pip install 'pytest>=8,<10'
+          python -m pytest -q tests/test_original230_host_roster_20261030.py
+
+      - name: Verify fresh source run and artifact identity before restoration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _original230_private
+          gh api repos/zuizui0223/chocho/actions/runs/39006554609 > _original230_private/source_run.json
+          gh api repos/zuizui0223/chocho/actions/artifacts/12090584135 > _original230_private/source_artifact.json
+          python scripts/derive_original230_host_roster_20261030.py \
+            --verify-source-metadata \
+            --run-metadata _original230_private/source_run.json \
+            --artifact-metadata _original230_private/source_artifact.json
+
+      - name: Restore only the pinned author artifact inside this runner
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '12090584135'
+          run-id: 39006554609
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          path: _original230_private/artifact
+
+      - name: Verify inner source and all239 counts, then derive all230 and baseline93
+        run: |
+          python scripts/derive_original230_host_roster_20261030.py \
+            --run-metadata _original230_private/source_run.json \
+            --artifact-metadata _original230_private/source_artifact.json \
+            --source-archive-directory _original230_private/artifact \
+            --output-dir _original230_output
+
+      - name: Preserve only the five validated derived files
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original230-derived-host-roster-20261030
+          path: |
+            _original230_output/original230_host_edges.csv
+            _original230_output/original239_host_count_alignment.csv
+            _original230_output/plant_taxon_query_candidates.csv
+            _original230_output/baseline93_host_coverage.csv
+            _original230_output/original230_host_roster_manifest.json
+          if-no-files-found: error
+          retention-days: 60
+
+      - name: Record an explicit incomplete status if restoration or validation failed
+        if: failure()
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          output = Path('_original230_output')
+          output.mkdir(exist_ok=True)
+          path = output / 'original230_host_roster_manifest.json'
+          if not path.exists():
+              receipt = {
+                  'schema': 'chocho_original230_source_host_roster_20261030_v1',
+                  'status': 'INCOMPLETE_SOURCE_OR_COHORT_VALIDATION_FAILED',
+                  'qualified_host_roster': False,
+                  'failed_stage': 'workflow_test_restore_or_export',
+                  'executed_utc': datetime.now(timezone.utc).isoformat(),
+                  'no_occurrence_queries_performed': True,
+                  'execution': {key: os.environ[key] for key in (
+                      'GITHUB_SHA', 'GITHUB_RUN_ID', 'GITHUB_RUN_ATTEMPT', 'GITHUB_JOB'
+                  ) if key in os.environ},
+              }
+              path.write_text(json.dumps(receipt, indent=2) + '\n')
+          print('ORIGINAL230_FAILURE_MANIFEST=' + path.read_text())
+          PY
+
+      - name: Preserve failure receipt without partial tables or raw sources
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original230-incomplete-receipt-20261030
+          path: _original230_output/original230_host_roster_manifest.json
+          if-no-files-found: error
+          retention-days: 60
+
+      - name: Remove runner-only source archive and metadata
+        if: always()
+        run: rm -rf -- _original230_private
