@@ -1,0 +1,2 @@
+# Reproduction
+Run analyze_port_connectivity_hosts.py at the original work/barriers/ location after the archived-connectivity acquisition and join scripts. Inputs and hashes are listed in the audit. Raw archived observations and detailed joined port rows remain local pending primary usage-term verification. This snapshot contains descriptive correlations, not an estimate of transport or introduction effects.
