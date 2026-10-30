@@ -90,16 +90,19 @@ def block_distribution(rows: list[tuple[int, tuple[tuple[int, int, float], ...]]
 
 
 def block_moments(rows: list[tuple[int, tuple[tuple[int, int, float], ...]]],
-                  caps: tuple[int, ...]) -> dict:
+                  caps: tuple[int, ...], include_table_scores: bool = False) -> dict:
     """Independent direct enumeration of complete tables and H/D moments."""
     count = 0
     sum_h = sum_h2 = sum_d = sum_d2 = sum_hd = 0.0
+    scores = [] if include_table_scores else None
     def walk(index: int, remaining: tuple[int, ...], h: int, d: float):
         nonlocal count, sum_h, sum_h2, sum_d, sum_d2, sum_hd
         if index == len(rows):
             if any(remaining):
                 return
             count += 1
+            if include_table_scores:
+                scores.append((h, d))
             sum_h += h
             sum_h2 += h * h
             sum_d += d
@@ -119,13 +122,103 @@ def block_moments(rows: list[tuple[int, tuple[tuple[int, int, float], ...]]],
     walk(0, caps, 0, 0.0)
     assert count > 0
     mh, md = sum_h / count, sum_d / count
-    return {
+    out = {
         "count": count,
         "expected_H": mh,
         "variance_H": max(0.0, sum_h2 / count - mh * mh),
         "expected_D": md,
         "variance_D": max(0.0, sum_d2 / count - md * md),
         "covariance_H_D": sum_hd / count - mh * md,
+    }
+    if include_table_scores:
+        out["_scores"] = scores
+    return out
+
+
+
+def weighted_profile(block_scores: list[tuple[str, list[tuple[int, float]]]],
+                     lam: float, threshold: int) -> dict:
+    """Exactly sum exp(-lambda*D) weights within each finite table block.
+
+    Lambda is treated as a fixed supplied parameter here. No resampling occurs.
+    Normalizing within blocks is equivalent to the full product-table law.
+    """
+    if lam < 0:
+        raise ValueError("This source-proximity sensitivity permits lambda >= 0")
+    full: dict[int, float] = {0: 1.0}
+    expected_h = expected_d = 0.0
+    for _name, scores in block_scores:
+        if not scores:
+            raise ValueError("Empty existing exact block")
+        d_min = min(d for _h, d in scores)
+        hist: dict[int, float] = defaultdict(float)
+        total_weight = weighted_h = weighted_d = 0.0
+        for h, d in scores:
+            w = math.exp(-lam * (d - d_min))
+            hist[h] += w
+            total_weight += w
+            weighted_h += h * w
+            weighted_d += d * w
+        if total_weight <= 0:
+            raise ValueError("Weighted enumeration lost positive finite support")
+        expected_h += weighted_h / total_weight
+        expected_d += weighted_d / total_weight
+        normalized = {h: w / total_weight for h, w in hist.items()}
+        next_full: dict[int, float] = defaultdict(float)
+        for prev_score, prev_prob in full.items():
+            for h, probability in normalized.items():
+                next_full[prev_score + h] += prev_prob * probability
+        full = dict(next_full)
+    if not math.isclose(sum(full.values()), 1.0, rel_tol=0, abs_tol=1e-10):
+        raise ValueError("Weighted score probabilities are not normalized")
+    return {
+        "lambda": lam,
+        "null_expected_distance_score_D": expected_d,
+        "null_expected_recorded_host_score_H": expected_h,
+        "probability_H_at_least_observed": sum(p for h, p in full.items() if h >= threshold),
+        "normalized_score_probability_sum": sum(full.values()),
+    }
+
+
+def distance_tilt_sensitivity(block_scores: list[tuple[str, list[tuple[int, float]]]],
+                              observed_d: float, observed_h: int) -> dict:
+    """Post-result plug-in check, explicitly NOT an exact composite-null test."""
+    uniform = weighted_profile(block_scores, 0.0, observed_h)
+    if observed_d >= uniform["null_expected_distance_score_D"]:
+        return {
+            "status": "nonnegative_proximity_tilt_cannot_match_distance",
+            "uniform": uniform,
+            "not_a_composite_null_p_value": True,
+        }
+    lower, upper = 0.0, 0.1
+    for _ in range(30):
+        if weighted_profile(block_scores, upper, observed_h)["null_expected_distance_score_D"] <= observed_d:
+            break
+        upper *= 2
+    else:
+        raise ValueError("Observed distance outside attainable finite-law tilt")
+    for _ in range(80):
+        mid = (lower + upper) / 2
+        if weighted_profile(block_scores, mid, observed_h)["null_expected_distance_score_D"] > observed_d:
+            lower = mid
+        else:
+            upper = mid
+    fitted_lambda = (lower + upper) / 2
+    matched = weighted_profile(block_scores, fitted_lambda, observed_h)
+    if not math.isclose(matched["null_expected_distance_score_D"], observed_d,
+                        rel_tol=0, abs_tol=1e-7):
+        raise ValueError("Distance-tilt moment matching failed")
+    return {
+        "status": "distance_moment_matched",
+        "observed_distance_score_D": observed_d,
+        "uniform": uniform,
+        "fitted_lambda": fitted_lambda,
+        "half_fitted_lambda": weighted_profile(block_scores, fitted_lambda / 2, observed_h),
+        "fitted_lambda_profile": matched,
+        "twice_fitted_lambda": weighted_profile(block_scores, 2 * fitted_lambda, observed_h),
+        "not_a_composite_null_p_value": True,
+        "distance_proxy_not_actual_colonist_source": True,
+        "missing_host_taxonomy_not_biological_absence": True,
     }
 
 
@@ -175,6 +268,7 @@ def run(root: Path = ROOT) -> dict:
         raise ValueError("Distance-score audit does not reproduce prior observed statistic")
 
     blocks = []
+    state_scores = []
     full = {0: 1}
     global_expected_h = global_expected_d = global_variance_h = global_variance_d = global_covariance = 0.0
     for name, expected in expected_blocks.items():
@@ -211,7 +305,8 @@ def run(root: Path = ROOT) -> dict:
             raise ValueError(f"Frozen structural margins changed: {name}")
 
         hist = block_distribution(rows, capacities)
-        moments = block_moments(rows, capacities)
+        moments = block_moments(rows, capacities, include_table_scores=True)
+        state_scores.append((name, moments.pop("_scores")))
         n = sum(hist.values())
         if n != moments["count"] or str(n) != expected["fiber_cardinality_decimal"]:
             raise ValueError(f"Mismatch with old exactly counted block {name}")
@@ -248,6 +343,10 @@ def run(root: Path = ROOT) -> dict:
 
     score_correlation = (global_covariance / math.sqrt(global_variance_h * global_variance_d)
                          if global_variance_h > 0 and global_variance_d > 0 else None)
+    tilt = distance_tilt_sensitivity(state_scores, observed_d, observed_h)
+    if not math.isclose(tilt["uniform"]["probability_H_at_least_observed"],
+                        main["inclusive_upper_tail_probability"], abs_tol=1e-12):
+        raise ValueError("Distance tilt at zero disagrees with primary exact uniform law")
     return {
         "schema": "chocho_exploratory_recorded_host_exact_fiber_20261030_v1",
         "not_biological_host_absence": True,
@@ -263,6 +362,7 @@ def run(root: Path = ROOT) -> dict:
         "blocks": blocks,
         "informative_host_blocks": len(nonconstant),
         "leave_one_informative_block_out": sensitivity,
+        "distance_tilt_sensitivity": tilt,
         "distance_score_companion": {
             "observed_total_log1p_gap": observed_d,
             "null_expected_total_log1p_gap": global_expected_d,
