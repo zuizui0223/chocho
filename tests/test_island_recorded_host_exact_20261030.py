@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import math
 from pathlib import Path
 import pytest
@@ -89,5 +90,11 @@ def test_frozen_reproducible_fiber_and_no_drift():
                         0.1305459571904408, abs_tol=1e-7)
     assert math.isclose(tilt["uniform"]["probability_H_at_least_observed"],
                         s["inclusive_upper_tail_probability"], abs_tol=1e-12)
+    saved = json.loads((ROOT / "data/exploratory/island_recorded_host_exact_20261030/recorded_host_exact_summary.json").read_text(encoding="utf-8"))
+    assert saved["primary_uniform_exact"]["full_fiber"] == s["exact_fiber_count"]
+    assert saved["primary_uniform_exact"]["upper_tail_count"] == s["inclusive_upper_tail_count"]
+    assert saved["primary_uniform_exact"]["H_histogram"] == result["score_distribution"]
+    assert math.isclose(saved["distance_tilt_post_result_sensitivity"]["profiles"][2]["H_ge20_probability"],
+                        tilt["fitted_lambda_profile"]["probability_H_at_least_observed"], abs_tol=1e-7)
     assert result["not_biological_host_absence"] is True
     assert result["not_confirmatory"] is True
