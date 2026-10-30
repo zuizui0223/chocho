@@ -1,5 +1,7 @@
 # Island barriers: baseline census, recorded sources and actual host co-recording
 
+**Continuation dated2026-10-30 JST:** [exact conditional-distance validation and original230 host-roster recovery](ISLAND_EXACT_NULL_HOST_ROSTER_RESULTS_20261030.md). The MCMC qualification failures below remain the result of this earlier run.
+
 **Result:** the added baseline census cannot fill the near-continent / far-port recording gap. In the already observed island panel, later focal-species records have shorter distances to earlier recorded source candidates than the sampled conditional reference configurations, but none of the three analyses qualifies for a tail-probability claim. Fresh point-to-island host acquisition succeeds technically and shows that the old positive-country subset does not overlap the fixed96 butterfly panel.
 
 This continues draft [PR #102](https://github.com/zuizui0223/chocho/pull/102) from repository commit `757d7568b4f57ac074c240f78441cfb20eb3b09f`. The [continuation plan](ISLAND_BASELINE_HOST_PLAN_20261029.md) was saved before these acquisitions and sampling runs, SHA256 `67c25d1f28ff9f98def1122fc0fa0b4782062e08cf3dae5497cd3806795a82e6`. All times below are UTC. The previous96 outcomes were already known; the source-distance analysis is explicitly post-pilot exploration. The previous richness/port models remain unfitted under their original gates.

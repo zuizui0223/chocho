@@ -1,0 +1,38 @@
+{
+  "input_sha256": {
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_coast_pairs.csv": "d83803dd3f976069533da40ff1c20f6602386b699de3dd744f37096e63f03545",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_diagnostic.json": "372fec4a1035132c17eec67c5392c5eab0727d3c596edb2d4f2b45b88b6ecebb",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_fixed_margins.csv": "e472a2dcb0977a02dda1f313bc66ab32d0c096a2b74d505c764791b1b15ecbd0",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_risk_cells.csv": "a8c7905f1ef6e187b2647d5ed39f1a5a67f901b94a5aab3a86b6358969f72fb4",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_run_lock.json": "a0124d968516c1d9a5b5cffb1ba6d6dd7f5826cedccd81c188c9d2e295735619",
+    "provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9"
+  },
+  "marginal_upper_alpha": 0.05,
+  "max_attempted_pattern_transitions_per_block": 2000000,
+  "max_memo_states_per_block": 100000,
+  "numpy_version": "2.3.5",
+  "plan": "provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md",
+  "plan_sha256": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9",
+  "python_version": "3.12.14",
+  "samples_per_scenario": 100000,
+  "sampling_with_replacement": true,
+  "scenario_order_and_seeds": [
+    {
+      "analysis": "primary",
+      "seed": 2026103001
+    },
+    {
+      "analysis": "source_records_ge3",
+      "seed": 2026103002
+    },
+    {
+      "analysis": "late_records_ge2",
+      "seed": 2026103003
+    }
+  ],
+  "schema": "chocho_exact_conditional_source_null_run_lock_20261030_v1",
+  "script_sha256": "ae37f7902910c86d3ec9173824920f110636bcd0989dc9c41249d40c37f349f0",
+  "simultaneous_three_scenario_upper_alpha": 0.016666666666666666,
+  "started_utc": "2026-10-29T22:47:40.130286+00:00",
+  "tail_tie_tolerance": 1e-12
+}

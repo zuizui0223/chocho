@@ -1,0 +1,50 @@
+{
+  "captured_stdout_lines": [
+    "{\"stage\": \"exact_counts_complete\", \"analysis\": \"primary\", \"fiber_cardinality_decimal\": \"3496100624678845194886224\", \"block_counts\": [\"1\", \"6870383478\", \"91827\", \"5541566504\"]}",
+    "{\"stage\": \"fixed_independent_draws_complete\", \"analysis\": \"primary\", \"stored_samples\": 100000, \"stored_margin_checks\": 100000}",
+    "{\"stage\": \"exact_counts_complete\", \"analysis\": \"source_records_ge3\", \"fiber_cardinality_decimal\": \"70389053018969220551610\", \"block_counts\": [\"1\", \"1403180478\", \"18727\", \"2678695685\"]}",
+    "{\"stage\": \"fixed_independent_draws_complete\", \"analysis\": \"source_records_ge3\", \"stored_samples\": 100000, \"stored_margin_checks\": 100000}",
+    "{\"stage\": \"exact_counts_complete\", \"analysis\": \"late_records_ge2\", \"fiber_cardinality_decimal\": \"4470500064\", \"block_counts\": [\"1\", \"4692\", \"1\", \"952792\"]}",
+    "{\"stage\": \"fixed_independent_draws_complete\", \"analysis\": \"late_records_ge2\", \"stored_samples\": 100000, \"stored_margin_checks\": 100000}"
+  ],
+  "command": "/tmp/chocho-followup-venv/bin/python scripts/analyze_island_source_exact_null_20261030.py",
+  "exit_code": 0,
+  "finished_utc": "2026-10-29T22:48:34.890606+00:00",
+  "independent_post_run_review": {
+    "all_input_output_script_and_run_lock_hashes_checked": true,
+    "block_csv_rows_reconciled": 12,
+    "conditional_mean_and_variance_independently_checked_by_forward_reward_moments": true,
+    "exact_cell_occupancy_numerators_independently_recomputed": 6967,
+    "late_records_ge2_unique_tail_row": {
+      "T": 7.817510900516905,
+      "global_rank": "2072598585",
+      "sample": 8704
+    },
+    "one_hit_bounds_independently_checked_by_binomial_CDF_bisection": true,
+    "revisions_required": false,
+    "saved_sample_rows_and_declared_seed_rank_replays_checked": 300000,
+    "selected_saved_tables_independently_unranked": 16,
+    "status": "PASSED"
+  },
+  "independent_pre_run_review": {
+    "core_and_runner_cleared": true,
+    "failure_behavior": "INCOMPLETE_NO_QUALIFIED_BOUND; qualified_bounds=false; no sampled files or qualified probability bounds",
+    "real_state_cap_failure_receipt_checked": true,
+    "real_transition_cap_failure_receipt_checked": true
+  },
+  "plan_sha256": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9",
+  "run_lock_sha256": "1d2e7ccc251abeece13ab3123ec6af7cfc392465e1045e4ebd0d66ee7a4468f5",
+  "schema": "chocho_exact_null_execution_receipt_20261030_v1",
+  "scientific_outputs_unchanged_after_completion": true,
+  "script_sha256": "ae37f7902910c86d3ec9173824920f110636bcd0989dc9c41249d40c37f349f0",
+  "started_utc": "2026-10-29T22:47:40.130286+00:00",
+  "stdout_capture_note": "The six lines below are transcribed from the original successful execution tool output, in order. No additional null run was performed to produce this receipt.",
+  "tests": {
+    "command": "/tmp/chocho-followup-venv/bin/python -m pytest tests/test_island_source_exact_null_20261030.py -q",
+    "exhaustive_compatible_three_by_three_mask_table_pairs": 19683,
+    "independent_reviewer_result": "19 passed in4.61s",
+    "last_worker_result": "19 passed in3.58s",
+    "test_first_evidence": "17 tests failed for missing implementation, then passed; two added integration tests failed for missing loader/runner interfaces, then all19 passed."
+  },
+  "working_directory": "repository root"
+}

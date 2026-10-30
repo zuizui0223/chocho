@@ -1,0 +1,539 @@
+{
+  "schema": "chocho_independent_exact_null_review_20261030_v1",
+  "status": "READY_WITH_INTERPRETATION_CAVEATS",
+  "production_verification": {
+    "status": "ALL_FINAL_REVIEW_CHECKS_PASSED",
+    "diagnostic_sha256": "9b2b21478c6a73dce547328995628f58e7d3c0f351649a037c7fee9fa74c939c",
+    "script_sha256": "ae37f7902910c86d3ec9173824920f110636bcd0989dc9c41249d40c37f349f0",
+    "run_lock_sha256": "1d2e7ccc251abeece13ab3123ec6af7cfc392465e1045e4ebd0d66ee7a4468f5",
+    "source_and_output_hashes_checked": 13,
+    "cell_occupancy_rows_checked": 6967,
+    "block_summary_rows_checked": 12,
+    "analyses": {
+      "primary": {
+        "fiber_count": "3496100624678845194886224",
+        "saved_samples_checked": 100000,
+        "unique_saved_ranks": 100000,
+        "tail_count": 0,
+        "tail_sample_indices": [],
+        "independently_reconstructed_sample_indices": [
+          1,
+          2,
+          50000,
+          99999,
+          100000
+        ],
+        "independent_mean_T": 8.149904123657251,
+        "independent_variance_T": 0.011442110097821175,
+        "sample_mean_T": 8.149464934125524,
+        "one_sided_95_upper": 0.000029956874019427958,
+        "simultaneous_three_scenario_95_upper": 0.000040942607450790544,
+        "tail_saved_rows": []
+      },
+      "source_records_ge3": {
+        "fiber_count": "70389053018969220551610",
+        "saved_samples_checked": 100000,
+        "unique_saved_ranks": 100000,
+        "tail_count": 0,
+        "tail_sample_indices": [],
+        "independently_reconstructed_sample_indices": [
+          1,
+          2,
+          50000,
+          99999,
+          100000
+        ],
+        "independent_mean_T": 8.319693155195434,
+        "independent_variance_T": 0.010836910525801796,
+        "sample_mean_T": 8.319591355633955,
+        "one_sided_95_upper": 0.000029956874019427958,
+        "simultaneous_three_scenario_95_upper": 0.000040942607450790544,
+        "tail_saved_rows": []
+      },
+      "late_records_ge2": {
+        "fiber_count": "4470500064",
+        "saved_samples_checked": 100000,
+        "unique_saved_ranks": 99999,
+        "tail_count": 1,
+        "tail_sample_indices": [
+          8704
+        ],
+        "independently_reconstructed_sample_indices": [
+          1,
+          2,
+          8704,
+          50000,
+          99999,
+          100000
+        ],
+        "independent_mean_T": 8.349500000238908,
+        "independent_variance_T": 0.015225528180682367,
+        "sample_mean_T": 8.34988951992668,
+        "one_sided_95_upper": 0.00004743775717386053,
+        "simultaneous_three_scenario_95_upper": 0.00006046785128159402,
+        "tail_saved_rows": [
+          {
+            "analysis": "late_records_ge2",
+            "sample": "8704",
+            "seed": "2026103003",
+            "global_rank": "2072598585",
+            "mean_log1p_source_gap_km": "7.817510900516905"
+          }
+        ]
+      }
+    },
+    "saved_seed_sequences_replayed": 300000,
+    "block_csv_every_field_reconciled": true,
+    "selected_table_reconstructions": 16,
+    "cap_failure_receipt_checks": [
+      "MAX_STATES=1",
+      "MAX_TRANSITIONS=1"
+    ]
+  },
+  "source_sha256": {
+    "provenance/archive/host_hindcast/ISLAND_EXACT_NULL_HOST_ROSTER_PLAN_20261030.md": "ce04b052a37ad4f07d2c81e87916dbf3addac3083a7117ebecea47545a4f99e9",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_diagnostic.json": "372fec4a1035132c17eec67c5392c5eab0727d3c596edb2d4f2b45b88b6ecebb",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_risk_cells.csv": "a8c7905f1ef6e187b2647d5ed39f1a5a67f901b94a5aab3a86b6358969f72fb4",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_fixed_margins.csv": "e472a2dcb0977a02dda1f313bc66ab32d0c096a2b74d505c764791b1b15ecbd0",
+    "data/exploratory/island_recorded_sources_20261029/recorded_source_target_support.csv": "9bbf0d50f1a42b82879f23ef966a6de4a6dc36f5dc03cc92e5c511fc6bad3e74"
+  },
+  "review_method": "Read-only independent original-row-order DP from frozen risk/margin CSVs, with a separately written prefix-times-suffix occupancy calculation. Independent selected occupancy numerators also checked by forcing each cell to one, reducing the corresponding row/column margins, forbidding that cell and recounting. No new random realizations by reviewer; all stored rank sequences were deterministically replayed against the declared seeds after the production run.",
+  "core_tests": {
+    "command": "/tmp/chocho-followup-venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_island_source_exact_null_20261030.py",
+    "passed": 19
+  },
+  "independent_benchmarks": {
+    "primary": {
+      "fiber_count": "3496100624678845194886224",
+      "positive_cells": 66,
+      "null_mean_T": 8.149904123657251,
+      "observed_T": 7.4325844968663395,
+      "blocks": [
+        {
+          "block": "longitude_0",
+          "fiber_count": "1",
+          "independent_dp_cache_states": 2,
+          "positive_cells": 1,
+          "observed_T": 3.364674616449286,
+          "null_mean_T": 3.364674616449286,
+          "observed_score_sum": 3.364674616449286,
+          "null_mean_score_sum": 3.364674616449286,
+          "contribution_to_global_mean_difference": 0,
+          "variable_cells": 0,
+          "forced_positive_cells": 1,
+          "selected_occupancy_checks": []
+        },
+        {
+          "block": "longitude_1",
+          "fiber_count": "6870383478",
+          "independent_dp_cache_states": 6880,
+          "positive_cells": 21,
+          "observed_T": 6.341528019541429,
+          "null_mean_T": 7.982321583582065,
+          "observed_score_sum": 133.17208841037,
+          "null_mean_score_sum": 167.62875325522336,
+          "contribution_to_global_mean_difference": -0.522070679467475,
+          "variable_cells": 108,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 5,
+              "column": 1,
+              "occupied_table_count": "1680549570",
+              "fiber_count": "6870383478",
+              "probability": 0.24460782653273608
+            },
+            {
+              "row": 5,
+              "column": 3,
+              "occupied_table_count": "532042560",
+              "fiber_count": "6870383478",
+              "probability": 0.0774400092372835
+            },
+            {
+              "row": 5,
+              "column": 12,
+              "occupied_table_count": "749759220",
+              "fiber_count": "6870383478",
+              "probability": 0.10912916613764598
+            }
+          ]
+        },
+        {
+          "block": "longitude_2",
+          "fiber_count": "91827",
+          "independent_dp_cache_states": 1280,
+          "positive_cells": 19,
+          "observed_T": 7.679054407061876,
+          "null_mean_T": 7.9922797197804964,
+          "observed_score_sum": 145.90203373417563,
+          "null_mean_score_sum": 151.85331467582944,
+          "contribution_to_global_mean_difference": -0.090170923358391,
+          "variable_cells": 49,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 2,
+              "column": 0,
+              "occupied_table_count": "14773",
+              "fiber_count": "91827",
+              "probability": 0.1608786086880765
+            },
+            {
+              "row": 2,
+              "column": 2,
+              "occupied_table_count": "10025",
+              "fiber_count": "91827",
+              "probability": 0.10917268341555315
+            },
+            {
+              "row": 2,
+              "column": 4,
+              "occupied_table_count": "29996",
+              "fiber_count": "91827",
+              "probability": 0.32665773683121524
+            }
+          ]
+        },
+        {
+          "block": "longitude_3",
+          "fiber_count": "5541566504",
+          "independent_dp_cache_states": 9084,
+          "positive_cells": 25,
+          "observed_T": 8.324471201287338,
+          "null_mean_T": 8.601877184555057,
+          "observed_score_sum": 208.11178003218345,
+          "null_mean_score_sum": 215.04692961387644,
+          "contribution_to_global_mean_difference": -0.10507802396504541,
+          "variable_cells": 102,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 7,
+              "column": 7,
+              "occupied_table_count": "3851570070",
+              "fiber_count": "5541566504",
+              "probability": 0.6950327253529971
+            },
+            {
+              "row": 7,
+              "column": 17,
+              "occupied_table_count": "1212759917",
+              "fiber_count": "5541566504",
+              "probability": 0.2188478503550591
+            },
+            {
+              "row": 7,
+              "column": 19,
+              "occupied_table_count": "1743501564",
+              "fiber_count": "5541566504",
+              "probability": 0.3146225102128631
+            }
+          ]
+        }
+      ]
+    },
+    "source_records_ge3": {
+      "fiber_count": "70389053018969220551610",
+      "positive_cells": 62,
+      "null_mean_T": 8.319693155195434,
+      "observed_T": 7.72152241980405,
+      "blocks": [
+        {
+          "block": "longitude_0",
+          "fiber_count": "1",
+          "independent_dp_cache_states": 2,
+          "positive_cells": 1,
+          "observed_T": 8.674984061591068,
+          "null_mean_T": 8.674984061591068,
+          "observed_score_sum": 8.674984061591068,
+          "null_mean_score_sum": 8.674984061591068,
+          "contribution_to_global_mean_difference": 0,
+          "variable_cells": 0,
+          "forced_positive_cells": 1,
+          "selected_occupancy_checks": []
+        },
+        {
+          "block": "longitude_1",
+          "fiber_count": "1403180478",
+          "independent_dp_cache_states": 4954,
+          "positive_cells": 20,
+          "observed_T": 6.595532584191226,
+          "null_mean_T": 8.04508985089613,
+          "observed_score_sum": 131.9106516838245,
+          "null_mean_score_sum": 160.9017970179226,
+          "contribution_to_global_mean_difference": -0.4675991182919047,
+          "variable_cells": 102,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 5,
+              "column": 1,
+              "occupied_table_count": "363388410",
+              "fiber_count": "1403180478",
+              "probability": 0.25897481877594936
+            },
+            {
+              "row": 5,
+              "column": 3,
+              "occupied_table_count": "106051680",
+              "fiber_count": "1403180478",
+              "probability": 0.07557950075756399
+            },
+            {
+              "row": 5,
+              "column": 12,
+              "occupied_table_count": "162261540",
+              "fiber_count": "1403180478",
+              "probability": 0.11563839616075389
+            }
+          ]
+        },
+        {
+          "block": "longitude_2",
+          "fiber_count": "18727",
+          "independent_dp_cache_states": 940,
+          "positive_cells": 17,
+          "observed_T": 7.821994078899043,
+          "null_mean_T": 8.057427447988408,
+          "observed_score_sum": 132.97389934128373,
+          "null_mean_score_sum": 136.97626661580293,
+          "contribution_to_global_mean_difference": -0.06455431087934196,
+          "variable_cells": 44,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 2,
+              "column": 0,
+              "occupied_table_count": "4141",
+              "fiber_count": "18727",
+              "probability": 0.22112457948416725
+            },
+            {
+              "row": 2,
+              "column": 2,
+              "occupied_table_count": "1475",
+              "fiber_count": "18727",
+              "probability": 0.07876328296043146
+            },
+            {
+              "row": 2,
+              "column": 4,
+              "occupied_table_count": "5147",
+              "fiber_count": "18727",
+              "probability": 0.2748438084049768
+            }
+          ]
+        },
+        {
+          "block": "longitude_3",
+          "fiber_count": "2678695685",
+          "independent_dp_cache_states": 8372,
+          "positive_cells": 24,
+          "observed_T": 8.54895228921466,
+          "null_mean_T": 8.719496996950017,
+          "observed_score_sum": 205.17485494115184,
+          "null_mean_score_sum": 209.2679279268004,
+          "contribution_to_global_mean_difference": -0.06601730622013831,
+          "variable_cells": 95,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 7,
+              "column": 7,
+              "occupied_table_count": "1769488152",
+              "fiber_count": "2678695685",
+              "probability": 0.6605782664707581
+            },
+            {
+              "row": 7,
+              "column": 17,
+              "occupied_table_count": "597896259",
+              "fiber_count": "2678695685",
+              "probability": 0.22320424912320713
+            },
+            {
+              "row": 7,
+              "column": 19,
+              "occupied_table_count": "863456377",
+              "fiber_count": "2678695685",
+              "probability": 0.32234209426443305
+            }
+          ]
+        }
+      ]
+    },
+    "late_records_ge2": {
+      "fiber_count": "4470500064",
+      "positive_cells": 35,
+      "null_mean_T": 8.349500000238908,
+      "observed_T": 7.8179783834080325,
+      "blocks": [
+        {
+          "block": "longitude_0",
+          "fiber_count": "1",
+          "independent_dp_cache_states": 1,
+          "positive_cells": 0,
+          "observed_T": null,
+          "null_mean_T": null,
+          "observed_score_sum": 0,
+          "null_mean_score_sum": 0,
+          "contribution_to_global_mean_difference": 0,
+          "variable_cells": 0,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": []
+        },
+        {
+          "block": "longitude_1",
+          "fiber_count": "4692",
+          "independent_dp_cache_states": 190,
+          "positive_cells": 11,
+          "observed_T": 6.629603227316651,
+          "null_mean_T": 8.006013745896297,
+          "observed_score_sum": 72.92563550048317,
+          "null_mean_score_sum": 88.06615120485927,
+          "contribution_to_global_mean_difference": -0.4325861629821743,
+          "variable_cells": 40,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 5,
+              "column": 1,
+              "occupied_table_count": "1176",
+              "fiber_count": "4692",
+              "probability": 0.2506393861892583
+            },
+            {
+              "row": 5,
+              "column": 12,
+              "occupied_table_count": "708",
+              "fiber_count": "4692",
+              "probability": 0.15089514066496162
+            },
+            {
+              "row": 5,
+              "column": 14,
+              "occupied_table_count": "528",
+              "fiber_count": "4692",
+              "probability": 0.11253196930946291
+            }
+          ]
+        },
+        {
+          "block": "longitude_2",
+          "fiber_count": "1",
+          "independent_dp_cache_states": 12,
+          "positive_cells": 9,
+          "observed_T": 8.13701754306318,
+          "null_mean_T": 8.13701754306318,
+          "observed_score_sum": 73.23315788756862,
+          "null_mean_score_sum": 73.23315788756862,
+          "contribution_to_global_mean_difference": 0,
+          "variable_cells": 0,
+          "forced_positive_cells": 9,
+          "selected_occupancy_checks": []
+        },
+        {
+          "block": "longitude_3",
+          "fiber_count": "952792",
+          "independent_dp_cache_states": 633,
+          "positive_cells": 15,
+          "observed_T": 8.498030002081956,
+          "null_mean_T": 8.728879394395593,
+          "observed_score_sum": 127.47045003122933,
+          "null_mean_score_sum": 130.9331909159339,
+          "contribution_to_global_mean_difference": -0.09893545384870167,
+          "variable_cells": 70,
+          "forced_positive_cells": 0,
+          "selected_occupancy_checks": [
+            {
+              "row": 7,
+              "column": 7,
+              "occupied_table_count": "431094",
+              "fiber_count": "952792",
+              "probability": 0.45245342110345177
+            },
+            {
+              "row": 7,
+              "column": 17,
+              "occupied_table_count": "52787",
+              "fiber_count": "952792",
+              "probability": 0.05540243830762643
+            },
+            {
+              "row": 7,
+              "column": 19,
+              "occupied_table_count": "108059",
+              "fiber_count": "952792",
+              "probability": 0.1134130009487905
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "forced_cell_count_crosschecks": [
+    [
+      "primary",
+      "longitude_1",
+      5,
+      1,
+      "1680549570"
+    ],
+    [
+      "primary",
+      "longitude_2",
+      2,
+      0,
+      "14773"
+    ],
+    [
+      "primary",
+      "longitude_3",
+      7,
+      7,
+      "3851570070"
+    ],
+    [
+      "source_records_ge3",
+      "longitude_1",
+      5,
+      1,
+      "363388410"
+    ],
+    [
+      "late_records_ge2",
+      "longitude_1",
+      5,
+      1,
+      "1176"
+    ],
+    [
+      "late_records_ge2",
+      "longitude_3",
+      7,
+      7,
+      "431094"
+    ]
+  ],
+  "zero_hit_binomial_bounds_at_100000": {
+    "one_sided_95_upper": 0.000029956874019427958,
+    "simultaneous_three_scenario_95_upper": 0.000040942607450790544
+  },
+  "target_eligibility_check": "Primary and source>=3 total late richness is invariant with fixed nonrisk records and fixed any-record risk column margins. For late>=2, every selected target has fixed nonrisk recorded richness plus its >=2 risk column margin at least5, exceeding the >=4 eligibility threshold even before any risk singletons. Selection is still outcome-informed and inference conditional on the frozen roster.",
+  "primary_descriptive_concentration": {
+    "positive_cells": 66,
+    "variable_allowed_cells": 259,
+    "candidate_cells": 2385,
+    "variable_positive_cells": 65,
+    "forced_positive_cells": 1,
+    "top_five_species_positive_cells": 26,
+    "largest_target_positive_cells": 10,
+    "top_four_targets_positive_cells": 26,
+    "single_late_record_positive_cells": 31,
+    "one_baseline_source_island_positive_cells": 12,
+    "longitude_1_share_of_total_mean_difference": 0.7278076048233534
+  },
+  "interpretation": "Exact means labeled integer table counts and unbiased-with-replacement pseudorandom rank draws. Binomial bounds concern Monte Carlo uncertainty in the frozen conditional-table tail; not exact enumeration of that tail, population sampling uncertainty, a colonization test or a causal port effect. Existing geographic upper-bound statistic/source omissions and original MCMC failure remain unchanged."
+}
+
