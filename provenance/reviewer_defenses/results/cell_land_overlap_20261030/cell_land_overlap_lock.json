@@ -1,0 +1,8 @@
+{
+ "status":"GEOGRAPHIC_SENSITIVITY_FIXED_AFTER_MODEL_RESULTS_BEFORE_AREA_AUDIT",
+ "scope":"All5282 original candidate10km cells; retain all cells and missing states",
+ "geometry":"Exact EPSG6933 cell boxes from integer cell identifiers, intersected with GSHHG2.3.7 high-resolution level1 polygons projected to6933. Union repeated sibling IDs within each cell.",
+ "outputs":"Total land fraction, dominant landmass share of land, centre-assigned landmass share, number of intersecting landmasses, centre/dominant agreement",
+ "sensitivity":"Existing strict-coordinate island subset plus at least50percent cell land and at least90percent of that land belonging to centre-assigned landmass. No refitting and no threshold tuning.",
+ "limits":"Static coastline polygon approximation, level1 does not subtract lakes. Not original occurrence precision verification or historical coastline reconstruction. Does not identify real barriers or movement."
+}

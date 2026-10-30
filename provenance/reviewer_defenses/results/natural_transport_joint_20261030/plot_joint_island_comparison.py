@@ -23,6 +23,6 @@ for ax,mode,title in zip(axes,['temporal','spatial'],['時間外','空間外＋�
     ax.ticklabel_format(axis='x',style='plain',useOffset=False)
     ax.spines[['top','right']].set_visible(False)
 fig.suptitle('島での統合モデル：改善方向は共通するが、差の区間はゼロをまたぐ',fontsize=15,y=.95)
-fig.text(.04,.08,'原座標帰属が一致する25島・95種・41,928行。同じ評価行で比較。\n線：種×空間ブロック2,000回再抽出の中央95%区間。予測は固定し、モデル再学習や資料誤差は含まない。\n港指数の支持は5島に偏る。自然地理の代理指標と記録確率の比較であり、輸送・中継の因果効果ではない。',fontsize=10)
+fig.text(.04,.04,'原座標帰属が一致する25島・95種・41,928行。同じ評価行で比較。\n線：種×空間ブロック2,000回再抽出の中央95%区間。予測は固定し、モデル再学習や資料誤差は含まない。\n港指数の支持は5島に偏る。自然地理の代理指標と記録確率の比較であり、輸送・中継の因果効果ではない。\n追加の面積条件は817/819セルが満たし、M5に対する改善率は時間外6.80%、空間外10.51%とほぼ不変。',fontsize=10)
 fig.savefig(O/'joint_island_comparison.png',dpi=170);plt.close(fig)
 pd.DataFrame(rows).to_csv(O/'joint_island_figure_values.csv',index=False)
