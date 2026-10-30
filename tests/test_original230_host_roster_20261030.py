@@ -153,6 +153,60 @@ def test_missing_or_nonatomic_focal_host_ids_are_not_zero_or_invented_links(bad_
         derive(m, inputs)
 
 
+def test_source_id_format_diagnostic_contains_counts_without_provider_values():
+    m = module()
+    values = ["", "23", "23.0", "23.5", "2.3e+06", "23-1", "23;24", "NA", "PRIVATE_VALUE"]
+    rows = [{"insect_species": "PRIVATE_FOCAL", "accepted_plant_name_id": value}
+            for value in values]
+    rows.append({"insect_species": "PRIVATE_OTHER", "accepted_plant_name_id": "42"})
+    audit = m.source_id_format_audit(rows, {"PRIVATE_FOCAL"})
+    assert audit["original_taxon_rows"] == {
+        "empty": 1, "digits": 1, "decimal_integral": 1, "decimal_fractional": 1,
+        "scientific_notation": 1, "hyphenated_numeric": 1, "multiple_id_separator": 1,
+        "missing_sentinel": 1, "other": 1,
+    }
+    assert audit["all_source_rows"] == dict(audit["original_taxon_rows"], digits=2)
+    encoded = json.dumps(audit)
+    assert "PRIVATE" not in encoded
+    assert "23" not in encoded
+
+
+def test_failing_source_id_preserves_strict_gate_and_attaches_aggregate_audit():
+    m = module()
+    inputs = synthetic_inputs()
+    inputs[0][4]["accepted_plant_name_id"] = "13.0"
+    with pytest.raises(ValueError, match="accepted plant ID") as failure:
+        derive(m, inputs)
+    assert failure.value.format_counts == {
+        "original_taxon_rows": {"decimal_integral": 1, "digits": 5},
+        "all_source_rows": {"decimal_integral": 1, "digits": 6},
+    }
+    assert "13.0" not in str(failure.value)
+
+
+def test_id_diagnostic_is_saved_only_in_incomplete_receipt(tmp_path, monkeypatch):
+    m = module()
+    workflow, artifact = metadata()
+    run_path, artifact_path = tmp_path / "run.json", tmp_path / "artifact.json"
+    run_path.write_text(json.dumps(workflow))
+    artifact_path.write_text(json.dumps(artifact))
+    audit = {"original_taxon_rows": {"scientific_notation": 1},
+             "all_source_rows": {"digits": 42, "scientific_notation": 1}}
+
+    def fail_identity(*args, **kwargs):
+        raise m.AcceptedPlantIdError(audit)
+
+    monkeypatch.setattr(m, "verify_source_metadata", fail_identity)
+    output = tmp_path / "derived"
+    status = m.main(["--repo-root", str(ROOT), "--run-metadata", str(run_path),
+                     "--artifact-metadata", str(artifact_path), "--output-dir", str(output)])
+    assert status == 1
+    assert {p.name for p in output.iterdir()} == {"original230_host_roster_manifest.json"}
+    receipt = json.loads((output / "original230_host_roster_manifest.json").read_text())
+    assert receipt["source_id_format_counts"] == audit
+    assert receipt["qualified_host_roster"] is False
+
+
 def test_conflicting_names_preserved_without_selecting_a_query_name():
     m = module()
     inputs = synthetic_inputs()

@@ -218,6 +218,48 @@ def butterfly_fields(row):
             "current_usage_status": row["current_usage_status"]}
 
 
+def source_id_format_audit(host_rows, original_names):
+    """Counts-only diagnostics; no ID values, species or provider rows leave the runner.
+
+    These lexical classes are observations, not accepted parsing alternatives.
+    In particular, the existing strict ID gate remains unchanged.
+    """
+    all_source, original = Counter(), Counter()
+    for row in host_rows:
+        value = row["accepted_plant_name_id"].strip()
+        if not value:
+            kind = "empty"
+        elif value.upper() in {"NA", "NAN", "NULL", "NONE"}:
+            kind = "missing_sentinel"
+        elif re.fullmatch(r"[0-9]+", value):
+            kind = "digits"
+        elif re.fullmatch(r"[0-9]+\.0+", value):
+            kind = "decimal_integral"
+        elif re.fullmatch(r"[0-9]+\.[0-9]+", value):
+            kind = "decimal_fractional"
+        elif re.fullmatch(r"[0-9]+(?:\.[0-9]+)?[eE][+-]?[0-9]+", value):
+            kind = "scientific_notation"
+        elif re.fullmatch(r"[0-9]+-[0-9]+", value):
+            kind = "hyphenated_numeric"
+        elif any(separator in value for separator in ";,|"):
+            kind = "multiple_id_separator"
+        else:
+            kind = "other"
+        all_source[kind] += 1
+        if row["insect_species"].strip() in original_names:
+            original[kind] += 1
+    return {"original_taxon_rows": dict(sorted(original.items())),
+            "all_source_rows": dict(sorted(all_source.items()))}
+
+
+class AcceptedPlantIdError(ValueError):
+    """Fail closed while preserving the aggregate evidence needed to diagnose it."""
+
+    def __init__(self, format_counts):
+        super().__init__("Missing or non-atomic accepted plant ID for original butterfly")
+        self.format_counts = format_counts
+
+
 def derive_roster(host_rows, metric_rows, bridge_rows, facet_rows, *, expected_counts):
     """Exact source names/IDs determine edges; records only annotate early coverage."""
     metrics = {}
@@ -265,7 +307,7 @@ def derive_roster(host_rows, metric_rows, bridge_rows, facet_rows, *, expected_c
         pid = row["accepted_plant_name_id"].strip()
         if not re.fullmatch(r"[0-9]+", pid):
             if name in metrics:
-                raise ValueError("Missing or non-atomic accepted plant ID for original butterfly")
+                raise AcceptedPlantIdError(source_id_format_audit(host_rows, metrics))
             continue
         botanical = row["accepted_name"].strip()
         family = row["family"].strip()
@@ -490,6 +532,8 @@ def main(argv=None):
                    "executed_utc": utc_now(), "error_type": type(exc).__name__,
                    "message": str(exc)[:300], "qualified_host_roster": False,
                    "no_occurrence_queries_performed": True, "execution": execution_receipt()}
+        if isinstance(exc, AcceptedPlantIdError):
+            failure["source_id_format_counts"] = exc.format_counts
         if args.output_dir is not None and (not args.output_dir.exists() or (
                 args.output_dir.is_dir() and not any(args.output_dir.iterdir()))):
             args.output_dir.mkdir(parents=True, exist_ok=True)
