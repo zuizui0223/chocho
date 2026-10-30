@@ -20,6 +20,7 @@ import sys
 import zipfile
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -221,8 +222,8 @@ def butterfly_fields(row):
 def source_id_format_audit(host_rows, original_names):
     """Counts-only diagnostics; no ID values, species or provider rows leave the runner.
 
-    These lexical classes are observations, not accepted parsing alternatives.
-    In particular, the existing strict ID gate remains unchanged.
+    These lexical classes alone do not establish ID validity. Scientific
+    notation is separately required to denote an exact positive integer.
     """
     all_source, original = Counter(), Counter()
     for row in host_rows:
@@ -250,6 +251,29 @@ def source_id_format_audit(host_rows, original_names):
             original[kind] += 1
     return {"original_taxon_rows": dict(sorted(original.items())),
             "all_source_rows": dict(sorted(all_source.items()))}
+
+
+def atomic_accepted_plant_id(value):
+    """Validate the observed source forms without rewriting the opaque ID string.
+
+    The original R sidecar preserves WCVP IDs with ``as.character``; the pinned
+    runner diagnostic found four scientific-notation rows (one for original239).
+    Decimal is used only for an exact validity check, never as a join key.
+    """
+    if re.fullmatch(r"[0-9]+", value):
+        return any(character != "0" for character in value)
+    if not re.fullmatch(r"[0-9]+(?:\.[0-9]+)?[eE][+-]?[0-9]+", value):
+        return False
+    try:
+        number = Decimal(value)
+    except InvalidOperation:
+        return False
+    if not number.is_finite() or number <= 0:
+        return False
+    _, digits, exponent = number.as_tuple()
+    # Check the exact decimal coefficient/exponent, without context rounding,
+    # binary floating arithmetic, numeric normalization or huge integer expansion.
+    return exponent >= 0 or (-exponent <= len(digits) and not any(digits[exponent:]))
 
 
 class AcceptedPlantIdError(ValueError):
@@ -305,7 +329,7 @@ def derive_roster(host_rows, metric_rows, bridge_rows, facet_rows, *, expected_c
     for row in host_rows:
         name = row["insect_species"].strip()
         pid = row["accepted_plant_name_id"].strip()
-        if not re.fullmatch(r"[0-9]+", pid):
+        if not atomic_accepted_plant_id(pid):
             if name in metrics:
                 raise AcceptedPlantIdError(source_id_format_audit(host_rows, metrics))
             continue
@@ -423,7 +447,16 @@ def derive_roster(host_rows, metric_rows, bridge_rows, facet_rows, *, expected_c
                            "excluded_original_concepts": [{"original_name": n, "reasons": exclusions[n]}
                                                           for n in sorted(exclusions)],
                            "plant_ambiguity_flag_counts": dict(sorted(flag_counts.items())),
-                           "plant_identity_conflicts_checked_across_original_source_table": True},
+                           "plant_identity_conflicts_checked_across_original_source_table": True,
+                           "source_accepted_id_representations": {
+                               "format_counts": source_id_format_audit(host_rows, metrics),
+                               "accepted_forms": ["positive_digit_string",
+                                                  "scientific_notation_exact_positive_integer"],
+                               "original_source_id_strings_preserved": True,
+                               "outer_whitespace_trimmed": True,
+                               "numeric_normalization_performed": False,
+                               "join_and_deduplication_key": "Original source ID string, not its numeric value",
+                           }},
     }
 
 

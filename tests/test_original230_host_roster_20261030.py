@@ -207,6 +207,62 @@ def test_id_diagnostic_is_saved_only_in_incomplete_receipt(tmp_path, monkeypatch
     assert receipt["qualified_host_roster"] is False
 
 
+@pytest.mark.parametrize("plant_id", ["1.3e+1", "13e0", "1.300E+01", "130e-1",
+                                      "9007199254740993e0", "1e100"])
+def test_positive_integral_scientific_source_ids_are_preserved_verbatim(plant_id):
+    m = module()
+    inputs = synthetic_inputs()
+    inputs[0][4]["accepted_plant_name_id"] = plant_id
+    result = derive(m, inputs)
+    edge = next(r for r in result["tables"]["original230_host_edges.csv"]
+                if r["original_name"] == "Gamma gamma")
+    assert edge["wcvp_accepted_id"] == plant_id
+    assert result["summary"]["original_catalog_edges"] == 5
+    assert result["summary"]["exported_catalog_edges"] == 4
+
+
+@pytest.mark.parametrize("plant_id", ["0", "0e+6", "0.0e1", "-1e6", "1e-1", "1.3e0",
+                                      "1.00000000000000001e0", "NaN", "Infinity", "1e+",
+                                      "1e999999999999999999999"])
+def test_nonpositive_fractional_or_nonfinite_scientific_ids_fail_closed(plant_id):
+    m = module()
+    inputs = synthetic_inputs()
+    inputs[0][4]["accepted_plant_name_id"] = plant_id
+    with pytest.raises(ValueError, match="accepted plant ID"):
+        derive(m, inputs)
+
+
+def test_numeric_equivalent_opaque_source_ids_are_not_normalized_or_merged():
+    m = module()
+    inputs = synthetic_inputs()
+    for row in inputs[0]:
+        if row["accepted_plant_name_id"] == "12":
+            row["accepted_plant_name_id"] = "1.1e+1"
+    result = derive(m, inputs)
+    alpha = [r for r in result["tables"]["original230_host_edges.csv"]
+             if r["original_name"] == "Alpha alba"]
+    assert {r["wcvp_accepted_id"] for r in alpha} == {"11", "1.1e+1"}
+    assert result["summary"]["original_catalog_edges"] == 5
+    inputs[1][0]["resolved_host_species"] = "1"
+    with pytest.raises(ValueError, match="does not reconcile"):
+        derive(m, inputs)
+
+
+def test_success_manifest_audits_scientific_id_format_and_no_normalization(tmp_path):
+    m = module()
+    inputs = synthetic_inputs()
+    inputs[0][4]["accepted_plant_name_id"] = "1.3e+1"
+    manifest = m.export_roster(derive(m, inputs), tmp_path / "derived", provenance={"synthetic": True})
+    identity = manifest["taxonomy_audit"]["source_accepted_id_representations"]
+    assert identity["format_counts"] == {
+        "original_taxon_rows": {"digits": 5, "scientific_notation": 1},
+        "all_source_rows": {"digits": 6, "scientific_notation": 1},
+    }
+    assert identity["numeric_normalization_performed"] is False
+    assert identity["original_source_id_strings_preserved"] is True
+    assert {p.name for p in (tmp_path / "derived").iterdir()} == OUTPUTS
+
+
 def test_conflicting_names_preserved_without_selecting_a_query_name():
     m = module()
     inputs = synthetic_inputs()
