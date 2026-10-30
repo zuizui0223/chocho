@@ -40,6 +40,17 @@ def test_forced_zero_and_forced_positive():
     }
 
 
+def test_distance_tilt_synthetic():
+    # When lower-distance tables also have H=2, a proximity tilt raises P(H>=2).
+    scores = [("tiny", [(2, 1.0), (0, 3.0)])]
+    at_zero = module.weighted_profile(scores, 0.0, 2)
+    stronger = module.weighted_profile(scores, 0.5, 2)
+    assert math.isclose(at_zero["probability_H_at_least_observed"], 0.5, abs_tol=1e-12)
+    assert stronger["probability_H_at_least_observed"] > 0.5
+    assert stronger["null_expected_distance_score_D"] < at_zero["null_expected_distance_score_D"]
+    assert math.isclose(stronger["normalized_score_probability_sum"], 1.0, abs_tol=1e-12)
+
+
 def test_frozen_reproducible_fiber_and_no_drift():
     # Anonymous-stage intentionally excludes exploratory provenance/data.
     # Only that explicitly documented export stage can skip this data test.
@@ -68,5 +79,15 @@ def test_frozen_reproducible_fiber_and_no_drift():
                         0.21338738532983137, abs_tol=1e-12)
     assert math.isclose(loo["longitude_3:tropical"]["inclusive_upper_tail_probability"],
                         0.06644276415602213, abs_tol=1e-12)
+    tilt = result["distance_tilt_sensitivity"]
+    assert tilt["status"] == "distance_moment_matched"
+    assert tilt["not_a_composite_null_p_value"] is True
+    assert math.isclose(tilt["fitted_lambda"], 0.7611080093702449, abs_tol=1e-7)
+    assert math.isclose(tilt["fitted_lambda_profile"]["null_expected_recorded_host_score_H"],
+                        18.049327866145973, abs_tol=1e-7)
+    assert math.isclose(tilt["fitted_lambda_profile"]["probability_H_at_least_observed"],
+                        0.1305459571904408, abs_tol=1e-7)
+    assert math.isclose(tilt["uniform"]["probability_H_at_least_observed"],
+                        s["inclusive_upper_tail_probability"], abs_tol=1e-12)
     assert result["not_biological_host_absence"] is True
     assert result["not_confirmatory"] is True
