@@ -17,3 +17,12 @@ for z in s.itertuples():
  assert len(q)==z.species and np.isclose(q.rho.mean(),z.mean_rho)
  assert q.rho.gt(0).sum()==z.positive_species
 print('PASS all72correlations, regional fractions, support, summaries and snapshot hashes')
+
+p=pd.read_csv(r/'top_shared_host_link_provenance.csv');s=pd.read_csv(r/'top_shared_host_source_sensitivity.csv')
+x=c.merge(p,on=['host_name','species'],validate='many_to_one');assert len(x)==len(c)
+for z in s.itertuples():
+ q=x[x.host_name.eq(z.host_name)&x.outcome.eq(z.outcome)]
+ if z.source=='frozen_HOSTS_only':q=q[q.in_frozen_HOSTS]
+ assert len(q)==z.species and np.isclose(q.rho.mean(),z.mean_rho)
+ assert q.rho.gt(0).sum()==z.positive_species
+print('PASS all36source sensitivity summaries')
