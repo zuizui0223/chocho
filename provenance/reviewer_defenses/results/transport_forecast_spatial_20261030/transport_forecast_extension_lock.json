@@ -1,0 +1,12 @@
+{
+  "status": "EXPLORATORY_EXTENSION_FIXED_BEFORE_FEATURE_SUPPORT_AND_MODEL_RESULTS",
+  "candidate_population": 225,
+  "evaluation": "preserve existing155-species training/test/fold definitions and model settings",
+  "time": "training predictors use port index2011-2014; heldout predictors use2015-2018; require13of16 nonmissing quarters per port",
+  "ports": "unique country+normalized name matches; single-landmass2019 port-query assignment; nearest eligible indexed port on same landmass; no port on another landmass substituted",
+  "models": "T0=M5 plus log nearest indexed-port distance and unknown-support flag; T1=T0 plus log1p baseline mean connectivity of that nearest port; compare T1-T0 and both-M5 on identical rows",
+  "features": ["log_nearest_indexed_port_km", "indexed_port_support_unknown", "log_nearest_port_connectivity"],
+  "missing": "retain rows; unavailable distance/connectivity encoded0 with explicit unknown flag; never call unindexed port absent",
+  "stages": "feature and temporal audit first; then temporal, spatial and held-species comparisons; separate island/continental and GB-Ireland contributions",
+  "limits": "Retrospective sensitivity, not an actual historical forecast: port coordinates/catalogue2019 and name crosswalk2026, old2021 connectivity edition, and static current host list. Historical index confirms recorded port index in baseline but not unchanged historical port coordinates or comprehensive coverage of closed ports. Single-landmass buffer attribution is approximate. No route or transport-causality claim."
+}
