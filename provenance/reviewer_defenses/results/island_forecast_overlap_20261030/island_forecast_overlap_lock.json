@@ -1,0 +1,7 @@
+{
+  "status": "OVERLAP_RULES_FIXED_BEFORE_COUNTS_OR_ERRORS",
+  "population": "225 candidates, existing held-out155-species forecast, same51 port-host islands",
+  "geographic_rule": "map original occurrence coordinates to existing EPSG6933 10km cells; require all observed coordinates in a cell assigned to one known landmass and agree with stored cell-centre landmass; keep mixed and unknown cells excluded but counted",
+  "comparison": "audit overlap, then species-equal MSE for fixed M3 and M5 on identical supported rows; report residual means and counts, no new model or claim of new independent validation",
+  "limits": "Observed-coordinate unanimity is not proof entire cell lies on an island. Geography uses all-period coordinates only to audit attribution, not train predictors. Island-targeted subsets may contain few species. Existing forecast response is standardized recording probability, not establishment."
+}
