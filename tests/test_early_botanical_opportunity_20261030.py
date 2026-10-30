@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import math
 import pytest
@@ -48,6 +49,9 @@ def test_full_fixed_51_island_source_reconciliation():
     if "_anonymous_stage" in ROOT.parts:
         pytest.skip("Anonymous manuscript export intentionally excludes exploratory island sources")
     r=mod.audit(ROOT)
+    saved_path=ROOT / "provenance/reviewer_defenses/results/early_botanical_observation_support_20261030/early_botanical_opportunity_summary.json"
+    saved=json.loads(saved_path.read_text(encoding="utf-8"))
+    assert saved==r
     assert (r["original_islands"],r["original_ports"],r["original_island_pairs"],
             r["original_shared_new_species_pair_denominator"]) == (51,194,1275,1163)
     s=r["fixed_thresholds"]
