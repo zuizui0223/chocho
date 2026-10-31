@@ -1,0 +1,278 @@
+{
+  "schema": "chocho_documented_focal_HOSTS_284region_prevalence_driver_v1",
+  "status": "SOURCE_LOCKED_POSTHOC_PREVALENCE_BIN_SENSITIVITY_NOT_CAUSAL",
+  "source": {
+    "v2_receipt_sha256": "58e24c9b456c0c96e04ba1964ea5107e2038b9d7b6405b39fffc35617603672b",
+    "full_bin_drop_diagnostic_sha256": "1c3868d7d2501a9b98b737e0ad40f879ff19fc5a9d18e8093070c3e39c5562c9",
+    "glonaf_zenodo_md5": "16f5585d2500676951a4b664bbf0ffde",
+    "wgsrpd3_region_nodes": 284,
+    "non_independent_region_pairs": 40171,
+    "butterfly_panel_species": 239,
+    "source_host_names": 2147,
+    "source_glonaf_original_taxa": 21712,
+    "geographic_source_test": "same TDWG 5%/50% polygon overlap"
+  },
+  "source_coverage": {
+    "source_active_documented_host_taxa": 1254,
+    "all_source_matched_host_taxa_including_outside_284_regions": 1312,
+    "source_matched_host_taxa_not_active_in_284_regions": 58,
+    "prevalence_matchable_hosts": 1168,
+    "excluded_due_to_unmatched_alternative_prevalence": 86,
+    "prevalence_strata": {
+      "0": {
+        "prevalence_upper_bound": 1,
+        "source_taxa": 228
+      },
+      "1": {
+        "prevalence_upper_bound": 2,
+        "source_taxa": 132
+      },
+      "2": {
+        "prevalence_upper_bound": 5,
+        "source_taxa": 168
+      },
+      "3": {
+        "prevalence_upper_bound": 10,
+        "source_taxa": 117
+      },
+      "4": {
+        "prevalence_upper_bound": 25,
+        "source_taxa": 173
+      },
+      "5": {
+        "prevalence_upper_bound": 50,
+        "source_taxa": 172
+      },
+      "6": {
+        "prevalence_upper_bound": 100,
+        "source_taxa": 178
+      },
+      "7": {
+        "prevalence_upper_bound": 200,
+        "source_taxa": 86
+      }
+    }
+  },
+  "all_documented_host_case": {
+    "tested_region_nodes": 284,
+    "tested_region_pairs": 40171,
+    "omitted_pairs_host_both_empty": 0,
+    "mean_host_jaccard": 0.13318192984182417,
+    "mean_other_alien_jaccard": 0.055963460502113496,
+    "mean_butterfly_resource_beta_delta": 0.18033856606509463,
+    "observed_documented_host_rho_conditioning_on_other_aliens": 0.15557497864865025,
+    "other_alien_rho_conditioning_on_documented_hosts": -0.019966274094962672,
+    "other_alien_pairs_both_empty_treated_zero": 1
+  },
+  "prevalence_matchable_case": {
+    "tested_region_nodes": 284,
+    "tested_region_pairs": 40165,
+    "omitted_pairs_host_both_empty": 6,
+    "mean_host_jaccard": 0.08461924134377569,
+    "mean_other_alien_jaccard": 0.05597182053604883,
+    "mean_butterfly_resource_beta_delta": 0.18036059517415237,
+    "observed_documented_host_rho_conditioning_on_other_aliens": 0.03215623916968422,
+    "other_alien_rho_conditioning_on_documented_hosts": 0.08626245621200075,
+    "other_alien_pairs_both_empty_treated_zero": 0
+  },
+  "drop_entire_prevalence_bin_one_at_a_time": {
+    "0": {
+      "removed_prevalence_bin": 0,
+      "source_284region_prevalence_range_inclusive": [
+        1,
+        1
+      ],
+      "excluded_original_matched_focal_host_taxa": 228,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.15461370559973672,
+      "partial_other_alien_rho": -0.018831758440073426,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": -0.0009612730489135246
+    },
+    "1": {
+      "removed_prevalence_bin": 1,
+      "source_284region_prevalence_range_inclusive": [
+        2,
+        2
+      ],
+      "excluded_original_matched_focal_host_taxa": 132,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.1539281640494142,
+      "partial_other_alien_rho": -0.018625970380587477,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": -0.0016468145992360461
+    },
+    "2": {
+      "removed_prevalence_bin": 2,
+      "source_284region_prevalence_range_inclusive": [
+        3,
+        5
+      ],
+      "excluded_original_matched_focal_host_taxa": 168,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.15365921607376853,
+      "partial_other_alien_rho": -0.018209085980130275,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": -0.001915762574881713
+    },
+    "3": {
+      "removed_prevalence_bin": 3,
+      "source_284region_prevalence_range_inclusive": [
+        6,
+        10
+      ],
+      "excluded_original_matched_focal_host_taxa": 117,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.15538402002147916,
+      "partial_other_alien_rho": -0.019580392506942795,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": -0.00019095862717108392
+    },
+    "4": {
+      "removed_prevalence_bin": 4,
+      "source_284region_prevalence_range_inclusive": [
+        11,
+        25
+      ],
+      "excluded_original_matched_focal_host_taxa": 173,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.157851163131764,
+      "partial_other_alien_rho": -0.020416578704396955,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": 0.002276184483113758
+    },
+    "5": {
+      "removed_prevalence_bin": 5,
+      "source_284region_prevalence_range_inclusive": [
+        26,
+        50
+      ],
+      "excluded_original_matched_focal_host_taxa": 172,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.1800239507199877,
+      "partial_other_alien_rho": -0.031010111075123848,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": 0.02444897207133745
+    },
+    "6": {
+      "removed_prevalence_bin": 6,
+      "source_284region_prevalence_range_inclusive": [
+        51,
+        100
+      ],
+      "excluded_original_matched_focal_host_taxa": 178,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.1592404072975144,
+      "partial_other_alien_rho": 0.006372455868179859,
+      "n_supported_region_pairs": 40171,
+      "pairs_both_no_documented_host": 0,
+      "delta_host_rho_relative_full": 0.003665428648864155
+    },
+    "7": {
+      "removed_prevalence_bin": 7,
+      "source_284region_prevalence_range_inclusive": [
+        101,
+        200
+      ],
+      "excluded_original_matched_focal_host_taxa": 86,
+      "state": "IDENTIFIED_ON_POSTHOC_REMAINING_SOURCE",
+      "partial_host_rho": 0.03215623916968422,
+      "partial_other_alien_rho": 0.08626245621200075,
+      "n_supported_region_pairs": 40165,
+      "pairs_both_no_documented_host": 6,
+      "delta_host_rho_relative_full": -0.12341873947896603
+    }
+  },
+  "same_fixed_pairs_unique_host_strata": {
+    "metric": "rank partial correlation of resource Jaccard delta",
+    "n_non_independent_region_pairs": 40171,
+    "all_host_both_empty_zero_coded": 0,
+    "retained_host_both_empty_zero_coded": 6,
+    "excluded_widespread_host_both_empty_zero_coded": 0,
+    "other_alien_both_empty_zero_coded": 1,
+    "high_prevalence_unique_after_retained_known_hosts": 0.19434662664413457,
+    "low_mid_prevalence_unique_after_excluded_widespread_hosts": 0.015977125394842973,
+    "all_documented_hosts_fixed_pair_support": 0.15557497864865025,
+    "non_documented_GloNAF_alien_plants_given_both_host_classes": -0.0025666820110433835
+  },
+  "leave_one_world_division_out": {
+    "1": {
+      "excluded_wgsrpd_level1": "1",
+      "remaining_region_pairs": 31360,
+      "remaining_region_nodes": 251,
+      "all_documented_host_partial": 0.19505799481788116,
+      "frequency_matchable_host_partial": 0.03972824016218285
+    },
+    "2": {
+      "excluded_wgsrpd_level1": "2",
+      "remaining_region_pairs": 23856,
+      "remaining_region_nodes": 219,
+      "all_documented_host_partial": 0.15007056343423644,
+      "frequency_matchable_host_partial": 0.0773948572125792
+    },
+    "3": {
+      "excluded_wgsrpd_level1": "3",
+      "remaining_region_pairs": 30613,
+      "remaining_region_nodes": 248,
+      "all_documented_host_partial": 0.16184017866904796,
+      "frequency_matchable_host_partial": 0.010967162279468562
+    },
+    "4": {
+      "excluded_wgsrpd_level1": "4",
+      "remaining_region_pairs": 33138,
+      "remaining_region_nodes": 258,
+      "all_documented_host_partial": 0.18694266995849557,
+      "frequency_matchable_host_partial": 0.04379893578119939
+    },
+    "5": {
+      "excluded_wgsrpd_level1": "5",
+      "remaining_region_pairs": 37660,
+      "remaining_region_nodes": 275,
+      "all_documented_host_partial": 0.14584738750186627,
+      "frequency_matchable_host_partial": 0.027755018621267495
+    },
+    "6": {
+      "excluded_wgsrpd_level1": "6",
+      "remaining_region_pairs": 37665,
+      "remaining_region_nodes": 275,
+      "all_documented_host_partial": 0.16219642888638458,
+      "frequency_matchable_host_partial": 0.02761293799152296
+    },
+    "7": {
+      "excluded_wgsrpd_level1": "7",
+      "remaining_region_pairs": 23205,
+      "remaining_region_nodes": 216,
+      "all_documented_host_partial": 0.1328734532026045,
+      "frequency_matchable_host_partial": 0.03412666536682189
+    },
+    "8": {
+      "excluded_wgsrpd_level1": "8",
+      "remaining_region_pairs": 31360,
+      "remaining_region_nodes": 251,
+      "all_documented_host_partial": 0.08885101712728113,
+      "frequency_matchable_host_partial": 0.013792298083670043
+    },
+    "9": {
+      "excluded_wgsrpd_level1": "9",
+      "remaining_region_pairs": 38781,
+      "remaining_region_nodes": 279,
+      "all_documented_host_partial": 0.13898645665149767,
+      "frequency_matchable_host_partial": 0.01888082754513711
+    }
+  },
+  "limits": [
+    "The butterfly-resource outcome uses the same documented HOSTS network as the known-host predictor; source coupling does not independently establish host-specific biological effects.",
+    "Non-documented GloNAF alien plant means not a known focal HOSTS host, NOT a demonstrated nonhost.",
+    "High-prevalence known host class had too few non-documented alternatives for one-to-one matching; its association is descriptive rather than a prevalence-matched causal test.",
+    "Leave-one-bin-out changes total host richness and Jaccard denominator; rho differences are descriptive, not additive contributions or a mediation decomposition.",
+    "Both-empty pair assignments are zero only in the explicitly labeled same-fixed-pairs comparison.",
+    "The same 284 region nodes enter 40,171 correlated region-pairs; no pairwise iid p-values are reported.",
+    "GloNAF mapped current alien flora and WCVP native/current reconstruction are not historical observations made in the colonial period."
+  ]
+}
