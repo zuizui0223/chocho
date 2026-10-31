@@ -1,0 +1,42 @@
+{
+  "schema": "chocho_global_GSHHG_island_frame_no_future_butterfly_selection_v1",
+  "status": "SOURCE_VERIFIED_GLOBAL_ISLAND_SAMPLING_FRAME_NOT_BUTTERFLY_OUTCOME",
+  "timestamp_utc": "2026-10-31T11:29:25.109005+00:00",
+  "source_GSHHG_url": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+  "source_GSHHG_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "original_17_islands_git_source": "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json",
+  "original_17_islands_git_blob": "54c4515947d2a3ee7545e4007985ef82a2af6868",
+  "source_gshhg_L1_polygon_rows": 144749,
+  "source_unique_sibling_landmasses": 144744,
+  "size_threshold_km2": {
+    "lower_inclusive": 20.0,
+    "upper_exclusive": 7000000.0
+  },
+  "selected_islands_count": 3696,
+  "geometry_repairs_n": 1,
+  "geometry_repairs": [
+    {
+      "landmass_id": "2380",
+      "original_area_km2": 44.22108403418893,
+      "repaired_area_km2": 44.19590831328435
+    }
+  ],
+  "geometry_excluded_invalid_n": 0,
+  "geometry_excluded_invalid_landmasses": [],
+  "original_17_in_global_frame_count": 17,
+  "original_17_missing_due_to_area_filter": [],
+  "min_area_km2": 20.00433782285817,
+  "max_area_km2": 2113775.0665858504,
+  "candidate_butterflies_existing_GEB_island_225": 225,
+  "potential_species_x_island_risk_cells": 831600,
+  "three_period_GBIF_occurrence_searches_without_sharding": 11088,
+  "limits": [
+    "GSHHG high-resolution Level 1 is not automatically equivalent to the 4663-island independent project geometry.",
+    "Only one source-locked static coastline is used; no historical dynamic coast reconstruction.",
+    "Equal-area filter does not prove oceanic isolation, continental distance or uninhabited island status.",
+    "GSHHG sibling IDs are geographical locators; pre-2011 GBIF index is still needed for a valid risk denominator.",
+    "Original 17-island study was a port-selected subset; global frame is not selected by future butterfly appearance.",
+    "Potential species×island cells are not all climatically accessible and unindexed does NOT mean true absence.",
+    "Full butterfly GBIF period records and matched historical plant resource information are separate future steps."
+  ]
+}
