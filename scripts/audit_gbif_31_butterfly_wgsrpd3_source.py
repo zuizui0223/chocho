@@ -46,7 +46,7 @@ def sha256(path):
 
 
 def read_csv(path):
-    with path.open("r",encoding="utf8-sig",newline="") as f:
+    with path.open("r",encoding="utf-8-sig",newline="") as f:
         return list(csv.DictReader(f))
 
 
@@ -57,7 +57,7 @@ def find_occurrence_member(z):
         if x.is_dir() or x.file_size<1000 or not x.filename.lower().endswith((".txt",".tsv",".csv")):
             continue
         with z.open(x.filename) as inp:
-            head=inp.readline().decode("utf8-sig",errors="replace").rstrip("\r\n")
+            head=inp.readline().decode("utf-8-sig",errors="replace").rstrip("\r\n")
         delimiter="\t" if head.count("\t")>=head.count(",") else ","
         columns=[v.strip().strip('"') for v in head.split(delimiter)]
         diagnostics.append({"filename":x.filename,"bytes":x.file_size,
@@ -134,7 +134,7 @@ def audit(source=SOURCE):
         if not required <= set(names):
             raise RuntimeError("Unrecognized decimal coordinate column schema")
         with z.open(member) as src:
-            reader=csv.DictReader(io.TextIOWrapper(src,encoding="utf8-sig",newline=""),delimiter=delimiter)
+            reader=csv.DictReader(io.TextIOWrapper(src,encoding="utf-8-sig",newline=""),delimiter=delimiter)
             for r in reader:
                 totals["source_occurrence_rows"]+=1
                 row={k.casefold():v for k,v in r.items() if k is not None}
