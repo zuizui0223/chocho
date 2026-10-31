@@ -8,6 +8,7 @@ on:
       - "scripts/analyze_documented_host_specificity.py"
       - "tests/test_documented_host_specificity_20261031.py"
       - "scripts/analyze_documented_host_specificity_v2.py"
+      - "scripts/audit_documented_host_prevalence_influence.py"
       - "tests/test_documented_host_specificity_v2_20261031.py"
       - "provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_specificity_lock_v2.json"
   workflow_dispatch:
@@ -33,7 +34,7 @@ jobs:
       - name: Install exact dependency floor, run no-source unit tests
         run: |
           python -m pip install "numpy>=1.26" "shapely>=2,<3" "pyproj>=3.7,<4" "pyshp>=2.3" "pytest>=8" ruff
-          ruff check --select F821 scripts/analyze_documented_host_specificity.py scripts/analyze_documented_host_specificity_v2.py
+          ruff check --select F821 scripts/analyze_documented_host_specificity.py scripts/analyze_documented_host_specificity_v2.py scripts/audit_documented_host_prevalence_influence.py
           python -m pytest tests/test_documented_host_specificity_20261031.py tests/test_documented_host_specificity_v2_20261031.py -q
       - name: Checkout source-locked HOSTS larval hosts
         uses: actions/checkout@v4
@@ -62,14 +63,19 @@ jobs:
           echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
       - name: Compare all documented hosts separately from full-prevalence-bin matched pseudo-hosts
         run: |
-          python scripts/analyze_documented_host_specificity_v2.py \
-            --draws 199 \
-            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_specificity_v2.json
+          if [ ! -s provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_specificity_v2.json ]; then
+            python scripts/analyze_documented_host_specificity_v2.py \
+              --draws 199 \
+              --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_specificity_v2.json
+          fi
+          python scripts/audit_documented_host_prevalence_influence.py \
+            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_prevalence_leave_bin_out_v1.json
       - name: Commit only derived aggregate receipt
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_specificity_v2.json
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/documented_host_prevalence_leave_bin_out_v1.json
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Audit full documented hosts and non-cherry-picked source-supported prevalence-matched pseudo-hosts [skip ci]'
           git fetch origin "${GITHUB_REF_NAME}"
