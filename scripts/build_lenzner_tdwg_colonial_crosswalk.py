@@ -59,13 +59,19 @@ def load_csv_member(z, name):
         raise RuntimeError("Expected exactly one source "+name)
     with z.open(matching[0]) as f:
         raw=f.read()
-    try:
-        decoded=raw.decode("utf-8-sig")
-    except UnicodeDecodeError:
-        # Some historical region labels contain CP1252 non-breaking spaces.
-        # Preserve source characters rather than substituting replacement symbols.
-        decoded=raw.decode("cp1252")
-    return list(csv.DictReader(io.StringIO(decoded)))
+    # The published table has a mix of non-UTF8 characters, including 0xa0
+    # and 0x81 (undefined in cp1252). The downstream join uses only ASCII
+    # source IDs and numeric duration fields, not the lossy regional names.
+    # Reject any affected identifier or numeric evidence, and audit count.
+    decoded=raw.decode("utf-8-sig",errors="replace")
+    rows=list(csv.DictReader(io.StringIO(decoded)))
+    affected=decoded.count("\ufffd")
+    if any("\ufffd" in str(r.get("OBJIDsic","")) for r in rows):
+        raise RuntimeError("Source key OBJIDsic contains an undecodable byte")
+    if any("\ufffd" in str(r.get(key,"")) for r in rows
+           for key in ("time.emp.GB","time.emp.ESP","time.emp.PRT","time.emp.NL")):
+        raise RuntimeError("Colonial duration contains an undecodable byte")
+    return rows,affected
 
 
 def geom_clean(g):
@@ -92,9 +98,14 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
     official_codes=set(original["units"])
     assert len(official_codes)==369
     with zipfile.ZipFile(zip_path) as z:
-        regions=load_csv_member(z,"Regions.csv")
-        predictors=load_csv_member(z,"Predictors.csv")
-        empires=load_csv_member(z,"Empires.csv")
+        regions,region_replacements=load_csv_member(z,"Regions.csv")
+        predictors,predictor_replacements=load_csv_member(z,"Predictors.csv")
+        empires,empire_replacements=load_csv_member(z,"Empires.csv")
+        source_text_replacements={
+            "Regions.csv":region_replacements,
+            "Predictors.csv":predictor_replacements,
+            "Empires.csv":empire_replacements,
+        }
         shp=[k for k in z.namelist() if k.lower().endswith(".shp")]
         shx=[k for k in z.namelist() if k.lower().endswith(".shx")]
         dbf=[k for k in z.namelist() if k.lower().endswith(".dbf")]
@@ -218,6 +229,7 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
         "tdwg_source_commit":TDWG_COMMIT,
         "source_glonaf_regions":len(reg_by_id),
         "source_empire_history_rows":len(empires),
+        "source_non_utf8_text_replacement_characters":source_text_replacements,
         "source_shapefile_records":len(source),
         "source_geometry_accepted":len(projected),
         "source_geometry_issues":dict(geom_issues),
