@@ -1,0 +1,174 @@
+{
+  "schema": "chocho_public_GBIF_unselected_225_butterfly_x_original_island_window_v1",
+  "status": "PUBLIC_REINDEXED_OCCURRENCE_HISTORY_NOT_TRUE_COLONIZATION_OR_HOST_MEDIATION",
+  "snapshot_timestamp_utc": "2026-10-31T11:07:52.567629+00:00",
+  "data_source": "https://api.gbif.org/v1/occurrence/search",
+  "source_git_blob_pins": {
+    "butterflies": {
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv",
+      "sha": "39fe84981cab2b0e47063399f0a5c0c9731e800d"
+    },
+    "islands": {
+      "path": "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json",
+      "sha": "54c4515947d2a3ee7545e4007985ef82a2af6868"
+    }
+  },
+  "gshhg_shape_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "gshhg_source": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+  "butterfly_taxon_filter": {
+    "method": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+    "family_taxonkeys": {
+      "Nymphalidae": "7017",
+      "Pieridae": "5481",
+      "Lycaenidae": "5473",
+      "Papilionidae": "9417",
+      "Hesperiidae": "6953",
+      "Riodinidae": "1933999"
+    },
+    "papilionoidea_strict_match_failed": true,
+    "papilionoidea_source_match": {
+      "confidence": 100,
+      "matchType": "NONE",
+      "synonym": false
+    },
+    "unverified_if_any_candidate_225_outside_six_families": true
+  },
+  "islands_tested": [
+    "169",
+    "276",
+    "715"
+  ],
+  "species_candidates_frozen_before_future_225": 225,
+  "all_17_original_islands": 17,
+  "geometry_audit": [
+    {
+      "island_id": "169",
+      "status": "VALID_POLYGON",
+      "original_area_km2": 3029.3300058018804,
+      "largest_component_frac": 1.0,
+      "simplify_degrees": 0.012,
+      "simplified_area_retained": 1.0010149444881937,
+      "polygon_wkt_length": 1571,
+      "polygon_sha256": "eb2f464d82fe11142c8e26b2ae5e76e394afbcf940d51d24cf1afbf4ad49b97f"
+    },
+    {
+      "island_id": "276",
+      "status": "VALID_POLYGON",
+      "original_area_km2": 1258.785789448425,
+      "largest_component_frac": 1.0,
+      "simplify_degrees": 0.008,
+      "simplified_area_retained": 1.0053718695988472,
+      "polygon_wkt_length": 1286,
+      "polygon_sha256": "dfe9994b3e30bc39b5f99a136c72f026fcc3b2993f50b4394e2e196cfc4b1450"
+    },
+    {
+      "island_id": "715",
+      "status": "VALID_POLYGON",
+      "original_area_km2": 320.9385059574661,
+      "largest_component_frac": 1.0,
+      "simplify_degrees": 0.003,
+      "simplified_area_retained": 1.001496053491465,
+      "polygon_wkt_length": 1424,
+      "polygon_sha256": "8e8f67a9b2b9f75736c22bfd4fe5425d8bc73ed45d2e896773c3244e0492a55d"
+    }
+  ],
+  "GBIF_index_query_receipts": [
+    {
+      "island_id": "169",
+      "period": "pre2001_2010",
+      "all_superfamily_papilionoidea_indexed_occurrences": 14775,
+      "gbif_specieskey_count": 46,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "169",
+      "period": "first2011_2017",
+      "all_superfamily_papilionoidea_indexed_occurrences": 9373,
+      "gbif_specieskey_count": 47,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "169",
+      "period": "holdout2018_2022",
+      "all_superfamily_papilionoidea_indexed_occurrences": 11247,
+      "gbif_specieskey_count": 49,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "276",
+      "period": "pre2001_2010",
+      "all_superfamily_papilionoidea_indexed_occurrences": 1655,
+      "gbif_specieskey_count": 47,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "276",
+      "period": "first2011_2017",
+      "all_superfamily_papilionoidea_indexed_occurrences": 2246,
+      "gbif_specieskey_count": 45,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "276",
+      "period": "holdout2018_2022",
+      "all_superfamily_papilionoidea_indexed_occurrences": 2164,
+      "gbif_specieskey_count": 42,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "715",
+      "period": "pre2001_2010",
+      "all_superfamily_papilionoidea_indexed_occurrences": 1391,
+      "gbif_specieskey_count": 31,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "715",
+      "period": "first2011_2017",
+      "all_superfamily_papilionoidea_indexed_occurrences": 888,
+      "gbif_specieskey_count": 22,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    },
+    {
+      "island_id": "715",
+      "period": "holdout2018_2022",
+      "all_superfamily_papilionoidea_indexed_occurrences": 741,
+      "gbif_specieskey_count": 30,
+      "species_facet_pages": 1,
+      "butterfly_filter_type": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+      "GBIF_indexed_not_biological_absence": true
+    }
+  ],
+  "risk_cells": 675,
+  "eligible_2011_2017": 587,
+  "first_indexed_2011_2017": 4,
+  "eligible_2018_2022": 583,
+  "first_indexed_2018_2022": 0,
+  "limits": [
+    "This GBIF 2026 index snapshot differs from the private original 2001–2024 precise coordinate source.",
+    "225 candidate butterfly species are fixed before looking at later island first indexing; no 60-species outcome preselection.",
+    "Simplified original GSHHG island polygons preserve >=96% equal-area size but can cause nearshore spatial errors.",
+    "All 225 species × island cells are included; many are geographically infeasible, so all-species crude risk rates are not transport effects.",
+    "Query negatives are GBIF nonindexes, not biological absences, occupancy, or proof of no colonization.",
+    "Accepted family taxonKey filters and the 225 source speciesKey concepts may drift under GBIF checklist upgrades; audit exact overlap.",
+    "Three window-specific speciesKey facets lack exact first year/individual observation providers and are not true sampling histories.",
+    "Current source has no plant × butterfly host-edge supply, transport vector or independent regional establishment observations.",
+    "Do not reuse 2001–2024 pooled port plant inventory as a pre-outcome foodplant exposure."
+  ]
+}
