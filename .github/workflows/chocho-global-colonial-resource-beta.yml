@@ -78,7 +78,7 @@ jobs:
             --current-host-distribution-csv _scratch_inputs/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --official-wgsrpd3-lookup-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
             --null-draws 199 \
-            --output-prefix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v1
+            --output-prefix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v2
           cp _scratch_inputs/allflora/allflora_source_counts.csv \
             provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/allflora_source_counts.csv
       - name: Commit only source-derived summary, region and pairs; keep raw sources off GitHub
