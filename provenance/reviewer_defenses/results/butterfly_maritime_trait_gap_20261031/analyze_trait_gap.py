@@ -86,7 +86,7 @@ def make_screen() -> tuple[list[dict], list[dict]]:
     assert len(included) == 193 and len(screen) == 225
     assert sum(x["n"] for x in included) == 3136
     assert sum(x["far500"] for x in included) == 164
-    included.sort(key=lambda x: x["species"])
+    included.sort(key=lambda x: int(x["speciesKey"]))
     return included, screen
 
 
