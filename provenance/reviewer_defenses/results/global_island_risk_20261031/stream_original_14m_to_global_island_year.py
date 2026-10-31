@@ -96,6 +96,25 @@ def compute(zip_path,shapezip,work):
     ids=np.asarray(land.landmass_id.tolist())
     if len(geometry)<140000:
         raise ValueError("Original GSHHG high-resolution geometry unexpectedly incomplete")
+    # Exactly one original 20+km² landmass was invalid under the global frame
+    # audit (sibling_id 2380), and was source-repaired with <=3% area change.
+    # Do not silently skip that island or accept unverified invalid source GIS.
+    invalid_inds=np.flatnonzero(~shapely.is_valid(geometry))
+    repaired_landmasses=[]
+    for idx in invalid_inds:
+        prev=geometry[int(idx)]
+        fixed=shapely.make_valid(prev)
+        if fixed.is_empty or not fixed.is_valid:
+            raise ValueError("Cannot repair original invalid GSHHG geometry "+str(ids[int(idx)]))
+        from shapely.ops import transform
+        from pyproj import Transformer
+        tr=Transformer.from_crs(4326,6933,always_xy=True)
+        before=transform(tr.transform,prev).area
+        after=transform(tr.transform,fixed).area
+        if abs(after-before)/max(after,1e-10)>.03:
+            raise ValueError("Source geometry repair changes >3% of land area "+str(ids[int(idx)]))
+        geometry[int(idx)]=fixed
+        repaired_landmasses.append(str(ids[int(idx)]))
     # Prepared geometries accelerate 14m coordinate intersection tests.
     shapely.prepare(geometry)
     tree=STRtree(geometry)
@@ -307,6 +326,7 @@ def compute(zip_path,shapezip,work):
       "all_downloaded_GBIF_rows":total,
       "original_GSHHG_source_sha256":source_gshhg,
       "original_GSHHG_source_polygon_rows":len(geometry),
+      "source_invalid_original_landmass_polygons_repaired":repaired_landmasses,
       "GBIF_predicate_and_source_ZIP_previously_audited":True,
       "GBIF_rows_excluded_by_safety_checks":dict(bad_rows),
       "GBIF_years_outside_2001_2024":index_year_outside_source,
