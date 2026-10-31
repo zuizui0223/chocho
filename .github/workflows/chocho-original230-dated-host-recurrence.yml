@@ -1,0 +1,63 @@
+name: Original230 dated host-source and 5-year butterfly re-record audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original230-prior-host-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download original author-only recovered butterfly host roster, never commit the edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-original230-derived-host-roster-20261030
+          run-id: 40979986160
+          github-token: ${{ github.token }}
+          path: work/author_original230
+      - name: Download source-pinned GBIF botanical facets for prior 23 ports
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work/plant23
+      - name: Download independently indexed historical plant facets for 15 additional ports
+        uses: actions/download-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          run-id: 41176666842
+          github-token: ${{ github.token }}
+          path: work/plant15
+      - name: Exact accepted plant-name crosswalk and source-resolved recurrence evaluation
+        run: |
+          python -m py_compile provenance/reviewer_defenses/results/original230_dated_host_join_20261031/run_dated_host_recurrence.py
+          python provenance/reviewer_defenses/results/original230_dated_host_join_20261031/run_dated_host_recurrence.py \
+            --root . \
+            --author-roster-dir work/author_original230 \
+            --original23 work/plant23/local_all23ports_specieskey_year.csv.gz \
+            --new15 work/plant15/local_new15port_specieskey_year.csv.gz \
+            --out provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json \
+            --taxonomy-archive work/original230_plant_name_to_gbifkey_v1.json.gz
+      - name: Archive the accepted original plant-name GBIF crosswalk without butterfly-host links
+        uses: actions/upload-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          path: work/original230_plant_name_to_gbifkey_v1.json.gz
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit aggregate rates and null contrasts only, never original host catalogue pairs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record source-locked original230 host availability and five-year butterfly recurrence audit [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
