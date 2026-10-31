@@ -1,0 +1,46 @@
+name: Historical botanical composition, all 17 near-island nodes
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  historical-plants-17islands:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download source-pinned previous 23-port raw GBIF taxon-year facets
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work
+      - name: Verify original 23 ports and acquire 15 additional WPI ports / 8 islands
+        run: |
+          python provenance/reviewer_defenses/results/historical_botanical_17island_20261031/acquire_and_compare_17_islands.py \
+            --root . \
+            --original-23port-gzip work/local_all23ports_specieskey_year.csv.gz \
+            --new-15port-gzip work/local_new15port_specieskey_year.csv.gz \
+            --output provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json
+      - name: Save only GBIF plant speciesKey annual facet aggregates, not original point locations
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          path: work/local_new15port_specieskey_year.csv.gz
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit aggregate original-source comparison results only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record source-locked historical botanical similarities for all 17 near-island nodes [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
