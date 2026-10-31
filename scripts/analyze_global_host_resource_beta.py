@@ -528,6 +528,32 @@ def main():
                 w.writerow([k+1,accepts[k],val,null_valid_pairs[k],
                             common_null[k],common_pair_count,
                             null_units[k]["native"],null_units[k]["current"]])
+    # Reusable source-locked butterfly resource opportunity states, NOT
+    # GBIF butterfly occurrence. Species-column ordering is in the receipt;
+    # a 239-bit hex vector per official region avoids distributing HOSTS
+    # observation rows or original WCVP plant tables.
+    report["resource_matrix"]={
+        "file":output.name+".matrix.csv.gz",
+        "encoding":"bit i corresponds to resource_matrix.species_order[i]",
+        "species_order":panel,
+        "all_regions":len(official_codes),
+        "native_species_x_regions":count_species_units(resources_official["native"]),
+        "current_species_x_regions":count_species_units(resources_official["current"]),
+    }
+    # Rewrite receipt with source-locked species order added.
+    output.with_suffix(".json").write_text(
+        json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
+    with gzip.GzipFile(filename="",mode="wb",fileobj=output.with_suffix(".matrix.csv.gz").open("wb"),mtime=0,compresslevel=7) as f:
+        wrap=io.TextIOWrapper(f,encoding="utf8",newline="")
+        w=csv.writer(wrap)
+        w.writerow(["wgsrpd3_code","native_bits_hex","added_bits_hex","current_bits_hex"])
+        for i,code in enumerate(official_codes):
+            n=resources_official["native"][i]
+            c=resources_official["current"][i]
+            if n & ~c:
+                raise RuntimeError("Native-resource set outside current set for "+code)
+            w.writerow([code,format(n,"x"),format(c & ~n,"x"),format(c,"x")])
+        wrap.flush();wrap.detach()
     with output.with_suffix(".region.csv").open("w",encoding="utf8",newline="") as f:
         w=csv.writer(f)
         w.writerow(["wgsrpd3_code","plant_native_species","plant_current_species",
