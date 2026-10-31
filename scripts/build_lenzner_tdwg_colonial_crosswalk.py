@@ -58,8 +58,14 @@ def load_csv_member(z, name):
     if len(matching)!=1:
         raise RuntimeError("Expected exactly one source "+name)
     with z.open(matching[0]) as f:
-        reader=csv.DictReader(io.TextIOWrapper(f,encoding="utf-8-sig",newline=""))
-        return list(reader)
+        raw=f.read()
+    try:
+        decoded=raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        # Some historical region labels contain CP1252 non-breaking spaces.
+        # Preserve source characters rather than substituting replacement symbols.
+        decoded=raw.decode("cp1252")
+    return list(csv.DictReader(io.StringIO(decoded)))
 
 
 def geom_clean(g):
