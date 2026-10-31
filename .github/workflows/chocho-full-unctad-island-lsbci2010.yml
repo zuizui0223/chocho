@@ -45,12 +45,16 @@ jobs:
             --output-csv provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_island_pairs.csv \
             --output-json provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_audit.json
           python -m pytest tests/test_full_unctad_lsbci_2010_20261031.py -q
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_full_lsbci2010_sensitivity.py \
+            --output provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_sensitivity.json
+          python -m pytest tests/test_global_lsbci_sensitivity_20261031.py -q
       - name: Commit only derived island-country pair results and source receipt
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_island_pairs.csv \
-                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_audit.json
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_audit.json \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_sensitivity.json
           if git diff --cached --quiet; then
             echo 'No derived-results change'; exit 0
           fi
