@@ -52,12 +52,19 @@ def inspect(archive=ARCHIVE):
                 # Export ONLY field names, NEVER the data rows. The source
                 # proves semicolon-delimited CSV, not a comma-separated file.
                 dialect = ";" if first.count(";") > first.count(",") else ","
-                header = [x.strip().strip('"') for x in first.split(dialect)]
-                import re
-                is_header = (len(header) >= 3
-                             and len(set(header)) == len(header)
-                             and all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_ /().-]*", x)
-                                     for x in header))
+                header = [x.strip().strip('"').strip() for x in first.split(dialect)]
+                if header and not header[-1]:
+                    header.pop()  # Source ends each record with a trailing semicolon.
+                # The verified CSV has 12+ recognizable schema words and ZERO
+                # numeric characters in the initial row, which is unambiguously
+                # a header despite diacritics and unusual separators.
+                keywords = ("date", "time", "ship", "port", "mmsi", "imo",
+                            "latitude", "longitude", "lon", "lat", "country", "flag",
+                            "vessel", "type", "arrival", "departure")
+                hits = sum(any(k in t.lower() for k in keywords) for t in header)
+                is_header = (len(header) >= 6 and len(set(header)) == len(header)
+                             and hits >= 3 and not any(ch.isdigit() for t in header for ch in t)
+                             and max(map(len, header)) < 90)
                 item["has_verified_header"] = is_header
                 item["column_names"] = header if is_header else []
                 item["delimiter"] = dialect
