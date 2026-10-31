@@ -1,0 +1,60 @@
+name: Diagnose public GBIF butterfly polygon search
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/diagnose_gbif_geometry.py"
+      - ".github/workflows/chocho-public-butterfly-gbif-polygon-diagnostic.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  gbif-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - uses: actions/cache@v4
+        with:
+          key: chocho-gshhg-shp-237-original-8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Verify source high-resolution GSHHG
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip \
+              https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Isolate GBIF 400 condition and capture provider response body
+        run: |
+          python provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/diagnose_gbif_geometry.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/gbif-diagnostic-shape
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: butterfly-gbif-polygon-400-diagnosis
+          path: provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/gbif_polygon_api_diagnostic.json
+          retention-days: 30
+      - name: Archive source problem and hard decision, non-destructively
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/gbif_polygon_api_diagnostic.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Identify source of public GBIF butterfly geometry 400 without false biological zeros [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+          done
+          exit 1
