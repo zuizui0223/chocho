@@ -1,0 +1,75 @@
+name: Original230 original-sources fixed taxonomy offline replay
+on:
+  push:
+    paths:
+      - '.github/workflows/chocho-original230-offline-replay.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  offline-original230-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read frozen author-only 230 butterfly host network
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-original230-derived-host-roster-20261030
+          run-id: 40979986160
+          github-token: ${{ github.token }}
+          path: work/host
+      - name: Read frozen original 23 WPI port GBIF plant taxon-year source
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work/plant23
+      - name: Read frozen additional 15 WPI port GBIF plant taxon-year source
+        uses: actions/download-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          run-id: 41176666842
+          github-token: ${{ github.token }}
+          path: work/plant15
+      - name: Read frozen 1,642 plant binomial to GBIF speciesKey mapping
+        uses: actions/download-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          run-id: 41177682289
+          github-token: ${{ github.token }}
+          path: work/taxonomy
+      - name: Replay full real author-source host network and 113 butterfly outcomes offline
+        run: |
+          python provenance/reviewer_defenses/results/original230_dated_host_join_20261031/run_dated_host_recurrence.py \
+            --root . \
+            --author-roster-dir work/host \
+            --original23 work/plant23/local_all23ports_specieskey_year.csv.gz \
+            --new15 work/plant15/local_new15port_specieskey_year.csv.gz \
+            --taxonomy-from-archive work/taxonomy/original230_plant_name_to_gbifkey_v1.json.gz \
+            --out work/replayed_original230.json
+      - name: Compare all scientific and MCMC fields byte-independent, excluding only run timestamp
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          frozen=json.loads(pathlib.Path("provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json").read_text())
+          replay=json.loads(pathlib.Path("work/replayed_original230.json").read_text())
+          for d in (frozen,replay): d.pop("audit_date_utc",None)
+          if frozen!=replay:
+              differing=[k for k in sorted(set(frozen)|set(replay)) if frozen.get(k)!=replay.get(k)]
+              raise SystemExit("OFFLINE_REPLAY_MISMATCH: "+repr(differing))
+          assert replay["butterfly_event_cohort"]["target_with_resolved_source_catalogue"]==113
+          assert replay["rates"]["all_source_eligible"]["historically_recorded_compatible_host_events"]==34
+          assert replay["host_network_structural_null"]["null_draws_ge_observed_fraction"]==10
+          assert replay["host_network_structural_null"]["null_draws_ge_observed_delta"]==194
+          assert replay["taxonomic_match"]["resolved_name_to_gbifkey_frozen_archive_sha256"]=="d8d21e6686e3f069d4374d4be1c4e47744788f9244c46a1bbbbb9015e5cd7fb9"
+          print("FULL_AUTHOR_SOURCE_OFFLINE_REPLAY_PASS")
+          print("butterfly_events",replay["butterfly_event_cohort"]["target_with_resolved_source_catalogue"])
+          print("observed_prior_hosts",replay["rates"]["all_source_eligible"]["historically_recorded_compatible_host_events"])
+          print("network_null_ge_observed",replay["host_network_structural_null"]["null_draws_ge_observed_fraction"],"/",replay["host_network_structural_null"]["n_draws"])
+          PY
