@@ -1,0 +1,89 @@
+{
+  "schema": "chocho_pre2011_port_nonport_island_top10_botanical_control_v1",
+  "status": "RETROSPECTIVE_BOTANICAL_MATCHED_COASTAL_DIAGNOSTIC_NOT_SHIPPING_OR_BUTTERFLY_ESTABLISHMENT",
+  "source_git_blobs": {
+    "islands": {
+      "path": "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json",
+      "sha": "54c4515947d2a3ee7545e4007985ef82a2af6868"
+    },
+    "ports": {
+      "path": "provenance/reviewer_defenses/results/island_dated_host_match_20261030/island_port_early_plant_availability.csv",
+      "sha": "0a01831056c2cd59a4bd41bd1dbd4c84d77cf922"
+    },
+    "top_hosts": {
+      "path": "provenance/reviewer_defenses/results/geb_port_island_realization_20261031/GEB_top10_pre2011_port_plant_overlap.json",
+      "sha": "d25a6198d70861d014b156f4f214691b62297634"
+    }
+  },
+  "wpi_source": "https://services-eu1.arcgis.com/BuS9rtTsYEV5C0xh/ArcGIS/rest/services/World_Port_Index/FeatureServer/0/query",
+  "gshhg_release": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+  "gshhg_zip_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "gbif_source": "https://api.gbif.org/v1/occurrence/search",
+  "window": "2001-2010 historical BEFORE 2011-2022 butterfly index",
+  "port_buffer_km": 1,
+  "offport_buffer_km": 1,
+  "landmass_original_GSHHG_sibling_ids": 17,
+  "original_port_candidates": 38,
+  "source_ports_in_design": 17,
+  "sites_geometrically_matched": 51,
+  "all_wpi_checked_for_nonport_distance": 3630,
+  "historical_plant_query_complete": 50,
+  "historical_plant_query_failed": 1,
+  "original_GEB_top_host_candidates": 10,
+  "excluded_geometric_pairs": 0,
+  "maximum_ports_for_pilot": 17,
+  "results_by_min_background_plant_species_keys": {
+    "1": {
+      "eligible_port_pairs": 0,
+      "eligible_islands": 0,
+      "island_equal_mean_port_minus_offport_host_fraction": null,
+      "positive_port_pairs": 0,
+      "negative_port_pairs": 0,
+      "equal_port_pairs": 0
+    },
+    "5": {
+      "eligible_port_pairs": 0,
+      "eligible_islands": 0,
+      "island_equal_mean_port_minus_offport_host_fraction": null,
+      "positive_port_pairs": 0,
+      "negative_port_pairs": 0,
+      "equal_port_pairs": 0
+    },
+    "10": {
+      "eligible_port_pairs": 0,
+      "eligible_islands": 0,
+      "island_equal_mean_port_minus_offport_host_fraction": null,
+      "positive_port_pairs": 0,
+      "negative_port_pairs": 0,
+      "equal_port_pairs": 0
+    },
+    "20": {
+      "eligible_port_pairs": 0,
+      "eligible_islands": 0,
+      "island_equal_mean_port_minus_offport_host_fraction": null,
+      "positive_port_pairs": 0,
+      "negative_port_pairs": 0,
+      "equal_port_pairs": 0
+    },
+    "50": {
+      "eligible_port_pairs": 0,
+      "eligible_islands": 0,
+      "island_equal_mean_port_minus_offport_host_fraction": null,
+      "positive_port_pairs": 0,
+      "negative_port_pairs": 0,
+      "equal_port_pairs": 0
+    }
+  },
+  "limits": [
+    "Ports are retroactively located from modern 2019 WPI, not historically verified active 2001-2010 harbor facilities.",
+    "New controls were sampled on GSHHG coast BEFORE botanical results and are NOT identical to 2021 WorldCover matched points.",
+    "Controls exclude all catalogued WPI within 5km but do not exclude unlisted historical harbors or nonport urban infrastructure.",
+    "Every plant query is 1km buffer; land and sea sampled fractions may differ for harbor vs inland-offset offport sites.",
+    "GEB top10 candidate plants are potential butterfly larval hosts globally, NOT verified introduced plants on a given island in 2001-2010.",
+    "GBIF botanical records/datasets are unevenly sampled, and non-indexed species are not true absent species.",
+    "Top10 ratio is an indexing proportion, not host biomass, host encounter rate, larval survival or butterfly colonization.",
+    "No ship cargo or route movement is established; urbanization and agriculture may drive planting.",
+    "The earlier private butterfly-year Parquet is not reconstructed from these botanical data.",
+    "The experiment is retrospective and exploratory, NOT registered confirmatory analysis."
+  ]
+}
