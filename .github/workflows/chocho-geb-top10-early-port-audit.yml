@@ -1,0 +1,54 @@
+name: Check frozen GEB top resource contributors in dated island WPI port plant records
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  source-locked-geb-historical-plant-link:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read original host-name-to-GBIF accepted taxonomy (NOT butterfly host edges)
+        uses: actions/download-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          run-id: 41177682289
+          github-token: ${{ github.token }}
+          path: work/taxonomy
+      - name: Read source-frozen historical GBIF island plant species-year observations at 23 ports
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work/plant23
+      - name: Read source-frozen historical GBIF island plant species-year observations at remaining 15 ports
+        uses: actions/download-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          run-id: 41176666842
+          github-token: ${{ github.token }}
+          path: work/plant15
+      - name: Compare GEB top-10 weighted plants to independent 2001-2010 island port index
+        run: |
+          python provenance/reviewer_defenses/results/geb_port_island_realization_20261031/audit_GEB_top10_on_early_island_ports.py \
+            --root . \
+            --taxonomy work/taxonomy/original230_plant_name_to_gbifkey_v1.json.gz \
+            --plant23 work/plant23/local_all23ports_specieskey_year.csv.gz \
+            --plant15 work/plant15/local_new15port_specieskey_year.csv.gz \
+            --out provenance/reviewer_defenses/results/geb_port_island_realization_20261031/GEB_top10_pre2011_port_plant_overlap.json
+      - name: Commit aggregate GEB contributor host port coverage only, no private original-source rows
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/geb_port_island_realization_20261031/GEB_top10_pre2011_port_plant_overlap.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Measure historical port-indexed presence of GEB's top ten global resource-contributing hosts [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

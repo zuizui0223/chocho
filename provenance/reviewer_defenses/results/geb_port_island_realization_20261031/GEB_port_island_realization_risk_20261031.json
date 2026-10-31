@@ -1,0 +1,345 @@
+{
+  "schema": "chocho_geb_port_island_species_at_risk_2011_2022_v1",
+  "status": "SOURCE_VERIFIED_EXPLORATORY_TWO_WINDOWS_NO_CAUSAL_GATEWAY_EVIDENCE",
+  "original_private_species_island_year_parquet_SHA256": "8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f",
+  "private_author_original_230_edges_SHA256": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+  "frozen_name_to_gbif_key_gzip_SHA256": "d8d21e6686e3f069d4374d4be1c4e47744788f9244c46a1bbbbb9015e5cd7fb9",
+  "original_23port_historical_plant_GBIF_gzip_SHA256": "b436ba8668d67d05a247f9cafd59b846db2327031e59f4ad95c78d6870bf113e",
+  "additional_15port_historical_plant_GBIF_gzip_SHA256": "44dc11ad3a0b73aef50e92ca28f49db3927f217de9496398f1b9ba9687a2bf15",
+  "source_GEB_contribution_metrics_git_blob": "4cf4851499ca2233ff2adadf1c4ee7f0e863f23d",
+  "source_225_butterfly_name_GBIF_key_git_blob": "39fe84981cab2b0e47063399f0a5c0c9731e800d",
+  "geographic_components": [
+    [
+      "79",
+      "110"
+    ],
+    [
+      "81",
+      "214",
+      "242",
+      "257"
+    ],
+    [
+      "169",
+      "276",
+      "321",
+      "715",
+      "1577"
+    ],
+    [
+      "206",
+      "397"
+    ],
+    [
+      "260",
+      "753"
+    ],
+    [
+      "821",
+      "951"
+    ]
+  ],
+  "all_island_first_2011_2017_before_original230_name_screen": {
+    "events": 121,
+    "species": 64,
+    "GEB_species_with_positive_global_resource_expansion": 63,
+    "GEB_events_for_species_with_positive_global_resource_expansion": 120
+  },
+  "selected_name_join": {
+    "source_event_species": 64,
+    "source_events": 121,
+    "resolved_larval_host_species": 60,
+    "resolved_event_count": 113,
+    "unresolved_source_events": 8,
+    "selected_species_required_at_least_one_2011_2017_original_first_index_in_study_islands": true
+  },
+  "early_host_index_year_window": "2001–2010",
+  "early_host_plant_status": "exact GBIF accepted species key, indexed within one of the 38 2019 WPI 5km port buffers",
+  "periods": {
+    "2011_2017_first_index_among_no_pre2011_butterfly_index": {
+      "recording_risk": {
+        "cells": 905,
+        "indexed_first_events": 113,
+        "butterfly_species": 60,
+        "islands": 17,
+        "host_early_recorded": {
+          "risk_cells": 207,
+          "new_indexed_events": 34
+        },
+        "host_early_NOT_indexed": {
+          "risk_cells": 698,
+          "new_indexed_events": 79
+        },
+        "raw_rate_recorded_host": 0.1642512077294686,
+        "raw_rate_no_host_index": 0.11318051575931232,
+        "no_index_is_not_botanical_absence": true,
+        "by_geographic_component": [
+          {
+            "islands": [
+              "79",
+              "110"
+            ],
+            "risk_cells": 105,
+            "first_index_events": 27,
+            "early_compatible_host_indexed_risk_cells": 4,
+            "first_index_events_at_preindexed_compatible_host": 1
+          },
+          {
+            "islands": [
+              "81",
+              "214",
+              "242",
+              "257"
+            ],
+            "risk_cells": 229,
+            "first_index_events": 21,
+            "early_compatible_host_indexed_risk_cells": 13,
+            "first_index_events_at_preindexed_compatible_host": 5
+          },
+          {
+            "islands": [
+              "169",
+              "276",
+              "321",
+              "715",
+              "1577"
+            ],
+            "risk_cells": 241,
+            "first_index_events": 32,
+            "early_compatible_host_indexed_risk_cells": 161,
+            "first_index_events_at_preindexed_compatible_host": 24
+          },
+          {
+            "islands": [
+              "206",
+              "397"
+            ],
+            "risk_cells": 105,
+            "first_index_events": 5,
+            "early_compatible_host_indexed_risk_cells": 3,
+            "first_index_events_at_preindexed_compatible_host": 0
+          },
+          {
+            "islands": [
+              "260",
+              "753"
+            ],
+            "risk_cells": 112,
+            "first_index_events": 20,
+            "early_compatible_host_indexed_risk_cells": 2,
+            "first_index_events_at_preindexed_compatible_host": 0
+          },
+          {
+            "islands": [
+              "821",
+              "951"
+            ],
+            "risk_cells": 113,
+            "first_index_events": 8,
+            "early_compatible_host_indexed_risk_cells": 24,
+            "first_index_events_at_preindexed_compatible_host": 4
+          }
+        ]
+      },
+      "geographic_margin_null": {
+        "method": "within-geographic-component bipartite double-edge swaps, conditional on eligibility and fixed butterfly species x component / island first-record margins",
+        "chains": [
+          {
+            "seed": 20261031,
+            "draws": 499,
+            "mean_matched_event_count": 33.877755511022045,
+            "min": 31,
+            "max": 36,
+            "interval95": [
+              32,
+              35
+            ],
+            "draws_at_least_observed": 341,
+            "accepted_swaps": 9292
+          },
+          {
+            "seed": 20261032,
+            "draws": 499,
+            "mean_matched_event_count": 33.921843687374746,
+            "min": 31,
+            "max": 36,
+            "interval95": [
+              32,
+              35
+            ],
+            "draws_at_least_observed": 345,
+            "accepted_swaps": 9386
+          },
+          {
+            "seed": 20261033,
+            "draws": 499,
+            "mean_matched_event_count": 33.95991983967936,
+            "min": 31,
+            "max": 36,
+            "interval95": [
+              32,
+              35
+            ],
+            "draws_at_least_observed": 361,
+            "accepted_swaps": 9455
+          }
+        ],
+        "total_draws": 1497,
+        "observed_matched_events": 34,
+        "null_mean_matched_events": 33.91983967935872,
+        "reference_tail_fraction": 0.6993987975951904,
+        "reference_tail_draws": 1047,
+        "no_independent_mc_pvalue_or_causal_interpretation": true
+      }
+    },
+    "2018_2022_first_index_among_still_unindexed_after_2017": {
+      "recording_risk": {
+        "cells": 792,
+        "indexed_first_events": 33,
+        "butterfly_species": 60,
+        "islands": 17,
+        "host_early_recorded": {
+          "risk_cells": 173,
+          "new_indexed_events": 20
+        },
+        "host_early_NOT_indexed": {
+          "risk_cells": 619,
+          "new_indexed_events": 13
+        },
+        "raw_rate_recorded_host": 0.11560693641618497,
+        "raw_rate_no_host_index": 0.0210016155088853,
+        "no_index_is_not_botanical_absence": true,
+        "by_geographic_component": [
+          {
+            "islands": [
+              "79",
+              "110"
+            ],
+            "risk_cells": 78,
+            "first_index_events": 2,
+            "early_compatible_host_indexed_risk_cells": 3,
+            "first_index_events_at_preindexed_compatible_host": 0
+          },
+          {
+            "islands": [
+              "81",
+              "214",
+              "242",
+              "257"
+            ],
+            "risk_cells": 208,
+            "first_index_events": 2,
+            "early_compatible_host_indexed_risk_cells": 8,
+            "first_index_events_at_preindexed_compatible_host": 1
+          },
+          {
+            "islands": [
+              "169",
+              "276",
+              "321",
+              "715",
+              "1577"
+            ],
+            "risk_cells": 209,
+            "first_index_events": 14,
+            "early_compatible_host_indexed_risk_cells": 137,
+            "first_index_events_at_preindexed_compatible_host": 13
+          },
+          {
+            "islands": [
+              "206",
+              "397"
+            ],
+            "risk_cells": 100,
+            "first_index_events": 1,
+            "early_compatible_host_indexed_risk_cells": 3,
+            "first_index_events_at_preindexed_compatible_host": 0
+          },
+          {
+            "islands": [
+              "260",
+              "753"
+            ],
+            "risk_cells": 92,
+            "first_index_events": 7,
+            "early_compatible_host_indexed_risk_cells": 2,
+            "first_index_events_at_preindexed_compatible_host": 1
+          },
+          {
+            "islands": [
+              "821",
+              "951"
+            ],
+            "risk_cells": 105,
+            "first_index_events": 7,
+            "early_compatible_host_indexed_risk_cells": 20,
+            "first_index_events_at_preindexed_compatible_host": 5
+          }
+        ]
+      },
+      "geographic_margin_null": {
+        "method": "within-geographic-component bipartite double-edge swaps, conditional on eligibility and fixed butterfly species x component / island first-record margins",
+        "chains": [
+          {
+            "seed": 20261031,
+            "draws": 499,
+            "mean_matched_event_count": 19.472945891783567,
+            "min": 18,
+            "max": 21,
+            "interval95": [
+              18,
+              21
+            ],
+            "draws_at_least_observed": 248,
+            "accepted_swaps": 8205
+          },
+          {
+            "seed": 20261032,
+            "draws": 499,
+            "mean_matched_event_count": 19.541082164328657,
+            "min": 18,
+            "max": 21,
+            "interval95": [
+              18,
+              21
+            ],
+            "draws_at_least_observed": 265,
+            "accepted_swaps": 8063
+          },
+          {
+            "seed": 20261033,
+            "draws": 499,
+            "mean_matched_event_count": 19.49699398797595,
+            "min": 18,
+            "max": 21,
+            "interval95": [
+              18,
+              21
+            ],
+            "draws_at_least_observed": 257,
+            "accepted_swaps": 8205
+          }
+        ],
+        "total_draws": 1497,
+        "observed_matched_events": 20,
+        "null_mean_matched_events": 19.50367401469606,
+        "reference_tail_fraction": 0.5143620574482298,
+        "reference_tail_draws": 770,
+        "no_independent_mc_pvalue_or_causal_interpretation": true
+      }
+    }
+  },
+  "study_limits": {
+    "only_60_butterfly_species_preselected_by_having_at_least_one_2011_2017_first_index": true,
+    "historical_botanical_nonindex_is_NOT_plant_absence": true,
+    "GBIF_first_record_not_arrival_or_establishment": true,
+    "five_year_butterfly_recording_not_larval_use_or_successful_breeding": true,
+    "GEB_resource_opportunity_is_modern_regional_not_historical_island_specific": true,
+    "no_port_vs_nonport_flora_control": true,
+    "no_actual_island_specific_plant_alien_status_or_shipping_mode": true,
+    "null_MCMC_draws_correlated_and_exchangeability_unproven": true,
+    "no_proof_of_positive_or_negative_butterfly_colonization_effect": true,
+    "private_source_rows_and_links_not_published": true
+  },
+  "scientific_readout": "Raw preindexed compatible host presence tracks later butterfly indexing, particularly 2018-2022, but after preserving butterfly x regional component first-record margins, island first-record margins, and risk-set prior-history eligibility, the observed host-index overlap is nearly identical to the conditional expected overlap in both windows. No independent port realization of the +54.9% GEB opportunity is identified."
+}
