@@ -29,5 +29,5 @@ def test_polygon_share_requires_substantive_real_source_overlap():
 def test_four_empire_shared_source_label_reuses_no_unverified_history():
     m=load()
     assert m.MIN_SOURCE_SHARE==.5
-    assert m.shared_years([[50,0,0,0]],[[20,30,0,0]],min_years=25).tolist()==[0.0]
-    assert m.shared_years([[50,0,0,0]],[[40,0,0,0]],min_years=25).tolist()==[40.0]
+    assert m.shared_years([[50,0,0,0]],[[20,30,0,0]],years_min=25).tolist()==[0.0]
+    assert m.shared_years([[50,0,0,0]],[[40,0,0,0]],years_min=25).tolist()==[40.0]
