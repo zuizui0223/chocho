@@ -1,0 +1,38 @@
+name: Verify focal larval-host names against historical plant species-year facets
+on:
+  push:
+    paths:
+      - '.github/workflows/chocho-dated-focal-host-taxonomy.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  dated-focal-hosts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work
+      - name: GBIF taxonomy source gate and fixed original host names
+        run: |
+          python provenance/reviewer_defenses/results/dated_focal_host_taxonomy_20261031/match_dated_host_names.py \
+            --root . \
+            --source-gzip work/local_all23ports_specieskey_year.csv.gz \
+            --output provenance/reviewer_defenses/results/dated_focal_host_taxonomy_20261031/focal_historical_host_taxon_year_audit.json
+      - name: Commit only public host-name taxonomic match and aggregate year evidence
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/dated_focal_host_taxonomy_20261031/focal_historical_host_taxon_year_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit accepted focal host names against historical island plant species-year records [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
