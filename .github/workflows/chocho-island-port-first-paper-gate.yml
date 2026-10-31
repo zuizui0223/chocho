@@ -22,11 +22,16 @@ jobs:
           python provenance/reviewer_defenses/results/island_port_first_paper_20261031/audit_primary40_control_support.py \
             --root . \
             --output provenance/reviewer_defenses/results/island_port_first_paper_20261031/primary_40island_landcover_and_host_support.json
+      - name: Audit exact matching historical WPI botanical port IDs versus existing 1km landscape control port IDs
+        run: |
+          python provenance/reviewer_defenses/results/island_port_first_paper_20261031/audit_joint79_port_plant_landcover_support.py \
+            --root . \
+            --out provenance/reviewer_defenses/results/island_port_first_paper_20261031/joint_79port_WPI_plant_landcover_support.json
       - name: Commit independent source-locked observational control audit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add provenance/reviewer_defenses/results/island_port_first_paper_20261031/primary_40island_landcover_and_host_support.json
+          git add provenance/reviewer_defenses/results/island_port_first_paper_20261031/primary_40island_landcover_and_host_support.json provenance/reviewer_defenses/results/island_port_first_paper_20261031/joint_79port_WPI_plant_landcover_support.json
           git diff --cached --quiet && exit 0
           git commit -m "Record source-recomputed 40-island/273-port observed control support and observational correlations [skip ci]"
           git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
