@@ -98,14 +98,14 @@ def resolve_butterfly_taxon_filter():
         "papilionoidea_source_match":match,
         "unverified_if_any_candidate_225_outside_six_families":True}
 
-def load_polygons(zipfile,working,ids,max_chars):
+def load_polygons(zip_path,working,ids,max_chars):
     import geopandas as gpd
     import shapely
     from shapely.geometry import Polygon,MultiPolygon
     from shapely.ops import transform
     from shapely import wkt
     from pyproj import Transformer
-    raw=zipfile.read_bytes()
+    raw=zip_path.read_bytes()
     digest=hashlib.sha256(raw).hexdigest()
     if digest!=GSHHG_SHA256:raise ValueError("Original GSHHG SHA256 mismatch "+digest)
     working.mkdir(parents=True,exist_ok=True)
