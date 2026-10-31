@@ -39,6 +39,7 @@ from analyze_colonial_legacy_resource_beta import (
 ROOT=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031")
 OUT=ROOT/"documented_host_prevalence_drivers_v1.json"
 V2=ROOT/"documented_host_specificity_v2.json"
+ALREADY_REPLAYED_BINS=ROOT/"documented_host_prevalence_leave_bin_out_v1.json"
 
 
 def split_by_prevalence(true_mask,frequency,bins=BINS):
@@ -125,28 +126,25 @@ def analyse():
            v2["matched_frequency_control"]["observed_documented_host_rho_conditioning_on_other_aliens"])>1e-8:
         raise RuntimeError("Matched support source v2 rho changed")
 
-    # Host taxonomy bins: one complete prevalence class removed at once.
+    # Previously source-recomputed full-bin deletion is an independent
+    # branch receipt. Validate that result instead of repeating the identical
+    # ~8 partial-rank fits and risking analysis version drift.
+    influence=json.loads(ALREADY_REPLAYED_BINS.read_text(encoding="utf8"))
+    if influence["schema"]!="chocho_posthoc_documented_host_prevalence_influence_v1":
+        raise RuntimeError("Prior response-blind all-bin diagnostic missing")
+    if abs(influence["baseline_host_partial_rank_rho"]-
+           all_case["observed_documented_host_rho_conditioning_on_other_aliens"])>1e-9:
+        raise RuntimeError("Previous drop-bin results do not match source")
     leave_bin={}
     by_bin={}
-    for key in sorted(masks):
-        mask=masks[key]
-        leave, _ = association(rawmask&~mask,full,others,data)
-        record={
-            "removed_bin_index":key,
-            "prevalence_bin_upper_bound":BINS[key],
-            "source_active_documented_hosts_in_bin":bin_counts[key],
-            "remaining_documented_hosts":sum(bin_counts.values())-bin_counts[key],
-            "after_drop_host_rho":leave[
-                "observed_documented_host_rho_conditioning_on_other_aliens"],
-            "after_drop_other_flora_rho":leave[
-                "other_alien_rho_conditioning_on_documented_hosts"],
-            "after_drop_region_pairs":leave["tested_region_pairs"],
-            "descriptive_drop_from_full_rho":(
-                all_case["observed_documented_host_rho_conditioning_on_other_aliens"]-
-                leave["observed_documented_host_rho_conditioning_on_other_aliens"]),
-        }
-        leave_bin[str(key)]=record
+    for row in influence["influence_by_bin"]:
+        key=int(row["removed_prevalence_bin"])
+        if key not in masks or int(row["excluded_original_matched_focal_host_taxa"])!=bin_counts[key]:
+            raise RuntimeError("Previously computed complete prevalence bin changed")
+        leave_bin[str(key)]=row
         by_bin[str(key)]={"prevalence_upper_bound":BINS[key],"source_taxa":bin_counts[key]}
+    if set(map(int,leave_bin))!=set(masks):
+        raise RuntimeError("Full source prevalence class coverage changed")
 
     # Unique high-prevalence and retained (low/mid) host information:
     # exactly the same 40,171 source region pairs, *symmetric* zero handling.
@@ -208,6 +206,8 @@ def analyse():
         "status":"SOURCE_LOCKED_POSTHOC_PREVALENCE_BIN_SENSITIVITY_NOT_CAUSAL",
         "source":{
             "v2_receipt_sha256":hashlib.sha256(V2.read_bytes()).hexdigest(),
+            "full_bin_drop_diagnostic_sha256":hashlib.sha256(
+                ALREADY_REPLAYED_BINS.read_bytes()).hexdigest(),
             "glonaf_zenodo_md5":"16f5585d2500676951a4b664bbf0ffde",
             "wgsrpd3_region_nodes":284,
             "non_independent_region_pairs":len(ia),
