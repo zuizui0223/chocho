@@ -67,9 +67,9 @@ def test_exact_geb_gate_only_accepts_239_species():
 def test_common_nonempty_region_mask_produces_equal_pair_support():
     m=load()
     z={"native":[1,2,3],"current":[3,2,3]}
-    value,n=m.mean_resource_delta_common_region_set(z,[0,1,2])
+    value,n=m.mean_resource_delta_common_region_set(z,[0,1,2],min_pairs=1)
     assert n==3
     assert value==pytest.approx(1/3)
     with pytest.raises(RuntimeError,match="Common-support"):
         m.mean_resource_delta_common_region_set(
-            {"native":[1,0],"current":[1,2]},[0,1])
+            {"native":[1,0],"current":[1,2]},[0,1],min_pairs=1)
