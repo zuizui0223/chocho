@@ -13,6 +13,8 @@
     "current": 41083
   },
   "rule": "2x2 swaps of added butterfly×WGSRPD3 cells; forbid native cells; preserve each butterfly's number of gains and each region's number of new butterflies; preserve all original native cells",
+  "stratification": "global unstratified",
+  "strata_source_sha256": null,
   "observed_mean_beta_jaccard_change": 0.18510150276498433,
   "randomization": {
     "draws": 199,
@@ -33,6 +35,7 @@
     "MCMC draws from sequential constrained swaps are not independent experimental replications.",
     "This null fixes butterfly gain counts by region and species, not plant-level introduction or host-network structure.",
     "Region endpoints are reused in pair summaries; no pair-independent confidence intervals.",
-    "Fixed margin null does not account for spatial autocorrelation/phylogeny of introduced host plant ranges."
+    "Fixed margin null does not account for spatial autocorrelation/phylogeny of introduced host plant ranges.",
+    "Within-level1 swaps retain broad geographic placement, but not climate, port traffic, or spatial autocorrelation within world division."
   ]
 }
