@@ -1,0 +1,66 @@
+name: Region-preserving first-record larval-host overlap null
+on:
+  push:
+    paths:
+      - '.github/workflows/chocho-region-preserving-host-null.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  first-record-geographic-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover source-frozen private original230 butterfly host roster
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-original230-derived-host-roster-20261030
+          run-id: 40979986160
+          github-token: ${{ github.token }}
+          path: work/host
+      - name: Recover source-frozen pre-2011 historical plant speciesKey facets (23 ports)
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work/plant23
+      - name: Recover source-frozen pre-2011 historical plant speciesKey facets (15 ports)
+        uses: actions/download-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          run-id: 41176666842
+          github-token: ${{ github.token }}
+          path: work/plant15
+      - name: Recover accepted-name-to-GBIF taxon crosswalk, no butterfly-host edges
+        uses: actions/download-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          run-id: 41177682289
+          github-token: ${{ github.token }}
+          path: work/taxonomy
+      - name: Run deterministic 3-chain species/island fixed-margin and regional-blocked source audit
+        run: |
+          python -m py_compile provenance/reviewer_defenses/results/region_preserving_host_overlap_20261031/analyze_regional_host_overlap_null.py
+          python provenance/reviewer_defenses/results/region_preserving_host_overlap_20261031/analyze_regional_host_overlap_null.py \
+            --root . \
+            --original-roster work/host/original230_host_edges.csv \
+            --original23 work/plant23/local_all23ports_specieskey_year.csv.gz \
+            --new15 work/plant15/local_new15port_specieskey_year.csv.gz \
+            --taxonomy work/taxonomy/original230_plant_name_to_gbifkey_v1.json.gz \
+            --out provenance/reviewer_defenses/results/region_preserving_host_overlap_20261031/host_overlap_geography_null_audit.json
+      - name: Commit only public null aggregate, no source butterfly-host associations
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/region_preserving_host_overlap_20261031/host_overlap_geography_null_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record geographic-blocked original230 host overlap counterfactual and MCMC mixing audits [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
