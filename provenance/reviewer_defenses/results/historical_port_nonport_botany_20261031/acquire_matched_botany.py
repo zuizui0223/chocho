@@ -243,15 +243,20 @@ def plant_facets(site,hosts):
         q=dict(p);q["facetOffset"]=offset
         result=get_json(GBIF,q)
         if count is None:count=int(result["count"])
-        facets={x["field"]:x.get("counts",[]) for x in result.get("facets",[])}
-        if not facets and count:
-            raise ValueError("GBIF returned indexed plant records without facets")
-        for entry in facets.get("speciesKey",[]):
+        # GBIF returns canonical facet FIELD ids (e.g. SPECIES_KEY), not
+        # necessarily camel-case query names (speciesKey). Never silently
+        # convert indexed records into zero botanical species on case mismatch.
+        facets={str(x.get("field","")).upper():x.get("counts",[])
+                for x in result.get("facets",[])}
+        if count and "SPECIES_KEY" not in facets:
+            raise ValueError("GBIF returned indexed plant records but no SPECIES_KEY facet: "+
+                             repr(sorted(facets)))
+        for entry in facets.get("SPECIES_KEY",[]):
             if entry.get("name"):
                 species[str(entry["name"])]=int(entry.get("count",0))
-        for entry in facets.get("datasetKey",[]):
+        for entry in facets.get("DATASET_KEY",[]):
             if entry.get("name"):datasets.add(str(entry["name"]))
-        if len(facets.get("speciesKey",[]))<1000:break
+        if len(facets.get("SPECIES_KEY",[]))<1000:break
         if offset==3000:raise ValueError("SpeciesKey facet pagination exceeded safety cap")
     host_key={str(x["GBIF_accepted_speciesKey"]) for x in hosts}
     return dict(site,query_status="COMPLETE",
