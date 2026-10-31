@@ -7,6 +7,7 @@ on:
       - ".github/workflows/chocho-colonial-lenzner-source-audit.yml"
       - "scripts/probe_lenzner_archive_structure.py"
       - "scripts/audit_lenzner_region_empire_tables.py"
+      - "scripts/build_lenzner_tdwg_colonial_crosswalk.py"
   workflow_dispatch:
 
 permissions:
@@ -25,6 +26,12 @@ jobs:
           python-version: "3.12"
       - name: Inspect published Lenzner et al. colonial-flora dataset source and file list
         run: python scripts/probe_lenzner_colonial_source.py
+      - name: Checkout verified official TDWG 369-region geometry
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/wgsrpd
       - name: Fetch exact Lenzner archive and inspect listed spatial/covariate files
         run: |
           mkdir -p _temp_historical_sources
@@ -35,9 +42,11 @@ jobs:
           python scripts/probe_lenzner_archive_structure.py
           python -m pip install --quiet pyshp>=2.3.1
           python scripts/audit_lenzner_region_empire_tables.py
+          python -m pip install --quiet "shapely>=2,<3" "pyproj>=3.7,<4"
+          python scripts/build_lenzner_tdwg_colonial_crosswalk.py
       - name: Remove original third-party source from runner
         if: always()
-        run: rm -rf _temp_historical_sources
+        run: rm -rf _temp_historical_sources _external
       - name: Preserve metadata, source files not republished
         run: |
           git config user.name 'github-actions[bot]'
@@ -47,6 +56,10 @@ jobs:
             git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_archive_structure.json
           if [ -f provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_region_empire_schema.json ]; then
             git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_region_empire_schema.json
+          fi
+          if [ -f provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_wgsrpd3_colonial_area_crosswalk.csv ]; then
+            git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_wgsrpd3_colonial_area_crosswalk.csv
+            git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_wgsrpd3_colonial_area_audit.json
           fi
           fi
           if git diff --cached --quiet; then exit 0; fi
