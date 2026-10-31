@@ -23,8 +23,22 @@
         151,
         154
       ],
-      "has_verified_header": false,
-      "column_names": [],
+      "has_verified_header": true,
+      "column_names": [
+        "date-out",
+        "date-in",
+        "mmsi_imo_vessel_mame",
+        "time_mooring",
+        "nb_mooring_terminal",
+        "Port_ID_waiting_area_id_from",
+        "PortName_from",
+        "lon_from",
+        "lat_from",
+        "Port_ID_waiting_area_id_to",
+        "PortName_to",
+        "lon_to",
+        "lat_to"
+      ],
       "delimiter": ";",
       "first_line_token_profile": [
         {
@@ -130,14 +144,6 @@
           "digits": 0,
           "punctuation": 1,
           "header_keyword": "lat"
-        },
-        {
-          "index": 14,
-          "length": 0,
-          "letters": 0,
-          "digits": 0,
-          "punctuation": 0,
-          "header_keyword": null
         }
       ],
       "header_keyword_hits": 12,
