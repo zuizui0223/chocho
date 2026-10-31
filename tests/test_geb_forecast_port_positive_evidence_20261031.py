@@ -162,5 +162,5 @@ def test_gEB_to_port_record_correlation_not_transport_causality():
     ledger = LEDGER.read_text(encoding="utf8")
     assert all(s in doc for s in ("+0.652", "+0.550", "39港でρ=+0.023",
                                   "予測改善4.1%・島間ρ0.300・港種別ρ0.652"))
-    assert "港を通じて実現した割合" in ledger
-    assert "島間" in ledger and "+0.652" not in ledger or "0.652" in ledger
+    assert "港・島を通じて実現した割合" in ledger
+    assert "0.652" in ledger and "0.418" in ledger and "119/155種" in ledger
