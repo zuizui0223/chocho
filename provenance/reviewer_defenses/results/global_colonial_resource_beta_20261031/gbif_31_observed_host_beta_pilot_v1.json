@@ -99,7 +99,324 @@
         "minimum_improvement": -0.005319513049906025,
         "maximum_improvement": 0.006309459191162499
       }
+    },
+    "conditional_incremental_to_existing_plant_layer": {
+      "host_given_other_aliens_m3_vs_m2_percent": 0.6034696583055986,
+      "other_aliens_given_host_m3_vs_m1_percent": 0.17861166465282022
     }
+  },
+  "ridge_regularization_robustness": {
+    "0.0": {
+      "base_M0_mse": 0.01392293336880046,
+      "host_M1_gain_percent": 1.4959088265970137,
+      "other_M2_gain_percent": 2.3620088336636194,
+      "both_M3_gain_percent": 1.9706328353807003,
+      "host_only_regions_improved": 69
+    },
+    "1.0": {
+      "base_M0_mse": 0.01392272818441716,
+      "host_M1_gain_percent": 1.4934968399327422,
+      "other_M2_gain_percent": 2.1993085014527294,
+      "both_M3_gain_percent": 1.942307769024773,
+      "host_only_regions_improved": 69
+    },
+    "10.0": {
+      "base_M0_mse": 0.013921072053727467,
+      "host_M1_gain_percent": 1.4700755291980647,
+      "other_M2_gain_percent": 1.0489217335724288,
+      "both_M3_gain_percent": 1.6460614674765426,
+      "host_only_regions_improved": 69
+    },
+    "100.0": {
+      "base_M0_mse": 0.013919307107790362,
+      "host_M1_gain_percent": 1.1948609680633309,
+      "other_M2_gain_percent": 0.1413940644219727,
+      "both_M3_gain_percent": 1.3449430171064967,
+      "host_only_regions_improved": 72
+    }
+  },
+  "whole_world_division_holdout": {
+    "method": "leave-entire-WGSRPD-level1-out: no outcome of held-out regions in train",
+    "models": {
+      "M0_general_flora_and_effort": {
+        "division_equal_mse": 0.025006111527964205,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012692756447698631
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.04503250805583063
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018046892431991222
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.034625235891084724
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014633164813215825
+          }
+        ]
+      },
+      "M1_known_host": {
+        "division_equal_mse": 0.024895703040814933,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012978208345382682
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.043955430765488274
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018857253310592518
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.03468257584908754
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014005046933523642
+          }
+        ]
+      },
+      "M2_other_aliens": {
+        "division_equal_mse": 0.024772889518084134,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012476303304335136
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.04455504929012354
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018165256025305047
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.0340769417562952
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014590897214361744
+          }
+        ]
+      },
+      "M3_both": {
+        "division_equal_mse": 0.024830997311795427,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012857756093860657
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.04385350149236121
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018888998442167772
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.03446222139801376
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.01409250913257375
+          }
+        ]
+      }
+    },
+    "comparisons": {
+      "M1_known_host": {
+        "divisions_improved": 2,
+        "divisions_worsened": 3,
+        "division_equal_mse_reduction_percent": 0.4415260126541562,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": -2.248935436997276,
+            "mse_difference": -0.00028545189768405116
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 2.3917772667847252,
+            "mse_difference": 0.001077077290342357
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -4.490307024630963,
+            "mse_difference": -0.0008103608786012954
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": -0.1656016385943997,
+            "mse_difference": -5.73399580028125e-05
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 4.292426742333301,
+            "mse_difference": 0.0006281178796921829
+          }
+        ]
+      },
+      "M2_other_aliens": {
+        "divisions_improved": 4,
+        "divisions_worsened": 1,
+        "division_equal_mse_reduction_percent": 0.9326600404035618,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": 1.7053281078495814,
+            "mse_difference": 0.00021645314336349482
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 1.0602535508685011,
+            "mse_difference": 0.00047745876570708806
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -0.6558668965300924,
+            "mse_difference": -0.00011836359331382496
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": 1.5835101788597457,
+            "mse_difference": 0.0005482941347895245
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 0.28884796551944536,
+            "mse_difference": 4.2267598854081254e-05
+          }
+        ]
+      },
+      "M3_both": {
+        "divisions_improved": 3,
+        "divisions_worsened": 2,
+        "division_equal_mse_reduction_percent": 0.7002856720564032,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": -1.299951250478318,
+            "mse_difference": -0.00016499964616202567
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 2.618123250003543,
+            "mse_difference": 0.0011790065634694202
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -4.666210614098699,
+            "mse_difference": -0.0008421060101765493
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": 0.4707967725728473,
+            "mse_difference": 0.00016301449307096205
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 3.694728293866998,
+            "mse_difference": 0.000540655680642075
+          }
+        ]
+      }
+    },
+    "limits": [
+      "Only five world-division groups with extreme geographic imbalance, so not global replication.",
+      "Held-out pairs include links to training-world regions; report as new-region transfer, not within-world future prediction.",
+      "All floral maps and sampling-effort covariates are cross-sectional sources."
+    ]
   },
   "limits": [
     "Only original GBIF occurrence DOI's 30 exact matches, not globally representative 239 or 225 butterfly species.",
