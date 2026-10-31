@@ -54,13 +54,23 @@ jobs:
             --zip _scratch_coastal/gshhg-shp-2.3.7.zip \
             --work-dir _scratch_coastal/extracted \
             --max-ports 0 --n-controls 2 --max-workers 6
-      - name: Commit biological data audit without individual GBIF records
-        if: always()
+      - name: Commit complete biological data audit without individual GBIF records
+        if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/*.csv \
              provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/*.json || true
           git diff --cached --quiet && exit 0
-          git commit -m "Record historic GBIF port/nonport botanical opportunity with original island geometry [skip ci]"
-          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+          git commit -m "Record full38 historic GBIF port/nonport botanical opportunity [skip ci]"
+          # Other analyses may update the same PR branch while this workflow runs.
+          # Never force-push or overwrite remote work; replay this results commit.
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then
+              exit 0
+            fi
+          done
+          echo "Failed to publish complete botanical results after 3 non-destructive retries" >&2
+          exit 1
