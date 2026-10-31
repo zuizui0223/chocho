@@ -65,7 +65,7 @@ def focal_hosts(raw_hosts=HOSTS,panel_path=PANEL):
     names=set()
     per_species=defaultdict(set)
     summary=Counter()
-    with raw_hosts.open("r",encoding="utf8-sig",newline="") as f:
+    with raw_hosts.open("r",encoding="utf-8-sig",newline="") as f:
         reader=csv.DictReader(f)
         necessary={"Insect Genus","Insect Species","Hostplant Genus","Hostplant Species"}
         if not necessary.issubset(reader.fieldnames or []):
