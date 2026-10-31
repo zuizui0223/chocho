@@ -1,0 +1,320 @@
+{
+  "schema": "chocho_migrant_selected_host_gap_followup_v1",
+  "status": "SOURCE_VERIFIED_PROXY_WITH_NO_CAUSAL_HOST_OR_STEPPING_STONE_SUPPORT",
+  "source_files": {
+    "roster": {
+      "path": "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv",
+      "git_blob": "439dd1034ca16f96ff94222695d98dc39747c2e4"
+    },
+    "gaps": {
+      "path": "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/matched_species_screen.csv",
+      "git_blob": "eb316611c58d5d08e37345f9f944a0dbf170a41e"
+    },
+    "followup": {
+      "path": "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv",
+      "git_blob": "efbc770469a720e2dea82478db2f6196ba03b353"
+    }
+  },
+  "cohort": "both_period_opportunity",
+  "full_candidate_butterfly_species": 225,
+  "gap_comparison_species": 193,
+  "groups": {
+    "ROSTER_SELECTED_MIGRANT": {
+      "species": 106,
+      "island_first_index_events": 2177,
+      "previous_record_gap_500km_events": 119,
+      "species_with_500km_gap": 57,
+      "gap_500_event_weighted": 0.05466237942122187,
+      "gap_500_species_equal": 0.13559039955512825,
+      "correlations": {
+        "rho_host_500": 0.16398541687244395,
+        "rho_ports_500": -0.13144267531321088,
+        "rho_wing_500": -0.05561511810633336,
+        "rho_host_100": 0.14884271377573025,
+        "rho_ports_100": -0.15077222558817988,
+        "rho_wing_100": 0.07286426462567236
+      },
+      "bootstrap_95": {
+        "rho_host_500": {
+          "ci95": [
+            -0.022197897712476555,
+            0.3530435856478709
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_ports_500": {
+          "ci95": [
+            -0.32620279012281156,
+            0.052229651785798824
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_wing_500": {
+          "ci95": [
+            -0.23717600913081088,
+            0.14807297059177152
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_host_100": {
+          "ci95": [
+            -0.05097742775492497,
+            0.3392095935339521
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_ports_100": {
+          "ci95": [
+            -0.3301898138518944,
+            0.036314166323154
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_wing_100": {
+          "ci95": [
+            -0.10686890296291734,
+            0.2615791082432629
+          ],
+          "valid_resamples": 1200
+        }
+      },
+      "minimum_record_thresholds": {
+        "5": {
+          "species": 81,
+          "island_first_index_events": 2120,
+          "previous_record_gap_500km_events": 106,
+          "species_with_500km_gap": 47,
+          "gap_500_event_weighted": 0.05,
+          "gap_500_species_equal": 0.10748044057008553,
+          "correlations": {
+            "rho_host_500": 0.0313210335514968,
+            "rho_ports_500": -0.15229060601447378,
+            "rho_wing_500": -0.11430006249216142,
+            "rho_host_100": 0.12929968700090802,
+            "rho_ports_100": -0.10884126232021982,
+            "rho_wing_100": -0.02313118090302757
+          }
+        },
+        "10": {
+          "species": 58,
+          "island_first_index_events": 1963,
+          "previous_record_gap_500km_events": 76,
+          "species_with_500km_gap": 31,
+          "gap_500_event_weighted": 0.03871625063678044,
+          "gap_500_species_equal": 0.07107900608351025,
+          "correlations": {
+            "rho_host_500": 0.07607101400849606,
+            "rho_ports_500": -0.03939693906420751,
+            "rho_wing_500": -0.0630951480795415,
+            "rho_host_100": 0.14655385177318922,
+            "rho_ports_100": 0.038324040189676695,
+            "rho_wing_100": -0.03664615525128456
+          }
+        },
+        "20": {
+          "species": 35,
+          "island_first_index_events": 1670,
+          "previous_record_gap_500km_events": 36,
+          "species_with_500km_gap": 17,
+          "gap_500_event_weighted": 0.02155688622754491,
+          "gap_500_species_equal": 0.023331711255141732,
+          "correlations": {
+            "rho_host_500": -0.1327346229554008,
+            "rho_ports_500": 0.08319705201608571,
+            "rho_wing_500": -0.008738488230889043,
+            "rho_host_100": 0.022007296821874345,
+            "rho_ports_100": 0.148622423351047,
+            "rho_wing_100": -0.029997207133000702
+          }
+        }
+      }
+    },
+    "NOT_LISTED_UNKNOWN": {
+      "species": 87,
+      "island_first_index_events": 959,
+      "previous_record_gap_500km_events": 45,
+      "species_with_500km_gap": 29,
+      "gap_500_event_weighted": 0.04692387904066736,
+      "gap_500_species_equal": 0.1606215660498197,
+      "correlations": {
+        "rho_host_500": -0.036661763916079546,
+        "rho_ports_500": -0.12332520872528176,
+        "rho_wing_500": 0.2842077682400649,
+        "rho_host_100": -0.13661353755843414,
+        "rho_ports_100": -0.19790062571080339,
+        "rho_wing_100": 0.27755799380162655
+      },
+      "bootstrap_95": {
+        "rho_host_500": {
+          "ci95": [
+            -0.28592994884435563,
+            0.20461103026653862
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_ports_500": {
+          "ci95": [
+            -0.3253603501772356,
+            0.10010717364268938
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_wing_500": {
+          "ci95": [
+            0.08602471430431147,
+            0.4616132122182868
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_host_100": {
+          "ci95": [
+            -0.3763470740892681,
+            0.1102581174723893
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_ports_100": {
+          "ci95": [
+            -0.4049667768635436,
+            0.011902264268999615
+          ],
+          "valid_resamples": 1200
+        },
+        "rho_wing_100": {
+          "ci95": [
+            0.07718047432825993,
+            0.4536672726764571
+          ],
+          "valid_resamples": 1200
+        }
+      },
+      "minimum_record_thresholds": {
+        "5": {
+          "species": 42,
+          "island_first_index_events": 871,
+          "previous_record_gap_500km_events": 26,
+          "species_with_500km_gap": 12,
+          "gap_500_event_weighted": 0.029850746268656716,
+          "gap_500_species_equal": 0.06485895824605502,
+          "correlations": {
+            "rho_host_500": -0.11646699919234858,
+            "rho_ports_500": -0.07811451302767326,
+            "rho_wing_500": 0.4135457441837678,
+            "rho_host_100": -0.12595371335348193,
+            "rho_ports_100": -0.11336663237869961,
+            "rho_wing_100": 0.19664833371272633
+          }
+        },
+        "10": {
+          "species": 29,
+          "island_first_index_events": 786,
+          "previous_record_gap_500km_events": 12,
+          "species_with_500km_gap": 6,
+          "gap_500_event_weighted": 0.015267175572519083,
+          "gap_500_species_equal": 0.022956652172447505,
+          "correlations": {
+            "rho_host_500": -0.3214204899242432,
+            "rho_ports_500": 0.17512002577953167,
+            "rho_wing_500": 0.1266045984203153,
+            "rho_host_100": -0.19995127147632694,
+            "rho_ports_100": 0.06105748666122551,
+            "rho_wing_100": 0.06199084373091557
+          }
+        },
+        "20": {
+          "species": 13,
+          "island_first_index_events": 577,
+          "previous_record_gap_500km_events": 4,
+          "species_with_500km_gap": 4,
+          "gap_500_event_weighted": 0.006932409012131715,
+          "gap_500_species_equal": 0.008378825475599668,
+          "correlations": {
+            "rho_host_500": -0.28186015152716337,
+            "rho_ports_500": 0.2631773073081477,
+            "rho_wing_500": 0.42950118327948705,
+            "rho_host_100": -0.36863858808008876,
+            "rho_ports_100": -0.07745571520275077,
+            "rho_wing_100": 0.030261376633440123
+          }
+        }
+      }
+    }
+  },
+  "followup_retrospective_2001_2024_plant_pooled": {
+    "ROSTER_SELECTED_MIGRANT": {
+      "host_groups": {
+        "ALIEN_CANDIDATE_RECORDED": {
+          "n": 113,
+          "reindexed": 98,
+          "rate": 0.8672566371681416
+        },
+        "NATIVE_ONLY_CLASSIFIED": {
+          "n": 48,
+          "reindexed": 35,
+          "rate": 0.7291666666666666
+        }
+      },
+      "within_species": {
+        "paired_species": 12,
+        "mean_alien_minus_native_reindex_rate": -0.07007575757575758,
+        "ci95_resampled": [
+          -0.2569444444444445,
+          0.1231060606060606
+        ],
+        "positive": 2,
+        "negative": 6,
+        "zero": 4,
+        "at_least_two_each": {
+          "n": 6,
+          "mean_difference": -0.013888888888888895
+        }
+      }
+    },
+    "NOT_LISTED_UNKNOWN": {
+      "host_groups": {
+        "ALIEN_CANDIDATE_RECORDED": {
+          "n": 26,
+          "reindexed": 22,
+          "rate": 0.8461538461538461
+        },
+        "NATIVE_ONLY_CLASSIFIED": {
+          "n": 32,
+          "reindexed": 28,
+          "rate": 0.875
+        }
+      },
+      "within_species": {
+        "paired_species": 5,
+        "mean_alien_minus_native_reindex_rate": -0.2333333333333333,
+        "ci95_resampled": [
+          -0.6333333333333333,
+          0
+        ],
+        "positive": 0,
+        "negative": 2,
+        "zero": 3,
+        "at_least_two_each": {
+          "n": 1,
+          "mean_difference": -0.16666666666666663
+        }
+      }
+    }
+  },
+  "not_listed_is_unknown": true,
+  "not_actual_butterfly_displacement": true,
+  "plant_records_can_postdate_butterfly": true,
+  "not_actual_host_feeding_or_establishment": true,
+  "notes": [
+    "Migration proxy derives indirectly from a later author's GBIF species-key request.",
+    "Original 2021 published review Table S1 is not redistributed or claimed independently recovered.",
+    "Migration trait is species-level; populations can be resident in particular regions.",
+    "Unlisted means undocumented/unresolved here, not biologically non-migratory.",
+    "500 km gaps are between past and current GBIF recording sites; not flight distance.",
+    "Contemporary host resource fraction is not historically dated island host availability.",
+    "Pooled 2001–2024 port host records can follow butterfly first records.",
+    "Species bootstrap CIs condition on these data and ignore shared islands/phylogeny.",
+    "Event persistence analyses select previously indexed species-island pairs.",
+    "Retrospective native-only controls are NOT equivalent biological resource controls.",
+    "n thresholds and multiple correlations are exploratory, not independent confirmatory tests."
+  ]
+}
