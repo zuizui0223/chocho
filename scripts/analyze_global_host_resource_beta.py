@@ -306,6 +306,7 @@ def main():
     ap.add_argument("--allflora-current-csv",type=Path,required=True)
     ap.add_argument("--native-host-distribution-csv",type=Path,required=True)
     ap.add_argument("--current-host-distribution-csv",type=Path,required=True)
+    ap.add_argument("--official-wgsrpd3-lookup-json",type=Path,required=True)
     ap.add_argument("--null-draws",type=int,default=199)
     ap.add_argument("--output-prefix",type=Path,required=True)
     args=ap.parse_args()
@@ -329,7 +330,28 @@ def main():
                            repr(sums)+"; all-flora masked "+
                            repr(allflora_masked_sums)+
                            "; required native=26530/current=41083")
-    pairs=pair_rows(regions,flora,resources)
+    official=json.loads(args.official_wgsrpd3_lookup_json.read_text(encoding="utf8"))
+    if official.get("schema") != "chocho_wgsrpd3_level1_lookup_v0.1":
+        raise RuntimeError("Official WGSRPD3 lookup source changed")
+    official_codes=sorted(official.get("units",{}))
+    if len(official_codes)!=369 or len(set(official_codes))!=369:
+        raise RuntimeError("Expected fixed 369 official level-3 codes")
+    index={code:i for i,code in enumerate(regions)}
+    extra=sorted(set(regions)-set(official_codes))
+    absent=sorted(set(official_codes)-set(regions))
+    if len(extra)>5 or len(absent)>5:
+        raise RuntimeError("Large WGSRPD3 source mismatch: extraneous="+repr(extra)+
+                           "; unrepresented="+repr(absent))
+    official_indices=[index.get(code) for code in official_codes]
+    def to_official(seq):
+        return [seq[i] if i is not None else 0 for i in official_indices]
+    flora_official={k:to_official(flora[k]) for k in ("native","current")}
+    resources_official={k:to_official(resources[k]) for k in ("native","current")}
+    official_resource_units={k:count_species_units(resources_official[k])
+                             for k in ("native","current")}
+    # Null uses exactly the same 369 valid codes; absent communities are
+    # empty (undefined pairwise Jaccard), not fabricated species presences.
+    pairs=pair_rows(official_codes,flora_official,resources_official)
     plant=describe_delta([p["plant_delta"] for p in pairs])
     consumer=describe_delta([p["resource_delta"] for p in pairs])
     subset=[p for p in pairs if p["plant_delta"] is not None
@@ -346,7 +368,9 @@ def main():
             raise RuntimeError("zero insect-host interactions")
         for i in range(args.null_draws):
             e,accepted=swap_family_edges(edges,family,rng,attempts=5*len(edges))
-            m=build_butterfly_by_region(e,plant_regions,len(regions),len(panel))
+            m_full=build_butterfly_by_region(e,host_regions,len(regions),len(panel))
+            m={kind:[m_full[kind][j] for j in official_indices]
+               for kind in ("native","current")}
             x,n=mean_resource_delta(m)
             if x is None:
                 raise RuntimeError("null all pairs undefined")
@@ -376,8 +400,13 @@ def main():
           "allflora_native_csv":args.allflora_native_csv,
           "allflora_current_csv":args.allflora_current_csv,
           "native_host_distribution_csv":args.native_host_distribution_csv,
-          "current_host_distribution_csv":args.current_host_distribution_csv}.items()},
-        "analysis_units":{"wgsrpd3_regions":len(regions),
+          "current_host_distribution_csv":args.current_host_distribution_csv,
+          "official_wgsrpd3_lookup_json":args.official_wgsrpd3_lookup_json}.items()},
+        "analysis_units":{"wgsrpd3_regions":len(official_codes),
+          "raw_wcvp_region_codes":len(regions),
+          "unexpected_wcvp_codes_not_in_official_369":extra,
+          "official_codes_without_contemporary_flora":absent,
+          "official_369_resource_units":official_resource_units,
           "all_region_pairs":len(pairs),"selected_butterflies":len(panel),
           "distinct_accepted_flora_species":n_plants,
           "resolved_panel_insect_host_edges":len(edges),
@@ -406,6 +435,8 @@ def main():
           "All pairs reuse regions; do not calculate naïve independent-pair p-values.",
           "Historical empires, trade routes, climate, and GBIF butterfly observations have NOT been fitted.",
           "WGSRPD3 regions are heterogeneous in size and not all are independent.",
+          "WCVP distribution may contain codes outside the official frozen 369; only official 369 appear in pair results.",
+          "GEB 26530 and 41083 source checks are on unfiltered original HOSTS sidecars, not the official-region-masked subset.",
         ],
     }
     output=args.output_prefix
@@ -421,9 +452,11 @@ def main():
         w=csv.writer(f)
         w.writerow(["wgsrpd3_code","plant_native_species","plant_current_species",
                     "butterfly_native_resource_species","butterfly_current_resource_species"])
-        for j,code in enumerate(regions):
-            w.writerow([code,flora["native"][j].bit_count(),flora["current"][j].bit_count(),
-                        resources["native"][j].bit_count(),resources["current"][j].bit_count()])
+        for j,code in enumerate(official_codes):
+            w.writerow([code,flora_official["native"][j].bit_count(),
+                        flora_official["current"][j].bit_count(),
+                        resources_official["native"][j].bit_count(),
+                        resources_official["current"][j].bit_count()])
     print(json.dumps({
         "units":report["analysis_units"],"plants":plant,
         "consumer_resources":consumer,"delta_spearman":rho,
