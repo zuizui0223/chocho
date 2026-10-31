@@ -48,6 +48,7 @@ def git_file(root,p):
  return b.decode("utf8")
 
 def read_csv(data):
+ if isinstance(data,bytes):data=data.decode("utf8")
  return list(csv.DictReader(io.StringIO(data)))
 
 def source_data(root,hosts_path,plants23_path,plants15_path,taxonomy_path):
