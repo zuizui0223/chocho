@@ -155,7 +155,12 @@ def fit_ridge_predict(train,test,y,X,penalty=10.):
     gram=a.T@a
     diag=np.eye(gram.shape[0])*penalty
     diag[0,0]=0
-    beta=np.linalg.solve(gram+diag,a.T@y[train])
+    # Unregularized λ=0 may have redundant geographical covariates;
+    # use the minimum-norm least-squares fit rather than claiming failure.
+    if penalty==0:
+        beta=np.linalg.lstsq(a,y[train],rcond=None)[0]
+    else:
+        beta=np.linalg.solve(gram+diag,a.T@y[train])
     return np.clip(b@beta,0,1)
 
 
