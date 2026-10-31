@@ -210,7 +210,8 @@ def main():
  p.add_argument("--taxonomy-gzip",type=Path,required=True)
  p.add_argument("--output",type=Path,required=True)
  args=p.parse_args()
- m,source,plantsets,edges,events,matched,match=read_sources(*((load_original(args.root)[0],args),))
+ m,old=load_original(args.root)
+ m,source,plantsets,edges,events,matched,match=read_sources(m,args)
  # IMPORTANT: redo original-source baseline to prove the 10/299 initial result matches.
  original=m.source_network_null(matched,edges)
  if original["null_draws_ge_observed_fraction"]!=10 or original["null_draws_ge_observed_delta"]!=194:
