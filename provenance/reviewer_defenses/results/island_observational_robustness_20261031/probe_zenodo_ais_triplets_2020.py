@@ -49,7 +49,19 @@ def inspect(archive=ARCHIVE):
                     "tab": first.count("\t"), "pipe": first.count("|"),
                 }
                 item["first_line_lengths"] = [len(x) for x in nonblank[:3]]
-                # Never export sample observations, individual vessel IDs or MMSI.
+                # Export ONLY field names, NEVER the data rows. The source
+                # proves semicolon-delimited CSV, not a comma-separated file.
+                dialect = ";" if first.count(";") > first.count(",") else ","
+                header = [x.strip().strip('"') for x in first.split(dialect)]
+                import re
+                is_header = (len(header) >= 3
+                             and len(set(header)) == len(header)
+                             and all(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_ /().-]*", x)
+                                     for x in header))
+                item["has_verified_header"] = is_header
+                item["column_names"] = header if is_header else []
+                item["delimiter"] = dialect
+                # No sample observations, individual vessel IDs or MMSI.
                 item["sample_raw_values_exported"] = False
             manifest.append(item)
     return {
