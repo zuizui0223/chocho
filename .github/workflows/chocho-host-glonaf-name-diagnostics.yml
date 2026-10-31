@@ -36,6 +36,7 @@ jobs:
           echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
       - name: Count without forcing unverified species synonym joins
         run: |
+          python -m pip install --quiet numpy "shapely>=2,<3" "pyproj>=3.7,<4" "pyshp>=2.3"
           python scripts/audit_host_glonaf_nomenclature.py
       - name: Commit diagnosis only
         run: |
