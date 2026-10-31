@@ -1,0 +1,66 @@
+name: chocho independent GBIF 31-species spatial-observation source gate
+
+on:
+  push:
+    branches: [analysis/global-colonial-alien-flora-control-20261031]
+    paths:
+      - ".github/workflows/chocho-independent-gbif-31-region-source-gate.yml"
+      - "scripts/audit_gbif_31_butterfly_wgsrpd3_source.py"
+      - "tests/test_gbif_31_region_source_gate_20261101.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-independent-gbif-31-region-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit-doi-derived-independent-butterfly-region-records:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install official polygon reader and verify source-only tests
+        run: |
+          python -m pip install "shapely>=2,<3" "pytest>=8" ruff
+          ruff check --select F821 scripts/audit_gbif_31_butterfly_wgsrpd3_source.py
+          python -m pytest tests/test_gbif_31_region_source_gate_20261101.py -q
+      - name: Checkout pinned official TDWG WGSRPD3 polygons
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/wgsrpd
+      - name: Fetch already-minted GBIF DOI archival download (31 butterflies only)
+        run: |
+          mkdir -p _private_observations
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 25 --max-time 240 \
+            'https://api.gbif.org/v1/occurrence/download/request/0008693-260928105237408.zip' \
+            --output _private_observations/gbif_31_2026.zip
+          test -s _private_observations/gbif_31_2026.zip
+      - name: Count externally recorded butterflies in the same 284 colonial-comparison regions
+        run: |
+          python scripts/audit_gbif_31_butterfly_wgsrpd3_source.py \
+            --zip _private_observations/gbif_31_2026.zip
+      - name: Commit only aggregated region recording support, not GPS or GBIF individual records
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_region_source_gate.json
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_region_counts.csv
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Gate independent 31-butterfly GBIF records for source-matched WGSRPD3 association [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete original GBIF positions and temporary official map
+        if: always()
+        run: rm -rf _private_observations _external
