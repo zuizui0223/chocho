@@ -7,6 +7,7 @@ on:
     paths:
       - "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/acquire_migration_evidence.py"
       - ".github/workflows/chocho-migration-roster-crosswalk.yml"
+      - "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/recover_migration_gbif_keys.py"
   workflow_dispatch:
 
 permissions:
@@ -28,11 +29,18 @@ jobs:
       - name: Fetch and verify historical review migration roster
         run: |
           python provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/acquire_migration_evidence.py
+      - name: Recover author GBIF predicate for documented migrants
+        run: |
+          python provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/recover_migration_gbif_keys.py
       - name: Record exact source and audit result (or explicit retrieval failure)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_roster_acquisition.json
+          git add provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_predicate_audit.json
+          if test -f provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv; then
+            git add provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv
+          fi
           if test -f provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_roster_225_crosswalk.csv; then
             git add provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_roster_225_crosswalk.csv
           fi
