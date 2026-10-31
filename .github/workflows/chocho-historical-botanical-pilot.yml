@@ -1,0 +1,37 @@
+name: Historical botanical source identity and dated GBIF facet pilot
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  historical-botanical-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check WPI port identities and retrieve dated plant facets
+        run: |
+          python provenance/reviewer_defenses/results/historical_host_controls_20261031/acquire_dated_botanical_facets.py \
+            --root . \
+            --output provenance/reviewer_defenses/results/historical_host_controls_20261031/daily_botanical_port_pilot_20261031.json \
+            --artifact work/local_private_gbif_specieskey_year.csv.gz
+      - name: Preserve aggregate species-year counts without individual original coordinates
+        uses: actions/upload-artifact@v4
+        with:
+          name: historical-botanical-species-year-source-20261031
+          path: work/local_private_gbif_specieskey_year.csv.gz
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit only public index-count audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/historical_host_controls_20261031/daily_botanical_port_pilot_20261031.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record source-verified historical GBIF botanical port year facets [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
