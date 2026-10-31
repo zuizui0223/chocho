@@ -93,6 +93,14 @@ jobs:
             --draws 199 --attempts-per-added 5 \
             --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_fixed_margins_v1.json \
             --draws-csv provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_fixed_margins_v1.draws.csv
+      - name: Repeat fixed-margin null with geographically constrained within-level1 swaps
+        run: |
+          python scripts/analyze_global_resource_gain_fixed_margins.py \
+            --matrix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.matrix.csv.gz \
+            --receipt provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.json \
+            --stratify-level1 --seed 41131 --draws 199 --attempts-per-added 5 \
+            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_within_level1_v1.json \
+            --draws-csv provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_within_level1_v1.draws.csv
       - name: Commit only source-derived summary, region and pairs; keep raw sources off GitHub
         run: |
           git config user.name "github-actions[bot]"
