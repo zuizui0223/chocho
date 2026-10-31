@@ -57,3 +57,16 @@ def test_public_snapshot_recomputed_without_statistical_refitting():
                 assert b is None
             else:
                 assert math.isclose(a, b, rel_tol=0, abs_tol=1e-9)
+
+
+def test_deterministic_800_species_resamples_match_frozen_intervals():
+    matched, _ = MODULE.make_screen()
+    recomputed = MODULE.report(matched, n_boot=800)
+    archived = json.loads((D / "trait_gap_results.json").read_text(encoding="utf-8"))
+    assert recomputed["bootstrap_draws"] == archived["bootstrap_draws"] == 800
+    for k, published in archived["correlations"].items():
+        recalculated = recomputed["correlations"][k]
+        assert recalculated["bootstrap_n"] == published["bootstrap_n"] == 800
+        for expected, actual in zip(published["species_resampled_95"],
+                                    recalculated["species_resampled_95"]):
+            assert math.isclose(expected, actual, rel_tol=0, abs_tol=1e-8), k
