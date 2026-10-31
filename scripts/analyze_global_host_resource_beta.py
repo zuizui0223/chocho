@@ -274,7 +274,7 @@ def mean_resource_delta(resource):
     return (total/valid if valid else None), valid
 
 
-def mean_resource_delta_common_region_set(resource, selected):
+def mean_resource_delta_common_region_set(resource, selected, min_pairs=100):
     """Compare pairs drawn from the SAME native-resource-supported regions.
 
     If every selected region has nonempty native and contemporary
@@ -293,7 +293,7 @@ def mean_resource_delta_common_region_set(resource, selected):
                 raise RuntimeError("Unexpected undefined Jaccard on common support")
             total+=y-x
             count+=1
-    if count<100:
+    if count<min_pairs:
         raise RuntimeError("No independent comparable common-support region-pair set")
     return total/count,count
 
