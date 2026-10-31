@@ -74,21 +74,29 @@ def get_json(endpoint,params=None):
             if attempt<3:time.sleep(min(8,0.7*2**attempt))
     raise RuntimeError(f"GBIF request failed endpoint={endpoint}, error={type(last).__name__}: {str(last)[:160]}")
 
-def resolve_superfamily():
+def resolve_butterfly_taxon_filter():
+    # GBIF's currently configured name matching returned NONE on strict
+    # Papilionoidea SUPERFAMILY queries in the actual 2026-10-31 CI source
+    # test. Use six established butterfly families instead, as OR filters;
+    # accept a family only when the name itself is not an ambiguous homonym.
     match=get_json(GBIF+"/species/match",{
         "name":"Papilionoidea","rank":"SUPERFAMILY","kingdom":"Animalia","strict":"true"})
     name=str(match.get("canonicalName") or match.get("scientificName") or "")
     rank=str(match.get("rank","")).upper()
-    matchtype=str(match.get("matchType","")).upper()
+    typ=str(match.get("matchType","")).upper()
     key=match.get("acceptedUsageKey") or match.get("usageKey")
-    if name.lower()!="papilionoidea" or rank!="SUPERFAMILY" or matchtype!="EXACT" or not key:
-        raise ValueError("GBIF Papilionoidea resolution ambiguous: "+json.dumps(match)[:500])
-    check=get_json(GBIF+"/species/"+str(key))
-    if str(check.get("rank","")).upper()!="SUPERFAMILY":
-        raise ValueError("Resolved GBIF Papilionoidea taxon rank changed: "+repr(check))
-    return {"superfamily_name":"Papilionoidea","GBIF_taxonKey":int(key),
-            "source_match":{k:match.get(k) for k in ("matchType","rank","canonicalName","status","confidence")},
-            "resolved_taxon_name":check.get("canonicalName")}
+    if name.lower()=="papilionoidea" and rank=="SUPERFAMILY" and typ=="EXACT" and key:
+        check=get_json(GBIF+"/species/"+str(key))
+        if str(check.get("rank","")).upper()=="SUPERFAMILY":
+            return {"method":"GBIF_SUPERFAMILY_TAXONKEY",
+                "superfamily_name":"Papilionoidea","GBIF_taxonKey":str(key),
+                "source_match":{k:match.get(k) for k in ("matchType","rank","canonicalName","status")}}
+    families=["Nymphalidae","Pieridae","Lycaenidae","Papilionidae","Hesperiidae","Riodinidae"]
+    return {"method":"REPEATED_GBIF_FAMILY_STRING_OR_FILTER",
+        "family_names":families,
+        "papilionoidea_strict_match_failed":True,
+        "papilionoidea_source_match":match,
+        "unverified_if_any_candidate_225_outside_six_families":True}
 
 def load_polygons(zipfile,working,ids,max_chars):
     import geopandas as gpd
@@ -151,14 +159,18 @@ def load_polygons(zipfile,working,ids,max_chars):
                       "polygon_sha256":hashlib.sha256(chosen.encode()).hexdigest()})
     return polygons,audit,digest
 
-def indexed_butterflies_in_period(island,period,geometry,taxon):
+def indexed_butterflies_in_period(island,period,geometry,taxon_filter):
     years=PERIODS[period]
-    basic={
-        "taxonKey":str(taxon),"geometry":geometry,"year":f"{years[0]},{years[1]}",
+    basic={"geometry":geometry,"year":f"{years[0]},{years[1]}",
         "hasCoordinate":"true","hasGeospatialIssue":"false",
         "occurrenceStatus":"PRESENT","facet":"speciesKey","facetLimit":1000,
         "limit":0,
     }
+    if taxon_filter["method"]=="GBIF_SUPERFAMILY_TAXONKEY":
+        basic["taxonKey"]=taxon_filter["GBIF_taxonKey"]
+    else:
+        # GBIF repeated search parameter values combine with OR, not AND.
+        basic["family"]=taxon_filter["family_names"]
     species={}
     total=None;offset=0;pages=0
     for _ in range(40):
@@ -188,7 +200,8 @@ def indexed_butterflies_in_period(island,period,geometry,taxon):
     return species,{"island_id":island,"period":period,
       "all_superfamily_papilionoidea_indexed_occurrences":total,
       "gbif_specieskey_count":len(species),"species_facet_pages":pages,
-      "taxonKey":str(taxon),"GBIF_indexed_not_biological_absence":True}
+      "butterfly_filter_type":taxon_filter["method"],
+      "GBIF_indexed_not_biological_absence":True}
 
 def build_risk(islands,table,facts):
     # This scope is fixed before any outcomes. Explicit zeros mean only
@@ -239,7 +252,7 @@ def main():
     selected=all_islands if args.islands=="all" else set(args.islands.split(","))
     if not selected or not selected <= all_islands:
         raise ValueError("Selected islands not all in original 17 source")
-    taxon=resolve_superfamily()
+    taxon=resolve_butterfly_taxon_filter()
     polygons,geometry_receipt,gshhg=load_polygons(args.gshhg_zip,args.work,selected,args.wkt_max_chars)
     HERE.mkdir(parents=True,exist_ok=True)
     facts={}
@@ -247,7 +260,7 @@ def main():
     for island in sorted(selected,key=int):
         for period in PERIODS:
             scores,receipt=indexed_butterflies_in_period(island,period,polygons[island],
-                                                        taxon["GBIF_taxonKey"])
+                                                        taxon)
             facts[(island,period)]=scores
             queries.append(receipt)
             print("BUTTERFLY_PERIOD",island,period,receipt["all_superfamily_papilionoidea_indexed_occurrences"],
@@ -280,7 +293,7 @@ def main():
            "Simplified original GSHHG island polygons preserve >=96% equal-area size but can cause nearshore spatial errors.",
            "All 225 species × island cells are included; many are geographically infeasible, so all-species crude risk rates are not transport effects.",
            "Query negatives are GBIF nonindexes, not biological absences, occupancy, or proof of no colonization.",
-           "The GBIF Papilionoidea superfamily extent, taxonomy and indexing may drift in later downloads.",
+           "GBIF butterfly family definitions, taxonomy and indexing may drift, and may omit rare families.",
            "Three window-specific speciesKey facets lack exact first year/individual observation providers and are not true sampling histories.",
            "Current source has no plant × butterfly host-edge supply, transport vector or independent regional establishment observations.",
            "Do not reuse 2001–2024 pooled port plant inventory as a pre-outcome foodplant exposure."
