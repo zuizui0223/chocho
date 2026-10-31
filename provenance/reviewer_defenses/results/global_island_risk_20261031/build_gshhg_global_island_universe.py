@@ -59,10 +59,29 @@ def run(archive,work):
     project=Transformer.from_crs(4326,6933,always_xy=True)
     ids=original_17()
     frame=[]
+    geometry_repairs=[]
+    geometry_unusable=[]
     for landmass,rows in land.groupby("landmass_id"):
         geom=shapely.union_all(rows.geometry.to_numpy())
-        if geom.is_empty or not geom.is_valid:
-            raise ValueError("Invalid GSHHG geometry landmass "+landmass)
+        if geom.is_empty:
+            geometry_unusable.append({"landmass_id":landmass,"reason":"empty_source"})
+            continue
+        if not geom.is_valid:
+            before=transform(project.transform,geom).area/1e6
+            repaired=shapely.make_valid(geom)
+            if repaired.is_empty or not repaired.is_valid:
+                geometry_unusable.append({"landmass_id":landmass,"reason":"make_valid_failed",
+                    "raw_geometry_area_km2":before})
+                continue
+            after=transform(project.transform,repaired).area/1e6
+            if abs(after-before)/max(after,1e-10)>.03:
+                geometry_unusable.append({"landmass_id":landmass,
+                    "reason":"make_valid_changed_area_over_3pct",
+                    "original_area_km2":before,"repaired_area_km2":after})
+                continue
+            geometry_repairs.append({"landmass_id":landmass,
+                "original_area_km2":before,"repaired_area_km2":after})
+            geom=repaired
         area_km2=transform(project.transform,geom).area/1e6
         if not AREA_MIN<=area_km2<AREA_MAX:continue
         point=geom.representative_point()
@@ -85,6 +104,8 @@ def run(archive,work):
         writer=csv.DictWriter(f,fieldnames=list(frame[0]))
         writer.writeheader();writer.writerows(frame)
     present={q["landmass_id"] for q in frame}
+    if ids-present:
+        raise ValueError("The 17 originally studied islands must all be retained; missing "+str(sorted(ids-present,key=int)))
     in17=ids&present
     areas=[q["area_km2_equal_area"] for q in frame]
     receipt={
@@ -98,6 +119,10 @@ def run(archive,work):
       "source_unique_sibling_landmasses":int(land.landmass_id.nunique()),
       "size_threshold_km2":{"lower_inclusive":AREA_MIN,"upper_exclusive":AREA_MAX},
       "selected_islands_count":len(frame),
+      "geometry_repairs_n":len(geometry_repairs),
+      "geometry_repairs":geometry_repairs,
+      "geometry_excluded_invalid_n":len(geometry_unusable),
+      "geometry_excluded_invalid_landmasses":geometry_unusable,
       "original_17_in_global_frame_count":len(in17),
       "original_17_missing_due_to_area_filter":sorted(ids-present,key=int),
       "min_area_km2":min(areas),
