@@ -92,8 +92,36 @@ def resolve_butterfly_taxon_filter():
                 "superfamily_name":"Papilionoidea","GBIF_taxonKey":str(key),
                 "source_match":{k:match.get(k) for k in ("matchType","rank","canonicalName","status")}}
     families=["Nymphalidae","Pieridae","Lycaenidae","Papilionidae","Hesperiidae","Riodinidae"]
-    return {"method":"REPEATED_GBIF_FAMILY_STRING_OR_FILTER",
-        "family_names":families,
+    by_family={}
+    for family in families:
+        d=get_json(GBIF+"/species/match",{"name":family,"rank":"FAMILY",
+                    "kingdom":"Animalia","strict":"true"})
+        rank=str(d.get("rank","")).upper()
+        name=str(d.get("canonicalName") or d.get("scientificName") or "")
+        key=d.get("acceptedUsageKey") or d.get("usageKey")
+        if rank!="FAMILY" or name.lower().split(" ")[0]!=family.lower() or not key:
+            # Some GBIF checklist deployments return NONE to a strict name
+            # match. Searching candidates still requires exact family rank and
+            # accepted Animalia family, never accepting arbitrary fuzzy hits.
+            data=get_json(GBIF+"/species/search",{"q":family,"rank":"FAMILY","limit":40})
+            candidates=[r for r in data.get("results",[])
+              if str(r.get("rank","")).upper()=="FAMILY"
+              and str(r.get("canonicalName") or r.get("scientificName") or "").lower().split(" ")[0]==family.lower()
+              and str(r.get("status","")).upper()=="ACCEPTED"
+              and str(r.get("kingdom","Animalia")).lower()=="animalia"]
+            if len(candidates)!=1:
+                raise ValueError("Cannot uniquely resolve butterfly family: "+family+
+                                 ", matches="+str(len(candidates))+", strict="+json.dumps(d)[:220])
+            key=candidates[0].get("key")
+            name=str(candidates[0].get("canonicalName") or family)
+        verify=get_json(GBIF+"/species/"+str(key))
+        if (str(verify.get("rank","")).upper()!="FAMILY"
+            or str(verify.get("canonicalName") or verify.get("scientificName") or "").lower().split(" ")[0]!=family.lower()):
+            raise ValueError("GBIF family resolved to inconsistent taxon "+family+" "+str(key))
+        by_family[family]=str(key)
+    assert len(set(by_family.values()))==len(families)
+    return {"method":"REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+        "family_taxonkeys":by_family,
         "papilionoidea_strict_match_failed":True,
         "papilionoidea_source_match":match,
         "unverified_if_any_candidate_225_outside_six_families":True}
@@ -102,6 +130,7 @@ def load_polygons(zip_path,working,ids,max_chars):
     import geopandas as gpd
     import shapely
     from shapely.geometry import Polygon,MultiPolygon
+    from shapely.geometry.polygon import orient
     from shapely.ops import transform
     from shapely import wkt
     from pyproj import Transformer
@@ -139,6 +168,9 @@ def load_polygons(zip_path,working,ids,max_chars):
         for tol in (0.,.00025,.0005,.001,.002,.003,.005,.008,.012,.02,.035,.06,.10):
             simplified=poly.simplify(tol,preserve_topology=True) if tol else poly
             if simplified.is_empty or not simplified.is_valid:continue
+            # GBIF accepts WKT polygons only with counter-clockwise exterior
+            # rings. Original GSHHG exterior may be clockwise; orient +1.
+            simplified=orient(simplified,sign=1.0)
             text=wkt.dumps(simplified,rounding_precision=5,trim=True)
             revised_area=transform(projection.transform,simplified).area
             retained=revised_area/max(original_area,1e-10)
@@ -169,8 +201,10 @@ def indexed_butterflies_in_period(island,period,geometry,taxon_filter):
     if taxon_filter["method"]=="GBIF_SUPERFAMILY_TAXONKEY":
         basic["taxonKey"]=taxon_filter["GBIF_taxonKey"]
     else:
-        # GBIF repeated search parameter values combine with OR, not AND.
-        basic["family"]=taxon_filter["family_names"]
+        # 'family=Nymphalidae' is silently ignored by the actual GBIF
+        # occurrence/search endpoint (country + impossible-family returned
+        # identical counts in source diagnosis). ONLY accepted family taxonKeys.
+        basic["taxonKey"]=list(taxon_filter["family_taxonkeys"].values())
     species={}
     total=None;offset=0;pages=0
     for _ in range(40):
@@ -293,7 +327,7 @@ def main():
            "Simplified original GSHHG island polygons preserve >=96% equal-area size but can cause nearshore spatial errors.",
            "All 225 species × island cells are included; many are geographically infeasible, so all-species crude risk rates are not transport effects.",
            "Query negatives are GBIF nonindexes, not biological absences, occupancy, or proof of no colonization.",
-           "GBIF butterfly family definitions, taxonomy and indexing may drift, and may omit rare families.",
+           "Accepted family taxonKey filters and the 225 source speciesKey concepts may drift under GBIF checklist upgrades; audit exact overlap.",
            "Three window-specific speciesKey facets lack exact first year/individual observation providers and are not true sampling histories.",
            "Current source has no plant × butterfly host-edge supply, transport vector or independent regional establishment observations.",
            "Do not reuse 2001–2024 pooled port plant inventory as a pre-outcome foodplant exposure."
