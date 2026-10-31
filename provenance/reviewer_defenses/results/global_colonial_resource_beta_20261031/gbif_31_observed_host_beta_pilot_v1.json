@@ -55,83 +55,83 @@
     "ridge_lambda": 10.0,
     "models": {
       "M0_general_flora_and_effort": {
-        "island_or_region_equal_mse": 0.013921072053727467,
-        "region_equal_mae": 0.07450671944486878
+        "island_or_region_equal_mse": 0.013921072053727451,
+        "region_equal_mae": 0.07450671944486877
       },
       "M1_known_host": {
-        "island_or_region_equal_mse": 0.013716421780063588,
-        "region_equal_mae": 0.07388673847766139
+        "island_or_region_equal_mse": 0.013716421780063574,
+        "region_equal_mae": 0.07388673847766138
       },
       "M2_other_aliens": {
-        "island_or_region_equal_mse": 0.013775050903409643,
-        "region_equal_mae": 0.07408164200677728
+        "island_or_region_equal_mse": 0.01377505090340963,
+        "region_equal_mae": 0.07408164200677726
       },
       "M3_both": {
-        "island_or_region_equal_mse": 0.013691922650791414,
+        "island_or_region_equal_mse": 0.013691922650791402,
         "region_equal_mae": 0.07382194804181025
       }
     },
     "incremental_vs_general_flora_and_effort": {
       "M1_known_host": {
-        "mse_reduction_percent": 1.4700755291980647,
-        "mean_region_equal_mse_difference": 0.00020465027366387795,
+        "mse_reduction_percent": 1.470075529198075,
+        "mean_region_equal_mse_difference": 0.00020465027366387914,
         "regions_improved": 69,
         "regions_worsened": 42,
-        "median_improvement_absolute": 0.00021799003024285807,
-        "minimum_improvement": -0.004861968163576619,
-        "maximum_improvement": 0.0073004533483002725
+        "median_improvement_absolute": 0.00021799003024286848,
+        "minimum_improvement": -0.004861968163576525,
+        "maximum_improvement": 0.007300453348300387
       },
       "M2_other_aliens": {
-        "mse_reduction_percent": 1.0489217335724288,
-        "mean_region_equal_mse_difference": 0.00014602115031782506,
+        "mse_reduction_percent": 1.0489217335724095,
+        "mean_region_equal_mse_difference": 0.0001460211503178222,
         "regions_improved": 77,
         "regions_worsened": 34,
-        "median_improvement_absolute": 0.00013497320260908406,
-        "minimum_improvement": -0.0017230420965430211,
-        "maximum_improvement": 0.0008786190735326806
+        "median_improvement_absolute": 0.0001349732026091257,
+        "minimum_improvement": -0.00172304209654308,
+        "maximum_improvement": 0.000878619073532691
       },
       "M3_both": {
-        "mse_reduction_percent": 1.6460614674765426,
-        "mean_region_equal_mse_difference": 0.0002291494029360532,
+        "mse_reduction_percent": 1.646061467476531,
+        "mean_region_equal_mse_difference": 0.00022914940293605136,
         "regions_improved": 71,
         "regions_worsened": 40,
-        "median_improvement_absolute": 0.00026618767166442826,
-        "minimum_improvement": -0.005319513049906025,
+        "median_improvement_absolute": 0.00026618767166443867,
+        "minimum_improvement": -0.005319513049905928,
         "maximum_improvement": 0.006309459191162499
       }
     },
     "conditional_incremental_to_existing_plant_layer": {
-      "host_given_other_aliens_m3_vs_m2_percent": 0.6034696583055986,
-      "other_aliens_given_host_m3_vs_m1_percent": 0.17861166465282022
+      "host_given_other_aliens_m3_vs_m2_percent": 0.6034696583055991,
+      "other_aliens_given_host_m3_vs_m1_percent": 0.17861166465280776
     }
   },
   "ridge_regularization_robustness": {
     "0.0": {
-      "base_M0_mse": 0.01392293336880046,
-      "host_M1_gain_percent": 1.4959088265970137,
-      "other_M2_gain_percent": 2.3620088336636194,
-      "both_M3_gain_percent": 1.9706328353807003,
+      "base_M0_mse": 0.01392293336880044,
+      "host_M1_gain_percent": 1.4959088265970426,
+      "other_M2_gain_percent": 2.362008833664484,
+      "both_M3_gain_percent": 1.9706328353817761,
       "host_only_regions_improved": 69
     },
     "1.0": {
-      "base_M0_mse": 0.01392272818441716,
-      "host_M1_gain_percent": 1.4934968399327422,
-      "other_M2_gain_percent": 2.1993085014527294,
-      "both_M3_gain_percent": 1.942307769024773,
+      "base_M0_mse": 0.013922728184417147,
+      "host_M1_gain_percent": 1.4934968399327615,
+      "other_M2_gain_percent": 2.199308501452553,
+      "both_M3_gain_percent": 1.9423077690245463,
       "host_only_regions_improved": 69
     },
     "10.0": {
-      "base_M0_mse": 0.013921072053727467,
-      "host_M1_gain_percent": 1.4700755291980647,
-      "other_M2_gain_percent": 1.0489217335724288,
-      "both_M3_gain_percent": 1.6460614674765426,
+      "base_M0_mse": 0.013921072053727451,
+      "host_M1_gain_percent": 1.470075529198075,
+      "other_M2_gain_percent": 1.0489217335724095,
+      "both_M3_gain_percent": 1.646061467476531,
       "host_only_regions_improved": 69
     },
     "100.0": {
-      "base_M0_mse": 0.013919307107790362,
-      "host_M1_gain_percent": 1.1948609680633309,
-      "other_M2_gain_percent": 0.1413940644219727,
-      "both_M3_gain_percent": 1.3449430171064967,
+      "base_M0_mse": 0.01391930710779035,
+      "host_M1_gain_percent": 1.1948609680633444,
+      "other_M2_gain_percent": 0.14139406442197727,
+      "both_M3_gain_percent": 1.3449430171064891,
       "host_only_regions_improved": 72
     }
   },
@@ -139,162 +139,162 @@
     "method": "leave-entire-WGSRPD-level1-out: no outcome of held-out regions in train",
     "models": {
       "M0_general_flora_and_effort": {
-        "division_equal_mse": 0.025006111527964205,
+        "division_equal_mse": 0.02500611152796417,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
             "training_region_pair_count": 4371,
             "test_region_pair_count": 1734,
-            "mse": 0.012692756447698631
+            "mse": 0.012692756447698472
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
             "training_region_pair_count": 5778,
             "test_region_pair_count": 327,
-            "mse": 0.04503250805583063
+            "mse": 0.045032508055830645
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
             "training_region_pair_count": 4465,
             "test_region_pair_count": 1640,
-            "mse": 0.018046892431991222
+            "mse": 0.01804689243199122
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
             "training_region_pair_count": 1770,
             "test_region_pair_count": 4335,
-            "mse": 0.034625235891084724
+            "mse": 0.03462523589108475
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
             "training_region_pair_count": 3741,
             "test_region_pair_count": 2364,
-            "mse": 0.014633164813215825
+            "mse": 0.014633164813215764
           }
         ]
       },
       "M1_known_host": {
-        "division_equal_mse": 0.024895703040814933,
+        "division_equal_mse": 0.024895703040814877,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
             "training_region_pair_count": 4371,
             "test_region_pair_count": 1734,
-            "mse": 0.012978208345382682
+            "mse": 0.0129782083453825
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
             "training_region_pair_count": 5778,
             "test_region_pair_count": 327,
-            "mse": 0.043955430765488274
+            "mse": 0.043955430765488294
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
             "training_region_pair_count": 4465,
             "test_region_pair_count": 1640,
-            "mse": 0.018857253310592518
+            "mse": 0.018857253310592473
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
             "training_region_pair_count": 1770,
             "test_region_pair_count": 4335,
-            "mse": 0.03468257584908754
+            "mse": 0.03468257584908752
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
             "training_region_pair_count": 3741,
             "test_region_pair_count": 2364,
-            "mse": 0.014005046933523642
+            "mse": 0.0140050469335236
           }
         ]
       },
       "M2_other_aliens": {
-        "division_equal_mse": 0.024772889518084134,
+        "division_equal_mse": 0.024772889518084096,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
             "training_region_pair_count": 4371,
             "test_region_pair_count": 1734,
-            "mse": 0.012476303304335136
+            "mse": 0.012476303304335046
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
             "training_region_pair_count": 5778,
             "test_region_pair_count": 327,
-            "mse": 0.04455504929012354
+            "mse": 0.04455504929012343
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
             "training_region_pair_count": 4465,
             "test_region_pair_count": 1640,
-            "mse": 0.018165256025305047
+            "mse": 0.018165256025305068
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
             "training_region_pair_count": 1770,
             "test_region_pair_count": 4335,
-            "mse": 0.0340769417562952
+            "mse": 0.034076941756295255
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
             "training_region_pair_count": 3741,
             "test_region_pair_count": 2364,
-            "mse": 0.014590897214361744
+            "mse": 0.014590897214361683
           }
         ]
       },
       "M3_both": {
-        "division_equal_mse": 0.024830997311795427,
+        "division_equal_mse": 0.02483099731179538,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
             "training_region_pair_count": 4371,
             "test_region_pair_count": 1734,
-            "mse": 0.012857756093860657
+            "mse": 0.012857756093860499
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
             "training_region_pair_count": 5778,
             "test_region_pair_count": 327,
-            "mse": 0.04385350149236121
+            "mse": 0.043853501492361245
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
             "training_region_pair_count": 4465,
             "test_region_pair_count": 1640,
-            "mse": 0.018888998442167772
+            "mse": 0.018888998442167727
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
             "training_region_pair_count": 1770,
             "test_region_pair_count": 4335,
-            "mse": 0.03446222139801376
+            "mse": 0.034462221398013755
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
             "training_region_pair_count": 3741,
             "test_region_pair_count": 2364,
-            "mse": 0.01409250913257375
+            "mse": 0.014092509132573684
           }
         ]
       }
@@ -303,73 +303,73 @@
       "M1_known_host": {
         "divisions_improved": 2,
         "divisions_worsened": 3,
-        "division_equal_mse_reduction_percent": 0.4415260126541562,
+        "division_equal_mse_reduction_percent": 0.4415260126542401,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
-            "mse_reduction_percent": -2.248935436997276,
-            "mse_difference": -0.00028545189768405116
+            "mse_reduction_percent": -2.248935436997127,
+            "mse_difference": -0.0002854518976840286
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
-            "mse_reduction_percent": 2.3917772667847252,
-            "mse_difference": 0.001077077290342357
+            "mse_reduction_percent": 2.391777266784709,
+            "mse_difference": 0.00107707729034235
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
-            "mse_reduction_percent": -4.490307024630963,
-            "mse_difference": -0.0008103608786012954
+            "mse_reduction_percent": -4.490307024630733,
+            "mse_difference": -0.0008103608786012538
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
-            "mse_reduction_percent": -0.1656016385943997,
-            "mse_difference": -5.73399580028125e-05
+            "mse_reduction_percent": -0.16560163859427932,
+            "mse_difference": -5.733995800277086e-05
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
-            "mse_reduction_percent": 4.292426742333301,
-            "mse_difference": 0.0006281178796921829
+            "mse_reduction_percent": 4.2924267423331885,
+            "mse_difference": 0.0006281178796921638
           }
         ]
       },
       "M2_other_aliens": {
         "divisions_improved": 4,
         "divisions_worsened": 1,
-        "division_equal_mse_reduction_percent": 0.9326600404035618,
+        "division_equal_mse_reduction_percent": 0.932660040403577,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
-            "mse_reduction_percent": 1.7053281078495814,
-            "mse_difference": 0.00021645314336349482
+            "mse_reduction_percent": 1.7053281078490563,
+            "mse_difference": 0.00021645314336342543
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
-            "mse_reduction_percent": 1.0602535508685011,
-            "mse_difference": 0.00047745876570708806
+            "mse_reduction_percent": 1.060253550868778,
+            "mse_difference": 0.00047745876570721296
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
-            "mse_reduction_percent": -0.6558668965300924,
-            "mse_difference": -0.00011836359331382496
+            "mse_reduction_percent": -0.6558668965302271,
+            "mse_difference": -0.00011836359331384924
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
-            "mse_reduction_percent": 1.5835101788597457,
-            "mse_difference": 0.0005482941347895245
+            "mse_reduction_percent": 1.5835101788596642,
+            "mse_difference": 0.0005482941347894968
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
-            "mse_reduction_percent": 0.28884796551944536,
+            "mse_reduction_percent": 0.2888479655194465,
             "mse_difference": 4.2267598854081254e-05
           }
         ]
@@ -377,37 +377,37 @@
       "M3_both": {
         "divisions_improved": 3,
         "divisions_worsened": 2,
-        "division_equal_mse_reduction_percent": 0.7002856720564032,
+        "division_equal_mse_reduction_percent": 0.7002856720564458,
         "folds": [
           {
             "world_division": "1",
             "heldout_region_count": 17,
-            "mse_reduction_percent": -1.299951250478318,
-            "mse_difference": -0.00016499964616202567
+            "mse_reduction_percent": -1.299951250478348,
+            "mse_difference": -0.0001649996461620274
           },
           {
             "world_division": "3",
             "heldout_region_count": 3,
-            "mse_reduction_percent": 2.618123250003543,
-            "mse_difference": 0.0011790065634694202
+            "mse_reduction_percent": 2.618123250003496,
+            "mse_difference": 0.0011790065634693994
           },
           {
             "world_division": "4",
             "heldout_region_count": 16,
-            "mse_reduction_percent": -4.666210614098699,
-            "mse_difference": -0.0008421060101765493
+            "mse_reduction_percent": -4.666210614098469,
+            "mse_difference": -0.0008421060101765077
           },
           {
             "world_division": "7",
             "heldout_region_count": 51,
-            "mse_reduction_percent": 0.4707967725728473,
-            "mse_difference": 0.00016301449307096205
+            "mse_reduction_percent": 0.47079677257294716,
+            "mse_difference": 0.00016301449307099675
           },
           {
             "world_division": "8",
             "heldout_region_count": 24,
-            "mse_reduction_percent": 3.694728293866998,
-            "mse_difference": 0.000540655680642075
+            "mse_reduction_percent": 3.694728293867049,
+            "mse_difference": 0.0005406556806420802
           }
         ]
       }
