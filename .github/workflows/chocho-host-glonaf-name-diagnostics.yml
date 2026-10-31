@@ -1,0 +1,52 @@
+name: chocho source-level fixed HOSTS versus GloNAF scientific name diagnosis
+
+on:
+  push:
+    branches: [analysis/global-colonial-alien-flora-control-20261031]
+    paths:
+      - ".github/workflows/chocho-host-glonaf-name-diagnostics.yml"
+      - "scripts/audit_host_glonaf_nomenclature.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  no-outcome-name-diagnosis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Acquire fixed Lenzner 2022 GloNAF source
+        run: |
+          mkdir -p _temp_historical_sources
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 180 \
+            'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' \
+            --output _temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+      - name: Count without forcing unverified species synonym joins
+        run: |
+          python scripts/audit_host_glonaf_nomenclature.py
+      - name: Commit diagnosis only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/HOSTS_GloNAF_name_alignment_diagnosis.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Diagnose source nomenclature alignment before any host-specificity claim [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove original source data
+        if: always()
+        run: rm -rf _temp_historical_sources _external
