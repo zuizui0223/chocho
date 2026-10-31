@@ -1,0 +1,54 @@
+{
+  "schema": "chocho_GEB239_to_port225_to_island64_observation_bridge_v1",
+  "status": "VALIDATED_PUBLIC_SOURCE_COUNTS_RETROSPECTIVE_ASSOCIATIONS_NOT_GATEWAY_CAUSALITY",
+  "source_git_blobs": {
+    "data/frozen/figure_sources/host_contribution_metrics.csv": "4cf4851499ca2233ff2adadf1c4ee7f0e863f23d",
+    "provenance/reviewer_defenses/results/port_connectivity_hosts_20261030/port_connectivity_host_all225.csv": "239dc82992fa3374e4862a1e2202663e1aeef7da",
+    "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv": "efbc770469a720e2dea82478db2f6196ba03b353",
+    "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json": "54c4515947d2a3ee7545e4007985ef82a2af6868",
+    "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv": "39fe84981cab2b0e47063399f0a5c0c9731e800d",
+    "provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json": "201a762de94b9ecf42a766c8cb5d8d1739a2ca3c"
+  },
+  "GEB_resource_opportunity": {
+    "butterfly_species": 239,
+    "expanded_species": 206,
+    "native_butterfly_x_WGSRPD3_units": 26530,
+    "introduced_added_units": 14553,
+    "expanded_percent_relative_to_native": 54.854881266490764,
+    "wcvp_areas_are_not_historical_port_sources": true
+  },
+  "aligned_port_candidate_comparison": {
+    "species": 225,
+    "with_global_geb_added_resource_units": 197,
+    "species_with_any_2001_2024_island_port_alien_candidate_host_record": 159,
+    "spearman_global_added_units_vs_count_of_island_ports_with_candidate_hosts": 0.6524282493600642,
+    "partial_rank_assoc_after_adjusting_host_count_only": 0.5612139581506519,
+    "partial_rank_assoc_after_adjusting_log1p_host_count_native_units_and_prior_recorded_islands": 0.5495755354184105,
+    "temporal_leak": "2001–2024 port flora and modern regional WCVP used; not prior-year forecast",
+    "not_independent_from_host_catalogue": true
+  },
+  "indexed_2011_2017_island_first_records": {
+    "island_count": 17,
+    "events": 121,
+    "species": 64,
+    "events_with_positive_global_resource_gain": 120,
+    "species_with_positive_global_resource_gain": 63,
+    "any_reindexed_during_next_five_years": 102,
+    "cases_selected_by_observed_indexing_not_a_risk_set": true
+  },
+  "top10_plant_contributors_from_geb": {
+    "contributors": 10,
+    "fraction_of_all_added_resource_units": 0.2510105136113853,
+    "shares_derived_from_source_github": true,
+    "first_year_plant_port_coverage_is_separate_audit": true
+  },
+  "primary_limits": {
+    "gep_gain_is_across_butterfly_x_region_units_not_physical_range_expansion": true,
+    "port_index_does_not_establish_transport_or_larval_use": true,
+    "port_plant_catalogue_and_global_geb_geography_share_plant_host_network_and_native_status": true,
+    "correlations_descriptive_not_causal": true,
+    "species_subset_and_island_subset_posthoc": true,
+    "unrecorded_hosts_not_absent": true,
+    "not_a_estimate_of_fraction_of_55_percent_realized": true
+  }
+}
