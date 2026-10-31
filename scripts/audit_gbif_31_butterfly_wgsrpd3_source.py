@@ -81,10 +81,10 @@ def field(row, names):
 def normalize_species(row):
     # GBIF 'species' is normally a canonical binomial. Rejected ambiguous
     # scientificName authors/infra-specific strings are not silently truncated.
-    name=field(row,("species","Species","acceptedScientificName"))
+    name=field(row,("species","accepteds cientificname".replace(" ",""),"scientificname"))
     if not name:
-        genus=field(row,("genus","Genus"))
-        epithet=field(row,("specificEpithet","SpecificEpithet"))
+        genus=field(row,("genus",))
+        epithet=field(row,("specificepithet",))
         if genus and epithet:
             name=f"{genus} {epithet}"
     values=name.split()
