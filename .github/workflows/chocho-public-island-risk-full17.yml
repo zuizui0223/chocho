@@ -1,0 +1,68 @@
+name: Independent 225 butterfly by 17 island GBIF risk panel
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - ".github/workflows/chocho-public-island-risk-full17.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  unfixed-candidate-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original island geometry toolchain
+        run: python -m pip install "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - uses: actions/cache@v4
+        with:
+          key: chocho-gshhg-shp-237-original-8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Preserve SHA-pinned GSHHG 2.3.7 island originals
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 \
+              -o _scratch_coastal/gshhg-shp-2.3.7.zip \
+              https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: First-index risk from 225 fixed butterflies across 17 GSHHG islands and 3 periods
+        run: |
+          python provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/build_public_island_risk.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/public_butterfly_risk_full17 \
+            --islands all --wkt-max-chars 2300
+      - name: Upload source replay and full candidate table
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-butterfly-225-x-17-at-risk-islands
+          path: |
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_query_receipt.json
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_atrisk.csv
+          retention-days: 45
+      - name: Archive strict source design and source metadata non-destructively
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_query_receipt.json \
+                  provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_atrisk.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "Source-lock all 225 butterflies and 17 islands in outcome-unselected GBIF historical risk reconstruction [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Full source result retained as action artifact; no force push" >&2
+          exit 1
