@@ -42,7 +42,7 @@ jobs:
           python provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/build_public_island_risk.py \
             --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
             --work _scratch_coastal/public_butterfly_risk_geom \
-            --islands 169,276,715
+            --islands 169,276,715 --wkt-max-chars 1800
       - name: Preserve pilot research outputs on failure to publish
         uses: actions/upload-artifact@v4
         if: always()
