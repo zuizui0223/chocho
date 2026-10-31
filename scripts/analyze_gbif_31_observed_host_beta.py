@@ -199,6 +199,79 @@ def evaluate_loio(y,features,ia,ib,node_count,lam):
     return summaries,comparisons
 
 
+def evaluate_division_heldout(y,features,ia,ib,division_labels,lam):
+    """Hold out ALL regions in one WGSRPD1 division.
+
+    A pair enters training iff NEITHER endpoint is in the held-out division.
+    Thus no outcome from a held-out region enters the training fold. These
+    five divisions are highly unbalanced; report fold sizes and signed gains,
+    never reinterpret this as five global independent regions.
+    """
+    division_labels=np.asarray(division_labels,str)
+    if division_labels.shape != (1+int(max(max(ia),max(ib))),):
+        raise ValueError("World division labels must align with all eligible region nodes")
+    group_ids=sorted(set(division_labels))
+    if len(group_ids)<2:
+        raise ValueError("Need at least two geographic divisions")
+    per_model={name:[] for name in features}
+    for group in group_ids:
+        group_nodes=division_labels==group
+        held=group_nodes[ia]|group_nodes[ib]
+        if held.sum()==0 or (~held).sum()<len(features["M0_general_flora_and_effort"])+2:
+            raise RuntimeError("Unidentifiable division holdout group "+group)
+        for name,xs in features.items():
+            X=np.column_stack(xs)
+            pred=fit_ridge_predict(~held,held,y,X,lam)
+            err=pred-y[held]
+            per_model[name].append({
+                "world_division":group,
+                "heldout_region_count":int(np.sum(group_nodes)),
+                "training_region_pair_count":int((~held).sum()),
+                "test_region_pair_count":int(held.sum()),
+                "mse":float(np.mean(err*err)),
+            })
+    summary={}
+    for name,folds in per_model.items():
+        summary[name]={
+            "division_equal_mse":float(np.mean([x["mse"] for x in folds])),
+            "folds":folds,
+        }
+    comparisons={}
+    baseline=summary["M0_general_flora_and_effort"]
+    for target in ("M1_known_host","M2_other_aliens","M3_both"):
+        vals=[]
+        for first,second in zip(baseline["folds"],summary[target]["folds"]):
+            if first["world_division"]!=second["world_division"]:
+                raise RuntimeError("Division heldout index drift")
+            vals.append({
+                "world_division":first["world_division"],
+                "heldout_region_count":first["heldout_region_count"],
+                "mse_reduction_percent":(
+                    100*(first["mse"]-second["mse"])/first["mse"]
+                    if first["mse"]>0 else None
+                ),
+                "mse_difference":first["mse"]-second["mse"],
+            })
+        comparisons[target]={
+            "divisions_improved":sum(x["mse_difference"]>0 for x in vals),
+            "divisions_worsened":sum(x["mse_difference"]<0 for x in vals),
+            "division_equal_mse_reduction_percent":100*(
+                baseline["division_equal_mse"]-summary[target]["division_equal_mse"]
+                )/baseline["division_equal_mse"],
+            "folds":vals,
+        }
+    return {
+        "method":"leave-entire-WGSRPD-level1-out: no outcome of held-out regions in train",
+        "models":summary,
+        "comparisons":comparisons,
+        "limits":[
+            "Only five world-division groups with extreme geographic imbalance, so not global replication.",
+            "Held-out pairs include links to training-world regions; report as new-region transfer, not within-world future prediction.",
+            "All floral maps and sampling-effort covariates are cross-sectional sources.",
+        ],
+    }
+
+
 def analyse():
     lock=json.loads(LOCK.read_text(encoding="utf8"))
     if lock["schema"]!="chocho_independent_GBIF31_observed_butterfly_beta_284source_lock_v1":
@@ -297,9 +370,35 @@ def analyse():
     }
     scores,comparisons=evaluate_loio(observed_j,models,ia,ib,len(selected_codes),
                                    float(lock["evaluation"]["linear_ridge_lambda"]))
+    # Required contrasts conditional on the *other* plant-composition layer.
+    # This is stronger than comparing each extension with M0 only.
+    mse={name:v["island_or_region_equal_mse"] for name,v in scores.items()}
+    conditional_increment={
+        "host_given_other_aliens_m3_vs_m2_percent":100*(
+            mse["M2_other_aliens"]-mse["M3_both"])/mse["M2_other_aliens"],
+        "other_aliens_given_host_m3_vs_m1_percent":100*(
+            mse["M1_known_host"]-mse["M3_both"])/mse["M1_known_host"],
+    }
+    ridge_robustness={}
+    for penalty in (0.0,1.0,10.0,100.0):
+        if penalty == float(lock["evaluation"]["linear_ridge_lambda"]):
+            these_scores,these_deltas=scores,comparisons
+        else:
+            these_scores,these_deltas=evaluate_loio(
+                observed_j,models,ia,ib,len(selected_codes),penalty)
+        ridge_robustness[str(penalty)]={
+            "base_M0_mse":these_scores["M0_general_flora_and_effort"]["island_or_region_equal_mse"],
+            "host_M1_gain_percent":these_deltas["M1_known_host"]["mse_reduction_percent"],
+            "other_M2_gain_percent":these_deltas["M2_other_aliens"]["mse_reduction_percent"],
+            "both_M3_gain_percent":these_deltas["M3_both"]["mse_reduction_percent"],
+            "host_only_regions_improved":these_deltas["M1_known_host"]["regions_improved"],
+        }
     world={code:level for code,level in
            json.loads(Path("data/frozen/wgsrpd3_level1_lookup_v0.1.json").read_text(encoding="utf8"))["units"].items()}
     level=Counter(world[code] for code in selected_codes)
+    world_exclusion=evaluate_division_heldout(
+        observed_j,models,ia,ib,[world[code] for code in selected_codes],
+        float(lock["evaluation"]["linear_ridge_lambda"]))
     report={
         "schema":"chocho_GBIF31_observed_assemblage_HOSTS_GloNAF_same111regions_v1",
         "status":"INDEPENDENT_BUTTERFLY_GBIF_INDEXED_ASSEMBLAGE_PILOT_NOT_TRUE_OCCUPANCY",
@@ -348,7 +447,10 @@ def analyse():
             "ridge_lambda":float(lock["evaluation"]["linear_ridge_lambda"]),
             "models":scores,
             "incremental_vs_general_flora_and_effort":comparisons,
+            "conditional_incremental_to_existing_plant_layer":conditional_increment,
         },
+        "ridge_regularization_robustness":ridge_robustness,
+        "whole_world_division_holdout":world_exclusion,
         "limits":[
             "Only original GBIF occurrence DOI's 30 exact matches, not globally representative 239 or 225 butterfly species.",
             "Most 111 eligible regions are in the Americas; no claims of worldwide butterfly-community generality.",
