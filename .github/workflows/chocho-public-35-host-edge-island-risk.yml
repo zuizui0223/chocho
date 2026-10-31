@@ -1,0 +1,51 @@
+name: Source-verified 35 butterfly host links x 17 island early-late risk audit
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/join_225risk_to_frozen_foodplants.py"
+      - ".github/workflows/chocho-public-35-host-edge-island-risk.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  join-foodplants:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Join 42 frozen HOSTS links to unselected 225 species by 17 original island GBIF risk panel
+        run: |
+          python provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/join_225risk_to_frozen_foodplants.py
+      - name: Preserve source evidence even if branch changes concurrently
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 35-known-larval-host-butterflies-17-island-GIFB-risk
+          path: |
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/public_35host_named_plant_join.json
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/public_35host_butterfly_x_17island_risk.csv
+          retention-days: 35
+      - name: Publish no-causality host overlap result
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/public_35host_named_plant_join.json \
+                  provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/public_35host_butterfly_x_17island_risk.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "Archive 35 linked butterfly species with 2001-2010 foodplant harbor indexing and future-risk outcomes [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Source output preserved in artifact, refusing force push" >&2
+          exit 1
