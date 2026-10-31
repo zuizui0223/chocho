@@ -1,0 +1,94 @@
+{
+  "status": "COMPLETE",
+  "train_rows": 1134,
+  "train_species": 139,
+  "train_regions": 19,
+  "test_rows_before_category_filter": 1201,
+  "results": {
+    "additive": {
+      "converged": true,
+      "loglikelihood": 1427.793940106259,
+      "aic": -2791.587880212518,
+      "random_intercept_variance": 0.0005519199651737505,
+      "warnings": [
+        "The MLE may be on the boundary of the parameter space."
+      ],
+      "test_rows": 1081,
+      "mse": 0.006610767121236301,
+      "mae": 0.057208847656166156,
+      "residual_variance": 0.0043583614023731485,
+      "alternate_optimizer_converged": true,
+      "alternate_loglikelihood": 1427.7939402617098,
+      "optimizer_max_fixed_effect_difference": 5.404923366369996e-06,
+      "alternate_warnings": [
+        "The MLE may be on the boundary of the parameter space."
+      ]
+    },
+    "interactions": {
+      "converged": true,
+      "loglikelihood": 1432.874182328152,
+      "aic": -2783.748364656304,
+      "random_intercept_variance": 0.0005520080941328242,
+      "warnings": [
+        "The MLE may be on the boundary of the parameter space."
+      ],
+      "test_rows": 1081,
+      "mse": 0.008464094717519922,
+      "mae": 0.06364940053043694,
+      "residual_variance": 0.004317204835888894,
+      "alternate_optimizer_converged": true,
+      "alternate_loglikelihood": 1432.8741824597546,
+      "optimizer_max_fixed_effect_difference": 3.841390453340754e-06,
+      "alternate_warnings": [
+        "The MLE may be on the boundary of the parameter space."
+      ]
+    }
+  },
+  "scaling": {
+    "baseline": {
+      "mean": 0.20154030082239321,
+      "sd": 0.24326667190382095
+    },
+    "effort_change": {
+      "mean": 0.33866548719776113,
+      "sd": 0.34221873571341005
+    },
+    "dominance_change": {
+      "mean": -0.00443703827199369,
+      "sd": 0.06043453911492176
+    },
+    "breadth": {
+      "mean": 2.8017207696429827,
+      "sd": 0.9471783929251687
+    },
+    "availability": {
+      "mean": 0.6287989792300981,
+      "sd": 0.2715964181475413
+    },
+    "grass_host_share": {
+      "mean": 0.23383895494761733,
+      "sd": 0.40899467200223455
+    },
+    "delta_temperature": {
+      "mean": 0.32951977380202757,
+      "sd": 0.1660135094270747
+    },
+    "delta_cropland": {
+      "mean": -0.0009264300722900928,
+      "sd": 0.0035332765287217883
+    },
+    "delta_built": {
+      "mean": 0.004081272537126565,
+      "sd": 0.008474638361779295
+    },
+    "delta_precipitation": {
+      "mean": 8.241213088709808,
+      "sd": 96.68230125304875
+    },
+    "delta_tree": {
+      "mean": -0.0027712494717708164,
+      "sd": 0.004019235714551414
+    }
+  },
+  "interpretation": "Exploratory aggregate mixed-model associations using realised subsequent environment; not strict forecast or causal effects"
+}

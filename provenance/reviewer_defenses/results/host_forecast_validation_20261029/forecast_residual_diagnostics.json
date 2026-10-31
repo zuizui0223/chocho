@@ -1,0 +1,19 @@
+{
+  "status": "COMPLETE",
+  "provider_strata": "Post-hoc total-variation cutoffs <=0.25, <=0.5, >0.5; future provider composition used for descriptive scoring only",
+  "spatial_graph": "Per species: symmetrized 8-nearest-neighbour graph, great-circle distance <=100km; drop isolated cells; row standardize; at least30 connected cells",
+  "permutations": 499,
+  "test": "One-sided positive Moran autocorrelation; BH across tested species separately per model; residual-permutation diagnostic, not proof of absence of source bias",
+  "models": {
+    "M0_background": {
+      "tested_species": 135,
+      "median_moran_i": 0.1429199593957618,
+      "positive_fdr05_species": 115
+    },
+    "M5_host_composition": {
+      "tested_species": 135,
+      "median_moran_i": 0.15269948112144877,
+      "positive_fdr05_species": 111
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "status": "COMPLETE",
+  "mode": "temporal",
+  "train_rows": 173414,
+  "train_species": 155,
+  "test_rows": 191004,
+  "test_species": 155,
+  "results": {
+    "persistence": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.047638035917382505,
+      "species_equal_mae": 0.10797672539279057,
+      "pooled_mse": 0.053325873607427444,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.041699005031352945
+    },
+    "M0_background": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.03362748735112253,
+      "species_equal_mae": 0.11199091598481957,
+      "pooled_mse": 0.03706148988695645,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.024799824782020828
+    },
+    "M1_climate": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.03392611515060067,
+      "species_equal_mae": 0.11525603580543355,
+      "pooled_mse": 0.03741618258487922,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.024658800188124694
+    },
+    "M2_landcover": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.03356468161038414,
+      "species_equal_mae": 0.11284456220120742,
+      "pooled_mse": 0.037142068727399113,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.02467279150228763
+    },
+    "M3_both": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.03394927802955238,
+      "species_equal_mae": 0.11515456040988804,
+      "pooled_mse": 0.03747177969113955,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.02450207484077613
+    },
+    "M4_host_resources": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.03279256741489512,
+      "species_equal_mae": 0.1130131851629784,
+      "pooled_mse": 0.03641659226154586,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.023932155443767426
+    },
+    "M5_host_composition": {
+      "rows": 191004,
+      "species": 155,
+      "species_equal_mse": 0.032066599001687054,
+      "species_equal_mae": 0.1114971285884959,
+      "pooled_mse": 0.03544822820333241,
+      "initially_unrecorded_rows": 123761,
+      "initially_unrecorded_mse": 0.023051535702393232
+    }
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "interpretation": "Predicts standardized recording probability; temporal holdout2019-2022; not verified true occupancy or causal drivers",
+  "sensitivity": "exclude_top_provider",
+  "input_panel": "LOCAL_ANALYSIS_WORKSPACE\\work\\temporal\\forecast\\panel_exclude_top_provider.parquet",
+  "rarefaction_n": 10
+}

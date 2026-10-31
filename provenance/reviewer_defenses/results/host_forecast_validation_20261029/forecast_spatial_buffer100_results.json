@@ -1,0 +1,50 @@
+{
+  "status": "COMPLETE",
+  "mode": "spatial_buffer100",
+  "results": {
+    "persistence": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.04615289557913895,
+      "species_equal_mae": 0.10466692237597842
+    },
+    "M0_background": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.0337021264554386,
+      "species_equal_mae": 0.11213127566853948
+    },
+    "M1_climate": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.03387605190078521,
+      "species_equal_mae": 0.11483145019479905
+    },
+    "M2_landcover": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.0333943559637428,
+      "species_equal_mae": 0.11262214651817254
+    },
+    "M3_both": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.033467813878241506,
+      "species_equal_mae": 0.11455113691145444
+    },
+    "M4_host_resources": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.03300284504461717,
+      "species_equal_mae": 0.11380457935517702
+    },
+    "M5_host_composition": {
+      "rows": 102728,
+      "species": 155,
+      "species_equal_mse": 0.03255224898024153,
+      "species_equal_mae": 0.11281694362552042
+    }
+  },
+  "cells": 1788,
+  "interpretation": "Post-hoc geographic sensitivity: test cells >=100km from ANY training cell for their held spatial fold; same fitted models; not a separate refit"
+}

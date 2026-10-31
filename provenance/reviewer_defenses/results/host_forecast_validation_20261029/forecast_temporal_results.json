@@ -1,0 +1,83 @@
+{
+  "status": "COMPLETE",
+  "mode": "temporal",
+  "train_rows": 193703,
+  "train_species": 155,
+  "test_rows": 208482,
+  "test_species": 155,
+  "results": {
+    "persistence": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.04520469872475359,
+      "species_equal_mae": 0.10385980497930151,
+      "pooled_mse": 0.04820852548621707,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.04080376307529341
+    },
+    "M0_background": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03228400186734764,
+      "species_equal_mae": 0.10795556913571679,
+      "pooled_mse": 0.03407274098813295,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.024452251451996865
+    },
+    "M1_climate": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.032464813384572126,
+      "species_equal_mae": 0.11124252919658374,
+      "pooled_mse": 0.034510646098118124,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.024119890649144396
+    },
+    "M2_landcover": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03194163625073919,
+      "species_equal_mae": 0.10828121693765694,
+      "pooled_mse": 0.034060092541764425,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.024068789094112208
+    },
+    "M3_both": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.032063882916911694,
+      "species_equal_mae": 0.11072639524436227,
+      "pooled_mse": 0.03430645586485255,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.023824519585202413
+    },
+    "M4_host_resources": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.031125572345572436,
+      "species_equal_mae": 0.10851130938652152,
+      "pooled_mse": 0.03339594330465689,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.023226074313481518
+    },
+    "M5_host_composition": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03074279463401328,
+      "species_equal_mae": 0.10785649257790925,
+      "pooled_mse": 0.032759986685560065,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.022578093562754663
+    }
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "interpretation": "Predicts standardized recording probability; temporal holdout2019-2022; not verified true occupancy or causal drivers"
+}
