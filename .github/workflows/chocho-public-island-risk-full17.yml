@@ -34,7 +34,7 @@ jobs:
               https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
           fi
           echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
-      - name: First-index risk from 225 fixed butterflies across 17 GSHHG islands and 3 periods
+      - name: First-index risk from 225 fixed butterflies across 17 GSHHG islands using nonoverlapping WKT fragments
         run: |
           python provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/build_public_island_risk.py \
             --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
