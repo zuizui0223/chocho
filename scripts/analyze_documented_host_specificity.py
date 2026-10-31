@@ -88,16 +88,46 @@ def focal_hosts(raw_hosts=HOSTS,panel_path=PANEL):
 
 
 def glonaf_index(sourcezip=GLO_NAF):
+    """Canonical alias to ORIGINAL source bit indices (never reorder masks).
+
+    Lenzner's published Species field is a complete underscore-joined name,
+    e.g. Abutilon_theophrasti, even though it also supplies genus. The
+    original region-bit matrices intentionally used the literal source string
+    'abutilon abutilon_theophrasti'. Preserve exact original alphabetic bit
+    positions and map a verified canonical alias only for HOSTS name matching.
+    """
     with zipfile.ZipFile(sourcezip) as z:
         rows,damaged=load_csv_member(z,"GloNAF.csv")
-    names=set()
+    original=set()
+    alias_to_original=defaultdict(set)
+    unusable=Counter()
     for row in rows:
-        v=binomial(row.get("genus"),row.get("Species"))
-        if v: names.add(v)
+        genus=(row.get("genus") or "").strip()
+        source=(row.get("Species") or "").strip()
+        original_key=binomial(genus,source)
+        if not original_key:
+            unusable["original_name_unusable"]+=1
+            continue
+        original.add(original_key)
+        fields=source.replace("_"," ").split()
+        if fields and fields[0].casefold()==genus.casefold():
+            fields=fields[1:]
+        if not fields or not fields[0].replace("-","").isalpha():
+            unusable["canonical_epithet_unusable"]+=1
+            continue
+        candidate=(genus+" "+fields[0]).casefold()
+        alias_to_original[candidate].add(original_key)
     if len(rows)!=470962:
         raise RuntimeError("GloNAF file no longer source-locked")
-    return {name:i for i,name in enumerate(sorted(names))},{
-        "total_source_rows":len(rows),"distinct_glonaf_names":len(names),
+    original_index={name:i for i,name in enumerate(sorted(original))}
+    aliases={name:tuple(sorted(original_index[k] for k in originals))
+             for name,originals in alias_to_original.items()}
+    return aliases,{
+        "total_source_rows":len(rows),
+        "distinct_glonaf_names":len(original),
+        "distinct_unambiguous_genus_epithet_aliases":len(aliases),
+        "aliases_with_multiple_raw_GloNAF_names":sum(len(x)>1 for x in aliases.values()),
+        "normalization_unusable":dict(unusable),
         "source_decode_replacements":damaged,
     }
 
@@ -182,16 +212,20 @@ def evaluate(draws=199,seed=31031):
     source_masks,_,source_audit=produce_matched_regions(GLO_NAF,TDWG,(0.05,))
     full_masks=[source_masks[.05][code] for code in data["ids"]]
     names,name_counts=focal_hosts()
-    idx,glonaf_counts=glonaf_index()
-    if len(idx)!=source_audit["glonaf"]["distinct_species"]:
+    aliases,glonaf_counts=glonaf_index()
+    n_glonaf=glonaf_counts["distinct_glonaf_names"]
+    if n_glonaf!=source_audit["glonaf"]["distinct_species"]:
         raise RuntimeError("GloNAF mask taxon index does not match source parser")
-    known=sorted(names.intersection(idx))
-    original_unknown=sorted(names-set(idx))
-    true_mask=sum(1<<idx[name] for name in known)
-    f,bins=prevalence_bins(full_masks,len(idx))
+    known=sorted(names.intersection(aliases))
+    original_unknown=sorted(names-set(aliases))
+    true_positions={j for name in known for j in aliases[name]}
+    true_mask=0
+    for j in true_positions:
+        true_mask |= 1<<j
+    f,bins=prevalence_bins(full_masks,n_glonaf)
     masks_host=[mask & true_mask for mask in full_masks]
     masks_other=[mask & ~true_mask for mask in full_masks]
-    source_active=sum(bool(f[idx[name]]) for name in known)
+    source_active=sum(bool(f[j]) for j in true_positions)
     if source_active<20:
         raise RuntimeError("Insufficient focal HOSTS × GloNAF active exact taxa: "+str(source_active))
     all_ia,all_ib=data["ia"],data["ib"]
@@ -249,6 +283,8 @@ def evaluate(draws=199,seed=31031):
             "original_GloNAF_mapped_audit":source_audit,
             "focal_HOSTS_host_names_exact_GloNAF":len(known),
             "source_ACTIVE_focal_host_names":source_active,
+            "source_original_bit_positions_matching_canonical_hosts":len(true_positions),
+            "source_canonicalization":"GloNAF Species=Genus_epithet, converted to Genus epithet while preserving original bit positions",
             "focal_host_names_not_matched_GloNAF":len(original_unknown),
             "source_same_region_pairs":len(all_ia),
             "eligible_known_host_region_pairs":int(valid.sum()),
