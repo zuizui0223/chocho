@@ -32,9 +32,9 @@ PATH=HERE/"global_225x3696_butterfly_island_risk.csv.gz"
 SRC=HERE/"global_original_14m_source_and_risk_receipt.json"
 PORTS=HERE/"global_WPI_ports_assigned_to_GSHHG.csv"
 OUT=HERE/"global_port_host_spatial_prediction_results.json"
-COVARS=("log_area","log_pre_plant_exposure_proxy","pre_richness","abs_lat",
-        "sin_lon","cos_lon","lat2","lon2")
-# Here log_pre_plant_exposure_proxy actually means logged *butterfly*
+COVARS=("log_area","log_pre_butterfly_records","pre_richness","abs_lat",
+        "sin_lon","cos_lon","lat2","lon2","host_data_available")
+# Here log_pre_butterfly_records actually means logged *butterfly*
 # observations, not plant data. Legacy name is avoided in user-visible results.
 
 def read_input():
@@ -68,7 +68,7 @@ def transformed(df):
     lat=df["reference_latitude"].to_numpy(dtype=float)
     lon=df["reference_longitude"].to_numpy(dtype=float)
     x["log_area"]=np.log1p(area)
-    x["log_pre_plant_exposure_proxy"]=np.log1p(pre)
+    x["log_pre_butterfly_records"]=np.log1p(pre)
     x["pre_richness"]=np.log1p(richness)
     x["abs_lat"]=abs(lat)/90
     x["sin_lon"]=np.sin(np.deg2rad(lon))
@@ -135,7 +135,7 @@ def run():
        "M1_plus_modern_WPI_ports":list(COVARS)+["modern_WPI_any","log_modern_WPI_ports"],
        "M2_plus_species_introduced_host_port_interaction":
             list(COVARS)+["modern_WPI_any","log_modern_WPI_ports",
-                          "host_data_available","host_x_modern_WPI",
+                          "host_x_modern_WPI",
                           "host_x_log_port_count"]
     }
     groups=np.unique(blocks)
@@ -169,6 +169,21 @@ def run():
            "per_fold_brier":[v["brier"] for v in fold_values],
            "per_fold_index_events":[v["positive_events"] for v in fold_values]
         }
+    # A distinct *temporal* evaluation on 2018-2022 still-unindexed pairs.
+    # The risk window is five years instead of the seven-year training window;
+    # absolute probabilities may be miscalibrated. Interpret only comparative
+    # scores and relative ranking, not a calibrated future colonization rate.
+    late_mask=raw["eligible_2018_2022"].to_numpy(dtype=int)==1
+    later=data.loc[late_mask].reset_index(drop=True)
+    y_later=raw.loc[late_mask,"first_2018_2022"].to_numpy(dtype=int)
+    early_training=df.copy()
+    early_training.index=np.arange(len(early_training))
+    later.index=np.arange(len(later))+len(early_training)
+    combined_y=np.concatenate([y,y_later])
+    temporal_scores=fit_compare(early_training,later,combined_y,names)
+    print("GLOBAL_TEMPORAL_HOLDOUT",len(later),"later_first_indexes",int(y_later.sum()),
+          "M0_M1_M2_BRIER",
+          *[round(temporal_scores[m]["brier"],7) for m in names],flush=True)
     b0=summary["M0_historical_butterfly_index_area_geography_species"]["spatial_block_heldout_sample_weighted_brier"]
     b1=summary["M1_plus_modern_WPI_ports"]["spatial_block_heldout_sample_weighted_brier"]
     b2=summary["M2_plus_species_introduced_host_port_interaction"]["spatial_block_heldout_sample_weighted_brier"]
@@ -185,6 +200,13 @@ def run():
       "source_block_count":len(groups),
       "models":summary,
       "full_source_fold_details":folds,
+      "temporal_2018_2022_still_at_risk_test":{
+          "train_index_2011_2017_count":len(df),
+          "test_index_2018_2022_count":len(later),
+          "new_indexed_in_test":int(y_later.sum()),
+          "different_training_7y_vs_test_5y_window_not_probabilistically_calibrated":True,
+          "scores":temporal_scores
+      },
       "delta_brier_M1_vs_M0":b1-b0,
       "delta_brier_M2_vs_M1":b2-b1,
       "relative_brier_improvement_M1_vs_M0":(b0-b1)/b0 if b0 else None,
@@ -201,6 +223,7 @@ def run():
         "Island spatial folds are 10-degree geographic cells and are not independent geological archipelagos or ocean-basin holdouts.",
         "The species-wide GEB resource portfolio and butterfly records share taxonomy and historical sources.",
         "Original 225 source butterfly species do not represent every global Lepidoptera species.",
+        "The temporal 2018-2022 test has a shorter 5-year event window than the 7-year train, so absolute probability calibration is not comparable.",
         "Modern 2019 WPI island port assignments include 130 ambiguous WPI coastal islands; sensitivity pending."
       ]
     }
