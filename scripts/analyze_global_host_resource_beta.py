@@ -163,6 +163,45 @@ def load_region_data(native_path, current_path, edges):
     return regions, flora_bits, plant_reg, totals, len(plants)
 
 
+def load_exact_host_footprints(native_host_path, current_host_path, edges, regions):
+    """Use the original HOSTS-matched *host* sidecars for the resource layer.
+
+    Full WCVP all-flora sheets include only accepted-rank species; some
+    HOSTS-resolved accepted IDs are not represented in that independently
+    filtered flora table. Merging both layers on all-flora IDs would silently
+    discard mapped host regions, producing wrong GEB totals.
+    """
+    ri = {name:i for i,name in enumerate(regions)}
+    hosts = {p for _,p in edges}
+    host_reg = {"native": defaultdict(int), "current": defaultdict(int)}
+    counts = {}
+    for kind, path in (("native",native_host_path), ("current",current_host_path)):
+        total = 0
+        used = 0
+        out_of_region = Counter()
+        for row in read_rows(path):
+            p = row["accepted_plant_name_id"].strip()
+            unit = row["area_code_l3"].strip()
+            total += 1
+            if p not in hosts:
+                continue
+            if unit not in ri:
+                out_of_region[unit] += 1
+                continue
+            host_reg[kind][p] |= 1 << ri[unit]
+            used += 1
+        if out_of_region:
+            raise RuntimeError("HOSTS sidecar has regions absent from all-flora WGSRPD3: "+
+                               repr(dict(out_of_region)))
+        counts[kind] = {"total_host_distribution_rows":total,
+                        "focal_host_distribution_rows":used,
+                        "focal_hosts_with_distribution":len(host_reg[kind])}
+    for p in hosts:
+        if host_reg["native"].get(p,0) & ~host_reg["current"].get(p,0):
+            raise RuntimeError("Host-native footprint outside host-contemporary footprint for "+p)
+    return host_reg, counts
+
+
 def build_butterfly_by_region(edges, plant_reg, n_regions, n_consumers):
     """Turn each butterfly's union of accepted host ranges into region bitsets."""
     footprints = {kind: [0] * n_consumers for kind in ("native","current")}
@@ -265,6 +304,8 @@ def main():
     ap.add_argument("--insect-host-csv",type=Path,required=True)
     ap.add_argument("--allflora-native-csv",type=Path,required=True)
     ap.add_argument("--allflora-current-csv",type=Path,required=True)
+    ap.add_argument("--native-host-distribution-csv",type=Path,required=True)
+    ap.add_argument("--current-host-distribution-csv",type=Path,required=True)
     ap.add_argument("--null-draws",type=int,default=199)
     ap.add_argument("--output-prefix",type=Path,required=True)
     args=ap.parse_args()
@@ -272,13 +313,22 @@ def main():
         ap.error("--null-draws must be between 0 and 999")
     panel=load_panel(args.butterfly_panel)
     edges,family,unresolved=load_interactions(args.insect_host_csv,panel)
-    regions,flora,plant_regions,flora_rows,n_plants=load_region_data(
+    regions,flora,flora_mapped_host_regions,flora_rows,n_plants=load_region_data(
         args.allflora_native_csv,args.allflora_current_csv,edges)
-    resources=build_butterfly_by_region(edges,plant_regions,len(regions),len(panel))
+    host_regions,host_distribution_rows=load_exact_host_footprints(
+        args.native_host_distribution_csv,args.current_host_distribution_csv,
+        edges,regions)
+    resources=build_butterfly_by_region(edges,host_regions,len(regions),len(panel))
     sums={k:count_species_units(resources[k]) for k in ("native","current")}
+    masked_resources=build_butterfly_by_region(
+        edges,flora_mapped_host_regions,len(regions),len(panel))
+    allflora_masked_sums={
+        k:count_species_units(masked_resources[k]) for k in ("native","current")}
     if sums != {"native":EXPECTED_NATIVE_UNITS, "current":EXPECTED_CURRENT_UNITS}:
-        raise RuntimeError("GEB +54.9% source checksum failed: reconstructed "+
-                           repr(sums)+" not native=26530/current=41083")
+        raise RuntimeError("GEB source checksum failed using EXACT host distribution: "+
+                           repr(sums)+"; all-flora masked "+
+                           repr(allflora_masked_sums)+
+                           "; required native=26530/current=41083")
     pairs=pair_rows(regions,flora,resources)
     plant=describe_delta([p["plant_delta"] for p in pairs])
     consumer=describe_delta([p["resource_delta"] for p in pairs])
@@ -324,13 +374,19 @@ def main():
           "butterfly_panel":args.butterfly_panel,
           "insect_host_csv":args.insect_host_csv,
           "allflora_native_csv":args.allflora_native_csv,
-          "allflora_current_csv":args.allflora_current_csv}.items()},
+          "allflora_current_csv":args.allflora_current_csv,
+          "native_host_distribution_csv":args.native_host_distribution_csv,
+          "current_host_distribution_csv":args.current_host_distribution_csv}.items()},
         "analysis_units":{"wgsrpd3_regions":len(regions),
           "all_region_pairs":len(pairs),"selected_butterflies":len(panel),
           "distinct_accepted_flora_species":n_plants,
           "resolved_panel_insect_host_edges":len(edges),
           "resolved_panel_host_plants":len({p for _,p in edges}),
           "allflora_plant_region_rows":flora_rows,
+          "host_sidecar_distribution_rows":host_distribution_rows,
+          "allflora_masked_resource_units":allflora_masked_sums,
+          "exact_host_vs_allflora_masked_gap":{
+            k:sums[k]-allflora_masked_sums[k] for k in ("native","current")},
           "native_butterfly_resource_units":sums["native"],
           "current_butterfly_resource_units":sums["current"],
           "added_butterfly_resource_units":sums["current"]-sums["native"],
