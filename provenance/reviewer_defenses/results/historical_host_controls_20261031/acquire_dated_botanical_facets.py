@@ -102,7 +102,7 @@ def get_ports(all_port_rows,countries):
 def year_facets(port,year):
     params={"taxonKey":"6","year":str(year),"hasCoordinate":"true",
             "hasGeospatialIssue":"false","occurrenceStatus":"PRESENT",
-            "geoDistance":f"5km,{port['latitude']:.7f},{port['longitude']:.7f}",
+            "geoDistance":f"{port['latitude']:.7f},{port['longitude']:.7f},5km",
             "facet":"speciesKey","facetLimit":"1000","limit":"0"}
     keys={};offset=0;total=None
     while True:
