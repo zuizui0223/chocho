@@ -39,10 +39,10 @@ def test_matched_fake_host_null_preserves_taxon_frequency_bins():
 
 def test_pair_jaccard_distinguishes_nonintersection_from_double_empty():
     m=load()
-    value,missing=m.pair_jaccard([0,0,1], [0,0,1], [1,2,2])
+    value,missing=m.pair_jaccard([0,0,1], [0,0,2], [1,2,2])
     assert missing==1
     assert value[0]!=value[0]
     assert value[1]==0
     assert value[2]==1
-    _,missing2=m.pair_jaccard([0,0,1], [0,0,1],[1,2,2],undefined_zero=True)
+    _,missing2=m.pair_jaccard([0,0,1], [0,0,2],[1,2,2],undefined_zero=True)
     assert missing2==1
