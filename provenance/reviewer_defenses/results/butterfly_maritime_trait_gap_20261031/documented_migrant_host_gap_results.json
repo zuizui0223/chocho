@@ -1,0 +1,161 @@
+{
+  "schema": "chocho_independently_documented_migrant_species_host_gap_screen_v1",
+  "status": "DESCRIPTIVE_MIGRANT_SUBSET_WEAK_UNSTABLE_HOST_PROXY_ASSOCIATION",
+  "source_git_blobs": {
+    "migration_crosswalk": {
+      "path": "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv",
+      "sha": "439dd1034ca16f96ff94222695d98dc39747c2e4"
+    },
+    "gap_species": {
+      "path": "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/matched_species_screen.csv",
+      "sha": "eb316611c58d5d08e37345f9f944a0dbf170a41e"
+    },
+    "fiveyear_events": {
+      "path": "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv",
+      "sha": "efbc770469a720e2dea82478db2f6196ba03b353"
+    }
+  },
+  "source_migration_taxonomy": "exact canonical names from 2025 author GBIF predicate, derived from 2021 review; indirect, not reviewed S1",
+  "migration_classification_warning": "not listed = migration status unknown, NOT nonmigrant",
+  "n_source_225": 225,
+  "n_source_documented_candidate": 111,
+  "all_193_screened": 193,
+  "documented_subset": {
+    "species": 106,
+    "first_indexed_events_with_before_after_observation_opportunity": 2177,
+    "prior_record_gaps_ge500km": 119,
+    "event_weighted_gap_share": 0.05466237942122187,
+    "equal_species_mean_gap_share": 0.13559039955512825,
+    "correlations": {
+      "host_fraction_vs_500km_gap": 0.16398541687244395,
+      "candidate_port_count_vs_500km_gap": -0.13144267531321088,
+      "wing_size_vs_500km_gap": -0.05561511810633336,
+      "host_fraction_vs_100km_gap": 0.14884271377573025,
+      "candidate_port_count_vs_100km_gap": -0.15077222558817988
+    }
+  },
+  "non_listed_unknown_coverage_NOT_A_CONTROL": {
+    "species": 87,
+    "first_indexed_events_with_before_after_observation_opportunity": 959,
+    "prior_record_gaps_ge500km": 45,
+    "event_weighted_gap_share": 0.04692387904066736,
+    "equal_species_mean_gap_share": 0.16062156604981967,
+    "correlations": {
+      "host_fraction_vs_500km_gap": -0.036661763916079546,
+      "candidate_port_count_vs_500km_gap": -0.12332520872528176,
+      "wing_size_vs_500km_gap": 0.2842077682400649,
+      "host_fraction_vs_100km_gap": -0.13661353755843414,
+      "candidate_port_count_vs_100km_gap": -0.19790062571080339
+    }
+  },
+  "min_events_sensitivity": {
+    "5": {
+      "species": 81,
+      "first_indexed_events_with_before_after_observation_opportunity": 2120,
+      "prior_record_gaps_ge500km": 106,
+      "event_weighted_gap_share": 0.05,
+      "equal_species_mean_gap_share": 0.10748044057008554,
+      "correlations": {
+        "host_fraction_vs_500km_gap": 0.0313210335514968,
+        "candidate_port_count_vs_500km_gap": -0.15229060601447378,
+        "wing_size_vs_500km_gap": -0.11430006249216142,
+        "host_fraction_vs_100km_gap": 0.12929968700090802,
+        "candidate_port_count_vs_100km_gap": -0.10884126232021982
+      }
+    },
+    "10": {
+      "species": 58,
+      "first_indexed_events_with_before_after_observation_opportunity": 1963,
+      "prior_record_gaps_ge500km": 76,
+      "event_weighted_gap_share": 0.03871625063678044,
+      "equal_species_mean_gap_share": 0.07107900608351027,
+      "correlations": {
+        "host_fraction_vs_500km_gap": 0.07607101400849606,
+        "candidate_port_count_vs_500km_gap": -0.03939693906420751,
+        "wing_size_vs_500km_gap": -0.0630951480795415,
+        "host_fraction_vs_100km_gap": 0.14655385177318922,
+        "candidate_port_count_vs_100km_gap": 0.038324040189676695
+      }
+    },
+    "20": {
+      "species": 35,
+      "first_indexed_events_with_before_after_observation_opportunity": 1670,
+      "prior_record_gaps_ge500km": 36,
+      "event_weighted_gap_share": 0.02155688622754491,
+      "equal_species_mean_gap_share": 0.023331711255141725,
+      "correlations": {
+        "host_fraction_vs_500km_gap": -0.1327346229554008,
+        "candidate_port_count_vs_500km_gap": 0.08319705201608571,
+        "wing_size_vs_500km_gap": -0.008738488230889043,
+        "host_fraction_vs_100km_gap": 0.022007296821874345,
+        "candidate_port_count_vs_100km_gap": 0.148622423351047
+      }
+    }
+  },
+  "bootstrap_seed": 20261031,
+  "bootstrap_draws": 1500,
+  "species_resampled_uncertainty": {
+    "host_fraction_vs_500km_gap": {
+      "successful_draws": 1500,
+      "species_bootstrap_95": [
+        -0.03462038664528937,
+        0.34543667493578495
+      ]
+    },
+    "candidate_port_count_vs_500km_gap": {
+      "successful_draws": 1500,
+      "species_bootstrap_95": [
+        -0.33352445660110475,
+        0.0709538742538816
+      ]
+    },
+    "wing_size_vs_500km_gap": {
+      "successful_draws": 1500,
+      "species_bootstrap_95": [
+        -0.25616742219406363,
+        0.14195042158707982
+      ]
+    }
+  },
+  "retrospective_5_year_followup": {
+    "documented_migrants_all_first_indexed_records": 4277,
+    "pooled_host_status_groups": {
+      "ALIEN_CANDIDATE_RECORDED": {
+        "events": 113,
+        "species": 37,
+        "rerecord_within5_years": 98,
+        "rerecord_fraction": 0.8672566371681416
+      },
+      "NATIVE_ONLY_CLASSIFIED": {
+        "events": 48,
+        "species": 27,
+        "rerecord_within5_years": 35,
+        "rerecord_fraction": 0.7291666666666666
+      },
+      "NO_MATCHING_HOST_RECORD": {
+        "events": 65,
+        "species": 33,
+        "rerecord_within5_years": 38,
+        "rerecord_fraction": 0.5846153846153846
+      }
+    },
+    "same_migrant_species_alien_vs_native_comparable_species": 12,
+    "same_species_equal_mean_reindex_fraction_difference": -0.07007575757575758,
+    "same_species_direction": {
+      "positive": 2,
+      "zero": 4,
+      "negative": 6
+    }
+  },
+  "limits": [
+    "Independent migratory status is positive-only and indirectly recovered from author GBIF request; not the review's S1.",
+    "Migration is not demonstrated local long-distance flight, island arrival, or dispersal ability on the study islands.",
+    "The 193-species gap response is distance to earlier GBIF records, not true butterfly travel.",
+    "2001-2024 port botanical host records may postdate 2011-2022 butterfly occurrences.",
+    "Global host introduced share not observed historically on target islands.",
+    "Repeated recording does not demonstrate breeding, establishment, or larval feeding.",
+    "Bootstrap resamples species but ignores phylogeny, island/shared-region effects and measurement error.",
+    "Not-listed/unknown is NOT a no-migration or no-host control.",
+    "Original species×island×year zero-event risk set and year-specific port/nonport plant flora unavailable."
+  ]
+}
