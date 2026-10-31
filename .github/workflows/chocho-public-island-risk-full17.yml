@@ -46,16 +46,16 @@ jobs:
         with:
           name: public-butterfly-225-x-17-at-risk-islands
           path: |
-            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_query_receipt.json
-            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_atrisk.csv
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_query_receipt.json
+            provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_butterfly_island_225_atrisk.csv
           retention-days: 45
       - name: Archive strict source design and source metadata non-destructively
         if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_query_receipt.json \
-                  provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_*_atrisk.csv
+          git add provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_query_receipt.json \
+                  provenance/reviewer_defenses/results/public_butterfly_island_risk_20261031/full17_butterfly_island_225_atrisk.csv
           git diff --cached --quiet && exit 0
           git commit -m "Source-lock all 225 butterflies and 17 islands in outcome-unselected GBIF historical risk reconstruction [skip ci]"
           for attempt in 1 2 3; do
