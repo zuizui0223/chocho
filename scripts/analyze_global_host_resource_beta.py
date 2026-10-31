@@ -157,8 +157,9 @@ def load_region_data(native_path, current_path, edges):
     for i in range(len(regions)):
         if flora_bits["native"][i] & ~flora_bits["current"][i]:
             raise RuntimeError("native plant flora not subset of current at region " + regions[i])
-    if not all(p in plants for _, p in edges):
-        raise RuntimeError("host-edge plant absent all-WCVP flora")
+    # HOSTS may include accepted WCVP host taxa with no non-extinct,
+    # non-doubtful current regional distribution. Keep those edges as
+    # unresolved geographic opportunity, rather than inventing presence.
     return regions, flora_bits, plant_reg, totals, len(plants)
 
 
