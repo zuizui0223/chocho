@@ -37,6 +37,8 @@ from pyproj import Transformer
 SOURCE_MD5="16f5585d2500676951a4b664bbf0ffde"
 TDWG_COMMIT="52da7828aba9d461dd133c27b3bd7a4407161f54"
 EMPIRES=("time.emp.GB","time.emp.ESP","time.emp.PRT","time.emp.NL")
+ENV_COVARS=("temp.mean","aridity.mean","pop.dens.2010.mean",
+            "gdp.pc.2011.mean","crop.area.prop")
 ZIP=Path("_temp_historical_sources/lenzner_6640264.zip")
 OFFICIAL=Path("data/frozen/wgsrpd3_level1_lookup_v0.1.json")
 OUT=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031")
@@ -146,6 +148,17 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
                 if not math.isfinite(val) or val<0 or val>600:
                     raise RuntimeError("Impossible colonial duration")
                 v[empire]=val
+            for covariate in ENV_COVARS:
+                raw=(r.get(covariate) or "").strip()
+                if raw.lower() in ("","na","nan","null"):
+                    v[covariate]=None
+                else:
+                    try:
+                        v[covariate]=float(raw)
+                    except ValueError:
+                        v[covariate]=None
+                    if v[covariate] is not None and not math.isfinite(v[covariate]):
+                        v[covariate]=None
             predictors_by_id[key]=v
         assert len(reg_by_id)==len(predictors_by_id)==1183
 
@@ -191,6 +204,7 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
         total_area=float(g.area)
         matched_area=0.0
         contributions=Counter()
+        covariate_weight=Counter()
         contributing_source=set()
         candidate_indices=tree.query(g)
         for candidate in candidate_indices:
@@ -207,14 +221,22 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
             contributing_source.add(identifiers[k])
             for empire in EMPIRES:
                 contributions[empire]+=area*predictors_by_id[identifiers[k]][empire]
+            for covariate in ENV_COVARS:
+                val=predictors_by_id[identifiers[k]][covariate]
+                if val is not None:
+                    contributions[covariate]+=area*val
+                    covariate_weight[covariate]+=area
         cov_ratio=matched_area/total_area
         area_coverage.append(cov_ratio)
         # Sum of overlaps can exceed polygon area if Lenzner regions overlap.
         # Do not mislabel >1 as complete, or silently divide away duplicates.
         if cov_ratio>1.05:
             geom_issues["substantial_region_overlap"]+=1
+        representative=geom.representative_point()
         row={
             "wgsrpd3_code":code,
+            "representative_lat":float(representative.y),
+            "representative_lon":float(representative.x),
             "glonaf_covered_area_fraction_unclipped":cov_ratio,
             "glonaf_overlap_region_count":len(contributing_source),
             "usable_area_fifty_percent":int(cov_ratio>=.5 and cov_ratio<=1.05),
@@ -225,6 +247,10 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
             # than divide by uncovered region area and imply zero colonialism.
             row[empire.replace("time.emp.","years_")]=(
                 contributions[empire]/matched_area if matched_area>0 else "")
+        for covariate in ENV_COVARS:
+            row["source_"+covariate.replace(".","_")]=(
+                contributions[covariate]/covariate_weight[covariate]
+                if covariate_weight[covariate]>0 else "")
         outputs.append(row)
     return outputs,{
         "status":"AREA_WEIGHTED_COLONIAL_GEOMETRY_RECONSTRUCTION_NOT_CONSUMER_EFFECT",
