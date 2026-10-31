@@ -58,3 +58,23 @@ Source-backed files: `land_fraction_sites.csv` (all 114 circle×land intersectio
 - Offline regression tests: `tests/test_historical_port_nonport_botany_20261031.py`, `tests/test_historical_38port_island_uncertainty_20261031.py`
 
 Main next test remains a **butterfly species × island × year at-risk panel** joined to actually prior, regionally alien-classified host observations, plus a non-port urban control and independent mobility data. A species' presence in contemporary GEB worldwide host-resource expansion cannot replace that historical field.
+
+## Added 1-km terrestrial land-area balance audit
+
+The original comparison fixed an equal 1 km *radius* but did not equate its terrestrial sampling area: a port-point circle can lie over ocean while a coastal control center is offset inland. Re-intersecting **all 114 circles** against the same source-pinned GSHHG 2.3.7 L1 island polygons reveals:
+
+- Mean terrestrial fraction within harbor query circle: **61.4%** (38 sites).
+- Mean terrestrial fraction within off-port query circle: **88.5%** (76 sites).
+- Median, over 38 ports, of the largest absolute difference against either corresponding control: **30.8 percentage points**.
+
+Thus a simple comparison of botanical species counts or candidate-host indexing cannot assume equal botanical sampling area. A retrospective quality subset now requires **both** non-port circles to differ from the corresponding port circle by no more than the specified land-area fraction. Keeping the same minimum 10 indexed plant species at all three matched sites:
+
+| Maximum absolute land-area fraction difference | Eligible ports / islands | Island-equal harbor minus off-port candidate-host index fraction |
+|---|---:|---:|
+| 0.15 | 2 / 2 | −1.13 percentage points |
+| 0.25 | 3 / 3 | **−0.68 percentage points** |
+| 0.40 | 5 / 3 | +1.18 percentage points |
+
+These are **post-hoc geographic quality sensitivities**, not independently replicated tests or a proof of no effect. Their changing sign and severe island attrition further prevent an identifiable port-specific plant mediator. Geographic area matching does not resolve different urbanization, cultivation, botanical surveys, native status or actual 2001–2010 shipment activity.
+
+Independent computation and exact fixed-source SHA: `audit_land_area_exposure.py`, `land_fraction_sites.csv`, `land_fraction_pairs.csv`, `land_fraction_quality_results.json`. The butterfly colonization/relay part remains unverified. 
