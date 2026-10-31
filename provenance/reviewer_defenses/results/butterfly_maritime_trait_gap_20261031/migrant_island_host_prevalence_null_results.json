@@ -1,0 +1,140 @@
+{
+  "schema": "chocho_author_migrant_island_2011_2017_host_network_prevalence_null_v1",
+  "status": "POSITIVE_ISLAND_SIMILARITY_NOT_MIGRANT_SPECIFIC_ABOVE_PREVALENCE_NULL",
+  "source_git_blobs": {
+    "migration": {
+      "path": "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv",
+      "sha": "439dd1034ca16f96ff94222695d98dc39747c2e4"
+    },
+    "islands": {
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv",
+      "sha": "18cecde5bf3066f276380167f451f1fa5cc1caa1"
+    },
+    "pairs": {
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv",
+      "sha": "5663d2ffe42419f5c4496b92c9f3bbf76175907b"
+    },
+    "events": {
+      "path": "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv",
+      "sha": "efbc770469a720e2dea82478db2f6196ba03b353"
+    }
+  },
+  "source_provenance": "2025 author GBIF predicate based on published migratory butterfly review; 2021 Table S1 not obtained",
+  "all_225_candidate_species_retained": 225,
+  "islands": 51,
+  "island_pairs": 1275,
+  "butterfly_first_index_2011_2017_island_events": 302,
+  "butterfly_species_first_indexed_2011_2017": 106,
+  "author_roster_migrant_selected_species_with_new_island_records": 63,
+  "not_listed_unknown_species_with_new_records": 43,
+  "original_all_225_new_2011_2022_baseline": {
+    "n_pairs": 1275,
+    "spearman_host_vs_butterfly": 0.29980576483377025,
+    "partial_rank_distance_prior_butterfly": 0.2153535842700985
+  },
+  "first_2011_2017_all_species": {
+    "n_pairs": 1272,
+    "jaccard_zero_pairs": 894,
+    "spearman_host_vs_butterfly": 0.23848776710485534,
+    "partial_rank_distance_prior_butterfly": 0.17506619159778716
+  },
+  "first_2011_2017_author_migrant_roster": {
+    "n_pairs": 1272,
+    "jaccard_zero_pairs": 915,
+    "spearman_host_vs_butterfly": 0.2204520274075129,
+    "partial_rank_distance_prior_butterfly": 0.17021539879216102
+  },
+  "first_2011_2017_not_listed_UNKNOWN_not_nonmigrants": {
+    "n_pairs": 1122,
+    "jaccard_zero_pairs": 1054,
+    "spearman_host_vs_butterfly": 0.18611621231683914,
+    "partial_rank_distance_prior_butterfly": 0.06427961936442361
+  },
+  "migrant_leave_one_island_sensitivity": {
+    "simple_rho_range": [
+      0.20054070455732798,
+      0.24377190055245057
+    ],
+    "partial_rank_range": [
+      0.1456860906764573,
+      0.1971228161529619
+    ]
+  },
+  "source_prevalence_bins": {
+    "1": {
+      "total": 38,
+      "published_migrant_selected": 13
+    },
+    "2": {
+      "total": 23,
+      "published_migrant_selected": 15
+    },
+    "5plus": {
+      "total": 14,
+      "published_migrant_selected": 11
+    },
+    "3-4": {
+      "total": 31,
+      "published_migrant_selected": 24
+    }
+  },
+  "permutation": {
+    "method": "permute author migration labels within number-of-first-indexed-islands bins (1, 2, 3-4, >=5), keeping bins counts; NOT a geographic/effort causal null",
+    "seed": 20261031,
+    "draws": 999,
+    "statistics": {
+      "spearman_host_vs_butterfly": {
+        "mean": 0.21557252871524055,
+        "reference95": [
+          0.1808106661585691,
+          0.2476659895103261
+        ],
+        "draws_ge_observed": 399,
+        "draws": 999,
+        "range": [
+          0.15869562250486727,
+          0.2698417042010486
+        ]
+      },
+      "partial_rank_distance_prior_butterfly": {
+        "mean": 0.15782230884663556,
+        "reference95": [
+          0.107386317588539,
+          0.19777560478803713
+        ],
+        "draws_ge_observed": 340,
+        "draws": 999,
+        "range": [
+          0.08283259811123658,
+          0.21227538011328387
+        ]
+      },
+      "n_pairs": {
+        "mean": 1267.883883883884,
+        "reference95": [
+          1260,
+          1272
+        ],
+        "draws_ge_observed": 259,
+        "draws": 999,
+        "range": [
+          1247,
+          1272
+        ]
+      }
+    },
+    "posthoc_descriptive_only": true
+  },
+  "explicit_limits": [
+    "Species migration status in 2025 GBIF predicate is indirect, not original 2021 Table S1.",
+    "Nonlisted means unknown, not sedentary/nonmigrant.",
+    "Migration in a species somewhere does not establish flight or arrival at these islands.",
+    "Butterfly first GBIF index is not first true colonization nor breeding.",
+    "Port host composition pools 2001-2024 botanical records, potentially postdating 2011-2017 butterfly indices.",
+    "The 51 islands and 1275 pairs are not independent global island samples.",
+    "Partial ranks adjust distance and earlier butterfly similarity only; not climate, sampling, phylogeny or port presence.",
+    "Migration-label shuffles within prevalence bins do not preserve geography, taxon-family, host geography or source-specific effort.",
+    "The 2021-22 new butterfly base and 2011-17 new subset are different time windows.",
+    "No evidence of shipborne host introduction, actual larval resource use, establishment or stepping-stone movement."
+  ]
+}
