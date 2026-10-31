@@ -61,6 +61,25 @@ def inspect(archive=ARCHIVE):
                 item["has_verified_header"] = is_header
                 item["column_names"] = header if is_header else []
                 item["delimiter"] = dialect
+                # The rare header with spaces/diacritics may fail strict regex.
+                # Classify columns without ever exporting an individual row.
+                item["first_line_token_profile"] = [
+                    {"index": j + 1, "length": len(t),
+                     "letters": sum(ch.isalpha() for ch in t),
+                     "digits": sum(ch.isdigit() for ch in t),
+                     "punctuation": sum(not ch.isalnum() and not ch.isspace() for ch in t),
+                     "header_keyword": next(
+                         (k for k in ("date","time","ship","port","mmsi","imo",
+                                      "latitude","longitude","lon","lat","country","flag",
+                                      "vessel","type","arrival","departure")
+                          if k in t.lower()), None)}
+                    for j, t in enumerate(header)
+                ]
+                item["header_keyword_hits"] = sum(
+                    bool(x["header_keyword"]) for x in item["first_line_token_profile"])
+                item["first_line_is_probably_observations"] = (
+                    not is_header and item["header_keyword_hits"] < 2)
+
                 # No sample observations, individual vessel IDs or MMSI.
                 item["sample_raw_values_exported"] = False
             manifest.append(item)
