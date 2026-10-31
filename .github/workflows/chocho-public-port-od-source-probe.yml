@@ -1,0 +1,34 @@
+name: chocho public maritime port-to-port data identity probe
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - .github/workflows/chocho-public-port-od-source-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  public-metadata-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe the public Mendeley Data dataset metadata without route downloads
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_mendeley_port_od.py
+      - name: Preserve public discovery receipt only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/port_to_port_source_discovery_20261031.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record public port-to-port dataset discovery limitations [skip ci]'
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
