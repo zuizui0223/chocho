@@ -170,7 +170,8 @@ def score(ids,pairs,species_islands,marked):
     by_island={i:set() for i in ids}
     for sp in marked:
         for island in species_islands[sp]:
-            by_island[island].add(sp)
+            if island in by_island:
+                by_island[island].add(sp)
     filtered=[]
     for p in pairs:
         value=jaccard(by_island[p["a"]],by_island[p["b"]])
