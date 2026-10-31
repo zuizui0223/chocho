@@ -59,6 +59,8 @@ jobs:
             --insect-host-csv _scratch_inputs/native/insect_host_accepted.csv \
             --allflora-native-csv _scratch_inputs/allflora/allflora_native_accepted_wgsrpd3.csv \
             --allflora-current-csv _scratch_inputs/allflora/allflora_contemporary_accepted_wgsrpd3.csv \
+            --native-host-distribution-csv _scratch_inputs/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --current-host-distribution-csv _scratch_inputs/contemporary/extant_nondoubtful_wgsrpd3.csv \
             --null-draws 199 \
             --output-prefix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v1
           cp _scratch_inputs/allflora/allflora_source_counts.csv \
