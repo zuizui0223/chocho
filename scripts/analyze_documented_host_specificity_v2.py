@@ -218,9 +218,19 @@ def main():
         p.error("19..999 pseudohost draws")
     out=analyse(args.draws)
     args.output.parent.mkdir(parents=True,exist_ok=True)
-    args.output.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
+    def numpy_scalar_to_json(value):
+        if isinstance(value,np.integer):
+            return int(value)
+        if isinstance(value,np.floating):
+            return float(value)
+        if isinstance(value,np.ndarray):
+            return value.tolist()
+        raise TypeError(f"Unsupported scientific result type: {type(value)}")
+    args.output.write_text(json.dumps(
+        out,indent=2,ensure_ascii=False,default=numpy_scalar_to_json)+"\n",
+        encoding="utf8")
     print(json.dumps({k:v for k,v in out.items() if k!="limits"},
-                     ensure_ascii=False,indent=2))
+                     ensure_ascii=False,indent=2,default=numpy_scalar_to_json))
 
 
 if __name__=="__main__":
