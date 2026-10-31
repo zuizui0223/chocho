@@ -1,0 +1,222 @@
+{
+  "schema": "chocho_pre2011_38port_17island_top10_matched_index_uncertainty_v1",
+  "status": "THIN_HISTORICAL_BOTANICAL_RECORD_ASSOCIATION_NO_CONFIRMED_ALIEN_HOST_ENRICHMENT",
+  "sources": {
+    "pair_csv_git_blob": "ae7fa4986e1a5be73a3c50b89669d05bc5138ac1",
+    "receipt_git_blob": "53ef6dddbe1a8efceaf518812bf2b3c77cf285d6"
+  },
+  "source_ports": 38,
+  "source_islands": 17,
+  "geometric_biological_query_sites": 114,
+  "all_queries_complete": true,
+  "species_key_cutoffs": {
+    "1": {
+      "eligible_ports": 14,
+      "eligible_islands": 10,
+      "island_equal_mean_port_minus_offport_top10_index_fraction": 0.010230252472507917,
+      "island_bootstrap95": [
+        -0.004666892213244483,
+        0.030471255109730356
+      ],
+      "leave_one_island_out_range": [
+        0.004153251619984141,
+        0.01404482096659565
+      ],
+      "positive_islands": 3,
+      "negative_islands": 1,
+      "zero_islands": 6,
+      "island_support": [
+        {
+          "island": "169",
+          "ports": 2,
+          "mean": 0.0649232601452219
+        },
+        {
+          "island": "951",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "821",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "260",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "276",
+          "ports": 4,
+          "mean": 0.0015328058161185533
+        },
+        {
+          "island": "1577",
+          "ports": 1,
+          "mean": 0.059947322738020406
+        },
+        {
+          "island": "715",
+          "ports": 1,
+          "mean": -0.02410086397428169
+        },
+        {
+          "island": "81",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "214",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "257",
+          "ports": 1,
+          "mean": 0
+        }
+      ]
+    },
+    "5": {
+      "eligible_ports": 9,
+      "eligible_islands": 5,
+      "island_equal_mean_port_minus_offport_top10_index_fraction": 0.020460504945015834,
+      "island_bootstrap95": [
+        -0.009333784426488965,
+        0.050943420634737224
+      ],
+      "leave_one_island_out_range": [
+        0.009344816144964317,
+        0.03160084717484021
+      ],
+      "positive_islands": 3,
+      "negative_islands": 1,
+      "zero_islands": 1,
+      "island_support": [
+        {
+          "island": "169",
+          "ports": 2,
+          "mean": 0.0649232601452219
+        },
+        {
+          "island": "260",
+          "ports": 1,
+          "mean": 0
+        },
+        {
+          "island": "276",
+          "ports": 4,
+          "mean": 0.0015328058161185533
+        },
+        {
+          "island": "1577",
+          "ports": 1,
+          "mean": 0.059947322738020406
+        },
+        {
+          "island": "715",
+          "ports": 1,
+          "mean": -0.02410086397428169
+        }
+      ]
+    },
+    "10": {
+      "eligible_ports": 8,
+      "eligible_islands": 4,
+      "island_equal_mean_port_minus_offport_top10_index_fraction": 0.025575631181269792,
+      "island_bootstrap95": [
+        -0.011284029079081569,
+        0.06243529144162115
+      ],
+      "leave_one_island_out_range": [
+        0.012459754859952423,
+        0.04213446289978695
+      ],
+      "positive_islands": 3,
+      "negative_islands": 1,
+      "zero_islands": 0,
+      "island_support": [
+        {
+          "island": "169",
+          "ports": 2,
+          "mean": 0.0649232601452219
+        },
+        {
+          "island": "276",
+          "ports": 4,
+          "mean": 0.0015328058161185533
+        },
+        {
+          "island": "1577",
+          "ports": 1,
+          "mean": 0.059947322738020406
+        },
+        {
+          "island": "715",
+          "ports": 1,
+          "mean": -0.02410086397428169
+        }
+      ]
+    },
+    "20": {
+      "eligible_ports": 5,
+      "eligible_islands": 2,
+      "island_equal_mean_port_minus_offport_top10_index_fraction": -0.011284029079081569,
+      "island_bootstrap95": null,
+      "leave_one_island_out_range": [
+        -0.02410086397428169,
+        0.0015328058161185533
+      ],
+      "positive_islands": 1,
+      "negative_islands": 1,
+      "zero_islands": 0,
+      "island_support": [
+        {
+          "island": "276",
+          "ports": 4,
+          "mean": 0.0015328058161185533
+        },
+        {
+          "island": "715",
+          "ports": 1,
+          "mean": -0.02410086397428169
+        }
+      ]
+    },
+    "50": {
+      "eligible_ports": 3,
+      "eligible_islands": 1,
+      "island_equal_mean_port_minus_offport_top10_index_fraction": 0.006468263933733548,
+      "island_bootstrap95": null,
+      "leave_one_island_out_range": null,
+      "positive_islands": 1,
+      "negative_islands": 0,
+      "zero_islands": 0,
+      "island_support": [
+        {
+          "island": "276",
+          "ports": 3,
+          "mean": 0.006468263933733548
+        }
+      ]
+    }
+  },
+  "bootstrap": {
+    "method": "resample eligible island means; non-independent same-island ports averaged first; fixed observation sources, not causal or full-uncertainty CI",
+    "seed": 20261031,
+    "draws": 5000,
+    "index_method": "upper 32-bit LCG scale to avoid modulo-4 pseudorandom cycling"
+  },
+  "limits": [
+    "Globally top-ten resource candidate plants are NOT necessarily historically introduced on each island.",
+    "GBIF recorded proportion is not vegetation abundance, larval feeding, breeding or colonization.",
+    "Many islands have no adequate botanical index opportunities at port and both coast controls.",
+    "One island's multiple port comparisons are not independent replications.",
+    "Controls are away from listed WPI harbors but unlisted old ports or urban planting remain possible.",
+    "2019 port positions are retrospective proxy locators for 2001–2010 botanical observations.",
+    "Bootstrap resamples a very small number of eligible islands and ignores geographic/taxon dependence.",
+    "When fewer than three islands meet quality cutoffs, no interval is reported.",
+    "No causal port enrichment, ship transport, or subsequent butterfly range expansion can be concluded."
+  ]
+}
