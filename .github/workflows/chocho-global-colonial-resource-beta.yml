@@ -1,0 +1,117 @@
+name: chocho global WGSRPD3 plant-to-butterfly resource beta
+
+on:
+  push:
+    branches: [analysis/global-colonial-host-resource-convergence-20261031]
+    paths:
+      - ".github/workflows/chocho-global-colonial-resource-beta.yml"
+      - "scripts/analyze_global_host_resource_beta.py"
+      - "tests/test_global_host_resource_beta_20261031.py"
+      - "scripts/analyze_global_resource_gain_fixed_margins.py"
+      - "tests/test_global_resource_gain_fixed_margins_20261031.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-global-resource-beta-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  flora-resource-beta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install paper tests (fail fast before R setup)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[test]"
+          python -m pip install ruff
+          ruff check --select F821 scripts/analyze_global_host_resource_beta.py scripts/analyze_global_resource_gain_fixed_margins.py
+          pytest -q tests/test_global_host_resource_beta_20261031.py tests/test_global_resource_gain_fixed_margins_20261031.py
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Checkout source-locked HOSTS (no moving master)
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Checkout source-locked WCVP version 13
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Restore source-locked HOSTS and WCVP derived sidecars
+        id: restored
+        uses: actions/cache/restore@v4
+        with:
+          path: _scratch_inputs
+          key: chocho-global-beta-wcvp-65bed76-hosts-808e0b-v2-${{ hashFiles('scripts/build_wcvp_hosts_null_sidecars.R', 'scripts/build_wcvp_all_flora_region_baselines.R') }}
+      - name: Reconstruct the exact original HOSTS/WCVP native and contemporary sources
+        if: steps.restored.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p _scratch_inputs/native _scratch_inputs/contemporary _scratch_inputs/allflora
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS _scratch_inputs/native _scratch_inputs/contemporary
+          Rscript scripts/build_wcvp_all_flora_region_baselines.R \
+            _external/WCVP _scratch_inputs/allflora
+      - name: Save immutable source-derived sidecars even if the later analysis fails
+        if: steps.restored.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: _scratch_inputs
+          key: chocho-global-beta-wcvp-65bed76-hosts-808e0b-v2-${{ hashFiles('scripts/build_wcvp_hosts_null_sidecars.R', 'scripts/build_wcvp_all_flora_region_baselines.R') }}
+      - name: Calculate native/current all-plant vs fixed-239 butterfly resource composition
+        run: |
+          python scripts/analyze_global_host_resource_beta.py \
+            --butterfly-panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --insect-host-csv _scratch_inputs/native/insect_host_accepted.csv \
+            --allflora-native-csv _scratch_inputs/allflora/allflora_native_accepted_wgsrpd3.csv \
+            --allflora-current-csv _scratch_inputs/allflora/allflora_contemporary_accepted_wgsrpd3.csv \
+            --native-host-distribution-csv _scratch_inputs/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --current-host-distribution-csv _scratch_inputs/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --official-wgsrpd3-lookup-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --null-draws 0 \
+            --output-prefix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3
+          cp _scratch_inputs/allflora/allflora_source_counts.csv \
+            provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/allflora_source_counts.csv
+      - name: Condition beta homogenization on EXACT native and added opportunity margins
+        run: |
+          python scripts/analyze_global_resource_gain_fixed_margins.py \
+            --matrix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.matrix.csv.gz \
+            --receipt provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.json \
+            --draws 199 --attempts-per-added 5 \
+            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_fixed_margins_v1.json \
+            --draws-csv provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_fixed_margins_v1.draws.csv
+      - name: Repeat fixed-margin null with geographically constrained within-level1 swaps
+        run: |
+          python scripts/analyze_global_resource_gain_fixed_margins.py \
+            --matrix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.matrix.csv.gz \
+            --receipt provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/beta_baseline_v3.json \
+            --stratify-level1 --seed 41131 --draws 199 --attempts-per-added 5 \
+            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_within_level1_v1.json \
+            --draws-csv provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/resource_gain_within_level1_v1.draws.csv
+      - name: Commit only source-derived summary, region and pairs; keep raw sources off GitHub
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/
+          git diff --cached --quiet && exit 0
+          git commit -m "Compute first global flora-to-butterfly resource beta and matched host-network null [skip ci]"
+          # Retain concurrent science/source-audit commits by fast-forward only.
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Clear local third-party flora/input sources
+        if: always()
+        run: rm -rf _scratch_inputs _external

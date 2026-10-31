@@ -1,0 +1,115 @@
+{
+  "schema": "chocho_global_WGSRPD3_flora_consumer_beta_v1",
+  "status": "SOURCE_LOCKED_POTENTIAL_LARVAL_RESOURCE_COMPOSITION_NOT_OCCUPANCY",
+  "source_commit_pins": {
+    "hosts_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "wcvp_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "wcvp_region_level": "WGSRPD3"
+  },
+  "source_sha256": {
+    "butterfly_panel": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+    "insect_host_csv": "0a084fb5273e4780b03e015205c87e4545c69f0f8e517feb1a2a3879889508e9",
+    "allflora_native_csv": "b66350a5d965e707cbfc5cb1de1d6fb72a62b6a01e5632eed2267b80cb02d091",
+    "allflora_current_csv": "bdf3ad670c435f570a715b23cb31ca7ab6add6e3241bee2105dc101fc675ebb7",
+    "native_host_distribution_csv": "c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558",
+    "current_host_distribution_csv": "55d06cdd2b80002ba1f057dcd57e409ce5688ac802d37e62166e0bd7e67856a6",
+    "official_wgsrpd3_lookup_json": "85804d45b0a9ffb3620d13795015ca2a23d2ecd4c99e489f7d312906750d94d7"
+  },
+  "analysis_units": {
+    "wgsrpd3_regions": 369,
+    "raw_wcvp_region_codes": 370,
+    "unexpected_wcvp_codes_not_in_official_369": [
+      "grb",
+      "wau"
+    ],
+    "official_codes_without_contemporary_flora": [
+      "BOU"
+    ],
+    "official_369_resource_units": {
+      "native": 26530,
+      "current": 41083
+    },
+    "all_region_pairs": 67896,
+    "selected_butterflies": 239,
+    "distinct_accepted_flora_species": 359012,
+    "resolved_panel_insect_host_edges": 2596,
+    "resolved_panel_host_plants": 1706,
+    "allflora_plant_region_rows": {
+      "native": 1202784,
+      "current": 1338575
+    },
+    "host_sidecar_distribution_rows": {
+      "native": {
+        "total_host_distribution_rows": 148254,
+        "focal_host_distribution_rows": 39220,
+        "focal_hosts_with_distribution": 1705
+      },
+      "current": {
+        "total_host_distribution_rows": 222384,
+        "focal_host_distribution_rows": 69593,
+        "focal_hosts_with_distribution": 1706
+      }
+    },
+    "allflora_masked_resource_units": {
+      "native": 26483,
+      "current": 41035
+    },
+    "exact_host_vs_allflora_masked_gap": {
+      "native": 47,
+      "current": 48
+    },
+    "native_butterfly_resource_units": 26530,
+    "current_butterfly_resource_units": 41083,
+    "added_butterfly_resource_units": 14553,
+    "added_percent": 54.854881266490764,
+    "unresolved_host_links": {}
+  },
+  "plant_flora_beta_delta": {
+    "n_valid": 67896,
+    "mean": 0.014884216431423944,
+    "median": 0.009188400119626565,
+    "negative_fraction": 0.02309414398491811,
+    "zero_fraction": 0.02481736773889478,
+    "positive_fraction": 0.9520884882761871,
+    "q025": 0.0,
+    "q975": 0.06718284763821251,
+    "note": "Pairs reuse regions; distribution across pairs is not a confidence interval"
+  },
+  "butterfly_resource_beta_delta": {
+    "n_valid": 67805,
+    "mean": 0.18434554356928748,
+    "median": 0.16,
+    "negative_fraction": 0.05250350269154192,
+    "zero_fraction": 0.02278593024113266,
+    "positive_fraction": 0.9247105670673255,
+    "q025": -0.04136863841253057,
+    "q975": 0.5126090400110296,
+    "note": "Pairs reuse regions; distribution across pairs is not a confidence interval"
+  },
+  "plant_delta_vs_resource_delta_spearman": 0.5408818974074676,
+  "paired_valid_region_pairs": 67805,
+  "network_structure_null": {
+    "n_draws": 199,
+    "scope": "fixed exact plant geographies; within-family edge-swaps preserve each insect and host-plant degree",
+    "observed_mean_consumer_delta": 0.18434554356928748,
+    "median_valid_swaps": 7618.0,
+    "median": 0.21046391266230377,
+    "q025": 0.20164161143128775,
+    "q975": 0.2192864687941582,
+    "p_greater_equal": 1.0,
+    "p_less_equal": 0.005,
+    "note": "Post-hoc MCMC-style degree-preserving network rewiring. Draws share fixed source; not independent biological replicates."
+  },
+  "interpretation_limits": [
+    "Contemporary means WCVP current native+introduced, not a dated historical year.",
+    "Native-only is a counterfactual subset of present-day mapped ranges, not observed pre-colonial flora.",
+    "Neither butterfly range occupancy nor realized larval consumption is inferred.",
+    "Raw Jaccard shifts across flora and a 239-consumer resource set are not a scale-comparable amplification ratio.",
+    "The null keeps plant distributions and family/degree structure, but not all observational/phylogenetic biases.",
+    "All pairs reuse regions; do not calculate naïve independent-pair p-values.",
+    "Historical empires, trade routes, climate, and GBIF butterfly observations have NOT been fitted.",
+    "WGSRPD3 regions are heterogeneous in size and not all are independent.",
+    "WCVP distribution may contain codes outside the official frozen 369; only official 369 appear in pair results.",
+    "GEB 26530 and 41083 source checks are on unfiltered original HOSTS sidecars, not the official-region-masked subset."
+  ]
+}

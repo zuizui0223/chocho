@@ -1,0 +1,41 @@
+{
+  "schema": "chocho_fixed_species_region_gain_degree_null_v1",
+  "status": "ADDED_OPPORTUNITY_SIZE_MATCHED_GEOGRAPHY_NULL_NOT_HOST_TRANSPORT",
+  "source": {
+    "resource_matrix_sha256": "ec6a5530d65ac0b04f230e0c51fd68bf543555641a17b94795996bf11ce257d0",
+    "report_source_sha256": "ccda0bc669fb5ffe7326175fcc0501dbb1447790925c06add92501d1d30f255b",
+    "butterfly_species": 239,
+    "official_regions": 369,
+    "common_native_resource_regions": 355,
+    "common_region_pairs": 62835,
+    "native": 26530,
+    "added": 14553,
+    "current": 41083
+  },
+  "rule": "2x2 swaps of added butterfly×WGSRPD3 cells; forbid native cells; preserve each butterfly's number of gains and each region's number of new butterflies; preserve all original native cells",
+  "stratification": "global unstratified",
+  "strata_source_sha256": null,
+  "observed_mean_beta_jaccard_change": 0.18510150276498433,
+  "randomization": {
+    "draws": 199,
+    "seed": 31031,
+    "attempted_edge_swaps_per_draw": 72765,
+    "min_accepted_swaps_per_draw": 6561,
+    "median_accepted_swaps_per_draw": 6761.0,
+    "mean": 0.17579427828219704,
+    "median": 0.1757822597713733,
+    "q025": 0.17548250604264806,
+    "q975": 0.17614834638945284,
+    "p_low": 1.0,
+    "p_high": 0.005
+  },
+  "limits": [
+    "Source WCVP native/current statuses are modern retrospective geography, not dated plant colonization.",
+    "No GBIF confirmed butterfly occupancy; output is only potential larval resource geography.",
+    "MCMC draws from sequential constrained swaps are not independent experimental replications.",
+    "This null fixes butterfly gain counts by region and species, not plant-level introduction or host-network structure.",
+    "Region endpoints are reused in pair summaries; no pair-independent confidence intervals.",
+    "Fixed margin null does not account for spatial autocorrelation/phylogeny of introduced host plant ranges.",
+    "Within-level1 swaps retain broad geographic placement, but not climate, port traffic, or spatial autocorrelation within world division."
+  ]
+}
