@@ -193,7 +193,8 @@ def island_bootstrap(samples):
 def source_network_null(samples,edges):
     """Family and per-butterfly/per-plant degree preserving rewires, not causal."""
     rng=random.Random(SEED)
-    ed=[[s,p,f] for s,p,f in edges]
+    # Sort source associations to eliminate Python set/hash-seed dependent MCMC ordering.
+    ed=[[s,p,f] for s,p,f in sorted(edges)]
     used={(s,p) for s,p,f in ed}
     if len(used)!=len(ed):raise ValueError("Duplicate source GBIF resolved host edges")
     family=defaultdict(list)
@@ -222,7 +223,6 @@ def source_network_null(samples,edges):
     for _ in range(DRAWS):
         accepted+=shuffle(BETWEEN_PER_EDGE*len(ed))
         if len(used)!=len(ed):raise ValueError("Null lost unique butterfly-host edges")
-        perm=classify(samples,ed,{s["landmass_id"]:s["__plants"] for s in []}, {}) if False else None
         by=defaultdict(set)
         for s,p,_ in ed:by[s].add(p)
         flags=[]
@@ -289,7 +289,28 @@ def run(args):
     candidates={x["species"] for x in candidate}
     if any(x["species"] not in candidates for x in study):
         raise ValueError("New butterfly records not in fixed 225-species source roster")
-    names=resolve_all_source_plant_names(queries)
+    if args.taxonomy_from_archive:
+        taxonomy_bytes=args.taxonomy_from_archive.read_bytes()
+        payload=json.loads(gzip.decompress(taxonomy_bytes).decode("utf8"))
+        if payload.get("schema")!="chocho_accepted_original_host_species_gbif_crosswalk_v1":
+            raise ValueError("Historic GBIF botanical name crosswalk archive has incorrect schema")
+        if payload.get("source_author_plant_candidates_sha256")!=PLANT_CANDIDATES_SHA:
+            raise ValueError("Historic plant source identity changed")
+        names=payload["name_resolution"]
+    else:
+        names=resolve_all_source_plant_names(queries)
+        payload={"schema":"chocho_accepted_original_host_species_gbif_crosswalk_v1",
+            "source_author_plant_candidates_sha256":PLANT_CANDIDATES_SHA,
+            "gbif_api":MAPPING_API,
+            "strict_taxonomic_gate":"EXACT ACCEPTED SPECIES >=90 confidence, canonical binomial match",
+            "name_resolution":names}
+        taxonomy_bytes=gzip.compress(json.dumps(payload,sort_keys=True,ensure_ascii=False,separators=(",",":")).encode("utf8"),mtime=0)
+    if len(names)!=1642:
+        raise ValueError("GBIF historical host name crosswalk coverage not complete")
+    if args.taxonomy_archive:
+        args.taxonomy_archive.parent.mkdir(parents=True,exist_ok=True)
+        args.taxonomy_archive.write_bytes(taxonomy_bytes)
+    taxonomy_sha=sha(taxonomy_bytes)
     # Mark original taxon collisions as unresolvable, NOT evidence for absence.
     host_edges=set()
     catalogue_species=defaultdict(set)
@@ -347,6 +368,7 @@ def run(args):
         "original_23_port_gzip_sha256":ORIGINAL23_SHA,
         "new_15_port_gzip_sha256":src["new_15port_gzip_sha256"],
         "taxonomic_match":{"eligible_plant_names":len(names),
+            "resolved_name_to_gbifkey_frozen_archive_sha256":taxonomy_sha,
             "resolution_status_counts":dict(taxonomy),
             "source_original_butterflies":len({x["original_name"] for x in rawedges}),
             "source_original_edges":len(rawedges),
@@ -387,4 +409,8 @@ if __name__=="__main__":
     p.add_argument("--original23",type=Path,required=True)
     p.add_argument("--new15",type=Path,required=True)
     p.add_argument("--out",type=Path,required=True)
+    p.add_argument("--taxonomy-archive",type=Path,default=None,
+        help="Store just name-to-GBIF-taxonomy crosswalk in action artifact; not butterfly-host edges")
+    p.add_argument("--taxonomy-from-archive",type=Path,default=None,
+        help="Replay source-frozen GBIF name mapping offline with exact source checks")
     run(p.parse_args())
