@@ -49,6 +49,9 @@ def get(url, params):
                 raise ValueError("Source JSON failed or explicit API error: "+str(data.get("error"))[:300])
             return data
         except (HTTPError,URLError,TimeoutError) as ex:
+            if isinstance(ex,HTTPError) and ex.code == 400:
+                body=ex.read(1200).decode("utf8",errors="replace")
+                raise ValueError(f"Source HTTP 400: {body}; URL={full[:550]}") from ex
             if trial==3:raise
             if isinstance(ex,HTTPError) and ex.code not in (408,425,429,500,502,503,504):
                 raise
