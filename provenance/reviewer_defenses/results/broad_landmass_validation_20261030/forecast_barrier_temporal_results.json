@@ -1,0 +1,59 @@
+{
+  "status": "COMPLETE",
+  "mode": "temporal",
+  "train_rows": 193703,
+  "train_species": 155,
+  "test_rows": 208482,
+  "test_species": 155,
+  "results": {
+    "persistence": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.04520469872475359,
+      "species_equal_mae": 0.10385980497930151,
+      "pooled_mse": 0.04820852548621707,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.04080376307529341
+    },
+    "M5_host_composition": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03074279463401328,
+      "species_equal_mae": 0.10785649257790925,
+      "pooled_mse": 0.032759986685560065,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.022578093562754663
+    },
+    "B1_history": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03077784092374207,
+      "species_equal_mae": 0.11090185545537987,
+      "pooled_mse": 0.03317972830067232,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.022635920744987114
+    },
+    "B2_landmass": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.030742288295608017,
+      "species_equal_mae": 0.11053973299467197,
+      "pooled_mse": 0.03327130354244138,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.022692386903748852
+    }
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "interpretation": "Predicts standardized recording probability; temporal holdout2019-2022; not verified true occupancy or causal drivers",
+  "sensitivity": null,
+  "input_panel": "C:\\Users\\zuizui\\Documents\\Codex\\2026-10-29\\choch\\work\\temporal\\forecast\\species_cell_period_panel.parquet",
+  "rarefaction_n": 10
+}

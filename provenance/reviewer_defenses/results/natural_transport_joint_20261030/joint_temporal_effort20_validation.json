@@ -1,0 +1,10 @@
+{
+  "status": "PASS_JOINT_COMPARISON",
+  "mode": "temporal_effort20",
+  "checks": [
+    "all reference predictions keys and targets exactly match original runs",
+    "joint feature set is exact union of saved B5 and T1 features",
+    "independent species-equal MSE matches receipt"
+  ],
+  "limits": "Fixed settings, retrospective heldout prediction. No causal identification, no uncertainty estimated here."
+}

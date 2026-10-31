@@ -1,0 +1,2 @@
+# Reproduction
+Run archived scripts from their original work/barriers/ project location. See Japanese result for execution order. Prior snapshots supply base family-null locks and pooled results. The fixed 194-port plan, dated inventory receipt and cache hashes are included; API caches and restricted source host data remain local. Reacquisition may change source records. Early zero counts are from the original year facets, not ecological absences. This is a temporal precedence check, not future prediction or observed transport.

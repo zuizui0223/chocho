@@ -1,0 +1,59 @@
+{
+  "status": "COMPLETE",
+  "mode": "spatial",
+  "train_rows": 193703,
+  "train_species": 155,
+  "test_rows": 208482,
+  "test_species": 155,
+  "results": {
+    "persistence": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.04520469872475359,
+      "species_equal_mae": 0.10385980497930151,
+      "pooled_mse": 0.04820852548621707,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.04080376307529341
+    },
+    "M5_host_composition": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.031358647707416844,
+      "species_equal_mae": 0.11090914896087692,
+      "pooled_mse": 0.03320273546315611,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.023235413389437652
+    },
+    "B1_history": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03162907123389654,
+      "species_equal_mae": 0.11403349645814544,
+      "pooled_mse": 0.034112710539050406,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.02381433861993586
+    },
+    "B2_landmass": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03191501187177049,
+      "species_equal_mae": 0.11458517024815457,
+      "pooled_mse": 0.034434169260051044,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.02404675361343401
+    }
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "interpretation": "Predicts standardized recording probability; temporal holdout2019-2022; not verified true occupancy or causal drivers",
+  "sensitivity": null,
+  "input_panel": "C:\\Users\\zuizui\\Documents\\Codex\\2026-10-29\\choch\\work\\temporal\\forecast\\species_cell_period_panel.parquet",
+  "rarefaction_n": 10
+}

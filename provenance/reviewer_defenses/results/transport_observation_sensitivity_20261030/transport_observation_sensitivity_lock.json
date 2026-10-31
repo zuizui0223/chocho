@@ -1,0 +1,10 @@
+{
+  "status": "FIXED_BEFORE_TRANSPORT_SENSITIVITY_FITS_AFTER_MAIN_RESULTS",
+  "candidate_population": 225,
+  "variants": ["effort20", "exclude_top_provider"],
+  "evaluation": "Temporal only; same fixed RF settings and original sensitivity panels. Compare T0 and T1 against exact matching original M5 predictions within each variant. No tuning or model selection from sensitivity results.",
+  "effort20": "Use existing hypergeometric 20-recording-day probability and support threshold, stored under legacy recording_probability10 column. Verify values against days and success before fitting.",
+  "exclude_top_provider": "Use existing panel with largest provider removed from observation effort and response. Original candidate domain, historical-distance covariate and host catalogue remain fixed; not a full removal of that provider from every geographic input.",
+  "port_features": "Reuse same historical port windows and same-landmass assignment; port index is independent of butterfly provider filters. Unknown remains flagged. No new geometry or port matching choices.",
+  "reporting": "Keep all supported rows, record species and rows per variant. Absolute MSE across rarefaction targets is not comparable. Subgroup summaries are descriptive. Spatial and species sensitivity variants not covered by this lock."
+}

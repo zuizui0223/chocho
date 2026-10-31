@@ -1,0 +1,3 @@
+# Reproduction
+
+This is an evidence snapshot, not a standalone data release. Run audit_nelson_transport_case.py from the original project under work/barriers/ (its ROOT is resolved relative to that location). Required inputs and SHA-256 values are listed in nelson_transport_case_audit.json. The restricted host network and raw source data are not redistributed. The script checks catalogue identity and host edges and recomputes local coverage and forecast comparison; it does not independently verify the literature statements. Primary-source URLs and their interpretation are in the Japanese report.

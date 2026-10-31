@@ -1,0 +1,2 @@
+# Reproduction
+Archived scripts run at their original work/barriers location in the project. Inputs and hashes are listed in island_host_continuity_audit.json. Restricted host-network data are not redistributed. Run analyze_island_host_continuity.py then verify_island_host_continuity.py. The verifier independently reconstructs followup outcomes and paired contrasts, but relies on the existing audited host inventory for regional classifications. This retrospective association is not a temporally valid forecast or a demonstrated transport mechanism.

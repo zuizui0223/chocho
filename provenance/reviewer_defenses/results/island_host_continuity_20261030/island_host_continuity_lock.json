@@ -1,0 +1,12 @@
+{
+  "status": "EXPLORATORY_RULES_SAVED_BEFORE_NEW_CONTINUITY_COUNTS",
+  "candidate_population": 225,
+  "unit": "species by island first-record event",
+  "index_years": [2011, 2017],
+  "followup": "year+1 through year+5, equal window, count distinct years with records",
+  "host_context": "complete port inventory, exactly one landmass and one island intersecting query polygon; union distinct matching hosts across ports; unanimous regional classification per host",
+  "groups": ["ALIEN_CANDIDATE_RECORDED", "NATIVE_ONLY_CLASSIFIED", "UNRESOLVED_ONLY", "NO_MATCHING_HOST_RECORD", "NOT_EVALUABLE"],
+  "comparison": "descriptive event and species-equal recurrence, plus within-species difference for species represented in both first two groups; no inferential p-value",
+  "outcomes": ["any_followup_record", "followup_record_years", "record_in_year5"],
+  "limits": "Contemporary pooled plant records do not precede butterfly events. This is retrospective association, not a forecast or host effect. Missing records are not absence. Shared host and island dependencies remain. No new distance-band acquisition or matched controls. Persistence of records is not reproduction, establishment, or island relay."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "EXPLORATORY_CONTROL_FIXED_AFTER_HOST_CORRELATIONS_BEFORE_BACKGROUND_RESULTS",
+  "unit": "Same species-region rows as original_regional_host_distance.parquet; no new outcome-based subset",
+  "background": "Union of host plants in225-species catalogue excluding plants listed as hosts of the focal butterfly. This is a catalogue background, not confirmed biological non-hosts or complete regional flora.",
+  "features": "Compare contemporary/native/contemporary-minus-native share for focal hosts against the corresponding share of background plant universe",
+  "matched_support": "Within each feature and species require both host/background varying, outcome varying, >=5regions; repeat>=10regions. Use identical species and regions for paired correlations.",
+  "statistics": "Species-equal mean host rho, background rho, paired difference(host minus background); species-bootstrap95% descriptive interval of paired difference when>=20species. Also partial Spearman by residualizing average ranks of host and distance against intercept plus background rank, retaining nonzero residual variance.",
+  "interpretation": "Negative paired difference means matched host association is more negative than catalogue background. Does not prove resource mediation, causal host specificity, transport or forecast value; shared geography/phylogeny and present-day ranges remain unresolved. Background exclusions reflect catalogue knowledge, not feeding experiments."
+}

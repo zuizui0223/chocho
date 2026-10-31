@@ -1,0 +1,2 @@
+# Reproduction
+Run run_island_host_degree_null.py at its original project work/barriers/ location, first without arguments then with --family. Inputs and hashes are recorded in each audit JSON; source network and detailed prior matches remain local. Run analyze_shared_host_match.py first to reconstruct that input when needed. All-draw degree and family invariants are asserted inside the simulator. Summary validation does not establish MCMC mixing, geographic exchangeability or a causal mechanism.

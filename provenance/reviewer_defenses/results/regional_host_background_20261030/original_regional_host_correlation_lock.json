@@ -1,0 +1,10 @@
+{
+  "status": "EXPLORATORY_RULES_FIXED_BEFORE_CORRELATION",
+  "source": "Original-coordinate205-species12028 first-island-record events; retain225-species candidate scope",
+  "unit": "One butterfly species x WGSRPD3region; median nearest-prior-record distance across island events in that region",
+  "features": ["contemporary available-host share", "native-host share of global catalogue hosts", "contemporary-not-native host share of global catalogue hosts"],
+  "coverage": "Only events with existing nonmissing regional host context and unique region mapping; do not replace missing regional host context with zero",
+  "method": "Within-species Spearman correlation across regions; >=5 regions and both variables varying. Also report>=10-region sensitivity and prior-observation-opportunity subset. Average correlation equally across eligible species, with descriptive species-bootstrap intervals only when>=20 species; no confirmatory p-values.",
+  "checks": "Reconstructed contemporary host counts must match existing available_hosts. Keep mismatches in audit and do not silently reinterpret source inputs.",
+  "limits": "Present regional catalogue is not local historical host availability; native-complement is only a non-native candidate. Geography, climate, land use and observer coverage remain potential explanations. Correlation cannot show host-mediated movement or prediction benefit. Species bootstrap does not account for phylogeny or shared regions. Coarse regional associations cannot identify island stepping stones."
+}

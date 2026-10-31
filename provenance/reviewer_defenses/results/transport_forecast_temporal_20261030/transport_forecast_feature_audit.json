@@ -1,0 +1,41 @@
+{
+  "status": "FEATURE_JOIN_COMPLETE_NOT_MODEL_RESULT",
+  "periods": [
+    {
+      "period": 0,
+      "years": [
+        2011,
+        2014
+      ],
+      "eligible_ports": 258,
+      "cells": 5282,
+      "supported_cells": 4725,
+      "supported_landmasses": 12
+    },
+    {
+      "period": 1,
+      "years": [
+        2015,
+        2018
+      ],
+      "eligible_ports": 262,
+      "cells": 5282,
+      "supported_cells": 4720,
+      "supported_landmasses": 11
+    }
+  ],
+  "feature_columns": [
+    "log_nearest_indexed_port_km",
+    "indexed_port_support_unknown",
+    "log_nearest_port_connectivity"
+  ],
+  "limits": "Retrospective sensitivity, not an actual historical forecast: port coordinates/catalogue2019 and name crosswalk2026, old2021 connectivity edition, and static current host list. Historical index confirms recorded port index in baseline but not unchanged historical port coordinates or comprehensive coverage of closed ports. Single-landmass buffer attribution is approximate. No route or transport-causality claim.",
+  "input_sha256": {
+    "outputs/transport_forecast_extension_lock.json": "2c9eff854d5e8a72393eeec957115f59efdc045239f7234bffc26f6ff856739e",
+    "outputs/port_connectivity_exact_matches.csv": "5d38fd770d1f3f0ea6410e054f8df360ac16f7315b0e67e2ff5063c14850f810",
+    "work/barriers/unctad_port_connectivity_2006_2021.parquet": "2f2406927d531d2ca90fe3f6251764094b29a2c0b19f3588bb7e4aca51c6a706",
+    "outputs/port_buffer_landmass_audit.csv": "549a2414d60d921476754262bbd936857f742989a873083a099913e6b5d2a910",
+    "work/barriers/ports_2019.geojson": "d580e8520dc5bd77c0ab464df3bdc9ea95653c47b00c42a510dc7c1519feaa78",
+    "work/barriers/cell_geography.parquet": "de7cfc8a52ce8603ce2f4e987b9c87686d80e4e7ccb63647eeab973d5db3ddbd"
+  }
+}

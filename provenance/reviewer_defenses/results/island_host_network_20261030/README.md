@@ -1,0 +1,2 @@
+# Reproduction
+Run the archived scripts from their original project location, work/barriers/. Required source inputs and hashes are listed in island_host_network_audit.json. Source host data are not redistributed here. The analysis is a retrospective composition association, not a movement network or forecast. The verifier reconstructs butterfly similarities and partial ranks; plant classifications rely on the existing inventory audit. Run analyze_island_host_network.py then verify_island_host_network.py.

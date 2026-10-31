@@ -1,0 +1,10 @@
+{
+ "status":"EXPLORATORY_JOINT_COMPARISON_FIXED_BEFORE_JOINT_RESULTS",
+ "population":"225 candidates; preserve original155 species, panel, folds and RF settings",
+ "models":{"M5":"existing climate landcover host baseline","B5_sea_terrain":"M5 plus historical-record geography, landmass, marine segments and land DEM","T1_port_connectivity":"M5 plus port distance, missing-index flag and historical port index","J1_natural_transport":"B5 plus the same3 port features used by T1"},
+ "contrasts":["J1 minus B5: additional port group conditional on natural proxies","J1 minus T1: additional natural group conditional on port proxies","J1 minus M5: combined value"],
+ "evaluation":"Temporal and spatial heldout comparisons on exact existing rows. Report >=100km and strict-island subgroups; no tuning. Reuse exact stored reference predictions after asserting keys and targets.",
+ "natural_features":"Existing history_geography_features, land_dem_features, sea_route_features; marine sampling <=250m; predictor periods0 and1 only",
+ "limits":"Retrospective static geography and2019 port geocoding. Straight sampled routes are not actual flight paths; cell relief is not crossed mountain barriers. Historical record distances are not origins. Port index is not a route/propagule count. Existing component results informed this exploratory extension, not the joint outcome. Missing remains flagged.",
+ "sensitivities":"Existing port-only effort sensitivity does not certify the joint model; joint observation sensitivity remains separate outstanding work."
+}

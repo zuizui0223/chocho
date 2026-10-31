@@ -1,0 +1,61 @@
+{
+  "status": "COMPLETE",
+  "mode": "temporal",
+  "train_rows": 193703,
+  "train_species": 155,
+  "test_rows": 208482,
+  "test_species": 155,
+  "results": {
+    "persistence": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.04520469872475359,
+      "species_equal_mae": 0.10385980497930151,
+      "pooled_mse": 0.04820852548621707,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.04080376307529341
+    },
+    "M5_host_composition": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.03074279463401328,
+      "species_equal_mae": 0.10785649257790925,
+      "pooled_mse": 0.032759986685560065,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.022578093562754663
+    },
+    "T0_port_location": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.030809744002587878,
+      "species_equal_mae": 0.10755731479273312,
+      "pooled_mse": 0.03276006207953644,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.0226416596645776
+    },
+    "T1_port_connectivity": {
+      "rows": 208482,
+      "species": 155,
+      "species_equal_mse": 0.030673696988983368,
+      "species_equal_mae": 0.10721282620678003,
+      "pooled_mse": 0.032677590100049926,
+      "initially_unrecorded_rows": 133557,
+      "initially_unrecorded_mse": 0.02249726540001693
+    }
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "interpretation": "Predicts standardized recording probability; temporal holdout2019-2022; not verified true occupancy or causal drivers",
+  "extension_lock_sha256": "2c9eff854d5e8a72393eeec957115f59efdc045239f7234bffc26f6ff856739e",
+  "transport_feature_sha256": "1d8dcb017977b8cc0b103444dfc713b21b91606071d7849d107dfb033e5d917c",
+  "sensitivity": null,
+  "input_panel": "C:\\Users\\zuizui\\Documents\\Codex\\2026-10-29\\choch\\work\\temporal\\forecast\\species_cell_period_panel.parquet",
+  "rarefaction_n": 10
+}

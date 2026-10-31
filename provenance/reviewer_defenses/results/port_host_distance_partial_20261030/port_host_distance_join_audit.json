@@ -1,0 +1,44 @@
+{
+  "status": "PARTIAL_ACQUISITION_COVERAGE_NOT_GLOBAL_RELATIONSHIP",
+  "target_ports": 1469,
+  "complete_ports": 17,
+  "query_status_counts": {
+    "COMPLETE": 17
+  },
+  "complete_port_countries": {
+    "JP": 8,
+    "GB": 8,
+    "CA": 1
+  },
+  "raw_port_record_memberships": 43701,
+  "unique_records": 43695,
+  "conflicting_record_keys": 0,
+  "host_records": 16855,
+  "host_species": 352,
+  "host_origin_counts": {
+    "NOT_IN_AUDITED_HOST_SPECIES": 26840,
+    "NATIVE": 12198,
+    "REGION_UNKNOWN_OR_AMBIGUOUS": 2703,
+    "NONNATIVE_CANDIDATE": 1654,
+    "CATALOGUE_STATUS_UNKNOWN": 300
+  },
+  "precision_counts": {
+    "LE100M": 19750,
+    "100_TO1000M": 19357,
+    "GT1000M": 2577,
+    "UNKNOWN": 2011
+  },
+  "license_record_counts": {
+    "http://creativecommons.org/licenses/by-nc/4.0/legalcode": 37504,
+    "http://creativecommons.org/licenses/by/4.0/legalcode": 5873,
+    "http://creativecommons.org/publicdomain/zero/1.0/legalcode": 318
+  },
+  "limits": [
+    "partial query order may be geographically clustered; inspect coverage before interpreting fractions",
+    "fraction denominator only hosts with classified origin; unknowns reported separately",
+    "haversine nearest-port distance; >5km boundary bin retained",
+    "raw recording association, no matched controls or effort correction",
+    "no records outside queried5km neighborhoods; no broad far-from-port inference",
+    "contemporary-minus-native only non-native candidate, not confirmed introduction or invasive status"
+  ]
+}
