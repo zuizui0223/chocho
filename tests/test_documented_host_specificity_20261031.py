@@ -9,6 +9,10 @@ SCRIPT=ROOT/"scripts/analyze_documented_host_specificity.py"
 
 
 def load():
+    # GEB's minimal paper CI does not install the optional spatial geometry
+    # stack. Specialized source workflows install and execute these tests.
+    pytest.importorskip("pyproj")
+    pytest.importorskip("shapefile")
     sys.path.insert(0,str(ROOT/"scripts"))
     spec=importlib.util.spec_from_file_location("documented_host_specificity",SCRIPT)
     m=importlib.util.module_from_spec(spec)
