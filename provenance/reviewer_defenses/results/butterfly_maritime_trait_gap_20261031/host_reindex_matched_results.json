@@ -1,0 +1,100 @@
+{
+  "schema": "chocho_retrospective_host_5yr_reindex_matched_v1",
+  "status": "DESCRIPTIVE_CONFOUNDING_DIAGNOSTIC_NOT_HISTORIC_HOST_OR_MOVEMENT_EVIDENCE",
+  "source_git_blobs": {
+    "butterfly_events": {
+      "path": "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv",
+      "sha": "efbc770469a720e2dea82478db2f6196ba03b353"
+    },
+    "traits": {
+      "path": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+      "sha": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd"
+    }
+  },
+  "butterfly_first_events_total": 5665,
+  "groups": {
+    "NOT_EVALUABLE": {
+      "events": 5333,
+      "reindexed_within_5y": 2515,
+      "raw_reindex_rate": 0.4715919744984062
+    },
+    "ALIEN_CANDIDATE_RECORDED": {
+      "events": 139,
+      "reindexed_within_5y": 120,
+      "raw_reindex_rate": 0.8633093525179856
+    },
+    "UNRESOLVED_ONLY": {
+      "events": 28,
+      "reindexed_within_5y": 17,
+      "raw_reindex_rate": 0.6071428571428571
+    },
+    "NATIVE_ONLY_CLASSIFIED": {
+      "events": 80,
+      "reindexed_within_5y": 63,
+      "raw_reindex_rate": 0.7875
+    },
+    "NO_MATCHING_HOST_RECORD": {
+      "events": 85,
+      "reindexed_within_5y": 49,
+      "raw_reindex_rate": 0.5764705882352941
+    }
+  },
+  "matched_comparisons": {
+    "species": {
+      "paired_groups": 17,
+      "mean_rate_difference": -0.1180926916221034,
+      "groups_with_positive_difference": 2,
+      "groups_with_negative_difference": 8,
+      "groups_with_zero_difference": 7,
+      "species_or_group_bootstrap_95": [
+        -0.3092691622103387,
+        0.07263814616755793
+      ],
+      "at_least_2_events_per_group": {
+        "paired_groups": 7,
+        "mean_rate_difference": -0.03571428571428571
+      },
+      "wing_size_vs_within_species_difference_spearman": -0.1605284417164824
+    },
+    "island": {
+      "paired_groups": 22,
+      "mean_rate_difference": -0.08042929292929293,
+      "groups_with_positive_difference": 7,
+      "groups_with_negative_difference": 7,
+      "groups_with_zero_difference": 8,
+      "species_or_group_bootstrap_95": [
+        -0.271969696969697,
+        0.0945707070707071
+      ],
+      "at_least_2_events_per_group": {
+        "paired_groups": 11,
+        "mean_rate_difference": 0.0845959595959596
+      }
+    },
+    "island_year": {
+      "paired_groups": 22,
+      "mean_rate_difference": -0.1553030303030303,
+      "groups_with_positive_difference": 4,
+      "groups_with_negative_difference": 6,
+      "groups_with_zero_difference": 12,
+      "species_or_group_bootstrap_95": [
+        -0.375,
+        0.060606060606060615
+      ],
+      "at_least_2_events_per_group": {
+        "paired_groups": 6,
+        "mean_rate_difference": 0.18055555555555558
+      }
+    }
+  },
+  "limitations": [
+    "Host-group assignment pooled 2001-2024 flora; can postdate butterfly index year.",
+    "Native-only classified does not establish matched biological resource quality.",
+    "All 5665 first-indexed events are a selected presence cohort, not a full at-risk island panel.",
+    "Within-species, within-island and within-island-year are overlapping, not independent replications.",
+    "Group comparisons retain observation, island habitat, geography and sampling confounding.",
+    "Differences change with >=2-per-arm restriction; do not interpret sign causally.",
+    "Wing-size interaction is a comparison among just 17 same-species eligible contrasts.",
+    "No demonstration of dispersal routes, reproductive establishment, or shipping introductions."
+  ]
+}
