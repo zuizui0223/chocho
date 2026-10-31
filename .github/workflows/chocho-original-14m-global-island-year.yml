@@ -1,0 +1,88 @@
+name: Original 14.6m butterfly GBIF events to 3696 global islands
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/global_island_risk_20261031/stream_original_14m_to_global_island_year.py"
+      - ".github/workflows/chocho-original-14m-global-island-year.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  global-island-risks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 105
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install vectorized GIS and geographic original GSHHG reader
+        run: |
+          python -m pip install "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - name: Restore existing 1.415GB GBIF original public ZIP cached by source probe
+        uses: actions/cache@v4
+        with:
+          key: chocho-original-global-gbif-0013264-261023074918325-zip-v1
+          path: _scratch_global/original_14m_GBIF.zip
+      - name: Restore original 149MB GSHHG high-res shoreline
+        uses: actions/cache@v4
+        with:
+          key: chocho-gshhg-shp-237-original-8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: If missing, get original identical GBIF and GSHHG sources by SHA
+        run: |
+          mkdir -p _scratch_global _scratch_coastal
+          if test ! -s _scratch_global/original_14m_GBIF.zip; then
+            python provenance/reviewer_defenses/results/global_island_risk_20261031/audit_original_global_gbif_zip.py \
+              --zip _scratch_global/original_14m_GBIF.zip
+          fi
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip \
+              https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+          echo "a1769481e91cb3002c25f69c6d8aa8e6d8d73a012c9495e8394032af02a9df18  _scratch_global/original_14m_GBIF.zip" | sha256sum --check
+      - name: Source-rebuild ALL original butterfly species by landmass by year
+        run: |
+          python -u provenance/reviewer_defenses/results/global_island_risk_20261031/stream_original_14m_to_global_island_year.py \
+            --gbif-zip _scratch_global/original_14m_GBIF.zip \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --shape-work _scratch_coastal/global_original_gshhg_reindex
+      - name: Save derived nonindividual aggregate results even on concurrent Git change
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: global-14m-butterfly-source-spatial-risks
+          path: |
+            provenance/reviewer_defenses/results/global_island_risk_20261031/global_original_14m_source_and_risk_receipt.json
+            provenance/reviewer_defenses/results/global_island_risk_20261031/global_island_butterfly_index_summary.csv
+            provenance/reviewer_defenses/results/global_island_risk_20261031/global_species_butterfly_index_summary.csv
+            provenance/reviewer_defenses/results/global_island_risk_20261031/global_225x3696_butterfly_island_risk.csv.gz
+            provenance/reviewer_defenses/results/global_island_risk_20261031/original_all_landmass_species_year_aggregates.csv.gz
+          retention-days: 90
+      - name: Publish global 831600-cell derived risk data with conflict-safe fast forward
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/global_island_risk_20261031/global_original_14m_source_and_risk_receipt.json \
+             provenance/reviewer_defenses/results/global_island_risk_20261031/global_island_butterfly_index_summary.csv \
+             provenance/reviewer_defenses/results/global_island_risk_20261031/global_species_butterfly_index_summary.csv \
+             provenance/reviewer_defenses/results/global_island_risk_20261031/global_225x3696_butterfly_island_risk.csv.gz \
+             provenance/reviewer_defenses/results/global_island_risk_20261031/original_all_landmass_species_year_aggregates.csv.gz
+          git diff --cached --quiet && exit 0
+          git commit -m "Reconstruct global 225 butterfly x 3696 island chronological risk cells from exact public GBIF DOI [skip ci]"
+          for attempt in 1 2 3 4; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 3
+          done
+          echo "Save verified result in artifact without force push" >&2
+          exit 1
