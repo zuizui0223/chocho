@@ -1,8 +1,5 @@
 name: Complete all 23 historical port botanical year and species-key facets
 on:
-  push:
-    paths:
-      - '.github/workflows/chocho-historical-botanical-allports.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -27,7 +24,7 @@ jobs:
         with:
           name: historical-all23-port-taxon-year-source-20261031
           path: work/local_all23ports_specieskey_year.csv.gz
-          retention-days: 7
+          retention-days: 90
           if-no-files-found: error
       - name: Commit only aggregate island/port source coverage
         run: |

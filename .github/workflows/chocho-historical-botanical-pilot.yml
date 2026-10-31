@@ -1,9 +1,5 @@
 name: Historical botanical source identity and dated GBIF facet pilot
 on:
-  push:
-    paths:
-      - '.github/workflows/chocho-historical-botanical-pilot.yml'
-      - 'provenance/reviewer_defenses/results/historical_host_controls_20261031/acquire_dated_botanical_facets.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -29,7 +25,7 @@ jobs:
         with:
           name: historical-botanical-species-year-source-20261031
           path: work/local_private_gbif_specieskey_year.csv.gz
-          retention-days: 7
+          retention-days: 90
           if-no-files-found: error
       - name: Commit only public index-count audit
         run: |
