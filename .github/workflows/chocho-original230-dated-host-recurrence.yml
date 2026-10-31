@@ -47,7 +47,15 @@ jobs:
             --author-roster-dir work/author_original230 \
             --original23 work/plant23/local_all23ports_specieskey_year.csv.gz \
             --new15 work/plant15/local_new15port_specieskey_year.csv.gz \
-            --out provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json
+            --out provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json \
+            --taxonomy-archive work/original230_plant_name_to_gbifkey_v1.json.gz
+      - name: Archive the accepted original plant-name GBIF crosswalk without butterfly-host links
+        uses: actions/upload-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          path: work/original230_plant_name_to_gbifkey_v1.json.gz
+          retention-days: 90
+          if-no-files-found: error
       - name: Commit aggregate rates and null contrasts only, never original host catalogue pairs
         run: |
           git config user.name "github-actions[bot]"
