@@ -71,7 +71,13 @@ def main():
     args=p.parse_args()
     metadata,size,link=fetch_metadata()
     receipt=ensure_archive(args.zip,size,link)
-    digest=hashlib.sha256(args.zip.read_bytes()).hexdigest()
+    hexdigest=hashlib.sha256()
+    with args.zip.open("rb") as source:
+        while True:
+            buf=source.read(8*1024*1024)
+            if not buf:break
+            hexdigest.update(buf)
+    digest=hexdigest.hexdigest()
     with zipfile.ZipFile(args.zip) as z:
         info=[{"filename":i.filename,"compressed_size":i.compress_size,
                "uncompressed_size":i.file_size,
