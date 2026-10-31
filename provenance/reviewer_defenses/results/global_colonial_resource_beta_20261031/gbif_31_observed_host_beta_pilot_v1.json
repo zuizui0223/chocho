@@ -1,0 +1,114 @@
+{
+  "schema": "chocho_GBIF31_observed_assemblage_HOSTS_GloNAF_same111regions_v1",
+  "status": "INDEPENDENT_BUTTERFLY_GBIF_INDEXED_ASSEMBLAGE_PILOT_NOT_TRUE_OCCUPANCY",
+  "method_lock_sha256": "fd3d82b8413cd0ebb0ec256289aaae5f2e482d5b75c9a37232cf9cf7d6155d65",
+  "source": {
+    "GBIF_download_DOI": "10.15468/dl.pp5nc9",
+    "GBIF_archive_sha256": "f629abab1f64c5e858956f91c4cdfe499e4d9fe0b39768df84e8bd47bbafa464",
+    "GloNAF_Zenodo_MD5": "16f5585d2500676951a4b664bbf0ffde",
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "official_TDWG_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "original_239_frozen_butterfly_DOI_species_count": 30
+  },
+  "cohort": {
+    "eligible_wgsrpd3_regions": 111,
+    "nonindependent_region_pairs": 6105,
+    "actual_recorded_butterfly_species": 30,
+    "all_original_source_taxa": 30,
+    "world_division_region_counts": {
+      "8": 24,
+      "7": 51,
+      "4": 16,
+      "1": 17,
+      "3": 3
+    },
+    "GBIF_region_record_counts": {
+      "rows": 53144,
+      "matched_region_records": 41708
+    },
+    "unique_recorded_taxa_early_2010_2017": 26,
+    "unique_recorded_taxa_late_2018_2026": 30,
+    "pairs_both_no_early_records": 1,
+    "pairs_both_no_late_records": 0,
+    "original_documented_focal_host_names": 534,
+    "host_names_matched_GloNAF": 299,
+    "host_raw_GloNAF_taxon_IDs": 366,
+    "pairs_both_no_documented_host_record": 0,
+    "pairs_both_no_other_alien_record": 0
+  },
+  "description": {
+    "mean_recorded_butterfly_community_Jaccard": 0.22232495539440683,
+    "median_recorded_butterfly_community_Jaccard": 0.0,
+    "mean_known_host_GloNAF_Jaccard": 0.24776763493139642,
+    "mean_other_GloNAF_Jaccard": 0.11259464042862778,
+    "mean_all_GloNAF_Jaccard": 0.12189679901456497,
+    "mean_earlier_2010_2017_recorded_community_Jaccard": 0.15084339287547846,
+    "mean_later_2018_2026_recorded_community_Jaccard": 0.2041273610714928
+  },
+  "adjusted_partial_rank": {
+    "known_focal_larval_host_Jaccard_given_all_flora_geography_climate_and_effort": -0.04526294685365723,
+    "other_not_documented_aliens_Jaccard_given_known_hosts_and_controls": -0.004235490308457304,
+    "not_a_causal_or_iid_pair_p_value": true
+  },
+  "region_held_out_ridge": {
+    "definition": "train 110x109/2=5995 pairs and score 110 pairs sharing the unseen 111th region; equal weight per 111 regions",
+    "ridge_lambda": 10.0,
+    "models": {
+      "M0_general_flora_and_effort": {
+        "island_or_region_equal_mse": 0.013921072053727467,
+        "region_equal_mae": 0.07450671944486878
+      },
+      "M1_known_host": {
+        "island_or_region_equal_mse": 0.013716421780063588,
+        "region_equal_mae": 0.07388673847766139
+      },
+      "M2_other_aliens": {
+        "island_or_region_equal_mse": 0.013775050903409643,
+        "region_equal_mae": 0.07408164200677728
+      },
+      "M3_both": {
+        "island_or_region_equal_mse": 0.013691922650791414,
+        "region_equal_mae": 0.07382194804181025
+      }
+    },
+    "incremental_vs_general_flora_and_effort": {
+      "M1_known_host": {
+        "mse_reduction_percent": 1.4700755291980647,
+        "mean_region_equal_mse_difference": 0.00020465027366387795,
+        "regions_improved": 69,
+        "regions_worsened": 42,
+        "median_improvement_absolute": 0.00021799003024285807,
+        "minimum_improvement": -0.004861968163576619,
+        "maximum_improvement": 0.0073004533483002725
+      },
+      "M2_other_aliens": {
+        "mse_reduction_percent": 1.0489217335724288,
+        "mean_region_equal_mse_difference": 0.00014602115031782506,
+        "regions_improved": 77,
+        "regions_worsened": 34,
+        "median_improvement_absolute": 0.00013497320260908406,
+        "minimum_improvement": -0.0017230420965430211,
+        "maximum_improvement": 0.0008786190735326806
+      },
+      "M3_both": {
+        "mse_reduction_percent": 1.6460614674765426,
+        "mean_region_equal_mse_difference": 0.0002291494029360532,
+        "regions_improved": 71,
+        "regions_worsened": 40,
+        "median_improvement_absolute": 0.00026618767166442826,
+        "minimum_improvement": -0.005319513049906025,
+        "maximum_improvement": 0.006309459191162499
+      }
+    }
+  },
+  "limits": [
+    "Only original GBIF occurrence DOI's 30 exact matches, not globally representative 239 or 225 butterfly species.",
+    "Most 111 eligible regions are in the Americas; no claims of worldwide butterfly-community generality.",
+    "GBIF presence is an indexed detection and species absence is not observed.",
+    "Eligibility determined from all-period GBIF records, so leave-region-out validation is cross-sectional, not a prospective future test.",
+    "Plant and host records are undated contemporary inventories; no causal host introduction or colonial-era temporal mechanism.",
+    "GBIF provider/day counts partially proxy effort but cannot correct all observer biases or species detection probability.",
+    "GBIF sampling is taxonomically selected and the region-pair observations are dependent; do not report naïve independent-pair p-values.",
+    "HOSTS taxonomic matches remain source lower bounds, non-documented taxa are not proven biological nonhosts."
+  ]
+}
