@@ -1,0 +1,62 @@
+name: Geography-conditioned historical host source co-indexing null
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  original230-geographic-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore frozen ORIGINAL author-only 230-species host roster
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-original230-derived-host-roster-20261030
+          run-id: 40979986160
+          github-token: ${{ github.token }}
+          path: work/author
+      - name: Restore original 23 harbor plant taxa indexed 2001-2010
+        uses: actions/download-artifact@v4
+        with:
+          name: historical-all23-port-taxon-year-source-20261031
+          run-id: 41168629480
+          github-token: ${{ github.token }}
+          path: work/p23
+      - name: Restore the additional 15 harbor plant taxa indexed 2001-2010
+        uses: actions/download-artifact@v4
+        with:
+          name: pre2011-new15-port-annual-specieskey-20261031
+          run-id: 41176666842
+          github-token: ${{ github.token }}
+          path: work/p15
+      - name: Restore immutable original 1642 plant names mapped to GBIF accepted keys
+        uses: actions/download-artifact@v4
+        with:
+          name: original230-frozen-plant-name-gbifkey-20261031
+          run-id: 41177682289
+          github-token: ${{ github.token }}
+          path: work/taxon
+      - name: Exact author-source co-indexing vs host plant geography-conditioned structural nulls
+        run: |
+          python provenance/reviewer_defenses/results/host_geographic_prevalence_null_20261031/audit_geographic_host_null.py \
+            --root . \
+            --author-roster-dir work/author \
+            --original23 work/p23/local_all23ports_specieskey_year.csv.gz \
+            --new15 work/p15/local_new15port_specieskey_year.csv.gz \
+            --taxonomy-gzip work/taxon/original230_plant_name_to_gbifkey_v1.json.gz \
+            --output provenance/reviewer_defenses/results/host_geographic_prevalence_null_20261031/host_geo_frequency_null_results.json
+      - name: Commit only bounded aggregate null scores (no original butterfly host edges)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/host_geographic_prevalence_null_20261031/host_geo_frequency_null_results.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Test historical host overlap under indexed plant geography-matched structural nulls [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
