@@ -53,3 +53,22 @@ def test_immutable_resource_matrix_shares_paper_source():
     assert m.OUTPUT.name=="resource_gain_fixed_margins_v1.json"
     assert m.MATRIX.name.endswith(".matrix.csv.gz")
     assert m.RECEIPT.name=="beta_baseline_v3.json"
+
+
+
+def test_within_world_division_swaps_preserve_species_gains_inside_each_division():
+    m=load()
+    native=[1]*6
+    additions=[2,4,8,2,4,8]
+    strata=["A","A","A","B","B","B"]
+    edges=m.additions_list(additions)
+    original=additions.copy()
+    accepted=m.swap_new_resources(
+        native,additions,edges,random.Random(17),2500,
+        region_strata=strata)
+    assert accepted>0
+    for label in set(strata):
+        former=[v if strata[i]==label else 0 for i,v in enumerate(original)]
+        latter=[v if strata[i]==label else 0 for i,v in enumerate(additions)]
+        assert m.marginal_counts(native,former,4)==m.marginal_counts(native,latter,4)
+    assert sorted(edges)==sorted(m.additions_list(additions))
