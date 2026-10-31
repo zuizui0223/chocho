@@ -47,7 +47,7 @@ PAIR_CSV=ROOT/"gbif_31_observed_host_beta_pairs_v1.csv"
 
 def canonical_exact_hosts(selected_species,hosts=HOSTS):
     host_by_butterfly=defaultdict(set)
-    with hosts.open(encoding="utf8-sig",newline="") as handle:
+    with hosts.open(encoding="utf-8-sig",newline="") as handle:
         for r in csv.DictReader(handle):
             b=(r.get("Insect Genus","").strip()+" "+
                r.get("Insect Species","").strip()).casefold()
