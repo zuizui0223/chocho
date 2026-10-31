@@ -1,0 +1,35 @@
+name: chocho original 224 butterfly GBIF 14.6 million source metadata gate
+
+on:
+  push:
+    branches: [analysis/global-colonial-alien-flora-control-20261031]
+    paths:
+      - ".github/workflows/chocho-original-global-gbif-doi-feasibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  archival-source-metadata-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original global DOI metadata without downloading 14 million records
+        run: python scripts/audit_global_224_butterfly_gbif_download_metadata.py
+      - name: Preserve only public GBIF archival identity and size receipt
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global_224_original_download_source_gate.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit historical 224-butterfly global GBIF DOI availability without raw records [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
