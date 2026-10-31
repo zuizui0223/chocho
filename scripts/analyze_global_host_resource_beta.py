@@ -274,6 +274,30 @@ def mean_resource_delta(resource):
     return (total/valid if valid else None), valid
 
 
+def mean_resource_delta_common_region_set(resource, selected):
+    """Compare pairs drawn from the SAME native-resource-supported regions.
+
+    If every selected region has nonempty native and contemporary
+    assemblages, every induced pair has a defined Jaccard value. This avoids
+    comparing nulls over subtly different lists of empty-vs-empty pairs.
+    """
+    total=0.
+    count=0
+    for ai,i in enumerate(selected):
+        if resource["native"][i]==0 or resource["current"][i]==0:
+            raise RuntimeError("Common-support region missing native/current resources")
+        for j in selected[ai+1:]:
+            x=jaccard_bits(resource["native"][i],resource["native"][j])
+            y=jaccard_bits(resource["current"][i],resource["current"][j])
+            if x is None or y is None:
+                raise RuntimeError("Unexpected undefined Jaccard on common support")
+            total+=y-x
+            count+=1
+    if count<100:
+        raise RuntimeError("No independent comparable common-support region-pair set")
+    return total/count,count
+
+
 def swap_family_edges(edges, family, rng, attempts):
     # Reversible degree-preserving bipartite rewiring within host families.
     pool=defaultdict(list)
@@ -362,6 +386,9 @@ def main():
     # are comparable as effect sizes: the null tests the *consumer mapping*.
     null=[]
     accepts=[]
+    null_assemblages=[]
+    null_units=[]
+    null_valid_pairs=[]
     rng=random.Random(31031)
     if args.null_draws:
         if not edges:
@@ -376,8 +403,36 @@ def main():
             if x is None:
                 raise RuntimeError("null all pairs undefined")
             null.append(x);accepts.append(accepted)
+            null_assemblages.append(m)
+            null_valid_pairs.append(n)
+            null_units.append({
+                "native":count_species_units(m["native"]),
+                "current":count_species_units(m["current"]),
+            })
         if np.median(accepts)<len(edges)*.1:
             raise RuntimeError("too few valid within-family swaps; null is too constrained")
+    # Common region-level support, fixed once across the observed network
+    # and ALL degree-preserving null draws; protects against changes in
+    # the number of undefined empty-empty region pairs.
+    common_indices=[
+        i for i in range(len(official_codes))
+        if resources_official["native"][i] and resources_official["current"][i]
+        and all(m["native"][i] and m["current"][i] for m in null_assemblages)
+    ]
+    common_observed=None
+    common_null=[]
+    common_pair_count=0
+    if args.null_draws:
+        if len(common_indices)<250:
+            raise RuntimeError("Too few shared nonempty native/current regions for common-support null: "+
+                               str(len(common_indices)))
+        common_observed,common_pair_count=mean_resource_delta_common_region_set(
+            resources_official,common_indices)
+        for m in null_assemblages:
+            v,n=mean_resource_delta_common_region_set(m,common_indices)
+            if n!=common_pair_count:
+                raise RuntimeError("Common support pair count drift")
+            common_null.append(v)
     observed=consumer.get("mean")
     null_summary={
         "n_draws":args.null_draws,
@@ -389,6 +444,18 @@ def main():
         "q975":float(np.quantile(null,.975)) if null else None,
         "p_greater_equal":(1+sum(x>=observed for x in null))/(len(null)+1) if null else None,
         "p_less_equal":(1+sum(x<=observed for x in null))/(len(null)+1) if null else None,
+        "null_all_valid_pair_count_min_max":[min(null_valid_pairs),max(null_valid_pairs)] if null_valid_pairs else None,
+        "common_support_regions":len(common_indices) if args.null_draws else None,
+        "common_support_pair_count":common_pair_count if args.null_draws else None,
+        "common_support_observed_mean":common_observed,
+        "common_support_null_median":float(np.median(common_null)) if common_null else None,
+        "common_support_null_q025":float(np.quantile(common_null,.025)) if common_null else None,
+        "common_support_null_q975":float(np.quantile(common_null,.975)) if common_null else None,
+        "common_support_p_low":(1+sum(x<=common_observed for x in common_null))/(len(common_null)+1) if common_null else None,
+        "common_support_p_high":(1+sum(x>=common_observed for x in common_null))/(len(common_null)+1) if common_null else None,
+        "null_native_resource_units_mean":float(np.mean([x["native"] for x in null_units])) if null_units else None,
+        "null_current_resource_units_mean":float(np.mean([x["current"] for x in null_units])) if null_units else None,
+        "null_added_resource_units_mean":float(np.mean([x["current"]-x["native"] for x in null_units])) if null_units else None,
         "note":"Post-hoc MCMC-style degree-preserving network rewiring. Draws share fixed source; not independent biological replicates.",
     }
     report={
@@ -449,6 +516,18 @@ def main():
         w=csv.DictWriter(wrap,fieldnames=list(pairs[0]))
         w.writeheader();w.writerows(pairs);wrap.flush()
         wrap.detach()
+    if args.null_draws:
+        with output.with_suffix(".null.csv").open("w",encoding="utf8",newline="") as f:
+            w=csv.writer(f)
+            w.writerow(["draw","accepted_within_family_degree_swaps",
+                        "mean_consumer_delta_over_each_null_valid_pairs",
+                        "each_null_valid_pairs","mean_delta_fixed_common_region_pairs",
+                        "fixed_common_region_pairs","null_native_resource_units",
+                        "null_current_resource_units"])
+            for k, val in enumerate(null):
+                w.writerow([k+1,accepts[k],val,null_valid_pairs[k],
+                            common_null[k],common_pair_count,
+                            null_units[k]["native"],null_units[k]["current"]])
     with output.with_suffix(".region.csv").open("w",encoding="utf8",newline="") as f:
         w=csv.writer(f)
         w.writerow(["wgsrpd3_code","plant_native_species","plant_current_species",
