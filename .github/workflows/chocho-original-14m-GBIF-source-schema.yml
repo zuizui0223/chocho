@@ -1,0 +1,54 @@
+name: Recover original 14.6m butterfly GBIF source once for global islands
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/global_island_risk_20261031/audit_original_global_gbif_zip.py"
+      - ".github/workflows/chocho-original-14m-GBIF-source-schema.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  original-GBIF:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore previous verified original public download ZIP if present
+        uses: actions/cache@v4
+        with:
+          key: chocho-original-global-gbif-0013264-261023074918325-zip-v1
+          path: _scratch_global/original_14m_GBIF.zip
+      - name: Download one existing 14,637,152 record GBIF source and audit full ZIP schema
+        run: |
+          python provenance/reviewer_defenses/results/global_island_risk_20261031/audit_original_global_gbif_zip.py \
+            --zip _scratch_global/original_14m_GBIF.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: original-14m-butterfly-GBIF-source-provenance-not-raw-occurrences
+          path: provenance/reviewer_defenses/results/global_island_risk_20261031/original_GBIF_14m_source_zip_audit.json
+          retention-days: 90
+      - name: Preserve metadata and source fingerprint (never commit 1.4GB ZIP)
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/global_island_risk_20261031/original_GBIF_14m_source_zip_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit reusable 14.6m butterfly GBIF original source ZIP and schema [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1

@@ -1,0 +1,57 @@
+name: Focal butterfly foodplant historical harbor radius validation
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/reconcile_focal_host_radius.py"
+      - "provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/query_focal_foodplant_nested_buffers.py"
+      - ".github/workflows/chocho-focal-foodplant-harbor-radius.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  focal-host-harbor-radius:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reconcile older 5km host years with matched 1km flora without original raw records
+        run: |
+          python provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/reconcile_focal_host_radius.py
+      - name: Independently requery GBIF plant taxon keys at same 1km and 5km radius
+        run: |
+          python provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/query_focal_foodplant_nested_buffers.py
+      - name: Retain inspectable source results even if Git branch updated in parallel
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: focal-foodplant-pre2011-gbif-1km-5km-radius
+          path: |
+            provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/*.json
+            provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/*.csv
+          retention-days: 30
+      - name: Commit successful audited results with conflict-safe retry
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/*.json \
+                  provenance/reviewer_defenses/results/focal_host_harbor_radius_20261031/*.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "Cross-audit pre-2011 focal foodplant 1km vs 5km island harbor records [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Result available in run artifact; no force-push used" >&2
+          exit 1

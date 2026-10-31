@@ -1,0 +1,76 @@
+name: Matched historical port and nonport island flora full38
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/acquire_matched_botany.py"
+      - ".github/workflows/chocho-historical-port-offport-botany.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  historical-botany:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout source-pinned butterfly repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install geographic data dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - name: Restore cached fixed GSHHG source
+        uses: actions/cache@v4
+        with:
+          key: chocho-gshhg-shp-237-original-8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Download official original GSHHG 2.3.7 only if not cached
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --retry-delay 4 --connect-timeout 30 --max-time 360 \
+              -o _scratch_coastal/gshhg-shp-2.3.7.zip \
+              https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Construct fixed controls for all 17 islands and 38 original ports
+        run: |
+          python provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/acquire_matched_botany.py \
+            --zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work-dir _scratch_coastal/extracted \
+            --max-ports 0 --n-controls 2 --max-workers 6 --design-only
+      - name: Acquire independent 2001-2010 GBIF plant speciesKey inventory at matched sites
+        run: |
+          python provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/acquire_matched_botany.py \
+            --zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work-dir _scratch_coastal/extracted \
+            --max-ports 0 --n-controls 2 --max-workers 6
+      - name: Commit complete biological data audit without individual GBIF records
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/*.csv \
+             provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/*.json || true
+          git diff --cached --quiet && exit 0
+          git commit -m "Record full38 historic GBIF port/nonport botanical opportunity [skip ci]"
+          # Other analyses may update the same PR branch while this workflow runs.
+          # Never force-push or overwrite remote work; replay this results commit.
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then
+              exit 0
+            fi
+          done
+          echo "Failed to publish complete botanical results after 3 non-destructive retries" >&2
+          exit 1

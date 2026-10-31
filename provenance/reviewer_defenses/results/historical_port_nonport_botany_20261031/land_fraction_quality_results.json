@@ -1,0 +1,124 @@
+{
+  "schema": "chocho_original_full38_1km_land_fraction_quality_v1",
+  "status": "SOURCE_LOCKED_HISTORICAL_BOTANY_GEOMETRIC_AREA_QA_NOT_CAUSAL_EFFECT",
+  "source_git_blobs": {
+    "sites": {
+      "file": "fixed_geometric_sites.csv",
+      "sha": "3373121189ac80b237d99e2a1b0a172101cfacb8"
+    },
+    "plants": {
+      "file": "historical_plant_site_facets.csv",
+      "sha": "eb09a3f3ec053c00b43e8bc0678d6643ce02697b"
+    },
+    "pairs": {
+      "file": "port_offport_historical_pairs.csv",
+      "sha": "ae7fa4986e1a5be73a3c50b89669d05bc5138ac1"
+    },
+    "receipt": {
+      "file": "historical_port_offport_results.json",
+      "sha": "53ef6dddbe1a8efceaf518812bf2b3c77cf285d6"
+    }
+  },
+  "gshhg_release_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "source_islands": 17,
+  "ports": 38,
+  "sites": 114,
+  "land_fraction_mean_port": 0.6141924534464229,
+  "land_fraction_mean_nonport": 0.8847564538131218,
+  "port_control_maxabs_landfrac_diff_median": 0.30786389424800475,
+  "tolerance_sensitivity": {
+    "min1_maxabsland0.15": {
+      "matched_ports": 4,
+      "matched_islands": 4,
+      "island_equal_top10_port_minus_nonport_share": -0.005671429058214371,
+      "positive_port_count": 1,
+      "negative_port_count": 1
+    },
+    "min1_maxabsland0.25": {
+      "matched_ports": 5,
+      "matched_islands": 5,
+      "island_equal_top10_port_minus_nonport_share": -0.004095224054652305,
+      "positive_port_count": 2,
+      "negative_port_count": 1
+    },
+    "min1_maxabsland0.4": {
+      "matched_ports": 7,
+      "matched_islands": 5,
+      "island_equal_top10_port_minus_nonport_share": 0.0070580819764749945,
+      "positive_port_count": 3,
+      "negative_port_count": 2
+    },
+    "min5_maxabsland0.15": {
+      "matched_ports": 2,
+      "matched_islands": 2,
+      "island_equal_top10_port_minus_nonport_share": -0.011342858116428742,
+      "positive_port_count": 1,
+      "negative_port_count": 1
+    },
+    "min5_maxabsland0.25": {
+      "matched_ports": 3,
+      "matched_islands": 3,
+      "island_equal_top10_port_minus_nonport_share": -0.006825373424420508,
+      "positive_port_count": 2,
+      "negative_port_count": 1
+    },
+    "min5_maxabsland0.4": {
+      "matched_ports": 5,
+      "matched_islands": 3,
+      "island_equal_top10_port_minus_nonport_share": 0.011763469960791658,
+      "positive_port_count": 3,
+      "negative_port_count": 2
+    },
+    "min10_maxabsland0.15": {
+      "matched_ports": 2,
+      "matched_islands": 2,
+      "island_equal_top10_port_minus_nonport_share": -0.011342858116428742,
+      "positive_port_count": 1,
+      "negative_port_count": 1
+    },
+    "min10_maxabsland0.25": {
+      "matched_ports": 3,
+      "matched_islands": 3,
+      "island_equal_top10_port_minus_nonport_share": -0.006825373424420508,
+      "positive_port_count": 2,
+      "negative_port_count": 1
+    },
+    "min10_maxabsland0.4": {
+      "matched_ports": 5,
+      "matched_islands": 3,
+      "island_equal_top10_port_minus_nonport_share": 0.011763469960791658,
+      "positive_port_count": 3,
+      "negative_port_count": 2
+    },
+    "min20_maxabsland0.15": {
+      "matched_ports": 1,
+      "matched_islands": 1,
+      "island_equal_top10_port_minus_nonport_share": -0.02410086397428169,
+      "positive_port_count": 0,
+      "negative_port_count": 1
+    },
+    "min20_maxabsland0.25": {
+      "matched_ports": 2,
+      "matched_islands": 2,
+      "island_equal_top10_port_minus_nonport_share": -0.010945634007342865,
+      "positive_port_count": 1,
+      "negative_port_count": 1
+    },
+    "min20_maxabsland0.4": {
+      "matched_ports": 3,
+      "matched_islands": 2,
+      "island_equal_top10_port_minus_nonport_share": -0.014816425131423464,
+      "positive_port_count": 1,
+      "negative_port_count": 2
+    }
+  },
+  "notes": [
+    "Geometric circle intersection uses 2017 GSHHG 2.3.7 high-resolution L1; not year-specific land change.",
+    "Port 2019 WPI retrospective locations may not be historically active in 2001-2010.",
+    "Results stratified by terrestrial circle area are exploratory; thresholds selected for quality sensitivity after basic botanical pilot.",
+    "Fewer islands and non-independent port pairs reduce precision.",
+    "Host plant taxonomy/introduced status and local butterfly feeding remain unverified.",
+    "WPI exclusion does not independently map ports or urbanization from the actual years.",
+    "No causal effect or ecological rescue inferred."
+  ]
+}

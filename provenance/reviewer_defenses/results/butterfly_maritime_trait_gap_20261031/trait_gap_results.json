@@ -1,0 +1,153 @@
+{
+  "schema": "chocho_butterfly_maritime_trait_record_gap_v1",
+  "status": "EXPLORATORY_NO_RELIABLE_CAUSAL_HOST_OR_PORT_RESULT",
+  "source_paths": {
+    "traits": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+    "species": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv",
+    "gaps": "provenance/reviewer_defenses/results/original_island_continuity_20261030/global_original_continuity_species_counts.csv",
+    "ports": "provenance/reviewer_defenses/results/port_connectivity_hosts_20261030/port_connectivity_host_all225.csv"
+  },
+  "source_git_blob_pins": {
+    "species": "39fe84981cab2b0e47063399f0a5c0c9731e800d",
+    "traits": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+    "ports": "239dc82992fa3374e4862a1e2202663e1aeef7da",
+    "gaps": "17bf86ad6bd3622d36cea738a363f3e76774cf04"
+  },
+  "cohort": "both_period_opportunity",
+  "n_candidate_species": 225,
+  "n_matched_species": 193,
+  "n_index_events": 3136,
+  "n_record_gaps_500km": 164,
+  "n_species_with_gap_500km": 86,
+  "n_species_with_port_candidate_host_index": 149,
+  "species_resample_seed": 20261031,
+  "bootstrap_draws": 800,
+  "correlations": {
+    "wing_gap": {
+      "point": 0.12014573281086319,
+      "species_resampled_95": [
+        -0.026201912349144634,
+        0.26361313215258
+      ],
+      "bootstrap_n": 800
+    },
+    "host_gap": {
+      "point": 0.08515034303266197,
+      "species_resampled_95": [
+        -0.06467786113857545,
+        0.2517101311465792
+      ],
+      "bootstrap_n": 800
+    },
+    "ports_gap": {
+      "point": -0.10345731351129919,
+      "species_resampled_95": [
+        -0.24270365951739392,
+        0.04101543592494267
+      ],
+      "bootstrap_n": 800
+    },
+    "wing_100": {
+      "point": 0.1826421838800758,
+      "species_resampled_95": [
+        0.048171781780744966,
+        0.3012683193055998
+      ],
+      "bootstrap_n": 800
+    },
+    "ports_prior": {
+      "point": 0.3499320465255458,
+      "species_resampled_95": [
+        0.220015909170594,
+        0.4743597499271863
+      ],
+      "bootstrap_n": 800
+    },
+    "ports_new": {
+      "point": 0.36808991648297545,
+      "species_resampled_95": [
+        0.24064838684648723,
+        0.4854510393814619
+      ],
+      "bootstrap_n": 800
+    },
+    "partial_wing": {
+      "point": 0.04830890173236259,
+      "species_resampled_95": [
+        -0.09502412245823218,
+        0.19074250378674093
+      ],
+      "bootstrap_n": 800
+    },
+    "partial_host": {
+      "point": 0.03876136038116035,
+      "species_resampled_95": [
+        -0.1191045409745944,
+        0.21128431304277479
+      ],
+      "bootstrap_n": 800
+    },
+    "partial_ports": {
+      "point": -0.07017338236038717,
+      "species_resampled_95": [
+        -0.2083202058427071,
+        0.07865541340423444
+      ],
+      "bootstrap_n": 800
+    }
+  },
+  "minimum_event_sensitivity": {
+    "5": {
+      "species": 123,
+      "correlations": {
+        "wing_gap": 0.12234443569112814,
+        "host_gap": 0.01349510461206166,
+        "ports_gap": -0.10108501297480474,
+        "wing_100": 0.11206156000843996,
+        "ports_prior": 0.28855466728616636,
+        "ports_new": 0.3587206764513169,
+        "partial_wing": -0.009304824300546022,
+        "partial_host": -0.05990365244687781,
+        "partial_ports": -0.038372397306048626
+      }
+    },
+    "10": {
+      "species": 87,
+      "correlations": {
+        "wing_gap": 0.06147396151203006,
+        "host_gap": 0.001953991560299858,
+        "ports_gap": 0.025457061098840363,
+        "wing_100": 0.044180590106275,
+        "ports_prior": 0.15251972992417082,
+        "ports_new": 0.3361686792362881,
+        "partial_wing": -0.04347614876612463,
+        "partial_host": -0.05601131548634666,
+        "partial_ports": -0.04259066665286731
+      }
+    },
+    "20": {
+      "species": 48,
+      "correlations": {
+        "wing_gap": 0.16792049789880506,
+        "host_gap": -0.12559274283030014,
+        "ports_gap": 0.10996500169500109,
+        "wing_100": 0.03453612732454546,
+        "ports_prior": 0.13440250846295307,
+        "ports_new": 0.35215117916947214,
+        "partial_wing": 0.14804264133509995,
+        "partial_host": -0.05894033592852324,
+        "partial_ports": 0.09617231435517067
+      }
+    }
+  },
+  "limits": [
+    "Distances link GBIF indices, not observed butterfly flights.",
+    "2001-2024 port flora can postdate butterfly records and is NOT a historical exposure.",
+    "Wing size is a limited dispersal proxy, NOT observed migration.",
+    "Global introduced-host share is not island-specific or independently dated.",
+    "Species bootstrap fixes observation/host/geometry errors and ignores shared islands.",
+    "Historical and new-island index counts are reporting-sensitive, NOT negative causal controls.",
+    "Missing plant records cannot be coded as biological absence.",
+    "No within-island port versus non-port plant control in these four source CSVs."
+  ]
+}

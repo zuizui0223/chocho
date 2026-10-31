@@ -1,0 +1,107 @@
+{
+  "schema": "chocho_full38_historical_botany_independent_source_replay_v1",
+  "status": "PASS_PUBLISHED_AGGREGATE_REPLAY_NOT_CAUSAL_OR_RAW_GBIF_VALIDATION",
+  "exact_17_islands_38_ports_76_offport_sites": true,
+  "all_historical_sites_complete": true,
+  "observed_2001_2010_biology_only": true,
+  "source_blob_hashes": {
+    "sites": "eb09a3f3ec053c00b43e8bc0678d6643ce02697b",
+    "design": "3373121189ac80b237d99e2a1b0a172101cfacb8",
+    "admission": "0addc7394476823f92a44aefa5009fe62b8d8f82",
+    "pairs": "ae7fa4986e1a5be73a3c50b89669d05bc5138ac1",
+    "receipt": "53ef6dddbe1a8efceaf518812bf2b3c77cf285d6",
+    "top10": "d25a6198d70861d014b156f4f214691b62297634"
+  },
+  "coverage": {
+    "port": {
+      "sites": 38,
+      "sites_without_2001_2010_botanical_records": 13,
+      "sites_without_resolved_specieskey": 13,
+      "sites_indexing_any_global_top10_host_candidate": 7,
+      "mean_botanical_specieskey_count": 26.92105263157895,
+      "mean_botanical_occurrence_index": 49.1578947368421,
+      "mean_distinct_publishing_datasets_minimum": 1.8421052631578947
+    },
+    "offport": {
+      "sites": 76,
+      "sites_without_2001_2010_botanical_records": 31,
+      "sites_without_resolved_specieskey": 31,
+      "sites_indexing_any_global_top10_host_candidate": 12,
+      "mean_botanical_specieskey_count": 26.263157894736842,
+      "mean_botanical_occurrence_index": 128.14473684210526,
+      "mean_distinct_publishing_datasets_minimum": 1.3157894736842106
+    }
+  },
+  "threshold_sensitivity": {
+    "1": {
+      "ports": 14,
+      "islands": 10,
+      "island_equal_mean": 0.010230252472507917,
+      "island_bootstrap_95": [
+        -0.004666892213244483,
+        0.028558762453022336
+      ],
+      "positive_ports": 6,
+      "negative_ports": 2,
+      "equal_ports": 6
+    },
+    "5": {
+      "ports": 9,
+      "islands": 5,
+      "island_equal_mean": 0.020460504945015834,
+      "island_bootstrap_95": [
+        -0.009333784426488965,
+        0.050943420634737224
+      ],
+      "positive_ports": 6,
+      "negative_ports": 2,
+      "equal_ports": 1
+    },
+    "10": {
+      "ports": 8,
+      "islands": 4,
+      "island_equal_mean": 0.025575631181269792,
+      "island_bootstrap_95": [
+        -0.011284029079081569,
+        0.06243529144162115
+      ],
+      "positive_ports": 6,
+      "negative_ports": 2,
+      "equal_ports": 0
+    },
+    "20": {
+      "ports": 5,
+      "islands": 2,
+      "island_equal_mean": -0.011284029079081569,
+      "island_bootstrap_95": [
+        -0.02410086397428169,
+        0.0015328058161185529
+      ],
+      "positive_ports": 3,
+      "negative_ports": 2,
+      "equal_ports": 0
+    },
+    "50": {
+      "ports": 3,
+      "islands": 1,
+      "island_equal_mean": 0.006468263933733548,
+      "island_bootstrap_95": [
+        0.006468263933733548,
+        0.006468263933733548
+      ],
+      "positive_ports": 3,
+      "negative_ports": 0,
+      "equal_ports": 0
+    }
+  },
+  "bootstrap_draws": 4000,
+  "limitations": [
+    "Bootstrap resamples at most 10 independent islands and cannot measure historical transport or reporting error.",
+    "Globally important top10 host plants are not confirmed alien or larval hosts on the target island at the target time.",
+    "Even exact WPI IDs are 2019 retrospectively mapped geographic proxies.",
+    "Off-port coastal points exclude catalogued modern WPI within 5km but can include unlisted human infrastructure.",
+    "Zero GBIF indexed botanical speciesKey means missing observed records, never biological plant absence.",
+    "Unequal terrestrial area fraction of 1km harbor versus inland controls has not been matched.",
+    "No butterfly observations, larval feeding, breeding, or island relay measured in this H1 source audit."
+  ]
+}

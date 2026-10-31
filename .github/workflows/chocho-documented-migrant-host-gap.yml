@@ -1,0 +1,35 @@
+name: Documented migrant butterfly island gap audit
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/analyze_documented_migrant_subset.py"
+      - ".github/workflows/chocho-documented-migrant-host-gap.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  documented-migrants:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reproduce source-locked migrant gap and follow-up diagnostics
+        run: |
+          python provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/analyze_documented_migrant_subset.py
+      - name: Archive diagnostics without source data redistribution
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/documented_migrant_host_gap_results.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Archive independently documented migrant island gap screening [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

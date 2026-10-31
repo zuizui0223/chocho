@@ -1,0 +1,48 @@
+name: Independent historical botanical full38 evidence replay
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/verify_historical_botany.py"
+      - ".github/workflows/chocho-full38-botany-verify.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Recompute full38 source bounds and 4000 island bootstrap replicates
+        run: |
+          python provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/verify_historical_botany.py
+      - name: Preserve source replay receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: full38-historical-botany-replay
+          path: provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/full38_replay_and_bias_audit.json
+          retention-days: 30
+      - name: Record independently recomputed scientific QA
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/full38_replay_and_bias_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Verify full38 pre-2011 coastal botanical source aggregates and coverage [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Unpublished audit retained as run artifact; no force-push" >&2
+          exit 1

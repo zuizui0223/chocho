@@ -1,0 +1,46 @@
+name: Check reuse of global butterfly GBIF occurrence download DOI
+
+on:
+  push:
+    branches: [analysis/butterfly-expansion-maritime-host-relay-20261031]
+    paths:
+      - "provenance/reviewer_defenses/results/global_island_risk_20261031/probe_original_gbif_download.py"
+      - ".github/workflows/chocho-original-global-GBIF-download-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  global-source-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original 205-species GBIF DOI download retention and source file size
+        run: |
+          python provenance/reviewer_defenses/results/global_island_risk_20261031/probe_original_gbif_download.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: original-global-butterfly-GBIF-reuse-gate
+          path: provenance/reviewer_defenses/results/global_island_risk_20261031/original_global_GBIF_reuse_gate.json
+          retention-days: 45
+      - name: Save source availability result without overwriting study branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/global_island_risk_20261031/original_global_GBIF_reuse_gate.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit availability of published butterfly global GBIF source for big island analysis [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+          done
+          exit 1

@@ -1,0 +1,74 @@
+{
+  "schema": "chocho_focal_butterfly_foodplant_nested_gbif_1km_5km_radius_v1",
+  "status": "GBIF_SOURCE_REQUERY_NOT_CAUSAL_HARBOR_OR_HOST_RESCUE",
+  "source_git_blobs": {
+    "hosts": {
+      "path": "provenance/reviewer_defenses/results/dated_focal_host_taxonomy_20261031/focal_historical_host_taxon_year_audit.json",
+      "sha": "3048c769d250f1b2f8df97c45aa20c8b91bc573b"
+    },
+    "ports": {
+      "path": "provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/fixed_geometric_sites.csv",
+      "sha": "3373121189ac80b237d99e2a1b0a172101cfacb8"
+    },
+    "site_index": {
+      "path": "provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/historical_plant_site_facets.csv",
+      "sha": "eb09a3f3ec053c00b43e8bc0678d6643ce02697b"
+    }
+  },
+  "GBIF_API": "https://api.gbif.org/v1/occurrence/search",
+  "species_specific_filter": "taxonKey=accepted plant species, validated by SPECIES_KEY facet",
+  "window": "2001-2010",
+  "quality_filters": [
+    "hasCoordinate=true",
+    "hasGeospatialIssue=false",
+    "occurrenceStatus=PRESENT"
+  ],
+  "original_5km_source_focal_combinations": 4,
+  "focal_host_x_port_samples": 11,
+  "host_island_summary": [
+    {
+      "host": "Alnus incana",
+      "island": "276",
+      "port_sites": 4,
+      "one_km_port_sites_with_index": 0,
+      "five_km_port_sites_with_index": 4,
+      "one_to_five_ring_sites_with_index": 4,
+      "all_nested_requeries_concordant_to_archived_1km": true
+    },
+    {
+      "host": "Alnus incana",
+      "island": "715",
+      "port_sites": 1,
+      "one_km_port_sites_with_index": 0,
+      "five_km_port_sites_with_index": 1,
+      "one_to_five_ring_sites_with_index": 1,
+      "all_nested_requeries_concordant_to_archived_1km": true
+    },
+    {
+      "host": "Medicago sativa",
+      "island": "169",
+      "port_sites": 2,
+      "one_km_port_sites_with_index": 0,
+      "five_km_port_sites_with_index": 2,
+      "one_to_five_ring_sites_with_index": 2,
+      "all_nested_requeries_concordant_to_archived_1km": true
+    },
+    {
+      "host": "Medicago sativa",
+      "island": "276",
+      "port_sites": 4,
+      "one_km_port_sites_with_index": 0,
+      "five_km_port_sites_with_index": 4,
+      "one_to_five_ring_sites_with_index": 4,
+      "all_nested_requeries_concordant_to_archived_1km": true
+    }
+  ],
+  "source_comparability_limits": [
+    "1km and 5km queries are from same current GBIF index but may differ from the earlier first-indexed plant facet source.",
+    "Multiple harbor buffers on one island may count the same plant observations, so raw record counts are not independent.",
+    "Geospatial buffers are centered on modern 2019 WPI port coordinates and may include surroundings/urban vegetation.",
+    "A plant 1-5 km from port is not evidence of ship movement, historical introduction, or local butterfly larval use.",
+    "No GBIF record is biological proof of first establishment or true presence/absence at unindexed points.",
+    "No unconditional butterfly species × island × year risk set or host-mediated movement endpoint is tested."
+  ]
+}
