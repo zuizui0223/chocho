@@ -1,0 +1,192 @@
+{
+  "butterfly_species_count": 60,
+  "geographic_near_network_components": [
+    [
+      "79",
+      "110"
+    ],
+    [
+      "81",
+      "214",
+      "242",
+      "257"
+    ],
+    [
+      "169",
+      "276",
+      "321",
+      "715",
+      "1577"
+    ],
+    [
+      "206",
+      "397"
+    ],
+    [
+      "260",
+      "753"
+    ],
+    [
+      "821",
+      "951"
+    ]
+  ],
+  "inference_limits": {
+    "actual_ship_routes_and_source_populations_unknown": true,
+    "fixed_2011_2017_indexed_first_recording_not_true_colonization": true,
+    "global_cross_region_null_is_geographically_unrealistic": true,
+    "host_plant_indexed_pre2011_not_confirmed_larval_feeding": true,
+    "mcmc_draws_not_independent_samples": true,
+    "no_host_indexed_not_true_absence": true,
+    "not_preregistered": true,
+    "source_name_taxonomy_acceptance_not_historical_island_introduction_status": true,
+    "within_geographic_connected_group_swaps_do_not_control_climate_or_habitat": true
+  },
+  "island_count": 17,
+  "new15_plant_gzip_sha256": "44dc11ad3a0b73aef50e92ca28f49db3927f217de9496398f1b9ba9687a2bf15",
+  "nulls": {
+    "global_species_island_fixed_margins": {
+      "chains": [
+        {
+          "accepted_double_edge_swaps": 357822,
+          "draws": 499,
+          "draws_ge_observed": 16,
+          "lag1_score_autocorrelation": -0.02059971584152519,
+          "mean": 28.22244488977956,
+          "range": [
+            21,
+            37
+          ],
+          "seed": 20261031,
+          "source_pair_retention_mean": 0.2365261496444216,
+          "swap_attempts": 570650
+        },
+        {
+          "accepted_double_edge_swaps": 357375,
+          "draws": 499,
+          "draws_ge_observed": 19,
+          "lag1_score_autocorrelation": -0.05832074788387793,
+          "mean": 28.13627254509018,
+          "range": [
+            19,
+            38
+          ],
+          "seed": 20261032,
+          "source_pair_retention_mean": 0.23668576090233565,
+          "swap_attempts": 570650
+        },
+        {
+          "accepted_double_edge_swaps": 357285,
+          "draws": 499,
+          "draws_ge_observed": 14,
+          "lag1_score_autocorrelation": -0.07934535554084193,
+          "mean": 28.220440881763526,
+          "range": [
+            21,
+            37
+          ],
+          "seed": 20261033,
+          "source_pair_retention_mean": 0.23899125684998315,
+          "swap_attempts": 570650
+        }
+      ],
+      "draws": 1497,
+      "inclusive_fraction": 0.032732130928523714,
+      "inclusive_tail_ge_observed": 49,
+      "interval95_overlap_n": [
+        23,
+        34
+      ],
+      "mean_overlap_fraction": 0.24949604223195654,
+      "mean_overlap_n": 28.19305277221109,
+      "observed_minus_null_mean_count": 5.8069472277889105,
+      "samples_are_autocorrelated_markov_chain_draws": true
+    },
+    "within_six_geographic_components_fixed_margins": {
+      "chains": [
+        {
+          "accepted_double_edge_swaps": 343355,
+          "draws": 499,
+          "draws_ge_observed": 27,
+          "lag1_score_autocorrelation": -0.06637224189376656,
+          "mean": 28.721442885771545,
+          "range": [
+            20,
+            37
+          ],
+          "seed": 20261031,
+          "source_pair_retention_mean": 0.2768013903914023,
+          "swap_attempts": 570650
+        },
+        {
+          "accepted_double_edge_swaps": 343219,
+          "draws": 499,
+          "draws_ge_observed": 30,
+          "lag1_score_autocorrelation": 0.01520030101982747,
+          "mean": 28.68937875751503,
+          "range": [
+            20,
+            37
+          ],
+          "seed": 20261032,
+          "source_pair_retention_mean": 0.2756131732491532,
+          "swap_attempts": 570650
+        },
+        {
+          "accepted_double_edge_swaps": 343268,
+          "draws": 499,
+          "draws_ge_observed": 26,
+          "lag1_score_autocorrelation": -0.00647563212461172,
+          "mean": 28.645290581162325,
+          "range": [
+            20,
+            37
+          ],
+          "seed": 20261033,
+          "source_pair_retention_mean": 0.27619841452817134,
+          "swap_attempts": 570650
+        }
+      ],
+      "draws": 1497,
+      "inclusive_fraction": 0.055444221776887105,
+      "inclusive_tail_ge_observed": 83,
+      "interval95_overlap_n": [
+        23,
+        35
+      ],
+      "mean_overlap_fraction": 0.25385283842020323,
+      "mean_overlap_n": 28.685370741482966,
+      "observed_minus_null_mean_count": 5.314629258517034,
+      "samples_are_autocorrelated_markov_chain_draws": true
+    }
+  },
+  "observation_cohort_n": 113,
+  "observed_indexed_compatible_host_fraction": 0.3008849557522124,
+  "observed_indexed_compatible_host_n": 34,
+  "original23_plant_gzip_sha256": "b436ba8668d67d05a247f9cafd59b846db2327031e59f4ad95c78d6870bf113e",
+  "preservation": {
+    "column_island_event_counts": true,
+    "original_plant_species_island_presence_and_host_identity_fixed": true,
+    "row_species_event_counts": true,
+    "species_x_near_component_event_counts_for_regional_null": true
+  },
+  "schema": "chocho_17island_species_island_fixed_margin_geography_null_v1",
+  "settings": {
+    "attempts_between_retained_draws_per_event": 10,
+    "burn_attempts_per_observed_event": 60,
+    "draws_per_chain": 499,
+    "seeds": [
+      20261031,
+      20261032,
+      20261033
+    ]
+  },
+  "source_author_edges_sha256": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+  "source_public_git_blobs": {
+    "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json": "54c4515947d2a3ee7545e4007985ef82a2af6868",
+    "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv": "efbc770469a720e2dea82478db2f6196ba03b353",
+    "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv": "39fe84981cab2b0e47063399f0a5c0c9731e800d"
+  },
+  "source_taxonomy_crosswalk_sha256": "d8d21e6686e3f069d4374d4be1c4e47744788f9244c46a1bbbbb9015e5cd7fb9",
+  "status": "POSTHOC_SOURCE_GEOGRAPHY_BLOCKED_RECORD_MATCH_NULL_NOT_CAUSAL"
+}
