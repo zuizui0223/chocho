@@ -78,3 +78,23 @@ Thus a simple comparison of botanical species counts or candidate-host indexing 
 These are **post-hoc geographic quality sensitivities**, not independently replicated tests or a proof of no effect. Their changing sign and severe island attrition further prevent an identifiable port-specific plant mediator. Geographic area matching does not resolve different urbanization, cultivation, botanical surveys, native status or actual 2001–2010 shipment activity.
 
 Independent computation and exact fixed-source SHA: `audit_land_area_exposure.py`, `land_fraction_sites.csv`, `land_fraction_pairs.csv`, `land_fraction_quality_results.json`. The butterfly colonization/relay part remains unverified. 
+
+
+## Specific butterfly hosts: earlier 5-km port buffer versus actual 1-km botanical site
+
+For the three historically indexed focal butterflies—*Colias croceus*, *C. hyale* and *Nymphalis antiopa*—previous source-recovered host-year records confirmed *Medicago sativa* or *Alnus incana* speciesKey entries **14–19 years before** their first 2015–2021 butterfly island indices at a **5km 2019-WPI harbor-centered** search scale. This is a genuine historical GBIF speciesKey chronology, but it is not the date a host was introduced or used.
+
+The new **same-period 2001–2010 fixed 1km port/nonport GBIF source** reveals a decisive scale limitation:
+
+| Previously indexed host × focal island | 1km near-port source-indexed sites | 1km off-port source-indexed sites |
+|---|---:|---:|
+| *Medicago sativa* × island 169 | 0/2 ports | 0/4 nonport sites |
+| *Medicago sativa* × island 276 | 0/4 ports | 0/8 nonport sites |
+| *Alnus incana* × island 276 | 0/4 ports | **2/8 nonport sites** |
+| *Alnus incana* × island 715 | 0/1 port | 0/2 nonport sites |
+
+There are **4 distinct plant×island endpoints**, used across **6 butterfly×island endpoints**; the two *Colias* species share the same host/islands and are not independent repetitions. All four original 5km candidates were earlier GBIF-indexed, but **none of the corresponding target plants was indexed at a focal port's 1km site**. A 5km "around harbor" host observation therefore **does not establish an indexed host localized inside the harbor's 1km vicinity**. The focal plant was detected at the nonport coastline on two matched *Alnus* samples on island 276, illustrating why nonport controls matter.
+
+The taxonomic matching uses accepted GBIF speciesKeys *Medicago sativa*=9151957 and *Alnus incana*=9148577. No 1km observation **cannot be interpreted as plant absence**; source reindexing and uneven effort remain possible. The historical island-specific nonnative status, vessel dispersal and actual larval use remain unknown. This small, selected set is not a valid quantitative estimate of host-mediated butterfly colonization.
+
+Source-locked independent replay: `audit_focal_host_spatial_scale.py`, `focal_host_5km_to_1km_source_audit.json`, and `tests/test_focal_historical_host_1km_port_scale_20261031.py`.
