@@ -1,0 +1,137 @@
+{
+  "schema": "chocho_17island_historical_plant_similarity_sensitivity_v1",
+  "source_historical_plant_git_blob": "54c4515947d2a3ee7545e4007985ef82a2af6868",
+  "source_butterfly_pair_git_blob": "5663d2ffe42419f5c4496b92c9f3bbf76175907b",
+  "pair_count_all": 14,
+  "source_distinct_islands": 17,
+  "regional_components": [
+    {
+      "islands": [
+        "79",
+        "110"
+      ],
+      "n_pairs": 1
+    },
+    {
+      "islands": [
+        "81",
+        "214",
+        "242",
+        "257"
+      ],
+      "n_pairs": 3
+    },
+    {
+      "islands": [
+        "169",
+        "276",
+        "321",
+        "715",
+        "1577"
+      ],
+      "n_pairs": 7
+    },
+    {
+      "islands": [
+        "206",
+        "397"
+      ],
+      "n_pairs": 1
+    },
+    {
+      "islands": [
+        "260",
+        "753"
+      ],
+      "n_pairs": 1
+    },
+    {
+      "islands": [
+        "821",
+        "951"
+      ],
+      "n_pairs": 1
+    }
+  ],
+  "all": {
+    "n": 14,
+    "rho_historical_broad_plants_vs_new_butterflies": -0.5512709317412138,
+    "rho_historical_broad_plants_vs_early_butterflies": 0.18522703306504784,
+    "rho_modern_catalogue_host_jaccard_vs_new_butterflies": -0.10804910262127791
+  },
+  "nonzero_new_pairs": {
+    "n": 12,
+    "rho": -0.547371790541553
+  },
+  "acquisition_primary_quality": {
+    "gate": "at least 20 indexed speciesKeys and two historical years on each island",
+    "n": 13,
+    "rho": -0.4882800423678409
+  },
+  "exploratory_stricter_quality": {
+    "gate": "at least 50 indexed speciesKeys and three historical years on each island",
+    "n": 9,
+    "rho": 0.07531446678801507
+  },
+  "leave_one_geography_group_out": [
+    {
+      "omitted_islands": [
+        "79",
+        "110"
+      ],
+      "remaining_pairs": 13,
+      "rho": -0.4882800423678409
+    },
+    {
+      "omitted_islands": [
+        "81",
+        "214",
+        "242",
+        "257"
+      ],
+      "remaining_pairs": 11,
+      "rho": -0.3287705507836006
+    },
+    {
+      "omitted_islands": [
+        "169",
+        "276",
+        "321",
+        "715",
+        "1577"
+      ],
+      "remaining_pairs": 7,
+      "rho": -0.2522624895547565
+    },
+    {
+      "omitted_islands": [
+        "206",
+        "397"
+      ],
+      "remaining_pairs": 13,
+      "rho": -0.60330807439238
+    },
+    {
+      "omitted_islands": [
+        "260",
+        "753"
+      ],
+      "remaining_pairs": 13,
+      "rho": -0.5013793129653569
+    },
+    {
+      "omitted_islands": [
+        "821",
+        "951"
+      ],
+      "remaining_pairs": 13,
+      "rho": -0.5241424183609592
+    }
+  ],
+  "interpretation": "SIGN_AND_MAGNITUDE_NOT_STABLE_ACROSS_BOTANICAL_REPORTING_QUALITY_GATES",
+  "not_species_specific_larval_host": true,
+  "not_same_as_51island_1275pair_retrospective_host_study": true,
+  "no_independent_pairwise_significance_tests": true,
+  "no_spatiotemporal_plant_identity_or_local_alien_introduction_proof": true,
+  "unresolved_source_2019_port_proxy_and_gbif_index_changes": true
+}
