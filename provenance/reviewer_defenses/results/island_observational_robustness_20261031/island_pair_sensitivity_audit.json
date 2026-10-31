@@ -1,0 +1,158 @@
+{
+  "status": "EXPLORATORY_OBSERVATIONAL_ISLAND_NETWORK_SENSITIVITY",
+  "source": "frozen 51-island pair and eligible-island CSV, 2026-10-30",
+  "eligible_islands": 51,
+  "island_pairs_not_independent": 1275,
+  "source_git_blobs": {
+    "island_host_network_pairs.csv": "5663d2ffe42419f5c4496b92c9f3bbf76175907b",
+    "island_host_network_islands.csv": "18cecde5bf3066f276380167f451f1fa5cc1caa1"
+  },
+  "observed": {
+    "host_new_rho": 0.29980576483377025,
+    "host_prior_rho": 0.4178255833828515,
+    "partial_distance_prior": 0.21535358427009846,
+    "partial_distance_prior_richness": 0.22080814781853753,
+    "pairs_host_positive": 711,
+    "pairs_new_positive": 600,
+    "pairs_both_zero": 358,
+    "within_positive_subsets": {
+      "host_positive": {
+        "n": 711,
+        "rho": 0.2854535928678211
+      },
+      "both_positive": {
+        "n": 394,
+        "rho": 0.3261260753902157
+      },
+      "new_positive": {
+        "n": 600,
+        "rho": 0.33452666197285025
+      }
+    },
+    "distance_quartile_boundaries_km": [
+      4288.576874802192,
+      8904.121129171805,
+      11387.931102447807
+    ],
+    "within_distance_quartiles": [
+      {
+        "group": 1,
+        "n": 319,
+        "rho": 0.29762993604631005,
+        "host_pos": 249,
+        "new_pos": 205
+      },
+      {
+        "group": 2,
+        "n": 319,
+        "rho": 0.19520279688953945,
+        "host_pos": 174,
+        "new_pos": 175
+      },
+      {
+        "group": 3,
+        "n": 319,
+        "rho": 0.18281791359164973,
+        "host_pos": 148,
+        "new_pos": 117
+      },
+      {
+        "group": 4,
+        "n": 318,
+        "rho": 0.1906090689133132,
+        "host_pos": 140,
+        "new_pos": 103
+      }
+    ]
+  },
+  "permutation_sensitivity": {
+    "distance_prior_global": {
+      "observed": 0.21535358427009846,
+      "permutations": 4999,
+      "seed": 31031,
+      "one_sided_positive_p": 0.0002,
+      "two_sided_abs_p": 0.0002,
+      "null_mean": 0.0003638611723455946,
+      "null_q025": -0.09737267097352154,
+      "null_q975": 0.10345333278396153,
+      "movable_islands": 51,
+      "groups": 1,
+      "largest_group": 51
+    },
+    "distance_prior_geo1000": {
+      "observed": 0.21535358427009846,
+      "permutations": 4999,
+      "seed": 31032,
+      "one_sided_positive_p": 0.044,
+      "two_sided_abs_p": 0.044,
+      "null_mean": 0.16405336863362796,
+      "null_q025": 0.10679330956658721,
+      "null_q975": 0.2209139127666138,
+      "movable_islands": 41,
+      "groups": 24,
+      "largest_group": 6
+    },
+    "distance_prior_geo2000": {
+      "observed": 0.21535358427009846,
+      "permutations": 4999,
+      "seed": 31033,
+      "one_sided_positive_p": 0.0282,
+      "two_sided_abs_p": 0.0282,
+      "null_mean": 0.15730649476875383,
+      "null_q025": 0.10061781490256702,
+      "null_q975": 0.21697966281293435,
+      "movable_islands": 47,
+      "groups": 18,
+      "largest_group": 9
+    },
+    "distance_prior_geo3000": {
+      "observed": 0.21535358427009846,
+      "permutations": 4999,
+      "seed": 31034,
+      "one_sided_positive_p": 0.0154,
+      "two_sided_abs_p": 0.0154,
+      "null_mean": 0.14434488511547466,
+      "null_q025": 0.08168348296794979,
+      "null_q975": 0.20981574665693595,
+      "movable_islands": 50,
+      "groups": 13,
+      "largest_group": 12
+    },
+    "richness_global": {
+      "observed": 0.22080814781853753,
+      "permutations": 4999,
+      "seed": 31035,
+      "one_sided_positive_p": 0.0002,
+      "two_sided_abs_p": 0.0002,
+      "null_mean": -0.00009223572085682998,
+      "null_q025": -0.06671392458508857,
+      "null_q975": 0.07211882578443617,
+      "movable_islands": 51,
+      "groups": 1,
+      "largest_group": 51
+    },
+    "richness_geo2000": {
+      "observed": 0.22080814781853753,
+      "permutations": 4999,
+      "seed": 31036,
+      "one_sided_positive_p": 0.001,
+      "two_sided_abs_p": 0.001,
+      "null_mean": 0.13968828448203593,
+      "null_q025": 0.08420547982929963,
+      "null_q975": 0.1957030448683818,
+      "movable_islands": 47,
+      "groups": 18,
+      "largest_group": 9
+    }
+  },
+  "interpretation_limits": [
+    "Ports index plants, but no matched nonport botanical host comparison is in this 51-island CSV.",
+    "2001-2024 plant inventory overlaps and postdates 2011-2022 butterfly records.",
+    "Earlier butterfly similarity correlates more strongly than new-record similarity.",
+    "Pair count is not the independent sample size; 51 island nodes are reused.",
+    "Distance groups and all post-hoc sensitivities are exploratory, not preregistered.",
+    "Residual-label permutations assume unverified network/spatial exchangeability.",
+    "Richness adjustments use observed catalogue coverage, not full observer effort.",
+    "Neither true colonization, host use, shipping pathways nor relay is measured."
+  ]
+}
