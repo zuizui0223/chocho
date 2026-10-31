@@ -23,7 +23,7 @@ OUT=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_202
 
 def first_botanical_name(genus,species):
     genus=(genus or "").strip()
-    species=(species or "").strip()
+    species=(species or "").strip().replace("_"," ")
     if not genus or not species:
         return None
     tokens=species.split()
