@@ -127,9 +127,10 @@ def resolve_butterfly_taxon_filter():
         "unverified_if_any_candidate_225_outside_six_families":True}
 
 def load_polygons(zip_path,working,ids,max_chars):
+    """Split intricate original GSHHG islands into area-preserving disjoint WKT."""
     import geopandas as gpd
     import shapely
-    from shapely.geometry import Polygon,MultiPolygon
+    from shapely.geometry import Polygon,MultiPolygon,GeometryCollection,box
     from shapely.geometry.polygon import orient
     from shapely.ops import transform
     from shapely import wkt
@@ -143,53 +144,92 @@ def load_polygons(zip_path,working,ids,max_chars):
                  "/h/GSHHS_h_L1." in "/"+p]
         if len(members)<3:raise ValueError("GSHHG original shapefile missing")
         for member in members:z.extract(member,working)
-    shp=next(working.rglob("GSHHS_h_L1.shp"))
-    land=gpd.read_file(shp)
+    land=gpd.read_file(next(working.rglob("GSHHS_h_L1.shp")))
     land["landmass_id"]=land.sibling_id.astype(int).astype(str)
-    if not ids <= set(land.landmass_id):raise ValueError("missing one or more GSHHG original sibling IDs")
+    if not ids<=set(land.landmass_id):raise ValueError("Source GSHHG island IDs missing")
     projection=Transformer.from_crs(4326,6933,always_xy=True)
-    polygons={}
-    audit=[]
+
+    def polys(geom):
+        if geom.is_empty:return []
+        if isinstance(geom,Polygon):return [geom]
+        if isinstance(geom,(MultiPolygon,GeometryCollection)):
+            return [p for g in geom.geoms for p in polys(g)]
+        return []
+    def area(geom):
+        return transform(projection.transform,geom).area
+    def shorten(poly,threshold):
+        original=area(poly)
+        if original<=0 or not poly.is_valid:return None
+        for tol in (0.,.00015,.00025,.0005,.001,.002,.003,.005,.008,.012,
+                    .02,.035,.06,.10):
+            q=poly.simplify(tol,preserve_topology=True) if tol else poly
+            if not isinstance(q,Polygon) or q.is_empty or not q.is_valid:continue
+            q=orient(q,sign=1.0)
+            text=wkt.dumps(q,rounding_precision=5,trim=True)
+            if len(text)<=max_chars:
+                ratio=area(wkt.loads(text))/original
+                if threshold<=ratio<=2-threshold:
+                    return text,tol,original,ratio
+        return None
+    def fragments(poly,depth=0):
+        short=shorten(poly,.96 if depth==0 else .985)
+        if short is not None:return [short]
+        if depth>=10:raise ValueError("Cannot preserve coastline in 10 geographic splits")
+        minx,miny,maxx,maxy=poly.bounds
+        kmx=(maxx-minx)*111*max(.05,abs(math.cos(math.radians((miny+maxy)/2))))
+        kmy=(maxy-miny)*111
+        if kmx<=0 or kmy<=0:raise ValueError("Degenerate geographic island extent")
+        if kmx>=kmy:
+            mid=(minx+maxx)/2
+            sides=(box(minx-1,miny-1,mid,maxy+1),box(mid,miny-1,maxx+1,maxy+1))
+        else:
+            mid=(miny+maxy)/2
+            sides=(box(minx-1,miny-1,maxx+1,mid),box(minx-1,mid,maxx+1,maxy+1))
+        part=[g for side in sides for g in polys(poly.intersection(side)) if area(g)>1.0]
+        if len(part)<2:raise ValueError("Island component could not be divided into disjoint geographic tiles")
+        out=[]
+        for g in part:
+            out.extend(fragments(g,depth+1))
+            if len(out)>100:raise ValueError("More than 100 island fragments needed")
+        return out
+
+    result={};audit=[]
     for island in sorted(ids,key=int):
-        x=land.loc[land.landmass_id.eq(island),"geometry"]
-        original=shapely.union_all(x.to_numpy())
+        original=shapely.union_all(land.loc[land.landmass_id.eq(island),"geometry"].to_numpy())
         if original.is_empty or not original.is_valid:
-            raise ValueError("Invalid source GSHHG island polygon "+island)
-        original_area=transform(projection.transform,original).area
-        if isinstance(original,MultiPolygon):
-            parts=list(original.geoms)
-            poly=max(parts,key=lambda y:transform(projection.transform,y).area)
-        elif isinstance(original,Polygon):poly=original
-        else:raise ValueError("Unexpected source island geometry "+type(original).__name__)
-        largest_area=transform(projection.transform,poly).area
-        if largest_area/max(original_area,1e-10)<.985:
-            raise ValueError("MULTIPOLYGON island loses >1.5% with largest component "+island)
-        chosen=None; selected_tolerance=None
-        for tol in (0.,.00025,.0005,.001,.002,.003,.005,.008,.012,.02,.035,.06,.10):
-            simplified=poly.simplify(tol,preserve_topology=True) if tol else poly
-            if simplified.is_empty or not simplified.is_valid:continue
-            # GBIF accepts WKT polygons only with counter-clockwise exterior
-            # rings. Original GSHHG exterior may be clockwise; orient +1.
-            simplified=orient(simplified,sign=1.0)
-            text=wkt.dumps(simplified,rounding_precision=5,trim=True)
-            revised_area=transform(projection.transform,simplified).area
-            retained=revised_area/max(original_area,1e-10)
-            if len(text)<=max_chars and .96<=retained<=1.04:
-                chosen=text;selected_tolerance=tol;break
-        if not chosen:
-            audit.append({"island_id":island,"status":"NO_VALID_AREA_PRESERVING_SHORT_WKT",
-                          "original_area_km2":original_area/1e6,"polygon_wkt_length":None})
-            raise ValueError(f"Cannot build <= {max_chars}-character area-preserving GBIF WKT for island {island}")
-        polygons[island]=chosen
-        audit.append({"island_id":island,"status":"VALID_POLYGON",
-                      "original_area_km2":original_area/1e6,
-                      "largest_component_frac":largest_area/original_area,
-                      "simplify_degrees":selected_tolerance,
-                      "simplified_area_retained":transform(projection.transform,
-                         wkt.loads(chosen)).area/max(original_area,1e-10),
-                      "polygon_wkt_length":len(chosen),
-                      "polygon_sha256":hashlib.sha256(chosen.encode()).hexdigest()})
-    return polygons,audit,digest
+            raise ValueError("Invalid original GSHHG island "+island)
+        original_area=area(original)
+        components=polys(original)
+        pieces=[x for part in components for x in fragments(part)]
+        if not pieces or len(pieces)>100:
+            raise ValueError("Island has zero or too many geometry pieces "+island)
+        values=[x[0] for x in pieces]
+        ratio=sum(area(wkt.loads(w)) for w in values)/max(original_area,1e-10)
+        if not .97<=ratio<=1.03:
+            raise ValueError("Island fragment area error exceeds 3%: "+island+" "+str(ratio))
+        # Each intersection is made with exactly adjacent (not overlapping)
+        # boxes, but simplification can create small overlap. Audit explicitly.
+        source_parts=[wkt.loads(w) for w in values]
+        for i in range(len(values)):
+            for j in range(i+1,len(values)):
+                overlap=source_parts[i].intersection(source_parts[j])
+                if area(overlap)>max(2.,original_area*1e-8):
+                    raise ValueError("Overlapping GBIF island fragments "+island)
+        result[island]=values
+        audit.append({
+            "island_id":island,"status":"AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+            "original_area_km2":original_area/1e6,
+            "original_polygon_components":len(components),
+            "query_fragments":len(values),"simplified_area_retained":ratio,
+            "max_fragment_WKT_chars":max(map(len,values)),
+            "WKT_sha256_fragments":[hashlib.sha256(v.encode()).hexdigest() for v in values],
+            "source_GSHHG_zip_SHA256":digest,
+            "fragmentation_invoked":len(values)>len(components)})
+        print("ISLAND_GEOMETRY",island,"fragments",len(values),
+              "area_retained",round(ratio,6),
+              "max_WKT_chars",max(map(len,values)),flush=True)
+    return result,audit,digest
+
 
 def indexed_butterflies_in_period(island,period,geometry,taxon_filter):
     years=PERIODS[period]
@@ -293,14 +333,30 @@ def main():
     queries=[]
     for island in sorted(selected,key=int):
         for period in PERIODS:
-            scores,receipt=indexed_butterflies_in_period(island,period,polygons[island],
-                                                        taxon)
-            facts[(island,period)]=scores
+            counts=defaultdict(int)
+            parts=[]
+            for ix,polygon in enumerate(polygons[island],1):
+                found,receipt=indexed_butterflies_in_period(island,period,polygon,taxon)
+                for species_key,n in found.items():
+                    counts[species_key]+=n
+                parts.append({
+                   "geometry_fragment":ix,
+                   "WKT_sha256":hashlib.sha256(polygon.encode()).hexdigest(),
+                   "indexed_occurrences":receipt["all_superfamily_papilionoidea_indexed_occurrences"],
+                   "species_keys_indexed":len(found),
+                   "facet_pages":receipt["species_facet_pages"]})
+                time.sleep(.10)
+            facts[(island,period)]=dict(counts)
+            receipt={"island_id":island,"period":period,
+                "all_butterfly_indexed_occurrences_disjoint_polygon_sum":
+                    sum(p["indexed_occurrences"] for p in parts),
+                "gbif_specieskey_count":len(counts),
+                "geometry_fragments":len(parts),"fragment_receipts":parts,
+                "index_is_not_biological_occupancy":True}
             queries.append(receipt)
-            print("BUTTERFLY_PERIOD",island,period,receipt["all_superfamily_papilionoidea_indexed_occurrences"],
-                "all_species_facets",len(scores),"candidate225",sum(k in scores for k in
+            print("BUTTERFLY_PERIOD",island,period,receipt["all_butterfly_indexed_occurrences_disjoint_polygon_sum"],
+                "all_species_facets",len(counts),"candidate225",sum(k in counts for k in
                        (x["taxon_key"] for x in candidates)),flush=True)
-            time.sleep(.12)
     outcome=build_risk(selected,candidates,facts)
     fname="full17" if len(selected)==17 else "pilot_"+str(len(selected))
     save_csv(HERE/(fname+"_butterfly_island_225_atrisk.csv"),outcome)
@@ -324,7 +380,8 @@ def main():
        "limits":[
            "This GBIF 2026 index snapshot differs from the private original 2001–2024 precise coordinate source.",
            "225 candidate butterfly species are fixed before looking at later island first indexing; no 60-species outcome preselection.",
-           "Simplified original GSHHG island polygons preserve >=96% equal-area size but can cause nearshore spatial errors.",
+           "GSHHG disjoint fragment polygons retain >=97% island area; simplified coastlines can change nearshore assignment.",
+           "Zero-overlap fragment interiors can share borders; GBIF points exactly on a split border may be double-indexed.",
            "All 225 species × island cells are included; many are geographically infeasible, so all-species crude risk rates are not transport effects.",
            "Query negatives are GBIF nonindexes, not biological absences, occupancy, or proof of no colonization.",
            "Accepted family taxonKey filters and the 225 source speciesKey concepts may drift under GBIF checklist upgrades; audit exact overlap.",
