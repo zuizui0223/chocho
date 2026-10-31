@@ -218,8 +218,8 @@ def run_null(rows,outcome,block_region,draws=999,attempts_per_draw=70):
     region, island first-record count, and eligibility. Fixed host exposure is
     not shuffled across species with different known host resource portfolios.
     """
-    eligible=[r for r in rows if r["eligible_2011_2017"] if outcome=="first_2011_2017"] if False else [
-       r for r in rows if (r["eligible_2011_2017"] if outcome=="first_2011_2017" else r["eligible_2018_2022"])]
+    eligibility_col="eligible_2011_2017" if outcome=="first_2011_2017" else "eligible_2018_2022"
+    eligible=[r for r in rows if r[eligibility_col]==1]
     occupied={(r["species"],r["landmass_id"]) for r in eligible if r[outcome]==1}
     allowed={(r["species"],r["landmass_id"]) for r in eligible}
     exposure={(r["species"],r["landmass_id"]):r["ever_host_plant_indexed_anywhere_pre2011"]
