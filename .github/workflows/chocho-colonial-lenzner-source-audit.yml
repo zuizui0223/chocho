@@ -5,6 +5,7 @@ on:
     branches: [analysis/lenzner-colonial-region-source-20261031]
     paths:
       - ".github/workflows/chocho-colonial-lenzner-source-audit.yml"
+      - "scripts/probe_lenzner_archive_structure.py"
   workflow_dispatch:
 
 permissions:
@@ -23,11 +24,25 @@ jobs:
           python-version: "3.12"
       - name: Inspect published Lenzner et al. colonial-flora dataset source and file list
         run: python scripts/probe_lenzner_colonial_source.py
+      - name: Fetch exact Lenzner archive and inspect listed spatial/covariate files
+        run: |
+          mkdir -p _temp_historical_sources
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 180 \
+            'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' \
+            --output _temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+          python scripts/probe_lenzner_archive_structure.py
+      - name: Remove original third-party source from runner
+        if: always()
+        run: rm -rf _temp_historical_sources
       - name: Preserve metadata, source files not republished
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_zenodo_colonial_metadata.json
+          if [ -f provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_archive_structure.json ]; then
+            git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/lenzner_archive_structure.json
+          fi
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'Audit Lenzner empire-flora dataset and region source files [skip ci]'
           git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
