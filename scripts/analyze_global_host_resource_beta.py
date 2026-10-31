@@ -369,7 +369,8 @@ def main():
         for i in range(args.null_draws):
             e,accepted=swap_family_edges(edges,family,rng,attempts=5*len(edges))
             m_full=build_butterfly_by_region(e,host_regions,len(regions),len(panel))
-            m={kind:[m_full[kind][j] for j in official_indices]
+            m={kind:[m_full[kind][j] if j is not None else 0
+                     for j in official_indices]
                for kind in ("native","current")}
             x,n=mean_resource_delta(m)
             if x is None:
