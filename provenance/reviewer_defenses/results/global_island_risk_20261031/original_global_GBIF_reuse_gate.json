@@ -1,0 +1,56 @@
+{
+  "schema": "chocho_published_global_GBIF_butterfly_download_reavailability_v1",
+  "citation_doi": "https://doi.org/10.15468/dl.umqmsf",
+  "checked_at_utc": "2026-10-31T11:34:23.424226+00:00",
+  "responses": [
+    {
+      "status": "RESPONDED_JSON",
+      "request_url": "https://api.gbif.org/v1/occurrence/download/10.15468/dl.umqmsf",
+      "response_url": "https://api.gbif.org/v1/occurrence/download/10.15468/dl.umqmsf",
+      "http": 200,
+      "metadata": {
+        "key": "0013264-261023074918325",
+        "doi": "10.15468/dl.umqmsf",
+        "status": "SUCCEEDED",
+        "size": 1415705617,
+        "totalRecords": 14637152,
+        "downloadLink": "https://api.gbif.org/v1/occurrence/download/request/0013264-261023074918325.zip",
+        "format": null,
+        "created": "2026-10-29T07:02:30.859+00:00",
+        "modified": "2026-10-29T07:22:20.419+00:00",
+        "numberDatasets": 1716,
+        "source": null,
+        "eraseAfter": "2027-04-29T07:02:30.574+00:00"
+      },
+      "metadata_fields": [
+        "created",
+        "doi",
+        "downloadLink",
+        "eraseAfter",
+        "key",
+        "license",
+        "modified",
+        "numberDatasets",
+        "request",
+        "size",
+        "status",
+        "totalRecords"
+      ]
+    },
+    {
+      "status": "SOURCE_LOOKUP_FAILED",
+      "request_url": "https://api.gbif.org/v1/occurrence/download/10.15468%2Fdl.umqmsf",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 400: Bad Request"
+    },
+    {
+      "status": "SOURCE_LOOKUP_FAILED",
+      "request_url": "https://www.gbif.org/occurrence/download/10.15468/dl.umqmsf",
+      "error_type": "HTTPError",
+      "error": "HTTP Error 403: Forbidden"
+    }
+  ],
+  "no_new_download_requested": true,
+  "not_original_14million_source_content_verified": true,
+  "not_equivalent_to_private_original_record_year_geography": true
+}
