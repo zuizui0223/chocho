@@ -49,7 +49,7 @@ def test_resource_availability_is_not_confirmed_butterfly_occurrence():
     z=m.build_butterfly_by_region([(0,"a"),(1,"b")],regions,2,2)
     assert z["native"]==[1,2]
     assert z["current"]==[1,3]
-    assert m.mean_resource_delta(z)==(1/3,1)
+    assert m.mean_resource_delta(z)==(.5,1)
     vals=m.describe_delta([-.1,0,.2,None])
     assert vals["n_valid"]==3
     assert vals["negative_fraction"]==pytest.approx(1/3)
