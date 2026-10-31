@@ -32,6 +32,7 @@ BASE=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_20
 MATRIX=BASE/"beta_baseline_v3.matrix.csv.gz"
 RECEIPT=BASE/"beta_baseline_v3.json"
 OUTPUT=BASE/"resource_gain_fixed_margins_v1.json"
+LEVEL1=Path("data/frozen/wgsrpd3_level1_lookup_v0.1.json")
 DRAW_TABLE=BASE/"resource_gain_fixed_margins_v1.draws.csv"
 
 
@@ -95,12 +96,23 @@ def additions_list(added):
     return out
 
 
-def swap_new_resources(native,added,edges,rng,attempts):
+def swap_new_resources(native,added,edges,rng,attempts,region_strata=None):
     """Constrained 2x2 bipartite switches with all row/column degrees fixed."""
     accepted=0
     n=len(edges)
+    by_stratum={}
+    if region_strata is not None:
+        for k,(reg,sp) in enumerate(edges):
+            by_stratum.setdefault(region_strata[reg],[]).append(k)
     for _ in range(attempts):
-        i,j=rng.randrange(n),rng.randrange(n)
+        i=rng.randrange(n)
+        if region_strata is None:
+            j=rng.randrange(n)
+        else:
+            group=by_stratum[region_strata[edges[i][0]]]
+            if len(group)<2:
+                continue
+            j=group[rng.randrange(len(group))]
         if i==j:
             continue
         r1,s1=edges[i]
@@ -135,10 +147,19 @@ def marginal_counts(native,added,n_species):
 
 
 def evaluate(matrix=MATRIX,receipt=RECEIPT,draws=199,
-             attempts_per_added=5,seed=31031):
+             attempts_per_added=5,seed=31031,
+             stratify_level1=False,lookup=LEVEL1):
     if draws<19 or attempts_per_added<1:
         raise ValueError("At least 19 draws and 1 attempt per added unit required")
     regions,taxa,native,added,current,units=read_matrix(matrix,receipt)
+    region_strata=None
+    if stratify_level1:
+        raw=json.loads(lookup.read_text(encoding="utf8"))
+        assert raw.get("schema")=="chocho_wgsrpd3_level1_lookup_v0.1"
+        d=raw["units"]
+        if set(regions)!=set(d) or len(d)!=369:
+            raise RuntimeError("Official WGSRPD3 region strata do not match source")
+        region_strata=[d[code] for code in regions]
     selected=[i for i,n in enumerate(native) if n>0]
     if len(selected)!=355:
         raise RuntimeError("Frozen native-region support changed")
@@ -151,13 +172,20 @@ def evaluate(matrix=MATRIX,receipt=RECEIPT,draws=199,
     if len(edges)!=14553:
         raise RuntimeError("Duplicate source additions")
     fixed_region,fixed_species=marginal_counts(native,added,len(taxa))
+    fixed_stratum_species=None
+    if region_strata is not None:
+        fixed_stratum_species={
+            tag:marginal_counts(native,[m if region_strata[i]==tag else 0
+                                      for i,m in enumerate(added)],len(taxa))[1]
+            for tag in sorted(set(region_strata))}
     rng=random.Random(seed)
     vals=[]
     n_accept=[]
     per_draw=[]
     attempts=int(attempts_per_added*len(edges))
     for i in range(draws):
-        k=swap_new_resources(native,sampled,edges,rng,attempts)
+        k=swap_new_resources(native,sampled,edges,rng,attempts,
+                            region_strata=region_strata)
         n_accept.append(k)
         sample_mean=current_mean(native,sampled,pairs)-baseline
         vals.append(sample_mean)
@@ -168,6 +196,13 @@ def evaluate(matrix=MATRIX,receipt=RECEIPT,draws=199,
             raise RuntimeError("Geographic null violated region/species addition margins")
         if any(n & a for n,a in zip(native,sampled)):
             raise RuntimeError("Geographic null overwrote native resource")
+        if fixed_stratum_species is not None:
+            for tag,expected in fixed_stratum_species.items():
+                subset=[m if region_strata[i]==tag else 0
+                        for i,m in enumerate(sampled)]
+                _,actual=marginal_counts(native,subset,len(taxa))
+                if actual!=expected:
+                    raise RuntimeError("Within-level1 null violates species gains per world division")
         per_draw.append({
             "draw":i+1,"accepted_swaps":k,
             "mean_delta_fixed_native_region_pairs":sample_mean,
@@ -187,6 +222,8 @@ def evaluate(matrix=MATRIX,receipt=RECEIPT,draws=199,
             "common_region_pairs":len(pairs),**units,
         },
         "rule":"2x2 swaps of added butterfly×WGSRPD3 cells; forbid native cells; preserve each butterfly's number of gains and each region's number of new butterflies; preserve all original native cells",
+        "stratification":"within WGSRPD level1 region division" if stratify_level1 else "global unstratified",
+        "strata_source_sha256":hashlib.sha256(lookup.read_bytes()).hexdigest() if stratify_level1 else None,
         "observed_mean_beta_jaccard_change":observed,
         "randomization": {
             "draws":draws,"seed":seed,
@@ -208,6 +245,7 @@ def evaluate(matrix=MATRIX,receipt=RECEIPT,draws=199,
             "This null fixes butterfly gain counts by region and species, not plant-level introduction or host-network structure.",
             "Region endpoints are reused in pair summaries; no pair-independent confidence intervals.",
             "Fixed margin null does not account for spatial autocorrelation/phylogeny of introduced host plant ranges.",
+            "Within-level1 swaps retain broad geographic placement, but not climate, port traffic, or spatial autocorrelation within world division.",
         ],
     }
 
@@ -218,10 +256,13 @@ def main():
     p.add_argument("--receipt",type=Path,default=RECEIPT)
     p.add_argument("--draws",type=int,default=199)
     p.add_argument("--attempts-per-added",type=int,default=5)
+    p.add_argument("--stratify-level1",action="store_true")
+    p.add_argument("--level1-lookup",type=Path,default=LEVEL1)
     p.add_argument("--output",type=Path,default=OUTPUT)
     p.add_argument("--draws-csv",type=Path,default=DRAW_TABLE)
     args=p.parse_args()
-    r=evaluate(args.matrix,args.receipt,args.draws,args.attempts_per_added)
+    r=evaluate(args.matrix,args.receipt,args.draws,args.attempts_per_added,
+               stratify_level1=args.stratify_level1,lookup=args.level1_lookup)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps({k:v for k,v in r.items() if k!="draws_table"},
                                       indent=2,ensure_ascii=False)+"\n",encoding="utf8")
