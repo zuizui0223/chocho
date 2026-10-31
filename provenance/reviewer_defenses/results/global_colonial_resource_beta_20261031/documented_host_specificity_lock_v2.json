@@ -3,7 +3,7 @@
   "status": "EXPLORATORY_AMENDMENT_AFTER_SOURCE_OVERLAP_FAILURE_BEFORE_READING_ASSOCIATION_OUTPUT",
   "originating_lock": "documented_host_specificity_lock_v1.json",
   "date": "2026-10-31",
-  "reason": "Source audit showed no exact-name matches because GloNAF Species=Genus_epithet; canonical alias gives 1118/2147 focal HOSTS host names. Subsequent strict prevalence-binned nonhost null was impossible: among 284 regions prevalence bin 201-284 there are 32 more documented host source taxa than alternative uncatalogued plants.",
+  "reason": "Source audit showed no exact-name matches because GloNAF Species=Genus_epithet; canonical alias gives 1118/2147 focal HOSTS host names. Subsequent strict prevalence-binned nonhost null was impossible: among 284 regions prevalence bin 101-200 there are 32 more documented host source taxa than alternative uncatalogued plants.",
   "primary_output": [
     "all documented focal HOSTS candidate host-Jaccard partial correlation controlling non-documented alien plant Jaccard and same geography/climate/native/current WCVP, WITHOUT a strictly prevalence-matched null",
     "separate overlap-only documented host correlation removing WHOLE bins where at least one distinct matched non-documented plant cannot be sampled per focal host, not choosing host species by results",
@@ -19,8 +19,9 @@
   "caution": [
     "Cannot compare all-host observed and common-support observed as if same support; explicitly report pairs/host taxa attrition.",
     "Uncatalogued GloNAF taxa are not proven biological nonhosts.",
-    "Common support exclusion of a highly prevalent bin limits generality; high-prevalence hosts may dominate real resource reorganization.",
+    "Common support exclusion of a broadly recorded (101-200 regions) bin limits generality; high-prevalence hosts may dominate real resource reorganization.",
     "Recorded 2001+ host list and GloNAF all contemporary, not colonial time sequence.",
     "199 matched sample draws are source-level control, not causal randomized biological experiments."
-  ]
+  ],
+  "frequency_bins_source": "bisect_left([1,2,5,10,25,50,100,200,285], freq); bin index 7 corresponds 101-200 source regions, not >200"
 }
