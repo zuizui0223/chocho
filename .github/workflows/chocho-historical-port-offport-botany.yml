@@ -1,4 +1,4 @@
-name: Matched historical port and nonport island flora pilot
+name: Matched historical port and nonport island flora full38
 
 on:
   push:
@@ -42,18 +42,18 @@ jobs:
               https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
           fi
           echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
-      - name: Construct 17-island pilot controls before querying any plants
+      - name: Construct fixed controls for all 17 islands and 38 original ports
         run: |
           python provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/acquire_matched_botany.py \
             --zip _scratch_coastal/gshhg-shp-2.3.7.zip \
             --work-dir _scratch_coastal/extracted \
-            --max-ports 17 --n-controls 2 --max-workers 6 --design-only
+            --max-ports 0 --n-controls 2 --max-workers 6 --design-only
       - name: Acquire independent 2001-2010 GBIF plant speciesKey inventory at matched sites
         run: |
           python provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/acquire_matched_botany.py \
             --zip _scratch_coastal/gshhg-shp-2.3.7.zip \
             --work-dir _scratch_coastal/extracted \
-            --max-ports 17 --n-controls 2 --max-workers 6
+            --max-ports 0 --n-controls 2 --max-workers 6
       - name: Commit biological data audit without individual GBIF records
         if: always()
         run: |
