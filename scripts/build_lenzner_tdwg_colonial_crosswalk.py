@@ -115,10 +115,14 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
         proj=z.read(prj[0]).decode("utf8",errors="replace")
         if "WGS_1984" not in proj and "WGS 84" not in proj and "WGS84" not in proj:
             raise RuntimeError("Source GloNAF geometry datum not verified as WGS84")
+        # Source .dbf has legacy Latin-1 names (e.g. Antartida Chilena
+        # with byte 0xe1). Numeric OBJIDsic keys are encoding-independent;
+        # do NOT let pyshp assume UTF-8 for unrelated textual attributes.
         source=shapefile.Reader(
             shp=io.BytesIO(z.read(shp[0])),
             shx=io.BytesIO(z.read(shx[0])),
-            dbf=io.BytesIO(z.read(dbf[0])))
+            dbf=io.BytesIO(z.read(dbf[0])),
+            encoding="latin1")
         assert len(source)==1184
 
         reg_by_id={}
@@ -231,6 +235,7 @@ def build(zip_path=ZIP, tdwg_path=TDWG, official_path=OFFICIAL):
         "source_empire_history_rows":len(empires),
         "source_non_utf8_text_replacement_characters":source_text_replacements,
         "source_shapefile_records":len(source),
+        "source_shapefile_dbf_encoding":"latin1",
         "source_geometry_accepted":len(projected),
         "source_geometry_issues":dict(geom_issues),
         "official_wgsrpd3_regions":len(outputs),
