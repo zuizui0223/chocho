@@ -1,0 +1,61 @@
+name: chocho global 2010 bilateral maritime country-index source gate
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - .github/workflows/chocho-full-unctad-island-lsbci2010.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-island-global-lsbci2010-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  historical-global-country-links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install required data readers
+        run: python -m pip install numpy pycountry
+      - name: Download public pinned June 2026 UNCTAD bulk CSV snapshot
+        run: |
+          mkdir -p _private_source_stage
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 20 --max-time 210 \
+            'https://raw.githubusercontent.com/DeckardShaw31/Eureka-2026/main/data/raw/unctad/US_LSBCI.csv' \
+            --output _private_source_stage/US_LSBCI.csv
+          echo 'edab41de33b9a6b4fc568bf454544dedfcbf32117e2bad7ccc77203e1ee6c33e  _private_source_stage/US_LSBCI.csv' | sha256sum -c -
+      - name: Download independently processed 2010 ASEAN-pair comparison and run full 51-island join
+        run: |
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 20 --max-time 90 \
+            'https://raw.githubusercontent.com/DeckardShaw31/Eureka-2026/main/data/processed/panel_bilateral_year.csv' \
+            --output _private_source_stage/panel_bilateral_year.csv
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_unctad_lsbci_2010.py \
+            --raw-csv _private_source_stage/US_LSBCI.csv \
+            --pilot-csv _private_source_stage/panel_bilateral_year.csv \
+            --output-csv provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_island_pairs.csv \
+            --output-json provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_audit.json
+          python -m pytest tests/test_full_unctad_lsbci_2010_20261031.py -q
+      - name: Commit only derived island-country pair results and source receipt
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_island_pairs.csv \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/full_lsbci2010_audit.json
+          if git diff --cached --quiet; then
+            echo 'No derived-results change'; exit 0
+          fi
+          git commit -m 'Measure observed 2010 global bilateral connectivity for frozen 51-island pairs [skip ci]'
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove downloaded third-party bulk CSV from working directory
+        if: always()
+        run: rm -rf _private_source_stage
