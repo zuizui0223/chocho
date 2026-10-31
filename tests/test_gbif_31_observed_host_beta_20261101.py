@@ -56,3 +56,32 @@ def test_heldout_region_scoring_preserves_all_pair_nodes():
     assert comparisons["M1_known_host"]["regions_improved"]==n
     assert comparisons["M2_other_aliens"]["mean_region_equal_mse_difference"]==pytest.approx(0,abs=1e-12)
     assert comparisons["M1_known_host"]["mse_reduction_percent"]>0
+
+
+def test_whole_world_division_holdout_excludes_all_held_region_pairs():
+    m=load()
+    n=9
+    pairs=[(i,j) for i in range(n) for j in range(i+1,n)]
+    ia=np.array([i for i,j in pairs])
+    ib=np.array([j for i,j in pairs])
+    y=np.array([.2+(((i+j)%3)/10) for i,j in pairs])
+    host=np.array([float((i*j)%7)/7 for i,j in pairs])
+    worlds=np.array(["1"]*3+["3"]*3+["7"]*3)
+    features={
+      "M0_general_flora_and_effort":[np.ones(len(ia))],
+      "M1_known_host":[np.ones(len(ia)),host],
+      "M2_other_aliens":[np.ones(len(ia)),1-host],
+      "M3_both":[np.ones(len(ia)),host,1-host],
+    }
+    result=m.evaluate_division_heldout(y,features,ia,ib,worlds,lam=10.)
+    assert set(result["models"])==set(features)
+    folds=result["models"]["M0_general_flora_and_effort"]["folds"]
+    assert len(folds)==3
+    assert all(x["heldout_region_count"]==3 for x in folds)
+    assert all(x["training_region_pair_count"]==15 for x in folds)
+    assert all(x["test_region_pair_count"]==21 for x in folds)
+    assert result["comparisons"]["M1_known_host"]["divisions_improved"]<=3
+    assert "no outcome" in result["method"]
+    with pytest.raises(ValueError,match="labels"):
+        m.evaluate_division_heldout(y,features,ia,ib,worlds[:-1],10.)
+
