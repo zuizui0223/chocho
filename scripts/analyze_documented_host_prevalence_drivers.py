@@ -108,10 +108,14 @@ def analyse():
     original={idx for host in hostnames & canonical.keys() for idx in canonical[host]}
     rawmask=sum(1<<idx for idx in sorted(original))
     frequency,buckets=prevalence_bins(full,names["distinct_glonaf_names"])
-    masks,bin_counts=split_by_prevalence(rawmask,frequency)
+    # 58 of the 1312 source-matched bit IDs never appear inside the
+    # fixed 284-region subset. They are NOT the 86 widespread host IDs
+    # dropped because frequency-matched alternative taxa are insufficient.
+    active_mask=sum(1<<idx for idx in original if frequency[idx]>0)
+    masks,bin_counts=split_by_prevalence(active_mask,frequency)
     source_active=sum(bin_counts.values())
-    supportmask,support=overlap_supported_mask(rawmask,frequency,buckets)
-    excluded=rawmask & ~supportmask
+    supportmask,support=overlap_supported_mask(active_mask,frequency,buckets)
+    excluded=active_mask & ~supportmask
     if (source_active!=v2["joined_names"]["source_region_active_known_taxa"]
             or excluded.bit_count()!=v2["overlap_only_prevalence_support"]["excluded_taxa_due_to_no_pseudohost_support"]):
         raise RuntimeError("Documented host source identity no longer reproduces v2")
@@ -218,6 +222,8 @@ def analyse():
         },
         "source_coverage":{
             "source_active_documented_host_taxa":source_active,
+            "all_source_matched_host_taxa_including_outside_284_regions":len(original),
+            "source_matched_host_taxa_not_active_in_284_regions":len(original)-source_active,
             "prevalence_matchable_hosts":supportmask.bit_count(),
             "excluded_due_to_unmatched_alternative_prevalence":excluded.bit_count(),
             "prevalence_strata":by_bin,
