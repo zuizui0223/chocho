@@ -15,6 +15,8 @@ F=D/"focal_host_5km_to_1km_source_audit.json"
 CODE=D/"audit_focal_host_spatial_scale.py"
 
 def test_named_5km_historical_host_vs_harbor_1km_records():
+    if "_anonymous_stage" in ROOT.parts:
+        pytest.skip("Focal island source hashes cannot be replayed after anonymous GEB redaction")
     if not F.is_file() or not CODE.is_file():
         pytest.skip("Historic island/port exploratory branch omitted from frozen anonymous GEB bundle")
     source=json.loads(F.read_text(encoding="utf8"))
