@@ -15,7 +15,7 @@ permissions:
 
 concurrency:
   group: chocho-observed31-host-beta-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   independent-observation-composition-pilot:
@@ -72,6 +72,24 @@ jobs:
             --pairs provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_host_beta_pairs_v1.csv
       - name: Preserve only source-verified aggregate beta and model scores
         run: |
+          # A new source-code or cohort revision can arrive during a long
+          # archival replay. Never publish an old result over newer code,
+          # nor let two identical source runs conflict on the same JSON path.
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+               scripts/analyze_gbif_31_observed_host_beta.py \
+               scripts/audit_gbif_31_butterfly_wgsrpd3_source.py \
+               provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_beta_model_lock_v1.json; then
+            echo 'Science source changed since checkout; stale run will not publish derived output'
+            exit 0
+          fi
+          existing='provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_host_beta_pilot_v1.json'
+          if git cat-file -e "origin/${GITHUB_REF_NAME}:${existing}" 2>/dev/null; then
+            if git show "origin/${GITHUB_REF_NAME}:${existing}" | cmp - "${existing}"; then
+              echo 'Exact same source-derived beta result already exists; no duplicate commit'
+              exit 0
+            fi
+          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_31_observed_host_beta_pilot_v1.json
