@@ -4,7 +4,7 @@
 
 **Status:** Candidate integrated submission track; not the approved or submission-ready manuscript. Full cohort, temporality and artwork checks remain.
 
-**Aim:** Human redistribution of known larval hosts may alter where consumers encounter resources without changing their diets. We tested whether this change in butterfly resource geography adds information to predictions of later butterfly records and corresponds with island assemblage patterns.
+**Aim:** We tested whether human redistribution of known larval hosts expands butterfly resource geography, improves later butterfly-record predictions, and corresponds with island assemblage patterns.
 
 **Location:** Global, with an exploratory comparison among 51 islands.
 
@@ -12,7 +12,7 @@
 
 **Major taxa studied:** Butterflies and their larval host plants.
 
-**Methods:** We contrasted native-only and contemporary resource envelopes for 239 butterflies, holding recorded host identities fixed. We compared climate–land-cover models with models additionally containing host-resource and host-family features for 155 species in 208,482 temporally held-out recording-probability evaluations, including spatial holdouts. We compared island pairs in candidate introduced-host composition at ports and in newly recorded butterfly assemblages.
+**Methods:** We reconstructed native-only and contemporary resource envelopes for 239 butterflies, holding host identities fixed. We assessed host predictors beyond climate and land cover in 208,482 temporally held-out recording-probability evaluations for 155 species, with spatial sensitivity tests. Across 51 islands, we related port-indexed candidate introduced-host composition to new butterfly assemblages.
 
 **Results:** Introduced-host ranges added 14,553 butterfly × region resource units (+54.9%) and expanded potential resources for 206/239 butterflies; removing crop hosts retained 46–47% growth. Thirty-eight plant species contributed half of the additional opportunity, whereas diet-family breadth was weakly associated with proportional gain (Spearman ρ = 0.008). Host information reduced temporal test mean squared error by 4.12%, spatially held-out error by 3.00%, and error at distances ≥100 km from training locations by 2.74%. Among 51 islands (1,275 non-independent pairs), candidate introduced-host similarity covaried with the similarity of newly recorded butterfly assemblages (ρ = 0.300; partial rank correlation after distance and prior butterfly composition = 0.215). Association with previously recorded butterfly assemblages was stronger (ρ = 0.418).
 
