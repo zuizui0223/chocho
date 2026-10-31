@@ -30,6 +30,24 @@ At the 1-species cutoff only **3 of 10 island means are positive, one is negativ
 
 The interval is a deterministic **5,000-draw island-level bootstrap of fixed source-derived island means**. It does not include GBIF reindexing, botanical detection/process error, shared region/phylogenetic structure or retrospective site-selection uncertainty. It is not a causal confidence interval. Using the low bits of an LCG would cause artificial degenerate resamples at 4 islands; the source audit instead uses high-bit scaled selection and explicitly tests against that defect.
 
+## Additional geometry quality gate: sea versus land within 1 km
+
+The original fixed GSHHG geometry was used to intersect each 1-km site circle with land before comparing harbor and non-harbor botanical indices. In the 114 sites, the mean terrestrial fraction is **61.4% for ports versus 88.5% for off-port controls**. Thus an equal *radius* does **not** necessarily provide equal land habitat or biological observation opportunity; this is a substantial source of confounding.
+
+Restricting pair support by the maximum absolute difference in port versus either control's terrestrial area fraction changes the direction:
+
+| Botanical speciesKey requirement | Max land-fraction difference | Eligible ports | Eligible islands | Island-equal harbor-minus-control top-ten index fraction |
+|---|---:|---:|---:|---:|
+| >=1 at every site | <=0.15 | 4 | 4 | **−0.57 percentage points** |
+| >=1 at every site | <=0.25 | 5 | 5 | **−0.41 pp** |
+| >=1 at every site | <=0.40 | 7 | 5 | **+0.71 pp** |
+| >=5 at every site | <=0.25 | 3 | 3 | **−0.68 pp** |
+| >=10 at every site | <=0.25 | 3 | 3 | **−0.68 pp** |
+
+These land-fraction cutoffs are **exploratory sensitivity thresholds selected after the initial botanical pilot**, not preregistered tests. Small and overlapping island samples make a positive or negative harbor effect uncertain. **The previously weak positive 1–10-species botanical differences do not survive the strict land-fraction matching, so the strongest statement is that port-specific resource enrichment remains unconfirmed.** Island records and shipping pathways are even further from being established.
+
+Source-backed files: `land_fraction_sites.csv` (all 114 circle×land intersections), `land_fraction_pairs.csv` (38 source port comparisons), `land_fraction_quality_results.json` (all 12 cutoffs). Offline arithmetic guard: `tests/test_historical_port_land_fraction_20261031.py`. Land fractions are from static GSHHG 2.3.7 boundaries, not historical shoreline reconstructions, and are not botanical cover measurements.
+
 ## Reproduction and tests
 
 - Matched input and geometry: `fixed_geometric_sites.csv`, `geometry_admissions.csv`
