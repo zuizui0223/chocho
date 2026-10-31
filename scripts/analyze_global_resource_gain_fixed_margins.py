@@ -256,13 +256,14 @@ def main():
     p.add_argument("--receipt",type=Path,default=RECEIPT)
     p.add_argument("--draws",type=int,default=199)
     p.add_argument("--attempts-per-added",type=int,default=5)
+    p.add_argument("--seed",type=int,default=31031)
     p.add_argument("--stratify-level1",action="store_true")
     p.add_argument("--level1-lookup",type=Path,default=LEVEL1)
     p.add_argument("--output",type=Path,default=OUTPUT)
     p.add_argument("--draws-csv",type=Path,default=DRAW_TABLE)
     args=p.parse_args()
     r=evaluate(args.matrix,args.receipt,args.draws,args.attempts_per_added,
-               stratify_level1=args.stratify_level1,lookup=args.level1_lookup)
+               seed=args.seed,stratify_level1=args.stratify_level1,lookup=args.level1_lookup)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps({k:v for k,v in r.items() if k!="draws_table"},
                                       indent=2,ensure_ascii=False)+"\n",encoding="utf8")
