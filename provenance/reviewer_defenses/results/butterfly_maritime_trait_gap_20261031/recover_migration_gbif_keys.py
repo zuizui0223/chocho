@@ -76,9 +76,11 @@ def taxon_keys_from_predicate(document):
     if len(hits)!=1:
         raise ValueError(f"Expected exactly one explicit taxon IN predicate, got {len(hits)}")
     values=[str(x) for x in hits[0]]
-    if not (200<=len(values)<=800) or len(set(values))!=len(values) or not all(v.isdigit() for v in values):
-        raise ValueError(f"Taxon keys are not a unique 200–800 list: {len(values)}")
-    return values
+    if not (200<=len(values)<=800) or not all(v.isdigit() for v in values):
+        raise ValueError(f"Taxon keys are not a valid 200–800 list: {len(values)}")
+    unique=list(dict.fromkeys(values))
+    if len(unique)<200:raise ValueError("Insufficient unique predicate taxon keys")
+    return unique,len(values)
 
 def taxon_record(key):
     try:
@@ -111,8 +113,10 @@ def analyze():
              "no_absence_or_causal_steppingstone_inference":True}
     try:
         metadata=request_json(receipt["download_api"])
-        keys=taxon_keys_from_predicate(metadata)
+        keys,n_raw=taxon_keys_from_predicate(metadata)
         receipt.update({"GBIF_metadata_doi":metadata.get("doi"),"gbif_download_status":metadata.get("status"),
+                        "GBIF_raw_predicate_taxon_values":n_raw,
+                        "GBIF_duplicate_predicate_values":n_raw-len(keys),
                         "GBIF_predicate_taxon_keys":len(keys),
                         "GBIF_taxon_keys_sha256":hashlib.sha256((",".join(keys)).encode()).hexdigest()})
         records=[]
