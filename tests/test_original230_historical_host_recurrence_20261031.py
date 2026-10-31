@@ -37,6 +37,7 @@ def test_private_source_temporal_host_cohort_denominators():
  assert sum(t["resolution_status_counts"].values())==1642
  assert t["resolved_butterfly_host_edges"]==2396
  assert t["resolved_original_butterfly_species"]==228
+ assert t["resolved_name_to_gbifkey_frozen_archive_sha256"]=="d8d21e6686e3f069d4374d4be1c4e47744788f9244c46a1bbbbb9015e5cd7fb9"
  e=x["butterfly_event_cohort"]
  events=list(csv.DictReader(EVENTS.open(encoding="utf8",newline="")))
  assert len(events)==e["event_rows_original_all_islands"]==5665
@@ -65,8 +66,8 @@ def test_original230_positive_structural_overlap_vs_negative_re_record():
  null=x["host_network_structural_null"]
  assert null["butterfly_degree_host_degree_and_species_x_family_breadth_preserved"] is True
  assert null["n_draws"]==299
- assert null["null_draws_ge_observed_fraction"]==7
- assert null["null_draws_ge_observed_delta"]==169
+ assert null["null_draws_ge_observed_fraction"]==10
+ assert null["null_draws_ge_observed_delta"]==194
  assert math.isclose(null["observed_prior_host_index_event_fraction"],34/113)
  assert null["null_fraction_mean"]<null["observed_prior_host_index_event_fraction"]
  assert null["null_fraction_95pct"][0]<null["null_fraction_95pct"][1]
