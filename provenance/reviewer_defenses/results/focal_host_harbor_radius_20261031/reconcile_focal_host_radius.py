@@ -27,7 +27,9 @@ FILES={
  "land":("provenance/reviewer_defenses/results/historical_port_nonport_botany_20261031/land_fraction_sites.csv",
          "b2f7a7597550b61abbc182b6c5c6f2f22ae6a898"),
  "prior_5links":("provenance/reviewer_defenses/results/island_dated_host_match_20261030/island_dated_host_match_links.csv",
-                "88db773c74dea9cd2d58bde0b67a394d93226869")
+                "88db773c74dea9cd2d58bde0b67a394d93226869"),
+ "migrant_proxy":("provenance/reviewer_defenses/results/butterfly_maritime_trait_gap_20261031/migration_gbif_author2025_crosswalk.csv",
+                  "439dd1034ca16f96ff94222695d98dc39747c2e4")
 }
 
 def source(name):
@@ -46,6 +48,9 @@ def run():
     one=source("one_km")
     land=source("land")
     links=source("prior_5links")
+    migration=source("migrant_proxy")
+    migration_by_species={x["species"]:x for x in migration}
+    assert len(migration)==225
     assert len(one)==114 and len(land)==114 and len(links)==5
     assert years["butterfly_links_checked"]==3
     assert years["butterfly_species_island_endpoints"]==6
@@ -112,8 +117,15 @@ def run():
                         "land_fraction_1km":float(landby[x["site_id"]]["land_area_fraction_1km"]),
                     } for x in sorted(focal_rows,key=lambda y:y["site_id"])]
                 }
+            if b not in migration_by_species:
+                raise ValueError("Focal butterfly missing from source 225 migration candidate panel")
+            migration_label=migration_by_species[b]["author_2025_GBIF_requested_taxon_key_proxy"]
+            if migration_label!="REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST":
+                raise ValueError("Focal butterfly lacks independent author-review positive migration proxy: "+b)
             butterfly.append({
-                "butterfly":b,"historical_foodplant":plant,
+                "butterfly":b,"migrant_proxy":"REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST",
+                "butterfly_migration_proxy_is_positive_only_not_island_direct_flight":True,
+                "historical_foodplant":plant,
                 "foodplant_speciesKey":key,"island":island,
                 "foodplant_index_year_5km":before,"butterfly_first_index_year":after,
                 "indexed_lead_years":after-before,
@@ -144,6 +156,8 @@ def run():
       "independent_host_island_units":len(values),
       "butterfly_species_island_mentions_not_independent":len(butterfly),
       "butterfly_species":3,
+      "butterfly_species_matched_to_published_author_selected_migrants":len({x["butterfly"] for x in butterfly}),
+      "indirect_migrant_roster_not_local_displacement_evidence":True,
       "plant_species":2,
       "five_km_original_foodplant_island_units_indexed":len(values),
       "one_km_port_plant_indexes_per_host_island":totalP,
