@@ -1,0 +1,171 @@
+{
+  "schema": "chocho_near_island_host_opportunity_holdout_v1",
+  "source_private_parquet_sha256": "8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f",
+  "source_public_git_blobs": {
+    "pairs": "5663d2ffe42419f5c4496b92c9f3bbf76175907b",
+    "early_plants": "0a01831056c2cd59a4bd41bd1dbd4c84d77cf922",
+    "host_links": "88db773c74dea9cd2d58bde0b67a394d93226869"
+  },
+  "design": "EXPLORATORY_PREVIOUS_YEAR_ONLY_NOT_CAUSAL_NOT_HOST_EFFECT",
+  "pair_cohort": {
+    "near_pairs": 14,
+    "islands": 17,
+    "shared_new_species_pair_rows": 41,
+    "chain_rows": 21,
+    "focal_prior_host_early": {
+      "n": 3,
+      "chains": 3,
+      "unique_pairs": 2
+    },
+    "other_prior_host_unclassified": {
+      "n": 38,
+      "chains": 18
+    },
+    "botanical_opportunity_min100_focal": {
+      "n": 3,
+      "chains": 3,
+      "unique_pairs": 2
+    },
+    "botanical_opportunity_min100_other_host_unclassified": {
+      "n": 9,
+      "chains": 3,
+      "unique_pairs": 5
+    }
+  },
+  "annual_risk": {
+    "rows": 865,
+    "events": 91,
+    "butterfly_species": 70,
+    "destination_islands": 17,
+    "years": "2011–2022",
+    "unrepeated_prior_near_source": {
+      "rows": 325,
+      "events": 24
+    },
+    "repeated_prior_near_source": {
+      "rows": 540,
+      "events": 67
+    },
+    "recent_5yr_unrepeated_source": {
+      "rows": 423,
+      "events": 36
+    },
+    "recent_5yr_repeated_source": {
+      "rows": 442,
+      "events": 55
+    },
+    "conditions": "species not previously indexed at destination, at least one near source previously indexed, destination recorded other butterflies in >=2 of prior five years"
+  },
+  "prediction": {
+    "description": "LogisticRegression L2(C=1) + StandardScaler; forward chronological holdouts; baseline includes past destination/source effort, as-of species known landmass count, area, port representative distance, year, source number, source timing and source recency",
+    "holdouts": [
+      {
+        "train_through": 2015,
+        "test": [
+          2016,
+          2018
+        ],
+        "train_rows": 311,
+        "train_events": 47,
+        "test_rows": 263,
+        "test_events": 22,
+        "test_islands": 15,
+        "logloss": {
+          "baseline": 0.2925860119437004,
+          "ever_repeat": 0.2853757006864421,
+          "recent_repeat": 0.29223870031902904
+        }
+      },
+      {
+        "train_through": 2017,
+        "test": [
+          2018,
+          2020
+        ],
+        "train_rows": 493,
+        "train_events": 63,
+        "test_rows": 236,
+        "test_events": 19,
+        "test_islands": 14,
+        "logloss": {
+          "baseline": 0.32314104948557143,
+          "ever_repeat": 0.32826091996009793,
+          "recent_repeat": 0.31519595980983944
+        }
+      },
+      {
+        "train_through": 2019,
+        "test": [
+          2020,
+          2022
+        ],
+        "train_rows": 651,
+        "train_events": 73,
+        "test_rows": 214,
+        "test_events": 18,
+        "test_islands": 14,
+        "logloss": {
+          "baseline": 0.2921006005600815,
+          "ever_repeat": 0.3088623636543739,
+          "recent_repeat": 0.2975953031961649
+        }
+      },
+      {
+        "train_through": 2017,
+        "test": [
+          2018,
+          2022
+        ],
+        "train_rows": 493,
+        "train_events": 63,
+        "test_rows": 372,
+        "test_events": 28,
+        "test_islands": 14,
+        "logloss": {
+          "baseline": 0.31467016226986716,
+          "ever_repeat": 0.32508442490786904,
+          "recent_repeat": 0.3121986189819843
+        },
+        "brier": {
+          "baseline": 0.07450646767649517,
+          "ever_repeat": 0.07526477343148158,
+          "recent_repeat": 0.0738350210012965
+        },
+        "auc": {
+          "baseline": 0.49792358803986714,
+          "ever_repeat": 0.5199335548172758,
+          "recent_repeat": 0.4943936877076412
+        }
+      }
+    ]
+  },
+  "island_bootstrap": {
+    "seed": 20261031,
+    "n": 1500,
+    "interval_type": "fixed_predictions, no refit, clustered by 14 held-out target islands",
+    "improvement": "baseline log-loss minus new log-loss",
+    "ever_repeat": {
+      "gain": -0.010414262638001801,
+      "ci95": [
+        -0.032766301279874156,
+        0.015590710609167654
+      ]
+    },
+    "recent_repeat": {
+      "gain": 0.002471543287882818,
+      "ci95": [
+        -0.007380533993936893,
+        0.017257425595958935
+      ]
+    }
+  },
+  "guardrails": {
+    "other_unknown_links_not_negative_hosts": true,
+    "port_2019_geometry_retrospective": true,
+    "first_record_not_arrival": true,
+    "repeat_not_establishment": true,
+    "shipping_not_observed": true,
+    "private_parquet_not_published": true,
+    "not_confirmatory": true
+  }
+}
