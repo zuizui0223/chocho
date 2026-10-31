@@ -31,6 +31,9 @@ def test_earlier_host_years_vs_1km_coastal_indices_are_source_reproducible():
     assert computed["independent_host_island_units"]==4
     assert computed["butterfly_species_island_mentions_not_independent"]==6
     assert computed["butterfly_species"]==3 and computed["plant_species"]==2
+    assert computed["butterfly_species_matched_to_published_author_selected_migrants"]==3
+    assert all(x["migrant_proxy"]=="REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST"
+               for x in computed["butterfly_endpoints"])
     assert computed["total_one_km_port_times_host_island_combinations"]==11
     assert computed["total_one_km_offport_times_host_island_combinations"]==22
     assert computed["one_km_port_plant_indexes_per_host_island"]==0
@@ -69,3 +72,9 @@ def test_no_false_harbor_introduction_or_butterfly_rescue_claim():
     assert "島" in t and "非港" in t
     assert "不在" in t
     assert "船舶" in t
+    context=json.loads((D/"powo_denmark_introduced_context_20261031.json").read_text(encoding="utf8"))
+    assert context["country"]=="Denmark"
+    assert {x["plant"] for x in context["plant_records"]}=={"Medicago sativa","Alnus incana"}
+    assert all(x["powo_country_status"]=="introduced"
+               and x["island_specific_status_not_confirmed"] for x in context["plant_records"])
+    assert "POWO" in context["status"]
