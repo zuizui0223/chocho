@@ -51,7 +51,7 @@ def main():
     ap.add_argument("--work",type=Path,required=True)
     args=ap.parse_args()
     source_islands={"169"}
-    polygons,audit,digest=src.load_polygons(args.gshhg_zip,args.work,source_islands,4300)
+    polygons,audit,digest=src.load_polygons(args.gshhg_zip,args.work,source_islands,1800)
     wkt=polygons["169"]
     families=["Nymphalidae","Pieridae","Lycaenidae","Papilionidae","Hesperiidae","Riodinidae"]
     base={"year":"2012","hasCoordinate":"true","hasGeospatialIssue":"false",
@@ -59,8 +59,11 @@ def main():
           "limit":0}
     rectangle="POLYGON((9.9 55.0,10.3 55.0,10.3 55.3,9.9 55.3,9.9 55.0))"
     cases=[
+      ("country_no_family",{**base,"country":"DK"}),
       ("country_one_family",{**base,"country":"DK","family":"Nymphalidae"}),
       ("country_six_families",{**base,"country":"DK","family":families}),
+      ("country_nonsense_family",{**base,"country":"DK","family":"Nonsenseidae"}),
+      ("country_known_aglais_species_taxonKey",{**base,"country":"DK","taxonKey":"1894840"}),
       ("rectangle_one_family",{**base,"geometry":rectangle,"family":"Nymphalidae"}),
       ("rectangle_six_families",{**base,"geometry":rectangle,"family":families}),
       ("original_polygon_one_family",{**base,"geometry":wkt,"family":"Nymphalidae"}),
