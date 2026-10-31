@@ -11,6 +11,8 @@ SCRIPT=ROOT/"scripts/analyze_documented_host_prevalence_drivers.py"
 
 
 def load():
+    pytest.importorskip("pyproj")
+    pytest.importorskip("shapefile")
     sys.path.insert(0,str(ROOT/"scripts"))
     spec=importlib.util.spec_from_file_location("documented_host_bins",SCRIPT)
     module=importlib.util.module_from_spec(spec)
