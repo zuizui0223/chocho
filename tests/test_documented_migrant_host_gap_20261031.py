@@ -58,7 +58,8 @@ def test_no_false_nonmigrant_or_earlier_host_claims():
     assert x["GBIF_predicate_taxon_keys"]==562
     assert x["candidate_225_exact_matched"]==111
     assert result["migration_classification_warning"].startswith("not listed = migration status unknown")
-    assert "NOT_A_CONTROL" in result
+    assert "non_listed_unknown_coverage_NOT_A_CONTROL" in result
+    assert result["non_listed_unknown_coverage_NOT_A_CONTROL"]["species"] == 87
     assert any("postdate" in s for s in result["limits"])
     assert result["documented_subset"]["correlations"]["host_fraction_vs_500km_gap"]<0.2
     assert result["min_events_sensitivity"]["5"]["correlations"]["host_fraction_vs_500km_gap"]<0.05
