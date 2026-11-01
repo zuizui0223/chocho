@@ -1,0 +1,57 @@
+name: chocho audit original HOSTS provenance for two strict VOC-naturalized flora triads
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-VOC-two-exact-HOSTS-source-annotation-gate.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_two_exact_HOSTS_relationship_sources.py"
+      - "tests/test_VOC_exact_two_host_relationship_source_20261102.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  exact-source-host-row-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test source-only exact original HOSTS ecological association provenance
+        run: |
+          python -m pip install 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_two_exact_HOSTS_relationship_sources.py
+          python -m pytest tests/test_VOC_exact_two_host_relationship_source_20261102.py -q
+      - name: Read frozen 140485 original HOSTS rows
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Audit original HOSTS reference and host-stage source for two exact species, not biological transport
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_two_exact_HOSTS_relationship_sources.py
+      - name: Freeze only two source data-quality receipts
+        run: |
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}/voc_cargo_two_exact_HOSTS_relationship_provenance_v1.json"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+              "${folder}/audit_VOC_two_exact_HOSTS_relationship_sources.py"; then
+            echo 'Science source changed while replaying; no stale commit';exit 0
+          fi
+          git commit -m 'Audit original HOSTS reference and life-stage evidence for two strict VOC plant-butterfly triads [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete original 140485-row HOSTS dataset from runner
+        if: always()
+        run: rm -rf _external
