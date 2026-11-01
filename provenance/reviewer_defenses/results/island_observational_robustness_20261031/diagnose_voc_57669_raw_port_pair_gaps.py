@@ -122,7 +122,7 @@ def scan(source=SOURCE, lock=LOCK):
         "strict_both_endpoints_same_island_top25":placepairs(both_strict_same_island,25,1),
         "strict_direct_island_links":full_links(strict_links),
         "broad_direct_island_links":full_links(broad_links),
-        "date_uninterpretable_link_rows":dict(no_year_links),
+        "date_uninterpretable_link_rows":{a+"|"+b:n for (a,b),n in no_year_links.items()},
         "limitations":[
             "No observed precise-city pair is not a confirmed absence of all historic trade.",
             "Some geographic names are broad island/region labels and may not designate an individual harbor.",
