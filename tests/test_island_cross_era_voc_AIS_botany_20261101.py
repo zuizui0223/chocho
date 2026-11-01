@@ -22,7 +22,7 @@ def mod():
 
 def test_source_verified_historical_current_ports_coverage_not_interpreted_as_route_absence():
     m=mod()
-    if not m.SOURCE.exists() or not m.BOTANY.exists():
+    if not m.VOYAGE.exists() or not m.BOTANY.exists():
         pytest.skip("Historical 51-island source artifacts are not in anonymized GEB review")
     table,result=m.audit()
     assert len(table)==result["original_island_nodes"]==51
@@ -43,4 +43,4 @@ def test_source_verified_historical_current_ports_coverage_not_interpreted_as_ro
 def test_no_missing_port_botany_as_certain_absence():
     m=mod()
     assert "observation" in m.__doc__.lower()
-    assert m.SOURCE.name.startswith("das_1595_")
+    assert m.VOYAGE.name.startswith("das_1595_")
