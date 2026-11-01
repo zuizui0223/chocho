@@ -1,0 +1,58 @@
+{
+  "schema": "chocho_2020_AIS_WPI51_source_covered_positive_OD_v1",
+  "status": "PUBLIC_AIS_OBSERVED_POSITIVE_VOYAGE_ROWS_NOT_COMPLETE_ISLAND_SHIPPING_CENSUS",
+  "source": {
+    "DOI": "10.5281/zenodo.10783698",
+    "ZIP_MD5": "af27e1bef1f706e2e29ed53aee47ff10",
+    "archive_bytes": 32453859,
+    "original_triplet_csv_bytes": 113764323,
+    "matched_original_WPI_port_locations": 26,
+    "source_sites_total": 1923
+  },
+  "max_AIS_endpoint_to_single_WPI_km": 2,
+  "source_route_rows_audited": {
+    "raw_source_route_rows": 645581,
+    "valid_2020_source_directed_voyage_rows": 645581
+  },
+  "routes_with_both_WPI_endpoints_unique": 1062,
+  "matched_voyages_between_different_WPI_ports_on_same_island": 595,
+  "matched_voyages_between_different_islands": 161,
+  "matched_directed_source_routes_distinct": 67571,
+  "source_undirected_WPI_port_pairs_observed": 22,
+  "source_undirected_island_pairs_observed": 8,
+  "original_island_pairs": 1275,
+  "original_island_nodes": 51,
+  "original_WPI_port_candidates": 194,
+  "island_nodes_with_observed_interisland_direct_voyages": 5,
+  "island_nodes_with_any_AIS_original_port_matches": 17,
+  "island_pairs_with_no_observed_2020_AIS_voyage_UNCOVERED_OR_ZERO_UNKNOWN": 1267,
+  "source_data_limitations": [
+    "AIS vessel message coverage differs by coast, ship type, provider, and time; missing edges are UNKNOWN, not no shipping.",
+    "2020 direct journey rows were reconstructed by AIS authors; no independent trajectory-level revalidation or duplicate-vessel correction was done.",
+    "From-to coordinates are matched uniquely within exact 2/5/10km radius to original 2019 WPI harbor points.",
+    "A historical shipping route or a specific colonial-era botanical transfer was not measured.",
+    "2020 voyages postdate some original 2011–2022 butterfly first-index events and 2001–2024 botanical indexing.",
+    "All WPI endpoints of a matched AIS source row are mapped to original landmass IDs; no GBIF occurrence data are transferred.",
+    "No observed route does not prove the route physically absent, including between two AIS-covered ports."
+  ],
+  "source_WPI_matches": {
+    "not_locatable_to_frozen_194_WPI_ports": 1882,
+    "unique_WPI_coordinate_match": 41
+  },
+  "source_geographic_bbox": {
+    "lat_min": -51.66445,
+    "lat_max": 78.92857000000001,
+    "lon_min": -176.60058,
+    "lon_max": 178.02414
+  },
+  "site_match_distance_diagnostics": {
+    "matched_source_location_max_km": 1.9671574362019817,
+    "matched_source_location_median_km": 1.0923117507096345,
+    "ambiguous_site_nearest_km_median": null
+  },
+  "AIS_original_source_unique_port_site_locations": 1923,
+  "AIS_validated_original_voyage_edges": 67571,
+  "WPI_geocoded_source_sha256": "7d3cd381e298b27a1c776d00540424a2e57838f1bfa34cee7b3ba9c3d99fd9a6",
+  "island_pair_source_sha256": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+  "preanalysis_lock_sha256": "96c1804798ea97bd5b213828ef3ceddde5061fb1f21bd34cf1d468e82f75099a"
+}
