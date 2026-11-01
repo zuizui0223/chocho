@@ -40,4 +40,4 @@ def test_source_locked_commodity_categories_are_not_species_identities():
     assert set(mod.classify("rijst en sandelhout",c))=={"rice","sandalwood"}
     assert mod.classify("silver and silk only",c)==[]
     assert "generic_seeds_plants" in c
-    assert "propagule" in " ".join(lock["classification_downgrade"]).casefold()
+    assert "seed" in " ".join(lock["classification_downgrade"]).casefold()
