@@ -1,0 +1,82 @@
+name: chocho original VOC 7737 cargo records and direct voyage-link feasibility
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-audit-original-VOC-17c-cargo.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_original_VOC_cargo_7737_schema.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_7737_source_lock_20261101.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-VOC-original17c-cargo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-17th-century-ship-cargo-original:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test source-only botanical cargo reader syntax
+        run: |
+          python -m pip install ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_original_VOC_cargo_7737_schema.py
+          python -m compileall -q provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_original_VOC_cargo_7737_schema.py
+      - name: Reacquire SHA-1-pinned cargo and historical interisland voyage sources
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 30 --max-time 240 \
+            'https://dataverse.nl/api/access/datafile/569978?format=original' \
+            --output _private_history/voc_7737_cargo.tab
+          echo 'd7cc3aff064fb63f58b8b549b1ca9808cb4b76d1  _private_history/voc_7737_cargo.tab' | sha1sum -c -
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 30 --max-time 240 \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_57669_all_voyages.tab
+          echo 'eed2479019a8570e392f37f3d781d5b0c67448b1  _private_history/voc_57669_all_voyages.tab' | sha1sum -c -
+      - name: Inspect exact cargo commodity fields and shared historical voyage keys
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_original_VOC_cargo_7737_schema.py \
+            --cargo _private_history/voc_7737_cargo.tab \
+            --voyages _private_history/voc_57669_all_voyages.tab
+      - name: Publish original-source-derived column/cargo category audit without raw ship cargo rows
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_7737_cargo_original_source_audit.json")
+          j=json.loads(p.read_text(encoding="utf8"))
+          assert j["cargo_source_row_count"]==7737
+          assert len(j["columns"])==5
+          assert j["original_cargo_source_sha1"]=="d7cc3aff064fb63f58b8b549b1ca9808cb4b76d1"
+          print("Original VOC cargo source columns:",j["columns"])
+          print("Original cargo source join:",j["candidate_exact_voyage_id_join"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          p=provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_7737_cargo_original_source_audit.json
+          git add "$p"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+             provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_original_VOC_cargo_7737_schema.py \
+             provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_7737_source_lock_20261101.json; then
+            echo 'Cargo source design changed; stale analysis will not publish'; exit 0
+          fi
+          git commit -m 'Audit 7737 genuine VOC cargo records for botanically named commodities and strict source voyage key join [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove all downloaded source ship/cargo lines
+        if: always()
+        run: rm -rf _private_history
