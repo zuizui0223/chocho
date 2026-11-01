@@ -97,3 +97,27 @@
 - 港名・島割当は事前固定 `dataversenl_17c_to_WPI51_island_alias_lock_20261101.json`。曖昧な島全体地名を使う感度分析は `voc_57669_17c_interisland_routes_broad_v1.audit.json`（14リンク、1,467行）。
 - 本結果：`voc_57669_17c_interisland_routes_v1.audit.json`（9航路、1,193行）、`voc_57669_17c_interisland_routes_v1.positive_historic_links.csv`、`voc_17c_7737_cargo_original_source_audit.json`、`voc_17c_cargo_on_verified_island_routes_v1.json`。
 - コード：`derive_dataversenl_17c_VOC_island_routes.py`、`diagnose_voc_57669_raw_port_pair_gaps.py`、`audit_original_VOC_cargo_7737_schema.py`、`join_VOC_17c_cargo_to_historic_island_routes.py`。各原本・積荷の個別記録ID/生データはGitHubに再配布しない。
+
+
+## 6. VOC商品群と239種のチョウの既知寄主属の一致（追加検証）
+
+歴史原表の積荷記述（7,737行）から事前固定辞書によって得た植物性**商品カテゴリー**を、GLOBAL 239蝶種の原HOSTSネットワーク（`808e0b869f9ec1adf8efff87cf6a395adda103e0`）の **Hostplant Genus** とだけ比較。原HOSTS **140,485行**、239蝶の対象レコード**6,672行**、このうち原HOSTSの寄主属・種形態情報が十分なのは4,695行。出発港の当該種での実寄主記録・積荷種名・植物個体の生存・幼虫の運搬を確認した結果ではない。
+
+| 植物性商品群 | 17世紀9航路の積荷に出現した行数 | 対応させた現代寄主属 | 239種中、その属の寄主がHOSTSに記録された蝶種数 |
+|---|---:|---|---:|
+| シナモン | 69 | *Cinnamomum* | 2 |
+| インディゴ | 19 | *Indigofera* | 6 |
+| 白檀 | 16 | *Santalum* | 2 |
+| 砂糖 | 14 | *Saccharum* | 9 |
+| 綿 | 9 | *Gossypium* | 3 |
+| 米 | 7 | *Oryza* | 11 |
+| 茶 | 3 | *Camellia* | 1 |
+| タバコ | 1 | *Nicotiana* | 3 |
+
+8つの貨物カテゴリーに、**固定239種のHOSTSに同じ植物属の寄主記録がある**ことを確認。**7/9の歴史的な陽性島間航路**には、これらいずれかの商品名が書かれた原積荷資料が対応していた。
+
+最も検証候補として具体的なのは、ジャワ–スリランカ（267歴史区間、126積荷行：シナモン67、綿9、インディゴ13など）と、ジャワ–スラウェシ（373区間、125積荷行：クローブ11、白檀12など）、九州–台湾（69区間、23積荷行：米2、砂糖2、タバコ1など）である。これは**港湾交易史と現代の寄主ネットワークを接続する候補の優先順位**であり、すべて同じ植物種・同一積荷・その島での食害・生態的定着が立証されたわけではない。
+
+元239種HOSTSでは、胡椒を *Piper*、クローブを *Syzygium*、生姜を *Zingiber* に事前割当した範囲では対応する寄主属の記録が無かった。**この239蝶種への記録が無いだけであり、全鱗翅目で利用されないことの証明でも、貨物が植物でないことの証明でもない**。古い商材名と現在の科学名が直接1種に結びつかないことにも注意。
+
+追加ソースロック：`voc_17c_commodity_to_HOSTS_genus_lock_20261101.json`。実測レシート：`voc_17c_cargo_HOSTS_genus_239_screen_v1.json`。コード：`audit_VOC_cargo_commodity_to_HOSTS_239_genus.py`。原HOSTSレコードや個別の歴史積荷記述は再配布していない。目的は「どの商材の生きた植物・導入標本を次に史料から検証するか」の絞り込みであり、因果的な移入を示した結果ではない。
