@@ -66,3 +66,14 @@ def test_source_missing_not_confused_with_indexed_absence(tmp_path):
     m=load()
     with pytest.raises(FileNotFoundError):
         m.load_annual_data(audit=tmp_path/"never_there.json")
+
+
+def test_region_effort_gates_are_predeclared_and_primary_unchanged():
+    m=load()
+    assert m.REGION_GATES=={
+        "primary":(5,10,20),
+        "relaxed":(5,5,10),
+        "stringent":(10,20,50),
+    }
+    with pytest.raises(ValueError,match="Unknown predeclared"):
+        m.analyse(eligibility="best-p-value-after-scan")
