@@ -44,10 +44,13 @@ def test_observed_direct_AIS_link_retained_missing_links_unknown():
         {"port_id":"2","landmass_id":"20"},
         {"port_id":"3","landmass_id":"30"},
     ]
+    # The real source accepts exactly the frozen 51 choose 2 cohort;
+    # synthetic tests preserve that scientific grain.
+    islands=["10","20","30"]+[str(i) for i in range(100,148)]
     pairs=[
-        {"island_a":"10","island_b":"20"},
-        {"island_a":"10","island_b":"30"},
-        {"island_a":"20","island_b":"30"},
+        {"island_a":a,"island_b":b}
+        for i,a in enumerate(islands)
+        for b in islands[i+1:]
     ]
     routes={
         ("SITE_A","SITE_B"):4,
@@ -56,7 +59,7 @@ def test_observed_direct_AIS_link_retained_missing_links_unknown():
     matched={"SITE_A":0,"SITE_B":1,"SITE_C":2}
     observed,edges,a=m.to_derived_island_network(
         {},routes,{"raw_source_route_rows":7},matched,ports,pairs,5,32500111)
-    assert len(observed)==3
+    assert len(observed)==1275
     assert observed[0]["ais_2020_direct_voyages_observed_in_sample"]==7
     assert observed[0]["has_positive_2020_AIS_observed_from_to_pair"]==1
     assert observed[1]["ais_2020_direct_voyages_observed_in_sample"]==""
