@@ -1,0 +1,28 @@
+{
+  "schema": "chocho_historical_VOC_IISG_source_probe_v1",
+  "status": "SOURCE_DISCOVERY_BEFORE_HISTORIC_VOYAGE_BODY",
+  "study_goal": "Measure observed Dutch VOC historical port-to-port connections from original voyages, and connect island port-level HOSTS/GBIF exploratory observations without claiming that particular plants were ship cargo",
+  "source": "Leenstra & Parthesius (2022), Dutch Ships in Asian Waters in the 17th Century, IISG Data Collection V1",
+  "url": "https://datasets.iisg.amsterdam/dataset.xhtml?persistentId=hdl%3A10622%2FYP2COP",
+  "persistent_identifier": "hdl:10622/YP2COP",
+  "voyage_filename": "all voyages.tab",
+  "voyage_dataverse_file_id": 10466,
+  "source_file_original_MD5": "1a4d0867da62c1cb4ac4fad83f78d092",
+  "published_table_rows": 57669,
+  "published_table_variables": 18,
+  "published_dataset_license": "CC BY-SA custom dataset terms, verify full attribution and licensing before any redistribution",
+  "years": "1595–1687 published Dutch East India Company Asian voyage table; only dates verified from archive contents later",
+  "download_candidates": [
+    "https://datasets.iisg.amsterdam/api/access/datafile/10466?format=original",
+    "https://datasets.iisg.amsterdam/api/access/datafile/10466?format=RData"
+  ],
+  "source_not_to_confuse": [
+    "original VOC historic journeys vs 2020 AIS paths",
+    "main 51-island sample is mostly outside old Dutch East India Company routes",
+    "Dutch East Indies were not all colonized at voyage date",
+    "recorded voyage stopover is not documented plant propagule or larval host transportation"
+  ],
+  "primary_next_gate": "public 57,669-row file accessible and row schema identifies dated route origin/destination place identifiers; then map unique historical place names to named WPI port matches with manual/geospatial validation before comparing island taxa",
+  "cargo_and_plant_stratification": "IISG dataset has separate cargo totaal.tab ~7737 observations and 5 variables; cannot claim historical transported plant names before inspecting actual cargo classifications",
+  "bias_protection": "Do not interpret modern AIS-absent edges as no connection; do not use only successful mapped host-positive island links to select historical voyages; do not imply GBIF observations in 2001–2024 prove 17th-century plant introductions"
+}
