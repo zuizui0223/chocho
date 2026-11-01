@@ -300,11 +300,35 @@ def main():
         a["site_match_distance_diagnostics"]=matchdist
         a["AIS_original_source_unique_port_site_locations"]=len(sites)
         a["AIS_validated_original_voyage_edges"]=len(routecounts)
+        # Freeze which original WPI port locations were actually present in
+        # this AIS source. A non-match is UNOBSERVED, NOT "no harbor route".
+        wpi_sites=defaultdict(list)
+        for ais_site,wpi_idx in mapping.items():
+            wpi_sites[wpi_idx].append(ais_site)
+        coverage=[]
+        for idx,p in enumerate(ports):
+            matched_sites=wpi_sites.get(idx,[])
+            coverage.append({
+                "wpi_port_id":p["port_id"],
+                "landmass_id":p["landmass_id"],
+                "country":p["country"],
+                "ais2020_source_site_count":len(matched_sites),
+                "ais2020_source_endpoint_rows":sum(endpoints.get(x,0) for x in matched_sites),
+                "ais2020_endpoint_source_status":(
+                    "AIS_ENDPOINT_PRESENT_IN_SOURCE" if matched_sites
+                    else "NOT_OBSERVED_OR_NOT_GEOCODE_MATCHED"),
+            })
+        a["island_nodes_with_positive_AIS_source_endpoint"]=len({
+            v["landmass_id"] for v in coverage
+            if v["ais2020_source_site_count"]>0})
+        a["matched_source_port_sites_source_endpoint_rows"]=sum(
+            v["ais2020_source_endpoint_rows"] for v in coverage)
         a["WPI_geocoded_source_sha256"]=sha256(WPI)
         a["island_pair_source_sha256"]=sha256(PAIRS)
         a["preanalysis_lock_sha256"]=sha256(LOCK)
         prefix=Path(str(args.output_prefix)+f"_{distance}km")
         write_csv(Path(str(prefix)+".island_pairs.csv"),rows)
+        write_csv(Path(str(prefix)+".WPI_port_AIS_source_coverage.csv"),coverage)
         if portedges:
             write_csv(Path(str(prefix)+".observed_port_links.csv"),portedges)
         Path(str(prefix)+".audit.json").write_text(
