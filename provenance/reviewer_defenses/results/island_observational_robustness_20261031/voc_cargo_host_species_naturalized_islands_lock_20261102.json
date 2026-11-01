@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_VOC_cargo_exact_HOSTS_host_species_GloNAF_naturalized_region_v1",
+  "status": "LOCKED_BEFORE_SOURCE_GLoNAF_REGION_RESULT",
+  "date": "2026-11-02",
+  "aim": "Check exact larval HOSTS plant binomial of independently first-indexed butterflies in six source VOC-route islands, requiring naturalized alien occurrence of same plant binomial in the island's source-matched GloNAF region AND historical commodity matches the plant genus.",
+  "sources": {
+    "historical_route_cargo": "voc_17c_cargo_on_verified_island_routes_v1.json (7 of 9 source-positive 1595–1698 routes have unambiguous 17th-century cargo records)",
+    "predeclared_commodity_genus_map": "voc_17c_commodity_to_HOSTS_genus_lock_20261101.json",
+    "independent_GBIF_butterfly_events": "island_host_continuity_events.csv 2011–2017 (six islands 49 first-index species×island events)",
+    "HOSTS": "globalbioticinteractions/HOSTS commit 808e0b869f9ec1adf8efff87cf6a395adda103e0, full 140485 source rows; GEB239 filter",
+    "glonaf": "Lenzner et al 2022 Zenodo 10.5281/zenodo.6640264 MD5 16f5585d2500676951a4b664bbf0ffde, 470962 source rows",
+    "geography": "TDWG official 369 level3 polygons, 52da7828aba9d461dd133c27b3bd7a4407161f54; 51-island WPI source crosswalk"
+  },
+  "six_island_to_wgsrpd3": {
+    "12": "SUM",
+    "17": "SUL",
+    "19": "JAW",
+    "31": "SRL",
+    "43": "JAP",
+    "44": "TAI"
+  },
+  "GloNAF_source_spatial_matching": {
+    "primary_threshold": 0.05,
+    "sensitivity_thresholds": [
+      0.01,
+      0.1
+    ],
+    "rule": "Original GloNAF source polygon >=50% inside target WGSRPD region OR >=threshold fraction of target, equal-area EPSG:6933, same existing source-locked code"
+  },
+  "matching_rules": [
+    "record of 2011–2017 butterfly first GBIF indexing on island, no HOSTS data used to define this outcome",
+    "focal recorded butterfly has an exact HOSTS genus + specific epithet binomial record (must be in fixed239 panel)",
+    "the exact plant binomial is an original GloNAF naturalized alien taxon canonical alias in the corresponding WGSRPD3 source region",
+    "plant genus is in originally precommitted commodity genus vocabulary for the ship's cargo category recorded on the original historic pair",
+    "unknown or missing GloNAF local match is NOT proof of plant species absence",
+    "JAP is all Japan (not only Kyushu); no island-specific inference for JAP species without finer source region"
+  ],
+  "primary_outcomes": [
+    "7 source-cargo-positive routes with at least one island-specific recorded butterfly×exact larval-host plant species×GloNAF naturalized record×original VOC cargo genus concordance",
+    "7 routes with such concordance at BOTH ends",
+    "7 routes with the SAME first-indexed butterfly species and the SAME exact larval-host plant species catalogued as naturalized in BOTH GloNAF regions",
+    "exact matches separated by commodity category and island; empty/unknown source records kept"
+  ],
+  "source_reuse_note": "No new 17th century cargo rows will be uploaded or redefined based on modern butterfly outcomes",
+  "interpretation_ceiling": [
+    "Same exact modern host species in a GloNAF naturalized flora and VOC commodity genus is STILL not evidence of shipment of that plant on the historic ship or voyage leg.",
+    "No detection date or naturalization year for source GloNAF species and no proved local larval use; 400-year sequence cannot be inferred.",
+    "Some source GloNAF and TDWG polygons cover broad areas; source plant records may not occur near the specific WPI port.",
+    "No negative inference from a genus or species unmatched by the historic or modern catalogues.",
+    "Nine source historic links and original 51-island host/GBIF positive evidence remain valid regardless of exact species source coverage."
+  ]
+}
