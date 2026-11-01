@@ -1,0 +1,31 @@
+{
+  "schema": "chocho_dataversenl_17c_asiatic_historic_voyages_source_gate_v1",
+  "status": "SOURCE_METADATA_VERIFIED_RAW_ORIGINAL_FILE_NOT_YET_AUDITED",
+  "archive_title": "Dutch Ships in Asian Waters in the 17th Century",
+  "authors": "Leenstra, Menno; Parthesius, Robert (2022)",
+  "original_dataset_citation": "Leenstra and Parthesius 2022, hdl:10622/YP2COP, IISH Data Collection",
+  "dataverse_nl_mirror_doi": "10.34894/5HGTCD",
+  "authoritative_dataversenl_mirror_metadata_repository": "Dans-labs/odissei-portal-exp",
+  "authoritative_metadata_json_blob_sha": "0f0e8a0598aee1c3e65e747165a1ee56789d49df",
+  "metadata_filepath": "raw-data/doi-10.34894-5HGTCD/source/dataverse-json-export.json",
+  "original_dataset_version": 1,
+  "source_file": "all voyages.tab",
+  "mirror_file_id": 569977,
+  "api_candidate": "https://dataverse.nl/api/access/datafile/569977?format=original",
+  "expected_stored_file_size_bytes": 10187695,
+  "expected_source_SHA1": "eed2479019a8570e392f37f3d781d5b0c67448b1",
+  "expected_original_dataset_rows": 57669,
+  "expected_columns": 18,
+  "separate_IISG_api_status": "Prior request at datasets.iisg.amsterdam/api/access/datafile/10466?format=original returned 116,415 bytes XML metadata not voyage tabular source, MD5 d298a614a7eb26a7fe22be21660b9268; cannot treat it as 57,669 voyage rows",
+  "prevent_cherry_pick": [
+    "Do not choose historical ports based on host or butterfly composition",
+    "Source row-level route time/origin/destination must be validated before joining islands",
+    "Only source-positive 17th c links are informative; lack of link in this subset is unknown",
+    "Keep original historic route archives off repo; only aggregated names/counts"
+  ],
+  "limits": [
+    "Historic VOC routes, not full world shipping or specifically colonial era biological cargo",
+    "Historic port name may designate broad region not actual WPI modern port; one-to-one verified geography required",
+    "Modern 2001-2024 plant presence and 2011-2022 butterfly indexing do not demonstrate centuries-long biological causal chain"
+  ]
+}
