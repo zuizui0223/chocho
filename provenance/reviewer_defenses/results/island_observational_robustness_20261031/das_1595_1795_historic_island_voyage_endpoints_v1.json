@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_source_pinned_DAS_Dutch_Europe_Asia_island_voyage_endpoint_v1",
+  "status": "ORIGINAL_HUYGENS_VOC_HISTORICAL_EUROPE_ISLAND_VOYAGE_ENDPOINTS_NOT_DIRECT_INTERISLAND_LINKS",
+  "source_huygens": "https://www.huygens.knaw.nl/en/resources/dutch-asiatic-shipping-in-the-17th-and-18th-centuries-2/",
+  "source_normalized_IBM_commit": "33ae4ef8dfa6acd5f35e619e079ceec518306c9f",
+  "source_sha256": "c875a0a59568713347b1d50e4a2f62708006be524133d30ee5ff4fe23f05b77f",
+  "mapping_lock_sha256": "812ea6336e6d5f7d97078579d593192df723b24f20b68ecf92bad4ac2f6feaa7",
+  "source_original_8178_journey_count": 8178,
+  "include_broad_geographic_island_labels": false,
+  "historical_source_rows_by_endpoint_type": {
+    "all_source_voyage_rows": 8178,
+    "NO_WPI51_ISLAND_ENDPOINT": 1718,
+    "DUTCH_METROPOLE_TO_OR_FROM_WPI51_ISLAND": 6157,
+    "ISLAND_ENDPOINT_TO_UNMAPPED_OTHER_SOURCE_PORT": 303,
+    "no_valid_1595_1795_departure_year": 36
+  },
+  "historical_source_departure_dated_rows_by_endpoint_type": {
+    "NO_WPI51_ISLAND_ENDPOINT": 1709,
+    "DUTCH_METROPOLE_TO_OR_FROM_WPI51_ISLAND": 6135,
+    "ISLAND_ENDPOINT_TO_UNMAPPED_OTHER_SOURCE_PORT": 298
+  },
+  "distinct_historical_voyage_ids_all_with_dated_departure": 8139,
+  "source_matched_metropole_to_island_arrival_date_checks": {
+    "metropole_island_named_endpoint_rows": 6135,
+    "metropole_island_arrival_unverified": 83,
+    "metropole_island_arrival_dated_rows": 6052
+  },
+  "original_WPI_islands": 51,
+  "islands_with_historical_Dutch_source_metropole_endpoint": 4,
+  "historic_island_ids_with_dated_Europe_voyage_endpoint": [
+    "12",
+    "17",
+    "19",
+    "31"
+  ],
+  "metropole_to_island_voyage_endpoint_rows_total": 4033,
+  "island_to_metropole_voyage_endpoint_rows_total": 2102,
+  "original_source_distinct_WPI51_island_pair_endpoint_routes": {},
+  "original_source_Metropole_island_endpoint_voyage_ids": 6133,
+  "caveats": [
+    "Huygens Dutch-Asiatic Shipping documents Europe–Asia *outward/homeward* voyages with Cape stopovers, not a complete seventeenth-century Asian coastal network.",
+    "A source voyage destination label without dated arrival is not known to have arrived; separately audited.",
+    "Only original 51-island physical landmass matches are shown; unmentioned islands do not have a certified absent historic route.",
+    "Public historical port names are different from frozen 2019 WPI harbor identities. No port-specific historic WPI original ID is inferred.",
+    "VOC vessel/cargo categories were not inspected for transported host plant species; no plant introduction or butterfly colonization is supported.",
+    "The counts of 17th/18th century historical journeys cannot be used as the exposure to 2001–2022 butterfly indexing without multiple time and geographic controls.",
+    "Contemporary host and butterfly richness on these islands are listed for transparent coverage only, not tested for causal shipping associations."
+  ]
+}
