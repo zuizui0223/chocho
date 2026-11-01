@@ -1,0 +1,106 @@
+name: chocho original 224 butterfly observed beta prior and late effort gates
+
+on:
+  push:
+    branches: [analysis/global-colonial-alien-flora-control-20261031]
+    paths:
+      - ".github/workflows/chocho-global224-observed-beta-effort-sensitivity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-global224-independent-effort-gates-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  source-locked-sampling-support-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source readers and verify source-free tests
+        run: |
+          python -m pip install "numpy>=1.26,<3" "pandas>=2.2,<3" "shapely>=2.1,<3" "pyproj>=3.7,<4" "pyshp>=2.3" "pytest>=8" ruff
+          ruff check --select F821 scripts/analyze_gbif_global224_observed_beta.py
+          python -m pytest tests/test_gbif_global224_observed_beta_20261101.py -q
+      - name: Checkout original fixed HOSTS
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Checkout frozen butterfly resource and source controls
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: analysis/global-colonial-host-resource-convergence-20261031
+          path: _external/butterfly_beta
+      - name: Checkout official TDWG source-pinned level3 polygons
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/wgsrpd
+      - name: Fetch only GloNAF plant source, not GBIF raw points
+        run: |
+          mkdir -p _temp_historical_sources
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 180 \
+            'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' \
+            --output _temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+      - name: Re-evaluate relaxed and stringent predeclared recording opportunity thresholds
+        run: |
+          prefix=provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031
+          for gate in relaxed stringent; do
+            python scripts/analyze_gbif_global224_observed_beta.py \
+              --eligibility "$gate" \
+              --output "${prefix}/gbif_global224_observed_beta_${gate}_v1.json" \
+              --region-fold-csv "${prefix}/gbif_global224_observed_beta_${gate}_region_holdout_v1.csv"
+          done
+      - name: Commit source-derived effort sensitivity only, never species geo-point records
+        run: |
+          prefix=provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          pre=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031")
+          for gate in ("relaxed","stringent"):
+            p=pre/f"gbif_global224_observed_beta_{gate}_v1.json"
+            o=json.loads(p.read_text(encoding="utf8"))
+            assert o["cohort"]["region_recording_eligibility"]==gate
+            assert o["cohort"]["global_source_mapped_candidate_species"]==224
+            assert o["cohort"]["region_count"]>=35
+            print(gate,o["cohort"]["region_count"],o["heldout_region_model_comparisons"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${prefix}/gbif_global224_observed_beta_relaxed_v1.json" \
+                  "${prefix}/gbif_global224_observed_beta_relaxed_region_holdout_v1.csv" \
+                  "${prefix}/gbif_global224_observed_beta_stringent_v1.json" \
+                  "${prefix}/gbif_global224_observed_beta_stringent_region_holdout_v1.csv"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+            scripts/analyze_gbif_global224_observed_beta.py \
+            "${prefix}/gbif_global224_observed_beta_lock_v1.json" \
+            "${prefix}/gbif_global224_annual_v1.audit.json"; then
+            echo 'Science/model source changed since checkout, skip stale publication'
+            exit 0
+          fi
+          git commit -m 'Assess original-global GBIF butterfly host signal under predeclared relaxed/strict provider-day eligibility [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove source plants and GIS
+        if: always()
+        run: rm -rf _temp_historical_sources _external
