@@ -1,0 +1,94 @@
+name: chocho original 1595–1687 VOC historical voyage table source gate
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-17c-VOC-historical-voyage-source-gate.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_voc_17c_archive_source.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_historical_ship_source_lock_20261101.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-17c-original-voc-source-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-voyage-original-IISG-Dataverse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download original VOC voyage table without publishing third-party raw vessel movements
+        id: download
+        continue-on-error: true
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 30 --max-time 240 \
+            'https://datasets.iisg.amsterdam/api/access/datafile/10466?format=original' \
+            --output _private_history/voc_all_voyages.tab
+          test -s _private_history/voc_all_voyages.tab
+          md5sum _private_history/voc_all_voyages.tab
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_voc_17c_archive_source.py \
+            --source _private_history/voc_all_voyages.tab
+      - name: Preserve exact source access/MD5 or documented blocker as finite receipt
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          import hashlib
+          from pathlib import Path
+          folder=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          source=Path("_private_history/voc_all_voyages.tab")
+          receipt=folder/"voc_17c_57669_source_schema.json"
+          audit={
+            "source":"Leenstra and Parthesius 2022, hdl:10622/YP2COP",
+            "download_dataverse_file_id":10466,
+            "download_url":"https://datasets.iisg.amsterdam/api/access/datafile/10466?format=original",
+            "expected_source_rows":57669,
+            "expected_original_MD5":"1a4d0867da62c1cb4ac4fad83f78d092",
+            "downloaded_bytes":source.stat().st_size if source.exists() else 0,
+            "observed_MD5":hashlib.md5(source.read_bytes()).hexdigest() if source.exists() else None,
+            "source_content_schema_receipt_exists":receipt.exists(),
+          }
+          if receipt.exists():
+            x=json.loads(receipt.read_text(encoding="utf8"))
+            audit["status"]=x["status"]
+            audit["source_rows"]=x["source_rows"]
+            audit["source_columns"]=x["source_variables"]
+          else:
+            audit["status"]="IISG_VOC_SOURCE_NOT_FETCHED_OR_SCHEMA_NOT_INSPECTED"
+          (folder/"voc_17c_source_access_gate.json").write_text(
+              json.dumps(audit,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
+          print(json.dumps(audit,indent=2,ensure_ascii=False))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git add "${folder}/voc_17c_source_access_gate.json"
+          if test -f "${folder}/voc_17c_57669_source_schema.json"; then
+            git add "${folder}/voc_17c_57669_source_schema.json"
+          fi
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+               "${folder}/probe_voc_17c_archive_source.py" \
+               "${folder}/voc_17c_historical_ship_source_lock_20261101.json"; then
+            echo 'Original historical source probe changed during execution; no stale report published'
+            exit 0
+          fi
+          git commit -m 'Audit authentic 17th-century VOC voyage source identity and port/date columns [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete source ship/crew/voyage rows from runner
+        if: always()
+        run: rm -rf _private_history

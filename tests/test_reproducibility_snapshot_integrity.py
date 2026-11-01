@@ -61,7 +61,13 @@ def test_r_sidecar_rebuild_uses_base_r_and_is_documented() -> None:
 
 def test_shapely_is_explicit_in_clean_test_environment() -> None:
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-    assert 'test = ["pytest>=8", "shapely>=2,<3"]' in pyproject
+    # Inspect dependency membership, not an exact TOML literal: new scientific
+    # source-validation dependencies may be added without dropping shapely.
+    import tomllib
+    requirements = tomllib.loads(pyproject)["project"]["optional-dependencies"]["test"]
+    assert any(dep.startswith("pytest>=8") for dep in requirements)
+    assert any(dep.startswith("shapely>=2,<3") for dep in requirements)
+    assert any(dep.startswith("pycountry>=24.6") for dep in requirements)
     workflow = (ROOT / ".github/workflows/paper-ci.yml").read_text(encoding="utf-8")
     assert 'python -m pip install -e ".[test]"' in workflow
 

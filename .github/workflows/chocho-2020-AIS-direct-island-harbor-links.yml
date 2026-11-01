@@ -1,0 +1,87 @@
+name: chocho public 2020 AIS direct port-to-port voyage links for original 51 islands
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-2020-AIS-direct-island-harbor-links.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_ais_2020_island_port_links.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_island_voyage_lock_20261101.json"
+      - "tests/test_island_ais2020_wpi_routes_20261101.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-public-direct-voyages-2020-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-observed-port-to-port-harbor-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate source-free unique port matching and positive-link-only output
+        run: |
+          python -m pip install 'numpy>=1.26,<3' 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_ais_2020_island_port_links.py
+          python -m pytest -q tests/test_island_ais2020_wpi_routes_20261101.py
+      - name: Download and checksum original open 2020 from/to AIS harbor journeys
+        run: |
+          mkdir -p _private_source_stage
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 25 --max-time 180 \
+            'https://zenodo.org/records/10783698/files/triplet_2020.zip?download=1' \
+            --output _private_source_stage/triplet_2020.zip
+          echo 'af27e1bef1f706e2e29ed53aee47ff10  _private_source_stage/triplet_2020.zip' | md5sum -c -
+      - name: Rebuild time-stamped AIS port origin-destination positive edge index and original island links
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_ais_2020_island_port_links.py \
+            --zip _private_source_stage/triplet_2020.zip
+      - name: Verify and publish only source-derived positive 2020 port and island links
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          folder=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          for km in (2,5,10):
+              x=json.loads((folder/f"ais_2020_wpi51_island_{km}km.audit.json").read_text())
+              assert x["source"]["ZIP_MD5"]=="af27e1bef1f706e2e29ed53aee47ff10"
+              assert x["original_island_pairs"]==1275
+              assert x["original_WPI_port_candidates"]==194
+              assert x["max_AIS_endpoint_to_single_WPI_km"]==km
+              assert x["matched_voyages_between_different_islands"]>=0
+              assert x["island_pairs_with_no_observed_2020_AIS_voyage_UNCOVERED_OR_ZERO_UNKNOWN"]>=0
+              print(km,x["source_undirected_island_pairs_observed"],
+                    x["source"]["matched_original_WPI_port_locations"],
+                    x["source_WPI_matches"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.audit.json \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.island_pairs.csv \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.WPI_port_AIS_source_coverage.csv
+          for candidate in provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.observed_port_links.csv; do
+            if test -f "$candidate"; then git add "$candidate"; fi
+          done
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_ais_2020_island_port_links.py \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_island_voyage_lock_20261101.json; then
+            echo 'AIS matching source changed, refusing stale data publication';exit 0
+          fi
+          git commit -m 'Audit public 2020 AIS direct harbor OD edges for original WPI 194 ports and 51 islands [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete public third-party voyage raw rows and AIS vessel identifiers
+        if: always()
+        run: rm -rf _private_source_stage

@@ -1,0 +1,58 @@
+{
+  "status": "SOURCE_VERIFIED_VOC_7737_CARGO_RECORDS_SCHEMA_NOT_LARVAL_HOST_TRANSPORT",
+  "citation": "Leenstra and Parthesius 2022, Dutch Ships in Asian Waters in the 17th Century, DataverseNL DOI 10.34894/5HGTCD",
+  "archive_file": 569978,
+  "original_cargo_source_sha1": "d7cc3aff064fb63f58b8b549b1ca9808cb4b76d1",
+  "original_cargo_source_bytes": 1389412,
+  "cargo_source_row_count": 7737,
+  "columns": [
+    "ID,N,5,0",
+    "REISN,N,6,0",
+    "SOURCE,C,254",
+    "LADING,C,254",
+    "FACTUUR,C,97"
+  ],
+  "source_record_column_profiles": {
+    "ID,N,5,0": {
+      "n_nonempty": 7737,
+      "n_distinct": 1032,
+      "top_count": 80
+    },
+    "REISN,N,6,0": {
+      "n_nonempty": 7737,
+      "n_distinct": 7701,
+      "top_count": 2
+    },
+    "SOURCE,C,254": {
+      "n_nonempty": 7732,
+      "n_distinct": 4692,
+      "top_count": 39
+    },
+    "LADING,C,254": {
+      "n_nonempty": 7625,
+      "n_distinct": 6983,
+      "top_count": 36
+    },
+    "FACTUUR,C,97": {
+      "n_nonempty": 5444,
+      "n_distinct": 4753,
+      "top_count": 8
+    }
+  },
+  "candidate_exact_voyage_id_join": {
+    "status": "MATCHED_SOURCE_VOYAGE_ID_VOCABULARY",
+    "source_voyage_ids": 57607,
+    "cargo_ids": 7701,
+    "intersecting_source_voyage_ids": 7648,
+    "cargo_unique_ids_unmatched": 53,
+    "source_voyage_ids_without_cargo_id": 49959,
+    "note": "Vocabulary overlap alone does not prove each cargo row refers to the same individual port-to-port leg"
+  },
+  "limitations": [
+    "Original shipping commodities and merchandise records are not automatically living plant propagules or compatible butterfly larval host species.",
+    "Cargo record taxonomy and voyage key relationship must be validated before cargo assignments to a particular island-to-island ship leg.",
+    "Source 7,737 rows represent one historical dataset, not complete cargo manifests for all 57,669 voyages.",
+    "No vessel, named ship, individual shipment date/quantity, cargo detail row or voyager is published here.",
+    "No association with modern GloNAF/WCVP/GBIF butterfly outcomes is estimated from cargo field names."
+  ]
+}

@@ -1,0 +1,102 @@
+name: chocho historical VOC cargo genus vs exact naturalized plant host and island butterflies
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-VOC-exact-naturalized-host-species-islands.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_cargo_exact_HOSTS_GloNAF_local_plant_species.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/_colonial_source_imports.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_cargo_host_species_naturalized_islands_lock_20261102.json"
+      - "tests/test_VOC_cargo_exact_HOSTS_GloNAF_species_20261102.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-VOC-historic-cargo-source-exact-naturalized-host-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  original-historical-cargo-to-island-naturalized-exact-host-species:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-locked botanical geometry, test stricter exact plant species matching
+        run: |
+          python -m pip install 'numpy>=1.26,<3' 'shapely>=2.1,<3' 'pyproj>=3.7,<4' 'pyshp>=2.3' 'pytest>=8' ruff
+          ruff check --select F821 \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_cargo_exact_HOSTS_GloNAF_local_plant_species.py \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/_colonial_source_imports.py
+          python -m pytest tests/test_VOC_cargo_exact_HOSTS_GloNAF_species_20261102.py -q
+      - name: Checkout frozen source HOSTS with actual larval host binomial
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Checkout original source-locked GloNAF normalizer (same as previous 284-region study)
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: _external/colonial
+      - name: Checkout fixed original 369 WD3 regions
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/tdwg
+      - name: Fetch exact original 2022 naturalized flora dataset; no source species rows republished
+        run: |
+          mkdir -p _temp_historical_sources
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 240 \
+            'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' \
+            --output _temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+      - name: Test exact contemporary HOSTS host plant species as GloNAF naturalized in six historical WPI islands, across three fixed polygon thresholds
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_cargo_exact_HOSTS_GloNAF_local_plant_species.py
+      - name: Publish source-derived pair-level exact concordance, no historic ship or individual GBIF records
+        run: |
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_cargo_exact_HOSTS_GloNAF_local_plant_species_v1.json")
+          x=json.loads(f.read_text(encoding="utf8"))
+          assert x["schema"]=="chocho_historical_VOC_cargo_modern_GloNAF_exact_larval_host_naturalized_local_v1"
+          assert x["comparisons"]["0.05"]["original_historic_positive_island_pairs"]==9
+          assert x["comparisons"]["0.05"]["history_routes_with_actual_cargo_ID_rows"]==7
+          assert set(x["comparisons"])=={"0.01","0.05","0.1"}
+          print(json.dumps({k:{a:b for a,b in v.items() if a!="pair_rows"}
+             for k,v in x["comparisons"].items()},ensure_ascii=False,indent=2))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}/voc_cargo_exact_HOSTS_GloNAF_local_plant_species_v1.json" \
+                  "${folder}/voc_cargo_exact_HOSTS_GloNAF_local_plant_species_pairs_v1.csv"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+            "${folder}/audit_VOC_cargo_exact_HOSTS_GloNAF_local_plant_species.py" \
+            "${folder}/voc_cargo_host_species_naturalized_islands_lock_20261102.json"; then
+            echo 'Original source design changed while processing, skip stale results'
+            exit 0
+          fi
+          git commit -m 'Check exact naturalized larval HOSTS species in port-linked islands on authentic historical VOC cargo category routes [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove downloaded third-party GloNAF regional plants and HOSTS records
+        if: always()
+        run: rm -rf _temp_historical_sources _external

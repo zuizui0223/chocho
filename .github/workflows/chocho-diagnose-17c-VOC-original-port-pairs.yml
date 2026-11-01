@@ -1,0 +1,79 @@
+name: chocho diagnostic original 57669 VOC island city-port pair mapping
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-diagnose-17c-VOC-original-port-pairs.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/diagnose_voc_57669_raw_port_pair_gaps.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-Dutch-early-modern-original-portpairs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  authentic-original-porto-pair-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate original source diagnostic code
+        run: |
+          python -m pip install ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/diagnose_voc_57669_raw_port_pair_gaps.py
+          python -m compileall -q provenance/reviewer_defenses/results/island_observational_robustness_20261031/diagnose_voc_57669_raw_port_pair_gaps.py
+      - name: Reacquire exact Dutch VOC source archive, do not reproduce individual journeys
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 240 \
+            -H 'Accept: application/octet-stream' \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_57669_all_voyages.tab
+          echo 'eed2479019a8570e392f37f3d781d5b0c67448b1  _private_history/voc_57669_all_voyages.tab' | sha1sum -c -
+          test "$(stat -c '%s' _private_history/voc_57669_all_voyages.tab)" = '10187695'
+      - name: Audit historical from/to port names, actual cross-island links and source date values
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/diagnose_voc_57669_raw_port_pair_gaps.py \
+            --source _private_history/voc_57669_all_voyages.tab \
+            --out provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_57669_17c_portpair_diagnostic_v1.json
+      - name: Publish only audited source-level aggregates, no ship or individual voyage data
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_57669_17c_portpair_diagnostic_v1.json")
+          j=json.loads(p.read_text(encoding="utf8"))
+          assert j["source_row_classification"]["source_rows"]==57669
+          assert j["source"]["sha1"]=="eed2479019a8570e392f37f3d781d5b0c67448b1"
+          print("Actual original distinct port pairs:",j["unique_original_offdiagonal_port_pairs"])
+          print("Both source city aliases matching DIFFERENT frozen 51 islands:",
+                j["source_row_classification"]["two_distinct_strict_island_endpoints"])
+          print("Both broad island aliases matching DIFFERENT frozen 51 islands:",
+                j["source_row_classification"]["two_distinct_broad_island_endpoints"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          path=provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_57669_17c_portpair_diagnostic_v1.json
+          git add "$path"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/diagnose_voc_57669_raw_port_pair_gaps.py \
+            provenance/reviewer_defenses/results/island_observational_robustness_20261031/dataversenl_17c_to_WPI51_island_alias_lock_20261101.json; then
+            echo 'Original source audit rules or historical place mapping changed; do not publish stale report';exit 0
+          fi
+          git commit -m 'Diagnose genuine Dutch VOC 57669 dated from-to port pairs and precommitted WPI51 island alias coverage [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Erase original copyrighted historic voyage-level source
+        if: always()
+        run: rm -rf _private_history

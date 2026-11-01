@@ -1,0 +1,64 @@
+{
+  "schema": "chocho_51island_194WPIports_x_Lenzner4empires_x_2010bilateral_pretest_v1",
+  "status": "PREDEFINED_BEFORE_PORT_TO_TDWG_JOIN_OR_PAIR_ASSOCIATION",
+  "source_date": "2026-11-01",
+  "main_question": "Does shared colonial-era imperial history help account for introduced-host and newly indexed butterfly assemblage similarity among islands with actual indexed ports, and does previously observed host-butterfly similarity persist under history controls?",
+  "source_pins": {
+    "island_pairs_blob": "5663d2ffe42419f5c4496b92c9f3bbf76175907b",
+    "island_list_blob": "18cecde5bf3066f276380167f451f1fa5cc1caa1",
+    "source_WPI_port_194_blob": "33e12af064c4af265cde75b799c1bfb4a250697f",
+    "Lenzner_WGSRPD3_empire_area_covariate_blob": "5963e26fff72c8f2bd3bd6379b3b79b6c8b4d126",
+    "TDWG_369_geojson_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "UNCTAD_2010_country_bilateral_blob": "f7d58e6e5d669611a5472f2e0f18ffcfb2c3bd53",
+    "original_Lenzner_Zenodo_DOI": "10.5281/zenodo.6640264"
+  },
+  "geo_matching": {
+    "primary": "2019 WPI port points inside official WGSRPD3 polygon, or nearest polygon boundary <=10 km, geodesic distance; unique code chosen alphabetically if multiple intersects",
+    "alternate_max_nearest_km": [
+      2,
+      25
+    ],
+    "source_polygon_repair": "shapely.make_valid only, log repaired TDWG region names and polygon area change",
+    "colonial_area_overlap_lower": 0.8,
+    "colonial_area_overlap_upper": 1.05,
+    "island_eligible": "at least one matched WPI port and at least half WPI ports on island successfully matched to an official WGSRPD3 region with 80%-105% Lenzner source area overlap",
+    "multiple_regions_per_island": "average colonial years over successfully matched original WPI ports (unweighted), keep dispersion and region IDs, no single forced colonial label",
+    "not_matched": "unknown, not zero historical exposure",
+    "multi_country_landmass": "Borneo (landmass_id 9) keeps island-level port mapping but is excluded from a country-bilateral maritime sensitivity"
+  },
+  "history": {
+    "primary_shared_metric": "sum across GB,ESP,PRT,NL of min(islandA port-mean years, islandB port-mean years), 0 only when both original matched history vectors are present",
+    "binary_shared_history": "at least one empire where both island port-mean durations>=25 years",
+    "sensitivity_shared_min_years": [
+      1,
+      50
+    ],
+    "exposure_log": "log1p(shared duration sum)",
+    "no_claims": [
+      "historical port-specific shipping edge",
+      "actual colonial botanical introductions",
+      "current country equals former empire",
+      "continuous historical overlap at same years"
+    ]
+  },
+  "models": {
+    "outcome": "2011–2022 first-indexed GBIF butterfly assemblage Jaccard (not colonization), 51-island frozen universe, only matched islands retained",
+    "base": "log1p representative port distance, earlier indexed butterfly Jaccard, earlier butterfly species richness min/max, candidate alien host species richness min/max, indexed WPI port count min/max",
+    "base_plus_host": "base + port-indexed candidate larval-host Jaccard",
+    "base_plus_history": "base + log1p shared colonial duration + binary shared history",
+    "base_plus_history_host": "base + history variables + candidate-host Jaccard",
+    "base_plus_history_host_interaction": "base + history + candidate-host Jaccard + candidate-host Jaccard×log1p shared colonial duration",
+    "source_lsBCI_models": "same matched islands restricted to observed different-country 2010 LSBCI; sequentially add original country-pair index, shared empire duration, and host candidate similarity",
+    "scoring": "leave-one-entire-island-out ridge lambda1, standardize training only, clip Jaccard predictions [0,1], each island equal weighted MSE and MAE",
+    "secondary_associations": "Spearman/partial rank shipping or colonial history × host/butterfly Jaccard controlling log-distance, earlier butterfly Jaccard and source catalogue island richness",
+    "dependence": "51-island pair observations repeat island nodes; no pair-independent p-values or naive confidence intervals"
+  },
+  "no_data_peeking_rules": [
+    "Do not select a closer/further WPI-TDWG cut point by butterfly response or strongest positive correlation",
+    "Report all cutoffs (2/10/25 km), matched island counts and selected island IDs",
+    "Do not label 2010 UNCTAD country bilateral LSBCI as individual port routes",
+    "Keep 2001–2024 pooled plant source as contemporary association, never plant-first temporal causal effect",
+    "The full 51-island positive original host-butterfly correlation remains valid descriptive evidence even when historic port-to-region coverage is poor",
+    "Do not join this limited 51-island response to separate 169 region GBIF beta as if independent simultaneous observations"
+  ]
+}

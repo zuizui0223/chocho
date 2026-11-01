@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_island_historic_colonial_and_2020_AIS_positive_links_v1",
+  "status": "SOURCE_BACKED_POSITIVE_ROUTE_PAIRS_X_HOST_BUTTERFLY_HISTORY_NOT_CAUSAL",
+  "data_sources": {
+    "historical_Lenzner": "10.5281/zenodo.6640264",
+    "AIS_2020_Duvallet": "10.5281/zenodo.10783698",
+    "source_original_51island_pairs_sha256": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+    "geocoded_51_island_history_sha256": "0538b14cd81b8978603d0885903e0fe2d6a432f4bc64058b120656493278828a",
+    "observed_2020_AIS_positive_pairs_sha256": "7a239e6ea5db1ea1cc0a18deaa7edf1b30d9e063ee049df5bc58e9115850b8c5",
+    "country_shipping_2010_sha256": "587cd6507ea182847138bc63a2fac001911843e3ee01df7c130df8dfddbb5283",
+    "AIS_before_result_design_lock_sha256": "96c1804798ea97bd5b213828ef3ceddde5061fb1f21bd34cf1d468e82f75099a"
+  },
+  "fixed_AIS_unique_port_match_radius_km": 5,
+  "original_island_pairs": 1275,
+  "positive_direct_2020_AIS_island_pair_count": 12,
+  "distinct_linked_islands": 9,
+  "recorded_AIS_route_row_total": 180,
+  "links_with_positive_host_candidate_similarity": 12,
+  "links_with_positive_new_GBIF_butterfly_similarity": 10,
+  "both_islands_historic_source_count": 12,
+  "colonial_shared_25years_positive_link_pairs": 2,
+  "metropolitan_country_to_contact_positive_link_pairs": 4,
+  "2020_link_graph_components_on_positive_records": [
+    [
+      "15",
+      "26",
+      "54",
+      "85",
+      "152"
+    ],
+    [
+      "10",
+      "19",
+      "23",
+      "44"
+    ]
+  ],
+  "largest_source_route_edge": {
+    "islands": [
+      "15",
+      "26"
+    ],
+    "raw_source_voyage_rows": 154,
+    "fraction_of_all_matched_source_interisland_route_rows": 0.8555555555555555
+  },
+  "after_largest_link_removed": {
+    "positive_link_pairs": 11,
+    "positive_route_rows": 26,
+    "pairs_with_host_similarity_gt_zero": 11,
+    "pairs_with_new_butterfly_similarity_gt_zero": 9
+  },
+  "unverified_false_routes_or_absences": [
+    "Do not compare observed AIS route links against 1250+ unobserved island pairs as if route-negative.",
+    "A positive direct 2020 AIS row does not identify which goods, plant propagules or butterfly life stages were carried.",
+    "AIS source coverage concentrated in some seas and ship types; observed links are not a global connection census.",
+    "2019 WPI harbor and 2020 AIS voyages are centuries later than much of the colonial contact source data.",
+    "Source historical empire metrics cover only GB, ESP, PRT, NL; French/other empires absent.",
+    "Metropolitan-country link is defined using a *current* WPI country code and a Lenzner historical-area proxy, not documented 1800s port operation.",
+    "Candidate plants use 2001-2024 indexing, butterfly response uses 2011-2022 first GBIF indexing; not guaranteed time precedence.",
+    "12 link observations reuse only 9 island nodes and offer no independent geospatial causality proof."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "chocho_VOC_cargo_local_butterflies_exact_route_null_lock_v1",
+  "status": "PREDEFINED_EXPLORATORY_TEST_BEFORE_7_FACTORIAL_ROUTE_PERMUTATIONS",
+  "date": "2026-11-02",
+  "question": "On nine source-authenticated VOC intra-island route pairs, do recorded plant commodity categories of seven cargo-supported links align with the known HOSTS genera of butterflies independently first indexed on either or both actual corresponding islands during 2011–2017?",
+  "source": {
+    "voyage": "source-locked 1595–1698 57669 rows and nine positive 1193 island-pair sections",
+    "cargo": "voc_17c_cargo_on_verified_island_routes_v1.json (original cargo descriptions 7737 rows; 7/9 routes with unambiguous cargo IDs)",
+    "cargo_genus": "voc_17c_cargo_HOSTS_genus_239_screen_v1.json, 239 preselected Lepidoptera HOSTS genus mapping, only exact complete named butterfly preview accepted",
+    "gbif_first_island_events": "provenance/reviewer_defenses/results/island_host_continuity_20261030/island_host_continuity_events.csv, original indexed first 2011–2017, n=5665 all source islands",
+    "source_Git_blob_SHA": {
+      "cargo_genus": "ff1b5e03141a0f6baf781f9d9a871916fcd84d29",
+      "cargo": "322c32be0d41e007e3031a986581cf235f138985",
+      "GBIF_island_first_events": "efbc770469a720e2dea82478db2f6196ba03b353"
+    }
+  },
+  "analysis_universe": {
+    "source_positive_historic_routes": 9,
+    "unambiguous_cargo_supported_routes": 7,
+    "source_islands": 6,
+    "source_period_butterfly": [
+      2011,
+      2017
+    ],
+    "no_cargo_records_for_2_routes": "UNKNOWN, excluded from category permutation"
+  },
+  "primary_stat": "number of 7 cargo-supported historic edges with >=1 exact same butterfly species first GBIF-indexed in both endpoint islands 2011–2017 and documented to use a plant genus assigned to one of that edge's cargo commodity categories",
+  "secondary_stats": [
+    "number of edges with at least one local first-index butterfly in either endpoint with compatible documented HOSTS genus",
+    "number of edges with at least one such butterfly in EACH endpoint (not necessarily same butterfly or same commodity genus)",
+    "number of documented compatible commodity categories among seven links and island butterfly first-indexed events"
+  ],
+  "null": {
+    "method": "EXACT permutation of the seven entire commodity-category sets across seven historically cargo-indexed route edges, preserving island butterfly sets, fixed source route geography, per-route commodity category counts as packets, and total historical category frequencies",
+    "n_exact_assignments": 5040,
+    "right_tail_report": "(number of all 5040 labeled permutations with statistic >= observed)/5040",
+    "why_exploratory": "route category packets and endpoint butterflies share geographic/historical context, so conditional random exchangeability of cargo among routes is unverified; exact finite label permutation is not independent causal frequentist test"
+  },
+  "cautions": [
+    "Commodity descriptions are not scientific species names, live plant propagules or documented cargo specifically loaded/unloaded on that island leg.",
+    "The present-day genus-host match can be true globally but unverified as local larval use or plant introduction.",
+    "2011–2017 first GBIF indexing is not an actual insect arrival, breeding, persistence or global 2011–2022 population representative sample.",
+    "6 islands and 7 nonindependent cargo-supported links: no inference about general global colonial or shipping causal network.",
+    "No stock VOC voyage may be assumed to carry butterflies; 17th century vs 21st century temporal gap.",
+    "Host-genus screen with full preview names is exact only if reported butterfly totals match the names list length; otherwise HALT, do not assume truncated preview complete.",
+    "All nine independently documented historic positive island links and the original 51-island positive ρ=0.300 are retained, not replaced by a selected seven-edge null."
+  ]
+}

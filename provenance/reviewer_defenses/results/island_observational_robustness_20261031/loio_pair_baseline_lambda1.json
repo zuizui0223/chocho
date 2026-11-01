@@ -1,0 +1,94 @@
+{
+  "status": "RETROSPECTIVE_HOST_COMPOSITION_OUT_OF_ISLAND_DESCRIPTIVE_EVALUATION",
+  "data": "2001-2024 port plants; 2011-2022 newly indexed butterflies; no temporal precedence",
+  "islands": 51,
+  "pairs": 1275,
+  "folds": 51,
+  "training_pairs_per_fold": 1225,
+  "evaluation_pairs_per_fold": 50,
+  "ridge_lambda": 1,
+  "outcome": "Jaccard similarity of butterfly species first indexed 2011-2022",
+  "scoring": "island-equal mean of held-out pairwise squared error (and MAE)",
+  "feature_groups": {
+    "M0": [
+      "dist",
+      "old"
+    ],
+    "M1": [
+      "dist",
+      "old",
+      "host"
+    ],
+    "E0": [
+      "dist",
+      "old",
+      "e0",
+      "e1",
+      "h0",
+      "h1",
+      "p0",
+      "p1"
+    ],
+    "E1": [
+      "dist",
+      "old",
+      "e0",
+      "e1",
+      "h0",
+      "h1",
+      "p0",
+      "p1",
+      "host"
+    ]
+  },
+  "model_stats": {
+    "M0": {
+      "island_equal_mse": 0.0066532376029260565,
+      "island_equal_mae": 0.05840137045978113
+    },
+    "M1": {
+      "island_equal_mse": 0.00652626417371054,
+      "island_equal_mae": 0.057155196245000685
+    },
+    "E0": {
+      "island_equal_mse": 0.005618974071438214,
+      "island_equal_mae": 0.05096719165031688
+    },
+    "E1": {
+      "island_equal_mse": 0.00554250510299399,
+      "island_equal_mae": 0.050840019518855806
+    }
+  },
+  "comparisons": {
+    "M1 vs M0": {
+      "mse_reduction_pct": 1.908445734144217,
+      "mean_mse_reduction": 0.00012697342921552128,
+      "islands_improved": 30,
+      "islands_worsened": 21,
+      "median_diff": 0.000244087183470393,
+      "range": [
+        -0.004386090265348577,
+        0.0025682234115663727
+      ]
+    },
+    "E1 vs E0": {
+      "mse_reduction_pct": 1.3609062343413298,
+      "mean_mse_reduction": 0.00007646896844422552,
+      "islands_improved": 29,
+      "islands_worsened": 22,
+      "median_diff": 0.00010423480115928597,
+      "range": [
+        -0.003232601082923528,
+        0.0018431604615974633
+      ]
+    }
+  },
+  "limitations": [
+    "51 islands are the sampling units; held-out pairs are reused across folds.",
+    "Host plant indexing through 2024 can postdate 2011-2022 butterfly observations.",
+    "All general non-host flora and actual maritime origin-destination links are absent.",
+    "Catalogued host counts are not direct botanical observation-effort measurement.",
+    "Predictive improvement in pairwise assemblage similarity does not imply host use, arrival, reproduction or transport.",
+    "The richer model excludes outcome-derived new butterfly richness to avoid feature leakage."
+  ]
+}

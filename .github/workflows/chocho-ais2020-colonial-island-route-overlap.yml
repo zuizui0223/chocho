@@ -1,0 +1,65 @@
+name: chocho contemporary AIS direct island links x historical colonial network types
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-ais2020-colonial-island-route-overlap.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_ais_port_colonial_island_overlap.py"
+      - "tests/test_island_historical_ais_network_overlap_20261101.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  positive-only-ais-island-history-network:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify source-free colonial-metropole distinctions
+        run: |
+          python -m pip install 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_ais_port_colonial_island_overlap.py
+          python -m pytest tests/test_island_historical_ais_network_overlap_20261101.py -q
+      - name: Join only observed 2020 AIS positive links to preexisting frozen island/host/butterfly/historical records
+        run: |
+          script=provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_ais_port_colonial_island_overlap.py
+          dir=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          for radius in 2 5 10; do
+            python "$script" --wpi-radius-km "$radius" \
+              --output-prefix "${dir}/ais_2020_island_colonial_overlap_${radius}km"
+          done
+      - name: Verify and preserve typed present-day AIS / historical four-empire links
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          for km,count in ((2,8),(5,12),(10,27)):
+              x=json.loads((d/f"ais_2020_island_colonial_overlap_{km}km.audit.json").read_text())
+              assert x["positive_direct_2020_AIS_island_pair_count"]==count
+              assert x["original_island_pairs"]==1275
+              assert x["fixed_AIS_unique_port_match_radius_km"]==km
+              assert x["links_with_positive_host_candidate_similarity"]<=count
+              print(km,x["recorded_AIS_route_row_total"],x["metropolitan_country_to_contact_positive_link_pairs"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_island_colonial_overlap_*km.audit.json \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_island_colonial_overlap_*km.positive_links.csv
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+              provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_ais_port_colonial_island_overlap.py; then
+            echo 'Repro code changed; do not publish stale result';exit 0
+          fi
+          git commit -m 'Distinguish contemporary positive AIS voyage links from empire-shared colonies and metropole-colony historical paths [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
