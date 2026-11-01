@@ -1,0 +1,46 @@
+name: chocho historical Huygens Dutch Asiatic Shipping 8194 voyage metadata
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-historical-DAS-VOC-source-shape.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  source-pinned-original-DAS-voyage-fields:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Checkout Huygens DAS derived source with source implementation and exact SHA
+        uses: actions/checkout@v4
+        with:
+          repository: IBM/chuk-mcp-maritime-archives
+          ref: 33ae4ef8dfa6acd5f35e619e079ceec518306c9f
+          path: _historical_DAS
+      - name: Audit normalized original documented 1595–1795 voyages without exporting ship rows
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_original_DAS_historic_voyages.py
+      - name: Commit only column/schema/port place aggregate source audit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          path=provenance/reviewer_defenses/results/island_observational_robustness_20261031/das_1595_1795_source_schema_audit.json
+          git add "$path"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          git commit -m 'Audit authentic Huygens VOC historical voyage departure/destination fields [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove original third-party historical voyage/vessel records
+        if: always()
+        run: rm -rf _historical_DAS
