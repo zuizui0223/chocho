@@ -1,0 +1,42 @@
+name: chocho historical cargo category and HOSTS genus screen
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-historic-commodity-HOSTS-screen.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Evaluate historical VOC product words against original butterfly-host genera
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_VOC_cargo_commodity_to_HOSTS_239_genus.py --hosts _external/HOSTS/resource.csv
+      - name: Save derived table without original HOSTS source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          file=provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_HOSTS_genus_239_screen_v1.json
+          git add "$file"
+          git diff --cached --quiet && exit 0
+          git commit -m 'Compare archived VOC plant-product groups against 239 source-known butterfly host genera [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin HEAD:"${GITHUB_REF_NAME}"
+      - name: Clear original third-party network
+        if: always()
+        run: rm -rf _external
