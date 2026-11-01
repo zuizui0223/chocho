@@ -30,6 +30,13 @@ def test_source_verified_historical_current_ports_coverage_not_interpreted_as_ro
     assert set(result["source_historic_DAS_city_endpoint_island_ids"])=={"12","17","19","31"}
     assert set(result["historic_city_endpoint_and_early_plant_observation_island_ids"])=={"17","31"}
     assert result["historic_VOC_ports_with_2001_2010_GBIF_index_zero"]==2
+    # A selected historical imperial-duration covariate is not a direct
+    # historic VOC ship-network edge indicator. Sri Lanka is a concrete
+    # counterexample: 26 named historic VOC voyage endpoints but a zero NL
+    # area-weighted region-history proxy in the botanical source.
+    assert result["historical_Dutch_voyage_source_islands_with_NL_area_proxy_zero"]==["31"]
+    assert result["dated_historical_Dutch_voyage_endpoints_on_NL_area_proxy_zero_islands"]==26
+    assert set(result["historical_Dutch_voyage_source_islands_with_NL_area_proxy_25plus"])=={"12","17","19"}
     # A wider one-to-one geocoding radius need not monotonically increase
     # matches: an extra second WPI port makes an otherwise valid site ambiguous.
     assert result["AIS_match_radius_sensitivity"]["2"]["historic_four_source_island_ids_with_ais_endpoint"]==["19"]
