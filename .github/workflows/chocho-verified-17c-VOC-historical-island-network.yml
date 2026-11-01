@@ -1,0 +1,94 @@
+name: chocho genuine 57669 original 17c VOC island-to-island port route links
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-verified-17c-VOC-historical-island-network.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_dataversenl_17c_VOC_island_routes.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/dataversenl_17c_to_WPI51_island_alias_lock_20261101.json"
+      - "tests/test_real_VOC_57669_historical_island_links_20261101.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-genuine-17c-island-port-OD-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verified-actual-historical-from-to-island-voyages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test precise 1600s harbor/place identity and year parsing
+        run: |
+          python -m pip install 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_dataversenl_17c_VOC_island_routes.py
+          python -m pytest -q tests/test_real_VOC_57669_historical_island_links_20261101.py
+      - name: Fetch exact 57,669-row DataverseNL archival voyage original
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 240 \
+            -H 'Accept: application/octet-stream' \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_57669_all_voyages.tab
+          echo 'eed2479019a8570e392f37f3d781d5b0c67448b1  _private_history/voc_57669_all_voyages.tab' | sha1sum -c -
+          test "$(stat -c '%s' _private_history/voc_57669_all_voyages.tab)" = '10187695'
+      - name: Count source-dated 17c historic city harbor-to-harbor legs on 51 original islands
+        run: |
+          script=provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_dataversenl_17c_VOC_island_routes.py
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          python "$script" \
+            --source _private_history/voc_57669_all_voyages.tab \
+            --output-prefix "${folder}/voc_57669_17c_interisland_routes_v1"
+          python "$script" --broad-island-labels \
+            --source _private_history/voc_57669_all_voyages.tab \
+            --output-prefix "${folder}/voc_57669_17c_interisland_routes_broad_v1"
+      - name: Source and route count integrity before publishing
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          folder=Path('provenance/reviewer_defenses/results/island_observational_robustness_20261031')
+          for suffix in ('','_broad'):
+            x=json.loads((folder/f'voc_57669_17c_interisland_routes{suffix}_v1.audit.json').read_text())
+            assert x["schema"]=="chocho_genuine_dataversenl_57669_17c_VOC_direct_island_edges_v1"
+            assert x["source_quality"]["source_record_rows"]==57669
+            assert x["original_source"]["historical_source_exact_SHA1"]=='eed2479019a8570e392f37f3d781d5b0c67448b1'
+            assert x["original_51_island_pairs"]==1275
+            assert x["original_51_island_nodes"]==51
+            assert 0 < x["historical_17c_positive_source_island_pairs"] <= 1275
+            print(suffix or 'specific historic harbor',x['source_endpoint_categories'])
+            print('positive edges:',x['historical_17c_positive_source_island_pairs'])
+          PY
+      - name: Commit only aggregated historical port links and joined host/GBIF counts
+        run: |
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}"/voc_57669_17c_interisland_routes*positive_historic_links.csv \
+                  "${folder}"/voc_57669_17c_interisland_routes*all_51_island_pairs.csv \
+                  "${folder}"/voc_57669_17c_interisland_routes*island_source_coverage.csv \
+                  "${folder}"/voc_57669_17c_interisland_routes*audit.json
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+            "${folder}/derive_dataversenl_17c_VOC_island_routes.py" \
+            "${folder}/dataversenl_17c_to_WPI51_island_alias_lock_20261101.json"; then
+            echo 'Route matching code or locked historical place names have changed; no stale empirical output'
+            exit 0
+          fi
+          git commit -m 'Audit original dated 57,669 VOC port-to-port legs and positive routes among original 51 islands [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete historic third-party ship and voyage rows
+        if: always()
+        run: rm -rf _private_history
