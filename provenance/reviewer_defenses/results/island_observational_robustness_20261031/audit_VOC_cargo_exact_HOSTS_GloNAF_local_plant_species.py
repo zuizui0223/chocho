@@ -148,12 +148,10 @@ def source_region_masks(glonaf=GLO_NAF,tdwg=TDWG,thresholds=CUTOFFS):
     from shapely.errors import GEOSException
     from _colonial_source_imports import load_glonaf_helpers
     helpers=load_glonaf_helpers()
-    if helpers.check_source(glonaf) is not None:
-        pass
+    helpers.check_source(glonaf)
     source_bits,source_audit=helpers.read_glonaf_taxa(glonaf)
-    _,geom,project,invalid=helpers.read_geometries(glonaf)
-    # read_geometries returns projected polygons and original source
-    # region IDs, not botanical taxon bit positions.
+    # Same original coordinates, GIS regions and original GloNAF
+    # accepted-raw-name bit indexing as the archived 284-region study.
     original_ids,geometry,project,invalid=helpers.read_geometries(glonaf)
     idx=STRtree(geometry)
     archived=json.loads(tdwg.read_text(encoding="utf8"))
