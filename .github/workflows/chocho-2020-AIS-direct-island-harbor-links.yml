@@ -67,7 +67,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.audit.json \
-                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.island_pairs.csv
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.island_pairs.csv \
+                  provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.WPI_port_AIS_source_coverage.csv
           for candidate in provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_*km.observed_port_links.csv; do
             if test -f "$candidate"; then git add "$candidate"; fi
           done
