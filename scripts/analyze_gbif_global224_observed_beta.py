@@ -229,7 +229,17 @@ def world_holdout(y,models,ia,ib,codes,level1,lam):
     }
 
 
-def analyse():
+REGION_GATES={
+    "primary":(5,10,20),
+    "relaxed":(5,5,10),
+    "stringent":(10,20,50),
+}
+
+
+def analyse(eligibility="primary"):
+    if eligibility not in REGION_GATES:
+        raise ValueError("Unknown predeclared observational-effort eligibility gate")
+    species_needed,prior_days_needed,later_days_needed=REGION_GATES[eligibility]
     lock=json.loads(LOCK.read_text(encoding="utf8"))
     if lock["schema"]!="chocho_global224_2001_2024_GBIF_observed_beta_lock_v1":
         raise RuntimeError("Study design lock changed")
@@ -242,9 +252,9 @@ def analyse():
         return effort[code][p]["days"]
     regions=[
         code for code in region_codes
-        if len(communities["all"].get(code,set()))>=5
-        and support(code,"prior")>=10
-        and support(code,"later")>=20
+        if len(communities["all"].get(code,set()))>=species_needed
+        and support(code,"prior")>=prior_days_needed
+        and support(code,"later")>=later_days_needed
     ]
     if len(regions)<35:
         raise RuntimeError("Too few prior-and-late provider-day-supported 284 regions: "+str(len(regions)))
@@ -348,9 +358,16 @@ def analyse():
         "unique_observed_taxa_by_period":observed_taxa,
         "valid_gbif_source_record_years":source_years,
         "World_division_region_counts":dict(Counter(world)),
-        "region_recording_threshold":"all-time >=5 indexed candidate butterfly species, prior datasetKey-days>=10, late datasetKey-days>=20",
-        "regions_with_prior_year_provider_days_10plus":sum(support(c,"prior")>=10 for c in region_codes),
-        "regions_with_late_year_provider_days_20plus":sum(support(c,"later")>=20 for c in region_codes),
+        "region_recording_eligibility":eligibility,
+        "region_recording_threshold":(
+            f"all-time >={species_needed} indexed candidate butterfly species, "
+            f"prior datasetKey-days>={prior_days_needed}, "
+            f"late datasetKey-days>={later_days_needed}"
+        ),
+        "regions_with_prior_year_provider_days_at_threshold":sum(
+            support(c,"prior")>=prior_days_needed for c in region_codes),
+        "regions_with_late_year_provider_days_at_threshold":sum(
+            support(c,"later")>=later_days_needed for c in region_codes),
         "region_pair_empty_butterfly_portfolios_by_period":misses,
         "pairs_both_empty_GloNAF_alien":miss_all,
         "pairs_both_empty_known_host":miss_hosts,
@@ -406,8 +423,9 @@ def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--output",type=Path,default=OUTPUT)
     ap.add_argument("--region-fold-csv",type=Path,default=SCORES)
+    ap.add_argument("--eligibility",choices=tuple(REGION_GATES),default="primary")
     args=ap.parse_args()
-    report=analyse()
+    report=analyse(eligibility=args.eligibility)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     folds=report.pop("folds")
     args.output.write_text(json.dumps(report,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
