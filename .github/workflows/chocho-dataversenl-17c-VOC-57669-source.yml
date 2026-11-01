@@ -1,0 +1,127 @@
+name: chocho original 57669 intra-Asia VOC port-voyage DataverseNL source
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-dataversenl-17c-VOC-57669-source.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_dataversenl_voc_57669_source.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/dataversenl_17c_original_57669_lock_20261101.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-original-57669-17c-journeys-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-locked-original-voyage-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test original DataverseNL access preserving archival SHA1 without downloading IISG XML
+        run: |
+          mkdir -p _private_history
+          curl --fail --location --show-error --silent --retry 2 \
+            --connect-timeout 30 --max-time 240 \
+            -H 'Accept: application/octet-stream' \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_57669_all_voyages.tab || true
+          if test -s _private_history/voc_57669_all_voyages.tab; then
+            sha1sum _private_history/voc_57669_all_voyages.tab
+            python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_dataversenl_voc_57669_source.py \
+              --source _private_history/voc_57669_all_voyages.tab \
+              --output provenance/reviewer_defenses/results/island_observational_robustness_20261031/dataversenl_17c_57669_original_source_schema.json || true
+          else
+            echo 'DataverseNL format=original endpoint did not return a file'
+          fi
+      - name: If necessary test the archival tabular endpoint separately
+        run: |
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          verified=0
+          if test -f "${folder}/dataversenl_17c_57669_original_source_schema.json"; then
+            status="$(python -c 'import json;print(json.load(open("provenance/reviewer_defenses/results/island_observational_robustness_20261031/dataversenl_17c_57669_original_source_schema.json")).get("status",""))')"
+            if [ "$status" = PUBLIC_DATAVERSENL_ORIGINAL_57669_VOYAGES_SHA1_AND_GRAIN_VERIFIED ]; then verified=1;fi
+          fi
+          if [ "$verified" = 0 ]; then
+            curl --fail --location --show-error --silent --retry 2 \
+              --connect-timeout 30 --max-time 240 \
+              'https://dataverse.nl/api/access/datafile/569977' \
+              --output _private_history/voc_57669_fallback.tab || true
+            if test -s _private_history/voc_57669_fallback.tab; then
+              sha1sum _private_history/voc_57669_fallback.tab
+              python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_dataversenl_voc_57669_source.py \
+                --source _private_history/voc_57669_fallback.tab \
+                --output "${folder}/dataversenl_17c_57669_archival_source_schema.json" || true
+            fi
+          fi
+      - name: Publish source identity/structure or precise availability blocker (no ship records)
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('provenance/reviewer_defenses/results/island_observational_robustness_20261031')
+          statuses={}
+          for file in ('dataversenl_17c_57669_original_source_schema.json',
+                       'dataversenl_17c_57669_archival_source_schema.json'):
+            f=p/file
+            if f.exists():
+              data=json.loads(f.read_text(encoding='utf8'))
+              statuses[file]={'status':data.get('status'),
+                              'size':data.get('download_bytes'),
+                              'sha1':data.get('download_SHA1'),
+                              'rows':data.get('source_rows'),
+                              'columns':data.get('column_count')}
+          summary={
+            'doi':'10.34894/5HGTCD',
+            'original_IISG_Dataset':'hdl:10622/YP2COP',
+            'archived_file_ID':569977,
+            'original_source_SHA1_expected':'eed2479019a8570e392f37f3d781d5b0c67448b1',
+            'expected_rows':57669,
+            'expected_columns':18,
+            'source_checks':statuses,
+            'status':'SOURCE_57669_VERIFIED' if any(
+                x['status']=='PUBLIC_DATAVERSENL_ORIGINAL_57669_VOYAGES_SHA1_AND_GRAIN_VERIFIED'
+                for x in statuses.values()) else 'ORIGINAL_VOYAGE_ROWS_NOT_YET_VERIFIED',
+            'limits':[
+              'Source publication metadata is independently verified; fail-closed on unknown bytes.',
+              'Colonial-century journeys cannot be matched to 2019 WPI by place string alone.',
+              'No material cargo, butterfly transport or introduction chronology is demonstrated.',
+              'No ship/vessel IDs or individual voyage rows reproduced.',
+            ]
+          }
+          (p/'dataversenl_17c_57669_access_gate.json').write_text(
+            json.dumps(summary,indent=2,ensure_ascii=False)+'\n',encoding='utf8')
+          print(json.dumps(summary,indent=2,ensure_ascii=False))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          root=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git add "${root}/dataversenl_17c_57669_access_gate.json"
+          for file in "${root}/dataversenl_17c_57669_original_source_schema.json" \
+                      "${root}/dataversenl_17c_57669_archival_source_schema.json"; do
+            if test -f "$file"; then git add "$file"; fi
+          done
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+             "${root}/probe_dataversenl_voc_57669_source.py" \
+             "${root}/dataversenl_17c_original_57669_lock_20261101.json"; then
+            echo 'Source gate changed during original download; refuse stale result'
+            exit 0
+          fi
+          git commit -m 'Audit DataverseNL original 57,669 intra-Asian historical VOC port voyage source SHA1 [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Erase historical vessel voyages and raw file
+        if: always()
+        run: rm -rf _private_history
