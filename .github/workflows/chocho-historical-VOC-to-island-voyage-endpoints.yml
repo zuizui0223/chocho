@@ -8,6 +8,7 @@ on:
       - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_das_colonial_island_voyage_endpoints.py"
       - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/das_island_historic_endpoint_lock_20261101.json"
       - "tests/test_DAS_colonial_island_voyage_endpoints_20261101.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_historical_DAS_prior_port_botany.py"
   workflow_dispatch:
 
 permissions:
@@ -49,6 +50,9 @@ jobs:
           python "$source" --include-broad-island-labels \
             --output "${folder}/das_1595_1795_historic_island_voyage_endpoints_broad_v1.json" \
             --island-csv "${folder}/das_1595_1795_historic_island_endpoint_counts_broad_v1.csv"
+      - name: Compare original VOC maritime reach against actually indexed early harbor plant-record opportunities
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/audit_historical_DAS_prior_port_botany.py
       - name: Verify genuine historic source differences, publish only aggregated endpoint counts and source audit
         run: |
           python - <<'PY'
@@ -70,6 +74,7 @@ jobs:
           folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}/das_hist_voyages_early_port_plant_record_coverage.json"
           git add "${folder}/das_1595_1795_historic_island_voyage_endpoints_v1.json" \
                   "${folder}/das_1595_1795_historic_island_voyage_endpoints_broad_v1.json" \
                   "${folder}/das_1595_1795_historic_island_endpoint_counts_v1.csv" \
