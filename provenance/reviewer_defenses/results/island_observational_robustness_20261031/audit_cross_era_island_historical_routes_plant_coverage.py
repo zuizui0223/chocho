@@ -94,6 +94,12 @@ def audit():
             "historic_VOC_metropole_island_voyage_endpoints_1595_1795":
                 int(hist["historical_VOC_named_island_endpoint_total"]),
             "historic_VOC_named_source_harbours":hist["historical_source_port_labels"],
+            "area_weighted_Lenzner_four_empire_source_available":
+                hist["has_four_empire_area_proxy"]=="1",
+            "area_weighted_Lenzner_NL_duration_years":(
+                float(hist["area_weighted_years_NL"])
+                if hist["has_four_empire_area_proxy"]=="1" and hist["area_weighted_years_NL"]!="" else None
+            ),
             "early_GBIF_port_botanical_index_rows_2001_2010":bcount[iid],
             "early_GBIF_port_buffer_with_at_least_one_plant_record":bnport[iid],
             "modern_catalogued_introduced_larval_host_species_2001_2024":
@@ -144,6 +150,19 @@ def audit():
         "original_2019_WPI_ports":len(port_index),
         "source_historic_DAS_city_endpoint_islands":len(hist),
         "source_historic_DAS_city_endpoint_island_ids":[x["landmass_id"] for x in hist],
+        "historical_Dutch_voyage_source_islands_with_NL_area_proxy_25plus":[
+            x["landmass_id"] for x in hist
+            if x["area_weighted_Lenzner_NL_duration_years"] is not None
+            and x["area_weighted_Lenzner_NL_duration_years"]>=25
+        ],
+        "historical_Dutch_voyage_source_islands_with_NL_area_proxy_zero":[
+            x["landmass_id"] for x in hist
+            if x["area_weighted_Lenzner_NL_duration_years"]==0
+        ],
+        "dated_historical_Dutch_voyage_endpoints_on_NL_area_proxy_zero_islands":sum(
+            x["historic_VOC_metropole_island_voyage_endpoints_1595_1795"] for x in hist
+            if x["area_weighted_Lenzner_NL_duration_years"]==0
+        ),
         "historic_VOC_ports_with_2001_2010_GBIF_index_zero":len([
             x for x in hist if x["early_GBIF_port_botanical_index_rows_2001_2010"]==0]),
         "historic_city_endpoint_and_early_plant_observation_island_ids":[
@@ -153,6 +172,7 @@ def audit():
         "hist_source_island_details":hist,
         "important_limits":[
             "Both Huygens historical voyage endpoints and 2020 AIS source endpoints are dated observations, not comparable link types or proof of route persistence.",
+            "Lenzner's area-weighted Dutch imperial duration is different from documented Dutch VOC port exchange. Source Sri Lanka has historic Dutch VOC voyages but its selected botanical area proxy NL duration is zero; do not call this voyage-free or assume the occupation measure captures all trade.",
             "The Huygens 8178 voyage set has ZERO documented direct between-WPI51 island routes; it is not a complete historic intra-Asia port network.",
             "No pre2011 GBIF plant records in one port 5km source buffer means no indexed observation in that search, not actual absence of the plant or its cargo.",
             "2019 WPI port points matched 2020 AIS and 1595–1795 *island* place labels at different geographic grains.",
