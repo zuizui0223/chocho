@@ -1,0 +1,470 @@
+{
+  "status": "HISTORICAL_DAS_SOURCE_SHAPE_ONLY_NOT_PORT_PAIR_MATCH",
+  "source_citation": "Dutch Asiatic Shipping (DAS), Huygens Institute, normalized in IBM/chuk-mcp-maritime-archives",
+  "source_URL": "https://resources.huygens.knaw.nl/das",
+  "derived_repository": "IBM/chuk-mcp-maritime-archives",
+  "normalized_repo_commit_SHA": "33ae4ef8dfa6acd5f35e619e079ceec518306c9f",
+  "normalized_original_Git_blob_SHA": "f7a55fcc91fec1e845c955cebd3355eb5bfa8a58",
+  "source_file_SHA256": "c875a0a59568713347b1d50e4a2f62708006be524133d30ee5ff4fe23f05b77f",
+  "record_count": 8178,
+  "source_keys": [
+    "arrival_date",
+    "built_year",
+    "cape_arrival",
+    "cape_departure",
+    "captain",
+    "cargo_chamber",
+    "chamber",
+    "crew_on_board",
+    "departure_date",
+    "departure_port",
+    "destination_port",
+    "fate",
+    "particulars",
+    "ship_name",
+    "ship_type",
+    "source_url",
+    "tonnage",
+    "voyage_id",
+    "voyage_number",
+    "yard"
+  ],
+  "column_profiles": {
+    "arrival_date": {
+      "row_coverage": 7724,
+      "scalar_distinct_values": 5070,
+      "non_scalar_values": 0
+    },
+    "built_year": {
+      "row_coverage": 6988,
+      "scalar_distinct_values": 173,
+      "non_scalar_values": 0
+    },
+    "cape_arrival": {
+      "row_coverage": 6919,
+      "scalar_distinct_values": 4642,
+      "non_scalar_values": 0,
+      "frequent_source_place_names": [
+        {
+          "name": "1715-02-26",
+          "n_rows": 14
+        },
+        {
+          "name": "1717-03-09",
+          "n_rows": 14
+        },
+        {
+          "name": "1711-03-06",
+          "n_rows": 13
+        },
+        {
+          "name": "1648-03-17",
+          "n_rows": 12
+        },
+        {
+          "name": "1697-05-20",
+          "n_rows": 12
+        },
+        {
+          "name": "1718-02-22",
+          "n_rows": 12
+        },
+        {
+          "name": "1695-11-29",
+          "n_rows": 11
+        },
+        {
+          "name": "1676-02-04",
+          "n_rows": 11
+        },
+        {
+          "name": "1704-03-03",
+          "n_rows": 11
+        },
+        {
+          "name": "1712-02-13",
+          "n_rows": 11
+        },
+        {
+          "name": "1727-01-04",
+          "n_rows": 11
+        },
+        {
+          "name": "1729-01-14",
+          "n_rows": 11
+        },
+        {
+          "name": "1696-07-27",
+          "n_rows": 10
+        },
+        {
+          "name": "1670-02-09",
+          "n_rows": 10
+        },
+        {
+          "name": "1702-02-13",
+          "n_rows": 10
+        },
+        {
+          "name": "1723-02-16",
+          "n_rows": 10
+        },
+        {
+          "name": "1731-12-28",
+          "n_rows": 10
+        },
+        {
+          "name": "1734-01-13",
+          "n_rows": 10
+        },
+        {
+          "name": "1630-02-17",
+          "n_rows": 9
+        },
+        {
+          "name": "1660-03-02",
+          "n_rows": 9
+        }
+      ]
+    },
+    "cape_departure": {
+      "row_coverage": 6730,
+      "scalar_distinct_values": 3167,
+      "non_scalar_values": 0,
+      "frequent_source_place_names": [
+        {
+          "name": "1719-04-02",
+          "n_rows": 29
+        },
+        {
+          "name": "1720-04-19",
+          "n_rows": 25
+        },
+        {
+          "name": "1717-04-13",
+          "n_rows": 25
+        },
+        {
+          "name": "1735-03-03",
+          "n_rows": 25
+        },
+        {
+          "name": "1715-04-05",
+          "n_rows": 24
+        },
+        {
+          "name": "1716-04-01",
+          "n_rows": 24
+        },
+        {
+          "name": "1725-04-11",
+          "n_rows": 23
+        },
+        {
+          "name": "1721-04-23",
+          "n_rows": 22
+        },
+        {
+          "name": "1710-04-02",
+          "n_rows": 21
+        },
+        {
+          "name": "1712-03-29",
+          "n_rows": 21
+        },
+        {
+          "name": "1718-04-07",
+          "n_rows": 21
+        },
+        {
+          "name": "1723-03-25",
+          "n_rows": 21
+        },
+        {
+          "name": "1724-04-02",
+          "n_rows": 21
+        },
+        {
+          "name": "1726-03-21",
+          "n_rows": 19
+        },
+        {
+          "name": "1714-04-10",
+          "n_rows": 19
+        },
+        {
+          "name": "1702-03-15",
+          "n_rows": 18
+        },
+        {
+          "name": "1722-04-10",
+          "n_rows": 18
+        },
+        {
+          "name": "1748-04-24",
+          "n_rows": 18
+        },
+        {
+          "name": "1704-03-30",
+          "n_rows": 17
+        },
+        {
+          "name": "1760-02-19",
+          "n_rows": 17
+        }
+      ]
+    },
+    "captain": {
+      "row_coverage": 6948,
+      "scalar_distinct_values": 3071,
+      "non_scalar_values": 0
+    },
+    "cargo_chamber": {
+      "row_coverage": 3167,
+      "scalar_distinct_values": 88,
+      "non_scalar_values": 0
+    },
+    "chamber": {
+      "row_coverage": 8024,
+      "scalar_distinct_values": 10,
+      "non_scalar_values": 0
+    },
+    "crew_on_board": {
+      "row_coverage": 7253,
+      "scalar_distinct_values": 0,
+      "non_scalar_values": 7253
+    },
+    "departure_date": {
+      "row_coverage": 8178,
+      "scalar_distinct_values": 3706,
+      "non_scalar_values": 0
+    },
+    "departure_port": {
+      "row_coverage": 8154,
+      "scalar_distinct_values": 38,
+      "non_scalar_values": 0,
+      "frequent_source_place_names": [
+        {
+          "name": "Texel",
+          "n_rows": 2979
+        },
+        {
+          "name": "Batavia",
+          "n_rows": 2281
+        },
+        {
+          "name": "Goeree",
+          "n_rows": 585
+        },
+        {
+          "name": "Rammekens",
+          "n_rows": 564
+        },
+        {
+          "name": "Ceylon",
+          "n_rows": 510
+        },
+        {
+          "name": "Wielingen",
+          "n_rows": 452
+        },
+        {
+          "name": "China",
+          "n_rows": 188
+        },
+        {
+          "name": "Bengal",
+          "n_rows": 165
+        },
+        {
+          "name": "Bantam",
+          "n_rows": 116
+        },
+        {
+          "name": "Vlie",
+          "n_rows": 75
+        },
+        {
+          "name": "Maas",
+          "n_rows": 61
+        },
+        {
+          "name": "The Cape",
+          "n_rows": 56
+        },
+        {
+          "name": "Zeeland",
+          "n_rows": 21
+        },
+        {
+          "name": "Surat",
+          "n_rows": 18
+        },
+        {
+          "name": "Coromandel",
+          "n_rows": 15
+        },
+        {
+          "name": "Jacatra",
+          "n_rows": 12
+        },
+        {
+          "name": "Vlissingen",
+          "n_rows": 9
+        },
+        {
+          "name": "Masulipatnam",
+          "n_rows": 7
+        },
+        {
+          "name": "Veere",
+          "n_rows": 6
+        },
+        {
+          "name": "Hellevoetsluis",
+          "n_rows": 5
+        }
+      ]
+    },
+    "destination_port": {
+      "row_coverage": 7603,
+      "scalar_distinct_values": 66,
+      "non_scalar_values": 0,
+      "frequent_source_place_names": [
+        {
+          "name": "Batavia",
+          "n_rows": 3840
+        },
+        {
+          "name": "Texel",
+          "n_rows": 1789
+        },
+        {
+          "name": "Rammekens",
+          "n_rows": 476
+        },
+        {
+          "name": "Goeree",
+          "n_rows": 399
+        },
+        {
+          "name": "Ceylon",
+          "n_rows": 295
+        },
+        {
+          "name": "Bantam",
+          "n_rows": 135
+        },
+        {
+          "name": "Wielingen",
+          "n_rows": 103
+        },
+        {
+          "name": "The Cape",
+          "n_rows": 88
+        },
+        {
+          "name": "Vlie",
+          "n_rows": 85
+        },
+        {
+          "name": "Zeeland",
+          "n_rows": 52
+        },
+        {
+          "name": "Bengal",
+          "n_rows": 36
+        },
+        {
+          "name": "Jacatra",
+          "n_rows": 33
+        },
+        {
+          "name": "Veere",
+          "n_rows": 22
+        },
+        {
+          "name": "Goa",
+          "n_rows": 20
+        },
+        {
+          "name": "Pulicat",
+          "n_rows": 18
+        },
+        {
+          "name": "Colombo",
+          "n_rows": 18
+        },
+        {
+          "name": "Eems",
+          "n_rows": 17
+        },
+        {
+          "name": "Tuticorin",
+          "n_rows": 16
+        },
+        {
+          "name": "Atjeh",
+          "n_rows": 14
+        },
+        {
+          "name": "China",
+          "n_rows": 13
+        }
+      ]
+    },
+    "fate": {
+      "row_coverage": 710,
+      "scalar_distinct_values": 7,
+      "non_scalar_values": 0
+    },
+    "particulars": {
+      "row_coverage": 5024,
+      "scalar_distinct_values": 4454,
+      "non_scalar_values": 0
+    },
+    "ship_name": {
+      "row_coverage": 8178,
+      "scalar_distinct_values": 1404,
+      "non_scalar_values": 0
+    },
+    "ship_type": {
+      "row_coverage": 2491,
+      "scalar_distinct_values": 55,
+      "non_scalar_values": 0
+    },
+    "source_url": {
+      "row_coverage": 8178,
+      "scalar_distinct_values": 8175,
+      "non_scalar_values": 0
+    },
+    "tonnage": {
+      "row_coverage": 8034,
+      "scalar_distinct_values": 337,
+      "non_scalar_values": 0
+    },
+    "voyage_id": {
+      "row_coverage": 8178,
+      "scalar_distinct_values": 8175,
+      "non_scalar_values": 0
+    },
+    "voyage_number": {
+      "row_coverage": 8178,
+      "scalar_distinct_values": 8175,
+      "non_scalar_values": 0
+    },
+    "yard": {
+      "row_coverage": 7590,
+      "scalar_distinct_values": 6,
+      "non_scalar_values": 0
+    }
+  },
+  "limits": [
+    "The Dutch Asiatic Shipping database is Dutch-only, not a global historic maritime network.",
+    "The IBM normalized source may not preserve every intra-Asian stop; check fields before converting to port-to-port edges.",
+    "Historic place names and coordinates must be matched to original WPI island locations without ambiguity.",
+    "Current port name and 2019 coordinate do not guarantee historic port continuous operation.",
+    "The published voyages were not sampled based on butterfly and host outcomes.",
+    "No original cargo entries or transported biological taxa are identified by this schema."
+  ]
+}
