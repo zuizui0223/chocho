@@ -1,0 +1,47 @@
+{
+  "schema": "chocho_global224_2001_2024_GBIF_observed_beta_lock_v1",
+  "status": "LOCKED_BEFORE_SOURCE_ANNUAL_RECONSTRUCTION",
+  "date": "2026-11-01",
+  "independent_response_source": "GBIF DOI 10.15468/dl.umqmsf; original 225 species candidates, 14,637,152 indexed occurrence rows; no HOSTS source used to construct the response",
+  "source_annual_gate": "gbif_global224_annual_v1.audit.json source-verified exact row count and 369 official region IDs required",
+  "region_scope": "Lenzner/WCVP aligned 284 WGSRPD3 level3 areas with >=80% GloNAF geometry and valid climate",
+  "periods": {
+    "previous": [
+      2001,
+      2010
+    ],
+    "middle": [
+      2011,
+      2017
+    ],
+    "evaluation": [
+      2018,
+      2024
+    ]
+  },
+  "primary_region_eligibility": "at least 5 globally selected butterflies recorded over 2001-2024, at least 10 datasetKey-date opportunities in 2001-2010 and at least 20 in 2018-2024; fixed before any new regional scoring",
+  "eligibility_sensitivities": [
+    "prior 5 / later 10 / cumulative species 5",
+    "prior 20 / later 50 / cumulative species 10"
+  ],
+  "dependent_response": "Jaccard similarity of 2018-2024 GBIF-detected candidate butterfly species sets; GBIF never used to label true absence",
+  "prior_butterfly_response": "Jaccard similarity of 2001-2010 recorded butterfly species sets; handle empty pair sets explicitly",
+  "model_M0": "regional distance and shared world division, temperature and aridity, native flora and native 225-candidate potential resource beta, WCVP flora delta, colonial duration, whole GloNAF alien flora Jaccard/richness, previous GBIF butterfly Jaccard, GBIF dataset/day recording effort in prior/evaluation periods",
+  "model_M1": "M0 plus documented larval-host GloNAF alien plant Jaccard for source-verified candidate butterflies",
+  "model_M2": "M0 plus GloNAF alien plant Jaccard not documented as larval hosts for candidate butterflies (not proven nonhosts)",
+  "model_M3": "M0 plus both documented host and not-documented alien plant Jaccards",
+  "model_eval": "Ridge lambda=10 standardized on training pairs only; leave-one-region-out mean MSE and MAE, region equal; compare M1/M2/M3 vs M0 and M3 vs M2; clip Jaccard predictions to [0,1]",
+  "robustness": [
+    "Ridge penalty 0/1/100",
+    "leave each entire WGSRPD1 division out with zero held region training outcomes",
+    "relaxed and stringent provider-day region gates"
+  ],
+  "negative_control": "M2 alien plants not documented as focal hosts; additional family/prevalence-matched control required for strong host-specificity claims",
+  "interpretation_limitations": [
+    "Current WCVP/GloNAF flora may postdate prior/evaluation butterfly records; this is a retrospective association, not a 2018 prospective forecast",
+    "Provider-day is unique GBIF datasetKey by ISO record date, not biological survey visits",
+    "A region absent from GBIF is not a species absence, and region pairs are dependent",
+    "Original 225 species are a selected resource analysis subset, not all butterfly species",
+    "No shipping or colonial-era causal pathways can be inferred from these maps"
+  ]
+}

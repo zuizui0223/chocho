@@ -1,0 +1,431 @@
+{
+  "schema": "chocho_GBIF31_observed_assemblage_HOSTS_GloNAF_same111regions_v1",
+  "status": "INDEPENDENT_BUTTERFLY_GBIF_INDEXED_ASSEMBLAGE_PILOT_NOT_TRUE_OCCUPANCY",
+  "method_lock_sha256": "fd3d82b8413cd0ebb0ec256289aaae5f2e482d5b75c9a37232cf9cf7d6155d65",
+  "source": {
+    "GBIF_download_DOI": "10.15468/dl.pp5nc9",
+    "GBIF_archive_sha256": "f629abab1f64c5e858956f91c4cdfe499e4d9fe0b39768df84e8bd47bbafa464",
+    "GloNAF_Zenodo_MD5": "16f5585d2500676951a4b664bbf0ffde",
+    "HOSTS_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "official_TDWG_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "original_239_frozen_butterfly_DOI_species_count": 30
+  },
+  "cohort": {
+    "eligible_wgsrpd3_regions": 111,
+    "nonindependent_region_pairs": 6105,
+    "actual_recorded_butterfly_species": 30,
+    "all_original_source_taxa": 30,
+    "world_division_region_counts": {
+      "8": 24,
+      "7": 51,
+      "4": 16,
+      "1": 17,
+      "3": 3
+    },
+    "GBIF_region_record_counts": {
+      "rows": 53144,
+      "matched_region_records": 41708
+    },
+    "unique_recorded_taxa_early_2010_2017": 26,
+    "unique_recorded_taxa_late_2018_2026": 30,
+    "pairs_both_no_early_records": 1,
+    "pairs_both_no_late_records": 0,
+    "original_documented_focal_host_names": 534,
+    "host_names_matched_GloNAF": 299,
+    "host_raw_GloNAF_taxon_IDs": 366,
+    "pairs_both_no_documented_host_record": 0,
+    "pairs_both_no_other_alien_record": 0
+  },
+  "description": {
+    "mean_recorded_butterfly_community_Jaccard": 0.22232495539440683,
+    "median_recorded_butterfly_community_Jaccard": 0.0,
+    "mean_known_host_GloNAF_Jaccard": 0.24776763493139642,
+    "mean_other_GloNAF_Jaccard": 0.11259464042862778,
+    "mean_all_GloNAF_Jaccard": 0.12189679901456497,
+    "mean_earlier_2010_2017_recorded_community_Jaccard": 0.15084339287547846,
+    "mean_later_2018_2026_recorded_community_Jaccard": 0.2041273610714928
+  },
+  "adjusted_partial_rank": {
+    "known_focal_larval_host_Jaccard_given_all_flora_geography_climate_and_effort": -0.04526294685365723,
+    "other_not_documented_aliens_Jaccard_given_known_hosts_and_controls": -0.004235490308457304,
+    "not_a_causal_or_iid_pair_p_value": true
+  },
+  "region_held_out_ridge": {
+    "definition": "train 110x109/2=5995 pairs and score 110 pairs sharing the unseen 111th region; equal weight per 111 regions",
+    "ridge_lambda": 10.0,
+    "models": {
+      "M0_general_flora_and_effort": {
+        "island_or_region_equal_mse": 0.013921072053727451,
+        "region_equal_mae": 0.07450671944486877
+      },
+      "M1_known_host": {
+        "island_or_region_equal_mse": 0.013716421780063574,
+        "region_equal_mae": 0.07388673847766138
+      },
+      "M2_other_aliens": {
+        "island_or_region_equal_mse": 0.01377505090340963,
+        "region_equal_mae": 0.07408164200677726
+      },
+      "M3_both": {
+        "island_or_region_equal_mse": 0.013691922650791402,
+        "region_equal_mae": 0.07382194804181025
+      }
+    },
+    "incremental_vs_general_flora_and_effort": {
+      "M1_known_host": {
+        "mse_reduction_percent": 1.470075529198075,
+        "mean_region_equal_mse_difference": 0.00020465027366387914,
+        "regions_improved": 69,
+        "regions_worsened": 42,
+        "median_improvement_absolute": 0.00021799003024286848,
+        "minimum_improvement": -0.004861968163576525,
+        "maximum_improvement": 0.007300453348300387
+      },
+      "M2_other_aliens": {
+        "mse_reduction_percent": 1.0489217335724095,
+        "mean_region_equal_mse_difference": 0.0001460211503178222,
+        "regions_improved": 77,
+        "regions_worsened": 34,
+        "median_improvement_absolute": 0.0001349732026091257,
+        "minimum_improvement": -0.00172304209654308,
+        "maximum_improvement": 0.000878619073532691
+      },
+      "M3_both": {
+        "mse_reduction_percent": 1.646061467476531,
+        "mean_region_equal_mse_difference": 0.00022914940293605136,
+        "regions_improved": 71,
+        "regions_worsened": 40,
+        "median_improvement_absolute": 0.00026618767166443867,
+        "minimum_improvement": -0.005319513049905928,
+        "maximum_improvement": 0.006309459191162499
+      }
+    },
+    "conditional_incremental_to_existing_plant_layer": {
+      "host_given_other_aliens_m3_vs_m2_percent": 0.6034696583055991,
+      "other_aliens_given_host_m3_vs_m1_percent": 0.17861166465280776
+    }
+  },
+  "ridge_regularization_robustness": {
+    "0.0": {
+      "base_M0_mse": 0.01392293336880044,
+      "host_M1_gain_percent": 1.4959088265970426,
+      "other_M2_gain_percent": 2.362008833664484,
+      "both_M3_gain_percent": 1.9706328353817761,
+      "host_only_regions_improved": 69
+    },
+    "1.0": {
+      "base_M0_mse": 0.013922728184417147,
+      "host_M1_gain_percent": 1.4934968399327615,
+      "other_M2_gain_percent": 2.199308501452553,
+      "both_M3_gain_percent": 1.9423077690245463,
+      "host_only_regions_improved": 69
+    },
+    "10.0": {
+      "base_M0_mse": 0.013921072053727451,
+      "host_M1_gain_percent": 1.470075529198075,
+      "other_M2_gain_percent": 1.0489217335724095,
+      "both_M3_gain_percent": 1.646061467476531,
+      "host_only_regions_improved": 69
+    },
+    "100.0": {
+      "base_M0_mse": 0.01391930710779035,
+      "host_M1_gain_percent": 1.1948609680633444,
+      "other_M2_gain_percent": 0.14139406442197727,
+      "both_M3_gain_percent": 1.3449430171064891,
+      "host_only_regions_improved": 72
+    }
+  },
+  "whole_world_division_holdout": {
+    "method": "leave-entire-WGSRPD-level1-out: no outcome of held-out regions in train",
+    "models": {
+      "M0_general_flora_and_effort": {
+        "division_equal_mse": 0.02500611152796417,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012692756447698472
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.045032508055830645
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.01804689243199122
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.03462523589108475
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014633164813215764
+          }
+        ]
+      },
+      "M1_known_host": {
+        "division_equal_mse": 0.024895703040814877,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.0129782083453825
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.043955430765488294
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018857253310592473
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.03468257584908752
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.0140050469335236
+          }
+        ]
+      },
+      "M2_other_aliens": {
+        "division_equal_mse": 0.024772889518084096,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012476303304335046
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.04455504929012343
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018165256025305068
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.034076941756295255
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014590897214361683
+          }
+        ]
+      },
+      "M3_both": {
+        "division_equal_mse": 0.02483099731179538,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "training_region_pair_count": 4371,
+            "test_region_pair_count": 1734,
+            "mse": 0.012857756093860499
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "training_region_pair_count": 5778,
+            "test_region_pair_count": 327,
+            "mse": 0.043853501492361245
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "training_region_pair_count": 4465,
+            "test_region_pair_count": 1640,
+            "mse": 0.018888998442167727
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "training_region_pair_count": 1770,
+            "test_region_pair_count": 4335,
+            "mse": 0.034462221398013755
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "training_region_pair_count": 3741,
+            "test_region_pair_count": 2364,
+            "mse": 0.014092509132573684
+          }
+        ]
+      }
+    },
+    "comparisons": {
+      "M1_known_host": {
+        "divisions_improved": 2,
+        "divisions_worsened": 3,
+        "division_equal_mse_reduction_percent": 0.4415260126542401,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": -2.248935436997127,
+            "mse_difference": -0.0002854518976840286
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 2.391777266784709,
+            "mse_difference": 0.00107707729034235
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -4.490307024630733,
+            "mse_difference": -0.0008103608786012538
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": -0.16560163859427932,
+            "mse_difference": -5.733995800277086e-05
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 4.2924267423331885,
+            "mse_difference": 0.0006281178796921638
+          }
+        ]
+      },
+      "M2_other_aliens": {
+        "divisions_improved": 4,
+        "divisions_worsened": 1,
+        "division_equal_mse_reduction_percent": 0.932660040403577,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": 1.7053281078490563,
+            "mse_difference": 0.00021645314336342543
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 1.060253550868778,
+            "mse_difference": 0.00047745876570721296
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -0.6558668965302271,
+            "mse_difference": -0.00011836359331384924
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": 1.5835101788596642,
+            "mse_difference": 0.0005482941347894968
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 0.2888479655194465,
+            "mse_difference": 4.2267598854081254e-05
+          }
+        ]
+      },
+      "M3_both": {
+        "divisions_improved": 3,
+        "divisions_worsened": 2,
+        "division_equal_mse_reduction_percent": 0.7002856720564458,
+        "folds": [
+          {
+            "world_division": "1",
+            "heldout_region_count": 17,
+            "mse_reduction_percent": -1.299951250478348,
+            "mse_difference": -0.0001649996461620274
+          },
+          {
+            "world_division": "3",
+            "heldout_region_count": 3,
+            "mse_reduction_percent": 2.618123250003496,
+            "mse_difference": 0.0011790065634693994
+          },
+          {
+            "world_division": "4",
+            "heldout_region_count": 16,
+            "mse_reduction_percent": -4.666210614098469,
+            "mse_difference": -0.0008421060101765077
+          },
+          {
+            "world_division": "7",
+            "heldout_region_count": 51,
+            "mse_reduction_percent": 0.47079677257294716,
+            "mse_difference": 0.00016301449307099675
+          },
+          {
+            "world_division": "8",
+            "heldout_region_count": 24,
+            "mse_reduction_percent": 3.694728293867049,
+            "mse_difference": 0.0005406556806420802
+          }
+        ]
+      }
+    },
+    "limits": [
+      "Only five world-division groups with extreme geographic imbalance, so not global replication.",
+      "Held-out pairs include links to training-world regions; report as new-region transfer, not within-world future prediction.",
+      "All floral maps and sampling-effort covariates are cross-sectional sources."
+    ]
+  },
+  "limits": [
+    "Only original GBIF occurrence DOI's 30 exact matches, not globally representative 239 or 225 butterfly species.",
+    "Most 111 eligible regions are in the Americas; no claims of worldwide butterfly-community generality.",
+    "GBIF presence is an indexed detection and species absence is not observed.",
+    "Eligibility determined from all-period GBIF records, so leave-region-out validation is cross-sectional, not a prospective future test.",
+    "Plant and host records are undated contemporary inventories; no causal host introduction or colonial-era temporal mechanism.",
+    "GBIF provider/day counts partially proxy effort but cannot correct all observer biases or species detection probability.",
+    "GBIF sampling is taxonomically selected and the region-pair observations are dependent; do not report naïve independent-pair p-values.",
+    "HOSTS taxonomic matches remain source lower bounds, non-documented taxa are not proven biological nonhosts."
+  ]
+}

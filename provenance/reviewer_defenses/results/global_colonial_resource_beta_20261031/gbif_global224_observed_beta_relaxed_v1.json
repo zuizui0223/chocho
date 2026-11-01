@@ -1,0 +1,261 @@
+{
+  "schema": "chocho_global224_GBIF_observed_WGSRPD3_2018_2024_beta_v1",
+  "status": "RECONSTRUCTED_ORIGINAL_OBSERVED_BUTTERFLY_ASSOCIATION_NOT_ARRIVAL_OR_TRUE_OCCUPANCY",
+  "sources": {
+    "annual_GBIF_audit_sha256": "a8fec1bbf1046c6b7d819cf609359da8574a8a8fbc53c1d023535e220821f824",
+    "annual_GBIF_species_region_year_sha256": "f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525",
+    "annual_GBIF_region_year_effort_sha256": "310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82",
+    "method_lock_sha256": "b0527d8094de4a229b366de3ecbe64d8c6f289dc20a8ed09d2a0b1f024448d5f",
+    "GBIF_doi": "10.15468/dl.umqmsf",
+    "GloNAF_zenodo_doi": "10.5281/zenodo.6640264",
+    "original_TDWG_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "source_WCVP_HOSTS_239_beta": "source-locked original GEB 239 resource panel, not 224-only native-resource control"
+  },
+  "cohort": {
+    "region_count": 194,
+    "evaluated_region_pairs": 18721,
+    "source_284_region_possible_pairs": 40171,
+    "global_source_mapped_candidate_species": 224,
+    "source_225_candidate_names_all_subset_239": true,
+    "positive_GBIF_species_in_matched_region_cohort": 224,
+    "unique_observed_taxa_by_period": {
+      "prior": 223,
+      "middle": 224,
+      "later": 222,
+      "all": 224
+    },
+    "valid_gbif_source_record_years": {
+      "2001": 143002,
+      "2002": 186006,
+      "2003": 272706,
+      "2004": 238119,
+      "2005": 243597,
+      "2006": 308635,
+      "2007": 276709,
+      "2008": 267947,
+      "2009": 428588,
+      "2010": 392621,
+      "2011": 455999,
+      "2012": 366270,
+      "2013": 519780,
+      "2014": 558602,
+      "2015": 550255,
+      "2016": 575946,
+      "2017": 717028,
+      "2018": 843855,
+      "2019": 967936,
+      "2020": 890293,
+      "2021": 937875,
+      "2022": 1095594,
+      "2023": 1197803,
+      "2024": 1152286
+    },
+    "World_division_region_counts": {
+      "7": 66,
+      "8": 27,
+      "1": 33,
+      "3": 22,
+      "4": 15,
+      "2": 21,
+      "6": 2,
+      "5": 8
+    },
+    "region_recording_eligibility": "relaxed",
+    "region_recording_threshold": "all-time >=5 indexed candidate butterfly species, prior datasetKey-days>=5, late datasetKey-days>=10",
+    "regions_with_prior_year_provider_days_at_threshold": 195,
+    "regions_with_late_year_provider_days_at_threshold": 241,
+    "region_pair_empty_butterfly_portfolios_by_period": {
+      "prior": 0,
+      "middle": 0,
+      "later": 0,
+      "all": 0
+    },
+    "pairs_both_empty_GloNAF_alien": 0,
+    "pairs_both_empty_known_host": 0,
+    "pairs_both_empty_not_documented_alien": 0,
+    "focal_GBIF_butterfly_known_host_binomial_names": 2070,
+    "GloNAF_documented_host_names": 1098,
+    "GloNAF_original_plant_raw_indices_known_hosts": 1286,
+    "GloNAF_source_taxa_count": 21712
+  },
+  "outcome_Jaccard_summary": {
+    "late_2018_2024_mean": 0.15123366934297627,
+    "late_2018_2024_median": 0.058823529411764705,
+    "late_2018_2024_zero_pair_fraction": 0.11292131830564607,
+    "prior_2001_2010_mean": 0.09894282365992799,
+    "prior_2001_2010_zero_pair_fraction": 0.2925057422146253,
+    "current_all_GloNAF_mean": 0.09608139936658325,
+    "documented_focal_HOSTS_GloNAF_mean": 0.17558305676699273,
+    "unregistered_hosts_GloNAF_mean": 0.0754719888488294
+  },
+  "partial_rank": {
+    "known_hosts_given_other_aliens": 0.006424832089136957,
+    "not_documented_aliens_given_known_hosts": 0.043142476080398735,
+    "not_iid_pair_significance": true
+  },
+  "heldout_region_model_scores": {
+    "M0_all_flora_effort_prior": {
+      "region_equal_MSE": 0.004045202916113183,
+      "region_equal_MAE": 0.04287383527898277,
+      "region_holdout_count": 194
+    },
+    "M1_known_host": {
+      "region_equal_MSE": 0.004042089836737753,
+      "region_equal_MAE": 0.04286247211427871,
+      "region_holdout_count": 194
+    },
+    "M2_other_aliens": {
+      "region_equal_MSE": 0.00404920151336934,
+      "region_equal_MAE": 0.04289412024178229,
+      "region_holdout_count": 194
+    },
+    "M3_both": {
+      "region_equal_MSE": 0.004035738068569097,
+      "region_equal_MAE": 0.04277946449187812,
+      "region_holdout_count": 194
+    }
+  },
+  "heldout_region_model_comparisons": {
+    "M1_known_host": {
+      "MSE_reduction_vs_M0_percent": 0.07695731067108537,
+      "regions_improved": 109,
+      "regions_worsened": 85,
+      "mse_diff_mean": 3.1130793754290274e-06,
+      "mse_diff_median": 1.1102449917242598e-05
+    },
+    "M2_other_aliens": {
+      "MSE_reduction_vs_M0_percent": -0.09884787831605524,
+      "regions_improved": 78,
+      "regions_worsened": 116,
+      "mse_diff_mean": -3.9985972561570775e-06,
+      "mse_diff_median": -4.27233871252335e-07
+    },
+    "M3_both": {
+      "MSE_reduction_vs_M0_percent": 0.23397707705550336,
+      "regions_improved": 117,
+      "regions_worsened": 77,
+      "mse_diff_mean": 9.464847544085611e-06,
+      "mse_diff_median": 1.4249899127530274e-05
+    },
+    "known_host_after_other_aliens": {
+      "MSE_reduction_percent": 0.332496289843568
+    },
+    "other_aliens_after_known_host": {
+      "MSE_reduction_percent": 0.15714069763928185
+    }
+  },
+  "heldout_world_division_results": {
+    "world_divisions_evaluable": 8,
+    "world_divisions_known_host_improved": 5,
+    "world_divisions_other_aliens_improved": 1,
+    "world_divisions_known_host_given_other_improved": 7,
+    "by_world_division": {
+      "1": {
+        "regions_heldout": 33,
+        "training_pairs": 12880,
+        "test_pairs": 5841,
+        "M0_all_flora_effort_prior": 0.0036572797130243646,
+        "M1_known_host": 0.0036448135828404775,
+        "M2_other_aliens": 0.00366632367084099,
+        "M3_both": 0.0036170340233394912,
+        "known_host_vs_base_pct": 0.34085799178806475,
+        "other_aliens_vs_base_pct": -0.24728646771035348,
+        "known_host_given_other_pct": 1.3443888736149836
+      },
+      "2": {
+        "regions_heldout": 21,
+        "training_pairs": 14878,
+        "test_pairs": 3843,
+        "M0_all_flora_effort_prior": 0.004394097932731807,
+        "M1_known_host": 0.004380107135240478,
+        "M2_other_aliens": 0.004395443861351748,
+        "M3_both": 0.004368208096374671,
+        "known_host_vs_base_pct": 0.3183997649918368,
+        "other_aliens_vs_base_pct": -0.030630373754651736,
+        "known_host_given_other_pct": 0.6196362833013411
+      },
+      "3": {
+        "regions_heldout": 22,
+        "training_pairs": 14706,
+        "test_pairs": 4015,
+        "M0_all_flora_effort_prior": 0.005744842996696057,
+        "M1_known_host": 0.005737673509772479,
+        "M2_other_aliens": 0.005762034765185075,
+        "M3_both": 0.005723600493662211,
+        "known_host_vs_base_pct": 0.12479865729492641,
+        "other_aliens_vs_base_pct": -0.29925567154585514,
+        "known_host_given_other_pct": 0.6670260262067331
+      },
+      "4": {
+        "regions_heldout": 15,
+        "training_pairs": 15931,
+        "test_pairs": 2790,
+        "M0_all_flora_effort_prior": 0.004307935436849002,
+        "M1_known_host": 0.004273019716965,
+        "M2_other_aliens": 0.004336904760938534,
+        "M3_both": 0.004297742392759975,
+        "known_host_vs_base_pct": 0.8104977522490668,
+        "other_aliens_vs_base_pct": -0.6724642120152495,
+        "known_host_given_other_pct": 0.903002725152867
+      },
+      "5": {
+        "regions_heldout": 8,
+        "training_pairs": 17205,
+        "test_pairs": 1516,
+        "M0_all_flora_effort_prior": 0.004337488056908504,
+        "M1_known_host": 0.004301343667107127,
+        "M2_other_aliens": 0.004337069540946043,
+        "M3_both": 0.004265083514147406,
+        "known_host_vs_base_pct": 0.8333023475144402,
+        "other_aliens_vs_base_pct": 0.009648809563748053,
+        "known_host_given_other_pct": 1.659784933559871
+      },
+      "6": {
+        "regions_heldout": 2,
+        "training_pairs": 18336,
+        "test_pairs": 385,
+        "M0_all_flora_effort_prior": 0.008762423648756448,
+        "M1_known_host": 0.008794623577006952,
+        "M2_other_aliens": 0.008779382684055164,
+        "M3_both": 0.008729298982055243,
+        "known_host_vs_base_pct": -0.367477418819782,
+        "other_aliens_vs_base_pct": -0.19354274546086986,
+        "known_host_given_other_pct": 0.5704695170752898
+      },
+      "7": {
+        "regions_heldout": 66,
+        "training_pairs": 8128,
+        "test_pairs": 10593,
+        "M0_all_flora_effort_prior": 0.004069065343725192,
+        "M1_known_host": 0.004130942957418279,
+        "M2_other_aliens": 0.004386078778410094,
+        "M3_both": 0.00430154304660735,
+        "known_host_vs_base_pct": -1.520683706603702,
+        "other_aliens_vs_base_pct": -7.790817003559826,
+        "known_host_given_other_pct": 1.9273646478686304
+      },
+      "8": {
+        "regions_heldout": 27,
+        "training_pairs": 13861,
+        "test_pairs": 4860,
+        "M0_all_flora_effort_prior": 0.004011356210393697,
+        "M1_known_host": 0.004126798786795755,
+        "M2_other_aliens": 0.004022157109873271,
+        "M3_both": 0.004153142591263221,
+        "known_host_vs_base_pct": -2.877893917846009,
+        "other_aliens_vs_base_pct": -0.26925804922505603,
+        "known_host_given_other_pct": -3.25659783573389
+      }
+    }
+  },
+  "limitations": [
+    "The source 14,637,152 GBIF records are a preselected candidate butterfly cohort, not all Lepidoptera.",
+    "GBIF absence is not established absence; provider-day counts only proxy recording opportunity.",
+    "Data from after 2018 are used to select/adjust later sample: this is retrospective prediction only.",
+    "Source-colonial variables measure area-weighted historical empire duration, not plant/voyage arrival dates.",
+    "GloNAF and HOSTS are contemporary species records and may postdate GBIF early records.",
+    "Known larval-host lists are catalogued relations, not independently demonstrated larval feeding in each region.",
+    "Regional pairs are dependent; no independent pairwise p-values or causal mediated effects.",
+    "The control native-resource geography is original frozen GEB 239, not source 224 alone."
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "status": "PUBLISHED_STUDY_ALIEN_FLORA_POSITIVE_CONTROL_NOT_NEW_DISCOVERY",
+  "sample": {
+    "regions": 1062,
+    "total_possible_pairs": 563391,
+    "hashed_response_blind_pairs": 89898,
+    "shared_colonial_pairs": 12581,
+    "shared_colonial_pair_fraction": 0.13994749605108012,
+    "source_geo_groups": {
+      "Central_America_Carib": 89,
+      "Central_Asia": 54,
+      "East_Africa": 79,
+      "East_Asia": 37,
+      "Eastern_Europe": 94,
+      "Europe": 96,
+      "Micronesia_Polynesia": 99,
+      "Mid_North_America": 50,
+      "Mid_South_Africa": 30,
+      "North_Africa": 5,
+      "Northern_North_America": 18,
+      "Oceania": 99,
+      "South_America": 175,
+      "Southeast_Asia": 20,
+      "Southern_Asia": 87,
+      "Western_Africa": 18,
+      "Western_Asia": 12
+    },
+    "movable_source_regions": 1062
+  },
+  "exposure": "log1p(sum minimum of shared GB ESP PRT NL duration years, both>=25)",
+  "response": "Jaccard of published GloNAF recorded naturalized alien plants, original study sites",
+  "raw_spearman_rho": 0.19324463771272565,
+  "distance_climate_area_alien_richness_adjusted_partial_rank_rho": 0.08222553171115578,
+  "node_permutation": {
+    "draws": 199,
+    "seed": 31031,
+    "scheme": "shuffle full four-empire vectors within original source UN_geospat group",
+    "null_median": 0.02614422467213938,
+    "null_q025": 0.011717880328867569,
+    "null_q975": 0.0409414386360397,
+    "upper_tail": 0.005,
+    "two_sided_abs_tail": 0.005,
+    "not_a_causal_p_value": true
+  },
+  "limitations": [
+    "Reanalysis of previously published GloNAF alien-plant data is a POSITIVE CONTROL, never a novel butterfly outcome.",
+    "UN_geospat source strata may be finer than biogeographic continents; exchangeability not proven.",
+    "Source plant indexing depends on observation effort and original taxonomy.",
+    "Empire duration does not establish overlapping calendar years, trade route or plant transport.",
+    "Hashed node pairs reuse source regions and cannot be treated as iid samples.",
+    "Native WCVP plant/historical butterfly differences are not tested by this source-only positive control."
+  ],
+  "source_data_audit": {
+    "source_regions": 1183,
+    "source_predictor_rows": 1183,
+    "source_glonaf_rows": 470962,
+    "source_taxa_after_validated_name": 19217,
+    "eligible_regions": 1062,
+    "alien_plant_species_records_eligible": 249012,
+    "unmatched_predictor_or_plant_rows": {
+      "outside_matched_predictors": 79868,
+      "missing_or_corrupt_taxon": 5
+    },
+    "invalid_predictors": {},
+    "original_source_zip_md5": "16f5585d2500676951a4b664bbf0ffde"
+  }
+}

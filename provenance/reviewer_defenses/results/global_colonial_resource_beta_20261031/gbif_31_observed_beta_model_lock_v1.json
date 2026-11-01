@@ -1,0 +1,51 @@
+{
+  "schema": "chocho_independent_GBIF31_observed_butterfly_beta_284source_lock_v1",
+  "status": "SOURCE_FEASIBILITY_PASS_BEFORE_FITTING_OBSERVED_BUTTERFLY_RESPONSE",
+  "date": "2026-11-01",
+  "response_source": {
+    "doi": "10.15468/dl.pp5nc9",
+    "download_key": "0008693-260928105237408",
+    "source_sha256": "f629abab1f64c5e858956f91c4cdfe499e4d9fe0b39768df84e8bd47bbafa464",
+    "returned_record_count": 53144,
+    "species_in_239_panel": 30
+  },
+  "geography": {
+    "source_matched_wgsrpd3_regions": 284,
+    "eligible_regions": 111,
+    "eligibility": ">=5 source-observed butterfly species and >=5 unique (datasetKey,eventDate day) combinations, on all 2010–2026 GBIF records",
+    "eligible_pairs": 6105,
+    "selection_label": "retrospective coverage screen, not an unbiased prospective holdout"
+  },
+  "predictor_sources": {
+    "original_239_panel": "HOSTS fixed 808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "focal_GBIF_butterflies": "ONLY the 30 matched GBIF-observed butterflies, not all 239",
+    "glonaf": "Lenzner 2022 Zenodo 6640264 MD5 16f5585d2500676951a4b664bbf0ffde",
+    "historical_covariates": "same 284 source-locked WGSRPD3 Lenzner crosswalk",
+    "WCVP": "original native/current flora and resource beta fixed to PR118"
+  },
+  "primary_response": "Jaccard similarity of butterfly species recorded in the exact 2010–2026 GBIF DOI, NOT true occupancy; if both region observation portfolios have zero union, pair excluded",
+  "baseline_model": "M0: fixed distance/same division/temperature/aridity/native plant/native-resource similarity and WCVP flora beta; colonial duration; whole GloNAF alien Jaccard; GloNAF floristic richness min/max; GBIF provider-day min/max; GBIF dataset count min/max",
+  "extensions": [
+    "M1=M0+GloNAF documented larval-host Jaccard for only the 30 recorded butterflies",
+    "M2=M0+remaining not-documented-as-focal-host alien plant Jaccard",
+    "M3=M0+M1 host and M2 other"
+  ],
+  "evaluation": {
+    "linear_ridge_lambda": 10,
+    "clip_prediction_range": [
+      0,
+      1
+    ],
+    "standardize_using_training_pairs_only": true,
+    "outer_holdout": "leave an entire WGSRPD3 region out of training; all pairs involving it are scored, 111 folds; region-equal MSE",
+    "primary_comparison": "M1-M0 MSE reduction; M2-M0 negative control"
+  },
+  "sample_quality_sensitivity": "report 2010–2017 vs 2018–2026 detection-support counts, not a temporal prediction because plants date to contemporary inventory",
+  "claims": [
+    "No GBIF nonrecord is true absence",
+    "Selected 30 species are not representative of fixed 239, Americas are overrepresented",
+    "Predictor host information is not derived from GBIF observations, but still catalogued current host data",
+    "GBIF record effort and same-period plant source prevent causal/colonial-era inference",
+    "Pair-pseudo-replication is not sample size; descriptive partial correlations have no iid p-values"
+  ]
+}

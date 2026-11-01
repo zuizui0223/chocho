@@ -1,0 +1,60 @@
+{
+  "schema": "chocho_global224_gbif_annual_wgsrpd3_source_lock_v1",
+  "status": "LOCKED_BEFORE_NEW_FULL_DOWNLOAD_REMAP",
+  "date": "2026-11-01",
+  "source_doi": "10.15468/dl.umqmsf",
+  "gbif_download_key": "0013264-261023074918325",
+  "expected_zip_size_bytes": 1415705617,
+  "expected_total_source_rows": 14637152,
+  "metadata_source": "https://api.gbif.org/v1/occurrence/download/10.15468/dl.umqmsf",
+  "expected_format": "single large occurrence table with GBIF canonical species and WGS84 decimal coordinates; fail on unexpected schema",
+  "original_candidate_source": "provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_all_225_disposition.csv",
+  "expected_candidate_species": 225,
+  "candidate_source_git_blob_sha": "d4abc2edd762ef1003fff7c84c096c38883f0c20",
+  "expected_source_species_with_records": 224,
+  "comparison_potential_resource_panel": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+  "comparison_potential_resource_panel_count": 239,
+  "geographic_source_commit": "tdwg/wgsrpd 52da7828aba9d461dd133c27b3bd7a4407161f54",
+  "official_geography_lookup": "data/frozen/wgsrpd3_level1_lookup_v0.1.json",
+  "official_eligible_region_count": 369,
+  "period": {
+    "start": 2001,
+    "end": 2024
+  },
+  "geography_rules": [
+    "one GBIF coordinate point intersects an official WGSRPD3 polygon",
+    "multi-polygon overlap resolve deterministically to alphabetically first matching region and report count",
+    "no geographic polygon hit is UNKNOWN geographic support, not a valid absence",
+    "never infer true absence from GBIF non-record"
+  ],
+  "taxonomy_rules": [
+    "speciesKey must match frozen 225-candidate taxon_key, with exactly matching accepted species binomial fallback allowed",
+    "record source_key/name disagreements and exclude ambiguous matches",
+    "GBIF source taxonomic rank and accepted names can differ from 2026 frozen candidate semantics; audit all",
+    "include all candidate species with actual original indexed records; never force output to 224 if source differs"
+  ],
+  "effort_definition": "distinct datasetKey × ISO observation date for each butterfly×WGSRPD3×year, and separately all-candidate species effort per region×year; these are recording opportunities, not true survey visits",
+  "temporal_bin": "source GBIF observation year (2001..2024), date should agree when parseable",
+  "output_grain": [
+    "species × WGSRPD3 × year (only indexed-positive cells; no invented zeros)",
+    "region × year whole-candidate recording effort (including zero-support omitted, not explicit absences)",
+    "candidate species disposition/coverage receipts",
+    "source hashes and row-quality/drop counters"
+  ],
+  "safe_publication": "No occurrence-level GBIF ID, geolocation, original datasetKey, observer, or daily row; only aggregated numeric counts and the GBIF DOI citation",
+  "scientific_gates": [
+    "exact input ZIP bytes and row count",
+    "frozen 225-species key lookup; explicit no-record species list",
+    "all 369 official level3 polygons present; deterministic source lock",
+    "region/year/source inclusion and exclusion audited",
+    "same frozen 239 potential-resource panel species intersection audited",
+    "report recording effort and source diversity before independent observation model"
+  ],
+  "limitations": [
+    "GBIF detected species is not local biological presence/true absence; incomplete taxon and observation support",
+    "All original 14.6M records are a selected butterfly group, not all insect observation effort",
+    "WCVP/HOSTS/GloNAF contemporary host geography does not date actual historical plant arrivals",
+    "Region–year recording dates and datasetKey distributions may be incomplete; never invent provider-days",
+    "This source aggregation alone does not establish plant-host effects, colonial legacy, shipping or actual butterfly convergence"
+  ]
+}

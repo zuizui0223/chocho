@@ -1,0 +1,106 @@
+name: chocho original 14.6M GBIF butterfly to WGSRPD3 annual effort aggregates
+
+on:
+  push:
+    branches:
+      - analysis/global-colonial-alien-flora-control-20261031
+    paths:
+      - ".github/workflows/chocho-global224-gbif-wgsrpd3-annual.yml"
+      - "scripts/aggregate_gbif_global224_wgsrpd3_annual.py"
+      - "tests/test_aggregate_global224_wgsrpd3_annual_20261101.py"
+      - "provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_224_annual_wgsrpd3_source_lock_v1.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-global224-gbif-annual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-locked-indexed-224-butterfly-observation-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install chunked geometry/statistics source readers and run synthetic tests
+        run: |
+          python -m pip install "numpy>=1.26,<3" "pandas>=2.2,<3" "shapely>=2.1,<3" "pytest>=8" ruff
+          ruff check --select F821 scripts/aggregate_gbif_global224_wgsrpd3_annual.py
+          python -m pytest tests/test_aggregate_global224_wgsrpd3_annual_20261101.py -q
+      - name: Checkout exact official WGSRPD3 polygons, NOT a moving taxonomy
+        uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/wgsrpd
+      - name: Fetch exact previously cited original 14,637,152 occurrence source
+        run: |
+          mkdir -p _private_observations
+          df -h .
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 35 --max-time 1200 \
+            'https://api.gbif.org/v1/occurrence/download/request/0013264-261023074918325.zip' \
+            --output _private_observations/gbif_global_224_2026.zip
+          actual_size="$(stat --printf='%s' _private_observations/gbif_global_224_2026.zip)"
+          if [ "$actual_size" != "1415705617" ]; then
+            echo "::error::Unexpected original GBIF DOI ZIP size $actual_size; expected 1415705617"
+            exit 1
+          fi
+          unzip -Z -1 _private_observations/gbif_global_224_2026.zip | head -n 15
+          df -h .
+      - name: Stream GBIF source to positive annual butterfly-region/provider-day and regional-effort aggregates
+        run: |
+          python -u scripts/aggregate_gbif_global224_wgsrpd3_annual.py \
+            --source-zip _private_observations/gbif_global_224_2026.zip \
+            --geojson _external/wgsrpd/geojson/level3.geojson \
+            --candidate-csv provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_all_225_disposition.csv \
+            --resource-panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --chunk-size 60000 \
+            --output-prefix provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_annual_v1
+      - name: Commit ONLY source-derived annual numeric summaries, never raw GBIF coordinates or dataset keys
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          prefix=provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_annual_v1
+          test -s "${prefix}.audit.json"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path("provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_annual_v1")
+          audit=json.loads(Path(str(base)+".audit.json").read_text())
+          assert audit["records"]["rows"]==14_637_152
+          assert audit["source"]["GBIF_zip_size_bytes"]==1_415_705_617
+          assert audit["coverage"]["original_candidate_species"]==225
+          assert audit["coverage"]["official_level3_region_codes"]==369
+          assert not audit["sampled_mode"]
+          print("Source science gates checked:",audit["coverage"])
+          PY
+          git add "${prefix}.audit.json" "${prefix}.species_region.csv.gz" \
+                  "${prefix}.species_region_year.csv.gz" "${prefix}.region_year_effort.csv"
+          if git diff --cached --quiet; then echo 'Identical aggregate exists'; exit 0; fi
+          # Avoid publishing a stale old-run result if science source was edited
+          # while the 1.42 GB original archive was being processed.
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+               scripts/aggregate_gbif_global224_wgsrpd3_annual.py \
+               provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_224_annual_wgsrpd3_source_lock_v1.json; then
+            echo 'Source code or locked design changed; keep old-run results uncommitted'
+            exit 0
+          fi
+          git commit -m 'Aggregate original global 14.6M GBIF indexed butterfly year-region and provider-day records [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Erase 1.42 GB downloaded original GBIF archive and external GIS
+        if: always()
+        run: rm -rf _private_observations _external
