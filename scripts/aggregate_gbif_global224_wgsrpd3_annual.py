@@ -35,6 +35,7 @@ import zipfile
 import numpy as np
 import pandas as pd
 from shapely.geometry import shape
+from shapely.validation import make_valid
 from shapely import points as shapely_points
 from shapely.strtree import STRtree
 
@@ -101,18 +102,35 @@ def official_geography(path=TDWG,lookup=LOOKUP):
         raise RuntimeError("Frozen WGSRPD3 geography is not 369 units")
     raw=json.loads(Path(path).read_text(encoding="utf8"))
     items=[]
+    repaired={}
     for f in raw["features"]:
         c=str(f["properties"].get("LEVEL3_COD") or "").strip()
-        if c:
-            items.append((c,shape(f["geometry"])))
+        if not c:
+            continue
+        geometry=shape(f["geometry"])
+        if geometry.is_empty:
+            raise RuntimeError("Official TDWG geometry is empty for "+c)
+        if not geometry.is_valid:
+            source_area=geometry.area
+            geometry=make_valid(geometry)
+            if geometry.is_empty or not geometry.is_valid or geometry.area<=0:
+                raise RuntimeError("Official TDWG polygon repair failed for "+c)
+            # Provenance note: numerical planar area is diagnostic only; no
+            # spatial-area weighting is done here.
+            repaired[c]={
+                "original_planar_area":source_area,
+                "valid_planar_area":geometry.area,
+                "relative_area_difference":abs(geometry.area-source_area)/max(source_area,1e-12),
+            }
+        items.append((c,geometry))
     items.sort(key=lambda x:x[0])
     codes=[x[0] for x in items]
     polygons=[x[1] for x in items]
     if len(codes)!=369 or set(codes)!=expected or len(set(codes))!=369:
         raise RuntimeError("Official TDWG polygon codes differ from source lock")
-    if not all(not g.is_empty and g.is_valid for g in polygons):
-        raise RuntimeError("Official polygon is empty/invalid")
-    return STRtree(polygons),codes
+    if any(g.is_empty or not g.is_valid for g in polygons):
+        raise RuntimeError("Official TDWG geometry invalid after deterministic repair")
+    return STRtree(polygons),codes,repaired
 
 
 def assign_xy_to_369(lons,lats,tree):
@@ -473,7 +491,10 @@ def main():
         raise RuntimeError("Full GBIF original ZIP size changed; refuse different source")
     bykey,byname,resource,_source_disposition=candidate_panel(
         args.candidate_csv,args.resource_panel)
-    tree,codes=official_geography(args.geojson)
+    tree,codes,repaired_codes=official_geography(args.geojson)
+    print(json.dumps({"official_level3_regions":len(codes),
+                      "geometry_repair_count":len(repaired_codes),
+                      "geometry_repaired_codes":sorted(repaired_codes)}),flush=True)
     checksum=sha256(src)
     with zipfile.ZipFile(src) as z:
         (member,sep,cols),audit=archive_table(z)
@@ -493,6 +514,10 @@ def main():
         {"zip_size_bytes":size,"occurrence_member":member,
          "uncompressed_bytes":zipinfo.file_size},args.output_prefix,
         full_run=args.max_source_rows is None)
+    receipt["source"]["repaired_official_TDWG_geometry"] = repaired_codes
+    receipt["source"]["number_repaired_official_regions"] = len(repaired_codes)
+    Path(str(args.output_prefix)+".audit.json").write_text(
+        json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
     print(json.dumps({
         "status":receipt["status"],
         "records":receipt["records"],
