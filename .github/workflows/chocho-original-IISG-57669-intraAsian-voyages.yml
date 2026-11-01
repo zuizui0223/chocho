@@ -1,0 +1,91 @@
+name: chocho original 57669 17th-century intra-Asian VOC historical voyage source
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-original-IISG-57669-intraAsian-voyages.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_voc_57669_dataversenl_source.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-VOC-original57k-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dataverse-original-authentic-intra-asian-voyages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download documented DataverseNL source file 569977 (NOT IISG mirror ID 10466)
+        id: source
+        continue-on-error: true
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 \
+            --connect-timeout 25 --max-time 210 \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_intra_asian_57669.tsv
+          test -s _private_history/voc_intra_asian_57669.tsv
+          sha1sum _private_history/voc_intra_asian_57669.tsv
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/probe_voc_57669_dataversenl_source.py \
+            --source _private_history/voc_intra_asian_57669.tsv
+      - name: Record finite provenance/availability response without shipping original vessel rows
+        if: always()
+        run: |
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          base=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          blob=Path("_private_history/voc_intra_asian_57669.tsv")
+          schema=base/"voc_intra_asian_57669_original_source_schema.json"
+          gate={
+              "status":"DATAVERSENL_SOURCE_NOT_VERIFIED",
+              "source":"Leenstra/Parthesius 2022 Dutch Ships in Asian Waters, DOI 10.34894/5HGTCD",
+              "web_source_metadata":"Dans-labs/odissei-portal-exp/raw-data/doi-10.34894-5HGTCD/source/dataverse-json-export.json",
+              "original_dataverse_file_id":569977,
+              "original_expected_sha1":"eed2479019a8570e392f37f3d781d5b0c67448b1",
+              "original_expected_bytes":10187695,
+              "expected_voyages":57669,
+              "download_url":"https://dataverse.nl/api/access/datafile/569977?format=original",
+              "downloaded_bytes":blob.stat().st_size if blob.exists() else 0,
+              "actual_sha1":hashlib.sha1(blob.read_bytes()).hexdigest() if blob.exists() else None,
+              "source_schema_passed":schema.exists(),
+          }
+          if schema.exists():
+              parsed=json.loads(schema.read_text(encoding="utf8"))
+              gate["status"]=parsed["status"]
+              gate["source_rows"]=parsed["original_record_count"]
+              gate["source_columns"]=parsed["source_columns"]
+          (base/"voc_intra_asia_DataverseNL_source_access_gate.json").write_text(
+              json.dumps(gate,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
+          print(json.dumps(gate,indent=2,ensure_ascii=False))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git add "${folder}/voc_intra_asia_DataverseNL_source_access_gate.json"
+          if test -f "${folder}/voc_intra_asian_57669_original_source_schema.json"; then
+            git add "${folder}/voc_intra_asian_57669_original_source_schema.json"
+          fi
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+              "${folder}/probe_voc_57669_dataversenl_source.py"; then
+            echo 'Source probe changed, skip stale';exit 0
+          fi
+          git commit -m 'Audit exact DataverseNL source for 57669 17th-century intra-Asia VOC ship voyages [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Delete all original ship rows and voyage IDs
+        if: always()
+        run: rm -rf _private_history
