@@ -54,12 +54,26 @@ def normalize_port(name):
 
 
 def source_year(v):
-    text=str(v or "").strip()
-    m=re.match(r"^(1[56]\d\d|17\d\d|18\d\d)(?:[-/].*|\d{2}.*|$)",text)
-    if not m:
+    """Interpret the original VOC Dataverse dates, normally MM/DD/YYYY.
+
+    Earlier parser incorrectly expected the year at the beginning,
+    removing historical inter-island routes despite real source records.
+    Reject impossible calendar days rather than guessing.
+    """
+    from datetime import datetime
+    text = str(v or "").strip()
+    if not text:
         return None
-    y=int(m.group(1))
-    return y if 1595<=y<=1795 else None
+    if text.isdigit() and len(text)==4:
+        y=int(text)
+        return y if 1595<=y<=1795 else None
+    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%Y/%m/%d", "%Y%m%d"):
+        try:
+            y=datetime.strptime(text,fmt).year
+            return y if 1595<=y<=1795 else None
+        except ValueError:
+            continue
+    return None
 
 
 def year_bin(y):
