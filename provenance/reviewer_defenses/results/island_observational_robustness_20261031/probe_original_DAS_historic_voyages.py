@@ -61,7 +61,15 @@ def audit(path=SOURCE):
                 if count>=2
             ]
         profiles[k]=profile
+    # Port destination/departure PLACE name vocabulary is public, low
+    # cardinality and needed for auditable historical gazetteer matching.
+    # Do not release names of ships or individuals.
+    port_vocabulary={
+        k:sorted({str(r[k]).strip() for r in voyages if r.get(k)})
+        for k in ("departure_port","destination_port")
+    }
     return {
+        "historical_port_name_vocabulary":port_vocabulary,
         "status":"HISTORICAL_DAS_SOURCE_SHAPE_ONLY_NOT_PORT_PAIR_MATCH",
         "source_citation":"Dutch Asiatic Shipping (DAS), Huygens Institute, normalized in IBM/chuk-mcp-maritime-archives",
         "source_URL":"https://resources.huygens.knaw.nl/das",
