@@ -185,7 +185,7 @@ def match_source_sites(sites,orig,threshold_km):
     }
 
 
-def to_derived_island_network(sites,routes,source_rows,port_matches,ports,pairs,threshold):
+def to_derived_island_network(sites,routes,source_rows,port_matches,ports,pairs,threshold,source_zip_size):
     source_edges=Counter()
     island_edges=Counter()
     WPI_matches=Counter()
@@ -229,7 +229,7 @@ def to_derived_island_network(sites,routes,source_rows,port_matches,ports,pairs,
         "source":{
             "DOI":"10.5281/zenodo.10783698",
             "ZIP_MD5":EXPECTED_MD5,
-            "archive_bytes":SOURCE.stat().st_size,
+            "archive_bytes":source_zip_size,
             "original_triplet_csv_bytes":EXPECTED_CSV_BYTES,
             "matched_original_WPI_port_locations":len(WPI_matches),
             "source_sites_total":len(sites),
@@ -286,8 +286,6 @@ def main():
     lock=json.loads(LOCK.read_text(encoding="utf8"))
     if lock.get("schema")!="chocho_2020_AIS_source_od_WPI194_island51_v1":
         raise RuntimeError("Pre-analysis AIS vessel port matching source lock absent")
-    global SOURCE
-    SOURCE=args.zip
     sites,routecounts,rawcounts,endpoints,bbox=read_ais(args.zip)
     ports,coords=validate_wpi()
     sourcepairs=read_csv(PAIRS)
@@ -295,7 +293,8 @@ def main():
     for distance in (2,5,10):
         mapping,matchstats,matchdist=match_source_sites(sites,coords,distance)
         rows,portedges,a=to_derived_island_network(
-            sites,routecounts,rawcounts,mapping,ports,sourcepairs,distance)
+            sites,routecounts,rawcounts,mapping,ports,sourcepairs,distance,
+            args.zip.stat().st_size)
         a["source_WPI_matches"]=matchstats
         a["source_geographic_bbox"]=bbox
         a["site_match_distance_diagnostics"]=matchdist
