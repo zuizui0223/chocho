@@ -256,6 +256,25 @@ def analyze():
                 if route["historic_cargo_indexed_rows"] else "NO_MATCHED_CARGO_ROWS_NOT_NO_PLANTS"),
         })
     supported=[v for v in outputs if v["original_cargo_records_linked"]>0]
+    # Post-hoc influence diagnostic: Java is a historical trade hub in
+    # the original voyage table. This does NOT create a negative control
+    # for all routes not observed in the Dutch archival source.
+    java=[v for v in supported if "19" in (v["island_a"],v["island_b"])]
+    nonjava=[v for v in supported if "19" not in (v["island_a"],v["island_b"])]
+    def hub_stats(rows):
+        return {
+            "cargo_indexed_positive_routes":len(rows),
+            "commodity_categories_compatible_with_locally_recorded_butterflies":sum(
+                len(v["commodity_categories_matching_locally_indexed_species"].split(";"))
+                if v["commodity_categories_matching_locally_indexed_species"] else 0
+                for v in rows),
+            "routes_with_same_compatible_butterfly_both_islands":sum(
+                v["same_compatible_butterfly_GBIF_first_indexed_in_both_islands"]
+                for v in rows),
+            "routes_with_any_locally_compatible_indexed_butterfly":sum(
+                v["any_local_butterfly_with_same_modern_known_host_genus"]
+                for v in rows),
+        }
     audit={
         "schema":"chocho_VOC_cargo_HostGenus_actual_GBIF_island_butterflies_v1",
         "status":"SOURCE_CONDITIONAL_LOCAL_GENUS_OVERLAP_SCREEN_NOT_BIOLOGICAL_TRANSPORT",
@@ -279,6 +298,11 @@ def analyze():
         },
         "exact_seven_factorial_commodity_packet_permutation":permutations,
         "number_labeled_packet_assignments":perm_n,
+        "posthoc_trade_hub_influence": {
+            "java_19_positive_cargo_links":hub_stats(java),
+            "other_positive_cargo_links":hub_stats(nonjava),
+            "warning":"Post-hoc geographical influence check, not a confirmatory Java-vs-other-islands treatment contrast.",
+        },
         "derived_island_pair_rows":outputs,
         "limitations":[
             "A VOC commodity category (e.g. rice/indigo) is not taxonomic proof that a live source HOSTS plant species was carried on the particular island leg.",
