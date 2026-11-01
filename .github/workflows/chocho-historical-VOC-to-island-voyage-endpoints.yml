@@ -1,0 +1,90 @@
+name: chocho authentic 1595–1795 VOC historical maritime endpoint-to-island data
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-historical-VOC-to-island-voyage-endpoints.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_das_colonial_island_voyage_endpoints.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/das_island_historic_endpoint_lock_20261101.json"
+      - "tests/test_DAS_colonial_island_voyage_endpoints_20261101.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-voc-historical-original-island-endpoints-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actual-historic-europe-asia-island-journey-endpoints:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test exact 16th–18th century historical island city aliases without raw voyage data
+        run: |
+          python -m pip install 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_das_colonial_island_voyage_endpoints.py
+          python -m pytest -q tests/test_DAS_colonial_island_voyage_endpoints_20261101.py
+      - name: Checkout exact Huygens DAS VOC original normalized record source
+        uses: actions/checkout@v4
+        with:
+          repository: IBM/chuk-mcp-maritime-archives
+          ref: 33ae4ef8dfa6acd5f35e619e079ceec518306c9f
+          path: _historical_DAS
+      - name: Match only source-dated Dutch transoceanic ship port endpoints to original WPI island landmasses
+        run: |
+          source=provenance/reviewer_defenses/results/island_observational_robustness_20261031/derive_das_colonial_island_voyage_endpoints.py
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          python "$source" \
+            --output "${folder}/das_1595_1795_historic_island_voyage_endpoints_v1.json" \
+            --island-csv "${folder}/das_1595_1795_historic_island_endpoint_counts_v1.csv"
+          python "$source" --include-broad-island-labels \
+            --output "${folder}/das_1595_1795_historic_island_voyage_endpoints_broad_v1.json" \
+            --island-csv "${folder}/das_1595_1795_historic_island_endpoint_counts_broad_v1.csv"
+      - name: Verify genuine historic source differences, publish only aggregated endpoint counts and source audit
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          folder=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          a=json.loads((folder/"das_1595_1795_historic_island_voyage_endpoints_v1.json").read_text())
+          b=json.loads((folder/"das_1595_1795_historic_island_voyage_endpoints_broad_v1.json").read_text())
+          assert a["source_original_8178_journey_count"]==8178
+          assert b["source_original_8178_journey_count"]==8178
+          assert a["original_WPI_islands"]==b["original_WPI_islands"]==51
+          assert b["include_broad_geographic_island_labels"] and not a["include_broad_geographic_island_labels"]
+          assert b["islands_with_historical_Dutch_source_metropole_endpoint"]>=a["islands_with_historical_Dutch_source_metropole_endpoint"]
+          print("Precise original historical city aliases:",a["historical_source_rows_by_endpoint_type"])
+          print("Broader historical island labels:",b["historical_source_rows_by_endpoint_type"])
+          print("Islands with voyage endpoints:",a["historic_island_ids_with_dated_Europe_voyage_endpoint"],
+                b["historic_island_ids_with_dated_Europe_voyage_endpoint"])
+          PY
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}/das_1595_1795_historic_island_voyage_endpoints_v1.json" \
+                  "${folder}/das_1595_1795_historic_island_voyage_endpoints_broad_v1.json" \
+                  "${folder}/das_1595_1795_historic_island_endpoint_counts_v1.csv" \
+                  "${folder}/das_1595_1795_historic_island_endpoint_counts_broad_v1.csv"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+               "${folder}/derive_das_colonial_island_voyage_endpoints.py" \
+               "${folder}/das_island_historic_endpoint_lock_20261101.json"; then
+            echo 'Source or precommitted study lock changed; refuse stale derived data'
+            exit 0
+          fi
+          git commit -m 'Count authentic 1595–1795 VOC Europe–island voyage endpoints and compare to existing port-host geographies [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove original third-party 8178 VOC voyage/vessel records
+        if: always()
+        run: rm -rf _historical_DAS
