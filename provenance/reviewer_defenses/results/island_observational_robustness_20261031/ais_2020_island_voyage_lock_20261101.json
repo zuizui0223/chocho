@@ -1,0 +1,63 @@
+{
+  "schema": "chocho_2020_AIS_source_od_WPI194_island51_v1",
+  "status": "PREDECIDED_BEFORE_READING_SOURCE_VOYAGE_ROWS",
+  "date": "2026-11-01",
+  "source": {
+    "doi": "10.5281/zenodo.10783698",
+    "citation": "Duvallet, Kerné, Morel & Pigné 2024 Date-Ship-Port triplet data based on AIS data",
+    "file": "triplet_2020.zip",
+    "archive_md5": "af27e1bef1f706e2e29ed53aee47ff10",
+    "source_csv": "triplet_2020.csv",
+    "source_uncompressed_csv_bytes": 113764323,
+    "source_license": "CC BY 4.0",
+    "data_vintage": "2020 only, not colonial-era shipping",
+    "known_schema": [
+      "date-out",
+      "date-in",
+      "mmsi_imo_vessel_mame",
+      "time_mooring",
+      "nb_mooring_terminal",
+      "Port_ID_waiting_area_id_from",
+      "PortName_from",
+      "lon_from",
+      "lat_from",
+      "Port_ID_waiting_area_id_to",
+      "PortName_to",
+      "lon_to",
+      "lat_to"
+    ],
+    "sources_note": "AISHUB, NOAA, DMA.DK AIS coverage is incomplete geographically; dataset does not certify complete observation of all possible port links"
+  },
+  "target_island_source": "51 previously source-eligible landmass IDs, 194 2019 WPI indexed ports, not a sample selected for 2020 AIS coverage",
+  "match_rules": {
+    "primary_max_geodesic_port_distance_km": 5,
+    "sensitivities_km": [
+      2,
+      5,
+      10
+    ],
+    "identification": "Match AIS source port endpoint coordinates to a single WPI point within radius using WGS84 great-circle distance; if multiple WPI points within radius reject as AMBIGUOUS",
+    "source_key": "AIS port source ID plus coordinates rounded to 0.001°; report duplicate ID if widely dispersed",
+    "island_ownership": "From matched WPI port's frozen landmass_id, never use modern country bilateral shipping as WPI identity",
+    "edge_definition": "an AIS table row with dated source port, destination port and 2020 date, both endpoints matched unambiguously to WPI ports on different islands",
+    "zero_vs_unknown": "only an observed direct link is positive; any unmatched or unobserved edge is UNKNOWN, never certified zero shipping",
+    "distance_sensitivity": "2km strict,5km primary,10km relaxed. Do not select the best by butterfly-host association"
+  },
+  "audit_to_collect": [
+    "number source rows and valid 2020 timestamps",
+    "number unique AIS port endpoint locations",
+    "AIS port coordinate spatial coverage",
+    "AIS-origin/destination/source voyage count",
+    "number matched original WPI ports / 194",
+    "number source island nodes / 51 with at least one AIS matched port",
+    "observed voyages between 51 indexed islands",
+    "distinct observed island-pair links vs 1,275 possible pairs",
+    "source island-pair links with actual early/late butterfly or host Jaccard"
+  ],
+  "negative_inference_limits": [
+    "No 2020 AIS link observed does not imply route absent; AIS geographic coverage/source type can be highly selective",
+    "No actual vessel ID/identity, departure date, GBIF position or third-party source row shall be committed",
+    "No 2020 AIS exposure is chronologically prior to 2001–2010 initial plant or 2011–2022 first-indexed butterfly records",
+    "No direct evidence for colonial-era port-to-port shipping, propagule transportation, butterfly arrival, breeding, or host suitability"
+  ]
+}
