@@ -1,0 +1,82 @@
+name: chocho VOC 17c documented cargo categories on verified island voyages
+
+on:
+  push:
+    branches: [analysis/island-port-observed-association-first-20261031]
+    paths:
+      - ".github/workflows/chocho-17c-VOC-cargo-island-linkage.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/join_VOC_17c_cargo_to_historic_island_routes.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_commodity_lock_20261101.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-archived17c-cargo-to-island-links-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-commodity-annotations-to-source-voyages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate source-only computation
+        run: |
+          python -m pip install ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/join_VOC_17c_cargo_to_historic_island_routes.py
+          python -m compileall -q provenance/reviewer_defenses/results/island_observational_robustness_20261031/join_VOC_17c_cargo_to_historic_island_routes.py
+      - name: Fetch exact archived 7737 cargo descriptions and 57669 dated VOC voyage legs
+        run: |
+          mkdir -p _private_history
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 240 \
+            'https://dataverse.nl/api/access/datafile/569978?format=original' \
+            --output _private_history/voc_7737_cargo.tab
+          echo 'd7cc3aff064fb63f58b8b549b1ca9808cb4b76d1  _private_history/voc_7737_cargo.tab' | sha1sum -c -
+          curl --fail --show-error --silent --location --retry 2 --connect-timeout 30 --max-time 240 \
+            'https://dataverse.nl/api/access/datafile/569977?format=original' \
+            --output _private_history/voc_57669_all_voyages.tab
+          echo 'eed2479019a8570e392f37f3d781d5b0c67448b1  _private_history/voc_57669_all_voyages.tab' | sha1sum -c -
+      - name: Link cargo by unique original voyage identifiers to 9 source-positive island route pairs
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/join_VOC_17c_cargo_to_historic_island_routes.py \
+            --voyages _private_history/voc_57669_all_voyages.tab \
+            --cargo _private_history/voc_7737_cargo.tab
+      - name: Verify numerical source keys, then publish only derived cargo commodity type counts
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_on_verified_island_routes_v1.json")
+          j=json.loads(p.read_text(encoding="utf8"))
+          assert j["historical_source_original_voyage_rows"]==57669
+          assert j["historical_source_original_cargo_rows"]==7737
+          assert j["verified_historic_island_edges"]==9
+          assert j["verified_historic_island_voyage_leg_rows"]==1193
+          print("Cargo-described source island legs:",j["source_cargo_rows_linked_to_unambiguous_two_island_leg"])
+          print("Historic 17c cargo plant commodity category mentions:",j["on_historic_island_routes_cargo_category_keyword_row_counts"])
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          p=provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_on_verified_island_routes_v1.json
+          git add "$p"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+               provenance/reviewer_defenses/results/island_observational_robustness_20261031/join_VOC_17c_cargo_to_historic_island_routes.py \
+               provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_commodity_lock_20261101.json; then
+            echo 'Commodities source method or lock drifted; do not publish stale analysis'
+            exit 0
+          fi
+          git commit -m 'Quantify VOC archived plant-commodity mentions on source-verified 17th-century island pairs without raw cargo [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Remove full original Dutch VOC voyage/cargo records
+        if: always()
+        run: rm -rf _private_history
