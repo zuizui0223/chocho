@@ -1,0 +1,71 @@
+name: chocho historical VOC cargo and actual island butterfly host genera exact null
+
+on:
+  push:
+    branches:
+      - analysis/island-port-observed-association-first-20261031
+    paths:
+      - ".github/workflows/chocho-VOC-cargo-actual-island-butterflies-exactnull.yml"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/analyze_VOC_cargo_vs_recorded_island_butterfly_species.py"
+      - "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_17c_cargo_island_specific_butterfly_match_lock_20261102.json"
+      - "tests/test_VOC_local_first_butterfly_commodity_20261102.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-VOC-cargo-actual-local-butterflies-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-locked-VOC-cargo-local-butterfly-first-records:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test seven source-backed route packets and all 5040 exact permutations
+        run: |
+          python -m pip install 'pytest>=8' ruff
+          ruff check --select F821 provenance/reviewer_defenses/results/island_observational_robustness_20261031/analyze_VOC_cargo_vs_recorded_island_butterfly_species.py
+          python -m pytest tests/test_VOC_local_first_butterfly_commodity_20261102.py -q
+      - name: Measure source original historical cargo category overlap with real GBIF butterfly first records on each island
+        run: |
+          python provenance/reviewer_defenses/results/island_observational_robustness_20261031/analyze_VOC_cargo_vs_recorded_island_butterfly_species.py
+      - name: Publish only public derived modern species and historical route aggregates
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=Path("provenance/reviewer_defenses/results/island_observational_robustness_20261031")
+          j=json.loads((d/"voc_17c_cargo_actual_island_butterfly_first_records_v1.json").read_text())
+          assert j["original_authentic_VOC_island_links"]==9
+          assert j["historic_links_with_cargo_rows"]==7
+          assert j["number_labeled_packet_assignments"]==5040
+          assert j["butterflies_source_event_quality"]["global_original_new_events"]==5665
+          print(json.dumps(j["primary_observed"],indent=2))
+          print(json.dumps({k:{"observed":v["observed"],"null_mean":v["null_mean"],
+                 "right_tail":v["conditional_finite_permutation_right_tail_fraction"]}
+                 for k,v in j["exact_seven_factorial_commodity_packet_permutation"].items()},indent=2))
+          PY
+          folder=provenance/reviewer_defenses/results/island_observational_robustness_20261031
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "${folder}/voc_17c_cargo_actual_island_butterfly_first_records_v1.json" \
+                  "${folder}/voc_17c_cargo_actual_island_butterfly_first_records_v1.csv"
+          git diff --cached --quiet && exit 0
+          git fetch origin "${GITHUB_REF_NAME}"
+          if ! git diff --quiet "origin/${GITHUB_REF_NAME}" -- \
+              "${folder}/analyze_VOC_cargo_vs_recorded_island_butterfly_species.py" \
+              "${folder}/voc_17c_cargo_island_specific_butterfly_match_lock_20261102.json"; then
+            echo 'Source model changed during run; do not publish stale result'
+            exit 0
+          fi
+          git commit -m 'Check 1595-1698 actual VOC cargo commodity genera against 2011-2017 island first-indexed butterfly taxa and all 5040 route-label permutations [skip ci]'
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
