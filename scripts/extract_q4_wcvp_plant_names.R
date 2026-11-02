@@ -22,10 +22,16 @@ if (nrow(take)!=length(ids) || anyDuplicated(take$plant_name_id)) {
 take <- take[match(ids,take$plant_name_id),,drop=FALSE]
 if (!identical(as.character(take$plant_name_id),ids)) stop("WCVP matched ID order drift")
 if (any(is.na(take$taxon_name) | !nzchar(trimws(as.character(take$taxon_name))))) stop("Missing plant names")
-if (any(tolower(as.character(take$taxon_rank))!="species")) stop("Not all WCVP plant IDs are species")
-if (any(tolower(as.character(take$taxon_status))!="accepted")) stop("Not all input IDs accepted in WCVP")
-outdf <- data.frame(plant_id=ids, wcvp_accepted_name=as.character(take$taxon_name),
-                    stringsAsFactors=FALSE)
+rank <- tolower(trimws(as.character(take$taxon_rank)))
+status <- tolower(trimws(as.character(take$taxon_status)))
+eligible <- rank=="species" & status=="accepted"
+outdf <- data.frame(
+  plant_id=ids, wcvp_accepted_name=as.character(take$taxon_name),
+  wcvp_taxon_rank=rank, wcvp_taxon_status=status,
+  gbif_species_query_eligible=ifelse(eligible,"True","False"),
+  stringsAsFactors=FALSE
+)
 dir.create(dirname(out),showWarnings=FALSE,recursive=TRUE)
 write.csv(outdf,out,row.names=FALSE,na="")
-cat(sprintf("Q4 name crosswalk PASS: %d WCVP accepted host plants\n",nrow(outdf)))
+cat(sprintf("Q4 WCVP taxonomy crosswalk PASS: total=%d species-eligible=%d infraspecific_or_ambiguous=%d\n",nrow(outdf),sum(eligible),sum(!eligible)))
+print(table(rank,status,useNA="ifany"))
