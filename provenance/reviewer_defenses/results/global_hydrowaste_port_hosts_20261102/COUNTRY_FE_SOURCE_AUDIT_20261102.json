@@ -1,0 +1,192 @@
+{
+  "schema": "chocho_global_HydroWASTE58502_WPI1596_host_port_spatial_association_independent_audit_20261102_v1",
+  "status": "EXPLORATORY_POSITIVE_SPATIAL_INFRASTRUCTURE_ASSOCIATION_NO_SEWAGE_N_CAUSAL_IDENTIFICATION",
+  "source_runs": {
+    "main": 41414513676,
+    "worldcover_78_pairs": 41413762626,
+    "global_host_N_affinity": 41403516863
+  },
+  "pin": {
+    "host_port_source_git_blob": "fdf73b11ddcb1644f46730123350ae52cc61cae6",
+    "HydroWASTE_csv_git_blob": "0506f873f6541c5f324478894a9731290d722bce",
+    "HydroWASTE_tidyTuesday_commit": "774fb8cc81e563d6d30efdcb7b48a38565e923cc",
+    "source_license": "HydroWASTE CC BY 4.0; original paper Ehalt Macedo et al. 2022"
+  },
+  "population": {
+    "WPI_ports": 3630,
+    "query_complete_ports": 1596,
+    "WPI_port_countries": 142,
+    "HydroWASTE_facilities": 58502,
+    "active_or_status_not_reported": 56800,
+    "explicitly_operational": 3767,
+    "status_not_reported": 53033,
+    "WWTP_good_location_quality_1_2": 52512,
+    "estimated_WWTP_discharge_quality4": 22930,
+    "port_with_WWTP25km": 1020,
+    "port_WWTP10km": 851,
+    "port_WWTP50km": 1157,
+    "countryFE_ports": 1368,
+    "countryFE_countries": 52,
+    "WPI_source_country_names_resolvable": 1593,
+    "mismatched_countries": 0
+  },
+  "primary": {
+    "predictor": "log1p WWTP facility count within 25 km",
+    "outcome": "ln((indexed alien candidate host spp + 0.5)/(indexed native candidate host spp + 0.5))",
+    "beta": 0.12850292930681598,
+    "country_cluster_t95": [
+      0.00765441696157293,
+      0.24935144165205902
+    ],
+    "within_country_permutation_p_exploratory": 0.0025,
+    "n_country": 52,
+    "n_port": 1368,
+    "per_0_to_1_WWTP_relative_ratio_change_percent": 9.31587522333328
+  },
+  "negative_controls": {
+    "alien_candidate_species_log_count": {
+      "beta": 0.5297666284236936,
+      "CI": [
+        0.42786323386866537,
+        0.6316700229787218
+      ]
+    },
+    "native_candidate_species_log_count": {
+      "beta": 0.4127606284579422,
+      "CI": [
+        0.3070865492994358,
+        0.5184347076164486
+      ]
+    }
+  },
+  "scales": {
+    "WWTP_10km": {
+      "beta": 0.20413629608612252,
+      "CI": [
+        0.035778059374003274,
+        0.37249453279824174
+      ]
+    },
+    "WWTP_50km": {
+      "beta": 0.13425972459915114,
+      "CI": [
+        0.03848439625218525,
+        0.23003505294611704
+      ]
+    },
+    "quality1or2_25km": {
+      "beta": 0.13808969303155796,
+      "CI": [
+        0.013178996386378317,
+        0.2630003896767376
+      ]
+    },
+    "estimated_outfall25km": {
+      "beta": 0.13978891657476966,
+      "CI": [
+        0.029378618122921377,
+        0.25019921502661796
+      ]
+    },
+    "daily_wastewater_flow25km_m3": {
+      "beta": 0.020391088084052957,
+      "CI": [
+        -0.0041700182396651846,
+        0.044952194407771096
+      ]
+    }
+  },
+  "observational_recording_proxy_adjustment": {
+    "all_ports_beta": 0.09696334264823485,
+    "source_t95": [
+      -0.026149073169207157,
+      0.22007575846567684
+    ],
+    "independent_HC_cluster95": [
+      -0.023228853422760695,
+      0.2171555381066661
+    ]
+  },
+  "independent_subsets": {
+    "known_candidate_classes_atleast1": {
+      "n": 1087,
+      "countries": 52,
+      "beta": 0.13869568293398546,
+      "CI": [
+        0.019059117930040628,
+        0.2583322479379303
+      ]
+    },
+    "known_candidate_classes_atleast5": {
+      "n": 903,
+      "countries": 46,
+      "beta": 0.15046847169087557,
+      "CI": [
+        0.040730539147142336,
+        0.26020640423460883
+      ]
+    },
+    "both_alien_native_present": {
+      "n": 934,
+      "countries": 49,
+      "beta": 0.1523963969678461,
+      "CI": [
+        0.05200229242906615,
+        0.2527905015066261
+      ]
+    },
+    "top1pct_WWTP_excluded": {
+      "n": 1354,
+      "countries": 52,
+      "beta": 0.0882660353637334,
+      "CI": [
+        -0.040217816739124945,
+        0.21674988746659174
+      ]
+    },
+    "United_States_excluded": {
+      "n": 1181,
+      "countries": 51,
+      "beta": 0.11630172626376614,
+      "CI": [
+        -0.021210052523986417,
+        0.2538135050515187
+      ]
+    }
+  },
+  "country_heterogeneity": {
+    "countries_with_atleast6_port_and_varying_WWTP25km": 47,
+    "positive_country_rho": 24,
+    "negative_country_rho": 23,
+    "binomial_two_sided_p": 1,
+    "leave_one_country_out_recording_adjusted_beta_range": [
+      0.052571184161323316,
+      0.12421549003346526
+    ],
+    "all_LOCO_positive": true
+  },
+  "satellite_built2021_proxy": {
+    "WPI_ports_with_valid_both_port_and_nonport": 77,
+    "independent_islands": 34,
+    "port_mean_built_frac": 0.4897642339243035,
+    "nonport_mean_built_frac": 0.10936275525062183,
+    "wwtp_count25_vs_port_built_rho": 0.3062503822614006,
+    "wwtp25_vs_nonport_built_rho": 0.13769920009708878,
+    "wwtp25_vs_alien_candidate_rho": 0.6153277683676466,
+    "wwtp25_vs_native_candidate_rho": 0.59527389658175,
+    "not_worldwide_full_sample_covariate": true
+  },
+  "limits": [
+    "HydroWASTE facility and estimated river/lake/coastal outfall geography is not a soil-N or sewage-nitrogen measurement",
+    "Volume WASTE_DIS is treated effluent m3/day, not the amount of nitrogen or treatment efficiency",
+    "No port exposure historical time series, plant sample 2001–2024 pooled, static WPI2019 and circa-2022 HydroWASTE",
+    "Candidate host status is regionally catalogued present vs not native, not island/city-specific historical introduction",
+    "Native and alien host recorded species counts both rise near treatment infrastructure, compatible with urban and recording effects",
+    "Pseudo count .5 makes ports with neither status indexed a synthetic ratio 1: category-zero exclusion matters",
+    "Country FE and coarsely measured geography do not remove within-country population, urbanization, plant sampling or spatial autocorrelation",
+    "Selecting only ports with known plant richness conditions on part of the response, possible selection/collider bias",
+    "47 country signs are nearly even: pooled slope not globally uniform",
+    "Partial 77-site 2021 WorldCover validation cannot stand in for global contemporary urban covariates",
+    "No observed butterfly reproduction, population size, host use, or shipping-mediated colonization"
+  ]
+}
