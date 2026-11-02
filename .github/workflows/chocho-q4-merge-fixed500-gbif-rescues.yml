@@ -1,0 +1,49 @@
+name: chocho Q4 immutable 500-pair plant first-index source revision v02
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/merge_q4_first_year_fixed500_source_recoveries.py
+      - .github/workflows/chocho-q4-merge-fixed500-gbif-rescues.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  merge-fixed-cohort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Merge original 500 and validated year-facet recoveries without creating new samples
+        run: |
+          python -m py_compile scripts/merge_q4_first_year_fixed500_source_recoveries.py
+          python scripts/merge_q4_first_year_fixed500_source_recoveries.py \
+            --original500 results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --original-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+            --429-retry results/q4-conservative-gbif-retry/http429_original_pilot_retry_subset.csv \
+            --initial-split results/q4-gbif-split-polygon-verified/split_wgsrpd_years.csv \
+            --remaining-split results/q4-gbif-split-polygon-remaining-five/remaining_five_split_wgsrpd_years.csv \
+            --out-dir results/q4-fixed500-gbif-years-v02
+      - name: Archive all original and recovered statuses
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-Q4-fixed500-first-year-complete-source-recovery-v02
+          path: results/q4-fixed500-gbif-years-v02/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit validated exact 500-row revised source without overwriting source v01
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-fixed500-gbif-years-v02/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Version fixed original 500 GBIF host index dates with 11 source error recoveries [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
