@@ -76,7 +76,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add results/q3-observed-butterfly-island-opportunity/q3_archival_gbif_overlap_audit.json \
                   results/q3-observed-butterfly-island-opportunity/island_gbif_observation_summary.csv \
-                  results/q3-observed-butterfly-island-opportunity/species_observation_summary.csv
+                  results/q3-observed-butterfly-island-opportunity/species_observation_summary.csv \
+                  results/q3-observed-butterfly-island-opportunity/observed_added_island_resource_cases.csv
           git diff --cached --quiet && exit 0
           git commit -m 'Archive Q3 independent butterfly records overlapping introduced-host island opportunity [skip ci]'
           git pull --rebase origin "${GITHUB_REF_NAME}"
