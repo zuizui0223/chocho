@@ -1,0 +1,53 @@
+name: chocho Q4 verified split-polygon GBIF years for rejected island queries
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/recover_q4_gbif_multipolygon_years.py
+      - .github/workflows/chocho-q4-split-polygon-gbif-years.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  split-island-polygons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install geographic toolchain
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Verify control before querying source-failed host–island records
+        run: |
+          python -m py_compile scripts/recover_q4_gbif_multipolygon_years.py
+          python scripts/recover_q4_gbif_multipolygon_years.py \
+            --retry-source results/q4-conservative-gbif-retry/http429_original_pilot_retry_subset.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q4-gbif-split-polygon-verified
+      - name: Preserve all verified and incomplete GBIF facet receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-GBIF-split-polygon-verified
+          path: results/q4-gbif-split-polygon-verified/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save only source-audited result
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-gbif-split-polygon-verified/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Verify GBIF polygon decomposition and record first indexed years with full coverage gates [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
