@@ -1,0 +1,283 @@
+{
+  "schema": "chocho_q2_historic_empire_shared_resource_similarity_v0.1",
+  "status": "EXPLORATORY_PAIRWISE_HISTORICAL_RESOURCE_GEOGRAPHY",
+  "sources": {
+    "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "Lenzner": "7aae72aadd39ae3827ece6935c6740dc0aace030",
+    "WGSRPD": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "shared_history": "Both islands have >=50 area-weighted former colonizer years for at least one of 4 European empires",
+  "butterfly_outcome": "Jaccard overlap of fixed 239-butterfly species for which introduced larval hosts create new WGSRPD3 potential opportunity in respective islands",
+  "plant_outcome": "Jaccard overlap of host species whose introduced distribution supports a new butterfly opportunity",
+  "controls": "OLS descriptive adjustment: great-circle distance, absolute log-area difference, same Level1, absolute log host richness difference, absolute log butterfly richness difference",
+  "null": "Shuffle full four-empire history vector among island nodes, with global, Level1 or Level1×area-half restriction; all pairs are NON-INDEPENDENT",
+  "cohorts": {
+    "primary_geographic_cover80_50yr": {
+      "n_islands": 44,
+      "pairs_nonindependent": 946,
+      "same_empire_pairs": 425,
+      "other_empire_pairs": 521,
+      "within_level1_pairs": 148,
+      "source_host_plant_jaccard_mean": 0.12081923890894242,
+      "new_butterfly_opportunity_jaccard_mean": 0.20468040833901852,
+      "mean_distance_km": 9876.269322044956,
+      "mean_difference_shared_minus_not_host_jaccard": 0.015141604097598307,
+      "mean_difference_shared_minus_not_butterfly_jaccard": 0.03437507674766521,
+      "history_comparisons": {
+        "global": {
+          "effective_shuffled_nodes": 44,
+          "exchangeable_blocks": 1,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.002738612015353454,
+            "null_mean": 3.2947569099738785e-05,
+            "difference_vs_permutation_mean": 0.002705664446253715,
+            "null_q025": -0.013003353347205121,
+            "null_q975": 0.014560273300490794,
+            "p_two_sided_descriptive": 0.6924,
+            "p_high_descriptive": 0.3348,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02171585097563462,
+            "null_mean": -0.00011920627627178772,
+            "difference_vs_permutation_mean": 0.021835057251906407,
+            "null_q025": -0.01901876395700591,
+            "null_q975": 0.019864754701446947,
+            "p_two_sided_descriptive": 0.0292,
+            "p_high_descriptive": 0.016,
+            "draws": 4999
+          }
+        },
+        "level1": {
+          "effective_shuffled_nodes": 38,
+          "exchangeable_blocks": 6,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.002738612015353454,
+            "null_mean": 0.003211479279727105,
+            "difference_vs_permutation_mean": -0.0004728672643736511,
+            "null_q025": -0.0063213601636008376,
+            "null_q975": 0.011913666419518116,
+            "p_two_sided_descriptive": 0.9172,
+            "p_high_descriptive": 0.5576,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02171585097563462,
+            "null_mean": 0.014179836967448945,
+            "difference_vs_permutation_mean": 0.007536014008185675,
+            "null_q025": -0.0001538324693029033,
+            "null_q975": 0.028920241938240162,
+            "p_two_sided_descriptive": 0.3102,
+            "p_high_descriptive": 0.1554,
+            "draws": 4999
+          }
+        },
+        "level1_area_half": {
+          "effective_shuffled_nodes": 33,
+          "exchangeable_blocks": 7,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.002738612015353454,
+            "null_mean": 0.004543239847378347,
+            "difference_vs_permutation_mean": -0.0018046278320248935,
+            "null_q025": -0.0023408524103534153,
+            "null_q975": 0.011824605132199536,
+            "p_two_sided_descriptive": 0.618,
+            "p_high_descriptive": 0.685,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02171585097563462,
+            "null_mean": 0.018105138397975052,
+            "difference_vs_permutation_mean": 0.003610712577659568,
+            "null_q025": 0.005297574391973123,
+            "null_q975": 0.031411352515969715,
+            "p_two_sided_descriptive": 0.5944,
+            "p_high_descriptive": 0.2888,
+            "draws": 4999
+          }
+        }
+      }
+    },
+    "sensitivity_cover50_50yr": {
+      "n_islands": 63,
+      "pairs_nonindependent": 1953,
+      "same_empire_pairs": 884,
+      "other_empire_pairs": 1069,
+      "within_level1_pairs": 262,
+      "source_host_plant_jaccard_mean": 0.1120360098894485,
+      "new_butterfly_opportunity_jaccard_mean": 0.19886776855447327,
+      "mean_distance_km": 9931.02029001187,
+      "mean_difference_shared_minus_not_host_jaccard": 0.014048838817843717,
+      "mean_difference_shared_minus_not_butterfly_jaccard": 0.03405585962358382,
+      "history_comparisons": {
+        "global": {
+          "effective_shuffled_nodes": 63,
+          "exchangeable_blocks": 1,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.0026638102703997477,
+            "null_mean": -6.96056901545839e-05,
+            "difference_vs_permutation_mean": 0.0027334159605543317,
+            "null_q025": -0.010446413450145707,
+            "null_q975": 0.011292682509318,
+            "p_two_sided_descriptive": 0.6152,
+            "p_high_descriptive": 0.2992,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02110836258990109,
+            "null_mean": -0.0001152861634396702,
+            "difference_vs_permutation_mean": 0.02122364875334076,
+            "null_q025": -0.017411127693476337,
+            "null_q975": 0.017654132413728738,
+            "p_two_sided_descriptive": 0.0148,
+            "p_high_descriptive": 0.0086,
+            "draws": 4999
+          }
+        },
+        "level1": {
+          "effective_shuffled_nodes": 55,
+          "exchangeable_blocks": 7,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.0026638102703997477,
+            "null_mean": 0.0007988952754493881,
+            "difference_vs_permutation_mean": 0.0018649149949503596,
+            "null_q025": -0.006231432489140207,
+            "null_q975": 0.0081297648405128,
+            "p_two_sided_descriptive": 0.6216,
+            "p_high_descriptive": 0.3042,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02110836258990109,
+            "null_mean": 0.014303340404928191,
+            "difference_vs_permutation_mean": 0.006805022184972897,
+            "null_q025": 0.0015377188709360023,
+            "null_q975": 0.028058898245896403,
+            "p_two_sided_descriptive": 0.3264,
+            "p_high_descriptive": 0.1654,
+            "draws": 4999
+          }
+        },
+        "level1_area_half": {
+          "effective_shuffled_nodes": 47,
+          "exchangeable_blocks": 8,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": 0.0026638102703997477,
+            "null_mean": 0.0016607617577430415,
+            "difference_vs_permutation_mean": 0.0010030485126567062,
+            "null_q025": -0.00462332148720426,
+            "null_q975": 0.00823592232062289,
+            "p_two_sided_descriptive": 0.764,
+            "p_high_descriptive": 0.3762,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.02110836258990109,
+            "null_mean": 0.012907155441938534,
+            "difference_vs_permutation_mean": 0.008201207147962554,
+            "null_q025": 0.0011722908174604419,
+            "null_q975": 0.025706776353970822,
+            "p_two_sided_descriptive": 0.2116,
+            "p_high_descriptive": 0.1092,
+            "draws": 4999
+          }
+        }
+      }
+    },
+    "sensitivity_strict_single_empire_cover80_50yr": {
+      "n_islands": 23,
+      "pairs_nonindependent": 253,
+      "same_empire_pairs": 118,
+      "other_empire_pairs": 135,
+      "within_level1_pairs": 25,
+      "source_host_plant_jaccard_mean": 0.10175797261638235,
+      "new_butterfly_opportunity_jaccard_mean": 0.1827709539934947,
+      "mean_distance_km": 9962.266232590551,
+      "mean_difference_shared_minus_not_host_jaccard": 0.02104309050481587,
+      "mean_difference_shared_minus_not_butterfly_jaccard": 0.0498435315518754,
+      "history_comparisons": {
+        "global": {
+          "effective_shuffled_nodes": 23,
+          "exchangeable_blocks": 1,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": -0.002982780235995652,
+            "null_mean": 7.911285379487468e-05,
+            "difference_vs_permutation_mean": -0.0030618930897905266,
+            "null_q025": -0.028925764924106336,
+            "null_q975": 0.02969176369268772,
+            "p_two_sided_descriptive": 0.836,
+            "p_high_descriptive": 0.5754,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.023720305627546356,
+            "null_mean": 2.7132105584137923e-05,
+            "difference_vs_permutation_mean": 0.023693173521962218,
+            "null_q025": -0.045622800935328486,
+            "null_q975": 0.044524508448631914,
+            "p_two_sided_descriptive": 0.3184,
+            "p_high_descriptive": 0.1608,
+            "draws": 4999
+          }
+        },
+        "level1": {
+          "effective_shuffled_nodes": 11,
+          "exchangeable_blocks": 3,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": -0.002982780235995652,
+            "null_mean": -0.0013261106449552944,
+            "difference_vs_permutation_mean": -0.0016566695910403574,
+            "null_q025": -0.014065401647682767,
+            "null_q975": 0.01525605997995802,
+            "p_two_sided_descriptive": 0.7908,
+            "p_high_descriptive": 0.5822,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.023720305627546356,
+            "null_mean": 0.028808278738670083,
+            "difference_vs_permutation_mean": -0.005087973111123727,
+            "null_q025": 0.015975032768035403,
+            "null_q975": 0.04958864302234434,
+            "p_two_sided_descriptive": 0.4882,
+            "p_high_descriptive": 0.7022,
+            "draws": 4999
+          }
+        },
+        "level1_area_half": {
+          "effective_shuffled_nodes": 9,
+          "exchangeable_blocks": 3,
+          "plant_host_similarity": {
+            "adjusted_shared_history_coefficient": -0.002982780235995652,
+            "null_mean": -0.0016577258689344926,
+            "difference_vs_permutation_mean": -0.0013250543670611592,
+            "null_q025": -0.014065401647682767,
+            "null_q975": 0.007578196922894692,
+            "p_two_sided_descriptive": 0.8412,
+            "p_high_descriptive": 0.579,
+            "draws": 4999
+          },
+          "butterfly_new_opportunity_similarity": {
+            "adjusted_shared_history_coefficient": 0.023720305627546356,
+            "null_mean": 0.02993493640286394,
+            "difference_vs_permutation_mean": -0.006214630775317583,
+            "null_q025": 0.023366671416963546,
+            "null_q975": 0.03614988256175386,
+            "p_two_sided_descriptive": 0.129,
+            "p_high_descriptive": 0.9558,
+            "draws": 4999
+          }
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Exploratory avenue developed after absence of support for simple metropolitan native-source prediction.",
+    "Shared empire assignments do not demonstrate historic plant movement between islands; support region-to-region association only.",
+    "Historical records cover only four European empires; French and other colonial histories are absent.",
+    "Fixed plant/host interaction network and region-level native/introduced WCVP data imply resource opportunity, not butterfly presence.",
+    "WCVP source sites and introduced host records are unequal in size, sampling, and taxonomic resolution.",
+    "Descriptive permutations of nodes are not an independent pair test or causal identification; residual spatial structure is untested."
+  ]
+}
