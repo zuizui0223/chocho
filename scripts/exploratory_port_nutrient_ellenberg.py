@@ -28,10 +28,10 @@ DEFAULT_HOSTS = REPO / (
 def parse_value(value: str, *, allow_zero: bool = False) -> int | None:
     s = value.strip()
     # Examples in the historic German Ellenberg table: 5, (5), 5~ and x.
-    m = re.fullmatch(r"\(?([0-9])\)?~?", s)
+    m = re.fullmatch(r"(?:\\(([0-9])\\)|([0-9]))~?", s)
     if not m:
         return None
-    v = int(m.group(1))
+    v = int(m.group(1) or m.group(2))
     return v if (allow_zero or v >= 1) else None
 
 
