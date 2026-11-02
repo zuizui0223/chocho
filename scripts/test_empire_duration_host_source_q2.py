@@ -114,6 +114,10 @@ def main():
     for name in ("host-source-islands","host-source-audit","empire-islands","empire-overlay-audit",
                  "area-metrics","output-dir"):
         p.add_argument("--"+name,required=True,type=Path)
+    p.add_argument("--source-type", choices=[
+        "metropole", "non_european_other_colonies", "all_other_empire_territories",
+        "other_colonial_islands_only"
+    ], default="metropole")
     a=p.parse_args()
     a.output_dir.mkdir(parents=True,exist_ok=True)
     hosts={r["island_code"]:r for r in read_csv(a.host_source_islands)}
@@ -150,7 +154,9 @@ def main():
       "sensitivity_non_european_cover80_50yr":analyze(subset(.8,1,True),50)
     }
     output={
-      "schema":"chocho_empire_duration_metropole_host_alignment_v0.1",
+      "schema":"chocho_empire_duration_metropole_host_alignment_v0.1" if a.source_type=="metropole"
+          else "chocho_empire_duration_other_colonial_host_alignment_v0.1",
+      "source_type":a.source_type,
       "status":"OBSERVATIONAL_COLONIAL_HISTORY_SOURCE_ASSOCIATION_TEST",
       "units":"Equal island-weighted array across four European historical empires, not butterfly abundances",
       "source_panel":host_audit["scope"],
@@ -167,12 +173,14 @@ def main():
       "caution":[
         "Descriptive cross-classified correlation and restricted exchangeability null; spatial and unobserved history remain uncontrolled.",
         "The published historical data covers four European empires, not France or every historical colonizer.",
-        "Native plant source regions do not establish actual import origin, pathway, period or port involvement.",
+        "Native plant source regions or native populations within other former colonies do not establish import origin, pathway, period or port involvement.",
         "Species gain is potential larval-host resource geography, not butterfly colonization or established population.",
         "The four source fractions overlap, since host species may have native distributions in more than one metropole.",
       ]
     }
-    (a.output_dir/"empire_duration_source_alignment_audit.json").write_text(
+    filename="empire_duration_source_alignment_audit.json" if a.source_type=="metropole" else (
+        a.source_type+"_duration_source_alignment_audit.json")
+    (a.output_dir/filename).write_text(
        json.dumps(output,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps(output,indent=2,ensure_ascii=False))
     return 0
