@@ -29,6 +29,25 @@ jobs:
           repository: zuizui0223/chocho
           github-token: ${{ github.token }}
           path: work/q2v02
+      - name: Normalize versioned Q2 artifact layout and verify exact edge file
+        shell: bash
+        run: |
+          set -euo pipefail
+          find work/q2v02 -maxdepth 6 -type f -print
+          mapfile -t matches < <(find work/q2v02 -type f -name introduced_host_source_edges.csv)
+          if [ "${#matches[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one corrected Q2 11,573 edge table"
+            exit 1
+          fi
+          cp "${matches[0]}" work/q2v02/introduced_host_source_edges.csv
+          python - <<'PY'
+          import csv
+          p="work/q2v02/introduced_host_source_edges.csv"
+          with open(p,newline='',encoding='utf8') as f:
+              rows=list(csv.DictReader(f))
+          if len(rows)!=11573:raise SystemExit(f"Q2 v02 edge mismatch {len(rows)}")
+          print("Q2_CNY_126_ISLAND_EDGES",len(rows))
+          PY
       - name: Integrate literature, host history, NASA climate, WPI ports, LepTraits
         run: |
           python -m py_compile scripts/build_island_butterfly_three_gate_case_matrix.py
