@@ -234,6 +234,22 @@ def main():
     excluded_full=[all_flora_map[x["code"]] for x in excluded]
     def median_float(arr,field):
         return float(np.median([float(x[field]) for x in arr])) if arr else None
+    # Leave-one-Level1-out tests use geographic groups (not 98 independent
+    # islands) as the stress test of generalizability. 399 permutations each;
+    # report coefficient directions only, not a post-hoc significance selection.
+    loo_by_bioregion={}
+    for lev in sorted({r["level1"] for r in enriched}):
+        remain=[r for r in enriched if r["level1"]!=lev]
+        conditional=model(remain,"ln1p_introduced_flora",
+                          ["ln1p_native_flora","ln1p_gbif_total"],
+                          permutations=399)
+        loo_by_bioregion[lev]={
+            "excluded_Level1":lev,
+            "remaining_islands":len(remain),
+            "beta":conditional["regression_beta_per_log2_port_unit"],
+            "direction_positive":conditional["regression_beta_per_log2_port_unit"]>0,
+            "descriptive_two_sided_p_after_excluding":conditional["permutation"]["p_two_sided_centered"],
+        }
     selection_audit={
        "n_observed":len(enriched),
        "n_excluded":len(excluded_full),
@@ -270,6 +286,9 @@ def main():
          "cohort_islands_without_WPI_indexed_ports":sum(x["WPI_ports"]==0 for x in enriched),
       },
       "source_effort_selection":selection_audit,
+      "leave_one_biogeographic_region_out_robustness":loo_by_bioregion,
+      "leave_one_biogeographic_region_out_direction_positive_count":
+          sum(x["direction_positive"] for x in loo_by_bioregion.values()),
       "models":m,
       "interpretation_boundaries":[
         "WPI port count comes from a modern indexed 2023 snapshot; it is not historical shipping intensity, port accessibility in all years, or a treatment.",
