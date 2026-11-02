@@ -1,0 +1,70 @@
+{
+  "schema": "chocho_three_gate_nasa_power_monthly_temp_1981_2020_pilot_v0.1",
+  "source": "NASA POWER monthly T2M at official WGSRPD3 representative points",
+  "source_docs": "https://power.larc.nasa.gov/docs/services/api/temporal/monthly/",
+  "regions": [
+    {
+      "code": "JAM",
+      "query_status": "COMPLETE_1981_2020",
+      "longitude": -77.1409196795974,
+      "latitude": 18.06830649511717,
+      "years_complete": 40,
+      "T2M_1981_2000_C": 26.746476558874168,
+      "T2M_2001_2020_C": 26.95853055992215,
+      "delta_recent_minus_early_C": 0.21205400104798144,
+      "api_url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M&community=AG&longitude=-77.14092&latitude=18.06831&format=JSON&start=1981&end=2020"
+    },
+    {
+      "code": "PUE",
+      "query_status": "COMPLETE_1981_2020",
+      "longitude": -66.49381284270953,
+      "latitude": 18.099606495117172,
+      "years_complete": 40,
+      "T2M_1981_2000_C": 24.981954315442774,
+      "T2M_2001_2020_C": 25.529912609476757,
+      "delta_recent_minus_early_C": 0.5479582940339824,
+      "api_url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M&community=AG&longitude=-66.49381&latitude=18.09961&format=JSON&start=1981&end=2020"
+    },
+    {
+      "code": "NZN",
+      "query_status": "COMPLETE_1981_2020",
+      "longitude": 176.6286265943942,
+      "latitude": -38.057193504882825,
+      "years_complete": 40,
+      "T2M_1981_2000_C": 14.153661950744816,
+      "T2M_2001_2020_C": 14.398124189684857,
+      "delta_recent_minus_early_C": 0.2444622389400415,
+      "api_url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M&community=AG&longitude=176.62863&latitude=-38.05719&format=JSON&start=1981&end=2020"
+    },
+    {
+      "code": "CUB",
+      "query_status": "COMPLETE_1981_2020",
+      "longitude": -77.98938264118559,
+      "latitude": 21.50735649511718,
+      "years_complete": 40,
+      "T2M_1981_2000_C": 26.01703015944307,
+      "T2M_2001_2020_C": 26.197486604536266,
+      "delta_recent_minus_early_C": 0.18045644509319558,
+      "api_url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M&community=AG&longitude=-77.98938&latitude=21.50736&format=JSON&start=1981&end=2020"
+    },
+    {
+      "code": "SEY",
+      "query_status": "COMPLETE_1981_2020",
+      "longitude": 55.462233435369996,
+      "latitude": -4.6466435048828245,
+      "years_complete": 40,
+      "T2M_1981_2000_C": 26.871650778501383,
+      "T2M_2001_2020_C": 27.283293195598475,
+      "delta_recent_minus_early_C": 0.4116424170970916,
+      "api_url": "https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=T2M&community=AG&longitude=55.46223&latitude=-4.64664&format=JSON&start=1981&end=2020"
+    }
+  ],
+  "complete_region_count": 5,
+  "limitations": [
+    "This does not estimate species thermal suitability or the date when a butterfly was physiologically able to establish.",
+    "Static representative climate points are a coarse sample of large WGSRPD3 islands, not individual colony or port localities.",
+    "NASA POWER meteorology starts in 1981 and cannot retrospectively date 19th-century climatic suitability.",
+    "Two-period temperature change is an observational trend, not a threshold or butterfly colonization mechanism.",
+    "Species-specific seasonal minimum temperature, larvae degree days, overwinter survival, climatic niche and spatial microclimate remain unspecified."
+  ]
+}
