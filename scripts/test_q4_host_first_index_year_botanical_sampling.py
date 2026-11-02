@@ -151,8 +151,24 @@ def main():
            "all_plants_indexed_records":int(total),
            "all_plants_pre1900_indexed_records":int(pre)
         })
+    # An island with only one dated host has an unstable median year.
+    # Keep an independent >=2-host result and geographic leave-one-region tests.
+    at_least_two=[r for r in cohort if r["n_dated_plants_in_original_fixed_pilot"]>=2]
+    two_hosts=fit(at_least_two,"total") if len(at_least_two)>=45 else {"status":"TOO_FEW_INDEPENDENT_REGIONS","n":len(at_least_two)}
+    geographic_leverage=[]
+    for lev in sorted({r["level1"] for r in cohort}):
+        without=[r for r in cohort if r["level1"]!=lev]
+        try:
+            m=fit(without,"total")
+            geographic_leverage.append({
+                "excluded_level1":lev,"n":len(without),
+                "beta":m["regression_year_change_per_ln1p_effort_unit"],
+                "p_two":m["permutation"]["two_sided_centered_p"]
+            })
+        except RuntimeError as e:
+            geographic_leverage.append({"excluded_level1":lev,"n":len(without),"status":"UNIDENTIFIABLE","reason":str(e)})
     output={
-       "schema":"chocho_Q4_host_first_index_year_botanical_effort_geographic_audit_v0.1",
+       "schema":"chocho_Q4_host_first_index_year_botanical_effort_geographic_audit_v0.2",
        "status":"OBSERVATION_INDEX_SAMPLING_BIAS_TEST_NOT_INTRODUCTION_DATING",
        "source":{
           "fixed_500_response_blind_host_island_pairs":len(dates),
@@ -163,6 +179,8 @@ def main():
        },
        "primary":fit(cohort,"total"),
        "pre1900_effort_sensitivity":fit(cohort,"pre1900"),
+       "sensitivity_2plus_dated_hosts_per_region":two_hosts,
+       "leave_one_biogeographic_region_out":geographic_leverage,
        "limits":[
           "The first indexed GBIF host year is an upper bound on the true date of plant introduction, NOT plant arrival or naturalization.",
           "Higher observation effort can move recorded first years earlier even if plants arrived at identical dates.",
