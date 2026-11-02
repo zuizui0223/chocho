@@ -28,7 +28,8 @@ STATUS_NO="NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT"
 def readcsv(p):
     with p.open(encoding="utf-8",newline="") as f:return list(csv.DictReader(f))
 def savecsv(p,data):
-    with p.open(encoding="utf-8",newline="") as f:
+    p.parent.mkdir(parents=True,exist_ok=True)
+    with p.open("w",encoding="utf-8",newline="") as f:
         writer=csv.DictWriter(f,fieldnames=list(data[0]))
         writer.writeheader();writer.writerows(data)
 
