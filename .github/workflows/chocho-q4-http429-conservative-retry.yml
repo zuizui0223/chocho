@@ -1,0 +1,55 @@
+name: chocho Q4 conservative GBIF HTTP429 retry diagnostic
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/audit_q4_http429_conservative_retry.py
+      - .github/workflows/chocho-q4-http429-conservative-retry.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  respectful-GBIF-retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned-compatible GIS tools
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Verify 69 original HTTP429 failures and retry only 12 deterministically at low rate
+        run: |
+          python -m py_compile scripts/audit_q4_http429_conservative_retry.py
+          python scripts/audit_q4_http429_conservative_retry.py \
+            --source-pairs results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --original-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+            --wgsrpd-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q4-conservative-gbif-retry \
+            --max-pairs 12
+      - name: Save technical retry receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-original500-GBIF429-low-rate-diagnostic
+          path: results/q4-conservative-gbif-retry/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save executed receipt without overwriting original pilot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-conservative-gbif-retry/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit GBIF 429 failure recovery on prespecified low-rate 12-pair pilot [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
