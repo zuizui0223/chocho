@@ -99,7 +99,9 @@ def main():
     if len(records)!=EXPECTED_RECORDS:
         raise RuntimeError(f"GBIF DOI returned {len(records)} rows instead of archived {EXPECTED_RECORDS}; do not silently replace")
     geo,geoms,codes=geometry_lookup(a.wgsrpd3_geojson)
-    outcome=defaultdict(lambda:{"n_records":0,"years":set(),"source_gbif_ids":set()})
+    outcome=defaultdict(lambda:{"n_records":0,"years":set(),"source_gbif_ids":set(),
+                            "source_datasets":set(),"record_types":Counter(),
+                            "coords_gt_10km_uncertainty":0,"coords_unknown_uncertainty":0})
     counts=Counter()
     missing_taxon=Counter()
     seen_keys=set()
@@ -140,6 +142,14 @@ def main():
         row=outcome[(species,region)]
         row["n_records"]+=1
         row["source_gbif_ids"].add(idv)
+        dataset=get(rec,columns,"datasetKey")
+        if dataset:row["source_datasets"].add(dataset)
+        basetype=get(rec,columns,"basisOfRecord") or "UNKNOWN"
+        row["record_types"][basetype]+=1
+        try:coord_uncertainty=float(get(rec,columns,"coordinateUncertaintyInMeters"))
+        except (ValueError,TypeError):coord_uncertainty=None
+        if coord_uncertainty is None:row["coords_unknown_uncertainty"]+=1
+        elif coord_uncertainty>10000:row["coords_gt_10km_uncertainty"]+=1
         if year and 2010<=year<=2026:row["years"].add(year)
         counts["island_occurrences"]+=1
     if len(seen_keys)!=EXPECTED_RECORDS:raise RuntimeError("GBIF DOI ID uniqueness mismatch")
@@ -187,10 +197,17 @@ def main():
           "last_indexed_year_in_DOI_subset":max(v["years"]) if v["years"] else "",
           "indexed_2010_2017":int(any(2010<=y<=2017 for y in v["years"])),
           "indexed_2018_2026":int(any(2018<=y<=2026 for y in v["years"])),
+          "n_recorded_years":len(v["years"]),
+          "n_source_gbif_datasets":len(v["source_datasets"]),
+          "record_types":";".join(f"{x}:{n}" for x,n in sorted(v["record_types"].items())),
+          "coordinate_uncertainty_gt10km_records":v["coords_gt_10km_uncertainty"],
+          "coordinate_uncertainty_unknown_records":v["coords_unknown_uncertainty"],
         })
     dump_csv(a.out_dir/"island_gbif_observation_summary.csv",island_out)
     dump_csv(a.out_dir/"species_observation_summary.csv",species_out)
     if edges:dump_csv(a.out_dir/"observed_species_island_cells.csv",edges)
+    confirmed=[r for r in edges if r["introduced_host_resource_added"]]
+    if confirmed:dump_csv(a.out_dir/"observed_added_island_resource_cases.csv",confirmed)
     N=len(observed_species)
     added_subset=sum(len(added[x]) for x in observed_species)
     matched=sum(r["observed_at_new_opportunity_island_units"] for r in species_out)
@@ -212,6 +229,11 @@ def main():
          "sampled_islands_with_record_at_added_opportunity":sum(x["new_opportunity_cells_with_gbif_records"]>0 for x in island_out),
          "island_butterfly_species_cells_with_any_gbif_record":len(edges),
          "total_island_gbif_records":counts["island_occurrences"],
+         "recorded_added_cells_with_2plus_occurrence_records":sum(r["observed_records"]>=2 for r in confirmed),
+         "recorded_added_cells_with_2plus_years_in_archival_subset":sum(r["n_recorded_years"]>=2 for r in confirmed),
+         "recorded_added_cells_with_2plus_gbif_datasets":sum(r["n_source_gbif_datasets"]>=2 for r in confirmed),
+         "recorded_added_cells_all_records_coord_uncertainty_over10km":
+             sum(r["coordinate_uncertainty_gt10km_records"]==r["observed_records"] for r in confirmed),
      },
      "audit_counts":dict(counts),
      "unmatched_species_top10":missing_taxon.most_common(10),
