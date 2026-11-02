@@ -70,3 +70,21 @@ def test_within_genus_permutation_preserves_genus_and_does_not_claim_effect():
     assert out1["eligible_species"] == 4
     assert 0 < out1["permutation_two_sided_p"] <= 1
     assert len(out1["null_95_percentiles"]) == 2
+
+
+def test_trait_comparison_uses_shared_species_and_reports_delta():
+    sample = [
+        {"genus": "A", "N": 2, "L": 3, "ports": 1},
+        {"genus": "A", "N": 5, "L": 8, "ports": 10},
+        {"genus": "B", "N": 7, "L": 4, "ports": 20},
+        {"genus": "B", "N": 9, "L": None, "ports": 30},
+        {"genus": "C", "N": 8, "L": 3, "ports": 50},
+    ]
+    v = pilot.compare_nutrient_with_control_trait(sample, "L", draws=99)
+    assert v["n_species"] == 4  # missing L excluded from BOTH correlations
+    assert v["n_genera"] == 3
+    assert math.isclose(
+        v["delta_rho_N_minus_control"],
+        v["nutrient_N_rho"] - v["control_rho"]
+    )
+    assert len(v["genus_cluster_bootstrap_descriptive_interval"]) == 2
