@@ -1,0 +1,68 @@
+name: exploratory strict disjoint 78-site 5km botanical census
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-strict-5km-botany.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  no-overlap-island-botany:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Obtain pinned blind-selected same-island disjoint geometry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/strict_source
+          gh run download 41402076182 \
+            --name strict-disjoint-coastal-sites-wpi79 \
+            --dir /tmp/strict_source \
+            --repo zuizui0223/chocho
+          test -s /tmp/strict_source/strict_disjoint_wpi79_sites.json
+      - name: Obtain pinned external Ellenberg nutrient values
+        run: |
+          curl -fLsS --retry 3 \
+            https://raw.githubusercontent.com/bathyscapher/EVA/73b323983702a74cb9b6867bcebe00a307ea6566/EllenbergsValuesAutomaton/Ellenberg_VascularPlants.csv \
+            --output /tmp/ellenberg_german.tsv
+          test -s /tmp/ellenberg_german.tsv
+      - name: Re-observe pre-specified 2001–2010 and 2011–2024 botanical periods at 5km
+        run: |
+          python -u scripts/exploratory_port_nonport_botany.py \
+            --sites /tmp/strict_source/strict_disjoint_wpi79_sites.json \
+            --ellenberg /tmp/ellenberg_german.tsv \
+            --pilot-pairs -1 \
+            --radius-km 5 \
+            --min-general-plant-records 30 \
+            --min-N-trait-species 2 \
+            --out /tmp/strict_disjoint_botanical_5km.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          g=json.loads(Path('/tmp/strict_source/strict_disjoint_wpi79_sites.json').read_text())
+          r=json.loads(Path('/tmp/strict_disjoint_botanical_5km.json').read_text())
+          n=g['summary']['paired_sites']
+          assert len(g['rows'])==79 and g['summary']['focal_islands']==36
+          assert n==78
+          assert r['sample_design']['selected_pairs']==78
+          assert r['sample_design']['selected_islands']==35
+          assert len(r['observations'])==4*n
+          assert len(r['paired_summary']['pair_rows'])==2*n
+          assert all(x['five_km_radius_buffers_disjoint'] for x in g['rows'] if x['status']=='PAIRED')
+          for key,z in r['paired_summary']['periods'].items():
+              assert z['pairs_observed']==n,(key,z)
+          print('STRICT_DISJOINT_78_SITE_5KM_GATE',json.dumps(r['paired_summary']['periods'],sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: strict-disjoint-wpi78-5km-GBIF-botany
+          path: /tmp/strict_disjoint_botanical_5km.json
+          retention-days: 30
