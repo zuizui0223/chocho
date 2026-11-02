@@ -17,7 +17,8 @@ from test_three_gate_port_resource_island_association import regression,group_mo
 def read(p):
     with p.open(encoding="utf-8",newline="") as f:return list(csv.DictReader(f))
 def write(p,rows):
-    with p.open(encoding="utf-8",newline="") as f:
+    p.parent.mkdir(parents=True,exist_ok=True)
+    with p.open("w",encoding="utf-8",newline="") as f:
         w=csv.DictWriter(f,fieldnames=list(rows[0]))
         w.writeheader();w.writerows(rows)
 
@@ -135,6 +136,7 @@ def main():
            "resource_added_count_secondary":out2,
         }
     write(a.out_dir/"distinct_introduced_host_taxa_and_port_by_island.csv",joined)
+    a.out_dir.mkdir(parents=True,exist_ok=True)
     (a.out_dir/"introduced_host_taxon_port_association_audit.json").write_text(
          json.dumps(outcome,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print(json.dumps({
