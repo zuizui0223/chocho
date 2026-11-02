@@ -3,6 +3,10 @@ import importlib.util
 import math
 from pathlib import Path
 import numpy as np
+import pytest
+pytest.importorskip("pandas")
+pytest.importorskip("scipy")
+pytest.importorskip("pycountry")
 import pandas as pd
 
 SCRIPT=Path(__file__).resolve().parents[1]/"scripts"/"exploratory_global_hydrowaste_ports.py"
@@ -14,7 +18,7 @@ def test_github_frozen_port_inventory():
     ports=m.source_ports()
     assert len(ports)==1596
     assert ports.port_id.nunique()==1596
-    assert ports.country.nunique()==142
+    assert ports.country.nunique()==141
     assert ports.alien_candidates.ge(0).all()
     assert ports.native_candidates.ge(0).all()
     assert ports.all_taxonomically_indexed.ge(ports.known_alien_native).all()

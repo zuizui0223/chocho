@@ -1,6 +1,8 @@
 """Offline testing of true ESA WorldCover native COG sampling, no web."""
 import importlib.util, sys, numpy as np
 from pathlib import Path
+import pytest
+pytest.importorskip("rasterio")
 import rasterio
 from rasterio.transform import from_origin
 
