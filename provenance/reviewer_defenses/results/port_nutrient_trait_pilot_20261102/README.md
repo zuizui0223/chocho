@@ -2,6 +2,12 @@
 
 **2026-11-02 · separate branch · NOT a new confirmed port mechanism or a GEB/JBI submission result**
 
+## November 2 status update: island-matched coast data now acquired
+
+The [strict 78-port / 35-island 5km observational source audit](STRICT_WPI78_SOURCE_AUDIT_20261102.md) is completed and reproducible. It supersedes the earlier missing-nonport-plant-data status below **for the newly reselected sample only**, not for the original nonport coordinates. The old 79-port 5km comparison was invalid for independent contrasts because 48/79 buffers overlapped; an outcome-blind 78-site geography revision removed that issue. Strict pair-local means of host Ellenberg N differences, island-weighted: early **+0.1129** (9 eligible islands; bootstrap 95% [−0.0340,+0.3020]); later **−0.0123** (22 eligible islands; [−0.3166,+0.2811]). Same 30 WPI pairs in 9 islands: late−early **−0.1622**, bootstrap [−0.5912,+0.1721]. No consistent port-specific nutrient-affinity difference is established. The positive **global species-level rho +0.341** is preserved. **No sewage or soil nitrogen exposure was measured.**
+
+The research plan that follows remains a statement of *what additional evidence would be necessary* for any causal or JBI port gateway claim; it is not a claim that botanical geography is still completely unacquired.
+
 ## Scope and research question
 
 The main chocho paper shows +54.9% additional potential butterfly × WGSRPD3
