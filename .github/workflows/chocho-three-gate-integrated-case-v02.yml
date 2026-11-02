@@ -1,0 +1,60 @@
+name: chocho three gates full source integration v02
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/build_island_butterfly_three_gate_case_matrix.py
+      - .github/workflows/chocho-three-gate-integrated-case-v02.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  integrated-evidence-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore 126-island source-validated Q2 v02 edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          path: work/q2v02
+      - name: Integrate literature, host history, NASA climate, WPI ports, LepTraits
+        run: |
+          python -m py_compile scripts/build_island_butterfly_three_gate_case_matrix.py
+          python scripts/build_island_butterfly_three_gate_case_matrix.py \
+            --literature-cases data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv \
+            --q2-edges-v02 work/q2v02/introduced_host_source_edges.csv \
+            --q2-audit-v02 results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --q4-firstyear-pilot results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --nasa-power-case-climate results/three-gate-nasa-power/literature_case_power_temperature_context.csv \
+            --port-counts-v02 results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --leptraits data/external/leptraits_consensus_v1.0.csv \
+            --geb-species-metrics data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out-dir results/three-gate-integrated-v02
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-three-gates-47-case-integrated-v02
+          path: results/three-gate-integrated-v02/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save auditable integration
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-integrated-v02/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Crosswalk 47 butterfly case leads against corrected host, climate, port, wing evidence [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
