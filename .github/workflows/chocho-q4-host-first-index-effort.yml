@@ -1,0 +1,51 @@
+name: chocho Q4 indexed host age versus botanical sampling effort
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_q4_host_first_index_year_botanical_sampling.py
+      - .github/workflows/chocho-q4-host-first-index-effort.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  observational-date-bias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric statistics
+        run: python -m pip install 'numpy>=1.26,<3'
+      - name: Quantify sampling-effort dependency of apparent oldest indexed plant year
+        run: |
+          python -m py_compile scripts/test_q4_host_first_index_year_botanical_sampling.py
+          python scripts/test_q4_host_first_index_year_botanical_sampling.py \
+            --plant-dates results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --original-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+            --botanical-effort results/q4-gbif-first-year-pilot/island_plant_effort_year_facets.csv \
+            --all-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --area results/island-mainland-resource-area-v02/region_area_metrics.csv \
+            --out-dir results/q4-host-year-botanical-effort
+      - name: Archive complete regional-year diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-Q4-first-index-host-year-vs-botanical-effort
+          path: results/q4-host-year-botanical-effort/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit audited summary to draft research branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-host-year-botanical-effort/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit historic host first-index year sensitivity to plant observation effort [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
