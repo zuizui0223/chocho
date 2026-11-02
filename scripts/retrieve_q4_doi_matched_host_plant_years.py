@@ -27,7 +27,7 @@ def exact_year(s):
 
 def main():
     p=argparse.ArgumentParser()
-    for name in ("matched-host-pairs","matched-species-islands",
+    for name in ("matched-host-pairs","matched-species-islands","q2-edges",
                  "wcvp-plant-names","pilot-plant-years","targeted-plant-years",
                  "canary-plant-years","q3-positive","wgsrpd3-geojson","output-dir"):
         p.add_argument("--"+name,required=True,type=Path)
@@ -40,6 +40,12 @@ def main():
     targeted=csv_read(a.targeted_plant_years)
     canary=csv_read(a.canary_plant_years)
     pos=csv_read(a.q3_positive)
+    q2_edges=csv_read(a.q2_edges)
+    if len(q2_edges)!=11573:raise RuntimeError("Q2 corrected source host edges drift")
+    pair_membership=defaultdict(set)
+    for e in q2_edges:
+        pair_membership[(e["species"],e["island_code"])].add(e["plant_id"])
+    if len(pair_membership)!=5741:raise RuntimeError("Q2 host resource membership drift")
     if (len(pairs),len(cases),len(taxa),len(pilot),len(targeted),len(canary),len(pos))!=(100,52,44,500,84,3,13):
         raise RuntimeError("frozen source populations changed")
     pids={r["plant_id"] for r in pairs}
@@ -136,22 +142,36 @@ def main():
     csv_save(a.output_dir/"matched_host_plant_gbif_firstyears.csv",results)
     byhost={(r["plant_id"],r["island_code"]):r for r in results}
     years={(r["species"],r["area_code_l3"]):exact_year(r["first_indexed_year_in_DOI_subset"]) for r in pos}
-    n_positive=0;date_case=0;pre_case=0;case_years=[]
     cellrows=[]
     for row in cases:
         sp,code=row["species"],row["island_code"]
-        hosts=[q for q in pairs if q["island_code"]==code and
-               # Candidate host can belong to multiple butterfly cells; original
-               # matching inventory is a union: exact species-link needed.
-               False]
-        # Build source membership from audited pair-level indicator; the
-        # selected-cell plant source is reconstructed in a downstream join by
-        # full corrected Q2 edges, not inferred from the union pair roles.
-        cellrows.append({**row,"case_reference_first_indexed_butterfly_year":
-             years.get((sp,code),"")})
-        if row["recorded"]=="1":
-            n_positive+=1
-    if n_positive!=13:raise RuntimeError("DOI positives not retained")
+        index_case=row["index_case"]
+        # Controls inherit the original indexed case's first DOI year as a
+        # *comparison cutoff*. This is not a predicted arrival year.
+        case_cutoff=years.get((sp,index_case))
+        if not case_cutoff:
+            raise RuntimeError(f"No original case record year for matched block {sp}:{index_case}")
+        hosts=pair_membership.get((sp,code),set())
+        if not hosts:raise RuntimeError(f"Missing Q2 hosts for {sp} {code}")
+        audited=[byhost[(h,code)] for h in hosts if (h,code) in byhost]
+        dated=[int(x["first_gbif_indexed_plant_year"]) for x in audited
+               if x["source_date_status"]=="DATED_OCCURRENCE_FOUND"]
+        before=[y for y in dated if y<case_cutoff]
+        n_undated=sum(x["source_date_status"]!="DATED_OCCURRENCE_FOUND" for x in audited)
+        cellrows.append({
+          **row,"case_reference_first_indexed_butterfly_year":case_cutoff,
+          "butterfly_resource_host_taxa_in_Q2":len(hosts),
+          "host_pairs_in_exact_matched_retrieval":len(audited),
+          "host_pairs_with_GBIF_year":len(dated),
+          "host_pairs_without_GBIF_year_or_failed":n_undated,
+          "earliest_GBIF_indexed_host_year":min(dated) if dated else "",
+          "host_first_index_year_before_case_butterfly_index":int(bool(before)),
+          "earliest_GBIF_host_year_before_case_DOI_index":min(before) if before else "",
+          "document_index_year_gap_at_most":case_cutoff-min(before) if before else "",
+          "all_Q2_candidate_hosts_queried":int(len(audited)==len(hosts)),
+        })
+    if sum(x["recorded"]=="1" for x in cellrows)!=13:
+        raise RuntimeError("DOI positives not retained")
     csv_save(a.output_dir/"matched_species_island_index_calendar.csv",cellrows)
     audit={
       "schema":"chocho_q4_matched_case_control_plant_year_retrieval_v0.1",
@@ -160,11 +180,19 @@ def main():
         "nonindexed_DOI_controls_NOT_absences":39,"host_plant_island_pairs":100,
         "source_plant_taxa":44,
         "GBIF_new_fresh_plant_region_queries":len(missing),
-        "GBIF_source_cached_pairs":len(cached)},
+        "GBIF_source_cached_pairs":sum((x["plant_id"],x["island_code"]) in cached for x in pairs)},
       "taxon":dict(counts),
       "geometry":dict(Counter(x["status"] for x in geos.values())),
       "outcomes":dict(Counter(x["source_date_status"] for x in results)),
       "source_reuse":dict(Counter(x["source_reuse"] for x in results)),
+      "matched_index_cases_with_any_dated_host":
+        sum(x["recorded"]=="1" and x["host_pairs_with_GBIF_year"]>0 for x in cellrows),
+      "matched_index_cases_with_host_first_index_before_butterfly_DOI":
+        sum(x["recorded"]=="1" and x["host_first_index_year_before_case_butterfly_index"] for x in cellrows),
+      "matched_nonindexed_control_cells_with_prior_host_documentation":
+        sum(x["recorded"]=="0" and x["host_first_index_year_before_case_butterfly_index"] for x in cellrows),
+      "matched_species_island_cells_with_all_source_host_pairs_queried":
+        sum(x["all_Q2_candidate_hosts_queried"] for x in cellrows),
       "not_full_year_riskset":True,
       "notes":[
          "The source sample is 13 DOI observed and 39 DOI nonindexed cells selected by butterfly outcome, not independent arrivals or absences.",
