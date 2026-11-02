@@ -61,7 +61,7 @@ def main():
         if y2 < y1:raise RuntimeError(f"Invalid date interval in source: {row}")
         source_history[key][empire].append((y1,y2))
 
-    reader=shapefile.Reader(str(a.lenzner_shapefile))
+    reader=shapefile.Reader(str(a.lenzner_shapefile), encoding='latin-1')
     fieldnames=[f[0] for f in reader.fields[1:]]
     if "OBJIDsic" not in fieldnames:
         raise RuntimeError(f"Source shapefile lacks expected OBJIDsic: {fieldnames}")
