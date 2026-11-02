@@ -101,8 +101,24 @@ def main():
         }
     else:test={"status":"TOO_FEW_COMPLETE_MATCHED_SETS","n_complete":len(selected)}
     groups={role:[r for r in classified if r["butterfly_indexed_in_original_DOI"]==role] for role in (1,0)}
+    case_lower=sum(x["GBIF_prior_plant_documentation"] for x in groups[1])/len(groups[1])
+    case_upper=(sum(x["GBIF_prior_plant_documentation"] for x in groups[1])+
+                sum(x["prior_documentation_classification"]=="QUERY_INCOMPLETE_UNKNOWN" for x in groups[1]))/len(groups[1])
+    control_lower=sum(x["GBIF_prior_plant_documentation"] for x in groups[0])/len(groups[0])
+    control_upper=(sum(x["GBIF_prior_plant_documentation"] for x in groups[0])+
+                   sum(x["prior_documentation_classification"]=="QUERY_INCOMPLETE_UNKNOWN" for x in groups[0]))/len(groups[0])
+    missingness_bounds={
+       "purpose":"Deterministic extremes for indexed-plant documentary exposure when incomplete GBIF queries might be dated prior (NOT a statistical confidence interval).",
+       "case_fraction_documented_prior_lower":case_lower,
+       "case_fraction_prior_if_all_unknown_were_prior_upper":case_upper,
+       "comparison_fraction_documented_prior_lower":control_lower,
+       "comparison_fraction_prior_if_all_unknown_were_prior_upper":control_upper,
+       "case_minus_comparison_absolute_fraction_lower":case_lower-control_upper,
+       "case_minus_comparison_absolute_fraction_upper":case_upper-control_lower,
+       "sign_identified_even_with_unknown_documentation":(case_lower-control_upper)>0 or (case_upper-control_lower)<0
+    }
     summary={
-      "schema":"chocho_Q4_31_butterfly_DOI_matched_source_first_host_doc_v0.1",
+      "schema":"chocho_Q4_31_butterfly_DOI_matched_source_first_host_doc_v0.2",
       "status":"DESCRIPTIVE_DOCUMENTATION_ASSOCIATION_NOT_COLONIZATION_OR_HALF_LAG",
       "n_observed_butterfly_index_case_cells":13,
       "n_nonindexed_DOI_control_cells_NOT_absent":39,
@@ -118,6 +134,7 @@ def main():
          "raw_documented_prior_fraction":sum(x["GBIF_prior_plant_documentation"] for x in group)/len(group),
         } for role,group in groups.items()
       },
+      "missingness_extreme_bounds_not_confidence_interval":missingness_bounds,
       "blocked":{
         "n_complete_source_comparison_groups":len(selected),
         "n_incomplete_source_comparison_groups":len(listed)-len(selected),
