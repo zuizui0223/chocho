@@ -1,0 +1,110 @@
+{
+  "schema": "chocho_q4_gbif_earliest_plant_observation_pilot_v0.1",
+  "status": "GBIF_INDEXED_FIRST_YEAR_COVERAGE_NOT_BIOLOGICAL_INTRODUCTION",
+  "source_inputs": {
+    "fixed_host_island_pairs": 500,
+    "distinct_wcvp_plants_in_pilot": 243,
+    "source_fixed_pair_csv_sha256": "21b1dfcb562630285916f18f92b34aebbe5ef0c56e48f870eb021923c8c06ec9",
+    "source_wcvp_name_map_csv_sha256": "2987ef7b529bacede665d25182f16c0ccd54e686ea43ed4fc2081a793ff031d6",
+    "wgsrpd_geojson_source_pinned": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "gbif_index": {
+    "api": "https://api.gbif.org/v1",
+    "searched_years": "1700,2026",
+    "retrieved_on_utc": "2026-11-02T05:52:38.849152+00:00",
+    "query": "GBIF occurrence/search taxonKey+WKT, valid coordinates, no geospatial issues, present, year facets",
+    "max_polygon_wkt_bytes": 7500
+  },
+  "taxon_match_status": {
+    "EXACT_SPECIES_MATCH": 241,
+    "NO_EXACT_ACCEPTED_SPECIES": 2
+  },
+  "geometry_status": {
+    "GEOMETRY_READY": 118,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 2,
+    "WKT_COMPLEX_OR_INACCURATE": 2
+  },
+  "pilot_status_counts": {
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 164,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 11,
+    "DATED_OCCURRENCE_FOUND": 210,
+    "GBIF_QUERY_FAILED": 102,
+    "NO_EXACT_ACCEPTED_SPECIES": 4,
+    "WKT_COMPLEX_OR_INACCURATE": 9
+  },
+  "pilot_dated_pairs": 210,
+  "pilot_fraction_all_pairs_with_observed_plant_year": 0.42,
+  "pilot_fraction_queried_pairs_with_observed_plant_year": 0.5614973262032086,
+  "earliest_indexed_year_summary": {
+    "min": 1805,
+    "median": 1974.0,
+    "max": 2026
+  },
+  "earliest_indexed_year_count_bands": {
+    "1700_1849": 5,
+    "1850_1899": 21,
+    "1900_1949": 42,
+    "1950_1999": 73,
+    "2000_2010": 25,
+    "2011_2026": 44
+  },
+  "islands_with_any_botanical_effort_year": 81,
+  "islands_with_any_pre1900_botanical_record": 70,
+  "by_level1": {
+    "1": {
+      "pilot_pairs": 34,
+      "dated": 16,
+      "exact_taxon_and_queryable_geometry": 34
+    },
+    "2": {
+      "pilot_pairs": 66,
+      "dated": 36,
+      "exact_taxon_and_queryable_geometry": 66
+    },
+    "3": {
+      "pilot_pairs": 32,
+      "dated": 14,
+      "exact_taxon_and_queryable_geometry": 31
+    },
+    "4": {
+      "pilot_pairs": 69,
+      "dated": 14,
+      "exact_taxon_and_queryable_geometry": 63
+    },
+    "5": {
+      "pilot_pairs": 34,
+      "dated": 22,
+      "exact_taxon_and_queryable_geometry": 34
+    },
+    "6": {
+      "pilot_pairs": 134,
+      "dated": 57,
+      "exact_taxon_and_queryable_geometry": 125
+    },
+    "7": {
+      "pilot_pairs": 17,
+      "dated": 5,
+      "exact_taxon_and_queryable_geometry": 11
+    },
+    "8": {
+      "pilot_pairs": 90,
+      "dated": 39,
+      "exact_taxon_and_queryable_geometry": 88
+    },
+    "9": {
+      "pilot_pairs": 24,
+      "dated": 7,
+      "exact_taxon_and_queryable_geometry": 24
+    }
+  },
+  "caution": [
+    "GBIF first recorded plant year is a left-censored INDEX DATE, not the historical introduction or establishment date.",
+    "Plants can arrive without GBIF presence, and old specimen dates may be unrelated to the introduction date.",
+    "The same island's all-plant record count has sampling composition, digitization, provider and date-varying bias.",
+    "Some island geometry is not safely representable in short WKT; these pairs are marked unqueried, not absent.",
+    "The pilot is a response-blind 500-pair sample, not the entire 5,545 pair population.",
+    "Taxon mapping statuses identify matches and ambiguity, and unresolvable names are not taken as zero.",
+    "No use of island butterflies, colonial history or port counts in pilot sampling.",
+    "No biological estimate of consumer lag or half-arrival time until observation effort, native butterfly origins, residence and temporal risk sets are evaluated."
+  ]
+}
