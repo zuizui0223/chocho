@@ -16,7 +16,7 @@ def observation(side,period,host,other,plant=100,coverage=.5):
 def test_paired_and_temporal_exact_key():
     a="early_2001_2010";b="later_2011_2024"
     obs=[observation("port",a,7,5),observation("nonport",a,5,6),
-         observation("port",b,8,6),observation("nonport",b,5,6)]
+         observation("port",b,9,6),observation("nonport",b,5,6)]
     records=m.paired({"observations":obs})
     assert len(records)==2
     assert m.temporal_same_pairs(records)[0]["target_minus_background"]==1
