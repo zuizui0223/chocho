@@ -23,7 +23,7 @@ EMPIRES=("Great_Britain","Spain","Portugal","Netherlands")
 
 
 def readcsv(path):
-    with path.open(encoding="utf-8", newline="") as h:
+    with path.open(encoding="latin-1" if path.name == "Empires.csv" else "utf-8", newline="") as h:
         yield from csv.DictReader(h)
 
 
