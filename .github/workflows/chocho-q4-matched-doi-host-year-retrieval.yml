@@ -1,0 +1,85 @@
+name: chocho 31 butterfly DOI matched source host first indexed years
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/extract_q4_matched_doi_plant_names.R
+      - scripts/retrieve_q4_doi_matched_host_plant_years.py
+      - .github/workflows/chocho-q4-matched-doi-host-year-retrieval.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  botanical-chronology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Install official geometry tools
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Check exact 44 source botanical names and 100 region matches
+        run: |
+          Rscript scripts/extract_q4_matched_doi_plant_names.R \
+            _external/WCVP \
+            results/q4-matched-doi-host-chronology/all_matched_candidate_introduced_host_island_pairs.csv \
+            work/q4_doi_matched_plant_names.csv
+      - name: Recover earlier GBIF indexed years and query only missing species-region source pairs
+        run: |
+          python -m py_compile scripts/retrieve_q4_doi_matched_host_plant_years.py
+          python scripts/retrieve_q4_doi_matched_host_plant_years.py \
+            --matched-host-pairs results/q4-matched-doi-host-chronology/all_matched_candidate_introduced_host_island_pairs.csv \
+            --matched-species-islands results/q4-matched-doi-host-chronology/matched_species_island_record_index_cells.csv \
+            --q2-edges work/q2/results/colonial-host-native-source-q2-v02/introduced_host_source_edges.csv \
+            --wcvp-plant-names work/q4_doi_matched_plant_names.csv \
+            --pilot-plant-years results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --targeted-plant-years results/q4-targeted-literature-hostyear/targeted_introduced_plant_island_years.csv \
+            --canary-plant-years results/q4-canary-plant-firstyear-v02/CNY_three_plant_years.csv \
+            --q3-positive results/q3-observed-butterfly-island-opportunity-v02/observed_added_island_resource_cases.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --output-dir results/q4-matched-doi-host-years
+      - name: Upload full historic plant-year source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-31-butterfly-doi-matched-host-index-years
+          path: |
+            work/q4_doi_matched_plant_names.csv
+            results/q4-matched-doi-host-years/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit audited source-year outcomes on analysis branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/q4-matched-doi-host-years/
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit source-dated matched DOI butterfly island host histories [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
