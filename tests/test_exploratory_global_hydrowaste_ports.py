@@ -54,7 +54,7 @@ def test_country_fixed_effects_regression_sign_and_permutation():
     rng=np.random.default_rng(1234)
     n=240
     country=np.repeat(["US","CA","GB","FR","DK","JP"],40)
-    x=np.tile(np.linspace(0,2,40),6)
+    x=np.tile(rng.uniform(0,2,size=40),6)  # independent of latitude/longitude covariates
     lat=np.tile(np.linspace(26,53,40),6)
     lon=np.tile(np.linspace(-25,25,40),6)
     labels=np.repeat(np.arange(6)*.6,40)

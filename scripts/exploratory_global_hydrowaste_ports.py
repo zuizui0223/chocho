@@ -62,7 +62,7 @@ def iso3(value):
 def source_ports():
     if gitblob_sha(PORTS)!=PORTS_BLOB:
         raise ValueError("Original 2026-10-30 port-flora census SHA changed")
-    allrows=pd.read_csv(PORTS)
+    allrows=pd.read_csv(PORTS,keep_default_na=False)  # ISO2 Namibia 'NA' is not a missing value
     assert len(allrows)==3630 and allrows.port_id.nunique()==3630
     port=allrows[allrows.query_complete.astype(str).str.lower()=="true"].copy()
     if len(port)!=1596 or port.port_id.nunique()!=1596:
