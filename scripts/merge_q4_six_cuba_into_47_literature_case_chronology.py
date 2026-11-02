@@ -65,7 +65,7 @@ def main():
             n_cuba+=1
             if int(r["first_butterfly_documented_year_min"])!=2006 or int(r["modern_introduced_host_candidates"])!=6:
                 raise RuntimeError("Cuba first record/host count drift")
-            plants=[x for x in modified if (x["plant_id"],"CUB") in patches]
+            plants=[x for x in modified if x["wgsrpd3_code"]=="CUB" and (x["plant_id"],"CUB") in patches]
             if len(plants)!=6:raise RuntimeError("Cuba plants not all resolved")
             years=[int(x["first_gbif_indexed_plant_year"]) for x in plants]
             previous=[y for y in years if y<2006]
