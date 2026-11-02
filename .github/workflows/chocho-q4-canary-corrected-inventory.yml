@@ -30,11 +30,14 @@ jobs:
           path: work/q2
       - name: Freeze 3 more Canary first-year plant opportunities while preserving original 500
         run: |
+          q2edges="$(find work/q2 -type f -name introduced_host_source_edges.csv)"
+          test -n "$q2edges" && test -f "$q2edges"
+          echo "Q2_CNY_EDGES_SOURCE=$q2edges"
           python -m py_compile scripts/extend_q4_firstyear_with_CNY_v02.py
           python scripts/extend_q4_firstyear_with_CNY_v02.py \
             --corrected-q1 results/island-mainland-resource-q1/island_mainland_summary.json \
             --q2-v02-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
-            --q2-v02-edges work/q2/introduced_host_source_edges.csv \
+            --q2-v02-edges "$q2edges" \
             --original-500-plant-years results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
             --original-500-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
             --out-dir results/q4-host-first-year-v02
