@@ -1,0 +1,61 @@
+name: chocho three-gate introduced host taxa versus port count
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_three_gate_port_introduced_host_taxa.py
+      - .github/workflows/chocho-three-gate-port-introduced-host-taxa.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  taxa-port:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install reproducible quantitative dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Restore fixed 11,573 plant–butterfly–island Q2 source edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Check source and run independent introduced-host taxon count association
+        run: |
+          python -m py_compile scripts/test_three_gate_port_introduced_host_taxa.py
+          python scripts/test_three_gate_port_introduced_host_taxa.py \
+            --q2-edges work/q2/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
+            --q1-audit results/island-mainland-resource-q1/island_mainland_summary.json \
+            --wpi-regions results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --island-area results/island-mainland-resource-area-v02/region_area_metrics.csv \
+            --out-dir results/three-gate-port-introduced-host-taxa
+      - name: Preserve plant-taxon counts and permutation audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-island-ports-introduced-larval-host-taxa
+          path: results/three-gate-port-introduced-host-taxa/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save Q2 independent plant count model only to draft research branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/three-gate-port-introduced-host-taxa/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit relationship of WPI ports to distinct introduced larval host taxa in 126 islands [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
