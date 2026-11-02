@@ -28,7 +28,7 @@ DEFAULT_HOSTS = REPO / (
 def parse_value(value: str, *, allow_zero: bool = False) -> int | None:
     s = value.strip()
     # Examples in the historic German Ellenberg table: 5, (5), 5~ and x.
-    m = re.fullmatch(r"\\(?([0-9])\\)?~?", s)
+    m = re.fullmatch(r"\(?([0-9])\)?~?", s)
     if not m:
         return None
     v = int(m.group(1))
@@ -37,7 +37,7 @@ def parse_value(value: str, *, allow_zero: bool = False) -> int | None:
 
 def load_data(host_csv: Path, ellenberg_tsv: Path) -> tuple[list[dict], dict]:
     with ellenberg_tsv.open(encoding="utf-8-sig", newline="") as f:
-        traits = list(csv.DictReader(f, delimiter="\\t"))
+        traits = list(csv.DictReader(f, delimiter="\t"))
     table = {}
     for row in traits:
         key = (row.get("Name") or "").strip().casefold()
