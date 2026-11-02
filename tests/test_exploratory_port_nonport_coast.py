@@ -5,6 +5,14 @@ import importlib.util
 import math
 from pathlib import Path
 
+import pytest
+
+# The submission-facing offline paper CI does not need GSHHG geospatial extras.
+# This exploratory test runs fully in the dedicated coastal workflow, where
+# pyshp / pyproj / shapely are installed; otherwise skip without breaking paper CI.
+pytest.importorskip("shapefile")
+pytest.importorskip("pyproj")
+pytest.importorskip("shapely")
 from shapely.geometry import Point, Polygon
 
 SCRIPT=Path(__file__).resolve().parents[1]/"scripts"/"exploratory_port_nonport_coast.py"
