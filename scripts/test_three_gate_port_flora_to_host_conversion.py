@@ -169,6 +169,37 @@ def main():
         reports[name]=regress(sub,y,z)
         print(name,json.dumps({"n":reports[name]["n"],"beta":reports[name]["coefficient"],
              "two_sided":reports[name]["within_level1_and_area_half_label_permutation"]["p_two_centered"]}),flush=True)
+    # Influence and common-support checks are descriptive and not new hypotheses.
+    # They test whether the conditional residual contrast is driven by one
+    # geographic region or extrapolation between small alien flora pools.
+    sensitivity_sets={
+       "min_75_introduced_flora_species":[r for r in rset if r["introduced_flora"]>=75],
+       "ports_present_only":[r for r in rset if r["WPI_ports"]>0],
+       "port_count_0_to_15_only":[r for r in rset if r["WPI_ports"]<=15],
+       "without_pacific_antarctic":[r for r in rset if r["level1"] not in {"6","9"}],
+       "effort_measured_port_positive":[r for r in filtered if r["WPI_ports"]>0],
+    }
+    supports={}
+    for name,subset in sensitivity_sets.items():
+        if len(subset)<60:
+            supports[name]={"status":"TOO_FEW_ISLANDS","n":len(subset)}
+            continue
+        try:
+            control=["log_alien","log_native_flora"]
+            if name=="effort_measured_port_positive":control+=["ln_botanical_effort"]
+            fit=regress(subset,"log_host",control,run_perm=False)
+            supports[name]={"status":"ESTIMATED_DESCRIPTIVE","n":len(subset),
+                            "beta":fit["coefficient"],"port_positive_n":sum(r["WPI_ports"]>0 for r in subset)}
+        except RuntimeError as exc:
+            supports[name]={"status":"MODEL_IDENTIFIABILITY_ERROR","n":len(subset),"error":str(exc)}
+    leave_region=[]
+    for lev in sorted({r["level1"] for r in rset}):
+        sub=[r for r in rset if r["level1"]!=lev]
+        try:
+            fit=regress(sub,"log_host",["log_alien","log_native_flora"],run_perm=False)
+            leave_region.append({"removed_level1":lev,"n":len(sub),"beta":fit["coefficient"]})
+        except RuntimeError as exc:
+            leave_region.append({"removed_level1":lev,"n":len(sub),"status":"MODEL_IDENTIFIABILITY_ERROR","error":str(exc)})
     primary=reports["M1_port_host_taxa_conditional_on_all_alien_flora"]
     effort_primary=reports["M1eff_port_host_taxa_given_alien_flora"]
     # Island leverage check on primary with *original* controls fitted again.
@@ -201,6 +232,8 @@ def main():
       "primary_model_predeclared":"M1_port_host_taxa_conditional_on_all_alien_flora",
       "primary_effort_model_predeclared":"M1eff_port_host_taxa_given_alien_flora",
       "model_results":reports,
+      "conditional_port_host_effect_support_diagnostics":supports,
+      "conditional_port_host_effect_leave_level1_out":leave_region,
       "sensitivity_leave_one_island_out_primary":{
           "n":len(values),"positive":sum(x>0 for x in values),
           "minimum":min(values),"maximum":max(values),
