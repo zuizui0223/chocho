@@ -218,6 +218,36 @@ def main():
     m["all_flora_effort_exclude_pacific_antarctic"]=model(
         [row for row in enriched if row["level1"] not in {"6","9"}],
         "ln1p_introduced_flora",["ln1p_native_flora","ln1p_gbif_total"])
+    # Check whether ports predict the reporting process itself; association
+    # here is not proof that all port–flora results are measurement artifacts.
+    m["botanical_reporting_effort_vs_ports"]=model(
+        enriched,"ln1p_gbif_total",["ln1p_native_flora"])
+    # Port-intensive islands with at least one WPI entry provide a separate
+    # exposure gradient, distinct from the binary catalogued-port difference.
+    m["all_flora_with_effort_only_port_positive"]=model(
+        [row for row in enriched if row["WPI_ports"]>0],
+        "ln1p_introduced_flora",["ln1p_native_flora","ln1p_gbif_total"])
+    m["all_flora_with_effort_high_botanical_reporting"]=model(
+        [row for row in enriched if row["gbif_all_plant_indexed_records"]>=1000],
+        "ln1p_introduced_flora",["ln1p_native_flora","ln1p_gbif_total"])
+    all_flora_map={r["code"]:r for r in flora}
+    excluded_full=[all_flora_map[x["code"]] for x in excluded]
+    def median_float(arr,field):
+        return float(np.median([float(x[field]) for x in arr])) if arr else None
+    selection_audit={
+       "n_observed":len(enriched),
+       "n_excluded":len(excluded_full),
+       "median_area_km2_observed":float(np.median([math.exp(x["log_area"]) for x in enriched])),
+       "median_area_km2_excluded":median_float(excluded_full,"area_km2"),
+       "median_WPI_ports_observed":float(np.median([x["WPI_ports"] for x in enriched])),
+       "median_WPI_ports_excluded":median_float(excluded_full,"wpi_port_count"),
+       "median_introduced_flora_observed":float(np.median([x["n_introduced_flora"] for x in enriched])),
+       "median_introduced_flora_excluded":median_float(excluded_full,"introduced"),
+       "excluded_high_port_regions":sorted(
+           [{"code":x["code"],"ports":int(x["wpi_port_count"]),"introduced_flora":int(x["introduced"])}
+            for x in excluded_full],key=lambda z:-z["ports"])[:12],
+       "interpretation":"Effort availability is size- and region-selective; models do not generalize automatically to all 126 islands"
+    }
     summary={
       "schema":"chocho_WPI_introduced_flora_GBIF_plant_index_effort_sensitivity_v0.1",
       "status":"DESCRIPTIVE_CROSS_SECTIONAL_SURVEY_EFFORT_AUDIT_NOT_TRANSPORT_CAUSATION",
@@ -239,6 +269,7 @@ def main():
          "cohort_islands_with_WPI_indexed_ports":sum(x["WPI_ports"]>0 for x in enriched),
          "cohort_islands_without_WPI_indexed_ports":sum(x["WPI_ports"]==0 for x in enriched),
       },
+      "source_effort_selection":selection_audit,
       "models":m,
       "interpretation_boundaries":[
         "WPI port count comes from a modern indexed 2023 snapshot; it is not historical shipping intensity, port accessibility in all years, or a treatment.",
