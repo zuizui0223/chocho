@@ -41,6 +41,14 @@ jobs:
           with ZipFile(p) as z:
               print("GBIF archived DOI files",[(n,z.getinfo(n).file_size) for n in z.namelist()])
           PY
+      - name: Restore audited 11,455 butterfly–introduced-host–island links from Q2
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          run-id: 41370175076
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/chocho
+          path: work/q2
       - name: Link exact available 31-species GBIF observations to added host islands
         shell: bash
         run: |
@@ -48,7 +56,7 @@ jobs:
           python scripts/analyze_q3_gbif_observed_island_resource_overlap.py \
             --gbif-download-zip work/gbif/0008693-260928105237408.zip \
             --validation-species data/frozen/figure_sources/occurrence_resource_validation_species.csv \
-            --q1-added results/island-mainland-resource-q1/added_species_region_pairs.csv \
+            --q2-edges work/q2/introduced_host_source_edges.csv \
             --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
             --q1-summary results/island-mainland-resource-q1/island_mainland_summary.json \
             --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
