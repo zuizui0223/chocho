@@ -53,3 +53,30 @@ The 47 literature leads also contain nonindependent repeated physical islands wi
 - Botanical source, climate, wing data and GBIF records: `docs/three_gates_island_butterflies_20261102.md`.
 
 **Statistical boundary:** Geographic label randomization is a descriptive calibration under restricted exchangeability, not a randomized intervention. WPI counts correlate with population, botanical inventory quality, trade, and land use; neither conditional p nor a log-scale coefficient establishes causal transport or shipping.
+
+
+## Botanical survey-effort robustness (source-audited)
+
+New outcome-blind sensitivity executed on the same branch with \`scripts/test_three_gate_port_flora_botanical_effort.py\`. All 126 islands have WCVP flora and WPI port counts, but only **98 islands** have successfully queried, taxonomically consistent, spatially indexed GBIF total botanical record counts (97 from original Q4 response-blind source + the independently indexed Canary Is.). GBIF query failures, complex geometries and no-indexed-record regions are excluded, **not interpreted as zero botanical sampling**.
+
+All regressions use log WGSRPD3 area and fixed Level1 botanical regions. Botanical outcome models also control the appropriate WCVP native-richness baseline, and reporting-effort models include log(1+GBIF indexed plant records) or log pre-1900 records. Port predictor: log2(1+2023 WPI port count). Tail calibration: 4,999 port-label permutations within Level1 × within-Level1 area half. This null is an observational descriptive exchangeability benchmark, not causal inference.
+
+| 98-island measured subset | Port association coefficient | Outcome-scale equivalent per +1 log2(1+ports) | Conditional 2-sided p |
+| --- | ---: | ---: | ---: |
+| All introduced WCVP accepted species, native baseline / area / region controls but **no GBIF effort** | +0.3337 log(1+species) | +39.6% | 0.0002 |
+| Same + **all-years indexed botanical reporting** | **+0.2445** | **+27.7%** | **0.0012** |
+| Same + **pre-1900 indexed botanical reporting** instead of all years | +0.2225 | +24.9% | 0.0014 |
+| Log introduced/native WCVP species contrast + all-years reporting | +0.2429 | Positive introduced-relative association | 0.0036 |
+| HOSTS-selected introduced larval host taxa + native butterfly-resource baseline + reporting | **+0.1639** | **+17.8%** | **0.0110** |
+| WPI ports vs **GBIF botanical reporting itself** (native flora / area / region controlled) | +0.5239 | +68.9% indexed botanical records | 0.0002 |
+
+Sensitivity of all-flora effort-adjusted model: ports >0 only, 69 regions (β=+0.2354, p=0.0222); indexed botanical record count ≥1,000, 71 regions (β=+0.2193, p=0.0466); excluding highest-port region, 97 regions (β=+0.2303, p=0.0010); excluding Pacific/Antarctic Level1 regions, 69 regions (β=+0.2428, p=0.0136).
+
+**Interpretation:** WPI-rich islands have more GBIF botanical records, yet the *positive conditional association* between indexed ports and both all introduced plant richness and selected larval-host richness persists when this coarse observation-effort proxy is included. This is a stronger positive observational **resource supply** association than port × observed butterfly occupation. It does **not** demonstrate a mechanism or estimate the arrival route of any plant or butterfly.
+
+**Selection warning:** The excluded 28/126 islands have median area ~25,120 km² and median 6.5 ports vs the analyzed 98 islands' ~956 km² and 1 port. Excluded sites include Great Britain, Japan, Philippines, Borneo and Cuba. GBIF failures and polygon complexity are strongly nonrandom; complete-case results cannot be generalized without these missing locations. Moreover botanical reporting may be downstream of ports and human settlement, so adjusting for records can also remove real shared effects. The exploratory P-values are not spatial-independence corrected, are not corrected for selection/multiple models, and do not identify a causal shipping effect.
+
+Reproducibility:
+- \`results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json\` (source population, every model and permutation)
+- \`results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv\` (98 complete-case island observations and WPI/GBIF controls)
+- \`scripts/test_three_gate_port_flora_botanical_effort.py\`, workflow \`.github/workflows/chocho-three-gate-port-flora-effort-control.yml\` (completed GitHub Actions success).
