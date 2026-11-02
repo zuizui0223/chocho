@@ -1,0 +1,73 @@
+{
+  "schema": "chocho_Q4_host_first_index_year_botanical_effort_geographic_audit_v0.1",
+  "status": "OBSERVATION_INDEX_SAMPLING_BIAS_TEST_NOT_INTRODUCTION_DATING",
+  "source": {
+    "fixed_500_response_blind_host_island_pairs": 500,
+    "dated_pairs": 219,
+    "islands_with_any_dated_host": 82,
+    "islands_with_complete_all_botanical_effort": 78,
+    "regions_with_at_least_two_dated_hosts": 54,
+    "reconciliation_statuses": {
+      "botanical_effort_missing": 4
+    }
+  },
+  "primary": {
+    "n_independent_WGSRPD3_regions": 78,
+    "response": "region median of first indexed year among fixed 500 originally sampled host-island plants with dated GBIF records",
+    "exposure": "total",
+    "controls": [
+      "ln_WGSRPD3_area",
+      "ln1p_number_dated_host_taxa_in_original_pilot",
+      "ln1p_introduced_WCVP_flora",
+      "Level1 fixed effects"
+    ],
+    "regression_year_change_per_ln1p_effort_unit": -8.72048266411606,
+    "descriptive_raw_spearman": -0.3265603027460063,
+    "permutation": {
+      "shuffle": "botanical effort labels within Level1 x within-Level1 area half",
+      "draws": 4999,
+      "exchangeable_regions": 76,
+      "exchangeable_strata": 16,
+      "null_mean": 0.9900481933161714,
+      "null_q025": -4.018032323760433,
+      "null_q975": 5.839482836858786,
+      "observed_minus_null": -9.710530857432232,
+      "two_sided_centered_p": 0.0004
+    }
+  },
+  "pre1900_effort_sensitivity": {
+    "n_independent_WGSRPD3_regions": 78,
+    "response": "region median of first indexed year among fixed 500 originally sampled host-island plants with dated GBIF records",
+    "exposure": "pre1900",
+    "controls": [
+      "ln_WGSRPD3_area",
+      "ln1p_number_dated_host_taxa_in_original_pilot",
+      "ln1p_introduced_WCVP_flora",
+      "Level1 fixed effects"
+    ],
+    "regression_year_change_per_ln1p_effort_unit": -6.249939607635676,
+    "descriptive_raw_spearman": -0.2867794965716537,
+    "permutation": {
+      "shuffle": "botanical effort labels within Level1 x within-Level1 area half",
+      "draws": 4999,
+      "exchangeable_regions": 76,
+      "exchangeable_strata": 16,
+      "null_mean": 1.4988088249181621,
+      "null_q025": -2.9880876848953215,
+      "null_q975": 5.840246168403643,
+      "observed_minus_null": -7.748748432553839,
+      "two_sided_centered_p": 0.0002
+    }
+  },
+  "limits": [
+    "The first indexed GBIF host year is an upper bound on the true date of plant introduction, NOT plant arrival or naturalization.",
+    "Higher observation effort can move recorded first years earlier even if plants arrived at identical dates.",
+    "Only 219 of the response-blind 500 host-island pairs have GBIF dated records; all failed/missing queries are excluded, not imputed absent.",
+    "All-botanical-effort count is a contemporaneous cumulative total that may include records after the first indexed host and can cause retrospective selection bias.",
+    "Pre-1900 botanical total is an incomplete earlier-collection sensitivity, not an exact era-specific offset at host first record.",
+    "Median among detected plant first indexed dates is a biased subsample of all introduced host taxa; the number of dated hosts is included as an analytic control.",
+    "WGSRPD3 geographic region can contain multiple distinct physical islands; association is not a host-butterfly temporal risk model.",
+    "Regional botanical effort is not independent of ports, settlement, plant introductions or true host distributions.",
+    "This test is observational and descriptive and cannot estimate consumer lag or which of three establishment gates opened last."
+  ]
+}
