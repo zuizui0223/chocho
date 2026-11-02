@@ -34,8 +34,14 @@ jobs:
       - name: Check source and run independent introduced-host taxon count association
         run: |
           python -m py_compile scripts/test_three_gate_port_introduced_host_taxa.py
+          mapfile -t Q2_EDGES < <(find work/q2 -type f -name introduced_host_source_edges.csv | sort)
+          if [ "${#Q2_EDGES[@]}" -ne 1 ]; then
+            printf 'Expected exactly one audited Q2 edge file, found %s\n' "${#Q2_EDGES[@]}"
+            find work/q2 -type f | head -30
+            exit 2
+          fi
           python scripts/test_three_gate_port_introduced_host_taxa.py \
-            --q2-edges work/q2/introduced_host_source_edges.csv \
+            --q2-edges "${Q2_EDGES[0]}" \
             --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
             --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
             --q1-audit results/island-mainland-resource-q1/island_mainland_summary.json \
