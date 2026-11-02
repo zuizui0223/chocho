@@ -57,7 +57,7 @@ The 47 literature leads also contain nonindependent repeated physical islands wi
 
 ## Botanical survey-effort robustness (source-audited)
 
-New outcome-blind sensitivity executed on the same branch with \`scripts/test_three_gate_port_flora_botanical_effort.py\`. All 126 islands have WCVP flora and WPI port counts, but only **98 islands** have successfully queried, taxonomically consistent, spatially indexed GBIF total botanical record counts (97 from original Q4 response-blind source + the independently indexed Canary Is.). GBIF query failures, complex geometries and no-indexed-record regions are excluded, **not interpreted as zero botanical sampling**.
+New outcome-blind sensitivity executed on the same branch with `scripts/test_three_gate_port_flora_botanical_effort.py`. All 126 islands have WCVP flora and WPI port counts, but only **98 islands** have successfully queried, taxonomically consistent, spatially indexed GBIF total botanical record counts (97 from original Q4 response-blind source + the independently indexed Canary Is.). GBIF query failures, complex geometries and no-indexed-record regions are excluded, **not interpreted as zero botanical sampling**.
 
 All regressions use log WGSRPD3 area and fixed Level1 botanical regions. Botanical outcome models also control the appropriate WCVP native-richness baseline, and reporting-effort models include log(1+GBIF indexed plant records) or log pre-1900 records. Port predictor: log2(1+2023 WPI port count). Tail calibration: 4,999 port-label permutations within Level1 × within-Level1 area half. This null is an observational descriptive exchangeability benchmark, not causal inference.
 
@@ -77,6 +77,6 @@ Sensitivity of all-flora effort-adjusted model: ports >0 only, 69 regions (β=+0
 **Selection warning:** The excluded 28/126 islands have median area ~25,120 km² and median 6.5 ports vs the analyzed 98 islands' ~956 km² and 1 port. Excluded sites include Great Britain, Japan, Philippines, Borneo and Cuba. GBIF failures and polygon complexity are strongly nonrandom; complete-case results cannot be generalized without these missing locations. Moreover botanical reporting may be downstream of ports and human settlement, so adjusting for records can also remove real shared effects. The exploratory P-values are not spatial-independence corrected, are not corrected for selection/multiple models, and do not identify a causal shipping effect.
 
 Reproducibility:
-- \`results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json\` (source population, every model and permutation)
-- \`results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv\` (98 complete-case island observations and WPI/GBIF controls)
-- \`scripts/test_three_gate_port_flora_botanical_effort.py\`, workflow \`.github/workflows/chocho-three-gate-port-flora-effort-control.yml\` (completed GitHub Actions success).
+- `results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json` (source population, every model and permutation)
+- `results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv` (98 complete-case island observations and WPI/GBIF controls)
+- `scripts/test_three_gate_port_flora_botanical_effort.py`, workflow `.github/workflows/chocho-three-gate-port-flora-effort-control.yml` (completed GitHub Actions success).
