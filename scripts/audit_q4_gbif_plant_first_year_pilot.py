@@ -179,10 +179,12 @@ def facet_year(key,geometry):
             "recorded_last_decade":sum(v for y,v in annual.items() if y>=2016),
             "year_facet_complete_within_1700_2026":sum(annual.values())==count}
 
-def runner(pairs,names,geos,workers,outdir):
+def runner(pairs,names,eligible,geos,workers,outdir):
     distinct_plants=sorted({r["plant_id"] for r in pairs})
     matched={}
     def taxon_task(pid):
+        if not eligible[pid]:
+            return pid,{"status":"WCVP_NON_SPECIES_OR_NONACCEPTED_RANK","key":"","canonical":"","confidence":"","match_type":"","detail":"not suitable for exact GBIF species-only mapping"}
         v=key_from_gbif(names[pid])
         return pid,v
     with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -289,7 +291,9 @@ def runner(pairs,names,geos,workers,outdir):
                     "retrieved_on_utc":datetime.datetime.now(datetime.timezone.utc).isoformat(),
                     "query":"GBIF occurrence/search taxonKey+WKT, valid coordinates, no geospatial issues, present, year facets",
                     "max_polygon_wkt_bytes":MAX_WKT},
-      "taxon_match_status":dict(counts if False else Counter(r["status"] for r in taxonrows)),
+      "taxon_match_status":dict(Counter(r["status"] for r in taxonrows)),
+      "wcvp_species_rank_queryable_plants":sum(eligible[pid] for pid in distinct_plants),
+      "wcvp_other_rank_unqueried_plants":sum(not eligible[pid] for pid in distinct_plants),
       "geometry_status":dict(Counter(v["status"] for v in geos.values())),
       "pilot_status_counts":dict(counts),
       "pilot_dated_pairs":len(found),
@@ -328,6 +332,7 @@ def main():
     pairs=readcsv(a.pairs)
     name_rows=readcsv(a.wcvp_names)
     names={r["plant_id"]:r["wcvp_accepted_name"] for r in name_rows}
+    eligible={r["plant_id"]:r.get("gbif_species_query_eligible")=="True" for r in name_rows}
     if len(pairs)!=500 or len(name_rows)!=560 or len(names)!=560:
         raise RuntimeError("Not the prespecified 500-pair Q4 pilot or 560 WCVP accepted names")
     if len({(r["plant_id"],r["island_code"]) for r in pairs})!=500:
@@ -337,7 +342,7 @@ def main():
     if not 1<=a.max_workers<=8:raise RuntimeError("Too much GBIF request concurrency")
     geos=build_geometries(a.wgsrpd_geojson,{r["island_code"] for r in pairs})
     print("GBIF_WKT_GEO",json.dumps(Counter(v["status"] for v in geos.values())),flush=True)
-    runner(pairs,names,geos,a.max_workers,a.out_dir)
+    runner(pairs,names,eligible,geos,a.max_workers,a.out_dir)
 
 if __name__=="__main__":
     main()
