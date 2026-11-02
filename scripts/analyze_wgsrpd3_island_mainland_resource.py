@@ -60,7 +60,7 @@ def host_by_butterfly(path: Path) -> dict[str, set[str]]:
 
 def wgsrpd_names(path: Path) -> dict[str, str]:
     out = {}
-    with path.open(encoding="utf-8-sig") as handle:
+    with path.open(encoding="latin-1") as handle:
         for line in handle:
             parts = line.strip().split("*")
             if len(parts) > 2 and len(parts[0]) == 3 and parts[0] != "L3 ":
