@@ -1,0 +1,59 @@
+name: exploratory port nutrient-trait pilot
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_port_nutrient_ellenberg.py"
+      - "tests/test_exploratory_port_nutrient_ellenberg.py"
+      - "provenance/reviewer_defenses/results/port_nutrient_trait_pilot_20261102/**"
+      - ".github/workflows/chocho-exploratory-nutrient-port-trait.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-source-locked-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download pinned German indicator table (not vendored)
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            https://raw.githubusercontent.com/bathyscapher/EVA/73b323983702a74cb9b6867bcebe00a307ea6566/EllenbergsValuesAutomaton/Ellenberg_VascularPlants.csv \
+            --output /tmp/ellenberg_germany.tsv
+          test -s /tmp/ellenberg_germany.tsv
+      - name: Run reproducible descriptive analysis
+        run: |
+          python scripts/exploratory_port_nutrient_ellenberg.py \
+            --ellenberg /tmp/ellenberg_germany.tsv \
+            --bootstrap 2000 \
+            --permutations 4999 \
+            --output nutrient_trait_result.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          o=json.loads(Path('nutrient_trait_result.json').read_text())
+          assert o['counts']['n_port_candidate_host_species'] == 687, o['counts']
+          assert o['counts']['n_exact_species_matches_with_N'] == 183, o['counts']
+          assert abs(o['spearman_n_vs_number_of_indexed_ports']-0.340819) < 1e-4, o
+          assert o['within_genus']['eligible_genera'] == 24, o
+          assert o['within_genus']['eligible_species'] == 77, o
+          assert 0.1 < o['within_genus']['permutation_two_sided_p'] < 0.9, o
+          print('SOURCE-LOCKED NUTRIENT PILOT VERIFIED')
+          print(json.dumps({
+            'n': o['counts']['n_exact_species_matches_with_N'],
+            'rho': o['spearman_n_vs_number_of_indexed_ports'],
+            'within_genus': o['within_genus'],
+          }, indent=2))
+          PY
+      - name: Upload exploratory receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: port-nutrient-trait-exploratory-receipt
+          path: nutrient_trait_result.json
+          retention-days: 30
