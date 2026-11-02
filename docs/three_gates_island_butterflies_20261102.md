@@ -118,3 +118,10 @@ Reproducibility:
 - `results/q4-matched-doi-host-documentation-split-geo/q4_matched_host_documentation_audit.json` (final case/control matched source-index statistics, uncertainty bounds, sensitivity and limits)
 
 **Study-status decision:** preserve the new positive *documentation order* and prior positive Q1 port–flora results, but keep colonization lag, port×wing flight substitution and last-gate identification as OPEN hypotheses. No causal regression should be fitted to 13 GBIF-indexed butterfly cells or 47 selected historical literature events without comparable species×island×year observed/not-indexed risk sets and detection controls.
+
+
+### Q4 low-rate GBIF HTTP429 source coverage diagnostic
+
+A separate fixed, outcome-blind first-12-of-69 HTTP429 source retry was run sequentially with ≥4-second spacing, no new butterfly selection. **4 of 12** previously failed source botanical plant×island pairs returned a GBIF indexed plant year, **1 of 12** returned a valid no-index result, and **7 of 12** now reported HTTP400 (complex geography). The first 500 response-blind cohort and original 219 dated outcomes remain frozen; these newly recovered four dates are an additional sensitivity source and are **not** silently inserted into earlier Q4/31 butterfly conditional tests. This shows both transient API rate limiting and structural WKT geography problems in the botanical chronology record, not evidence of newly introduced plants or butterfly movement.
+
+Source: `results/q4-conservative-gbif-retry/http429_retry_audit.json`; 12 explicit source ID/year/status rows in `results/q4-conservative-gbif-retry/http429_original_pilot_retry_subset.csv`.
