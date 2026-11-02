@@ -1,5 +1,5 @@
 {
-  "schema": "chocho_Q4_host_first_index_year_botanical_effort_geographic_audit_v0.1",
+  "schema": "chocho_Q4_host_first_index_year_botanical_effort_geographic_audit_v0.2",
   "status": "OBSERVATION_INDEX_SAMPLING_BIAS_TEST_NOT_INTRODUCTION_DATING",
   "source": {
     "fixed_500_response_blind_host_island_pairs": 500,
@@ -21,17 +21,17 @@
       "ln1p_introduced_WCVP_flora",
       "Level1 fixed effects"
     ],
-    "regression_year_change_per_ln1p_effort_unit": -8.72048266411606,
+    "regression_year_change_per_ln1p_effort_unit": -8.720482664116073,
     "descriptive_raw_spearman": -0.3265603027460063,
     "permutation": {
       "shuffle": "botanical effort labels within Level1 x within-Level1 area half",
       "draws": 4999,
       "exchangeable_regions": 76,
       "exchangeable_strata": 16,
-      "null_mean": 0.9900481933161714,
-      "null_q025": -4.018032323760433,
-      "null_q975": 5.839482836858786,
-      "observed_minus_null": -9.710530857432232,
+      "null_mean": 0.9900481933161823,
+      "null_q025": -4.018032323760427,
+      "null_q975": 5.839482836858805,
+      "observed_minus_null": -9.710530857432255,
       "two_sided_centered_p": 0.0004
     }
   },
@@ -45,20 +45,100 @@
       "ln1p_introduced_WCVP_flora",
       "Level1 fixed effects"
     ],
-    "regression_year_change_per_ln1p_effort_unit": -6.249939607635676,
+    "regression_year_change_per_ln1p_effort_unit": -6.24993960763568,
     "descriptive_raw_spearman": -0.2867794965716537,
     "permutation": {
       "shuffle": "botanical effort labels within Level1 x within-Level1 area half",
       "draws": 4999,
       "exchangeable_regions": 76,
       "exchangeable_strata": 16,
-      "null_mean": 1.4988088249181621,
-      "null_q025": -2.9880876848953215,
-      "null_q975": 5.840246168403643,
-      "observed_minus_null": -7.748748432553839,
+      "null_mean": 1.4988088249181704,
+      "null_q025": -2.9880876848953233,
+      "null_q975": 5.8402461684036595,
+      "observed_minus_null": -7.7487484325538505,
       "two_sided_centered_p": 0.0002
     }
   },
+  "sensitivity_2plus_dated_hosts_per_region": {
+    "n_independent_WGSRPD3_regions": 54,
+    "response": "region median of first indexed year among fixed 500 originally sampled host-island plants with dated GBIF records",
+    "exposure": "total",
+    "controls": [
+      "ln_WGSRPD3_area",
+      "ln1p_number_dated_host_taxa_in_original_pilot",
+      "ln1p_introduced_WCVP_flora",
+      "Level1 fixed effects"
+    ],
+    "regression_year_change_per_ln1p_effort_unit": -4.454389978187383,
+    "descriptive_raw_spearman": -0.1630606795412586,
+    "permutation": {
+      "shuffle": "botanical effort labels within Level1 x within-Level1 area half",
+      "draws": 4999,
+      "exchangeable_regions": 52,
+      "exchangeable_strata": 14,
+      "null_mean": 1.7045415922795806,
+      "null_q025": -5.415880183139875,
+      "null_q975": 7.776276008373593,
+      "observed_minus_null": -6.158931570466963,
+      "two_sided_centered_p": 0.0636
+    }
+  },
+  "leave_one_biogeographic_region_out": [
+    {
+      "excluded_level1": "1",
+      "n": 70,
+      "beta": -7.0847882071504715,
+      "p_two": 0.001
+    },
+    {
+      "excluded_level1": "2",
+      "n": 65,
+      "beta": -15.617394377334133,
+      "p_two": 0.0002
+    },
+    {
+      "excluded_level1": "3",
+      "n": 70,
+      "beta": -8.570454960568728,
+      "p_two": 0.0002
+    },
+    {
+      "excluded_level1": "4",
+      "n": 72,
+      "beta": -8.996111188235636,
+      "p_two": 0.0002
+    },
+    {
+      "excluded_level1": "5",
+      "n": 71,
+      "beta": -8.56693322933545,
+      "p_two": 0.0004
+    },
+    {
+      "excluded_level1": "6",
+      "n": 63,
+      "beta": -8.909507447807828,
+      "p_two": 0.002
+    },
+    {
+      "excluded_level1": "7",
+      "n": 76,
+      "beta": -8.945585194355402,
+      "p_two": 0.0004
+    },
+    {
+      "excluded_level1": "8",
+      "n": 63,
+      "beta": -7.656741099642567,
+      "p_two": 0.0008
+    },
+    {
+      "excluded_level1": "9",
+      "n": 74,
+      "beta": -6.367709260217173,
+      "p_two": 0.0006
+    }
+  ],
   "limits": [
     "The first indexed GBIF host year is an upper bound on the true date of plant introduction, NOT plant arrival or naturalization.",
     "Higher observation effort can move recorded first years earlier even if plants arrived at identical dates.",
