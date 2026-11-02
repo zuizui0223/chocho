@@ -1,0 +1,48 @@
+name: chocho colonial history × island resource Q2 screen
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_colonial_duration_resource_q2.py
+      - .github/workflows/chocho-colonial-duration-island-q2.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  historic-duration-source-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: numpy
+        run: python -m pip install 'numpy>=1.26,<3'
+      - name: Independently test historic four-empire duration against island resource share
+        run: |
+          python scripts/test_colonial_duration_resource_q2.py \
+            --region-metrics results/island-mainland-resource-q1/region_metrics.csv \
+            --area-metrics results/island-mainland-resource-area/region_area_metrics.csv \
+            --empire-crosswalk results/colonial-history-island-q2/island_lenzner_empire_crosswalk.csv \
+            --output results/colonial-history-island-q2/duration_resource_screen_audit.json
+      - name: Upload source-locked result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-colonial-duration-island-q2
+          path: results/colonial-history-island-q2/duration_resource_screen_audit.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save descriptive result to branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/colonial-history-island-q2/duration_resource_screen_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test area-matched historical exposure in potential island resource [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
