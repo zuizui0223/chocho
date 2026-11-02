@@ -1,0 +1,46 @@
+name: chocho three-gate targeted documentary host chronology integration
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/join_three_gate_targeted_hostyears.py
+      - .github/workflows/chocho-three-gate-targeted-hostyear-join.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  integrate-targeted-hostyear:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Join source-audited three-gate cases with all case-targeted botanical indexed dates
+        run: |
+          python -m py_compile scripts/join_three_gate_targeted_hostyears.py
+          python scripts/join_three_gate_targeted_hostyears.py \
+            --original-three-gate-v02 results/three-gate-integrated-v02/island_species_three_gate_case_matrix.csv \
+            --targeted-host-years results/q4-targeted-literature-hostyear/literature_case_host_year_order.csv \
+            --targeted-host-audit results/q4-targeted-literature-hostyear/targeted_literature_hostyear_audit.json \
+            --out-dir results/three-gate-integrated-targeted-v03
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-three-gate-47-case-targeted-hostyear-v03
+          path: results/three-gate-integrated-targeted-v03/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit summary and case-level evidence with all last-gate flags unresolved
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-integrated-targeted-v03/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Integrate targeted host indexed chronology into island butterfly three-gate cases [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
