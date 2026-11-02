@@ -28,7 +28,13 @@ def get_worldwide_one(gbif_species_key: int) -> dict:
             "hasCoordinate":"true","hasGeospatialIssue":"false",
             "occurrenceStatus":"PRESENT","facet":"country",
             "facetLimit":300,"limit":0}
-    data=query(GBIF_SEARCH,params)
+    try:
+        data=query(GBIF_SEARCH,params)
+    except Exception as ex:
+        raise RuntimeError(
+            f"Global GBIF facet failed: taxonKey={gbif_species_key}; "
+            f"query_fields={params}; original_error={type(ex).__name__}: {ex}"
+        ) from ex
     countries=next((x.get("counts",[]) for x in data.get("facets",[])
                     if x.get("field","").upper()=="COUNTRY"),[])
     if len(countries)>=300:
