@@ -25,8 +25,12 @@ def readcsv(path):
         return list(csv.DictReader(f))
 def csvwrite(path, data):
     if not data:return
+    fields=list(data[0])
+    for row in data[1:]:
+        for name in row:
+            if name not in fields: fields.append(name)
     with path.open("w",newline="",encoding="utf-8") as f:
-        writer=csv.DictWriter(f,fieldnames=list(data[0]))
+        writer=csv.DictWriter(f,fieldnames=fields)
         writer.writeheader()
         writer.writerows(data)
 def query_once(taxon,geo):
