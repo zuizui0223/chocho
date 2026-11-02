@@ -124,14 +124,16 @@ def summarize_period(geometry,observations,period,*,radius_km=5):
 def run(geometry_path,botany_path):
     geometry=json.loads(geometry_path.read_text(encoding="utf8"))
     botany=json.loads(botany_path.read_text(encoding="utf8"))
-    if geometry["summary"]["paired_sites"]!=79 or geometry["summary"]["paired_islands"]!=36:
-        raise ValueError("Wrong source GSHHG/WPI cohort")
-    if botany["sample_design"]["selected_pairs"]!=79 or botany["sample_design"]["botanical_search_radius_km"]!=5:
-        raise ValueError("Wrong botanical 79-site / 5km census")
-    if len(botany["observations"])!=316 or botany["match_audit"]["gbif_strict_exact_accepted_species_resolved"]<170:
+    if len(geometry["rows"])!=79 or geometry["summary"]["focal_islands"]!=36:
+        raise ValueError("Wrong locked candidate GSHHG/WPI79 cohort")
+    n = geometry["summary"]["paired_sites"]
+    if (botany["sample_design"]["selected_pairs"]!=n or
+        botany["sample_design"]["botanical_search_radius_km"]!=5):
+        raise ValueError("Botanical census must exactly cover all eligible disjoint geometry sites")
+    if len(botany["observations"])!=4*n or botany["match_audit"]["gbif_strict_exact_accepted_species_resolved"]<170:
         raise ValueError("Expected source complete record and strict taxonomy gate")
-    sites={(str(x["island_id"]),int(x["port_id"])):x for x in geometry["rows"]}
-    if len(sites)!=79:raise ValueError("Duplicate or missing WPI IDs")
+    sites={(str(x["island_id"]),int(x["port_id"])):x for x in geometry["rows"] if x["status"]=="PAIRED"}
+    if len(sites)!=n:raise ValueError("Duplicate or missing eligible WPI IDs")
     result={
         "schema":"chocho_WPI79_5km_botanical_offline_geometry_effort_sensitivity_v1",
         "status":"OBSERVATIONAL_SENSITIVITY_ONLY_NO_CAUSAL_NUTRIENT_GATE",
@@ -139,6 +141,8 @@ def run(geometry_path,botany_path):
         "source_geometry_gshhg_sha256":geometry["source_gshhg_sha256"],
         "source_site_geometry_sha256_claim":botany["site_geometry_sha256"],
         "source_sample_79_WPI_ports_36_islands":True,
+        "eligible_port_nonport_pairs":n,
+        "eligible_independent_islands":len({r["island_id"] for r in sites.values()}),
         "periods":{p:summarize_period(sites,botany["observations"],p) for p in
                    ("early_2001_2010","later_2011_2024")},
         "limitations":[
