@@ -70,3 +70,20 @@ The case-targeted botanical search extends a **different** sample from the origi
 The nonrandom 31-species GBIF download screen includes 920 source-defined newly enabled butterfly×island opportunity cells and only 13 with an indexed butterfly record. All 13 happen to be in 2023-WPI-port-bearing WGSRPD3 regions, but the species- and region-matched port score is not distinguishable from the conditional randomized distribution (two-sided p=0.2458); neither is wing×port (p=0.2181). Requiring an additional other-butterfly-indexed observation stratum leaves port p=0.574 and wing×port p=0.267. The observation activity surrogate itself is related to where the 13 records occur; it is not an independent ecological supply mechanism. Source: `results/q3-wing-port-index-screen-v02/wing_port_observation_screen_audit.json`.
 
 **Primary empirical claim maintained:** human-mediated host plant redistribution expands **potential** butterfly resource geography disproportionately on islands. **Hypothesis still open:** if matched source-year risk sets become available, assess which among resource, species-relevant climate and access histories best predicts *subsequent indexed butterflies*, and separately whether the result generalizes to independently documented naturalization/establishment. No original positive results are invalidated by a failure to identify a causal arrival mechanism.
+
+
+### Botanical effort-controlled port–resource evidence
+
+A new complete-case sensitivity (98/126 islands with GBIF indexed all-plant reporting effort) independently queries WCVP introduced species, HOSTS-selected introduced host taxa, WPI ports and GBIF botanical collection intensity. All source files are audit-pinned. **Modern ports are positively associated with the quantity of introduced flora, even after conditioning on native flora richness, region area, broad Level1 biogeography and indexed botanical records**:
+
+- WCVP all introduced accepted plant species: β=+0.2445 in log(1+species) per log2(1+WPI ports), corresponding to +27.7%, 4,999 Level1×area-half permutations, two-sided centered p=0.0012.
+- HOSTS-selected introduced larval-host taxa: β=+0.1639, +17.8%, two-sided centered p=0.0110; the native butterfly-resource baseline is controlled.
+- WCVP introduced/native species log-ratio still has a positive port association (β=+0.2429; p=0.0036).
+- WPI itself also positively correlates with indexed botanical reporting effort: β=+0.5239, +68.9%, p=0.0002; this is a source of confounding, not an independent access mechanism.
+- Sensitivities: restricting to indexed-port islands only (n=69) β=+0.2354, p=0.0222; botanical effort ≥1,000 records (n=71) β=+0.2193, p=0.0466; adjusting pre-1900 botanical effort instead of all-years β=+0.2225, p=0.0014.
+
+The 28 unqueried/non-comparable islands have median area ≈25,120 km² versus ≈956 km² among the 98 included. This excluded cohort includes Japan, Great Britain and Cuba; geographic missingness and human-population/port/recording confounding prevent a causal or all-islands generalization. GBIF reporting itself may be affected by historic transport and settlement, so recording-effort adjustment is **sensitivity**, not causal control.
+
+**The three-gate inference has therefore advanced most strongly in the *upstream plant-supply* link, not the hypothesized port-mediated butterfly arrival, wing-size interaction or colonization-delay mechanism.** These remain distinct open tests and require genuine island×species×year observation/risk sets or independent establishment dates.
+
+Full source and audit: [effort-adjusted WPI/flora model](../results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json), [case-island model input](../results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv), and [ecological interpretation and selection caveat](./three_gate_port_resource_source_results_20261102.md).
