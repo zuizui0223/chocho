@@ -117,7 +117,8 @@ def main():
           "nasa_decade_minus_1981_2000_T2M_C":cc["T2M_decade_before_minus_1981_2000_C"],
           "nasa_decadal_T2M_trend_C_per_decade":cc["T2M_decadal_trend_at_first_record_C_per_decade"],
           "WPI_indexed_port_count_2023":port_n if port_n is not None else "",
-          "leptraits_wingspan_source_units":proxy if proxy is not None else "",
+          "leptraits_wingspan_cm":proxy if proxy is not None else "",
+          "leptraits_wingspan_mm":10*proxy if proxy is not None else "",
           "leptraits_wingspan_source_column":origin,
           "geb_prescaled_wing_size_proxy":geb_wing_proxy if geb_wing_proxy is not None else "",
           "diapause_stage_LepTraits_raw":diapause[0] if diapause else "",
@@ -132,6 +133,8 @@ def main():
     joint={
         "schema":"chocho_3gate_literature_host_climate_port_wing_integrated_v0.1",
         "status":"SAME_WGSRPD3_MACROREGION_PROXY_SUPPORT_NOT_CAUSAL_GATE_IDENTIFICATION",
+        "wing_measurement_source":"LepTraits 1.0 Shirey et al. 2022, Scientific Data 9:382; wingspan consensus original unit cm (converted x10 to mm in separate column)",
+        "wing_measurement_source_doi":"10.1038/s41597-022-01473-5",
         "source_cohorts":{
             "literature_leads":47,
             "GEB_species":239,
@@ -148,7 +151,7 @@ def main():
             "literature_rows_with_host_index_prior_to_butterfly_record":sum(bool(r["hosts_with_GBIF_index_before_butterfly_literature"]) for r in details),
             "literature_rows_with_10yr_prefirst_T2M":sum(bool(r["nasa_decade_prior_mean_T2M_C"]!="") for r in details),
             "literature_rows_with_WPI_port_count":sum(r["WPI_indexed_port_count_2023"]!="" for r in details),
-            "literature_rows_with_wing_measure":sum(r["leptraits_wingspan_source_units"]!="" for r in details),
+            "literature_rows_with_wing_measure":sum(r["leptraits_wingspan_cm"]!="" for r in details),
             "literature_rows_with_all_recorded_proxies":sum(r["full_temporal_proxy_context"] for r in details),
             "distinct_species_with_all_recorded_proxies":len({r["species"] for r in details if r["full_temporal_proxy_context"]}),
         },
