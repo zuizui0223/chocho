@@ -41,4 +41,4 @@ def test_exact_island_27_pair_source_quality_from_original_document():
                         "N_scored_candidate_host_species":2,
                         "N_scored_other_plant_species":5})
     z={"site_period_facets":312,"predeclared_source_pairs":78,"observations":observations}
-    assert len(m.focal_27_eligibility(z))==30
+    assert len(m.focal_27_eligibility(z))==27
