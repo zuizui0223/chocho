@@ -20,7 +20,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Offline ecological estimator tests
-        run: python -m pytest -q tests/test_exploratory_port_nutrient_global_prevalence.py
+        run: |
+          python -m pip install --quiet pytest
+          python -m pytest -q tests/test_exploratory_port_nutrient_global_prevalence.py
       - name: Retrieve externally pinned German Ellenberg N source
         run: |
           curl -fLsS --retry 3 \
