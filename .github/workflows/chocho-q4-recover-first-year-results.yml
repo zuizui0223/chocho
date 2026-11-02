@@ -1,0 +1,82 @@
+name: chocho Q4 recover completed GBIF first-year artifact
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - .github/workflows/chocho-q4-recover-first-year-results.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  recover-first-year-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Restore successful 500-pair GBIF computation from preceding source run
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q4-first-year-frozen-500-pilot
+          run-id: 41396012274
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: inputs/source
+      - name: Verify source result and classify GBIF query failure modes
+        run: |
+          python - <<'PY'
+          import csv,json,collections,shutil,hashlib
+          from pathlib import Path
+          root=Path('inputs/source')
+          target=Path('results/q4-gbif-first-year-pilot')
+          target.mkdir(parents=True,exist_ok=True)
+          names=('gbif_first_year_pilot_audit.json','gbif_first_year_pilot_pairs.csv','gbif_taxon_resolution.csv','island_plant_effort_year_facets.csv')
+          for name in names:
+              found=list(root.rglob(name))
+              if len(found)!=1:raise SystemExit(f'Expected one source file {name}: found {len(found)}')
+              shutil.copy2(found[0],target/name)
+          audit=json.loads((target/names[0]).read_text(encoding='utf8'))
+          with (target/names[1]).open(encoding='utf8',newline='') as f:
+              rows=list(csv.DictReader(f))
+          with (target/names[2]).open(encoding='utf8',newline='') as f:
+              taxa=list(csv.DictReader(f))
+          with (target/names[3]).open(encoding='utf8',newline='') as f:
+              effort=list(csv.DictReader(f))
+          status=collections.Counter(x['q4_pilot_status'] for x in rows)
+          if len(rows)!=500 or len(taxa)!=243 or len(effort)!=122 or status['DATED_OCCURRENCE_FOUND']!=219:
+              raise SystemExit(f'Source audit drift {len(rows)} {len(taxa)} {len(effort)} {status}')
+          if audit['source_inputs']['fixed_host_island_pairs']!=500 or audit['pilot_dated_pairs']!=219:
+              raise SystemExit('Audited Q4 first-year counts drift')
+          errors=collections.Counter()
+          examples={}
+          for r in rows:
+              if r['q4_pilot_status']!='GBIF_QUERY_FAILED':continue
+              text=r['error']
+              if 'HTTP Error 400' in text or 'HTTP 400' in text:kind='HTTP_400'
+              elif 'HTTP Error 429' in text:kind='HTTP_429'
+              elif 'HTTP Error 500' in text:kind='HTTP_500'
+              elif 'Timeout' in text or 'timed out' in text:kind='TIMEOUT'
+              elif 'year facet' in text.lower():kind='FACET_INCOMPLETE'
+              else:kind='OTHER'
+              errors[kind]+=1
+              if kind not in examples:examples[kind]=text[:250]
+          fail={'schema':'chocho_q4_gbif_first_year_query_failure_diagnostic_v0.1',
+                'source_artifact_run':41396012274,
+                'source_artifact_id':13119557622,
+                'pilot_pairs':500,'dated':219,
+                'failures':dict(errors),'examples':examples,
+                'not_absence':True,'retry_should_preserve_original_500_pairs':True}
+          (target/'query_failure_diagnostic.json').write_text(json.dumps(fail,indent=2,ensure_ascii=False)+'\n')
+          print('RECOVERED_Q4_HISTORICAL_PLANT_YEARS',json.dumps(fail))
+          PY
+      - name: Commit exact recovered data without rerunning remote GBIF queries
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-gbif-first-year-pilot/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Recover 500-pair historical plant GBIF dates after Git push conflict [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
