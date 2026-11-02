@@ -1,0 +1,50 @@
+name: chocho SoilGrids 250m topsoil N WCS feasibility
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_port_soilgrids_N_pilot.py"
+      - ".github/workflows/chocho-port-soilgrids-n-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  eight-point-independent-soil-model-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-reading libraries
+        run: python -m pip install --quiet rasterio pyproj
+      - name: Obtain original no-overlap WPI78 coastline sites
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/nsoil
+          gh run download 41402076182 --name strict-disjoint-coastal-sites-wpi79 \
+            --dir /tmp/nsoil --repo zuizui0223/chocho
+          test -s /tmp/nsoil/strict_disjoint_wpi79_sites.json
+      - name: Probe eight coast sites in four countries via SoilGrids WCS
+        run: |
+          python -u scripts/exploratory_port_soilgrids_N_pilot.py \
+            --geometry /tmp/nsoil/strict_disjoint_wpi79_sites.json \
+            --out /tmp/nsoil/topsoil_N_feasibility_receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('/tmp/nsoil/topsoil_N_feasibility_receipt.json').read_text())
+          assert len(x['sites'])==8
+          assert x['schema']=='chocho_ISRIC_soilgrids_v2_N_WCS_8point_feasibility_v1'
+          print('SOILGRIDS_FOOTPRINT_AND_SOURCE_STATUS',x['valid_pixels'],len(x['sites']))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WPI78-ISRIC-soilgrids-N-wcs-feasibility
+          path: /tmp/nsoil/topsoil_N_feasibility_receipt.json
+          retention-days: 30
