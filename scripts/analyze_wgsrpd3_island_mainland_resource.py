@@ -19,7 +19,7 @@ from pathlib import Path
 # and are not inferred from a region's butterfly records or outcome.
 STRICT_ISLAND_CODES = frozenset("""
 ALD ALU AND ARU ASC ASP ATP AZO BAH BAL BER BIS BOR BOU CAY CGS CHH
-CKI COM COO COR CPI CRL CRZ CTM CUB CVI CYP DOM DSV EAI EAS FAL
+CKI CNY COM COO COR CPI CRL CRZ CTM CUB CVI CYP DOM DSV EAI EAS FAL
 FIJ FOR GAL GGI GIL GNL GRB HAI HAW HBI HMD ICE IRE JAM JAP JAW
 JNF KEG KER KRI KUR KZN LDV LEE LIN LSI MAQ MAU MCI MCS MDG
 MDR MDV MOL MPE MRN MRQ MRS MXI NCB NFK NFL NLA NNS NRU NUE
@@ -135,6 +135,17 @@ def main():
     names = wgsrpd_names(a.wgsrpd3_table)
 
     missing_islands = sorted(STRICT_ISLAND_CODES - names.keys())
+    # Guard against silently classifying explicitly named island regions
+    # as mainland (the earlier v0.1 inadvertently did this for CNY Canary Is.).
+    explicit_named_islands = {
+        code for code, name in names.items()
+        if " Is." in name or " Islands" in name or "Archipelago" in name
+    }
+    misclassified_named_islands = sorted(explicit_named_islands - STRICT_ISLAND_CODES)
+    if misclassified_named_islands:
+        raise RuntimeError(f"Named island regions classed mainland: {misclassified_named_islands}")
+    if len(STRICT_ISLAND_CODES) != 126 or "CNY" not in STRICT_ISLAND_CODES or "RHO" in STRICT_ISLAND_CODES:
+        raise RuntimeError("Incorrect 126-region geographical island scope")
     if missing_islands or len(panel) != 239:
         raise RuntimeError(f"Region codes not in official WGSRPD3={missing_islands}, panel_n={len(panel)}")
     known_codes = set(names) & set(level1)
@@ -225,13 +236,15 @@ def main():
     p_two = None if observed is None else (1 + sum(abs(x) >= abs(observed)
                    for x in draws)) / (1 + len(draws))
     outcome = {
-        "schema": "chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.1",
+        "schema": "chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.2",
         "status": "RECONSTRUCTED_FROM_PINNED_WCVP_HOSTS",
         "design": "Descriptive binary butterfly x WGSRPD3 potential host-resource membership, not realized occupancy",
         "source_commits": {"wcvp": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
                            "hosts": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
                            "wgsrpd": "52da7828aba9d461dd133c27b3bd7a4407161f54"},
-        "classification": {"strict_island_codes": sorted(STRICT_ISLAND_CODES),
+        "classification": {"corrected_named_island": "CNY Canary Is.; RHO Rhode I. is a US mainland state",
+                           "official_name_island_test_count": len(explicit_named_islands),
+                           "strict_island_codes": sorted(STRICT_ISLAND_CODES),
                            "excluded_mixed_codes": sorted(MIXED_CODES),
                            "mainland": "remaining Level-3 regions, excluding mixed"},
         "panel_total": diagnostic,
