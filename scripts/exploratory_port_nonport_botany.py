@@ -88,6 +88,8 @@ def map_gbif(hosts: list[dict], *, workers: int = 6) -> tuple[dict[int,dict], li
 
 def choose_pilot(sites: list[dict], n: int) -> list[dict]:
     paired = [x for x in sites if x["status"] == "PAIRED"]
+    if n < 0:
+        return sorted(paired, key=lambda x:(int(x["island_id"]),int(x["port_id"])))
     by_island = defaultdict(list)
     for x in paired:
         by_island[x["island_id"]].append(x)
@@ -108,11 +110,11 @@ def choose_pilot(sites: list[dict], n: int) -> list[dict]:
     return sorted(selected,key=lambda x:(int(x["island_id"]),x["port_id"]))
 
 
-def facet_species(lat: float, lon: float, period: str) -> dict:
+def facet_species(lat: float, lon: float, period: str, radius_km: int = 1) -> dict:
     params = {
         "taxonKey":6,
         "year":PERIODS[period],
-        "geoDistance":f"{lat:.7f},{lon:.7f},1km",
+        "geoDistance":f"{lat:.7f},{lon:.7f},{radius_km}km",
         "hasCoordinate":"true",
         "hasGeospatialIssue":"false",
         "occurrenceStatus":"PRESENT",
@@ -197,44 +199,68 @@ def summarise(receipt: dict, *, min_plant_records: int, min_trait_species: int) 
     for period in PERIODS:
         q=[x for x in paired if x["period"]==period]
         valid=[x["port_minus_nonport_candidate_host_mean_N"] for x in q if x["data_adequate_for_trait_composition_compare"]]
+        by_island=defaultdict(list)
+        for x in q:
+            if x["data_adequate_for_trait_composition_compare"]:
+                by_island[x["island_id"]].append(x["port_minus_nonport_candidate_host_mean_N"])
+        island_values={island:sum(values)/len(values) for island,values in by_island.items()}
+        site_coverage=lambda key: sum(x[key]>0 for x in q)
         stats[period]={
             "pairs_observed":len(q), "pairs_trait_comparable":len(valid),
+            "independent_islands_trait_comparable":len(island_values),
             "paired_mean_N_differences":valid,
-            "mean_of_paired_differences":sum(valid)/len(valid) if valid else None,
+            "mean_of_paired_differences_unweighted_by_port":sum(valid)/len(valid) if valid else None,
+            "island_weighted_mean_N_difference":(
+                sum(island_values.values())/len(island_values) if island_values else None),
             "positive_paired_differences":sum(x>0 for x in valid),
+            "islands_positive_mean_N_differences":sum(x>0 for x in island_values.values()),
+            "pairs_both_sides_any_general_botanical_record":sum(
+                x["port_all_plant_records"]>0 and x["nonport_all_plant_records"]>0 for x in q),
+            "pairs_both_sides_30plus_general_plant_records":sum(
+                x["port_all_plant_records"]>=30 and x["nonport_all_plant_records"]>=30 for x in q),
             "not_a_significance_test":True,
-            "data_gate_passed":len(valid)>=6,
+            "data_gate_passed":len(island_values)>=6,
         }
     return {"periods":stats,
             "pair_rows":sorted(paired,key=lambda x:(x["period"],int(x["island_id"])))}
 
 
-def run(sites_path: Path, traits_path: Path, *, n_pilot: int,
+def run(sites_path: Path, traits_path: Path, *, n_pilot: int, radius_km: int,
         min_plant_records: int, min_trait_species: int) -> dict:
     full = json.loads(sites_path.read_text(encoding="utf8"))
     if (len(full["rows"]),full["summary"]["focal_islands"]) != (79,36):
         raise ValueError("Site sample must be from WPI79 locked geometry gate")
+    if radius_km not in (1,5):
+        raise ValueError("Only predeclared 1km primary pilot or 5km equal-footprint comparison allowed")
     selected=choose_pilot(full["rows"],n_pilot)
     hosts, counts=load_data(HOSTS,traits_path)
     resolved, mapped=map_gbif(hosts)
+    def acquire_item(item):
+        pair,site_type,period=item
+        lat=pair["port_sample_lat"] if site_type=="port" else pair["nonport_lat"]
+        lon=pair["port_sample_lon"] if site_type=="port" else pair["nonport_lon"]
+        if lat is None or lon is None:
+            raise ValueError("Unpaired geometry in selected sites")
+        facet=facet_species(float(lat),float(lon),period,radius_km=radius_km)
+        summary=plant_summary(facet,resolved)
+        return {"island_id":pair["island_id"],"port_id":pair["port_id"],
+                "site_type":site_type,"period":period,"latitude":lat,
+                "longitude":lon,**summary}
+    items=[(pair,site_type,period) for pair in selected
+           for site_type in ("port","nonport") for period in PERIODS]
     observations=[]
-    for pair in selected:
-        for site_type in ("port","nonport"):
-            lat=pair["port_sample_lat"] if site_type=="port" else pair["nonport_lat"]
-            lon=pair["port_sample_lon"] if site_type=="port" else pair["nonport_lon"]
-            if lat is None or lon is None:
-                raise ValueError("Unpaired geometry in selected sites")
-            for period in PERIODS:
-                facet=facet_species(float(lat),float(lon),period)
-                summary=plant_summary(facet,resolved)
-                observations.append({"island_id":pair["island_id"],"port_id":pair["port_id"],
-                                     "site_type":site_type,"period":period,"latitude":lat,
-                                     "longitude":lon,**summary})
-                print("BOTANICAL_SITE",pair["island_id"],pair["port_id"],site_type,period,
-                      "plants",summary["all_plant_records"],
-                      "species",summary["all_plant_species_keys"],
-                      "N_hosts",summary["candidate_hosts_with_N_indexed_species"],flush=True)
-                time.sleep(0.12)
+    # Bounded I/O concurrency; deterministic sorted data after all requests.
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        future_map={pool.submit(acquire_item,item):item for item in items}
+        for future in as_completed(future_map):
+            row=future.result()
+            observations.append(row)
+            print("BOTANICAL_SITE",row["island_id"],row["port_id"],
+                  row["site_type"],row["period"],
+                  "plants",row["all_plant_records"],
+                  "species",row["all_plant_species_keys"],
+                  "N_hosts",row["candidate_hosts_with_N_indexed_species"],flush=True)
+    observations.sort(key=lambda x:(int(x["island_id"]),int(x["port_id"]),x["site_type"],x["period"]))
     result={
         "schema":"chocho_port_nonport_botanical_pilot_source_20261102_v1",
         "status":"EXPLORATORY_GBIF_INDEXED_PLANT_COMPOSITION_NOT_NITROGEN_EFFECT",
@@ -243,7 +269,7 @@ def run(sites_path: Path, traits_path: Path, *, n_pilot: int,
         "site_selection_method":"blind to focal botanical and butterfly responses; one port per island across four prior-effort quartiles",
         "sample_design":{"selected_islands":len(selected),"selected_pairs":len(selected),
                          "intended_observations":len(selected)*2*len(PERIODS),
-                         "period_windows":PERIODS,"botanical_search_radius_km":1,
+                         "period_windows":PERIODS,"botanical_search_radius_km":radius_km,
                          "minimum_general_plant_records":min_plant_records,
                          "minimum_N_scored_host_species":min_trait_species},
         "match_audit":{"source_host_counts":counts,
@@ -271,11 +297,14 @@ def main():
     p.add_argument("--sites",type=Path,required=True)
     p.add_argument("--ellenberg",type=Path,required=True)
     p.add_argument("--out",type=Path,required=True)
-    p.add_argument("--pilot-pairs",type=int,default=12)
+    p.add_argument("--pilot-pairs",type=int,default=12,
+                   help="-1 means all independently paired WPI79 sites; 0 means one per island")
+    p.add_argument("--radius-km",type=int,choices=(1,5),default=1)
     p.add_argument("--min-general-plant-records",type=int,default=30)
     p.add_argument("--min-N-trait-species",type=int,default=2)
     args=p.parse_args()
     out=run(args.sites,args.ellenberg,n_pilot=args.pilot_pairs,
+            radius_km=args.radius_km,
             min_plant_records=args.min_general_plant_records,
             min_trait_species=args.min_N_trait_species)
     args.out.parent.mkdir(parents=True,exist_ok=True)
