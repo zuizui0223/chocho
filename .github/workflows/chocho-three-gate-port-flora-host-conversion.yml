@@ -1,0 +1,49 @@
+name: chocho three-gate port versus alien-flora host conversion
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_three_gate_port_flora_to_host_conversion.py
+      - .github/workflows/chocho-three-gate-port-flora-host-conversion.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  port-flora-host-conversion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric regression dependency
+        run: python -m pip install 'numpy>=1.26,<3'
+      - name: Test host-functionalization beyond entire introduced flora with island and botanical reporting controls
+        run: |
+          python -m py_compile scripts/test_three_gate_port_flora_to_host_conversion.py
+          python scripts/test_three_gate_port_flora_to_host_conversion.py \
+            --all-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --host-taxa results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --botanical-effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --out-dir results/three-gate-port-flora-host-conversion
+      - name: Keep source-backed regression audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-three-gate-port-introduced-flora-host-conversion
+          path: results/three-gate-port-flora-host-conversion/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save only verified output on draft analysis branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-port-flora-host-conversion/island_port_flora_host_conversion_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Compare port alien flora, larval host and butterfly resource steps without causal mediation [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
