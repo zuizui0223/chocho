@@ -61,12 +61,19 @@ def load_data(host_csv: Path, ellenberg_tsv: Path) -> tuple[list[dict], dict]:
         )
     if len({x["name"] for x in rows}) != len(rows):
         raise ValueError("Duplicate exact-name host matches; must resolve before analysis.")
+    matched_names = {x["name"] for x in rows}
+    unmatched_ports = [
+        int(x["ports"]) for x in hosts if x["host_name"].strip() not in matched_names
+    ]
     return rows, {
         "n_port_candidate_host_species": len(hosts),
         "n_german_ellenberg_n_valued_names": sum(
             v["N"] is not None for v in table.values()
         ),
         "n_exact_species_matches_with_N": len(rows),
+        "n_unmatched_host_species": len(unmatched_ports),
+        "median_ports_matched": statistics.median([x["ports"] for x in rows]) if rows else None,
+        "median_ports_unmatched": statistics.median(unmatched_ports) if unmatched_ports else None,
         "match_fraction": len(rows) / len(hosts) if hosts else None,
     }
 
@@ -119,7 +126,71 @@ def bootstrap_genus(rows: list[dict], *, seed: int, n_draws: int) -> list[float]
     return sorted(draws)
 
 
-def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int) -> dict:
+def within_genus_test(rows: list[dict], *, seed: int = 23211201,
+                      permutations: int = 4999) -> dict:
+    """Conditional label permutation: exchange N scores only within genus.
+
+    A positive result here is not sufficient to attribute port records to N,
+    but a null result limits genus-independent interpretation.
+    """
+    groups: dict[str, list[dict]] = defaultdict(list)
+    for row in rows:
+        groups[row["genus"]].append(row)
+    eligible = [
+        v for v in groups.values()
+        if len(v) >= 2 and len({row["N"] for row in v}) >= 2
+    ]
+
+    def slope(seq: list[list[dict]]) -> float:
+        numerator = denominator = 0.0
+        for group in seq:
+            xbar = statistics.mean(row["N"] for row in group)
+            ybar = statistics.mean(math.log1p(row["ports"]) for row in group)
+            for row in group:
+                dx = row["N"] - xbar
+                numerator += dx * (math.log1p(row["ports"]) - ybar)
+                denominator += dx * dx
+        return numerator / denominator if denominator else math.nan
+
+    obs = slope(eligible)
+    state = seed & 0xFFFFFFFF
+
+    def rand() -> float:
+        nonlocal state
+        state = (1664525 * state + 1013904223) & 0xFFFFFFFF
+        return state / 4294967296.0
+
+    null = []
+    for _ in range(permutations):
+        shuffled_groups = []
+        for group in eligible:
+            values = [x["N"] for x in group]
+            for i in range(len(values) - 1, 0, -1):
+                j = int(rand() * (i + 1))
+                values[i], values[j] = values[j], values[i]
+            shuffled_groups.append([
+                {**row, "N": values[i]} for i, row in enumerate(group)
+            ])
+        null.append(slope(shuffled_groups))
+    extreme = sum(abs(value) >= abs(obs) for value in null)
+    null.sort()
+    return {
+        "eligible_genera": len(eligible),
+        "eligible_species": sum(len(g) for g in eligible),
+        "log1p_port_count_slope_per_N_point": obs,
+        "nominal_relative_change_per_N_point": math.expm1(obs),
+        "permutation_draws": permutations,
+        "permutation_seed": seed,
+        "permutation_two_sided_p": (extreme + 1) / (permutations + 1),
+        "null_95_percentiles": [
+            null[round((len(null) - 1) * 0.025)],
+            null[round((len(null) - 1) * 0.975)],
+        ] if null else [],
+    }
+
+
+def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int,
+            permutations: int) -> dict:
     if len(rows) < 3:
         raise ValueError("Fewer than three matched species; no correlation is estimable.")
     upper = [r["ports"] for r in rows if r["N"] >= 7]
@@ -155,6 +226,7 @@ def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int) -> dict:
         "genus_resampled_descriptive_interval_95": [q(0.025), q(0.975)],
         "bootstrap_draws": n_draws,
         "bootstrap_seed": seed,
+        "within_genus": within_genus_test(rows, permutations=permutations),
         "sensitivity_excluding_top_10_percent_ports": {
             "cutoff_inclusive": cutoff,
             "n": sum(r["ports"] <= cutoff for r in rows),
@@ -168,6 +240,8 @@ def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int) -> dict:
             "N is a plant site-fertility affinity indicator, not direct tissue nitrogen.",
             "No measured wastewater nitrogen loading or site-specific soil nitrogen.",
             "Genus bootstrap measures subset resampling variability, not causal uncertainty.",
+        "The within-genus contrast has restricted scope and limited statistical power.",
+        "Taxonomic matching selects high-observation species (see matched/unmatched medians).",
         ],
     }
 
@@ -179,10 +253,12 @@ def main() -> None:
                         help="Local external Ellenberg_VascularPlants.csv (tab-separated)")
     parser.add_argument("--bootstrap", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=72819)
+    parser.add_argument("--permutations", type=int, default=4999)
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
     rows, meta = load_data(args.ports, args.ellenberg)
-    result = analyze(rows, meta, n_draws=args.bootstrap, seed=args.seed)
+    result = analyze(rows, meta, n_draws=args.bootstrap, seed=args.seed,
+                     permutations=args.permutations)
     out = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
