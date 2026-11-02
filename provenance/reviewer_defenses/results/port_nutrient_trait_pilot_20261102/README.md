@@ -62,6 +62,9 @@ in this repository.
 | Within-genus fixed-effect slope, log(1+ports) per N point | **+0.105** |
 | 4,999 within-genus N permutations, two-sided | **p≈0.38**, NOT supported |
 | Median ports: N-matched / N-unmatched species | **28 / 12** |
+| Same-species subset: nutrient N versus light L | ρ=+0.341 vs **+0.025**; Δρ≈+0.316 (182 spp.) |
+| Same-species subset: nutrient N versus moisture F | ρ=+0.395 vs **+0.043**; Δρ≈+0.352 (155 spp.) |
+| Same-species subset: nutrient N versus salinity S | ρ=+0.344 vs **−0.023**; Δρ≈+0.366 (182 spp.) |
 
 The overall positive rank correlation is robust to removal of very frequent
 species and to leaving out any one genus, but the small eligible within-genus
@@ -70,6 +73,12 @@ centric matching is selective: matched species have more indexed ports even
 before any trait model. A genus-cluster resampling interval for the overall
 correlation was positive in exploratory calculations, but it does not correct
 selection, geographic range, observation effort, or causal confounding.
+
+The positive nutrient pattern is stronger than the similarly calculated
+light, moisture, or salinity trait–port associations on their respective
+identical-species subsets. This makes the *trait-specific descriptive pattern*
+more interesting, but does not substitute for measured nitrogen exposure,
+plant range size, matched non-port coasts, or independently verified host use.
 
 **Conclusion:** a positive association in **port-indexed plant catalogues**,
 not a demonstrated nutrient-enrichment mechanism. The existing positive GEB,
