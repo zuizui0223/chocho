@@ -46,3 +46,14 @@ def test_same_sites_and_times_background_differencing():
     assert math.isclose(later["host_minus_background_N"]["island_equal_weight_mean"],-.5)
     missing=m.pair_rows([site("port",a,7,5,nb=1),site("nonport",a,5,6)])
     assert missing[0]["difference_in_differences_hosts_minus_other_N"] is None
+
+
+def test_partial_raw_site_cache_preserves_exact_identity(tmp_path):
+    p=tmp_path/"partial.jsonl"
+    p.write_text('{"island_id":"7","port_id":41,"side":"port","period":"early_2001_2010","facet":{}}\n')
+    rows=m.records_from_cache(p)
+    assert len(rows)==1 and rows[0]["port_id"]==41
+    p.write_text(p.read_text()+p.read_text())
+    import pytest
+    with pytest.raises(ValueError,match="Duplicate site facets"):
+        m.records_from_cache(p)

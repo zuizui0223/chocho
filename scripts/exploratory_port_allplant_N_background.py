@@ -19,6 +19,8 @@ import re
 import statistics
 import sys
 import time
+import threading
+import urllib.error
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -207,12 +209,37 @@ def collect_observations(geometry: Path, traits_map: Path, source: Path, output:
     site_lookup={(r["island_id"],r["port_id"]):r for r in sites}
     remaining=[x for x in ids if x not in done]
 
+    pace_lock = threading.Lock()
+    next_allowed = [0.0]
     def acquire(item):
         island,port,side,period=item
         p=site_lookup[(island,port)]
         lat,lon=(p["port_sample_lat"],p["port_sample_lon"]) if side=="port" else (
             p["nonport_lat"],p["nonport_lon"])
-        facet=facet_species(float(lat),float(lon),period,radius_km=radius_km)
+        # Limit combined request pressure across all workers. GBIF may enforce
+        # dynamic rate limits; a 429 means pause and retry, never treat as 0.
+        for attempt in range(9):
+            with pace_lock:
+                now = time.monotonic()
+                pause = max(0.0, next_allowed[0] - now)
+                if pause:
+                    time.sleep(pause)
+                next_allowed[0] = time.monotonic() + 1.3
+            try:
+                facet=facet_species(float(lat),float(lon),period,radius_km=radius_km)
+                break
+            except urllib.error.HTTPError as ex:
+                if ex.code != 429 or attempt == 8:
+                    raise
+                retry_header = ex.headers.get("Retry-After")
+                try:
+                    wait = float(retry_header) if retry_header else 0
+                except ValueError:
+                    wait = 0
+                delay = max(wait, min(180.0, 15.0*2**attempt))
+                print("GBIF_429_RETRY",island,port,side,period,
+                      "attempt",attempt+1,"seconds",delay,flush=True)
+                time.sleep(delay)
         # Store original all-plant species facets in the private workflow artifact.
         return {"island_id":island,"port_id":port,"side":side,"period":period,
                 "lat":lat,"lon":lon,"facet":facet}

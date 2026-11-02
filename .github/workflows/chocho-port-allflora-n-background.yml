@@ -15,7 +15,7 @@ permissions:
 jobs:
   source-locked-flora-N:
     runs-on: ubuntu-latest
-    timeout-minutes: 38
+    timeout-minutes: 28
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,22 +40,27 @@ jobs:
         run: |
           curl -fLsS --retry 3 https://raw.githubusercontent.com/bathyscapher/EVA/73b323983702a74cb9b6867bcebe00a307ea6566/EllenbergsValuesAutomaton/Ellenberg_VascularPlants.csv -o /tmp/nflora/ellenberg.tsv
           test -s /tmp/nflora/ellenberg.tsv
-      - name: Match all nutrient-scored binomial plants to GBIF exact accepted species keys
+      - name: Recover exact successful mapping and the completed 238 site facets from previous source run
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python -u scripts/exploratory_port_allplant_N_background.py --stage map --workers 5 \
-            --ellenberg /tmp/nflora/ellenberg.tsv --focal /tmp/nflora/focal/port_n_global_prevalence_receipt.json \
-            --out /tmp/nflora/allplant_GBIF_mapping.json
+          mkdir -p /tmp/nflora/recovery
+          gh run download 41406807197 --name allflora-N-host-vs-other-WPI78 --dir /tmp/nflora/recovery --repo zuizui0223/chocho
+          cp /tmp/nflora/recovery/allplant_GBIF_mapping.json /tmp/nflora/allplant_GBIF_mapping.json
+          cp /tmp/nflora/recovery/allplant_312_facets.jsonl /tmp/nflora/allplant_312_facets.jsonl
           python - <<'PY'
           import json
           from pathlib import Path
-          j=json.loads(Path('/tmp/nflora/allplant_GBIF_mapping.json').read_text())
-          assert j['counts']['reused_locked_host_species']==182
-          assert j['counts']['exact_accepted_unambiguous_species']>=500
-          print('ALL_FLORA_MAPPING_VALIDATED',j['counts'])
+          m=json.loads(Path('/tmp/nflora/allplant_GBIF_mapping.json').read_text())
+          s=Path('/tmp/nflora/allplant_312_facets.jsonl').read_text().splitlines()
+          assert m['counts']['exact_accepted_unambiguous_species']==1494
+          assert m['counts']['reused_locked_host_species']==182
+          assert len(s)==238,len(s)
+          print('RECOVERED_ORIGINAL_GBIF_SOURCE',len(s),m['counts'])
           PY
       - name: Match 312 equal-radius port and nonport flora inventories to nutrient indicators
         run: |
-          python -u scripts/exploratory_port_allplant_N_background.py --stage observe --workers 5 \
+          python -u scripts/exploratory_port_allplant_N_background.py --stage observe --workers 1 \
             --mapping /tmp/nflora/allplant_GBIF_mapping.json \
             --geometry /tmp/nflora/geo/strict_disjoint_wpi79_sites.json \
             --original-botany /tmp/nflora/old/strict_disjoint_botanical_5km.json \
