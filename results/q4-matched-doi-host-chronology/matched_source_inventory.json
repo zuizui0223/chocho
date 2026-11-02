@@ -1,0 +1,85 @@
+{
+  "schema": "chocho_q4_indexed_butterfly_hostcase_control_source_selection_v0.1",
+  "status": "MATCHED_RETRIEVAL_DESIGN_NOT_BIOLOGICAL_ARRIVAL_OR_ESTABLISHMENT",
+  "source": {
+    "q3_31_species_sampled_opportunity_cells": 920,
+    "q3_index_positive_cells": 13,
+    "q2_126island_resource_cells": 5741,
+    "q2_introduced_host_edges": 11573
+  },
+  "case_control_population": {
+    "positive_DOI_butterfly_index_cells": 13,
+    "unique_nonindexed_control_cells": 39,
+    "total_case_control_butterfly_region_cells": 52,
+    "species_in_butterfly_records": 10,
+    "distinct_Q2_introduced_host_x_island_pairs": 100,
+    "distinct_host_plants": 44,
+    "matched_control_blocks": {
+      "WITHIN_SPECIES_LEVEL1": 27,
+      "WITHIN_SPECIES_OUTSIDE_LEVEL1": 12
+    },
+    "per_case_control_support": {
+      "('Atalopedes campestris', 'NLA')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Brephidium exilis', 'HAW')": {
+        "control_n": 3,
+        "same_Level1": 0
+      },
+      "('Colobura dirce', 'TRT')": {
+        "control_n": 3,
+        "same_Level1": 0
+      },
+      "('Danaus genutia', 'LSI')": {
+        "control_n": 3,
+        "same_Level1": 1
+      },
+      "('Historis acheronta', 'CUB')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Historis acheronta', 'JAM')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Melanitis leda', 'MRN')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Nacaduba biocellata', 'JAW')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Nacaduba biocellata', 'NWC')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Papilio memnon', 'AND')": {
+        "control_n": 3,
+        "same_Level1": 2
+      },
+      "('Papilio memnon', 'XMS')": {
+        "control_n": 3,
+        "same_Level1": 0
+      },
+      "('Papilio polytes', 'MRN')": {
+        "control_n": 3,
+        "same_Level1": 3
+      },
+      "('Pieris brassicae', 'AZO')": {
+        "control_n": 3,
+        "same_Level1": 3
+      }
+    }
+  },
+  "limitations": [
+    "Controls have no indexed record in this particular earlier 31-species GBIF DOI, NOT verified butterfly absence.",
+    "Case status is a modern observational index rather than independent island naturalization or arrival date.",
+    "Selection uses butterfly DOI outcome to fill plant index dates; case-control comparisons are exploratory and require observation-effort correction.",
+    "Even with matching, source GBIF butterfly sample is nonrandom and case-control samples are not a complete year-specific risk set.",
+    "Matching on modern port count describes record access and might overmatch a true access effect; no port causal effect can be inferred.",
+    "Plants' native-versus-introduced WGSRPD3 status is contemporary, and original year of introduction is unknown.",
+    "WGSRPD3 areas can be archipelagos and botanical/entomological records can originate on different islands."
+  ]
+}
