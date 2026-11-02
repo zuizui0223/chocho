@@ -7,7 +7,7 @@ from __future__ import annotations
 import argparse,json
 from pathlib import Path
 from recover_q4_gbif_multipolygon_years import (
-    readcsv,savecsv,geo_parts,run_case,MAX_CALLS
+    records as readcsv,savecsv,geo_parts,run_case,MAX_CALLS
 )
 from audit_q4_gbif_plant_first_year_pilot import build_geometries
 
