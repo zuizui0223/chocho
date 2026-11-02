@@ -30,10 +30,13 @@ jobs:
           path: work/q2
       - name: Join literature butterfly, host, NASA, WPI and LepTraits source panels
         run: |
+          q2edges="$(find work/q2 -type f -name introduced_host_source_edges.csv)"
+          test -n "$q2edges" && test -f "$q2edges"
+          echo "Q2_CNY_EDGES_SOURCE=$q2edges"
           python -m py_compile scripts/build_island_butterfly_three_gate_case_matrix.py
           python scripts/build_island_butterfly_three_gate_case_matrix.py \
             --literature-cases data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv \
-            --q2-edges-v02 work/q2/introduced_host_source_edges.csv \
+            --q2-edges-v02 "$q2edges" \
             --q2-audit-v02 results/colonial-host-native-source-q2-v02/host_source_audit.json \
             --q4-firstyear-pilot results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
             --nasa-power-case-climate results/three-gate-nasa-power/literature_case_power_temperature_context.csv \
