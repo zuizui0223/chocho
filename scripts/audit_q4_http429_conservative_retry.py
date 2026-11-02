@@ -63,7 +63,10 @@ def query_once(taxon,geo):
                 "distinct_indexed_years":len(year_counts),"pre1900_records":sum(v for y,v in year_counts.items() if y<1900),
                 "year_counts_sum":sum(year_counts.values()),"all_year_facets_complete":sum(year_counts.values())==count}
     except HTTPError as e:
-        return {"status":f"HTTP_{e.code}","message":str(e)[:160]}
+        try: body=e.read(800).decode("utf-8",errors="replace")[:500]
+        except Exception: body=""
+        return {"status":f"HTTP_{e.code}","message":str(e)[:160],
+                "http_error_body_excerpt":body}
     except (URLError,TimeoutError,json.JSONDecodeError) as e:
         return {"status":"NETWORK_ERROR","message":str(e)[:160]}
 
