@@ -87,6 +87,9 @@ def main():
     if (hasdated,prior,len(cells))!=(25,22,12):
         raise RuntimeError(f"Source case-date coverage drift: {hasdated,prior,len(cells)}")
     report={
+      "source":{"candidate_literature_events":47,"Q2_corrected_island_resource_cells":5741},
+      "targets":{"distinct_plant_island_pairs":84,"case_selected_Cuba_400_rescued":6},
+      "plant_pairs_with_first_index_year":73,
       "schema":"chocho_Q4_case_selected_Cuba_plant_index_full_geometry_recovery_v0.2",
       "status":"SOURCE_INDEX_RECORD_ORDER_NOT_REAL_ESTABLISHMENT_OR_LAG",
       "fixed_original_plants":84,"fixed_literature_butterfly_cases":47,
