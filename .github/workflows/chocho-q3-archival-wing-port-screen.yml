@@ -45,7 +45,8 @@ jobs:
             --q3-observed results/q3-observed-butterfly-island-opportunity-v02/observed_added_island_resource_cases.csv \
             --q3-all-observed results/q3-observed-butterfly-island-opportunity-v02/observed_species_island_cells.csv \
             --q3-audit results/q3-observed-butterfly-island-opportunity-v02/q3_archival_gbif_overlap_audit.json \
-            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --validation-panel data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+            --wing-panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
             --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
             --area results/island-mainland-resource-area/region_area_metrics.csv \
             --out-dir results/q3-wing-port-index-screen-v02
