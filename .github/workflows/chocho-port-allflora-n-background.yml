@@ -1,0 +1,87 @@
+name: chocho exploratory all-flora nutrient-background
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_port_allplant_N_background.py"
+      - "tests/test_exploratory_port_allplant_N_background.py"
+      - ".github/workflows/chocho-port-allflora-n-background.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-locked-flora-N:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test source-free estimator
+        run: |
+          python -m pip install --quiet pytest
+          python -m pytest -q tests/test_exploratory_port_allplant_N_background.py
+      - name: Obtain three independent verified source artifacts
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          mkdir -p /tmp/nflora/geo /tmp/nflora/old /tmp/nflora/focal
+          gh run download 41402076182 --name strict-disjoint-coastal-sites-wpi79 --dir /tmp/nflora/geo --repo zuizui0223/chocho
+          gh run download 41402214941 --name strict-disjoint-wpi78-5km-GBIF-botany --dir /tmp/nflora/old --repo zuizui0223/chocho
+          gh run download 41403516863 --name port-nutrient-global-gbif-prevalence-20261102 --dir /tmp/nflora/focal --repo zuizui0223/chocho
+          test -s /tmp/nflora/geo/strict_disjoint_wpi79_sites.json
+          test -s /tmp/nflora/old/strict_disjoint_botanical_5km.json
+          test -s /tmp/nflora/focal/port_n_global_prevalence_receipt.json
+      - name: Fetch pinned German Ellenberg nutrient indicator
+        run: |
+          curl -fLsS --retry 3 https://raw.githubusercontent.com/bathyscapher/EVA/73b323983702a74cb9b6867bcebe00a307ea6566/EllenbergsValuesAutomaton/Ellenberg_VascularPlants.csv -o /tmp/nflora/ellenberg.tsv
+          test -s /tmp/nflora/ellenberg.tsv
+      - name: Match all nutrient-scored binomial plants to GBIF exact accepted species keys
+        run: |
+          python -u scripts/exploratory_port_allplant_N_background.py --stage map --workers 5 \
+            --ellenberg /tmp/nflora/ellenberg.tsv --focal /tmp/nflora/focal/port_n_global_prevalence_receipt.json \
+            --out /tmp/nflora/allplant_GBIF_mapping.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/nflora/allplant_GBIF_mapping.json').read_text())
+          assert j['counts']['reused_locked_host_species']==182
+          assert j['counts']['exact_accepted_unambiguous_species']>=500
+          print('ALL_FLORA_MAPPING_VALIDATED',j['counts'])
+          PY
+      - name: Match 312 equal-radius port and nonport flora inventories to nutrient indicators
+        run: |
+          python -u scripts/exploratory_port_allplant_N_background.py --stage observe --workers 5 \
+            --mapping /tmp/nflora/allplant_GBIF_mapping.json \
+            --geometry /tmp/nflora/geo/strict_disjoint_wpi79_sites.json \
+            --original-botany /tmp/nflora/old/strict_disjoint_botanical_5km.json \
+            --raw-cache /tmp/nflora/allplant_312_facets.jsonl \
+            --out /tmp/nflora/allplant_N_background_analysis.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/nflora/allplant_N_background_analysis.json').read_text())
+          assert j['predeclared_source_pairs']==78
+          assert j['independent_islands']==35
+          assert j['site_period_facets']==312
+          assert j['paired_analysis']['selection']['paired_port_periods']==156
+          for period,summary in j['paired_analysis']['periods'].items():
+              assert summary['original_wpi_pairs']==78
+              print('ALL_FLORA_N_BACKGROUND_VERIFIED',period,
+                    json.dumps(summary,sort_keys=True))
+          PY
+      - name: Preserve all downloaded general-flora source facets and trait mapping
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allflora-N-host-vs-other-WPI78
+          path: |
+            /tmp/nflora/allplant_GBIF_mapping.json
+            /tmp/nflora/allplant_N_background_analysis.json
+            /tmp/nflora/allplant_312_facets.jsonl
+          if-no-files-found: warn
+          retention-days: 30
