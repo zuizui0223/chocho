@@ -1,0 +1,54 @@
+name: chocho Q4 retrieve six documented Cuban host dates with validated polygon split
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/recover_q4_targeted_six_cuba_host_years.py
+      - .github/workflows/chocho-q4-recover-six-cuba-documentation-years.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cuba-host-chronology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install geographic dependencies
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Recover all six Cuba-specific original HTTP400 first indexed host years
+        run: |
+          python -m py_compile scripts/recover_q4_targeted_six_cuba_host_years.py
+          python scripts/recover_q4_targeted_six_cuba_host_years.py \
+            --targeted-source results/q4-targeted-literature-hostyear/targeted_introduced_plant_island_years.csv \
+            --split-control-audit results/q4-gbif-split-polygon-verified/split_polygon_year_audit.json \
+            --geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q4-targeted-cuban-host-dates-rescued
+      - name: Preserve strict full-region and incomplete query receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-Q4-literature-selected-Cuba-Gbif-host-year-recovery
+          path: results/q4-targeted-cuban-host-dates-rescued/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save source date only on analysis branch, leaving Q4 500 response-blind source unchanged
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-targeted-cuban-host-dates-rescued/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Recover Cuban introduced-host documentation years from complete island polygon [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
