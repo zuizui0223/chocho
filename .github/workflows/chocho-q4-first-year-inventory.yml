@@ -1,0 +1,55 @@
+name: chocho Q4 plant-first-record opportunity inventory
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/inventory_q4_introduced_host_island_first_year.py
+      - .github/workflows/chocho-q4-first-year-inventory.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact 11,455 host edge references
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          run-id: 41370175076
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Deduplicate plant × island source units and freeze response-blind 500-pair pilot
+        run: |
+          python -m py_compile scripts/inventory_q4_introduced_host_island_first_year.py
+          python scripts/inventory_q4_introduced_host_island_first_year.py \
+            --edges work/q2/introduced_host_source_edges.csv \
+            --audit results/colonial-host-native-source-q2/host_source_audit.json \
+            --island-metrics results/island-mainland-resource-q1/region_metrics.csv \
+            --output-dir results/q4-host-first-year
+      - name: Upload exact host-island pair universe and preselected pilot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-pair-source-and-pilot-v1
+          path: results/q4-host-first-year/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit only summary audit, keep detailed plant-island pairs in artifact
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-host-first-year/first_year_inventory_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Freeze source-audited historical host-first-record pilot [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
