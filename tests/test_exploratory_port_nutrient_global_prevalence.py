@@ -21,8 +21,8 @@ def test_residualization_removes_linear_global_reporting_trend():
 
 def test_partial_spearman_no_control_matches_raw_spearman():
     data=[{"ports":i+2,"N":i%7+1,
-           "number_countries_with_indexed_observations":i//3+1,
-           "global_indexed_records_2001_2024":i*i+12}
+           "number_countries_with_indexed_observations":1+(i*11)%13,
+           "global_indexed_records_2001_2024":18+(i*7)%23}
           for i in range(1,21)]
     assert abs(mod.partial_spearman(data,[])-
                mod.associations(data)["raw"])<1e-12
