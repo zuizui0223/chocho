@@ -175,13 +175,35 @@ def evaluate(data):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--source",type=Path,required=True)
+    ap.add_argument("--geometry",type=Path)
     ap.add_argument("--output",type=Path,required=True)
     args=ap.parse_args()
     data=json.loads(args.source.read_text(encoding="utf-8"))
     result=evaluate(data)
     result["source_sha256"]=hashlib.sha256(args.source.read_bytes()).hexdigest()
+    if args.geometry:
+        geometry=json.loads(args.geometry.read_text(encoding="utf-8"))
+        if (geometry["summary"]["paired_sites"],geometry["summary"]["paired_islands"])!=(78,35):
+            raise ValueError("Unexpected GSHHG/WPI source geography")
+        by_port={(str(x["island_id"]),int(x["port_id"])):x for x in geometry["rows"]}
+        temporal=result["results"]["base"]["same_exact_port_pairs_period_change"]["target_minus_background"]
+        countries=[]
+        for row in temporal["island_details"]:
+            key=row["island_id"]
+            source_ports=[z for z in by_port.values() if str(z["island_id"])==str(key) and z["status"]=="PAIRED"]
+            actual_countries=sorted({str(z["country_original"]) for z in source_ports})
+            countries.append({**row,"country_codes":actual_countries,
+                              "all_eligible_WPI_ports_on_this_island":len(source_ports)})
+        result["identical_pair_temporal_geography"]={
+            "islands":countries,
+            "distinct_country_codes":sorted(set(k for row in countries for k in row["country_codes"])),
+            "not_independent_world_regions":True}
+        result["geometry_source_sha256"]=hashlib.sha256(args.geometry.read_bytes()).hexdigest()
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    if "identical_pair_temporal_geography" in result:
+        print("ALL_FLORA_N_ISLAND_GEOGRAPHY",json.dumps(
+            result["identical_pair_temporal_geography"],sort_keys=True),flush=True)
     for setting,o in result["results"].items():
         print("ALL_FLORA_N_ISLAND_SENSITIVITY",setting,json.dumps({
             k:{m:{"pairs":d["pairs"],"islands":d["islands"],

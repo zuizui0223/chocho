@@ -32,10 +32,15 @@ jobs:
           mkdir -p /tmp/nflora_full
           gh run download 41407370295 --name allflora-N-host-vs-other-WPI78 --dir /tmp/nflora_full --repo zuizui0223/chocho
           test -s /tmp/nflora_full/allplant_N_background_analysis.json
+          mkdir -p /tmp/nflora_full/geography
+          gh run download 41402076182 --name strict-disjoint-coastal-sites-wpi79 \
+            --dir /tmp/nflora_full/geography --repo zuizui0223/chocho
+          test -s /tmp/nflora_full/geography/strict_disjoint_wpi79_sites.json
       - name: Audit independent island sign shifts, leave-one-island robustness and sampling bias
         run: |
           python scripts/exploratory_port_allflora_N_offline_audit.py \
             --source /tmp/nflora_full/allplant_N_background_analysis.json \
+            --geometry /tmp/nflora_full/geography/strict_disjoint_wpi79_sites.json \
             --output /tmp/nflora_full/allflora_N_exact_island_audit.json
           python - <<'PY'
           import json
