@@ -89,9 +89,8 @@ def main():
         cc=bynasa[nasa_key]
         pp=byport.get(code)
         proxy,origin=best_wingspan(traitby.get(sp,[]))
-        if proxy is None and sp in metrics:
-            proxy=numeric(metrics[sp].get("wing_size_proxy"))
-            origin="GEB_PRESCALED_WING_PROXY_NOT_RAW_MM"
+        # Never combine a prescaled GEB proxy with raw LepTraits wingspans.
+        geb_wing_proxy=numeric(metrics[sp].get("wing_size_proxy")) if sp in metrics else None
         diapause=[r.get("DiapauseStage") for r in traitby.get(sp,[]) if r.get("DiapauseStage")]
         ovip=[r.get("OvipositionStyle") for r in traitby.get(sp,[]) if r.get("OvipositionStyle")]
         port_n=int(pp["WPI_port_count"]) if pp else None
@@ -118,8 +117,9 @@ def main():
           "nasa_decade_minus_1981_2000_T2M_C":cc["T2M_decade_before_minus_1981_2000_C"],
           "nasa_decadal_T2M_trend_C_per_decade":cc["T2M_decadal_trend_at_first_record_C_per_decade"],
           "WPI_indexed_port_count_2023":port_n if port_n is not None else "",
-          "wing_size_measure":proxy if proxy is not None else "",
-          "wing_source":origin,
+          "leptraits_wingspan_source_units":proxy if proxy is not None else "",
+          "leptraits_wingspan_source_column":origin,
+          "geb_prescaled_wing_size_proxy":geb_wing_proxy if geb_wing_proxy is not None else "",
           "diapause_stage_LepTraits_raw":diapause[0] if diapause else "",
           "oviposition_style_LepTraits_raw":ovip[0] if ovip else "",
           "full_temporal_proxy_context":
@@ -148,7 +148,7 @@ def main():
             "literature_rows_with_host_index_prior_to_butterfly_record":sum(bool(r["hosts_with_GBIF_index_before_butterfly_literature"]) for r in details),
             "literature_rows_with_10yr_prefirst_T2M":sum(bool(r["nasa_decade_prior_mean_T2M_C"]!="") for r in details),
             "literature_rows_with_WPI_port_count":sum(r["WPI_indexed_port_count_2023"]!="" for r in details),
-            "literature_rows_with_wing_measure":sum(r["wing_size_measure"]!="" for r in details),
+            "literature_rows_with_wing_measure":sum(r["leptraits_wingspan_source_units"]!="" for r in details),
             "literature_rows_with_all_recorded_proxies":sum(r["full_temporal_proxy_context"] for r in details),
             "distinct_species_with_all_recorded_proxies":len({r["species"] for r in details if r["full_temporal_proxy_context"]}),
         },
