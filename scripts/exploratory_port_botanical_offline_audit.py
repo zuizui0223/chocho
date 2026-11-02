@@ -121,6 +121,34 @@ def summarize_period(geometry,observations,period,*,radius_km=5):
     }
 
 
+def same_pair_temporal_contrast(early,late):
+    """Compare the identical eligible port–nonport pair in both periods."""
+    def make_map(obj):
+        return {
+            (r["island_id"],r["port_id"]):r["port_minus_nonport_mean_N"]
+            for r in obj["paired_site_audit"]
+            if r["trait_usable_both_2plus"] and r["five_km_radius_circular_buffers_disjoint"]
+        }
+    a,b=make_map(early),make_map(late)
+    shared=sorted(set(a)&set(b),key=lambda x:(int(x[0]),x[1]))
+    rows=[{"island_id":k[0],"port_id":k[1],"early":a[k],"later":b[k],
+           "later_minus_early":b[k]-a[k]} for k in shared]
+    groups=group_island_mean(rows,"later_minus_early")
+    early_island=group_island_mean(rows,"early")
+    later_island=group_island_mean(rows,"later")
+    return {
+        "common_eligible_port_pairs":len(rows),
+        "common_independent_islands":len(groups),
+        "island_weighted_early_mean_N_gap":statistics.mean(early_island.values()) if early_island else None,
+        "island_weighted_later_mean_N_gap":statistics.mean(later_island.values()) if later_island else None,
+        "island_weighted_mean_change_later_minus_early":statistics.mean(groups.values()) if groups else None,
+        "bootstrap_island_95_change":bootstrap_islands(groups),
+        "paired_changes_positive_islands":sum(v>0 for v in groups.values()),
+        "no_observed_plant_colonization_or_causal_diffusion":True,
+        "same_pairs":rows,
+    }
+
+
 def run(geometry_path,botany_path):
     geometry=json.loads(geometry_path.read_text(encoding="utf8"))
     botany=json.loads(botany_path.read_text(encoding="utf8"))
@@ -157,6 +185,9 @@ def run(geometry_path,botany_path):
             "Overlapping buffers, if any, are excluded in strict spatial sensitivity.",
         ]
     }
+    result["identical_port_pair_temporal_contrast"]=same_pair_temporal_contrast(
+        result["periods"]["early_2001_2010"],
+        result["periods"]["later_2011_2024"])
     return result
 
 
@@ -172,6 +203,10 @@ def main():
     print("COAST_BOTANY_OFFLINE_BIAS_AUDIT",json.dumps({
         k:{name:value for name,value in v.items() if name!="paired_site_audit"}
         for k,v in result["periods"].items()},sort_keys=True),flush=True)
+    print("COAST_BOTANY_MATCHED_TEMPORAL",json.dumps({
+        k:v for k,v in result["identical_port_pair_temporal_contrast"].items()
+        if k!="same_pairs"
+    },sort_keys=True),flush=True)
 
 
 if __name__=="__main__":
