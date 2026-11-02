@@ -1,0 +1,223 @@
+{
+  "schema": "chocho_Q4_GBIF_nonmultipolygon_400_repair_v0.1",
+  "status": "GEOGRAPHIC_ERROR_RESCUE_NOT_INTRODUCTION_OR_ESTABLISHMENT",
+  "origin": "Original observed-vs-nonindexed matched 100 plant × region GBIF cases",
+  "reported_GBIF_400_pairs": 11,
+  "distinct_official_WGSRPD3_regions": 7,
+  "new_GBIF_polygon_batch_queries": 11,
+  "new_dated_plant_index_pairs": 3,
+  "remaining_failed_pairs": 8,
+  "source_regions": {
+    "LSI": {
+      "polygon_parts": 49,
+      "queryable_parts": 20,
+      "area_coverage": 0.9601938464948659
+    },
+    "SUM": {
+      "polygon_parts": 67,
+      "queryable_parts": 20,
+      "area_coverage": 0.9934006349309046
+    },
+    "MOL": {
+      "polygon_parts": 36,
+      "queryable_parts": 20,
+      "area_coverage": 0.9892823026592048
+    },
+    "CUB": {
+      "polygon_parts": 26,
+      "queryable_parts": 20,
+      "area_coverage": 0.9993697078660019
+    },
+    "SOL": {
+      "polygon_parts": 50,
+      "queryable_parts": 20,
+      "area_coverage": 0.9689863398608196
+    },
+    "SUL": {
+      "polygon_parts": 47,
+      "queryable_parts": 20,
+      "area_coverage": 0.9961438995719589
+    },
+    "BAH": {
+      "polygon_parts": 28,
+      "queryable_parts": 20,
+      "area_coverage": 0.9878738118394187
+    }
+  },
+  "outcomes": [
+    {
+      "plant_id": "2362842",
+      "plant": "Mangifera indica",
+      "region": "BAH",
+      "n_source_polygons": 28,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9878738118394187,
+      "queries": 1,
+      "indexed_year_min": 1975,
+      "source_query_record_count": 22,
+      "all_components_successful": false,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "errors": []
+    },
+    {
+      "plant_id": "2362842",
+      "plant": "Mangifera indica",
+      "region": "CUB",
+      "n_source_polygons": 26,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9993697078660019,
+      "queries": 1,
+      "indexed_year_min": 1889,
+      "source_query_record_count": 54,
+      "all_components_successful": false,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "errors": []
+    },
+    {
+      "plant_id": "2703160",
+      "plant": "Cassia fistula",
+      "region": "LSI",
+      "n_source_polygons": 49,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9601938464948659,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    },
+    {
+      "plant_id": "502084",
+      "plant": "Calotropis gigantea",
+      "region": "LSI",
+      "n_source_polygons": 49,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9601938464948659,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    },
+    {
+      "plant_id": "2703160",
+      "plant": "Cassia fistula",
+      "region": "MOL",
+      "n_source_polygons": 36,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9892823026592048,
+      "queries": 1,
+      "indexed_year_min": 1857,
+      "source_query_record_count": 5,
+      "all_components_successful": false,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "errors": []
+    },
+    {
+      "plant_id": "2724206",
+      "plant": "Citrus maxima",
+      "region": "SOL",
+      "n_source_polygons": 50,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9689863398608196,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": []
+    },
+    {
+      "plant_id": "502084",
+      "plant": "Calotropis gigantea",
+      "region": "SOL",
+      "n_source_polygons": 50,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9689863398608196,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": []
+    },
+    {
+      "plant_id": "117504",
+      "plant": "Magnolia champaca",
+      "region": "SUL",
+      "n_source_polygons": 47,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9961438995719589,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    },
+    {
+      "plant_id": "2452405",
+      "plant": "Vachellia farnesiana",
+      "region": "SUL",
+      "n_source_polygons": 47,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9961438995719589,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    },
+    {
+      "plant_id": "2724206",
+      "plant": "Citrus maxima",
+      "region": "SUL",
+      "n_source_polygons": 47,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9961438995719589,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    },
+    {
+      "plant_id": "2452405",
+      "plant": "Vachellia farnesiana",
+      "region": "SUM",
+      "n_source_polygons": 67,
+      "n_queried_polygons": 20,
+      "area_covered_approximately": 0.9934006349309046,
+      "queries": 1,
+      "indexed_year_min": null,
+      "source_query_record_count": 0,
+      "all_components_successful": false,
+      "status": "GBIF_QUERY_FAILED",
+      "errors": [
+        "HTTPError: HTTP Error 400: Bad Request"
+      ]
+    }
+  ],
+  "critical_limits": [
+    "GBIF occurrence API does not accept MULTIPOLYGON WKT in the documented search predicate; we split only erroring regions into separate CCW POLYGON components.",
+    "An indexed year found in any high-purity polygon fragment is real documentary source evidence for part of the WGSRPD3 island area; it is not an exact plant first arrival or guaranteed first record of the entire macroregion.",
+    "If summed polygons are partial, source query no-record does not count as botanical absence or a verified negative old host.",
+    "Geometries and taxon statuses in previous successful queries stay frozen and are not re-fetched.",
+    "Repeated GBIF geometry parameters may be interpreted as an OR in occurrence/search; retrieved records from disjoint components may still be duplicated on shared borders.",
+    "The 11 source queries were all HTTP400 before rescue; inability to query some official fragments remains missing."
+  ]
+}
