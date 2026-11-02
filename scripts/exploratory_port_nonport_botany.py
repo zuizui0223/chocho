@@ -204,7 +204,6 @@ def summarise(receipt: dict, *, min_plant_records: int, min_trait_species: int) 
             if x["data_adequate_for_trait_composition_compare"]:
                 by_island[x["island_id"]].append(x["port_minus_nonport_candidate_host_mean_N"])
         island_values={island:sum(values)/len(values) for island,values in by_island.items()}
-        site_coverage=lambda key: sum(x[key]>0 for x in q)
         stats[period]={
             "pairs_observed":len(q), "pairs_trait_comparable":len(valid),
             "independent_islands_trait_comparable":len(island_values),
@@ -266,8 +265,12 @@ def run(sites_path: Path, traits_path: Path, *, n_pilot: int, radius_km: int,
         "status":"EXPLORATORY_GBIF_INDEXED_PLANT_COMPOSITION_NOT_NITROGEN_EFFECT",
         "checked_utc":datetime.now(timezone.utc).isoformat(),
         "site_geometry_sha256":hashlib.sha256(sites_path.read_bytes()).hexdigest(),
-        "site_selection_method":"blind to focal botanical and butterfly responses; one port per island across four prior-effort quartiles",
-        "sample_design":{"selected_islands":len(selected),"selected_pairs":len(selected),
+        "site_selection_method":(
+            "all WPI79 ports with independent nonport coast control; cluster inference by 36 islands"
+            if n_pilot<0 else
+            "one port per island across four prior-effort quartiles; no butterfly or current botanical response selection"),
+
+        "sample_design":{"selected_islands":len({x["island_id"] for x in selected}),"selected_pairs":len(selected),
                          "intended_observations":len(selected)*2*len(PERIODS),
                          "period_windows":PERIODS,"botanical_search_radius_km":radius_km,
                          "minimum_general_plant_records":min_plant_records,
