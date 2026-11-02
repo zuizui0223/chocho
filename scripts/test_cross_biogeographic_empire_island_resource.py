@@ -176,6 +176,49 @@ def make_model(nodes, hosts, butterflies, coords, *, level_relation="different")
           "host_plant_network":one_test(name,observed_host,yh,blocks),
           "butterfly_resource_opportunity_network":one_test(name,observed_butter,yb,blocks),
         }
+    # Pair outcomes share islands, so report leave-one-ISLAND-out sign changes
+    # instead of treating 798 dyads as 798 independent replicates.
+    def leave_one_island_out_y(outcome):
+        values=[]
+        for removed in range(n):
+            keep=(u != removed)&(v != removed)
+            if int(np.sum(keep))<20:
+                continue
+            z=X[keep].astype(float).copy()
+            x=obs_x[keep].astype(float).copy()
+            y=outcome[keep].astype(float).copy()
+            groups=defaultdict(list)
+            for ix,k in enumerate(np.array(keys)[keep]):
+                groups[k].append(ix)
+            for ind in groups.values():
+                z[ind]-=np.mean(z[ind],axis=0)
+                x[ind]-=np.mean(x[ind])
+                y[ind]-=np.mean(y[ind])
+            if np.linalg.matrix_rank(z)!=z.shape[1]:
+                continue
+            q,_=np.linalg.qr(z,mode="reduced")
+            xx=x-q@(q.T@x)
+            yy=y-q@(q.T@y)
+            denom=float(xx@xx)
+            if denom<=1e-10:
+                continue
+            values.append({"excluded_code":nodes[removed]["code"],
+                           "adjusted_beta":float(xx@yy/denom)})
+        return {
+            "valid_leave_one_island_out":len(values),
+            "n_positive":sum(v["adjusted_beta"]>0 for v in values),
+            "minimum_coefficient":min((v["adjusted_beta"] for v in values),default=None),
+            "maximum_coefficient":max((v["adjusted_beta"] for v in values),default=None),
+            "range_is_not_confidence_interval":True,
+            "extreme_influence_cases":(
+                sorted(values,key=lambda x:x["adjusted_beta"])[:3]+
+                sorted(values,key=lambda x:x["adjusted_beta"])[-3:]
+            ) if values else [],
+        }
+    loocv={
+        "host_plant_network": leave_one_island_out_y(y_host),
+        "butterfly_resource_opportunity_network": leave_one_island_out_y(y_butter),
+    }
     exposure_by_region={
       reg:{
         "islands":sum(x["level1"]==reg for x in nodes),
@@ -203,6 +246,7 @@ def make_model(nodes, hosts, butterflies, coords, *, level_relation="different")
       "raw_same_minus_no_shared_butterfly_jaccard":raw_butter,
       "controlled_shared_history_host_coefficient":observed_host,
       "controlled_shared_history_butterfly_coefficient":observed_butter,
+      "island_leave_one_out_influence":loocv,
       "controls":"Unordered Level1 pair fixed effects, log great-circle distance, abs log WGSRPD area difference, abs log host richness difference, abs log butterfly resource opportunity richness difference.",
       "label_permutations":tests,
     }
