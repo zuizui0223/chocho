@@ -148,6 +148,79 @@
     "cohort_islands_with_WPI_indexed_ports": 69,
     "cohort_islands_without_WPI_indexed_ports": 29
   },
+  "source_effort_selection": {
+    "n_observed": 98,
+    "n_excluded": 28,
+    "median_area_km2_observed": 955.7751173115331,
+    "median_area_km2_excluded": 25120.112020516604,
+    "median_WPI_ports_observed": 1.0,
+    "median_WPI_ports_excluded": 6.5,
+    "median_introduced_flora_observed": 206.5,
+    "median_introduced_flora_excluded": 203.5,
+    "excluded_high_port_regions": [
+      {
+        "code": "GRB",
+        "ports": 173,
+        "introduced_flora": 2291
+      },
+      {
+        "code": "JAP",
+        "ports": 151,
+        "introduced_flora": 769
+      },
+      {
+        "code": "PHI",
+        "ports": 65,
+        "introduced_flora": 414
+      },
+      {
+        "code": "BOR",
+        "ports": 38,
+        "introduced_flora": 213
+      },
+      {
+        "code": "SUM",
+        "ports": 27,
+        "introduced_flora": 224
+      },
+      {
+        "code": "CUB",
+        "ports": 23,
+        "introduced_flora": 882
+      },
+      {
+        "code": "NWG",
+        "ports": 19,
+        "introduced_flora": 375
+      },
+      {
+        "code": "SUL",
+        "ports": 15,
+        "introduced_flora": 164
+      },
+      {
+        "code": "ALU",
+        "ports": 12,
+        "introduced_flora": 32
+      },
+      {
+        "code": "GNL",
+        "ports": 11,
+        "introduced_flora": 89
+      },
+      {
+        "code": "LSI",
+        "ports": 11,
+        "introduced_flora": 308
+      },
+      {
+        "code": "NFL",
+        "ports": 11,
+        "introduced_flora": 407
+      }
+    ],
+    "interpretation": "Effort availability is size- and region-selective; models do not generalize automatically to all 126 islands"
+  },
   "models": {
     "all_flora_unnormalized_no_effort": {
       "n": 98,
@@ -173,9 +246,9 @@
         "n_permutations": 4999,
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
-        "null_mean": 0.03882598425590658,
-        "null_q025": -0.09159897784689662,
-        "null_q975": 0.16333316978015186,
+        "null_mean": 0.03882598425590653,
+        "null_q025": -0.09159897784689666,
+        "null_q975": 0.16333316978015183,
         "observed_minus_null_mean": 0.2949041136621401,
         "p_two_sided_centered": 0.0002,
         "p_one_sided_positive": 0.0002
@@ -199,17 +272,17 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.24447852550694826,
-      "multiplicative_change_in_1plus_outcome": 0.27695523996346805,
+      "regression_beta_per_log2_port_unit": 0.24447852550694815,
+      "multiplicative_change_in_1plus_outcome": 0.2769552399634678,
       "permutation": {
         "stratify": "within_level1_area_half",
         "n_permutations": 4999,
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
-        "null_mean": 0.044543481909457325,
-        "null_q025": -0.07585717913459347,
-        "null_q975": 0.15699525562887143,
-        "observed_minus_null_mean": 0.19993504359749092,
+        "null_mean": 0.04454348190945738,
+        "null_q025": -0.07585717913459339,
+        "null_q975": 0.15699525562887154,
+        "observed_minus_null_mean": 0.19993504359749076,
         "p_two_sided_centered": 0.0012,
         "p_one_sided_positive": 0.0002
       }
@@ -232,17 +305,17 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.22249699629833392,
+      "regression_beta_per_log2_port_unit": 0.2224969962983339,
       "multiplicative_change_in_1plus_outcome": 0.24919206744472344,
       "permutation": {
         "stratify": "within_level1_area_half",
         "n_permutations": 4999,
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
-        "null_mean": 0.02323225512095872,
+        "null_mean": 0.023232255120958716,
         "null_q025": -0.09633617096833974,
-        "null_q975": 0.13518896710683642,
-        "observed_minus_null_mean": 0.1992647411773752,
+        "null_q975": 0.13518896710683637,
+        "observed_minus_null_mean": 0.19926474117737517,
         "p_two_sided_centered": 0.0014,
         "p_one_sided_positive": 0.0004
       }
@@ -264,7 +337,7 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.24291347717458128,
+      "regression_beta_per_log2_port_unit": 0.24291347717458123,
       "multiplicative_change_in_1plus_outcome": null,
       "permutation": {
         "stratify": "within_level1_area_half",
@@ -272,9 +345,9 @@
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
         "null_mean": 0.043379577590488064,
-        "null_q025": -0.08987021678946372,
-        "null_q975": 0.16848841854674348,
-        "observed_minus_null_mean": 0.19953389958409323,
+        "null_q025": -0.08987021678946369,
+        "null_q975": 0.16848841854674346,
+        "observed_minus_null_mean": 0.19953389958409318,
         "p_two_sided_centered": 0.0036,
         "p_one_sided_positive": 0.0006
       }
@@ -296,17 +369,17 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.2526789726466868,
-      "multiplicative_change_in_1plus_outcome": 0.28746989743149,
+      "regression_beta_per_log2_port_unit": 0.2526789726466867,
+      "multiplicative_change_in_1plus_outcome": 0.28746989743148976,
       "permutation": {
         "stratify": "within_level1_area_half",
         "n_permutations": 4999,
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
-        "null_mean": 0.02146105654279803,
-        "null_q025": -0.09676921181899302,
-        "null_q975": 0.13271440279479438,
-        "observed_minus_null_mean": 0.23121791610388878,
+        "null_mean": 0.02146105654279805,
+        "null_q025": -0.09676921181899294,
+        "null_q975": 0.1327144027947944,
+        "observed_minus_null_mean": 0.23121791610388864,
         "p_two_sided_centered": 0.0002,
         "p_one_sided_positive": 0.0002
       }
@@ -329,17 +402,17 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.1639059578900127,
+      "regression_beta_per_log2_port_unit": 0.16390595789001258,
       "multiplicative_change_in_1plus_outcome": 0.17810351854236584,
       "permutation": {
         "stratify": "within_level1_area_half",
         "n_permutations": 4999,
         "exchangeable_islands": 93,
         "exchangeable_blocks": 15,
-        "null_mean": 0.026918918004683642,
+        "null_mean": 0.026918918004683625,
         "null_q025": -0.08173296592733659,
-        "null_q975": 0.12547200421464438,
-        "observed_minus_null_mean": 0.13698703988532906,
+        "null_q975": 0.12547200421464436,
+        "observed_minus_null_mean": 0.13698703988532895,
         "p_two_sided_centered": 0.011,
         "p_one_sided_positive": 0.003
       }
@@ -362,17 +435,17 @@
         "Level1_8",
         "Level1_9"
       ],
-      "regression_beta_per_log2_port_unit": 0.24447852550694826,
-      "multiplicative_change_in_1plus_outcome": 0.27695523996346805,
+      "regression_beta_per_log2_port_unit": 0.24447852550694815,
+      "multiplicative_change_in_1plus_outcome": 0.2769552399634678,
       "permutation": {
         "stratify": "within_level1",
         "n_permutations": 4999,
         "exchangeable_islands": 98,
         "exchangeable_blocks": 9,
-        "null_mean": 0.0008687282443141334,
-        "null_q025": -0.11290176739095549,
-        "null_q975": 0.11199638546638074,
-        "observed_minus_null_mean": 0.24360979726263413,
+        "null_mean": 0.0008687282443141315,
+        "null_q025": -0.11290176739095546,
+        "null_q975": 0.11199638546638077,
+        "observed_minus_null_mean": 0.24360979726263401,
         "p_two_sided_centered": 0.0002,
         "p_one_sided_positive": 0.0002
       }
@@ -402,9 +475,9 @@
         "n_permutations": 4999,
         "exchangeable_islands": 92,
         "exchangeable_blocks": 15,
-        "null_mean": 0.043846927384955645,
-        "null_q025": -0.07607581277543428,
-        "null_q975": 0.155309004978865,
+        "null_mean": 0.04384692738495566,
+        "null_q025": -0.0760758127754342,
+        "null_q975": 0.15530900497886496,
         "observed_minus_null_mean": 0.18649440031415526,
         "p_two_sided_centered": 0.001,
         "p_one_sided_positive": 0.0002
@@ -426,19 +499,117 @@
         "Level1_7",
         "Level1_8"
       ],
-      "regression_beta_per_log2_port_unit": 0.24280561322919877,
+      "regression_beta_per_log2_port_unit": 0.24280561322919872,
       "multiplicative_change_in_1plus_outcome": 0.274820791734516,
       "permutation": {
         "stratify": "within_level1_area_half",
         "n_permutations": 4999,
         "exchangeable_islands": 67,
         "exchangeable_blocks": 12,
-        "null_mean": 0.0822669579459482,
-        "null_q025": -0.0489239625522678,
-        "null_q975": 0.20270129857776578,
+        "null_mean": 0.08226695794594817,
+        "null_q025": -0.04892396255226787,
+        "null_q975": 0.2027012985777658,
         "observed_minus_null_mean": 0.16053865528325056,
         "p_two_sided_centered": 0.0136,
         "p_one_sided_positive": 0.0044
+      }
+    },
+    "botanical_reporting_effort_vs_ports": {
+      "n": 98,
+      "outcome": "ln1p_gbif_total",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.523893033066187,
+      "multiplicative_change_in_1plus_outcome": 0.6885886016725746,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": -0.025007634733261026,
+        "null_q025": -0.2804756222892466,
+        "null_q975": 0.21833963605792228,
+        "observed_minus_null_mean": 0.548900667799448,
+        "p_two_sided_centered": 0.0002,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_with_effort_only_port_positive": {
+      "n": 69,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.23537604763291234,
+      "multiplicative_change_in_1plus_outcome": 0.26538452412896274,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 67,
+        "exchangeable_blocks": 14,
+        "null_mean": 0.0793532198701418,
+        "null_q025": -0.055605443184462686,
+        "null_q975": 0.2138186621681475,
+        "observed_minus_null_mean": 0.15602282776277054,
+        "p_two_sided_centered": 0.0222,
+        "p_one_sided_positive": 0.0114
+      }
+    },
+    "all_flora_with_effort_high_botanical_reporting": {
+      "n": 71,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.21933060757354628,
+      "multiplicative_change_in_1plus_outcome": 0.24524289537376975,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 66,
+        "exchangeable_blocks": 14,
+        "null_mean": 0.11578721820622734,
+        "null_q025": 0.012455391815044889,
+        "null_q975": 0.21573026742715237,
+        "observed_minus_null_mean": 0.10354338936731894,
+        "p_two_sided_centered": 0.0466,
+        "p_one_sided_positive": 0.0218
       }
     }
   },
