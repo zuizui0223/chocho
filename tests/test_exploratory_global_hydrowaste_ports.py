@@ -18,7 +18,7 @@ def test_github_frozen_port_inventory():
     ports=m.source_ports()
     assert len(ports)==1596
     assert ports.port_id.nunique()==1596
-    assert ports.country.nunique()==141
+    assert ports.country.nunique()==142
     assert ports.alien_candidates.ge(0).all()
     assert ports.native_candidates.ge(0).all()
     assert ports.all_taxonomically_indexed.ge(ports.known_alien_native).all()
