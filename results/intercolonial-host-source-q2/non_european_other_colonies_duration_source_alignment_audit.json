@@ -1,0 +1,367 @@
+{
+  "schema": "chocho_empire_duration_other_colonial_host_alignment_v0.1",
+  "source_type": "non_european_other_colonies",
+  "status": "OBSERVATIONAL_COLONIAL_HISTORY_SOURCE_ASSOCIATION_TEST",
+  "units": "Equal island-weighted array across four European historical empires, not butterfly abundances",
+  "source_panel": {
+    "all_added_butterfly_region_cells": 14553,
+    "added_strict_island_cells": 5674,
+    "islands_with_added_resource": 122,
+    "introduced_butterfly_plant_island_edges": 11455,
+    "distinct_intro_host_taxa": 560
+  },
+  "all_active_islands": 122,
+  "primary_coverage_ge80": 67,
+  "source_refs": {
+    "lenzner": {
+      "study_doi": "10.1038/s41559-022-01865-1",
+      "lenzner_git_commit": "7aae72aadd39ae3827ece6935c6740dc0aace030",
+      "wgsrpd_git_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+    },
+    "wcvp_hosts": {
+      "wcvp": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+      "hosts": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+      "wgsrpd": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+    }
+  },
+  "variants": {
+    "primary_cover_ge80_min50yr": {
+      "islands": 67,
+      "total_added_resource_cells": 3377,
+      "islands_with_any_metropole_native_source": 67,
+      "islands_with_any_historic_empire": 44,
+      "total_empire_years_geography_weighted": {
+        "Great_Britain": 3721.860291821248,
+        "Spain": 3224.571967415209,
+        "Portugal": 2814.974217581283,
+        "Netherlands": 2473.885086316223
+      },
+      "area_quartiles_ln_km2": [
+        7.315463966052951,
+        9.029900025226427,
+        10.909059229327982
+      ],
+      "history_exposure_threshold_yrs": 50,
+      "test": {
+        "globally_unstratified": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009925875468812661,
+          "null_mean_slope": -9.910345921724216e-06,
+          "observed_minus_null_slope": 0.009935785814734385,
+          "null_interval_q025_q975": [
+            -0.010876929306766338,
+            0.010341667849470059
+          ],
+          "p_high": 0.0298,
+          "p_two": 0.066,
+          "draws": 4999,
+          "effective_islands": 67,
+          "exchangeable_blocks": 1
+        },
+        "within_biogeographic_level1": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009925875468812661,
+          "null_mean_slope": 0.0008600904867365526,
+          "observed_minus_null_slope": 0.009065784982076108,
+          "null_interval_q025_q975": [
+            -0.008094895549518264,
+            0.00940152568782208
+          ],
+          "p_high": 0.0184,
+          "p_two": 0.0412,
+          "draws": 4999,
+          "effective_islands": 67,
+          "exchangeable_blocks": 9
+        },
+        "within_level1_and_global_area_quartile": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009925875468812661,
+          "null_mean_slope": 0.0062982473574285875,
+          "observed_minus_null_slope": 0.0036276281113840738,
+          "null_interval_q025_q975": [
+            0.0013210416528479738,
+            0.010828021139873743
+          ],
+          "p_high": 0.0628,
+          "p_two": 0.1382,
+          "draws": 4999,
+          "effective_islands": 54,
+          "exchangeable_blocks": 15
+        }
+      }
+    },
+    "full_history_cover_ge80_min1yr": {
+      "islands": 67,
+      "total_added_resource_cells": 3377,
+      "islands_with_any_metropole_native_source": 67,
+      "islands_with_any_historic_empire": 49,
+      "total_empire_years_geography_weighted": {
+        "Great_Britain": 3721.860291821248,
+        "Spain": 3224.571967415209,
+        "Portugal": 2814.974217581283,
+        "Netherlands": 2473.885086316223
+      },
+      "area_quartiles_ln_km2": [
+        7.315463966052951,
+        9.029900025226427,
+        10.909059229327982
+      ],
+      "history_exposure_threshold_yrs": 1,
+      "test": {
+        "globally_unstratified": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009707248364094286,
+          "null_mean_slope": -9.426021748369354e-06,
+          "observed_minus_null_slope": 0.009716674385842654,
+          "null_interval_q025_q975": [
+            -0.010991086470036132,
+            0.010460536389386063
+          ],
+          "p_high": 0.0366,
+          "p_two": 0.0776,
+          "draws": 4999,
+          "effective_islands": 67,
+          "exchangeable_blocks": 1
+        },
+        "within_biogeographic_level1": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009707248364094286,
+          "null_mean_slope": 0.0005985224466507552,
+          "observed_minus_null_slope": 0.00910872591744353,
+          "null_interval_q025_q975": [
+            -0.008439469627297408,
+            0.009111082817350385
+          ],
+          "p_high": 0.0188,
+          "p_two": 0.0422,
+          "draws": 4999,
+          "effective_islands": 67,
+          "exchangeable_blocks": 9
+        },
+        "within_level1_and_global_area_quartile": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009707248364094286,
+          "null_mean_slope": 0.005849076815858548,
+          "observed_minus_null_slope": 0.0038581715482357377,
+          "null_interval_q025_q975": [
+            0.0007972838301974894,
+            0.010603838170744943
+          ],
+          "p_high": 0.0634,
+          "p_two": 0.1358,
+          "draws": 4999,
+          "effective_islands": 56,
+          "exchangeable_blocks": 16
+        }
+      }
+    },
+    "sensitivity_cover_ge50_min50yr": {
+      "islands": 93,
+      "total_added_resource_cells": 4408,
+      "islands_with_any_metropole_native_source": 93,
+      "islands_with_any_historic_empire": 63,
+      "total_empire_years_geography_weighted": {
+        "Great_Britain": 5254.05091185053,
+        "Spain": 3892.9157248776455,
+        "Portugal": 3172.306769069169,
+        "Netherlands": 3289.367607564346
+      },
+      "area_quartiles_ln_km2": [
+        5.503081538876055,
+        7.950742410336465,
+        10.451684275052425
+      ],
+      "history_exposure_threshold_yrs": 50,
+      "test": {
+        "globally_unstratified": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009367258184103907,
+          "null_mean_slope": -0.00014169489723981195,
+          "observed_minus_null_slope": 0.009508953081343719,
+          "null_interval_q025_q975": [
+            -0.010873711350129014,
+            0.010339533661211386
+          ],
+          "p_high": 0.037,
+          "p_two": 0.077,
+          "draws": 4999,
+          "effective_islands": 93,
+          "exchangeable_blocks": 1
+        },
+        "within_biogeographic_level1": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009367258184103907,
+          "null_mean_slope": 0.0009236455585693914,
+          "observed_minus_null_slope": 0.008443612625534516,
+          "null_interval_q025_q975": [
+            -0.007565869830163368,
+            0.009480401061858731
+          ],
+          "p_high": 0.0276,
+          "p_two": 0.0532,
+          "draws": 4999,
+          "effective_islands": 93,
+          "exchangeable_blocks": 9
+        },
+        "within_level1_and_global_area_quartile": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.009367258184103907,
+          "null_mean_slope": 0.0018703703442990466,
+          "observed_minus_null_slope": 0.007496887839804861,
+          "null_interval_q025_q975": [
+            -0.005432927859464133,
+            0.008990840699710907
+          ],
+          "p_high": 0.019,
+          "p_two": 0.0408,
+          "draws": 4999,
+          "effective_islands": 80,
+          "exchangeable_blocks": 20
+        }
+      }
+    },
+    "sensitivity_cover_ge80_min50yr_ncells25": {
+      "islands": 56,
+      "total_added_resource_cells": 3166,
+      "islands_with_any_metropole_native_source": 56,
+      "islands_with_any_historic_empire": 36,
+      "total_empire_years_geography_weighted": {
+        "Great_Britain": 3442.3497085220774,
+        "Spain": 1827.446653208777,
+        "Portugal": 2211.974217581283,
+        "Netherlands": 1790.8850863162231
+      },
+      "area_quartiles_ln_km2": [
+        7.275750831002758,
+        8.69425817530997,
+        11.118166773878265
+      ],
+      "history_exposure_threshold_yrs": 50,
+      "test": {
+        "globally_unstratified": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.015335304770958852,
+          "null_mean_slope": -8.743485278343193e-06,
+          "observed_minus_null_slope": 0.015344048256237195,
+          "null_interval_q025_q975": [
+            -0.011510341590291637,
+            0.011248728929484591
+          ],
+          "p_high": 0.0054,
+          "p_two": 0.011,
+          "draws": 4999,
+          "effective_islands": 56,
+          "exchangeable_blocks": 1
+        },
+        "within_biogeographic_level1": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.015335304770958852,
+          "null_mean_slope": 0.006486108301539062,
+          "observed_minus_null_slope": 0.00884919646941979,
+          "null_interval_q025_q975": [
+            -0.0005046791349927987,
+            0.013097802912481252
+          ],
+          "p_high": 0.0032,
+          "p_two": 0.0082,
+          "draws": 4999,
+          "effective_islands": 54,
+          "exchangeable_blocks": 8
+        },
+        "within_level1_and_global_area_quartile": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.015335304770958852,
+          "null_mean_slope": 0.01213968971868871,
+          "observed_minus_null_slope": 0.003195615052270142,
+          "null_interval_q025_q975": [
+            0.00663885887920647,
+            0.016753767392732138
+          ],
+          "p_high": 0.102,
+          "p_two": 0.2394,
+          "draws": 4999,
+          "effective_islands": 35,
+          "exchangeable_blocks": 9
+        }
+      }
+    },
+    "sensitivity_non_european_cover80_50yr": {
+      "islands": 60,
+      "total_added_resource_cells": 3181,
+      "islands_with_any_metropole_native_source": 60,
+      "islands_with_any_historic_empire": 41,
+      "total_empire_years_geography_weighted": {
+        "Great_Britain": 3622.3497085220774,
+        "Spain": 1965.446653208777,
+        "Portugal": 2814.974217581283,
+        "Netherlands": 2473.885086316223
+      },
+      "area_quartiles_ln_km2": [
+        7.110480031292927,
+        8.52576705066156,
+        10.909059229327982
+      ],
+      "history_exposure_threshold_yrs": 50,
+      "test": {
+        "globally_unstratified": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.01905655396239632,
+          "null_mean_slope": 0.00011251079957780753,
+          "observed_minus_null_slope": 0.018944043162818513,
+          "null_interval_q025_q975": [
+            -0.01156685096024893,
+            0.011142738142367027
+          ],
+          "p_high": 0.0008,
+          "p_two": 0.0014,
+          "draws": 4999,
+          "effective_islands": 60,
+          "exchangeable_blocks": 1
+        },
+        "within_biogeographic_level1": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.01905655396239632,
+          "null_mean_slope": 0.006356387390426146,
+          "observed_minus_null_slope": 0.012700166571970173,
+          "null_interval_q025_q975": [
+            -0.0012141207010987055,
+            0.013867763578352165
+          ],
+          "p_high": 0.0004,
+          "p_two": 0.0006,
+          "draws": 4999,
+          "effective_islands": 60,
+          "exchangeable_blocks": 8
+        },
+        "within_level1_and_global_area_quartile": {
+          "status": "DESCRIPTIVE_PERMUTATION",
+          "observed_slope_fraction_per_century": 0.01905655396239632,
+          "null_mean_slope": 0.014168393900411221,
+          "observed_minus_null_slope": 0.004888160061985098,
+          "null_interval_q025_q975": [
+            0.008144366659975304,
+            0.01955937257905754
+          ],
+          "p_high": 0.0404,
+          "p_two": 0.095,
+          "draws": 4999,
+          "effective_islands": 45,
+          "exchangeable_blocks": 11
+        }
+      }
+    }
+  },
+  "controls": {
+    "island_baseline": "Subtract per-island four-metropole source-opportunity mean",
+    "metropole_baseline": "Subtract per-metropole mean across included islands",
+    "permutation": "Permute full empire-year vectors among islands, holding the native-source opportunity matrix fixed, within strata",
+    "duration": "Ignore a historical empire's fractional area-weighted occupancy shorter than 50 years for primary"
+  },
+  "caution": [
+    "Descriptive cross-classified correlation and restricted exchangeability null; spatial and unobserved history remain uncontrolled.",
+    "The published historical data covers four European empires, not France or every historical colonizer.",
+    "Native plant source regions or native populations within other former colonies do not establish import origin, pathway, period or port involvement.",
+    "Species gain is potential larval-host resource geography, not butterfly colonization or established population.",
+    "The four source fractions overlap, since host species may have native distributions in more than one metropole."
+  ]
+}
