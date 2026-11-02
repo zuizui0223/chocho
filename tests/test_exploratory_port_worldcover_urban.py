@@ -33,7 +33,7 @@ def test_land_cover_pixel_counts_and_land_only_denominator(tmp_path):
 def test_exact_island_27_pair_source_quality_from_original_document():
     observations=[]
     for island in range(1,7):
-        for port in range(1,6):
+        for port in range(1, 6 if island < 6 else 3):
             for side in ("port","nonport"):
                 for period in ("early_2001_2010","later_2011_2024"):
                     observations.append({"island_id":str(island),"port_id":port,
