@@ -1,0 +1,75 @@
+name: chocho Q3 archived butterfly observation on new island resources
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/analyze_q3_gbif_observed_island_resource_overlap.py
+      - .github/workflows/chocho-q3-gbif-observed-resource-islands.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  gbif-observation-overlap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official geographic lookup dependencies
+        run: python -m pip install "shapely>=2,<3"
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Reuse exact published GBIF observation set (DOI 10.15468/dl.pp5nc9)
+        shell: bash
+        run: |
+          mkdir -p work/gbif
+          curl --fail --location --show-error --silent \
+            --retry 3 --retry-delay 3 --connect-timeout 20 --max-time 300 \
+            --output work/gbif/0008693-260928105237408.zip \
+            https://api.gbif.org/v1/occurrence/download/request/0008693-260928105237408.zip
+          python - <<'PY'
+          from zipfile import ZipFile
+          p="work/gbif/0008693-260928105237408.zip"
+          with ZipFile(p) as z:
+              print("GBIF archived DOI files",[(n,z.getinfo(n).file_size) for n in z.namelist()])
+          PY
+      - name: Link exact available 31-species GBIF observations to added host islands
+        shell: bash
+        run: |
+          python -m py_compile scripts/analyze_q3_gbif_observed_island_resource_overlap.py
+          python scripts/analyze_q3_gbif_observed_island_resource_overlap.py \
+            --gbif-download-zip work/gbif/0008693-260928105237408.zip \
+            --validation-species data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+            --q1-added results/island-mainland-resource-q1/added_species_region_pairs.csv \
+            --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
+            --q1-summary results/island-mainland-resource-q1/island_mainland_summary.json \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q3-observed-butterfly-island-opportunity
+      - name: Save full disaggregated non-sensitive results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q3-gbif-archive-island-resource-realization
+          path: results/q3-observed-butterfly-island-opportunity
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save Q3 reproducibility summary without new GBIF occurrence IDs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q3-observed-butterfly-island-opportunity/q3_archival_gbif_overlap_audit.json \
+                  results/q3-observed-butterfly-island-opportunity/island_gbif_observation_summary.csv \
+                  results/q3-observed-butterfly-island-opportunity/species_observation_summary.csv
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive Q3 independent butterfly records overlapping introduced-host island opportunity [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
