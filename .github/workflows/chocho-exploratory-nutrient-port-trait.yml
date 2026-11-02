@@ -44,6 +44,12 @@ jobs:
           assert o['within_genus']['eligible_genera'] == 24, o
           assert o['within_genus']['eligible_species'] == 77, o
           assert 0.1 < o['within_genus']['permutation_two_sided_p'] < 0.9, o
+          for name, expected, n in [('L', 0.3158307863, 182),
+                                    ('F', 0.3516555121, 155),
+                                    ('S', 0.3660112564, 182)]:
+              item=o['nutrient_vs_other_traits'][name]
+              assert item['n_species'] == n, item
+              assert abs(item['delta_rho_N_minus_control']-expected) < 1e-4, item
           print('SOURCE-LOCKED NUTRIENT PILOT VERIFIED')
           print(json.dumps({
             'n': o['counts']['n_exact_species_matches_with_N'],
