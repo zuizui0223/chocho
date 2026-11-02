@@ -38,15 +38,14 @@ def write_csv(path, rows, fields):
 def main():
     p = argparse.ArgumentParser()
     for x in ["panel-csv", "host-csv", "native-csv", "contemporary-csv",
-              "q1-summary", "q1-added", "level1-json", "output-dir"]:
+              "q1-summary", "level1-json", "output-dir"]:
         p.add_argument("--" + x, required=True, type=Path)
     a = p.parse_args()
     a.output_dir.mkdir(parents=True, exist_ok=True)
     q1 = json.loads(a.q1_summary.read_text(encoding="utf-8"))
     panel = list(read_csv(a.panel_csv))
     butterflies = {r["species"] for r in panel}
-    added = list(read_csv(a.q1_added))
-    if len(panel) != 239 or len(added) != 14553 or q1["panel_total"]["n_panel_mismatches"]:
+    if len(panel) != 239 or q1["panel_total"]["n_panel_mismatches"]:
         raise RuntimeError("Q1 source-verified panel is not the frozen 239-species matrix")
     level1 = json.loads(a.level1_json.read_text(encoding="utf-8"))["units"]
     native_host = defaultdict(set)
@@ -62,6 +61,31 @@ def main():
     missing_native = [(h, code) for h, regs in native_host.items()
                       for code in regs if code not in contemporary_host.get(h, ())]
     if missing_native: raise RuntimeError(f"Native hosts not subset contemporary: {missing_native[:10]}")
+
+    # Reconstruct all 239 x WGSRPD3 resource cells from exact pinned sources.
+    # No dependence on expired temporary GitHub Action output artifacts.
+    added = []
+    for record in panel:
+        butterfly = record["species"]
+        hosts = species_hosts.get(butterfly, ())
+        n = set()
+        c = set()
+        for host in hosts:
+            n.update(native_host.get(host, ()))
+            c.update(contemporary_host.get(host, ()))
+        if (not n <= c or len(n) != int(record["native_resource_units"])
+                or len(c) != int(record["contemporary_resource_units"])):
+            raise RuntimeError(f"Source footprint drift for {butterfly}: {len(n)=}, {len(c)=}")
+        for code in sorted(c - n):
+            added.append({
+                "species": butterfly,
+                "area_code_l3": code,
+                "geographic_group": "island" if code in q1["classification"]["strict_island_codes"] else (
+                    "mixed" if code in q1["classification"]["excluded_mixed_codes"] else "mainland"
+                )
+            })
+    if len(added) != 14553:
+        raise RuntimeError(f"Added source cells did not reproduce GEB 14,553: {len(added)}")
 
     # A true new resource cell has no native host in its island region but at
     # least one introduced host present in WCVP contemporary distribution.
