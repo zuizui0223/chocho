@@ -1,0 +1,50 @@
+name: chocho WPI flora survey effort sensitivity
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_three_gate_port_flora_botanical_effort.py
+      - .github/workflows/chocho-three-gate-port-flora-effort-control.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verify-reporting-effort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact numeric dependency
+        run: python -m pip install 'numpy>=1.26,<3'
+      - name: Validate and compute 9 models with independent botanical reporting effort sensitivity
+        run: |
+          python -m py_compile scripts/test_three_gate_port_flora_botanical_effort.py
+          python scripts/test_three_gate_port_flora_botanical_effort.py \
+            --all-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --host-taxa results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --gbif-effort results/q4-gbif-first-year-pilot/island_plant_effort_year_facets.csv \
+            --canary-effort-audit results/q4-canary-plant-firstyear-v02/CNY_three_plant_firstyear_audit.json \
+            --out-dir results/three-gate-port-botanical-effort
+      - name: Upload source-backed reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-wpi-plant-botanical-reporting-effort-audit
+          path: results/three-gate-port-botanical-effort/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save only source-backed descriptive evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-port-botanical-effort/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit indexed island botanical effort as WPI-introduced flora confounding sensitivity [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
