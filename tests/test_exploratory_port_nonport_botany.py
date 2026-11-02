@@ -29,6 +29,7 @@ def test_pilot_selection_stratifies_but_does_not_duplicate_islands():
     assert len({p["port_id"] for p in chosen})==12
     assert mod.choose_pilot(x,12)==chosen
     assert len(mod.choose_pilot(x,0))==36
+    assert len(mod.choose_pilot(x,-1))==36
 
 
 def test_plant_summary_is_species_presence_not_record_count():
@@ -56,7 +57,8 @@ def test_paired_data_sufficiency_is_strict_and_auditable():
                              make("port",later,5,120,8),make("nonport",later,1,15,4)]}
     o=mod.summarise(receipt,min_plant_records=30,min_trait_species=2)
     assert o["periods"][valid]["pairs_trait_comparable"]==1
-    assert o["periods"][valid]["mean_of_paired_differences"]==1
+    assert o["periods"][valid]["island_weighted_mean_N_difference"]==1
+    assert o["periods"][valid]["independent_islands_trait_comparable"]==1
     assert o["periods"][later]["pairs_trait_comparable"]==0
-    assert o["periods"][later]["mean_of_paired_differences"] is None
+    assert o["periods"][later]["island_weighted_mean_N_difference"] is None
     assert not o["periods"][valid]["data_gate_passed"]
