@@ -266,7 +266,7 @@ def run(sites_path: Path, traits_path: Path, *, n_pilot: int, radius_km: int,
         "checked_utc":datetime.now(timezone.utc).isoformat(),
         "site_geometry_sha256":hashlib.sha256(sites_path.read_bytes()).hexdigest(),
         "site_selection_method":(
-            "all WPI79 ports with independent nonport coast control; cluster inference by 36 islands"
+            "all spatially eligible paired sites drawn from locked WPI79 ports; clustered by independent islands"
             if n_pilot<0 else
             "one port per island across four prior-effort quartiles; no butterfly or current botanical response selection"),
 
