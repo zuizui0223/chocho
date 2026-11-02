@@ -8,6 +8,10 @@ The [strict 78-port / 35-island 5km observational source audit](STRICT_WPI78_SOU
 
 The research plan that follows remains a statement of *what additional evidence would be necessary* for any causal or JBI port gateway claim; it is not a claim that botanical geography is still completely unacquired.
 
+## Global prevalence control — additional positive result
+
+A [source-locked global GBIF prevalence audit](GLOBAL_GBIF_PREVALENCE_CONTROL_20261102.md) has since verified that the **raw port frequency × N correlation (rho=+0.338; n=182 accepted taxa) remains positive when country-wide geographic recording and total GBIF occurrence indexing are controlled (partial rank rho=+0.210, genus-bootstrap descriptive interval +0.065 to +0.348)**. This is stronger evidence of a *trait-specific port-recording association* than the unadjusted global correlation, but not evidence for local sewage nitrogen, plant imports, butterfly reproduction, or port-specific enrichment; the strict same-island comparisons still remain inconclusive.
+
 ## Scope and research question
 
 The main chocho paper shows +54.9% additional potential butterfly × WGSRPD3

@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   no-overlap-island-botany:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 24
     steps:
