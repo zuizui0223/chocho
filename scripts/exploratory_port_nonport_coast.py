@@ -183,7 +183,8 @@ def shore_candidates(poly, *, n: int) -> list[tuple[float, float]]:
     return pts
 
 
-def geometry_sites(*, n_shore: int, cache: Path) -> dict:
+def geometry_sites(*, n_shore: int, cache: Path, min_clearance_km: float = 8.0,
+                   avoid_overlap_radius_km: float = 0.0) -> dict:
     cohort, country = source_cohort()
     ports = read_ports()
     ids = {int(x["port_id"]) for x in cohort}
@@ -206,7 +207,7 @@ def geometry_sites(*, n_shore: int, cache: Path) -> dict:
         candidates = shore_candidates(poly, n=n_shore)
         safe = []
         for lon, lat in candidates:
-            if np.min(haversine_array(lat, lon, lats, lons)) >= 8.0:
+            if np.min(haversine_array(lat, lon, lats, lons)) >= min_clearance_km:
                 safe.append((lon, lat))
         chosen = []
         for row in sorted(by_island[island], key=lambda x:int(x["port_id"])):
@@ -224,7 +225,8 @@ def geometry_sites(*, n_shore: int, cache: Path) -> dict:
                 if any(geodesic_km(q, old) < 2.0 for old in chosen):
                     continue
                 distance = geodesic_km((wpi.x,wpi.y), q)
-                if distance < 100:
+                if distance < 100 and (port_center is None or
+                    geodesic_km(port_center,q) >= 2*avoid_overlap_radius_km+.25):
                     eligible.append((distance, q))
             eligible.sort(key=lambda x:(x[0],x[1]))
             nonport = eligible[0][1] if eligible else None
@@ -243,6 +245,9 @@ def geometry_sites(*, n_shore: int, cache: Path) -> dict:
                 "nonport_lon": nonport[0] if nonport else None,
                 "nonport_lat": nonport[1] if nonport else None,
                 "nonport_distance_from_wpi_km": geodesic_km((wpi.x,wpi.y),nonport) if nonport else None,
+                "sample_centres_separation_km": geodesic_km(port_center,nonport) if port_center and nonport else None,
+                "five_km_radius_buffers_disjoint": (
+                    geodesic_km(port_center,nonport)>=10.0 if port_center and nonport else None),
                 "status": quality,
                 "prior_2001_2010_5km_indexed_botanical_records": int(row["original_port_2001_2010_GBIF_indexed_plants_query_count"]),
             })
@@ -265,7 +270,8 @@ def geometry_sites(*, n_shore: int, cache: Path) -> dict:
         "source_gshhg_sha256":shape_sha,
         "source_WPI_url":WPI,
         "search_radius_km_for_future_botany":1,
-        "nonport_minimum_distance_from_any_indexed_WPI_port_km":8,
+        "nonport_minimum_distance_from_any_indexed_WPI_port_km":min_clearance_km,
+        "nonport_candidate_avoid_overlap_radius_km":avoid_overlap_radius_km,
         "within_island_control_separation_km":2,
         "point_inside_landmass_and_offset_from_shoreline_m":250,
         "maximum_focal_port_site_WPI_shift_km":2,
@@ -284,8 +290,12 @@ def main():
     p.add_argument("--out",type=Path,required=True)
     p.add_argument("--cache-dir",type=Path,default=Path("/tmp/chocho-gshhg"))
     p.add_argument("--shore-candidates-per-island",type=int,default=512)
+    p.add_argument("--min-clearance-km",type=float,default=8.0)
+    p.add_argument("--avoid-overlap-radius-km",type=float,default=0.0)
     args=p.parse_args()
-    receipt=geometry_sites(n_shore=args.shore_candidates_per_island,cache=args.cache_dir)
+    receipt=geometry_sites(n_shore=args.shore_candidates_per_island,cache=args.cache_dir,
+                           min_clearance_km=args.min_clearance_km,
+                           avoid_overlap_radius_km=args.avoid_overlap_radius_km)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
     print("COAST_GEOMETRY_GATE",json.dumps(receipt["summary"],ensure_ascii=False,sort_keys=True),flush=True)
