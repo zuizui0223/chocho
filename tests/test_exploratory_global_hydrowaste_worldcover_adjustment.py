@@ -16,7 +16,7 @@ def test_COG_cache_has_explicit_small_file_handle_limit():
 
 def test_urban_model_defends_underpowered_support():
     n=90
-    df=pd.DataFrame({"in_within_country_comparison":[True]*n,
+    df=pd.DataFrame({"port_id":np.arange(n),"in_within_country_comparison":[True]*n,
           "quality":["COMPLETE"]*n,
           "country":np.repeat(["JP","GB","US"],30),
           "WWTP_count_25km":np.tile(np.arange(30)%4,3)})
