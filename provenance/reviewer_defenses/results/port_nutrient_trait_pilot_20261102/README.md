@@ -8,6 +8,12 @@ The [strict 78-port / 35-island 5km observational source audit](STRICT_WPI78_SOU
 
 The research plan that follows remains a statement of *what additional evidence would be necessary* for any causal or JBI port gateway claim; it is not a claim that botanical geography is still completely unacquired.
 
+## Completed all-flora matched-island background and source-quality audit
+
+[**All-flora background-N study**](ALL_FLORA_BACKGROUND_N_SOURCE_AUDIT_20261102.md) adds exact GBIF matching for 1,494 N-scored plant species and full 312 site-period botanical facets across 78 nonoverlapping port/nonport coastal pairs (35 islands). Before 2011, six eligible islands show higher indexed mean N among *other plants* near ports (+0.189 island-weighted, descriptive 95% bootstrap +0.063 to +0.316), but not among the already defined candidate non-native larval hosts (+0.011). The identical 27 pairs in six European islands show a host-vs-other relative N gap increasing by +0.149 in the later GBIF index period (bootstrap +0.053 to +0.252), with independent-island leave-one-out estimates +0.110 to +0.178. **This is botanical recording/composition, not plant movement or nitrogen loading.**
+
+SoilGrids predicted total-N at four port/nonport test pairs returned seven zero-or-masked pixels out of eight, including coastal source-mask risk. Soil N exposure is therefore **not identified**; no 78-pair WCS nutrient effect was claimed. Original GEB results, port host global positive correlation and previous geographic sensitivity tests remain unchanged.
+
 ## Global prevalence control — additional positive result
 
 A [source-locked global GBIF prevalence audit](GLOBAL_GBIF_PREVALENCE_CONTROL_20261102.md) has since verified that the **raw port frequency × N correlation (rho=+0.338; n=182 accepted taxa) remains positive when country-wide geographic recording and total GBIF occurrence indexing are controlled (partial rank rho=+0.210, genus-bootstrap descriptive interval +0.065 to +0.348)**. This is stronger evidence of a *trait-specific port-recording association* than the unadjusted global correlation, but not evidence for local sewage nitrogen, plant imports, butterfly reproduction, or port-specific enrichment; the strict same-island comparisons still remain inconclusive.
