@@ -55,13 +55,24 @@ def request_one(lat:float,lon:float) -> dict:
     with MemoryFile(data) as mem,mem.open() as ds:
         raw = float(next(ds.sample([(x,y)],indexes=1,masked=False))[0])
         nodata = ds.nodata
+        import numpy as np
+        image=ds.read(1,masked=False)
+        mask=(np.isfinite(image)&(image>0))
+        if nodata is not None:
+            mask=mask&(image!=nodata)
         valid=(math.isfinite(raw) and (nodata is None or raw!=nodata)
-               and raw>=0)
+               and raw>0)
         value=raw/100.0 if valid else None  # cg/kg -> g/kg
-        return {"status":"VALID_PIXEL" if valid else "NO_SOURCE_PIXEL",
+        return {"status":("VALID_POSITIVE_PIXEL" if valid else
+                          "ZERO_OR_MASKED_CANNOT_INTERPRET_AS_ZERO"),
                 "lon":lon,"lat":lat,"x_igh":x,"y_igh":y,
                 "topsoil_total_N_g_per_kg":value,
-                "raw_cg_per_kg":raw if valid else None,
+                "raw_pixel_cg_per_kg":raw,
+                "positive_pixels_in_900m_crop":int(mask.sum()),
+                "zero_pixels_in_900m_crop":int(np.count_nonzero(image==0)),
+                "positive_pixel_mean_g_per_kg":float(image[mask].mean()/100.0) if mask.any() else None,
+                "raster_source_crs":str(ds.crs),
+                "raster_crop_bounds":list(map(float,ds.bounds)),
                 "pixel_nodata_value":nodata,
                 "crop_width":ds.width,"crop_height":ds.height,
                 "source_layer":LAYER,"source_url":SOURCE_DOC,
@@ -93,6 +104,18 @@ def run(geom_path:Path):
             print("SOILGRIDS_N_SITE",r["country_original"],r["port_id"],side,
                   s.get("status"),s.get("topsoil_total_N_g_per_kg"),flush=True)
             time.sleep(.3)
+    positive_controls=[]
+    for name,lat,lon in (("Germany_inland",50.0,8.0),
+                         ("France_inland",48.0,2.5),
+                         ("Switzerland_inland",47.0,9.0)):
+        try:
+            q=request_one(lat,lon)
+        except Exception as ex:
+            q={"status":"SOURCE_REQUEST_FAILED","error":repr(ex)}
+        positive_controls.append({"control_label":name,**q})
+        print("SOILGRIDS_N_INLAND_CONTROL",name,q.get("status"),
+              q.get("topsoil_total_N_g_per_kg"),
+              "positive_crop_pixels",q.get("positive_pixels_in_900m_crop"),flush=True)
     return {
        "schema":"chocho_ISRIC_soilgrids_v2_N_WCS_8point_feasibility_v1",
        "status":"FEASIBILITY_ONLY_NO_WWTP_OR_FERTILIZATION_EFFECT",
@@ -102,7 +125,13 @@ def run(geom_path:Path):
        "model_depth":"0-5cm",
        "total_N_concentration_units":"g N per kg model-predicted fine earth",
        "sites":result,
-       "valid_pixels":sum(x["status"]=="VALID_PIXEL" for x in result),
+       "valid_pixels":sum(x["status"]=="VALID_POSITIVE_PIXEL" for x in result),
+       "inland_positive_controls":positive_controls,
+       "positive_inland_controls":sum(x["status"]=="VALID_POSITIVE_PIXEL" for x in positive_controls),
+       "strict_source_readiness":(
+           "PASS_FOR_EXPANSION" if sum(x["status"]=="VALID_POSITIVE_PIXEL" for x in result)>=6
+           and sum(x["status"]=="VALID_POSITIVE_PIXEL" for x in positive_controls)>=2
+           else "NOT_READY_ZERO_VALUES_REQUIRE_DIAGNOSIS"),
        "limitations":[
            "SoilGrids mapped nitrogen is machine-predicted, not soil observations at the port.",
            "The 2020-style soil-property map does not resolve 2001-2010 versus 2011-2024 temporal nutrient loading.",
@@ -123,7 +152,9 @@ def main():
     a.out.write_text(json.dumps(r,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("SOILGRIDS_TOTAL_N_WCS_FEASIBILITY",
           json.dumps({"valid":r["valid_pixels"],"total":len(r["sites"]),
-                      "errors":[x for x in r["sites"] if x["status"]!="VALID_PIXEL"]},
+                      "controls":r["positive_inland_controls"],
+                      "source_readiness":r["strict_source_readiness"],
+                      "errors":[x for x in r["sites"] if x["status"]!="VALID_POSITIVE_PIXEL"]},
                      ensure_ascii=False),flush=True)
 
 
