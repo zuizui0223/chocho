@@ -17,6 +17,9 @@ DOI="10.15468/dl.pp5nc9"
 EXPECTED_RECORDS=53144
 EXPECTED_API=53434
 NAME_RE=re.compile(r"^\s*([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)\b")
+# GBIF/Catalogue of Life: Historis acheronta (Fabricius, 1775) is a synonym
+# of the accepted Coea acheronta. Source: https://www.gbif.org/taxon/PTQJ2
+VERIFIED_SYNONYMS={"Coea acheronta":"Historis acheronta"}
 
 def load_csv(path):
     with path.open(newline="", encoding="utf-8") as h:
@@ -108,6 +111,7 @@ def main():
         species=(canon(get(rec,columns,"species")) or
                  canon(get(rec,columns,"acceptedScientificName")) or
                  canon(get(rec,columns,"scientificName")))
+        species=VERIFIED_SYNONYMS.get(species,species)
         if species not in all_species:
             counts["not_in_frozen_32_species"]+=1
             if species:missing_taxon[species]+=1
@@ -194,6 +198,7 @@ def main():
      "schema":"chocho_q3_gbif_doi_31species_island_opportunity_observation_v0.1",
      "status":"INDEPENDENT_GBIF_DOI_RECORD_OVERLAP_DESCRIPTIVE_ONLY",
      "gbif":{"doi":DOI,"download_key":KEY,"archive_total_records_expected":EXPECTED_RECORDS,
+             "verified_taxonomic_synonyms":VERIFIED_SYNONYMS,
              "original_api_records":EXPECTED_API,"not_returned_at_doi_rebuild":EXPECTED_API-EXPECTED_RECORDS,
              **archive_info},
      "validation_panel":{
