@@ -68,6 +68,9 @@ jobs:
           print('GBIF_BOTANICAL_12PAIRS_VERIFIED', json.dumps(d['paired_summary']['periods'],sort_keys=True))
           PY
       - name: Full 79-port / 36-island paired 5km GBIF botanical comparison
+        # The full 316-query upstream census was run at 6d32ef7 (run 41401009854).
+        # On PR updates keep the small 12-island pilot; full refresh is manual only.
+        if: github.event_name == 'workflow_dispatch'
         run: |
           python -u scripts/exploratory_port_nonport_botany.py \
             --sites /tmp/matched_coast_control_sites.json \
