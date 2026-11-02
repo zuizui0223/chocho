@@ -32,7 +32,7 @@ def main():
     if len(res)!=239 or len(original)!=225 or len({(r["species"],r["physical_island"]) for r in literature})!=len(literature):
         raise RuntimeError("Source-panel mismatch")
     trait_columns={
-      "wingspan":[c for c in fields if re.search("wing.?span|forewing|wing.?length",c,re.I)],
+      "wingspan":[c for c in fields if re.search(r"wing.?span|forewing|wing.?length|^(WS|FW)_",c,re.I)],
       "movement_or_migration":[c for c in fields if re.search("migra|dispers|mobil|movement",c,re.I)],
       "diapause_or_overwinter":[c for c in fields if re.search("diapause|overwinter|hibernat",c,re.I)],
       "oviposition":[c for c in fields if re.search("oviposit|egg.?lay",c,re.I)],
@@ -59,7 +59,8 @@ def main():
     trait_counts={
       group:{"columns":cols,
              "all_239_species_with_value":coverage(res,cols),
-             "literature_seed_species_with_value":coverage(listed&res,cols)}
+             "literature_seed_species_with_value":coverage(listed&res,cols),
+             "nonmissing_in_each_source_column":{col:coverage(res,[col]) for col in cols}}
       for group,cols in trait_columns.items()
     }
     metrics_nonmissing={
@@ -111,6 +112,10 @@ def main():
                     "frozen_species_matched":len(matching),
                     "by_trait":trait_counts},
        "GEB_precomputed_species_summary_completeness":metrics_nonmissing,
+       "literature_unique_species_panel_link":{
+          "in_GEB239_and_original225": sorted(listed&res&original),
+          "missing_from_original225": sorted(listed-original),
+       },
        "further_gates":[
          "Historical first record is not establishment and differs from known arrival.",
          "Independent observations on individual islands are collapsed within WGSRPD3 and cannot be treated as independent WGSRPD3 exposures.",
