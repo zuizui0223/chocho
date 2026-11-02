@@ -72,7 +72,7 @@ def geometry_lookup(path):
 
 def main():
     p=argparse.ArgumentParser()
-    for name in ("gbif-download-zip","validation-species","q1-added","q1-regions",
+    for name in ("gbif-download-zip","validation-species","q2-edges","q1-regions",
                  "q1-summary","wgsrpd3-geojson","out-dir"):
         p.add_argument("--"+name,type=Path,required=True)
     a=p.parse_args()
@@ -89,9 +89,8 @@ def main():
     islands={r["area_code_l3"]:r for r in load_csv(a.q1_regions) if r["class"]=="island"}
     if len(islands)!=125:raise RuntimeError("Q1 strict island classification drift")
     added=defaultdict(set)
-    for r in load_csv(a.q1_added):
-        if r["geographic_group"]=="island":
-            added[r["species"]].add(r["area_code_l3"])
+    for r in load_csv(a.q2_edges):
+        added[r["species"]].add(r["island_code"])
     if sum(len(v) for v in added.values())!=5674:raise RuntimeError("Frozen 5674 island additions changed")
     records,columns,archive_info=parse_archive(a.gbif_download_zip)
     if len(records)!=EXPECTED_RECORDS:
