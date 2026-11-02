@@ -328,16 +328,84 @@
       "mean_new_butterfly_resource_jaccard": 0.1809984651935035,
       "raw_same_minus_no_shared_host_jaccard": 0.0032106491975602003,
       "raw_same_minus_no_shared_butterfly_jaccard": 0.02824717153340539,
-      "controlled_shared_history_host_coefficient": 3.2654934790603515e-05,
-      "controlled_shared_history_butterfly_coefficient": 0.012636018016897366,
+      "controlled_shared_history_host_coefficient": 3.2654934790605e-05,
+      "controlled_shared_history_butterfly_coefficient": 0.012636018016897363,
+      "island_leave_one_out_influence": {
+        "host_plant_network": {
+          "valid_leave_one_island_out": 44,
+          "n_positive": 23,
+          "minimum_coefficient": -0.00202164982902456,
+          "maximum_coefficient": 0.0025232801066169433,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": -0.00202164982902456
+            },
+            {
+              "excluded_code": "CVI",
+              "adjusted_beta": -0.0019585222890083484
+            },
+            {
+              "excluded_code": "AZO",
+              "adjusted_beta": -0.0016879625807951146
+            },
+            {
+              "excluded_code": "DOM",
+              "adjusted_beta": 0.00115147574003181
+            },
+            {
+              "excluded_code": "BAL",
+              "adjusted_beta": 0.0012472671550050904
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": 0.0025232801066169433
+            }
+          ]
+        },
+        "butterfly_resource_opportunity_network": {
+          "valid_leave_one_island_out": 44,
+          "n_positive": 44,
+          "minimum_coefficient": 0.007788028236532354,
+          "maximum_coefficient": 0.01558469547278795,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "STH",
+              "adjusted_beta": 0.007788028236532354
+            },
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": 0.008418380290508927
+            },
+            {
+              "excluded_code": "AZO",
+              "adjusted_beta": 0.00935537389252519
+            },
+            {
+              "excluded_code": "DOM",
+              "adjusted_beta": 0.014817337773778354
+            },
+            {
+              "excluded_code": "SOC",
+              "adjusted_beta": 0.015027931178144691
+            },
+            {
+              "excluded_code": "GGI",
+              "adjusted_beta": 0.01558469547278795
+            }
+          ]
+        }
+      },
       "controls": "Unordered Level1 pair fixed effects, log great-circle distance, abs log WGSRPD area difference, abs log host richness difference, abs log butterfly resource opportunity richness difference.",
       "label_permutations": {
         "global": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 3.2654934790603515e-05,
-            "permutation_mean": -4.954497776129939e-05,
-            "observed_minus_null_mean": 8.21999125519029e-05,
+            "adjusted_shared_history_Jaccard_difference": 3.2654934790605e-05,
+            "permutation_mean": -4.954497776129938e-05,
+            "observed_minus_null_mean": 8.219991255190438e-05,
             "null_q025": -0.009044616233209683,
             "null_q975": 0.009122338710547023,
             "p_high": 0.4872,
@@ -350,11 +418,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.012636018016897366,
-            "permutation_mean": -0.00012232193262379606,
-            "observed_minus_null_mean": 0.012758339949521162,
-            "null_q025": -0.013663872205643177,
-            "null_q975": 0.013854964790077317,
+            "adjusted_shared_history_Jaccard_difference": 0.012636018016897363,
+            "permutation_mean": -0.00012232193262379603,
+            "observed_minus_null_mean": 0.012758339949521158,
+            "null_q025": -0.013663872205643178,
+            "null_q975": 0.013854964790077319,
             "p_high": 0.0372,
             "p_two_sided_centered": 0.07,
             "effective_islands": 44,
@@ -367,10 +435,10 @@
         "within_level1": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 3.2654934790603515e-05,
-            "permutation_mean": 1.3124875155070787e-05,
-            "observed_minus_null_mean": 1.953005963553273e-05,
-            "null_q025": -0.00960266085595318,
+            "adjusted_shared_history_Jaccard_difference": 3.2654934790605e-05,
+            "permutation_mean": 1.3124875155070743e-05,
+            "observed_minus_null_mean": 1.9530059635534254e-05,
+            "null_q025": -0.009602660855953179,
             "null_q975": 0.010412282849526484,
             "p_high": 0.497,
             "p_two_sided_centered": 0.9968,
@@ -382,10 +450,10 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.012636018016897366,
-            "permutation_mean": 1.6833285463341722e-05,
-            "observed_minus_null_mean": 0.012619184731434025,
-            "null_q025": -0.016331529098973663,
+            "adjusted_shared_history_Jaccard_difference": 0.012636018016897363,
+            "permutation_mean": 1.6833285463341624e-05,
+            "observed_minus_null_mean": 0.012619184731434021,
+            "null_q025": -0.016331529098973667,
             "null_q975": 0.017026672524026794,
             "p_high": 0.0742,
             "p_two_sided_centered": 0.1458,
@@ -399,11 +467,11 @@
         "within_level1_area_half": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 3.2654934790603515e-05,
-            "permutation_mean": -0.0009008138112015267,
-            "observed_minus_null_mean": 0.0009334687459921303,
+            "adjusted_shared_history_Jaccard_difference": 3.2654934790605e-05,
+            "permutation_mean": -0.0009008138112015266,
+            "observed_minus_null_mean": 0.0009334687459921316,
             "null_q025": -0.009635814084122356,
-            "null_q975": 0.008524205300111594,
+            "null_q975": 0.008524205300111597,
             "p_high": 0.4138,
             "p_two_sided_centered": 0.8384,
             "effective_islands": 33,
@@ -414,9 +482,9 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.012636018016897366,
+            "adjusted_shared_history_Jaccard_difference": 0.012636018016897363,
             "permutation_mean": 0.0012719900821578098,
-            "observed_minus_null_mean": 0.011364027934739555,
+            "observed_minus_null_mean": 0.011364027934739552,
             "null_q025": -0.015265740026790951,
             "null_q975": 0.01811307672536021,
             "p_high": 0.0974,
@@ -745,18 +813,86 @@
       "mean_new_butterfly_resource_jaccard": 0.17881821207069679,
       "raw_same_minus_no_shared_host_jaccard": 0.003239899650025746,
       "raw_same_minus_no_shared_butterfly_jaccard": 0.02355627658406151,
-      "controlled_shared_history_host_coefficient": 0.0005344511910070288,
+      "controlled_shared_history_host_coefficient": 0.0005344511910070289,
       "controlled_shared_history_butterfly_coefficient": 0.005517658955893963,
+      "island_leave_one_out_influence": {
+        "host_plant_network": {
+          "valid_leave_one_island_out": 63,
+          "n_positive": 53,
+          "minimum_coefficient": -0.0009663740780297783,
+          "maximum_coefficient": 0.0021795031427708513,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "CVI",
+              "adjusted_beta": -0.0009663740780297783
+            },
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": -0.0005903775974199139
+            },
+            {
+              "excluded_code": "AZO",
+              "adjusted_beta": -0.000255872417284143
+            },
+            {
+              "excluded_code": "MCS",
+              "adjusted_beta": 0.0014826699839834544
+            },
+            {
+              "excluded_code": "LSI",
+              "adjusted_beta": 0.0016248865128385044
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": 0.0021795031427708513
+            }
+          ]
+        },
+        "butterfly_resource_opportunity_network": {
+          "valid_leave_one_island_out": 63,
+          "n_positive": 63,
+          "minimum_coefficient": 0.0018536182815267952,
+          "maximum_coefficient": 0.008132418495719369,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "STH",
+              "adjusted_beta": 0.0018536182815267952
+            },
+            {
+              "excluded_code": "CVI",
+              "adjusted_beta": 0.0026522242571666837
+            },
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": 0.0028677725843164886
+            },
+            {
+              "excluded_code": "JAW",
+              "adjusted_beta": 0.007433121734798418
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": 0.007921130199293918
+            },
+            {
+              "excluded_code": "MRN",
+              "adjusted_beta": 0.008132418495719369
+            }
+          ]
+        }
+      },
       "controls": "Unordered Level1 pair fixed effects, log great-circle distance, abs log WGSRPD area difference, abs log host richness difference, abs log butterfly resource opportunity richness difference.",
       "label_permutations": {
         "global": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070288,
-            "permutation_mean": -2.8328163227495197e-05,
-            "observed_minus_null_mean": 0.000562779354234524,
-            "null_q025": -0.00810187080760591,
-            "null_q975": 0.008539715779745601,
+            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070289,
+            "permutation_mean": -2.832816322749521e-05,
+            "observed_minus_null_mean": 0.0005627793542345241,
+            "null_q025": -0.008101870807605913,
+            "null_q975": 0.008539715779745598,
             "p_high": 0.4424,
             "p_two_sided_centered": 0.8996,
             "effective_islands": 63,
@@ -768,10 +904,10 @@
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
             "adjusted_shared_history_Jaccard_difference": 0.005517658955893963,
-            "permutation_mean": -9.504605469680601e-05,
+            "permutation_mean": -9.504605469680603e-05,
             "observed_minus_null_mean": 0.005612705010590769,
-            "null_q025": -0.013912852685785173,
-            "null_q975": 0.013611749138722746,
+            "null_q025": -0.013912852685785172,
+            "null_q975": 0.013611749138722744,
             "p_high": 0.2148,
             "p_two_sided_centered": 0.4344,
             "effective_islands": 63,
@@ -784,9 +920,9 @@
         "within_level1": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070288,
-            "permutation_mean": -0.00012089400436545805,
-            "observed_minus_null_mean": 0.0006553451953724868,
+            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070289,
+            "permutation_mean": -0.00012089400436545808,
+            "observed_minus_null_mean": 0.000655345195372487,
             "null_q025": -0.007864730143532951,
             "null_q975": 0.008406422223793066,
             "p_high": 0.4338,
@@ -800,10 +936,10 @@
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
             "adjusted_shared_history_Jaccard_difference": 0.005517658955893963,
-            "permutation_mean": -2.0463238442835105e-05,
+            "permutation_mean": -2.046323844283506e-05,
             "observed_minus_null_mean": 0.005538122194336798,
-            "null_q025": -0.014306322427537458,
-            "null_q975": 0.014978800935156892,
+            "null_q025": -0.014306322427537464,
+            "null_q975": 0.014978800935156888,
             "p_high": 0.2362,
             "p_two_sided_centered": 0.4814,
             "effective_islands": 55,
@@ -816,10 +952,10 @@
         "within_level1_area_half": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070288,
-            "permutation_mean": 0.00020448937745682228,
+            "adjusted_shared_history_Jaccard_difference": 0.0005344511910070289,
+            "permutation_mean": 0.00020448937745682242,
             "observed_minus_null_mean": 0.0003299618135502065,
-            "null_q025": -0.006988489548997174,
+            "null_q025": -0.006988489548997172,
             "null_q975": 0.008044743920628962,
             "p_high": 0.4562,
             "p_two_sided_centered": 0.935,
@@ -834,8 +970,8 @@
             "adjusted_shared_history_Jaccard_difference": 0.005517658955893963,
             "permutation_mean": -0.002709109284675086,
             "observed_minus_null_mean": 0.00822676824056905,
-            "null_q025": -0.016434573591526527,
-            "null_q975": 0.011952479196625258,
+            "null_q025": -0.01643457359152653,
+            "null_q975": 0.01195247919662526,
             "p_high": 0.136,
             "p_two_sided_centered": 0.274,
             "effective_islands": 47,
@@ -1147,16 +1283,84 @@
       "mean_new_butterfly_resource_jaccard": 0.15826236889951753,
       "raw_same_minus_no_shared_host_jaccard": -0.003260284621575793,
       "raw_same_minus_no_shared_butterfly_jaccard": 0.019869896006346116,
-      "controlled_shared_history_host_coefficient": -0.008376292944178751,
-      "controlled_shared_history_butterfly_coefficient": -0.017051477599879405,
+      "controlled_shared_history_host_coefficient": -0.00837629294417875,
+      "controlled_shared_history_butterfly_coefficient": -0.01705147759987941,
+      "island_leave_one_out_influence": {
+        "host_plant_network": {
+          "valid_leave_one_island_out": 23,
+          "n_positive": 0,
+          "minimum_coefficient": -0.01926448406688177,
+          "maximum_coefficient": -0.000763081092996887,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "MXI",
+              "adjusted_beta": -0.01926448406688177
+            },
+            {
+              "excluded_code": "SGE",
+              "adjusted_beta": -0.011589384297341299
+            },
+            {
+              "excluded_code": "BIS",
+              "adjusted_beta": -0.011525050816925137
+            },
+            {
+              "excluded_code": "AND",
+              "adjusted_beta": -0.005307726123349645
+            },
+            {
+              "excluded_code": "SEL",
+              "adjusted_beta": -0.005014522751582794
+            },
+            {
+              "excluded_code": "SOC",
+              "adjusted_beta": -0.000763081092996887
+            }
+          ]
+        },
+        "butterfly_resource_opportunity_network": {
+          "valid_leave_one_island_out": 23,
+          "n_positive": 0,
+          "minimum_coefficient": -0.023084992066008603,
+          "maximum_coefficient": -0.013257253340731755,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "MXI",
+              "adjusted_beta": -0.023084992066008603
+            },
+            {
+              "excluded_code": "SOC",
+              "adjusted_beta": -0.021522065147906225
+            },
+            {
+              "excluded_code": "NCB",
+              "adjusted_beta": -0.020011690178263895
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": -0.014868462986912384
+            },
+            {
+              "excluded_code": "PEI",
+              "adjusted_beta": -0.01333456224558299
+            },
+            {
+              "excluded_code": "DOM",
+              "adjusted_beta": -0.013257253340731755
+            }
+          ]
+        }
+      },
       "controls": "Unordered Level1 pair fixed effects, log great-circle distance, abs log WGSRPD area difference, abs log host richness difference, abs log butterfly resource opportunity richness difference.",
       "label_permutations": {
         "global": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.008376292944178751,
+            "adjusted_shared_history_Jaccard_difference": -0.00837629294417875,
             "permutation_mean": 0.00013776295352433212,
-            "observed_minus_null_mean": -0.008514055897703083,
+            "observed_minus_null_mean": -0.008514055897703082,
             "null_q025": -0.015199391127590712,
             "null_q975": 0.015987979273281484,
             "p_high": 0.876,
@@ -1169,11 +1373,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.017051477599879405,
-            "permutation_mean": 0.0001233761759833504,
-            "observed_minus_null_mean": -0.017174853775862756,
+            "adjusted_shared_history_Jaccard_difference": -0.01705147759987941,
+            "permutation_mean": 0.0001233761759833503,
+            "observed_minus_null_mean": -0.01717485377586276,
             "null_q025": -0.023850503466627107,
-            "null_q975": 0.023437185935981666,
+            "null_q975": 0.02343718593598167,
             "p_high": 0.9218,
             "p_two_sided_centered": 0.1626,
             "effective_islands": 23,
@@ -1186,11 +1390,11 @@
         "within_level1": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.008376292944178751,
-            "permutation_mean": 0.0003080223840918594,
-            "observed_minus_null_mean": -0.00868431532827061,
+            "adjusted_shared_history_Jaccard_difference": -0.00837629294417875,
+            "permutation_mean": 0.000308022384091859,
+            "observed_minus_null_mean": -0.008684315328270608,
             "null_q025": -0.015196939313322728,
-            "null_q975": 0.021179810623323376,
+            "null_q975": 0.02117981062332337,
             "p_high": 0.8484,
             "p_two_sided_centered": 0.3352,
             "effective_islands": 11,
@@ -1201,10 +1405,10 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.017051477599879405,
-            "permutation_mean": 0.00022434691571648557,
-            "observed_minus_null_mean": -0.01727582451559589,
-            "null_q025": -0.019465013532570033,
+            "adjusted_shared_history_Jaccard_difference": -0.01705147759987941,
+            "permutation_mean": 0.00022434691571648584,
+            "observed_minus_null_mean": -0.017275824515595894,
+            "null_q025": -0.019465013532570036,
             "null_q975": 0.027441624068439148,
             "p_high": 0.9706,
             "p_two_sided_centered": 0.1258,
@@ -1218,11 +1422,11 @@
         "within_level1_area_half": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.008376292944178751,
-            "permutation_mean": -0.0016134933638754017,
-            "observed_minus_null_mean": -0.0067627995803033495,
-            "null_q025": -0.01352062743805045,
-            "null_q975": 0.011784484056738327,
+            "adjusted_shared_history_Jaccard_difference": -0.00837629294417875,
+            "permutation_mean": -0.001613493363875401,
+            "observed_minus_null_mean": -0.006762799580303349,
+            "null_q025": -0.013520627438050447,
+            "null_q975": 0.01178448405673833,
             "p_high": 0.8314,
             "p_two_sided_centered": 0.419,
             "effective_islands": 9,
@@ -1233,11 +1437,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": -0.017051477599879405,
-            "permutation_mean": -0.00010286681791442683,
-            "observed_minus_null_mean": -0.016948610781964978,
-            "null_q025": -0.017051477599879405,
-            "null_q975": 0.014635352254049196,
+            "adjusted_shared_history_Jaccard_difference": -0.01705147759987941,
+            "permutation_mean": -0.00010286681791442705,
+            "observed_minus_null_mean": -0.01694861078196498,
+            "null_q025": -0.01705147759987941,
+            "null_q975": 0.014635352254049197,
             "p_high": 1.0,
             "p_two_sided_centered": 0.0392,
             "effective_islands": 9,
@@ -1505,17 +1709,85 @@
       "mean_new_butterfly_resource_jaccard": 0.1879173315216817,
       "raw_same_minus_no_shared_host_jaccard": 0.006609890870041768,
       "raw_same_minus_no_shared_butterfly_jaccard": 0.034901129668067105,
-      "controlled_shared_history_host_coefficient": 0.0014836453830650584,
-      "controlled_shared_history_butterfly_coefficient": 0.014316358653855442,
+      "controlled_shared_history_host_coefficient": 0.001483645383065057,
+      "controlled_shared_history_butterfly_coefficient": 0.014316358653855445,
+      "island_leave_one_out_influence": {
+        "host_plant_network": {
+          "valid_leave_one_island_out": 41,
+          "n_positive": 37,
+          "minimum_coefficient": -0.0008454699620452832,
+          "maximum_coefficient": 0.004649756515694487,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": -0.0008454699620452832
+            },
+            {
+              "excluded_code": "AZO",
+              "adjusted_beta": -0.0006899717514501465
+            },
+            {
+              "excluded_code": "CVI",
+              "adjusted_beta": -0.0005362308634343408
+            },
+            {
+              "excluded_code": "DOM",
+              "adjusted_beta": 0.002892119562595412
+            },
+            {
+              "excluded_code": "SEL",
+              "adjusted_beta": 0.0031190068188343065
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": 0.004649756515694487
+            }
+          ]
+        },
+        "butterfly_resource_opportunity_network": {
+          "valid_leave_one_island_out": 41,
+          "n_positive": 41,
+          "minimum_coefficient": 0.008997857364732766,
+          "maximum_coefficient": 0.016988871781005988,
+          "range_is_not_confidence_interval": true,
+          "extreme_influence_cases": [
+            {
+              "excluded_code": "STH",
+              "adjusted_beta": 0.008997857364732766
+            },
+            {
+              "excluded_code": "MAU",
+              "adjusted_beta": 0.009623917524424926
+            },
+            {
+              "excluded_code": "AZO",
+              "adjusted_beta": 0.010269294534464568
+            },
+            {
+              "excluded_code": "GGI",
+              "adjusted_beta": 0.016762463032433984
+            },
+            {
+              "excluded_code": "CYP",
+              "adjusted_beta": 0.016829418508288858
+            },
+            {
+              "excluded_code": "DOM",
+              "adjusted_beta": 0.016988871781005988
+            }
+          ]
+        }
+      },
       "controls": "Unordered Level1 pair fixed effects, log great-circle distance, abs log WGSRPD area difference, abs log host richness difference, abs log butterfly resource opportunity richness difference.",
       "label_permutations": {
         "global": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0014836453830650584,
-            "permutation_mean": 2.986235574411949e-05,
-            "observed_minus_null_mean": 0.0014537830273209389,
-            "null_q025": -0.00983450701541837,
+            "adjusted_shared_history_Jaccard_difference": 0.001483645383065057,
+            "permutation_mean": 2.9862355744119468e-05,
+            "observed_minus_null_mean": 0.0014537830273209373,
+            "null_q025": -0.009834507015418372,
             "null_q975": 0.010261703294192001,
             "p_high": 0.3794,
             "p_two_sided_centered": 0.7754,
@@ -1527,11 +1799,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.014316358653855442,
-            "permutation_mean": 0.00012811299469029521,
-            "observed_minus_null_mean": 0.014188245659165146,
-            "null_q025": -0.015486084453668123,
-            "null_q975": 0.015527047108206928,
+            "adjusted_shared_history_Jaccard_difference": 0.014316358653855445,
+            "permutation_mean": 0.00012811299469029527,
+            "observed_minus_null_mean": 0.01418824565916515,
+            "null_q025": -0.015486084453668121,
+            "null_q975": 0.015527047108206925,
             "p_high": 0.036,
             "p_two_sided_centered": 0.0734,
             "effective_islands": 41,
@@ -1544,11 +1816,11 @@
         "within_level1": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0014836453830650584,
-            "permutation_mean": -8.352493386102185e-05,
-            "observed_minus_null_mean": 0.0015671703169260803,
-            "null_q025": -0.010972251913373766,
-            "null_q975": 0.011010379835496738,
+            "adjusted_shared_history_Jaccard_difference": 0.001483645383065057,
+            "permutation_mean": -8.352493386102179e-05,
+            "observed_minus_null_mean": 0.0015671703169260788,
+            "null_q025": -0.010972251913373768,
+            "null_q975": 0.011010379835496737,
             "p_high": 0.3872,
             "p_two_sided_centered": 0.784,
             "effective_islands": 35,
@@ -1559,11 +1831,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.014316358653855442,
-            "permutation_mean": -0.0001558991610043921,
-            "observed_minus_null_mean": 0.014472257814859833,
+            "adjusted_shared_history_Jaccard_difference": 0.014316358653855445,
+            "permutation_mean": -0.00015589916100439212,
+            "observed_minus_null_mean": 0.014472257814859836,
             "null_q025": -0.0194829444290136,
-            "null_q975": 0.01898621297162878,
+            "null_q975": 0.018986212971628776,
             "p_high": 0.069,
             "p_two_sided_centered": 0.1424,
             "effective_islands": 35,
@@ -1576,11 +1848,11 @@
         "within_level1_area_half": {
           "host_plant_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.0014836453830650584,
-            "permutation_mean": 0.0004475811611364128,
-            "observed_minus_null_mean": 0.0010360642219286456,
-            "null_q025": -0.009738784045455981,
-            "null_q975": 0.011462552535805099,
+            "adjusted_shared_history_Jaccard_difference": 0.001483645383065057,
+            "permutation_mean": 0.00044758116113641303,
+            "observed_minus_null_mean": 0.0010360642219286438,
+            "null_q025": -0.009738784045455983,
+            "null_q975": 0.011462552535805103,
             "p_high": 0.4188,
             "p_two_sided_centered": 0.8564,
             "effective_islands": 33,
@@ -1591,11 +1863,11 @@
           },
           "butterfly_resource_opportunity_network": {
             "status": "DESCRIPTIVE_NODE_PERMUTATION",
-            "adjusted_shared_history_Jaccard_difference": 0.014316358653855442,
-            "permutation_mean": 0.0012867459915667455,
-            "observed_minus_null_mean": 0.013029612662288696,
-            "null_q025": -0.017329434918338108,
-            "null_q975": 0.02009793722131155,
+            "adjusted_shared_history_Jaccard_difference": 0.014316358653855445,
+            "permutation_mean": 0.001286745991566746,
+            "observed_minus_null_mean": 0.013029612662288699,
+            "null_q025": -0.0173294349183381,
+            "null_q975": 0.02009793722131156,
             "p_high": 0.0922,
             "p_two_sided_centered": 0.1798,
             "effective_islands": 33,
