@@ -1,0 +1,51 @@
+name: chocho three-gate port resource supply contrast
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_three_gate_port_resource_island_association.py
+      - .github/workflows/chocho-three-gate-port-resource-faucet.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  port-host-resource:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install quantitative dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Test modern port inventory against introduced host-resource expansion across 123 islands
+        run: |
+          python -m py_compile scripts/test_three_gate_port_resource_island_association.py
+          python scripts/test_three_gate_port_resource_island_association.py \
+            --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
+            --q1-audit results/island-mainland-resource-q1/island_mainland_summary.json \
+            --wpi-island-regions results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --wpi-audit results/three-gate-wpi-port-v02/wpi_port_exposure_audit_v02.json \
+            --island-area results/island-mainland-resource-area-v02/region_area_metrics.csv \
+            --out-dir results/three-gate-port-resource-faucet
+      - name: Preserve inspectable island-level source joins and null results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-three-gate-port-host-resource-126-islands
+          path: results/three-gate-port-resource-faucet/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Record completed noncausal geographic comparison on analysis branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-port-resource-faucet/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit port vs host-resource association on corrected islands [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
