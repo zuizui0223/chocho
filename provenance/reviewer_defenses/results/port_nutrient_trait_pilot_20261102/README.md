@@ -18,6 +18,10 @@ SoilGrids predicted total-N at four port/nonport test pairs returned seven zero-
 
 A [source-locked global GBIF prevalence audit](GLOBAL_GBIF_PREVALENCE_CONTROL_20261102.md) has since verified that the **raw port frequency × N correlation (rho=+0.338; n=182 accepted taxa) remains positive when country-wide geographic recording and total GBIF occurrence indexing are controlled (partial rank rho=+0.210, genus-bootstrap descriptive interval +0.065 to +0.348)**. This is stronger evidence of a *trait-specific port-recording association* than the unadjusted global correlation, but not evidence for local sewage nitrogen, plant imports, butterfly reproduction, or port-specific enrichment; the strict same-island comparisons still remain inconclusive.
 
+## Source-locked recording-effort sensitivity (2026-11-02)
+
+[New 27-pair European rarefaction and plant-turnover source audit](RECORD_SPECIES_RAREFACTION_SENSITIVITY_20261102.md): the observed equal-species N temporal contrast is **+0.149** (six islands), but its sign depends on the GBIF observation sampling unit. Sampling equal numbers of distinct detected plant species (80–160) retains a positive average **+0.128 to +0.136**; sampling occurrence records proportional to record frequency yields **−0.094 at 120 records**, **−0.007 at 500 records**, and **+0.044 at 1000 records**. All simulation distributions remain broad and cross zero. This is an observation-weighting sensitivity, not a causal mechanism. **No new GBIF requests were made.**
+
 ## Scope and research question
 
 The main chocho paper shows +54.9% additional potential butterfly × WGSRPD3
