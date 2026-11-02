@@ -148,7 +148,7 @@ def wpi_sites(port):
 def hydrowaste_table(path):
     if gitblob_sha(path)!=HYDRO_BLOB:
         raise ValueError("Global HydroWASTE 2022 TidyTuesday snapshot SHA mismatch")
-    rows=pd.read_csv(path,low_memory=False)
+    rows=pd.read_csv(path,low_memory=False,encoding='latin1')  # pinned HydroWASTE CSV contains non-UTF8 facility names
     if len(rows)!=58502 or rows.WASTE_ID.nunique()!=58502:
         raise ValueError("HydroWASTE v1.0 row-count or ID mismatch")
     need=["LAT_WWTP","LON_WWTP","LAT_OUT","LON_OUT","WASTE_DIS",
