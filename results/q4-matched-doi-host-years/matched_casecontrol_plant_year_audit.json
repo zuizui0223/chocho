@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_q4_matched_case_control_plant_year_retrieval_v0.1",
+  "status": "INDEXED_HOST_SOURCE_DATES_NOT_COLONIZATION",
+  "scope": {
+    "matched_butterfly_region_cells": 52,
+    "indexed_butterfly_cases": 13,
+    "nonindexed_DOI_controls_NOT_absences": 39,
+    "host_plant_island_pairs": 100,
+    "source_plant_taxa": 44,
+    "GBIF_new_fresh_plant_region_queries": 88,
+    "GBIF_source_cached_pairs": 10
+  },
+  "taxon": {
+    "EXACT_SPECIES_MATCH": 9,
+    "VERIFIED_PREVIOUS_GBIF_SPECIES_KEY": 34,
+    "WCVP_NON_SPECIES_OR_UNACCEPTED": 1
+  },
+  "geometry": {
+    "GEOMETRY_READY": 39,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 1
+  },
+  "outcomes": {
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 31,
+    "DATED_OCCURRENCE_FOUND": 56,
+    "GBIF_QUERY_FAILED": 11,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 1,
+    "WCVP_NON_SPECIES_OR_UNACCEPTED": 1
+  },
+  "source_reuse": {
+    "NEW_DOI_MATCHED_QUERY": 88,
+    "NEVER_QUERIED_COMPLEX_REGION": 1,
+    "NEVER_QUERIED_UNRESOLVED_TAXON": 1,
+    "Q4_LITERATURE_TARGETED_84": 7,
+    "Q4_BLIND_500": 3
+  },
+  "matched_index_cases_with_any_dated_host": 10,
+  "matched_index_cases_with_host_first_index_before_butterfly_DOI": 10,
+  "matched_nonindexed_control_cells_with_prior_host_documentation": 22,
+  "matched_species_island_cells_with_all_source_host_pairs_queried": 52,
+  "not_full_year_riskset": true,
+  "notes": [
+    "The source sample is 13 DOI observed and 39 DOI nonindexed cells selected by butterfly outcome, not independent arrivals or absences.",
+    "GBIF first year is an upper bound on arrival time, subject to incomplete historical digitization and taxonomic mismatch.",
+    "The 100 pairs are union of potential host resources across selected butterfly cells. A downstream join must use the full corrected Q2 edges; do not associate all plants on an island with every butterfly.",
+    "Unresolved plant taxon / complex island polygon / GBIF query failure is missing, never botanical zero.",
+    "Regional WGSRPD3 host record can be on a different physical island from the butterfly DOI index.",
+    "Port exposure has already entered matching; no port coefficient or shipping-effect estimate is identified from this design."
+  ]
+}
