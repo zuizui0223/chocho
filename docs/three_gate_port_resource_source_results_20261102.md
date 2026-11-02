@@ -70,6 +70,8 @@ All regressions use log WGSRPD3 area and fixed Level1 botanical regions. Botanic
 | HOSTS-selected introduced larval host taxa + native butterfly-resource baseline + reporting | **+0.1639** | **+17.8%** | **0.0110** |
 | WPI ports vs **GBIF botanical reporting itself** (native flora / area / region controlled) | +0.5239 | +68.9% indexed botanical records | 0.0002 |
 
+Geographic influence check: leaving out each of the nine Level1 botanical biogeographic regions in turn preserved a positive effort-adjusted port–introduced flora coefficient in **9/9 leave-one-Level1-out comparisons** (range β=+0.1868 to +0.2831, based on 75–96 retained islands). These are effect-direction checks and not nine independent replications; the regions are unevenly sampled.
+
 Sensitivity of all-flora effort-adjusted model: ports >0 only, 69 regions (β=+0.2354, p=0.0222); indexed botanical record count ≥1,000, 71 regions (β=+0.2193, p=0.0466); excluding highest-port region, 97 regions (β=+0.2303, p=0.0010); excluding Pacific/Antarctic Level1 regions, 69 regions (β=+0.2428, p=0.0136).
 
 **Interpretation:** WPI-rich islands have more GBIF botanical records, yet the *positive conditional association* between indexed ports and both all introduced plant richness and selected larval-host richness persists when this coarse observation-effort proxy is included. This is a stronger positive observational **resource supply** association than port × observed butterfly occupation. It does **not** demonstrate a mechanism or estimate the arrival route of any plant or butterfly.
