@@ -126,6 +126,45 @@ def bootstrap_genus(rows: list[dict], *, seed: int, n_draws: int) -> list[float]
     return sorted(draws)
 
 
+def compare_nutrient_with_control_trait(rows: list[dict], trait: str,
+                                        *, draws: int = 1999, seed: int = 384231) -> dict:
+    """Matched-subset rank correlation difference, genus-block resampling.
+
+    Control traits are descriptive ecology benchmarks, not negative
+    exposure controls with causal identification.
+    """
+    subset = [r for r in rows if r.get(trait) is not None]
+    n_rho = corr(subset)
+    control_rho = corr(subset, trait)
+    groups: dict[str, list[dict]] = defaultdict(list)
+    for row in subset:
+        groups[row["genus"]].append(row)
+    names = sorted(groups)
+    rng = random.Random(seed)
+    boot = []
+    for _ in range(draws):
+        sample = [r for _ in names for r in groups[rng.choice(names)]]
+        n, c = corr(sample), corr(sample, trait)
+        if math.isfinite(n) and math.isfinite(c):
+            boot.append(n - c)
+    boot.sort()
+    interval = [
+        boot[round((len(boot) - 1) * 0.025)],
+        boot[round((len(boot) - 1) * 0.975)],
+    ] if boot else []
+    return {
+        "control": trait,
+        "n_species": len(subset),
+        "n_genera": len(groups),
+        "nutrient_N_rho": n_rho,
+        "control_rho": control_rho,
+        "delta_rho_N_minus_control": n_rho - control_rho,
+        "genus_cluster_bootstrap_descriptive_interval": interval,
+        "bootstrap_draws": len(boot),
+        "bootstrap_seed": seed,
+    }
+
+
 def within_genus_test(rows: list[dict], *, seed: int = 23211201,
                       permutations: int = 4999) -> dict:
     """Conditional label permutation: exchange N scores only within genus.
@@ -233,6 +272,10 @@ def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int,
             "rho": corr([r for r in rows if r["ports"] <= cutoff]),
         },
         "other_ellenberg_traits": traits,
+        "nutrient_vs_other_traits": {
+            name: compare_nutrient_with_control_trait(rows, name)
+            for name in ("L", "F", "S")
+        },
         "boundaries": [
             "No port-versus-nonport botanical comparison.",
             "Port index count mixes geographic prevalence and GBIF observation effort.",
@@ -241,6 +284,7 @@ def analyze(rows: list[dict], meta: dict, *, n_draws: int, seed: int,
             "No measured wastewater nitrogen loading or site-specific soil nitrogen.",
             "Genus bootstrap measures subset resampling variability, not causal uncertainty.",
         "The within-genus contrast has restricted scope and limited statistical power.",
+        "Other Ellenberg traits are observational benchmarks, not exposure-adjusted controls.",
         "Taxonomic matching selects high-observation species (see matched/unmatched medians).",
         ],
     }
