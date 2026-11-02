@@ -1,0 +1,57 @@
+name: chocho Q4 bridge documented butterfly island years to host first-index years
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/bridge_q4_literature_to_host_firstyear.py
+      - .github/workflows/chocho-q4-literature-hostyear-bridge.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  documentary-time-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover fixed Q2 introduced host × island edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          run-id: 41370175076
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Match Q2 resource opportunity and dated plant index to literature butterfly cases
+        run: |
+          python -m py_compile scripts/bridge_q4_literature_to_host_firstyear.py
+          python scripts/bridge_q4_literature_to_host_firstyear.py \
+            --seed data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv \
+            --q2-edges work/q2/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2/host_source_audit.json \
+            --q4-plant-years results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --q4-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+            --out-dir results/q4-literature-hostyear
+      - name: Retain exact source-verified output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-literature-host-year-bridge
+          path: results/q4-literature-hostyear/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit only research-branch reproducibility results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-literature-hostyear/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit first-record historical time-order support without calling it arrival [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
