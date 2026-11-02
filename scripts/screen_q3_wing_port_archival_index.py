@@ -24,7 +24,7 @@ def quantile(vals,q):
 def main():
     ap=argparse.ArgumentParser()
     for k in ("q2-edges","q2-audit","q3-observed","q3-all-observed",
-              "q3-audit","panel","ports","area","out-dir"):
+              "q3-audit","validation-panel","wing-panel","ports","area","out-dir"):
         ap.add_argument("--"+k,type=Path,required=True)
     a=ap.parse_args();a.out_dir.mkdir(parents=True,exist_ok=True)
     q2=json.loads(a.q2_audit.read_text(encoding="utf8"))
@@ -33,8 +33,9 @@ def main():
         raise RuntimeError("Not corrected Q2/Q3 source population")
     edges=rows(a.q2_edges)
     if len(edges)!=11573:raise RuntimeError("Corrected Q2 source edges missing")
-    val=rows(a.panel)
+    val=rows(a.validation_panel)
     use={r["species"]:r for r in val if int(r["occurrence_records"])>0}
+    allwings={r["species"]:r for r in rows(a.wing_panel)}
     if len(use)!=31:raise RuntimeError("Wrong original 31 GBIF validation species")
     pos=rows(a.q3_observed)
     posset={(r["species"],r["area_code_l3"]) for r in pos}
@@ -60,7 +61,7 @@ def main():
     arearows=rows(a.area)
     areamap={r["code"]:r for r in arearows}
     if len(areamap)<120:raise RuntimeError("Area join missing")
-    spans={sp:float(use[sp]["wing_size_proxy"]) for sp in use}
+    spans={sp:float(allwings[sp]["wing_size_proxy"]) for sp in use}
     if any(not math.isfinite(x) for x in spans.values()):raise RuntimeError("Invalid wing span")
     wingmean=statistics.mean(spans.values())
     wingsd=statistics.pstdev(spans.values())
