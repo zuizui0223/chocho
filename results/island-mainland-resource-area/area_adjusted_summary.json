@@ -1,0 +1,164 @@
+{
+  "schema": "chocho_wgsrpd3_area_adjusted_island_resource_v0.1",
+  "source": "Pinned WGSRPD3 Level 3 geometry + exact audited Q1 output",
+  "area_metric": "WGS84 geodesic polygon area km2, entire WGSRPD3 Level3 region",
+  "active_regions": 359,
+  "active_islands": 122,
+  "active_mainland": 237,
+  "ols_model": {
+    "response": "introduced_added / contemporary opportunity",
+    "predictors": [
+      "intercept",
+      "island",
+      "ln(region area km2)",
+      "level1==2",
+      "level1==3",
+      "level1==4",
+      "level1==5",
+      "level1==6",
+      "level1==7",
+      "level1==8",
+      "level1==9"
+    ],
+    "coefficients": [
+      0.3600171540818893,
+      0.06750942829906491,
+      -0.017034587523789783,
+      0.20032632633136868,
+      0.04821081119612001,
+      0.1699131514115489,
+      0.6107608349370413,
+      0.5428808834947473,
+      0.1525497331860984,
+      0.19748415422847077,
+      0.6728690963637569
+    ],
+    "island_coefficient": 0.06750942829906491,
+    "interpretation": "Descriptive conditional association, not independence-adjusted inference"
+  },
+  "stratum_test": {
+    "definition": "Level1 biogeographic region x pooled global log-area quartile",
+    "area_quartile_cutoffs_log_km2": [
+      9.163739275608831,
+      11.78569062587344,
+      12.977350238757271
+    ],
+    "strata_with_both_classes": [
+      {
+        "stratum": "1|1",
+        "island_n": 5,
+        "mainland_n": 11,
+        "difference": 0.009124548690849998,
+        "weight": 5
+      },
+      {
+        "stratum": "1|2",
+        "island_n": 1,
+        "mainland_n": 10,
+        "difference": 0.12908084516355023,
+        "weight": 1
+      },
+      {
+        "stratum": "2|0",
+        "island_n": 16,
+        "mainland_n": 2,
+        "difference": 0.08476754372934547,
+        "weight": 2
+      },
+      {
+        "stratum": "2|3",
+        "island_n": 1,
+        "mainland_n": 21,
+        "difference": -0.009143629200331793,
+        "weight": 1
+      },
+      {
+        "stratum": "3|1",
+        "island_n": 3,
+        "mainland_n": 3,
+        "difference": 0.08826483606889485,
+        "weight": 3
+      },
+      {
+        "stratum": "3|2",
+        "island_n": 1,
+        "mainland_n": 14,
+        "difference": 0.08845862659199974,
+        "weight": 1
+      },
+      {
+        "stratum": "4|1",
+        "island_n": 6,
+        "mainland_n": 1,
+        "difference": 0.25970151048565404,
+        "weight": 1
+      },
+      {
+        "stratum": "4|2",
+        "island_n": 2,
+        "mainland_n": 8,
+        "difference": 0.03136383109674895,
+        "weight": 2
+      },
+      {
+        "stratum": "4|3",
+        "island_n": 3,
+        "mainland_n": 4,
+        "difference": 0.19005999950120456,
+        "weight": 3
+      },
+      {
+        "stratum": "5|2",
+        "island_n": 1,
+        "mainland_n": 1,
+        "difference": 0.13779844961240306,
+        "weight": 1
+      },
+      {
+        "stratum": "7|0",
+        "island_n": 2,
+        "mainland_n": 3,
+        "difference": 0.11373843527085153,
+        "weight": 2
+      },
+      {
+        "stratum": "7|1",
+        "island_n": 2,
+        "mainland_n": 22,
+        "difference": 0.1583833197544327,
+        "weight": 2
+      },
+      {
+        "stratum": "7|3",
+        "island_n": 1,
+        "mainland_n": 11,
+        "difference": 0.1260956520370697,
+        "weight": 1
+      },
+      {
+        "stratum": "8|0",
+        "island_n": 14,
+        "mainland_n": 1,
+        "difference": 0.261207252750549,
+        "weight": 1
+      },
+      {
+        "stratum": "8|1",
+        "island_n": 5,
+        "mainland_n": 8,
+        "difference": 0.14140714461979642,
+        "weight": 5
+      }
+    ],
+    "weighted_island_minus_mainland_share": 0.10830122388410264,
+    "within_stratum_permutation_n": 4999,
+    "within_stratum_descriptive_p_two_sided": 0.0002,
+    "note": "Only overlap strata contribute; cannot support causal or spatial-independent inference"
+  },
+  "limits": [
+    "WGSRPD3 polygons include coarse region boundaries; natural island area differs from precise ecological land area.",
+    "Out-of-range island areas have no matched mainland analogue and are excluded from strict matched strata.",
+    "Area and broad biogeographic region do not adjust climate, plant introduction effort, HOSTS observation bias or human land use.",
+    "Repeated butterflies across regions create geographic and interaction-network dependence; permutation p values are descriptive."
+  ]
+}
