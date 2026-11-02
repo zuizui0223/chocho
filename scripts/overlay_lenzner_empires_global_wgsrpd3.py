@@ -14,7 +14,7 @@ from pathlib import Path
 
 import shapefile
 from pyproj import Transformer
-from shapely import make_valid
+from shapely import make_valid, union_all
 from shapely.geometry import shape as geo_shape
 from shapely.ops import transform, unary_union
 from shapely.strtree import STRtree
@@ -50,7 +50,7 @@ def main():
         code=str((feature.get("properties") or {}).get("LEVEL3_COD") or "").strip()
         if code in lookup and feature.get("geometry"):
             geom=make_valid(geo_shape(feature["geometry"]))
-            if not geom.is_empty: island_shapes[code].append(transform(trans,geom))
+            if not geom.is_empty: island_shapes[code].append(make_valid(transform(trans,geom)))
     source_history=defaultdict(lambda:defaultdict(list))
     for row in readcsv(a.lenzner_empires):
         empire=row["colonizer"]
@@ -74,7 +74,7 @@ def main():
         if not key: continue
         try:
             geom=make_valid(geo_shape(shp.__geo_interface__))
-            projected=transform(trans,geom)
+            projected=make_valid(transform(trans,geom))
             if projected.is_empty or projected.area<=0:continue
         except Exception:
             skipped+=1
@@ -91,7 +91,7 @@ def main():
         if not shapes:
             unmapped.append(code)
             continue
-        target=unary_union(shapes)
+        target=make_valid(union_all(shapes, grid_size=5))
         region_area=target.area
         parts=[]
         for k in tree.query(target):
@@ -102,7 +102,7 @@ def main():
             intersection=target.intersection(g)
             if intersection.is_empty or intersection.area<=0:continue
             parts.append((ids[j],intersection))
-        union=unary_union([x[1] for x in parts]) if parts else None
+        union=make_valid(union_all([make_valid(x[1]) for x in parts], grid_size=5)) if parts else None
         covered=0 if union is None else min(region_area,union.area)
         coverage=0 if region_area<=0 else covered/region_area
         areas_by_empire=defaultdict(float)
