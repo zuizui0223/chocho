@@ -1,5 +1,5 @@
 {
-  "schema": "chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.1",
+  "schema": "chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.2",
   "status": "RECONSTRUCTED_FROM_PINNED_WCVP_HOSTS",
   "design": "Descriptive binary butterfly x WGSRPD3 potential host-resource membership, not realized occupancy",
   "source_commits": {
@@ -8,6 +8,8 @@
     "wgsrpd": "52da7828aba9d461dd133c27b3bd7a4407161f54"
   },
   "classification": {
+    "corrected_named_island": "CNY Canary Is.; RHO Rhode I. is a US mainland state",
+    "official_name_island_test_count": 46,
     "strict_island_codes": [
       "ALD",
       "ALU",
@@ -27,6 +29,7 @@
       "CGS",
       "CHH",
       "CKI",
+      "CNY",
       "COM",
       "COO",
       "COR",
@@ -161,32 +164,32 @@
   },
   "groups": {
     "island": {
-      "all_regions": 125,
-      "regions_with_contemporary_opportunity": 122,
-      "regions_with_native_baseline": 112,
-      "regions_with_new_opportunity": 122,
+      "all_regions": 126,
+      "regions_with_contemporary_opportunity": 123,
+      "regions_with_native_baseline": 113,
+      "regions_with_new_opportunity": 123,
       "regions_new_from_zero_baseline": 10,
-      "native_butterfly_region_units": 4743,
-      "contemporary_butterfly_region_units": 10417,
-      "added_butterfly_region_units": 5674,
-      "pooled_increase_pct_if_native_positive": 119.62892683955303,
-      "pooled_added_share_pct_if_contemporary_positive": 54.4686570029759,
-      "mean_added_share_per_active_region": 0.5988991669443037,
-      "median_added_share_per_active_region": 0.5140554722638682,
-      "median_increase_pct_nonzero_native_regions": 92.1969696969697
+      "native_butterfly_region_units": 4829,
+      "contemporary_butterfly_region_units": 10570,
+      "added_butterfly_region_units": 5741,
+      "pooled_increase_pct_if_native_positive": 118.88589770138745,
+      "pooled_added_share_pct_if_contemporary_positive": 54.31409649952696,
+      "mean_added_share_per_active_region": 0.5975902997068054,
+      "median_added_share_per_active_region": 0.5108695652173914,
+      "median_increase_pct_nonzero_native_regions": 91.66666666666667
     },
     "mainland": {
-      "all_regions": 238,
-      "regions_with_contemporary_opportunity": 237,
-      "regions_with_native_baseline": 237,
-      "regions_with_new_opportunity": 237,
+      "all_regions": 237,
+      "regions_with_contemporary_opportunity": 236,
+      "regions_with_native_baseline": 236,
+      "regions_with_new_opportunity": 236,
       "regions_new_from_zero_baseline": 0,
-      "native_butterfly_region_units": 21301,
-      "contemporary_butterfly_region_units": 30054,
-      "added_butterfly_region_units": 8753,
-      "pooled_increase_pct_if_native_positive": 41.09196751326229,
-      "pooled_added_share_pct_if_contemporary_positive": 29.12424302921408,
-      "mean_added_share_per_active_region": 0.29336884956959924,
+      "native_butterfly_region_units": 21215,
+      "contemporary_butterfly_region_units": 29901,
+      "added_butterfly_region_units": 8686,
+      "pooled_increase_pct_if_native_positive": 40.942729201037004,
+      "pooled_added_share_pct_if_contemporary_positive": 29.049195679074277,
+      "mean_added_share_per_active_region": 0.29275639343755505,
       "median_added_share_per_active_region": 0.2777777777777778,
       "median_increase_pct_nonzero_native_regions": 38.46153846153846
     },
@@ -218,10 +221,10 @@
       },
       {
         "level1": "2",
-        "island_n": 17,
-        "mainland_n": 52,
-        "mean_difference": 0.22297003251630954,
-        "weight": 17
+        "island_n": 18,
+        "mainland_n": 51,
+        "mean_difference": 0.21810330068922557,
+        "weight": 18
       },
       {
         "level1": "3",
@@ -260,7 +263,7 @@
       }
     ],
     "weight": "min(island_regions, mainland_regions) per Level-1 area",
-    "weighted_difference": 0.14367664832602042,
+    "weighted_difference": 0.14357408303346214,
     "descriptive_within_level1_label_permutation_p_two_sided": 0.0002,
     "permutations": 4999,
     "warning": "No causal inference; region areas, species composition and macro-geographic spatial dependence remain uncontrolled."
