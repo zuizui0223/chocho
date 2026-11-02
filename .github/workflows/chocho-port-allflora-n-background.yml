@@ -27,7 +27,7 @@ jobs:
           python -m pytest -q tests/test_exploratory_port_allplant_N_background.py
       - name: Obtain three independent verified source artifacts
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p /tmp/nflora/geo /tmp/nflora/old /tmp/nflora/focal
           gh run download 41402076182 --name strict-disjoint-coastal-sites-wpi79 --dir /tmp/nflora/geo --repo zuizui0223/chocho
