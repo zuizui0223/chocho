@@ -1,0 +1,60 @@
+name: exploratory strict WPI78 equal-site 5km audit
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-strict-botany-offline-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  strict-control-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download verified source-locked geometry and plant observations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/geometry /tmp/botany
+          gh run download 41402076182 --name strict-disjoint-coastal-sites-wpi79 \
+            --dir /tmp/geometry --repo zuizui0223/chocho
+          gh run download 41402214941 --name strict-disjoint-wpi78-5km-GBIF-botany \
+            --dir /tmp/botany --repo zuizui0223/chocho
+          test -s /tmp/geometry/strict_disjoint_wpi79_sites.json
+          test -s /tmp/botany/strict_disjoint_botanical_5km.json
+      - name: Recalculate matched island scores, effort and identical-pair time contrast
+        run: |
+          python scripts/exploratory_port_botanical_offline_audit.py \
+            --geometry /tmp/geometry/strict_disjoint_wpi79_sites.json \
+            --botany /tmp/botany/strict_disjoint_botanical_5km.json \
+            --output /tmp/strict_WPI78_5km_offline_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v=json.loads(Path('/tmp/strict_WPI78_5km_offline_audit.json').read_text())
+          assert v['eligible_port_nonport_pairs']==78
+          assert v['eligible_independent_islands']==35
+          for k,x in [('early_2001_2010',.1129119112591537),
+                      ('later_2011_2024',-.012278139754615742)]:
+              d=v['periods'][k]
+              assert d['all_pairs']==78
+              assert d['pairs_with_overlapping_5km_buffers']==0
+              assert abs(d['after_spatial_nonoverlap']['island_weighted_mean_port_minus_nonport_N']-x)<1e-6,(k,d)
+          print('STRICT_WPI78_POST_ANALYSIS_AUDIT_PASS',json.dumps({
+            'early':v['periods']['early_2001_2010']['after_nonoverlap_and_5fold_effort_comparability'],
+            'late':v['periods']['later_2011_2024']['after_nonoverlap_and_5fold_effort_comparability'],
+            'same_pair_time':{k:v for k,v in v['identical_port_pair_temporal_contrast'].items() if k!='same_pairs'},
+          },sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: strict-wpi78-island-effort-time-audit
+          path: /tmp/strict_WPI78_5km_offline_audit.json
+          retention-days: 30
