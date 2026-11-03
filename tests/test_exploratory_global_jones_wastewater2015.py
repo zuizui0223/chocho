@@ -1,6 +1,11 @@
 """PANGAEA original source 2015 WW flows at WPI ports (offline tests)."""
 import importlib.util,sys,math
 from pathlib import Path
+import pytest
+pytest.importorskip("pandas")
+pytest.importorskip("scipy")
+pytest.importorskip("statsmodels")
+pytest.importorskip("netCDF4")
 import numpy as np
 p=Path(__file__).resolve().parents[1]/"scripts"/"exploratory_global_jones_wastewater2015.py"
 s=importlib.util.spec_from_file_location("ww2015",p)

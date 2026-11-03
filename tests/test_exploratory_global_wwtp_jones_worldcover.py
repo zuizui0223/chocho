@@ -2,6 +2,9 @@
 import importlib.util,sys,math
 from pathlib import Path
 import pytest
+pytest.importorskip("pandas")
+pytest.importorskip("scipy")
+pytest.importorskip("statsmodels")
 p=Path(__file__).resolve().parents[1]/"scripts"/"exploratory_global_wwtp_jones_worldcover.py"
 spec=importlib.util.spec_from_file_location("three_source",p)
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
