@@ -1,0 +1,73 @@
+name: chocho Jones 2015 gridded wastewater volumes x WPI1596 ports
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_global_jones_wastewater2015.py"
+      - "tests/test_exploratory_global_jones_wastewater2015.py"
+      - ".github/workflows/chocho-jones2015-global-port-model.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-pinned-5arc-WW-produced-treated-at-global-ports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install netCDF native and country FE estimation
+        run: |
+          python -m pip install --quiet netCDF4 numpy pandas scipy statsmodels pytest
+          python -m pytest -q tests/test_exploratory_global_jones_wastewater2015.py
+      - name: Retrieve exact original HydroWASTE x WPI1596 port source table
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/wastewater2015
+          gh run download 41414513676 --name global-hydrowaste-58502-WPI1596-port-host-study \
+            --dir /tmp/wastewater2015 --repo zuizui0223/chocho
+          test -s /tmp/wastewater2015/WWTP_port_1596_features.csv
+      - name: Obtain original PANGAEA 2015 wastewater model grid with pin
+        run: |
+          curl -fLsS --retry 3 --connect-timeout 30 --max-time 180 \
+            https://store.pangaea.de/Publications/JonesE-etal_2020/Global_wastewater.zip \
+            -o /tmp/wastewater2015/Global_wastewater.zip
+          sha256sum /tmp/wastewater2015/Global_wastewater.zip
+          echo "c413f7493fb5c2b5a07d3d974abf3b9af25a32fcadd8eb839cc3fe302838e5eb  /tmp/wastewater2015/Global_wastewater.zip" | sha256sum -c -
+      - name: Test modeled 2015 production vs treated volume at original 1596 ports, country FE
+        run: |
+          python -u scripts/exploratory_global_jones_wastewater2015.py \
+            --ports /tmp/wastewater2015/WWTP_port_1596_features.csv \
+            --zip /tmp/wastewater2015/Global_wastewater.zip \
+            --json /tmp/wastewater2015/Jones2015_WPI1596_millionm3y_models.json \
+            --table /tmp/wastewater2015/Jones2015_WPI1596_port_grid_census.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("/tmp/wastewater2015/Jones2015_WPI1596_millionm3y_models.json").read_text())
+          assert d["original_complete_ports"]==1596
+          assert d["original_country_fixed_effect_ports"]==1368
+          assert d["grid_metadata"]["grid_dims"]=={"lat":2160,"lon":4320}
+          assert d["ports_with_any_valid_modelled_WW_production_grid_cells"]>=1200
+          assert len(d["country_FE_same_source_comparisons"])==4
+          print("PANGAEA2015_WASTEWATER_PRODUCTION_TREATMENT_GLOBAL_PORT_JOIN_VALIDATED")
+          PY
+      - name: Archive full source-matched grid exposure and models
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pangaea-jones2015-5arc-wpi1596-wastewater-wwtp
+          path: |
+            /tmp/wastewater2015/Jones2015_WPI1596_millionm3y_models.json
+            /tmp/wastewater2015/Jones2015_WPI1596_port_grid_census.csv
+          if-no-files-found: warn
+          retention-days: 30
