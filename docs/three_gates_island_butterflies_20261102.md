@@ -125,3 +125,26 @@ Reproducibility:
 A separate fixed, outcome-blind first-12-of-69 HTTP429 source retry was run sequentially with ≥4-second spacing, no new butterfly selection. **4 of 12** previously failed source botanical plant×island pairs returned a GBIF indexed plant year, **1 of 12** returned a valid no-index result, and **7 of 12** now reported HTTP400 (complex geography). The first 500 response-blind cohort and original 219 dated outcomes remain frozen; these newly recovered four dates are an additional sensitivity source and are **not** silently inserted into earlier Q4/31 butterfly conditional tests. This shows both transient API rate limiting and structural WKT geography problems in the botanical chronology record, not evidence of newly introduced plants or butterfly movement.
 
 Source: `results/q4-conservative-gbif-retry/http429_retry_audit.json`; 12 explicit source ID/year/status rows in `results/q4-conservative-gbif-retry/http429_original_pilot_retry_subset.csv`.
+
+
+### Original-source 205 butterfly wing–indexed-island distance check (2026-11-03)
+
+We recovered a **source-audited derivative** of the previously user-supplied private 224-butterfly original Parquet from the repository: `provenance/reviewer_defenses/results/original_island_continuity_20261030/global_original_continuity_species_counts.csv`. The earlier source SHA-256 is `8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f` (83,573 butterfly×landmass×year rows, 224 species, 14,425,536 indexed GBIF records, 2001–2024). **The raw Parquet itself was not reread in this session** because the two stored ChatGPT Library copies are discoverable but their original bytes cannot be authorized for this runtime via `files.materialize`. These derived counts are the actual historical source results and have retained key and source validation.
+
+The derived source provides **12,028 first-indexed 2011–2022 species×island events across 205 species** with a strict earlier-year nearest-indexed locality distance, partitioned at <10 km / 10–100 km / 100–500 km / ≥500 km. Each of the **205 species was uniquely rejoined to the original 225 speciesKey bridge, GEB239 wing-size proxy and LepTraits family**, preserving the original distance-bin and event totals. Original observation-effort subsets contain 194 species / 3,813 events with prior coverage, and 193 species / 3,136 events with prior **and** subsequent records.
+
+The geographic-continuity question is narrower than the biological colonization question: **do species with larger measured wings have a higher *fraction of first indexed island records* more than 100 km from their previously indexed nearest locality?** These distances do not measure individual flights or the natural versus human pathway.
+
+| Source scope | Species | Spearman rho, wing versus fraction of ≥100 km prior-indexed distance |
+| --- | ---: | ---: |
+| All historical first-index events | 205 | +0.118 |
+| Prior and subsequent opportunity recorded | 193 | +0.183 |
+| Prior+after opportunity and ≥10 original first-index events per species | 87 | +0.044 |
+
+**Prespecified within-analysis primary**: strict prior+after observation cohort, at least 10 original first-index events per species, ≥100 km. An equal-species arcsine-sqrt-transformed far-event-fraction partial regression controlled original per-species event count, native GEB resource breadth, host-family breadth and LepTraits family fixed effects. In 4,999 wing-label permutations within family × within-family event-intensity halves, the positive partial wing coefficient did not differ confidently from the source null (**p(two-sided centered)=0.2046**). The 87-species wing quartiles were nonmonotonic: mean species-equal shares of ≥100 km first indexed localities of **23.9%, 23.2%, 16.9%, 27.7%**, respectively.
+
+For ≥500 km prior-index distances the strict 87-species association was also not robust (within-family×event-intensity permutation p=0.7944). This **does not invalidate the independent positive port–introduced-plant/resource results**, nor does it refute a role for flight capacity. It does show the available wing proxy and recorded geographic distances do not identify long-distance self-flight, and cannot be used to classify arrival as by wings rather than ships.
+
+Code `scripts/test_original205_wing_vs_island_record_distance.py`; runnable GitHub action `.github/workflows/chocho-original205-wing-distance-index.yml`; 205-source×three-cohort audit `results/original205-wing-island-index-distance/original205_wing_distance_audit.json` and per-species reproducible table `results/original205-wing-island-index-distance/original205_wing_distance_species_source.csv`. Neither raw private Parquet nor personally identifying original coordinates were uploaded to GitHub.
+
+**Remaining strict barrier:** because these are **species-level distance aggregates**, they do not preserve the butterfly×physical-island×year risk sets or exact modern ports, host availability calendar, native/alien status and observation-process controls needed to estimate a time-to-arrival hazard or test port×wing on source occurrence events. No fake absent butterflies, synthetic annual histories or "consumer invasion debt half-life" were inferred.
