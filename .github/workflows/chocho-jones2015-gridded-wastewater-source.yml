@@ -1,0 +1,56 @@
+name: chocho Jones 2015 global gridded wastewater source manifest
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-jones2015-gridded-wastewater-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-pangaea-gridded-wastewater:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download original Jones et al 2015 reference year PANGAEA 918731 zip
+        run: |
+          mkdir -p /tmp/jones_wastewater
+          curl -fLsS --retry 4 --connect-timeout 25 --max-time 180 \
+            https://store.pangaea.de/Publications/JonesE-etal_2020/Global_wastewater.zip \
+            -o /tmp/jones_wastewater/Global_wastewater.zip
+          test "$(stat -c '%s' /tmp/jones_wastewater/Global_wastewater.zip)" -gt 300000
+      - name: Identify gridded netCDF variables and available dimensions with no ecological model
+        run: |
+          python - <<'PY'
+          import zipfile,hashlib,json,os
+          from pathlib import Path
+          p=Path("/tmp/jones_wastewater/Global_wastewater.zip")
+          z=zipfile.ZipFile(p)
+          files=[{"name":x.filename,"size_bytes":x.file_size,"compressed_bytes":x.compress_size}
+                 for x in z.infolist() if not x.is_dir()]
+          o={"schema":"chocho_2015_PANGAEA_918731_wastewater_original_zip_manifest_v1",
+             "doi":"10.1594/PANGAEA.918731",
+             "reference_year":2015,
+             "source_url":"https://store.pangaea.de/Publications/JonesE-etal_2020/Global_wastewater.zip",
+             "original_zip_sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
+             "total_original_bytes":p.stat().st_size,
+             "entries":files,
+             "no_ecological_effect_claimed":True,
+             "licence":"CC BY 4.0, Jones et al. (2020) PANGAEA"}
+          out=Path("/tmp/jones_wastewater/source_manifest.json")
+          out.write_text(json.dumps(o,indent=2)+"\n")
+          print("JONES_2015_WASTEWATER_GRID_SOURCE",json.dumps(o,sort_keys=True),flush=True)
+          assert any(x["name"].lower().endswith((".nc",".tif",".txt",".asc")) for x in files),files
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jones-2015-5arc-gridded-wastewater-original-source-manifest
+          path: /tmp/jones_wastewater/source_manifest.json
+          retention-days: 30
