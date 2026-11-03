@@ -1,0 +1,54 @@
+name: chocho HydroWASTE worldwide WWTP x butterfly host port screening
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_global_hydrowaste_port.py"
+      - "tests/test_exploratory_global_hydrowaste_port.py"
+      - ".github/workflows/chocho-global-hydrowaste-port.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-global-wwtp-1596-port-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dataframe, spatial index, country-cluster model packages
+        run: python -m pip install --quiet numpy pandas requests scipy statsmodels pytest
+      - name: Validate source counts and spherical geodesic neighbor arithmetic
+        run: python -m pytest -q tests/test_exploratory_global_hydrowaste_port.py
+      - name: Download pinned HydroWASTE v1 CSV and source WPI identity coordinates; execute global comparison
+        run: |
+          mkdir -p /tmp/chocho_hydrowaste
+          python -u scripts/exploratory_global_hydrowaste_port.py \
+            --out-json /tmp/chocho_hydrowaste/wwtp_host_1596port_142country_summary.json \
+            --out-csv /tmp/chocho_hydrowaste/wwtp_host_1596port_geographic_exposure.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/chocho_hydrowaste/wwtp_host_1596port_142country_summary.json').read_text())
+          assert j['WWTP_population']==58502
+          assert j['matched_ports']==1596
+          assert j['total_alien_host_pairs']==25742
+          assert j['total_native_host_pairs']==54156
+          assert j['distinct_port_countries']>=120
+          assert j['ports_with_25km_operational_or_notreported_WWTP']>100
+          print('HYDROWASTE_WPI1596_AND_HOST_SOURCE_LOCK_PASS')
+          PY
+      - name: Upload independent global WWTP / plant host join and model diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hydroWASTE-v1-global-wwtp-port-host-observation
+          path: |
+            /tmp/chocho_hydrowaste/wwtp_host_1596port_142country_summary.json
+            /tmp/chocho_hydrowaste/wwtp_host_1596port_geographic_exposure.csv
+          if-no-files-found: warn
+          retention-days: 30
