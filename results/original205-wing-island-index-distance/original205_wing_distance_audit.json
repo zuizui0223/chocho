@@ -1,0 +1,2521 @@
+{
+  "schema": "chocho_original205_island_first_index_distance_vs_continuous_wingspan_v0.1",
+  "status": "SOURCE_DERIVED_FROM_PRIVATE_PARQUET_PREVIOUSLY_VERIFIED_AGGREGATES",
+  "source": {
+    "private_original_224_species_83573_island_years_sha256": "8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f",
+    "source_subdataset": "provenance/reviewer_defenses/results/original_island_continuity_20261030/global_original_continuity_species_counts.csv",
+    "source_original_event_checksum": "e374df514117e6091cd3426af59a1ba5401199b1ebf5e4a0b994a45886a2d09f",
+    "joined_species_name_key": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv",
+    "joined_plant_resource_wings": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+    "joined_family": "data/external/leptraits_consensus_v1.0.csv",
+    "local_raw_224species_Parquet_NOT_read_this_run": true
+  },
+  "cohort_event_audits": {
+    "all": [
+      205,
+      12028
+    ],
+    "prior_opportunity": [
+      194,
+      3813
+    ],
+    "both_period_opportunity": [
+      193,
+      3136
+    ]
+  },
+  "prespecified_primary": "both_period_opportunity / >=100 km / species >=10 first-index events; family x event intensity half source permutation",
+  "exploratory_multi_cohort_sensitivities": {
+    "all": {
+      "prior_nearest_record_ge100km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11808548186527858,
+            "raw_spearman_p_naive": 0.09173929429708315,
+            "partial_spearman_rank_control": 0.11152979305914414,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08574075986350094,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 1,
+              "null_mean": 0.0005164190937505129,
+              "q025": -0.08097720198546401,
+              "q975": 0.0792796074416709,
+              "p_two_sided_centered": 0.0342,
+              "p_high": 0.015
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.3048350525575353,
+                "event_weighted_far_fraction": 0.14592933947772657,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.41264022309111165,
+                "event_weighted_far_fraction": 0.11184482047049113,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.3502044594596611,
+                "event_weighted_far_fraction": 0.08326277166243297,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.42359568585909674,
+                "event_weighted_far_fraction": 0.15355696934644303,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11808548186527858,
+            "raw_spearman_p_naive": 0.09173929429708315,
+            "partial_spearman_rank_control": 0.11152979305914414,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08574075986350094,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 5,
+              "null_mean": -0.0021791801185698984,
+              "q025": -0.12046574780808345,
+              "q975": 0.1174584114316146,
+              "p_two_sided_centered": 0.1446,
+              "p_high": 0.0736
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.3048350525575353,
+                "event_weighted_far_fraction": 0.14592933947772657,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.41264022309111165,
+                "event_weighted_far_fraction": 0.11184482047049113,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.3502044594596611,
+                "event_weighted_far_fraction": 0.08326277166243297,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.42359568585909674,
+                "event_weighted_far_fraction": 0.15355696934644303,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11808548186527858,
+            "raw_spearman_p_naive": 0.09173929429708315,
+            "partial_spearman_rank_control": 0.11152979305914414,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08574075986350094,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.004032176658479326,
+              "q025": -0.1232330889798745,
+              "q975": 0.11210580041795672,
+              "p_two_sided_centered": 0.1304,
+              "p_high": 0.0632
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.3048350525575353,
+                "event_weighted_far_fraction": 0.14592933947772657,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.41264022309111165,
+                "event_weighted_far_fraction": 0.11184482047049113,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.3502044594596611,
+                "event_weighted_far_fraction": 0.08326277166243297,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.42359568585909674,
+                "event_weighted_far_fraction": 0.15355696934644303,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11310689505265717,
+            "raw_spearman_p_naive": 0.2054721727728447,
+            "partial_spearman_rank_control": 0.2304009488935199,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.13170515012572334,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.0004525905371313331,
+              "q025": -0.08606120309857081,
+              "q975": 0.08548194362594064,
+              "p_two_sided_centered": 0.0028,
+              "p_high": 0.0016
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22628930930709373,
+                "event_weighted_far_fraction": 0.13501238645747315,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22424772244730085,
+                "event_weighted_far_fraction": 0.09712722298221614,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.20762186885563297,
+                "event_weighted_far_fraction": 0.07234479220112879,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.29555028273188777,
+                "event_weighted_far_fraction": 0.17467248908296942,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11310689505265717,
+            "raw_spearman_p_naive": 0.2054721727728447,
+            "partial_spearman_rank_control": 0.2304009488935199,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.13170515012572334,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0004940445275244677,
+              "q025": -0.1263962260109921,
+              "q975": 0.12410112919359839,
+              "p_two_sided_centered": 0.0392,
+              "p_high": 0.0192
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22628930930709373,
+                "event_weighted_far_fraction": 0.13501238645747315,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22424772244730085,
+                "event_weighted_far_fraction": 0.09712722298221614,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.20762186885563297,
+                "event_weighted_far_fraction": 0.07234479220112879,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.29555028273188777,
+                "event_weighted_far_fraction": 0.17467248908296942,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11310689505265717,
+            "raw_spearman_p_naive": 0.2054721727728447,
+            "partial_spearman_rank_control": 0.2304009488935199,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.13170515012572334,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 10,
+              "null_mean": 0.0036262890532266726,
+              "q025": -0.12559720243791478,
+              "q975": 0.13578864973029584,
+              "p_two_sided_centered": 0.0572,
+              "p_high": 0.0306
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22628930930709373,
+                "event_weighted_far_fraction": 0.13501238645747315,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.22424772244730085,
+                "event_weighted_far_fraction": 0.09712722298221614,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.20762186885563297,
+                "event_weighted_far_fraction": 0.07234479220112879,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.29555028273188777,
+                "event_weighted_far_fraction": 0.17467248908296942,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      },
+      "prior_nearest_record_ge500km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.14287433046364595,
+            "raw_spearman_p_naive": 0.040989442220064204,
+            "partial_spearman_rank_control": 0.11878537374048835,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.03862655232003238,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.00019893289528705646,
+              "q025": -0.06493118250939353,
+              "q975": 0.06525784012684437,
+              "p_two_sided_centered": 0.2504,
+              "p_high": 0.1236
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.0661407825758581,
+                "event_weighted_far_fraction": 0.03302611367127496,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1522419647258203,
+                "event_weighted_far_fraction": 0.028477094510936857,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1611135342148208,
+                "event_weighted_far_fraction": 0.02286198137171888,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.10521666381651765,
+                "event_weighted_far_fraction": 0.03296703296703297,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.14287433046364595,
+            "raw_spearman_p_naive": 0.040989442220064204,
+            "partial_spearman_rank_control": 0.11878537374048835,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.03862655232003238,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 5,
+              "null_mean": -0.0002197756315993605,
+              "q025": -0.09644351171490102,
+              "q975": 0.09984421832379882,
+              "p_two_sided_centered": 0.4512,
+              "p_high": 0.224
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.0661407825758581,
+                "event_weighted_far_fraction": 0.03302611367127496,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1522419647258203,
+                "event_weighted_far_fraction": 0.028477094510936857,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1611135342148208,
+                "event_weighted_far_fraction": 0.02286198137171888,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.10521666381651765,
+                "event_weighted_far_fraction": 0.03296703296703297,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 205,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 12028,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.14287433046364595,
+            "raw_spearman_p_naive": 0.040989442220064204,
+            "partial_spearman_rank_control": 0.11878537374048835,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.03862655232003238,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 205,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.0016477458444290787,
+              "q025": -0.10036006255519024,
+              "q975": 0.0977207785723965,
+              "p_two_sided_centered": 0.4258,
+              "p_high": 0.213
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 52,
+                "mean_species_equal_far_event_fraction": 0.0661407825758581,
+                "event_weighted_far_fraction": 0.03302611367127496,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1522419647258203,
+                "event_weighted_far_fraction": 0.028477094510936857,
+                "wing_proxy_median": 3.6075
+              },
+              {
+                "wing_quartile": 3,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.1611135342148208,
+                "event_weighted_far_fraction": 0.02286198137171888,
+                "wing_proxy_median": 4.819444444333333
+              },
+              {
+                "wing_quartile": 4,
+                "species": 51,
+                "mean_species_equal_far_event_fraction": 0.10521666381651765,
+                "event_weighted_far_fraction": 0.03296703296703297,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.12720016461987788,
+            "raw_spearman_p_naive": 0.1541296119329192,
+            "partial_spearman_rank_control": 0.08794894011107421,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.01833741608116947,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 1,
+              "null_mean": -2.987018515788693e-05,
+              "q025": -0.05675528939996976,
+              "q975": 0.05775134003203459,
+              "p_two_sided_centered": 0.531,
+              "p_high": 0.2634
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.058749376081373816,
+                "event_weighted_far_fraction": 0.031791907514450865,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.05491324734015641,
+                "event_weighted_far_fraction": 0.018467852257181942,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.05121591998922841,
+                "event_weighted_far_fraction": 0.016675218060543867,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.07117114191492771,
+                "event_weighted_far_fraction": 0.038110361254466055,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.12720016461987788,
+            "raw_spearman_p_naive": 0.1541296119329192,
+            "partial_spearman_rank_control": 0.08794894011107421,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.01833741608116947,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0006014408070757136,
+              "q025": -0.0845842721863385,
+              "q975": 0.08372888112575011,
+              "p_two_sided_centered": 0.6904,
+              "p_high": 0.3462
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.058749376081373816,
+                "event_weighted_far_fraction": 0.031791907514450865,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.05491324734015641,
+                "event_weighted_far_fraction": 0.018467852257181942,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.05121591998922841,
+                "event_weighted_far_fraction": 0.016675218060543867,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.07117114191492771,
+                "event_weighted_far_fraction": 0.038110361254466055,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 127,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 11763,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.12720016461987788,
+            "raw_spearman_p_naive": 0.1541296119329192,
+            "partial_spearman_rank_control": 0.08794894011107421,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.01833741608116947,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 127,
+              "exchangeable_blocks": 10,
+              "null_mean": 0.0034370182845925726,
+              "q025": -0.08165907223850064,
+              "q975": 0.09051425564696769,
+              "p_two_sided_centered": 0.7458,
+              "p_high": 0.3722
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.058749376081373816,
+                "event_weighted_far_fraction": 0.031791907514450865,
+                "wing_proxy_median": 2.596041666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.05491324734015641,
+                "event_weighted_far_fraction": 0.018467852257181942,
+                "wing_proxy_median": 3.6850000000000005
+              },
+              {
+                "wing_quartile": 3,
+                "species": 31,
+                "mean_species_equal_far_event_fraction": 0.05121591998922841,
+                "event_weighted_far_fraction": 0.016675218060543867,
+                "wing_proxy_median": 4.9886904765
+              },
+              {
+                "wing_quartile": 4,
+                "species": 32,
+                "mean_species_equal_far_event_fraction": 0.07117114191492771,
+                "event_weighted_far_fraction": 0.038110361254466055,
+                "wing_proxy_median": 6.75
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      }
+    },
+    "prior_opportunity": {
+      "prior_nearest_record_ge100km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.17742889887989605,
+            "raw_spearman_p_naive": 0.013323723353335457,
+            "partial_spearman_rank_control": 0.1183561300105006,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08428981442358217,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.00014743945651455098,
+              "q025": -0.08329694199240684,
+              "q975": 0.08389285457927298,
+              "p_two_sided_centered": 0.0486,
+              "p_high": 0.0248
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.31430965698405977,
+                "event_weighted_far_fraction": 0.1825813221406086,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.4010435436926861,
+                "event_weighted_far_fraction": 0.15107102593010147,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.36933376692612035,
+                "event_weighted_far_fraction": 0.13753581661891118,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.49010536939203897,
+                "event_weighted_far_fraction": 0.22462203023758098,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.17742889887989605,
+            "raw_spearman_p_naive": 0.013323723353335457,
+            "partial_spearman_rank_control": 0.1183561300105006,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08428981442358217,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0015610711294159676,
+              "q025": -0.12522678910976867,
+              "q975": 0.12732942785198545,
+              "p_two_sided_centered": 0.1982,
+              "p_high": 0.102
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.31430965698405977,
+                "event_weighted_far_fraction": 0.1825813221406086,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.4010435436926861,
+                "event_weighted_far_fraction": 0.15107102593010147,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.36933376692612035,
+                "event_weighted_far_fraction": 0.13753581661891118,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.49010536939203897,
+                "event_weighted_far_fraction": 0.22462203023758098,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.17742889887989605,
+            "raw_spearman_p_naive": 0.013323723353335457,
+            "partial_spearman_rank_control": 0.1183561300105006,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08428981442358217,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.0035472195196691396,
+              "q025": -0.12443386213364196,
+              "q975": 0.11620633305686819,
+              "p_two_sided_centered": 0.1586,
+              "p_high": 0.0782
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.31430965698405977,
+                "event_weighted_far_fraction": 0.1825813221406086,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.4010435436926861,
+                "event_weighted_far_fraction": 0.15107102593010147,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.36933376692612035,
+                "event_weighted_far_fraction": 0.13753581661891118,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.49010536939203897,
+                "event_weighted_far_fraction": 0.22462203023758098,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10331172319625337,
+            "raw_spearman_p_naive": 0.33254681852274,
+            "partial_spearman_rank_control": 0.27455215887142426,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.11535995745694,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.0010449819540629757,
+              "q025": -0.10188558935759617,
+              "q975": 0.0990422385332225,
+              "p_two_sided_centered": 0.021,
+              "p_high": 0.0104
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.22287709531386646,
+                "event_weighted_far_fraction": 0.1519138755980861,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.22392184424724587,
+                "event_weighted_far_fraction": 0.11678832116788321,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.16041869493837516,
+                "event_weighted_far_fraction": 0.10283315844700944,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.3153072983528118,
+                "event_weighted_far_fraction": 0.1826086956521739,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10331172319625337,
+            "raw_spearman_p_naive": 0.33254681852274,
+            "partial_spearman_rank_control": 0.27455215887142426,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.11535995745694,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0003016118476534701,
+              "q025": -0.1364883856732279,
+              "q975": 0.1386503849083236,
+              "p_two_sided_centered": 0.0984,
+              "p_high": 0.0492
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.22287709531386646,
+                "event_weighted_far_fraction": 0.1519138755980861,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.22392184424724587,
+                "event_weighted_far_fraction": 0.11678832116788321,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.16041869493837516,
+                "event_weighted_far_fraction": 0.10283315844700944,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.3153072983528118,
+                "event_weighted_far_fraction": 0.1826086956521739,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10331172319625337,
+            "raw_spearman_p_naive": 0.33254681852274,
+            "partial_spearman_rank_control": 0.27455215887142426,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.11535995745694,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.0017362542718707733,
+              "q025": -0.1412148176923337,
+              "q975": 0.13434410986417752,
+              "p_two_sided_centered": 0.0966,
+              "p_high": 0.049
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.22287709531386646,
+                "event_weighted_far_fraction": 0.1519138755980861,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.22392184424724587,
+                "event_weighted_far_fraction": 0.11678832116788321,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.16041869493837516,
+                "event_weighted_far_fraction": 0.10283315844700944,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.3153072983528118,
+                "event_weighted_far_fraction": 0.1826086956521739,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      },
+      "prior_nearest_record_ge500km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11025128844908362,
+            "raw_spearman_p_naive": 0.1259256756443771,
+            "partial_spearman_rank_control": 0.07516958416425837,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.005733622677809028,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.000512470250687313,
+              "q025": -0.06758864969741335,
+              "q975": 0.0658848442898944,
+              "p_two_sided_centered": 0.862,
+              "p_high": 0.4382
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.08545346824079368,
+                "event_weighted_far_fraction": 0.04197271773347324,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.18561504174440757,
+                "event_weighted_far_fraction": 0.046223224351747465,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.1653025039650776,
+                "event_weighted_far_fraction": 0.04011461318051576,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.13946866819807602,
+                "event_weighted_far_fraction": 0.0550755939524838,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11025128844908362,
+            "raw_spearman_p_naive": 0.1259256756443771,
+            "partial_spearman_rank_control": 0.07516958416425837,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.005733622677809028,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0008236914535478346,
+              "q025": -0.0977658440900009,
+              "q975": 0.0999809337877089,
+              "p_two_sided_centered": 0.928,
+              "p_high": 0.4678
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.08545346824079368,
+                "event_weighted_far_fraction": 0.04197271773347324,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.18561504174440757,
+                "event_weighted_far_fraction": 0.046223224351747465,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.1653025039650776,
+                "event_weighted_far_fraction": 0.04011461318051576,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.13946866819807602,
+                "event_weighted_far_fraction": 0.0550755939524838,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 194,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3813,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.11025128844908362,
+            "raw_spearman_p_naive": 0.1259256756443771,
+            "partial_spearman_rank_control": 0.07516958416425837,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.005733622677809028,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 194,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.006089399582821625,
+              "q025": -0.10563863017359706,
+              "q975": 0.0941172455978079,
+              "p_two_sided_centered": 0.8154,
+              "p_high": 0.4028
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.08545346824079368,
+                "event_weighted_far_fraction": 0.04197271773347324,
+                "wing_proxy_median": 2.6166666666666667
+              },
+              {
+                "wing_quartile": 2,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.18561504174440757,
+                "event_weighted_far_fraction": 0.046223224351747465,
+                "wing_proxy_median": 3.5550641025000003
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.1653025039650776,
+                "event_weighted_far_fraction": 0.04011461318051576,
+                "wing_proxy_median": 4.834722222166667
+              },
+              {
+                "wing_quartile": 4,
+                "species": 49,
+                "mean_species_equal_far_event_fraction": 0.13946866819807602,
+                "event_weighted_far_fraction": 0.0550755939524838,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10266065583561354,
+            "raw_spearman_p_naive": 0.3356190170095365,
+            "partial_spearman_rank_control": 0.13824221554098334,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.010920472859181435,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.0008002960436873955,
+              "q025": -0.07589695851069951,
+              "q975": 0.07247133907490186,
+              "p_two_sided_centered": 0.7622,
+              "p_high": 0.3798
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.05981356553438933,
+                "event_weighted_far_fraction": 0.03229665071770335,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.05097394389256021,
+                "event_weighted_far_fraction": 0.021897810218978103,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.0279038758949456,
+                "event_weighted_far_fraction": 0.024134312696747113,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.09183214542957945,
+                "event_weighted_far_fraction": 0.040993788819875775,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10266065583561354,
+            "raw_spearman_p_naive": 0.3356190170095365,
+            "partial_spearman_rank_control": 0.13824221554098334,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.010920472859181435,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 5,
+              "null_mean": -0.0005857811567382242,
+              "q025": -0.10174285127049919,
+              "q975": 0.10206315535516378,
+              "p_two_sided_centered": 0.8266,
+              "p_high": 0.414
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.05981356553438933,
+                "event_weighted_far_fraction": 0.03229665071770335,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.05097394389256021,
+                "event_weighted_far_fraction": 0.021897810218978103,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.0279038758949456,
+                "event_weighted_far_fraction": 0.024134312696747113,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.09183214542957945,
+                "event_weighted_far_fraction": 0.040993788819875775,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 90,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 3416,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.10266065583561354,
+            "raw_spearman_p_naive": 0.3356190170095365,
+            "partial_spearman_rank_control": 0.13824221554098334,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.010920472859181435,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 90,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.0068107501980931165,
+              "q025": -0.11099436535424662,
+              "q975": 0.098768633731635,
+              "p_two_sided_centered": 0.7414,
+              "p_high": 0.3728
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.05981356553438933,
+                "event_weighted_far_fraction": 0.03229665071770335,
+                "wing_proxy_median": 2.5125
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.05097394389256021,
+                "event_weighted_far_fraction": 0.021897810218978103,
+                "wing_proxy_median": 3.635
+              },
+              {
+                "wing_quartile": 3,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.0279038758949456,
+                "event_weighted_far_fraction": 0.024134312696747113,
+                "wing_proxy_median": 4.731944444416666
+              },
+              {
+                "wing_quartile": 4,
+                "species": 23,
+                "mean_species_equal_far_event_fraction": 0.09183214542957945,
+                "event_weighted_far_fraction": 0.040993788819875775,
+                "wing_proxy_median": 6.509126984000001
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      }
+    },
+    "both_period_opportunity": {
+      "prior_nearest_record_ge100km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1826421838800758,
+            "raw_spearman_p_naive": 0.011013052691455937,
+            "partial_spearman_rank_control": 0.11079765309216233,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08248210647878237,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.001011286977973817,
+              "q025": -0.08512819936349605,
+              "q975": 0.08619656212382788,
+              "p_two_sided_centered": 0.0588,
+              "p_high": 0.0322
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.3115495586150759,
+                "event_weighted_far_fraction": 0.19855595667870035,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.4199658734961638,
+                "event_weighted_far_fraction": 0.174931129476584,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.3889546252467834,
+                "event_weighted_far_fraction": 0.15613825983313467,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.5029523446314917,
+                "event_weighted_far_fraction": 0.24864864864864866,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1826421838800758,
+            "raw_spearman_p_naive": 0.011013052691455937,
+            "partial_spearman_rank_control": 0.11079765309216233,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08248210647878237,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.0003042834662345413,
+              "q025": -0.1273122901026006,
+              "q975": 0.12692555126374544,
+              "p_two_sided_centered": 0.2082,
+              "p_high": 0.1038
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.3115495586150759,
+                "event_weighted_far_fraction": 0.19855595667870035,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.4199658734961638,
+                "event_weighted_far_fraction": 0.174931129476584,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.3889546252467834,
+                "event_weighted_far_fraction": 0.15613825983313467,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.5029523446314917,
+                "event_weighted_far_fraction": 0.24864864864864866,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1826421838800758,
+            "raw_spearman_p_naive": 0.011013052691455937,
+            "partial_spearman_rank_control": 0.11079765309216233,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08248210647878237,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.00504066147562473,
+              "q025": -0.1266570538202574,
+              "q975": 0.12171322363985074,
+              "p_two_sided_centered": 0.1746,
+              "p_high": 0.0884
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.3115495586150759,
+                "event_weighted_far_fraction": 0.19855595667870035,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.4199658734961638,
+                "event_weighted_far_fraction": 0.174931129476584,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.3889546252467834,
+                "event_weighted_far_fraction": 0.15613825983313467,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.5029523446314917,
+                "event_weighted_far_fraction": 0.24864864864864866,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.044180590106274994,
+            "raw_spearman_p_naive": 0.6845021462587432,
+            "partial_spearman_rank_control": 0.2350639635229054,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08552487597316288,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 1,
+              "null_mean": 0.0012283353548621406,
+              "q025": -0.1037429838146523,
+              "q975": 0.10924157780522162,
+              "p_two_sided_centered": 0.128,
+              "p_high": 0.0644
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23941518251863078,
+                "event_weighted_far_fraction": 0.17043740573152338,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23186655603191653,
+                "event_weighted_far_fraction": 0.13539967373572595,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.16887537839509054,
+                "event_weighted_far_fraction": 0.12385919165580182,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.27736877541397575,
+                "event_weighted_far_fraction": 0.17280453257790368,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.044180590106274994,
+            "raw_spearman_p_naive": 0.6845021462587432,
+            "partial_spearman_rank_control": 0.2350639635229054,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08552487597316288,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 5,
+              "null_mean": -0.00019161971793929164,
+              "q025": -0.1448211284744667,
+              "q975": 0.14552781523734987,
+              "p_two_sided_centered": 0.2436,
+              "p_high": 0.1228
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23941518251863078,
+                "event_weighted_far_fraction": 0.17043740573152338,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23186655603191653,
+                "event_weighted_far_fraction": 0.13539967373572595,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.16887537839509054,
+                "event_weighted_far_fraction": 0.12385919165580182,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.27736877541397575,
+                "event_weighted_far_fraction": 0.17280453257790368,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 100,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.044180590106274994,
+            "raw_spearman_p_naive": 0.6845021462587432,
+            "partial_spearman_rank_control": 0.2350639635229054,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.08552487597316288,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.011434692460730174,
+              "q025": -0.1593452616608085,
+              "q975": 0.13969857530508142,
+              "p_two_sided_centered": 0.2046,
+              "p_high": 0.1012
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23941518251863078,
+                "event_weighted_far_fraction": 0.17043740573152338,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.23186655603191653,
+                "event_weighted_far_fraction": 0.13539967373572595,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.16887537839509054,
+                "event_weighted_far_fraction": 0.12385919165580182,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.27736877541397575,
+                "event_weighted_far_fraction": 0.17280453257790368,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      },
+      "prior_nearest_record_ge500km": {
+        "1": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1201457328108632,
+            "raw_spearman_p_naive": 0.09605062873684467,
+            "partial_spearman_rank_control": 0.07808395240747405,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.009369367208932538,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 1,
+              "null_mean": -0.00029955269052246117,
+              "q025": -0.06630650884687295,
+              "q975": 0.06789484525823908,
+              "p_two_sided_centered": 0.769,
+              "p_high": 0.3824
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.07825133951016304,
+                "event_weighted_far_fraction": 0.04693140794223827,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.19496374952302004,
+                "event_weighted_far_fraction": 0.05509641873278237,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.16414747711346014,
+                "event_weighted_far_fraction": 0.04529201430274136,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.15399409363836927,
+                "event_weighted_far_fraction": 0.06351351351351352,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1201457328108632,
+            "raw_spearman_p_naive": 0.09605062873684467,
+            "partial_spearman_rank_control": 0.07808395240747405,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.009369367208932538,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 5,
+              "null_mean": 0.00018072771808051472,
+              "q025": -0.09890631269022879,
+              "q975": 0.10246243947935672,
+              "p_two_sided_centered": 0.8562,
+              "p_high": 0.4266
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.07825133951016304,
+                "event_weighted_far_fraction": 0.04693140794223827,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.19496374952302004,
+                "event_weighted_far_fraction": 0.05509641873278237,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.16414747711346014,
+                "event_weighted_far_fraction": 0.04529201430274136,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.15399409363836927,
+                "event_weighted_far_fraction": 0.06351351351351352,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 193,
+            "species_event_minimum": 1.0,
+            "total_original_first_index_events": 3136,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.1201457328108632,
+            "raw_spearman_p_naive": 0.09605062873684467,
+            "partial_spearman_rank_control": 0.07808395240747405,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": 0.009369367208932538,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 193,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.008244569852206871,
+              "q025": -0.10661358345498015,
+              "q975": 0.09448132453445374,
+              "p_two_sided_centered": 0.7388,
+              "p_high": 0.3704
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 50,
+                "mean_species_equal_far_event_fraction": 0.07825133951016304,
+                "event_weighted_far_fraction": 0.04693140794223827,
+                "wing_proxy_median": 2.6284226190833335
+              },
+              {
+                "wing_quartile": 2,
+                "species": 47,
+                "mean_species_equal_far_event_fraction": 0.19496374952302004,
+                "event_weighted_far_fraction": 0.05509641873278237,
+                "wing_proxy_median": 3.5999999999999996
+              },
+              {
+                "wing_quartile": 3,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.16414747711346014,
+                "event_weighted_far_fraction": 0.04529201430274136,
+                "wing_proxy_median": 4.862500000000001
+              },
+              {
+                "wing_quartile": 4,
+                "species": 48,
+                "mean_species_equal_far_event_fraction": 0.15399409363836927,
+                "event_weighted_far_fraction": 0.06351351351351352,
+                "wing_proxy_median": 6.584096459
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        },
+        "10": {
+          "global": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.061473961512030065,
+            "raw_spearman_p_naive": 0.5716433117296584,
+            "partial_spearman_rank_control": 0.10450534310086142,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": -0.0081447394839683,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "global",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 1,
+              "null_mean": 0.0008167940383227157,
+              "q025": -0.06924527733633863,
+              "q975": 0.07324444141967276,
+              "p_two_sided_centered": 0.8204,
+              "p_high": 0.5862
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06706112514936045,
+                "event_weighted_far_fraction": 0.0392156862745098,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.04865013774104683,
+                "event_weighted_far_fraction": 0.022838499184339316,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.03469613309156466,
+                "event_weighted_far_fraction": 0.03129074315514994,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06882084942421615,
+                "event_weighted_far_fraction": 0.0339943342776204,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.061473961512030065,
+            "raw_spearman_p_naive": 0.5716433117296584,
+            "partial_spearman_rank_control": 0.10450534310086142,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": -0.0081447394839683,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 5,
+              "null_mean": -0.0007046894660773232,
+              "q025": -0.09634656892345225,
+              "q975": 0.09703240059868051,
+              "p_two_sided_centered": 0.8808,
+              "p_high": 0.5632
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06706112514936045,
+                "event_weighted_far_fraction": 0.0392156862745098,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.04865013774104683,
+                "event_weighted_far_fraction": 0.022838499184339316,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.03469613309156466,
+                "event_weighted_far_fraction": 0.03129074315514994,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06882084942421615,
+                "event_weighted_far_fraction": 0.0339943342776204,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          },
+          "family_and_event_intensity": {
+            "status": "SPECIES_EQUAL_FIRST_INDEX_DISTANCE_PROXY_ANALYSIS",
+            "n_butterfly_species": 87,
+            "species_event_minimum": 10.0,
+            "total_original_first_index_events": 2749,
+            "outcome": "first indexed island records whose earlier indexed nearest coordinate was 100+ or 500+ km; NOT butterfly physical dispersal",
+            "source_distance_threshold_km": 500,
+            "raw_spearman_rho_wing_vs_species_far_fraction": 0.061473961512030065,
+            "raw_spearman_p_naive": 0.5716433117296584,
+            "partial_spearman_rank_control": 0.10450534310086142,
+            "family_count": 5,
+            "partial_regression_arcsin_sqrt_beta_per_ln_wing": -0.0081447394839683,
+            "nuisance": [
+              "log1p_n_original_source_first_records",
+              "log1p_GEB_native_resource_units",
+              "log1p_HOSTS_host_family_breadth",
+              "LepTraits_family_fixed_effect"
+            ],
+            "permute_wing_within": "family_event_intensity_halves",
+            "null": {
+              "valid_permutations": 4999,
+              "exchangeable_species": 87,
+              "exchangeable_blocks": 10,
+              "null_mean": -0.02103600983428132,
+              "q025": -0.10992003807070251,
+              "q975": 0.06996798131933231,
+              "p_two_sided_centered": 0.7944,
+              "p_high": 0.4016
+            },
+            "wing_quartiles": [
+              {
+                "wing_quartile": 1,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06706112514936045,
+                "event_weighted_far_fraction": 0.0392156862745098,
+                "wing_proxy_median": 2.50347222225
+              },
+              {
+                "wing_quartile": 2,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.04865013774104683,
+                "event_weighted_far_fraction": 0.022838499184339316,
+                "wing_proxy_median": 3.58173076925
+              },
+              {
+                "wing_quartile": 3,
+                "species": 21,
+                "mean_species_equal_far_event_fraction": 0.03469613309156466,
+                "event_weighted_far_fraction": 0.03129074315514994,
+                "wing_proxy_median": 4.55
+              },
+              {
+                "wing_quartile": 4,
+                "species": 22,
+                "mean_species_equal_far_event_fraction": 0.06882084942421615,
+                "event_weighted_far_fraction": 0.0339943342776204,
+                "wing_proxy_median": 6.419340986404762
+              }
+            ],
+            "limits": [
+              "Species-equal event-ratio outcome is not island first-colonization probability, presence, absence, or dispersal distance.",
+              "Wingspan is a limited proxy for butterfly flight ability; natural rafting, wind, horticultural transit, shipping and air movement are not distinguished.",
+              "The 205 species have source-selected 2011–2022 indexed first-record island events and earlier-year points; no full island-year denominator or unrecorded species.",
+              "Family adjustment does not remove within-family phylogenetic dependence and source reporting heterogeneity.",
+              "The 3 original nested cohorts are not independent; tests and thresholds are exploratory and multiplicity exposed.",
+              "No geographic port accessibility, modern climate, host introductions or vessel routes are contained in this original event distance summary."
+            ]
+          }
+        }
+      }
+    }
+  },
+  "no_flight_or_shipment_claim": true
+}
