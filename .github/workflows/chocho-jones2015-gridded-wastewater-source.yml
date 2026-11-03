@@ -48,9 +48,39 @@ jobs:
           print("JONES_2015_WASTEWATER_GRID_SOURCE",json.dumps(o,sort_keys=True),flush=True)
           assert any(x["name"].lower().endswith((".nc",".tif",".txt",".asc")) for x in files),files
           PY
+      - name: Inspect source netCDF variable meanings and latitude longitude grid
+        run: |
+          python -m pip install --quiet netCDF4
+          python - <<'PY'
+          import zipfile,json
+          from netCDF4 import Dataset
+          from pathlib import Path
+          p=Path('/tmp/jones_wastewater/Global_wastewater.zip')
+          with zipfile.ZipFile(p) as z:
+              name=next(x.filename for x in z.infolist() if x.filename.lower().endswith('.nc'))
+              tmp=Path('/tmp/jones_wastewater/source_grid.nc')
+              tmp.write_bytes(z.read(name))
+          with Dataset(tmp,'r') as ds:
+              meta={
+                'netcdf_name':name,
+                'dimensions':{k:len(v) for k,v in ds.dimensions.items()},
+                'variables':{
+                    k:{'dims':list(v.dimensions),'shape':list(v.shape),
+                       'units':getattr(v,'units',None),
+                       'long_name':getattr(v,'long_name',None),
+                       'missing_value':str(getattr(v,'_FillValue',None)),
+                       'dtype':str(v.dtype)}
+                    for k,v in ds.variables.items()},
+                'global_attributes':{k:str(ds.getncattr(k))[:500] for k in ds.ncattrs()}
+              }
+          Path('/tmp/jones_wastewater/netcdf_schema.json').write_text(json.dumps(meta,indent=2))
+          print('JONES_2015_NETCDF_SCHEMA',json.dumps(meta,sort_keys=True),flush=True)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: jones-2015-5arc-gridded-wastewater-original-source-manifest
-          path: /tmp/jones_wastewater/source_manifest.json
+          path: |
+            /tmp/jones_wastewater/source_manifest.json
+            /tmp/jones_wastewater/netcdf_schema.json
           retention-days: 30
