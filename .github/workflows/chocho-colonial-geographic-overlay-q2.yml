@@ -1,0 +1,60 @@
+name: chocho Q2 historical island empire spatial join
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/overlay_lenzner_empires_wgsrpd3.py
+      - .github/workflows/chocho-colonial-geographic-overlay-q2.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  overlay-empire-polygons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install geometry dependencies
+        run: python -m pip install "shapely>=2,<3" "pyproj>=3.6,<4" "pyshp>=2.3,<3"
+      - uses: actions/checkout@v4
+        with:
+          repository: lenzner/Eur-Emp-Alien-Flora
+          ref: 7aae72aadd39ae3827ece6935c6740dc0aace030
+          path: _external/LENZNER
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Source-based historical exposure overlay
+        run: |
+          python -m py_compile scripts/overlay_lenzner_empires_wgsrpd3.py
+          python scripts/overlay_lenzner_empires_wgsrpd3.py \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --q1-island-lookup results/island-mainland-resource-q1/region_metrics.csv \
+            --lenzner-empires _external/LENZNER/Code/Datasets/Empires.csv \
+            --lenzner-shapefile _external/LENZNER/Code/Datasets/Shapefile/Shapefile.shp \
+            --output-dir results/colonial-history-island-q2
+      - name: Upload overlay outputs even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q2-lenzner-island-crosswalk
+          path: results/colonial-history-island-q2/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save reproducible aggregate geographic crosswalk
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/colonial-history-island-q2/island_lenzner_empire_crosswalk.csv \
+            results/colonial-history-island-q2/empire_geographic_overlay_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Geolocate historical colonial empires on WGSRPD3 islands [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

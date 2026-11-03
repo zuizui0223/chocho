@@ -1,0 +1,68 @@
+name: chocho Q3 31-species wing-port indexed observation screen
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/screen_q3_wing_port_archival_index.py
+      - .github/workflows/chocho-q3-archival-wing-port-screen.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  wing-port-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Retrieve 126-island Q2 host resource edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          path: work/q2
+      - name: Select versioned audited source edge table
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t edges < <(find work/q2 -type f -name introduced_host_source_edges.csv)
+          test "${#edges[@]}" -eq 1
+          cp "${edges[0]}" work/q2/q2_edges_v02.csv
+      - name: Check observational port×wing differences under species and regional nulls
+        run: |
+          python -m py_compile scripts/screen_q3_wing_port_archival_index.py
+          python scripts/screen_q3_wing_port_archival_index.py \
+            --q2-edges work/q2/q2_edges_v02.csv \
+            --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --q3-observed results/q3-observed-butterfly-island-opportunity-v02/observed_added_island_resource_cases.csv \
+            --q3-all-observed results/q3-observed-butterfly-island-opportunity-v02/observed_species_island_cells.csv \
+            --q3-audit results/q3-observed-butterfly-island-opportunity-v02/q3_archival_gbif_overlap_audit.json \
+            --validation-panel data/frozen/figure_sources/occurrence_resource_validation_species.csv \
+            --wing-panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --area results/island-mainland-resource-area/region_area_metrics.csv \
+            --out-dir results/q3-wing-port-index-screen-v02
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Q3-wing-port-index-status-not-colonization
+          path: results/q3-wing-port-index-screen-v02/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit observational audit without changing GEB manuscript
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q3-wing-port-index-screen-v02/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Assess power and wing/port co-indexing on GBIF sampled islands [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

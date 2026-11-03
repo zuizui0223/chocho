@@ -1,0 +1,691 @@
+{
+  "schema": "chocho_WPI_introduced_flora_GBIF_plant_index_effort_sensitivity_v0.1",
+  "status": "DESCRIPTIVE_CROSS_SECTIONAL_SURVEY_EFFORT_AUDIT_NOT_TRANSPORT_CAUSATION",
+  "sources": {
+    "wcvp_all_flora_126": "results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv",
+    "butterfly_host_taxa_123": "results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv",
+    "gbif_botanical_effort_122": "results/q4-gbif-first-year-pilot/island_plant_effort_year_facets.csv",
+    "canary_botanical_effort": "results/q4-canary-plant-firstyear-v02/CNY_three_plant_firstyear_audit.json",
+    "historical_index_definition": "GBIF all Plantae taxonKey=6; 1700–2026, WGSRPD3 polygon, valid coordinates, all GBIF providers"
+  },
+  "scope": {
+    "total_WCVP_island_regions": 126,
+    "original_Q4_botanical_effort_status": {
+      "DATED_OCCURRENCE_FOUND": 97,
+      "ANTIMERIDIAN_GEOMETRY_REVIEW": 2,
+      "GBIF_QUERY_FAILED": 20,
+      "WKT_COMPLEX_OR_INACCURATE": 2,
+      "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 1
+    },
+    "CNY_effort_added": true,
+    "island_regions_with_successful_botanical_index_effort": 98,
+    "islands_with_HOSTS_and_botanical_effort": 98,
+    "excluded_regions": [
+      {
+        "code": "ALU",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "BAH",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "BOR",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "BOU",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "CUB",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "FIJ",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "GNL",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "GRB",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "HMD",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "JAP",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "LDV",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "LSI",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "MCS",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "MDV",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "MOL",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "NFL",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "NWC",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "NWG",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "PHI",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SGE",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SOL",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SSA",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SUL",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SUM",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "SVA",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "TDC",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "TUA",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      },
+      {
+        "code": "VAN",
+        "reason": "GBIF_EFFORT_NOT_INDEXED_OR_FAILED"
+      }
+    ],
+    "cohort_counts_by_level1": {
+      "2": 18,
+      "4": 8,
+      "8": 17,
+      "9": 6,
+      "5": 7,
+      "1": 8,
+      "3": 9,
+      "6": 23,
+      "7": 2
+    },
+    "cohort_islands_with_WPI_indexed_ports": 69,
+    "cohort_islands_without_WPI_indexed_ports": 29
+  },
+  "source_effort_selection": {
+    "n_observed": 98,
+    "n_excluded": 28,
+    "median_area_km2_observed": 955.7751173115331,
+    "median_area_km2_excluded": 25120.112020516604,
+    "median_WPI_ports_observed": 1.0,
+    "median_WPI_ports_excluded": 6.5,
+    "median_introduced_flora_observed": 206.5,
+    "median_introduced_flora_excluded": 203.5,
+    "excluded_high_port_regions": [
+      {
+        "code": "GRB",
+        "ports": 173,
+        "introduced_flora": 2291
+      },
+      {
+        "code": "JAP",
+        "ports": 151,
+        "introduced_flora": 769
+      },
+      {
+        "code": "PHI",
+        "ports": 65,
+        "introduced_flora": 414
+      },
+      {
+        "code": "BOR",
+        "ports": 38,
+        "introduced_flora": 213
+      },
+      {
+        "code": "SUM",
+        "ports": 27,
+        "introduced_flora": 224
+      },
+      {
+        "code": "CUB",
+        "ports": 23,
+        "introduced_flora": 882
+      },
+      {
+        "code": "NWG",
+        "ports": 19,
+        "introduced_flora": 375
+      },
+      {
+        "code": "SUL",
+        "ports": 15,
+        "introduced_flora": 164
+      },
+      {
+        "code": "ALU",
+        "ports": 12,
+        "introduced_flora": 32
+      },
+      {
+        "code": "GNL",
+        "ports": 11,
+        "introduced_flora": 89
+      },
+      {
+        "code": "LSI",
+        "ports": 11,
+        "introduced_flora": 308
+      },
+      {
+        "code": "NFL",
+        "ports": 11,
+        "introduced_flora": 407
+      }
+    ],
+    "interpretation": "Effort availability is size- and region-selective; models do not generalize automatically to all 126 islands"
+  },
+  "leave_one_biogeographic_region_out_robustness": {
+    "1": {
+      "excluded_Level1": "1",
+      "remaining_islands": 90,
+      "beta": 0.23981197458971232,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    },
+    "2": {
+      "excluded_Level1": "2",
+      "remaining_islands": 80,
+      "beta": 0.1868437969002704,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.03
+    },
+    "3": {
+      "excluded_Level1": "3",
+      "remaining_islands": 89,
+      "beta": 0.27874849834695375,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    },
+    "4": {
+      "excluded_Level1": "4",
+      "remaining_islands": 90,
+      "beta": 0.26222101348766336,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    },
+    "5": {
+      "excluded_Level1": "5",
+      "remaining_islands": 91,
+      "beta": 0.22477931214173352,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0075
+    },
+    "6": {
+      "excluded_Level1": "6",
+      "remaining_islands": 75,
+      "beta": 0.23739078546437584,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    },
+    "7": {
+      "excluded_Level1": "7",
+      "remaining_islands": 96,
+      "beta": 0.23786474337004324,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    },
+    "8": {
+      "excluded_Level1": "8",
+      "remaining_islands": 81,
+      "beta": 0.2831461054840132,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.005
+    },
+    "9": {
+      "excluded_Level1": "9",
+      "remaining_islands": 92,
+      "beta": 0.25213650605782145,
+      "direction_positive": true,
+      "descriptive_two_sided_p_after_excluding": 0.0025
+    }
+  },
+  "leave_one_biogeographic_region_out_direction_positive_count": 9,
+  "models": {
+    "all_flora_unnormalized_no_effort": {
+      "n": 98,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.33373009791804664,
+      "multiplicative_change_in_1plus_outcome": 0.39616626453502346,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.03882598425590653,
+        "null_q025": -0.09159897784689666,
+        "null_q975": 0.16333316978015183,
+        "observed_minus_null_mean": 0.2949041136621401,
+        "p_two_sided_centered": 0.0002,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_with_gbif_total_effort": {
+      "n": 98,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.24447852550694815,
+      "multiplicative_change_in_1plus_outcome": 0.2769552399634678,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.04454348190945738,
+        "null_q025": -0.07585717913459339,
+        "null_q975": 0.15699525562887154,
+        "observed_minus_null_mean": 0.19993504359749076,
+        "p_two_sided_centered": 0.0012,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_with_pre1900_effort": {
+      "n": 98,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_pre1900",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.2224969962983339,
+      "multiplicative_change_in_1plus_outcome": 0.24919206744472344,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.023232255120958716,
+        "null_q025": -0.09633617096833974,
+        "null_q975": 0.13518896710683637,
+        "observed_minus_null_mean": 0.19926474117737517,
+        "p_two_sided_centered": 0.0014,
+        "p_one_sided_positive": 0.0004
+      }
+    },
+    "all_flora_intro_native_logratio_with_effort": {
+      "n": 98,
+      "outcome": "log_ratio_introduced_to_native",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.24291347717458123,
+      "multiplicative_change_in_1plus_outcome": null,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.043379577590488064,
+        "null_q025": -0.08987021678946369,
+        "null_q975": 0.16848841854674346,
+        "observed_minus_null_mean": 0.19953389958409318,
+        "p_two_sided_centered": 0.0036,
+        "p_one_sided_positive": 0.0006
+      }
+    },
+    "host_taxa_no_effort": {
+      "n": 98,
+      "outcome": "ln1p_introduced_host_taxa",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_host_baseline",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.2526789726466867,
+      "multiplicative_change_in_1plus_outcome": 0.28746989743148976,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.02146105654279805,
+        "null_q025": -0.09676921181899294,
+        "null_q975": 0.1327144027947944,
+        "observed_minus_null_mean": 0.23121791610388864,
+        "p_two_sided_centered": 0.0002,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "host_taxa_with_effort": {
+      "n": 98,
+      "outcome": "ln1p_introduced_host_taxa",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_host_baseline",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.16390595789001258,
+      "multiplicative_change_in_1plus_outcome": 0.17810351854236584,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.026918918004683625,
+        "null_q025": -0.08173296592733659,
+        "null_q975": 0.12547200421464436,
+        "observed_minus_null_mean": 0.13698703988532895,
+        "p_two_sided_centered": 0.011,
+        "p_one_sided_positive": 0.003
+      }
+    },
+    "all_flora_with_effort_within_Level1_only": {
+      "n": 98,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.24447852550694815,
+      "multiplicative_change_in_1plus_outcome": 0.2769552399634678,
+      "permutation": {
+        "stratify": "within_level1",
+        "n_permutations": 4999,
+        "exchangeable_islands": 98,
+        "exchangeable_blocks": 9,
+        "null_mean": 0.0008687282443141315,
+        "null_q025": -0.11290176739095546,
+        "null_q975": 0.11199638546638077,
+        "observed_minus_null_mean": 0.24360979726263401,
+        "p_two_sided_centered": 0.0002,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_effort_exclude_largest_port": {
+      "n": 97,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.23034132769911092,
+      "multiplicative_change_in_1plus_outcome": 0.2590296782996546,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 92,
+        "exchangeable_blocks": 15,
+        "null_mean": 0.04384692738495566,
+        "null_q025": -0.0760758127754342,
+        "null_q975": 0.15530900497886496,
+        "observed_minus_null_mean": 0.18649440031415526,
+        "p_two_sided_centered": 0.001,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_effort_exclude_pacific_antarctic": {
+      "n": 69,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_7",
+        "Level1_8"
+      ],
+      "regression_beta_per_log2_port_unit": 0.24280561322919872,
+      "multiplicative_change_in_1plus_outcome": 0.274820791734516,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 67,
+        "exchangeable_blocks": 12,
+        "null_mean": 0.08226695794594817,
+        "null_q025": -0.04892396255226787,
+        "null_q975": 0.2027012985777658,
+        "observed_minus_null_mean": 0.16053865528325056,
+        "p_two_sided_centered": 0.0136,
+        "p_one_sided_positive": 0.0044
+      }
+    },
+    "botanical_reporting_effort_vs_ports": {
+      "n": 98,
+      "outcome": "ln1p_gbif_total",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.523893033066187,
+      "multiplicative_change_in_1plus_outcome": 0.6885886016725746,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_blocks": 15,
+        "null_mean": -0.025007634733261026,
+        "null_q025": -0.2804756222892466,
+        "null_q975": 0.21833963605792228,
+        "observed_minus_null_mean": 0.548900667799448,
+        "p_two_sided_centered": 0.0002,
+        "p_one_sided_positive": 0.0002
+      }
+    },
+    "all_flora_with_effort_only_port_positive": {
+      "n": 69,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.23537604763291234,
+      "multiplicative_change_in_1plus_outcome": 0.26538452412896274,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 67,
+        "exchangeable_blocks": 14,
+        "null_mean": 0.0793532198701418,
+        "null_q025": -0.055605443184462686,
+        "null_q975": 0.2138186621681475,
+        "observed_minus_null_mean": 0.15602282776277054,
+        "p_two_sided_centered": 0.0222,
+        "p_one_sided_positive": 0.0114
+      }
+    },
+    "all_flora_with_effort_high_botanical_reporting": {
+      "n": 71,
+      "outcome": "ln1p_introduced_flora",
+      "exposure": "log2(1+2023_WPI_indexed_port_count)",
+      "nuisance_covariates": [
+        "intercept",
+        "ln_WGSRPD3_region_area_km2",
+        "ln1p_native_flora",
+        "ln1p_gbif_total",
+        "Level1_2",
+        "Level1_3",
+        "Level1_4",
+        "Level1_5",
+        "Level1_6",
+        "Level1_7",
+        "Level1_8",
+        "Level1_9"
+      ],
+      "regression_beta_per_log2_port_unit": 0.21933060757354628,
+      "multiplicative_change_in_1plus_outcome": 0.24524289537376975,
+      "permutation": {
+        "stratify": "within_level1_area_half",
+        "n_permutations": 4999,
+        "exchangeable_islands": 66,
+        "exchangeable_blocks": 14,
+        "null_mean": 0.11578721820622734,
+        "null_q025": 0.012455391815044889,
+        "null_q975": 0.21573026742715237,
+        "observed_minus_null_mean": 0.10354338936731894,
+        "p_two_sided_centered": 0.0466,
+        "p_one_sided_positive": 0.0218
+      }
+    }
+  },
+  "interpretation_boundaries": [
+    "WPI port count comes from a modern indexed 2023 snapshot; it is not historical shipping intensity, port accessibility in all years, or a treatment.",
+    "WCVP floristic status and GBIF botanical effort may share collecting/digitization biases and are not independent data collection systems in a causal sense.",
+    "Total indexed plant records is a post-exposure variable: adjustment is a bias sensitivity only, and may block real human-linked botanical introductions as well as collection effort.",
+    "Strict missing GBIF effort sources are omitted, not treated as botanical zero; the complete-case cohort is geographically nonrandom.",
+    "Matched geography still aggregates physical islands, not ports or breeding sites.",
+    "Area and Level1 strata do not eliminate population-density, land-use, gardening/nursery plants, trade or spatial dependence.",
+    "Permutations are descriptive against exchangeable port-label baselines, not evidence of independent transport causality."
+  ]
+}

@@ -1,0 +1,106 @@
+name: chocho Q2 exploratory intercolonial butterfly host-resource source
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - .github/workflows/chocho-intercolonial-host-source-q2.yml
+      - scripts/overlay_lenzner_empires_global_wgsrpd3.py
+      - scripts/analyze_intercolonial_host_source_q2.py
+      - scripts/test_empire_duration_host_source_q2.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  other-colonial-native-host-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Install GIS dependencies for pinned global Lenzner overlay
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4' 'pyshp>=2.3,<3'
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: lenzner/Eur-Emp-Alien-Flora
+          ref: 7aae72aadd39ae3827ece6935c6740dc0aace030
+          path: _external/LENZNER
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Recover fixed 11,455 butterfly/introduced-host/island edges without rerunning HOSTS
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          run-id: 41370175076
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Recover published WCVP native source geography for exactly 560 introduced hosts
+        run: |
+          Rscript scripts/extract_q2_host_native_source_regions.R \
+            _external/WCVP work/q2/introduced_host_source_edges.csv work/native
+      - name: Match all 369 WGSRPD3 donor regions to pinned historic European empires
+        run: |
+          python -m py_compile scripts/overlay_lenzner_empires_global_wgsrpd3.py scripts/analyze_intercolonial_host_source_q2.py
+          python scripts/overlay_lenzner_empires_global_wgsrpd3.py \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --q1-island-lookup results/island-mainland-resource-q1/region_metrics.csv \
+            --lenzner-empires _external/LENZNER/Code/Datasets/Empires.csv \
+            --lenzner-shapefile _external/LENZNER/Code/Datasets/Shapefile/Shapefile.shp \
+            --output-dir results/colonial-history-source-global-q2
+      - name: Attribute all 5674 introduced butterfly island opportunities to other former colonies
+        run: |
+          python scripts/analyze_intercolonial_host_source_q2.py \
+            --q2-edges work/q2/introduced_host_source_edges.csv \
+            --native-plant-regions work/native/q2_introduced_host_native_regions.csv \
+            --global-empire-crosswalk results/colonial-history-source-global-q2/global_lenzner_empire_crosswalk.csv \
+            --island-empire-crosswalk results/colonial-history-island-q2/island_lenzner_empire_crosswalk.csv \
+            --q2-original-audit results/colonial-host-native-source-q2/host_source_audit.json \
+            --output-dir results/intercolonial-host-source-q2
+      - name: Test exploratory other-colonial source matching under geographic fixed-sample permutation
+        run: |
+          for kind in non_european_other_colonies all_other_empire_territories other_colonial_islands_only; do
+            python scripts/test_empire_duration_host_source_q2.py \
+              --host-source-islands "results/intercolonial-host-source-q2/colonial_network_${kind}_island_source_summary.csv" \
+              --host-source-audit results/colonial-host-native-source-q2/host_source_audit.json \
+              --empire-islands results/colonial-history-island-q2/island_lenzner_empire_crosswalk.csv \
+              --empire-overlay-audit results/colonial-history-island-q2/empire_geographic_overlay_audit.json \
+              --area-metrics results/island-mainland-resource-area/region_area_metrics.csv \
+              --source-type "${kind}" \
+              --output-dir results/intercolonial-host-source-q2
+          done
+      - name: Preserve native-source and historic source reconstruction receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q2-intercolonial-host-source-complete
+          path: |
+            work/native/
+            results/colonial-history-source-global-q2/
+            results/intercolonial-host-source-q2/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit exploratory aggregate results without altering main GEB findings
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/colonial-history-source-global-q2/ results/intercolonial-host-source-q2/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Test alternative co-colonial native-host resource corridors [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

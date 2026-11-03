@@ -1,0 +1,192 @@
+{
+  "schema": "chocho_three_gates_island_butterfly_case_traits_feasibility_v0.1",
+  "status": "LITERATURE_CASE_LEADS_NOT_INDEPENDENT_ESTABLISHMENTS",
+  "data": {
+    "literature_events": 47,
+    "unique_butterflies": 13,
+    "distinct_physical_islands_or_localities": 29,
+    "distinct_wgsrpd3_codes": 15,
+    "unique_butterfly_x_WGSRPD3": 25,
+    "within_WGSRPD3_redundant_events": 19,
+    "source_events_missing_WGSRPD3_mapping": 3,
+    "exact_year_first_record_cases": 40,
+    "first_year_1981plus_cases": 26,
+    "events_with_subsequent_establishment_or_breeding_upper_year": 20,
+    "event_rows_in_both_GEB239_and_GBIF225": 30,
+    "distinct_species_in_both_panels": 9
+  },
+  "GEB_resource_species_panel_size": 239,
+  "GEB_225_butterfly_port_observation_panel_size": 225,
+  "shared_butterfly_species_count": 225,
+  "leptraits": {
+    "source_rows": 12448,
+    "source_columns": [
+      "Family",
+      "Genus",
+      "Species",
+      "verbatimSpecies",
+      "WS_L_Fem",
+      "WS_U_Fem",
+      "WS_L_Mal",
+      "WS_U_Mal",
+      "WS_L",
+      "WS_U",
+      "FW_L_Fem",
+      "FW_U_Fem",
+      "FW_L_Mal",
+      "FW_U_Mal",
+      "FW_L",
+      "FW_U",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+      "FlightDuration",
+      "DiapauseStage",
+      "Voltinism",
+      "OvipositionStyle",
+      "CanopyAffinity",
+      "EdgeAffinity",
+      "MoistureAffinity",
+      "DisturbanceAffinity",
+      "NumberOfHostplantFamilies",
+      "SoleHostplantFamily",
+      "PrimaryHostplantFamily",
+      "SecondaryHostplantFamily",
+      "EqualHostplantFamily",
+      "NumberOfHostplantAccounts",
+      "DateCreated"
+    ],
+    "candidate_taxon_key_cols": [
+      [
+        239,
+        "Species"
+      ]
+    ],
+    "taxon_key_selected": "Species",
+    "frozen_species_matched": 239,
+    "by_trait": {
+      "wingspan": {
+        "columns": [
+          "WS_L_Fem",
+          "WS_U_Fem",
+          "WS_L_Mal",
+          "WS_U_Mal",
+          "WS_L",
+          "WS_U",
+          "FW_L_Fem",
+          "FW_U_Fem",
+          "FW_L_Mal",
+          "FW_U_Mal",
+          "FW_L",
+          "FW_U"
+        ],
+        "all_239_species_with_value": 239,
+        "literature_seed_species_with_value": 9,
+        "nonmissing_in_each_source_column": {
+          "WS_L_Fem": 119,
+          "WS_U_Fem": 140,
+          "WS_L_Mal": 122,
+          "WS_U_Mal": 139,
+          "WS_L": 195,
+          "WS_U": 196,
+          "FW_L_Fem": 0,
+          "FW_U_Fem": 0,
+          "FW_L_Mal": 0,
+          "FW_U_Mal": 0,
+          "FW_L": 11,
+          "FW_U": 29
+        }
+      },
+      "movement_or_migration": {
+        "columns": [],
+        "all_239_species_with_value": 0,
+        "literature_seed_species_with_value": 0,
+        "nonmissing_in_each_source_column": {}
+      },
+      "diapause_or_overwinter": {
+        "columns": [
+          "DiapauseStage"
+        ],
+        "all_239_species_with_value": 129,
+        "literature_seed_species_with_value": 5,
+        "nonmissing_in_each_source_column": {
+          "DiapauseStage": 129
+        }
+      },
+      "oviposition": {
+        "columns": [
+          "OvipositionStyle"
+        ],
+        "all_239_species_with_value": 148,
+        "literature_seed_species_with_value": 9,
+        "nonmissing_in_each_source_column": {
+          "OvipositionStyle": 148
+        }
+      },
+      "habitat_disturbance": {
+        "columns": [
+          "DisturbanceAffinity"
+        ],
+        "all_239_species_with_value": 239,
+        "literature_seed_species_with_value": 9,
+        "nonmissing_in_each_source_column": {
+          "DisturbanceAffinity": 239
+        }
+      },
+      "voltinism": {
+        "columns": [
+          "Voltinism"
+        ],
+        "all_239_species_with_value": 239,
+        "literature_seed_species_with_value": 9,
+        "nonmissing_in_each_source_column": {
+          "Voltinism": 239
+        }
+      }
+    }
+  },
+  "GEB_precomputed_species_summary_completeness": {
+    "wing_size_proxy": 239,
+    "voltinism": 239,
+    "host_family_count": 239,
+    "host_contemporary_units": 239
+  },
+  "literature_unique_species_panel_link": {
+    "in_GEB239_and_original225": [
+      "Agraulis vanillae",
+      "Brephidium exilis",
+      "Danaus plexippus",
+      "Hylephila phyleus",
+      "Leptotes pirithous",
+      "Papilio demoleus",
+      "Pieris rapae",
+      "Pyrgus communis",
+      "Zizina otis"
+    ],
+    "missing_from_original225": [
+      "Abaeis nicippe",
+      "Azanus ubaldus",
+      "Cacyreus marshalli",
+      "Catopsilia florella"
+    ]
+  },
+  "further_gates": [
+    "Historical first record is not establishment and differs from known arrival.",
+    "Independent observations on individual islands are collapsed within WGSRPD3 and cannot be treated as independent WGSRPD3 exposures.",
+    "NASA POWER meteorological time series start 1981; pre-1981 butterfly first-record cases cannot receive direct climate-threshold chronology from POWER.",
+    "For tested island outcomes, stable pre-arrival botanical and climatic denominators require period-specific effort and source history.",
+    "Original 224/225-island butterfly occurrence parquet with 14.4+ million records is private/not mounted in this workflow; without source it cannot be used to infer all island first years.",
+    "Natural dispersal, wind transport and human import are latent alternatives even for a butterfly with small wings.",
+    "Wing size is a proxy (with limited prediction), not a deterministic flight-vs-ship classifier.",
+    "Do not infer that occupation of newly available resource is a colonization event for native butterflies."
+  ]
+}

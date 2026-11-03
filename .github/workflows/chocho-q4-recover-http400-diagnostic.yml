@@ -1,0 +1,66 @@
+name: chocho Q4 recover HTTP400 diagnostic response from completed retry artifact
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - .github/workflows/chocho-q4-recover-http400-diagnostic.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recover-http400-response:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download completed retry output without repeating GBIF API calls
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q4-original500-GBIF429-low-rate-diagnostic
+          run-id: 41412312725
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/diagnostic
+      - name: Audit published GBIF 400 responses and technical recovery
+        run: |
+          python - <<'PY'
+          import csv,json,collections,pathlib,hashlib
+          root=pathlib.Path('work/diagnostic')
+          files=list(root.rglob('http429_original_pilot_retry_subset.csv'))
+          if len(files)!=1:raise SystemExit('Exactly one completed source retry CSV required')
+          with files[0].open(encoding='utf8',newline='') as f: rows=list(csv.DictReader(f))
+          assert len(rows)==12
+          stat=collections.Counter(r['status'] for r in rows)
+          assert stat==collections.Counter({'HTTP_400':7,'DATED_OCCURRENCE_FOUND':4,'NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT':1}),stat
+          errors=collections.Counter((r.get('http_error_body_excerpt') or '').strip()[:400] for r in rows if r['status']=='HTTP_400')
+          report={
+           'schema':'chocho_Q4_original500_429_recovered_HTTP400_payload_audit_v0.1',
+           'status':'GBIF_TECHNICAL_DIAGNOSIS_NOT_BIOLOGICAL_ABSENCE',
+           'original_fixed_cohort_size':500,
+           'original_failed_429_pairs':69,
+           'source_run_id':41412312725,
+           'source_retry_pairs':12,
+           'counts':dict(stat),
+           'HTTP400_response_message_counts':dict(errors),
+           'new_original_cohort_documented_years_within_12':4,
+           'no_additional_public_GBIF_queries':True,
+           'limits':['12 of 69 original 429 errors are diagnosed, not an unbiased full missingness survey','HTTP400 cases cannot be imputed as plant absence','First GBIF index year does not equal introduction year']
+          }
+          out=pathlib.Path('results/q4-http400-payload-audit')
+          out.mkdir(parents=True,exist_ok=True)
+          (out/'http400_published_response_audit.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n',encoding='utf8')
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY
+      - name: Save independent audit without overwriting prior retry runs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-http400-payload-audit/http400_published_response_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Recover public GBIF HTTP400 source diagnosis without repeated API queries [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

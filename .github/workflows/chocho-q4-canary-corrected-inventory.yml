@@ -1,0 +1,60 @@
+name: chocho Q4 corrected host island universe and continued pilot
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/extend_q4_firstyear_with_CNY_v02.py
+      - .github/workflows/chocho-q4-canary-corrected-inventory.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extend-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Load audited v02 Q2 Canary-inclusive source
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Freeze 3 more Canary first-year plant opportunities while preserving original 500
+        run: |
+          q2edges="$(find work/q2 -type f -name introduced_host_source_edges.csv)"
+          test -n "$q2edges" && test -f "$q2edges"
+          echo "Q2_CNY_EDGES_SOURCE=$q2edges"
+          python -m py_compile scripts/extend_q4_firstyear_with_CNY_v02.py
+          python scripts/extend_q4_firstyear_with_CNY_v02.py \
+            --corrected-q1 results/island-mainland-resource-q1/island_mainland_summary.json \
+            --q2-v02-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --q2-v02-edges "$q2edges" \
+            --original-500-plant-years results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --original-500-audit results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+            --out-dir results/q4-host-first-year-v02
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-q4-corrected-host-island-universe-and-503-pilot
+          path: results/q4-host-first-year-v02/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Preserve new population audit without editing old pilot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-host-first-year-v02/Q4_CNY_extension_audit.json \
+                  results/q4-host-first-year-v02/new_CNY_host_island_pairs.csv
+          git diff --cached --quiet && exit 0
+          git commit -m 'Extend historical plant first year pilot to corrected Canary islands [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

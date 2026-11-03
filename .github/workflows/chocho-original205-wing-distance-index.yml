@@ -1,0 +1,50 @@
+name: chocho original 205 butterfly wing versus island record distance
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_original205_wing_vs_island_record_distance.py
+      - .github/workflows/chocho-original205-wing-distance-index.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-preserving-distance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric source aggregation dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Recalculate 205 source species wing and distance associations
+        run: |
+          python -m py_compile scripts/test_original205_wing_vs_island_record_distance.py
+          python scripts/test_original205_wing_vs_island_record_distance.py \
+            --species-distance-summary provenance/reviewer_defenses/results/original_island_continuity_20261030/global_original_continuity_species_counts.csv \
+            --species-key-bridge provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv \
+            --geb-species-metrics data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --leptraits data/external/leptraits_consensus_v1.0.csv \
+            --out-dir results/original205-wing-island-index-distance
+      - name: Retain exact original 205-species aggregation and statistics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original-source205-wing-indexed-island-distance
+          path: results/original205-wing-island-index-distance/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save auditable descriptive outcomes on source analysis branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/original205-wing-island-index-distance/
+          git diff --cached --quiet && exit 0
+          git commit -m "Measure 205 original-source butterfly wing-size versus distant indexed island records [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

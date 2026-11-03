@@ -1,0 +1,87 @@
+{
+  "schema": "chocho_three_gate_wpi_port_island_exposure_v0.1",
+  "source": "ArcGIS public WPI point mirror, not an actual historic ship movement ledger",
+  "source_url": "https://services-eu1.arcgis.com/BuS9rtTsYEV5C0xh/ArcGIS/rest/services/World_Port_Index/FeatureServer/0",
+  "source_mirror_last_edited_utc": "2023-08-09",
+  "all_public_WPI_ports": 3630,
+  "matched_port_positions": 3274,
+  "location_diagnostics": {
+    "nearest_5km_coastal": 1252,
+    "unmapped_or_ambiguous": 356,
+    "direct_polygon": 2022
+  },
+  "frozen_WGSRPD3_regions": 369,
+  "frozen_strict_island_regions": 125,
+  "strict_islands_with_at_least_one_WPI_port": 90,
+  "strict_island_ports_total": 978,
+  "top_island_port_regions": [
+    {
+      "code": "GRB",
+      "name": "Great Britain",
+      "n": 173
+    },
+    {
+      "code": "JAP",
+      "name": "Japan",
+      "n": 151
+    },
+    {
+      "code": "PHI",
+      "name": "Philippines",
+      "n": 65
+    },
+    {
+      "code": "BOR",
+      "name": "Borneo",
+      "n": 38
+    },
+    {
+      "code": "IRE",
+      "name": "Ireland",
+      "n": 29
+    },
+    {
+      "code": "SUM",
+      "name": "Sumatera",
+      "n": 27
+    },
+    {
+      "code": "CUB",
+      "name": "Cuba",
+      "n": 23
+    },
+    {
+      "code": "HAW",
+      "name": "Hawaii",
+      "n": 21
+    },
+    {
+      "code": "NWG",
+      "name": "New Guinea",
+      "n": 19
+    },
+    {
+      "code": "LEE",
+      "name": "Leeward Is.",
+      "n": 18
+    },
+    {
+      "code": "SIC",
+      "name": "Sicilia",
+      "n": 18
+    },
+    {
+      "code": "ICE",
+      "name": "Iceland",
+      "n": 16
+    }
+  ],
+  "limits": [
+    "Modern published WPI indexed port count is not ship visitation, supply of larvae on plants, or port activity at biological first arrival year.",
+    "Port number is strongly related to area, urbanization, sampling intensity and historical geography; these require controls.",
+    "Coastal ports within 5 km of WGSRPD3 polygon boundaries are assigned only if unambiguous within a 1-km nearest-margin rule.",
+    "WPI mirror last edit 2023 differs from original source-locked WPI 2019 used in earlier island-port analysis and cannot be directly compared to it.",
+    "World Geographic Scheme regions often aggregate several physical islands; ports do not resolve intra-archipelago biological histories.",
+    "Wing×port interaction requires species×region observation risk set and species-specific detectability, not available from this port layer alone."
+  ]
+}

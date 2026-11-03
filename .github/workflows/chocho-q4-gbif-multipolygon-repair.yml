@@ -1,0 +1,70 @@
+name: chocho Q4 GBIF 400 island multipolygon repair
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/repair_q4_gbif_complex_island_polygons.py
+      - .github/workflows/chocho-q4-gbif-multipolygon-repair.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  multi-island-geographic-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official geodesic source verification libraries
+        run: python -m pip install 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Re-query only 11 HTTP400 source plants with polygon fragments
+        run: |
+          python -m py_compile scripts/repair_q4_gbif_complex_island_polygons.py
+          python scripts/repair_q4_gbif_complex_island_polygons.py \
+            --source-plant-years results/q4-matched-doi-host-years/matched_host_plant_gbif_firstyears.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q4-matched-doi-host-years-split-geo
+      - name: Reassess matched DOI vs GBIF botanical chronology without counting unresolved as no-host
+        run: |
+          python scripts/test_q4_matched_host_firstindex_record_order.py \
+            --source-cells results/q4-matched-doi-host-years/matched_species_island_index_calendar.csv \
+            --plant-years results/q4-matched-doi-host-years-split-geo/matched_host_plant_gbif_firstyears_rescued.csv \
+            --q2-edges work/q2/results/colonial-host-native-source-q2-v02/introduced_host_source_edges.csv \
+            --out-dir results/q4-matched-doi-host-documentation-split-geo
+      - name: Upload all fixed-geometry plant chronology and butterfly record comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-13-butterfly-31doi-GBIF-island-multipolygon-repair
+          path: |
+            results/q4-matched-doi-host-years-split-geo/
+            results/q4-matched-doi-host-documentation-split-geo/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save original and repaired side by side on research branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/q4-matched-doi-host-years-split-geo/ \
+                  results/q4-matched-doi-host-documentation-split-geo/
+          git diff --cached --quiet && exit 0
+          git commit -m "Separate complex GBIF island polygons and bound matched host-record evidence [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

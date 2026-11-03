@@ -1,0 +1,57 @@
+name: chocho Q4 DOI-indexed butterfly matched host chronology source inventory
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/select_q4_doi_matched_host_cases.py
+      - .github/workflows/chocho-q4-doi-casecontrol-host-inventory.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  exact-source-casecontrol:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore corrected 126-island butterfly x introduced-plant edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Construct fixed paired observed vs nonindexed butterfly island source inventory
+        run: |
+          python -m py_compile scripts/select_q4_doi_matched_host_cases.py
+          python scripts/select_q4_doi_matched_host_cases.py \
+            --q3-risk results/q3-wing-port-index-screen-v02/fixed_31_species_added_resource_island_index_status.csv \
+            --q3-records results/q3-observed-butterfly-island-opportunity-v02/observed_added_island_resource_cases.csv \
+            --q2-edges work/q2/results/colonial-host-native-source-q2-v02/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --out-dir results/q4-matched-doi-host-chronology
+      - name: Upload exact source cohort and target botanical pairs
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-q4-observation-matched-host-date-cases
+          path: results/q4-matched-doi-host-chronology/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save fully qualified host date-retrieval cohort
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/q4-matched-doi-host-chronology/
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit 31-DOI butterfly index matched source controls and candidate host plant IDs [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

@@ -1,0 +1,88 @@
+name: chocho Q4 targeted literature host first-years 126 islands
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/audit_q4_targeted_literature_host_years.py
+      - scripts/extract_q4_wcvp_plant_names_v02.R
+      - .github/workflows/chocho-q4-targeted-literature-hostyear.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  case-selected-date-screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Install GIS and geographic source join dependencies
+        run: python -m pip install "shapely>=2,<3" "pyproj>=3.6,<4"
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Read exact 11,573 Butterfly–Plant–Island edges from fixed corrected source
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          path: work/q2source
+      - name: Normalize corrected host edges and recover all 564 WCVP accepted plant IDs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t matches < <(find work/q2source -type f -name introduced_host_source_edges.csv)
+          test "${#matches[@]}" -eq 1
+          cp "${matches[0]}" work/q2source/introduced_host_source_edges.csv
+          Rscript scripts/extract_q4_wcvp_plant_names_v02.R \
+            _external/WCVP work/q2source/introduced_host_source_edges.csv \
+            work/q2source/corrected_564_WCVP_taxon_names.csv
+      - name: Request pre-literature host GBIF years and era-specific all-plant observation effort
+        run: |
+          python -m py_compile scripts/audit_q4_targeted_literature_host_years.py
+          python scripts/audit_q4_targeted_literature_host_years.py \
+            --literature data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv \
+            --q2-edges work/q2source/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --wcvp-names-v02 work/q2source/corrected_564_WCVP_taxon_names.csv \
+            --previous-pilot results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --previous-taxon results/q4-gbif-first-year-pilot/gbif_taxon_resolution.csv \
+            --wgsrpd-geojson _external/WGSRPD/geojson/level3.geojson \
+            --workers 2 \
+            --out-dir results/q4-targeted-literature-hostyear
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Q4-literature-targeted-host-GBIF-firstyears
+          path: |
+            results/q4-targeted-literature-hostyear/
+            work/q2source/corrected_564_WCVP_taxon_names.csv
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save source-backed case-selection audited results without retroactive claim changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-targeted-literature-hostyear/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit chronology of matched hosts in documented butterfly island leads [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

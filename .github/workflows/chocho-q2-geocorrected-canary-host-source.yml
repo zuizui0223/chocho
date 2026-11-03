@@ -1,0 +1,100 @@
+name: chocho Q2 geo-corrected Canary island host source
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/analyze_colonial_host_source_q2_geocorrected.py
+      - .github/workflows/chocho-q2-geocorrected-canary-host-source.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  corrected-126-islands:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Reconcile Q1 Canary geography without relying on old island counts
+        run: |
+          mkdir -p work/q1corrected
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          source=Path('results/island-mainland-resource-q1/island_mainland_summary.json')
+          q=json.loads(source.read_text(encoding='utf8'))
+          rr=list(csv.DictReader(open('results/island-mainland-resource-q1/region_metrics.csv',newline='',encoding='utf8')))
+          cny=next(x for x in rr if x['area_code_l3']=='CNY')
+          if (int(cny['native']),int(cny['contemporary']),int(cny['added']))!=(86,153,67):
+              raise SystemExit('CNY 239-butterfly resource totals drift')
+          codes=set(q['classification']['strict_island_codes'])
+          codes.add('CNY')
+          if len(codes)!=126:raise SystemExit('Islands not 126')
+          q['classification']['strict_island_codes']=sorted(codes)
+          q['schema']='chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.2_CNY_audit'
+          for group in ['island','mainland']:
+              subset=[r for r in rr if ('island' if r['area_code_l3']=='CNY' else r['class'])==group]
+              native=sum(int(r['native']) for r in subset)
+              cont=sum(int(r['contemporary']) for r in subset)
+              q['groups'][group]['native_butterfly_region_units']=native
+              q['groups'][group]['contemporary_butterfly_region_units']=cont
+              q['groups'][group]['added_butterfly_region_units']=cont-native
+              q['groups'][group]['all_regions']=len(subset)
+          if (q['groups']['island']['added_butterfly_region_units'],q['groups']['mainland']['added_butterfly_region_units'])!=(5741,8686):
+              raise SystemExit('Corrected Q1 source geography mismatch')
+          Path('work/q1corrected/island_mainland_summary.json').write_text(json.dumps(q,indent=2)+'\n')
+          print('ISLAND_CORRECTION',q['groups']['island']['added_butterfly_region_units'])
+          PY
+      - name: Rebuild exact WCVP-HOSTS native contemporary sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS work/native work/contemporary
+      - name: Reconstruct introduced host source for 126 strict islands
+        run: |
+          python -m py_compile scripts/analyze_colonial_host_source_q2_geocorrected.py
+          python scripts/analyze_colonial_host_source_q2_geocorrected.py \
+            --panel-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --host-csv work/native/insect_host_accepted.csv \
+            --native-csv work/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv work/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --q1-summary work/q1corrected/island_mainland_summary.json \
+            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --output-dir results/colonial-host-native-source-q2-v02
+      - name: Upload full corrected host source without replacing v01 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          path: |
+            work/q1corrected/island_mainland_summary.json
+            results/colonial-host-native-source-q2-v02/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save source-verified v02 audit without modifying v01
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/colonial-host-native-source-q2-v02/host_source_audit.json \
+                  results/colonial-host-native-source-q2-v02/island_source_summary.csv
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit corrected Canary host opportunity in 126-island Q2 [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

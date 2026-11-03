@@ -1,0 +1,74 @@
+name: chocho independent all WCVP flora port exposure validation
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/extract_wcvp_all_introduced_flora_islands.R
+      - scripts/test_three_gate_port_all_wcvp_flora.py
+      - .github/workflows/chocho-three-gate-port-all-flora-validation.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  full-wcvp-flora:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Install quantitative and geometry dependencies
+        run: python -m pip install 'numpy>=1.26,<3' 'scipy>=1.11,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Reconstruct complete 126-region flora (not restricted to butterfly host lists)
+        run: |
+          Rscript scripts/extract_wcvp_all_introduced_flora_islands.R \
+            _external/WCVP \
+            results/island-mainland-resource-q1/region_metrics.csv \
+            work/allflora
+      - name: Compare modern indexed ports with WCVP all-flora introductions
+        run: |
+          python -m py_compile scripts/test_three_gate_port_all_wcvp_flora.py
+          python scripts/test_three_gate_port_all_wcvp_flora.py \
+            --all-flora work/allflora/wcvp_all_flora_native_introduced_by_island.csv \
+            --all-flora-audit work/allflora/WCVP_all_flora_island_source_audit.csv \
+            --q1-regions results/island-mainland-resource-q1/region_metrics.csv \
+            --q1-audit results/island-mainland-resource-q1/island_mainland_summary.json \
+            --wpi-regions results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/three-gate-port-all-flora
+      - name: Upload independent botanic source and region-level tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-all-wcvp-introduced-flora-port-126-island-validation
+          path: |
+            work/allflora/
+            results/three-gate-port-all-flora/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save independent all-flora ecological evidence only to analysis branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-port-all-flora/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Validate port-rich islands across all introduced WCVP flora [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

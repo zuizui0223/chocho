@@ -1,0 +1,64 @@
+name: chocho cross-biogeographic empire resource contrast
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_cross_biogeographic_empire_island_resource.py
+      - .github/workflows/chocho-cross-region-empire-resource.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cross-biogeographic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific geographic tools
+        run: python -m pip install "numpy>=1.26,<3" "shapely>=2,<3" "pyproj>=3.6,<4"
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Restore frozen butterfly × introduced-host × island source edges
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          run-id: 41370175076
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Test same empire on pairs in different Level1 biogeographic regions
+        run: |
+          python -m py_compile scripts/test_cross_biogeographic_empire_island_resource.py
+          python scripts/test_cross_biogeographic_empire_island_resource.py \
+            --q2-edges work/q2/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2/host_source_audit.json \
+            --empire-islands results/colonial-history-island-q2/island_lenzner_empire_crosswalk.csv \
+            --region-area results/island-mainland-resource-area/region_area_metrics.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out results/colonial-history-source-q2/cross_region_empire_resource_audit.json
+      - name: Upload exact cross-region network result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-cross-biogeographic-empire-resource-test
+          path: results/colonial-history-source-q2/cross_region_empire_resource_audit.json
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save source-locked network audit on analysis branch only
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/colonial-history-source-q2/cross_region_empire_resource_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record region-discordant island pairs under within-region empire permutations [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

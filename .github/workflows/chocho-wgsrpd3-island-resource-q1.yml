@@ -1,0 +1,76 @@
+name: chocho island-mainland WGSRPD3 host opportunity Q1
+
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - "scripts/analyze_wgsrpd3_island_mainland_resource.py"
+      - ".github/workflows/chocho-wgsrpd3-island-resource-q1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct-and-compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Reconstruct native and contemporary host distribution sidecars
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS work/native work/contemporary
+      - name: Run island versus mainland fixed 239-butterfly comparison
+        run: |
+          python -m py_compile scripts/analyze_wgsrpd3_island_mainland_resource.py
+          python scripts/analyze_wgsrpd3_island_mainland_resource.py \
+            --panel-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --host-csv work/native/insect_host_accepted.csv \
+            --native-csv work/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv work/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --wgsrpd3-table "_external/WGSRPD/109-488-1-ED/2nd Edition/tblLevel3.txt" \
+            --out-dir results/island-mainland-resource-q1
+      - name: Upload reconstruction and bounded source-backed results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-island-mainland-q1-source-results
+          path: results/island-mainland-resource-q1/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save only aggregated reproducible island/mainland results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/island-mainland-resource-q1/island_mainland_summary.json \
+            results/island-mainland-resource-q1/region_metrics.csv \
+            results/island-mainland-resource-q1/reconstruction_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Reconstruct fixed 239-species WCVP host-resource island/mainland Q1 [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

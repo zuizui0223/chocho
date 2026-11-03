@@ -1,0 +1,54 @@
+name: chocho three-gate WPI island port exposure source
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/build_three_gate_wpi_port_exposure.py
+      - .github/workflows/chocho-three-gate-wpi-port-input.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  port-opportunity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install GIS geometry dependencies
+        run: python -m pip install "shapely>=2,<3" "pyproj>=3.6,<4"
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Count existing published WPI port locations in exact WGSRPD3 island polygons
+        run: |
+          python -m py_compile scripts/build_three_gate_wpi_port_exposure.py
+          python scripts/build_three_gate_wpi_port_exposure.py \
+            --island-metrics results/island-mainland-resource-q1/region_metrics.csv \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/three-gate-wpi-port
+      - name: Upload WPI and polygon-match diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-three-gate-wpi-island-port-counts
+          path: results/three-gate-wpi-port/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit geographically audited WPI exposure only on analysis branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-wpi-port/wpi_port_exposure_audit.json \
+                  results/three-gate-wpi-port/wgsrpd3_port_counts.csv
+          git diff --cached --quiet && exit 0
+          git commit -m 'Build modern indexed port exposure for island×species gate framework [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

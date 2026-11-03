@@ -1,0 +1,55 @@
+name: chocho Q4 indexed butterfly versus plant chronology matched audit
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_q4_matched_host_firstindex_record_order.py
+      - .github/workflows/chocho-q4-matched-host-index-association.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  paired-documentation-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Compute 13 source-matched butterfly records versus prior GBIF botanical index
+        run: |
+          python -m py_compile scripts/test_q4_matched_host_firstindex_record_order.py
+          python scripts/test_q4_matched_host_firstindex_record_order.py \
+            --source-cells results/q4-matched-doi-host-years/matched_species_island_index_calendar.csv \
+            --plant-years results/q4-matched-doi-host-years/matched_host_plant_gbif_firstyears.csv \
+            --q2-edges work/q2/results/colonial-host-native-source-q2-v02/introduced_host_source_edges.csv \
+            --out-dir results/q4-matched-doi-host-documentation-test
+      - name: Retain all source evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-matched-butterfly-index-prior-host-documentation
+          path: results/q4-matched-doi-host-documentation-test/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Save descriptive confirmation and missingness diagnostics on the research branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/q4-matched-doi-host-documentation-test/
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit matched historical host documentation before indexed butterfly records [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

@@ -1,0 +1,61 @@
+name: chocho source-blind plant-year vs archived butterfly DOI 31species
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/audit_q4_firstindexed_host_vs_archival_butterfly.py
+      - .github/workflows/chocho-q4-hostyear-vs-gbif-31species.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  reconcile-historical-record-order:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore geographically corrected Q2 126-island butterfly plant links
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source-v02-CNY
+          run-id: 41398149093
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q2
+      - name: Source-audited host chronologies versus DOI butterfly index cells
+        run: |
+          python -m py_compile scripts/audit_q4_firstindexed_host_vs_archival_butterfly.py
+          python scripts/audit_q4_firstindexed_host_vs_archival_butterfly.py \
+            --q2-edges work/q2/results/colonial-host-native-source-q2-v02/introduced_host_source_edges.csv \
+            --q2-audit results/colonial-host-native-source-q2-v02/host_source_audit.json \
+            --q3-risk-cells results/q3-wing-port-index-screen-v02/fixed_31_species_added_resource_island_index_status.csv \
+            --q3-recorded results/q3-observed-butterfly-island-opportunity-v02/observed_added_island_resource_cases.csv \
+            --pilot-plant-years results/q4-gbif-first-year-pilot/gbif_first_year_pilot_pairs.csv \
+            --canary-plant-years results/q4-canary-plant-firstyear-v02/CNY_three_plant_years.csv \
+            --targeted-plant-years results/q4-targeted-literature-hostyear/targeted_introduced_plant_island_years.csv \
+            --out-dir results/q4-archival-butterfly-host-index-timeline
+      - name: Preserve cohort-specific reproducibility evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-q4-dated-plant-vs-31species-butterfly-DOI
+          path: results/q4-archival-butterfly-host-index-timeline/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit descriptive source-cohort audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/q4-archival-butterfly-host-index-timeline/q4_hostyear_vs_archived_butterfly_audit.json \
+                  results/q4-archival-butterfly-host-index-timeline/dated_host_x_archived_butterfly_31species.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "Audit butterfly DOI first records against response-blind host-year pilot [skip ci]"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

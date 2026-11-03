@@ -1,0 +1,33 @@
+name: chocho Q2 source-backed colonial metadata scout
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/inspect_colonial_zenodo_source.py
+      - .github/workflows/chocho-colonial-source-scout.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover published Zenodo repository for published empire history
+        run: python scripts/inspect_colonial_zenodo_source.py
+      - name: Commit factual dataset inventory only
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add provenance/reviewer_defenses/results/colonial_host_source_20261102/zenodo_source_inventory.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Record published Zenodo source inventory for empire exposure [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

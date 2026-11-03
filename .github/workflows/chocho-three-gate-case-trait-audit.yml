@@ -1,0 +1,48 @@
+name: chocho three-gate island butterfly case and LepTraits feasibility
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/audit_three_gate_island_case_traits.py
+      - data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv
+      - .github/workflows/chocho-three-gate-case-trait-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  audited-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Count unique historic island butterfly events and available wing/behaviour traits
+        run: |
+          python -m py_compile scripts/audit_three_gate_island_case_traits.py
+          python scripts/audit_three_gate_island_case_traits.py \
+            --literature-seed data/frozen/exploratory_island_butterfly_invasion_literature_seed_20261102.csv \
+            --leptraits data/external/leptraits_consensus_v1.0.csv \
+            --resource-species data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --original-island-species provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv \
+            --output-dir results/three-gate-island-butterfly
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-three-gate-island-case-traits-audit
+          path: results/three-gate-island-butterfly/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Save case/trait coverage audit to analysis branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-island-butterfly/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record reproducible butterfly island case and dispersal trait coverage [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

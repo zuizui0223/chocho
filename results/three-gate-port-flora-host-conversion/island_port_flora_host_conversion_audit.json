@@ -1,0 +1,425 @@
+{
+  "schema": "chocho_island_ports_alien_flora_larval_host_conversion_v0.1",
+  "status": "CROSS_SECTIONAL_OBSERVATIONAL_RESOURCE_CHAIN_NOT_TRANSPORT_OR_COLONIZATION",
+  "source": {
+    "WCVP_all_flora_accepted_species_regions": 126,
+    "WCVP_HOSTS_selected_resource_active_islands": 123,
+    "successful_GBIF_total_plant_effort_islands": 98,
+    "butterflies_in_HOSTS_fixed_panel": 239,
+    "modern_2023_WPI_ports_from_published_3630_port_inventory": true
+  },
+  "hypothesis": "Does indexed port availability predict the fraction/number of larval-host plants beyond the entire introduced flora, and added butterfly resource cells beyond the larval host flora?",
+  "naive_means": {
+    "indexed_port_islands": 91,
+    "no_indexed_port_islands": 32,
+    "mean_larval_host_taxa_with_port": 53.94505494505494,
+    "mean_larval_host_taxa_no_port": 21.9375,
+    "mean_host_taxa_per_all_introduced_flora_with_port": 0.16902443886136492,
+    "mean_host_taxa_per_all_introduced_flora_no_port": 0.2779830021899042
+  },
+  "primary_model_predeclared": "M1_port_host_taxa_conditional_on_all_alien_flora",
+  "primary_effort_model_predeclared": "M1eff_port_host_taxa_given_alien_flora",
+  "model_results": {
+    "M0_port_and_entire_alien_flora": {
+      "n": 123,
+      "level1_regions": 9,
+      "response": "log_alien",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_native_flora",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": 0.23347121981392502,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": 0.2629764786697822,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 121,
+        "exchangeable_strata": 17,
+        "same_exposure_draws": 0,
+        "null_mean": 0.01022121908509351,
+        "null_q025": -0.08860705065116693,
+        "null_q975": 0.10945690865497357,
+        "observed_minus_null": 0.2232500007288315,
+        "p_two_centered": 0.0002,
+        "p_one_direction_positive": 0.0002
+      }
+    },
+    "M1_port_host_taxa_conditional_on_all_alien_flora": {
+      "n": 123,
+      "level1_regions": 9,
+      "response": "log_host",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_alien",
+        "log_native_flora",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.042821670551814024,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.04191777089100432,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 121,
+        "exchangeable_strata": 17,
+        "same_exposure_draws": 0,
+        "null_mean": -0.011256489111497969,
+        "null_q025": -0.042997862562604856,
+        "null_q975": 0.018924416377814498,
+        "observed_minus_null": -0.03156518144031606,
+        "p_two_centered": 0.0466,
+        "p_one_direction_positive": 0.9746
+      }
+    },
+    "M1b_port_relative_host_taxa_per_alien_flora": {
+      "n": 123,
+      "level1_regions": 9,
+      "response": "log_host_per_alien",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_native_flora",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.08977816122556023,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.08586604686465328,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 121,
+        "exchangeable_strata": 17,
+        "same_exposure_draws": 0,
+        "null_mean": -0.01423068284744152,
+        "null_q025": -0.05609404796980268,
+        "null_q975": 0.027755662268539816,
+        "observed_minus_null": -0.07554747837811872,
+        "p_two_centered": 0.0002,
+        "p_one_direction_positive": 1.0
+      }
+    },
+    "M2_port_added_butterfly_resources_conditional_on_larval_hosts": {
+      "n": 123,
+      "level1_regions": 9,
+      "response": "log_added",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_host",
+        "log_native_resource",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.03652158883769614,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.035862720931593775,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 121,
+        "exchangeable_strata": 17,
+        "same_exposure_draws": 0,
+        "null_mean": -0.007601010053119569,
+        "null_q025": -0.027524519161987296,
+        "null_q975": 0.012180145731549881,
+        "observed_minus_null": -0.028920578784576573,
+        "p_two_centered": 0.0048,
+        "p_one_direction_positive": 0.9982
+      }
+    },
+    "M0eff_port_entire_alien_flora": {
+      "n": 98,
+      "level1_regions": 9,
+      "response": "log_alien",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_native_flora",
+        "ln_botanical_effort",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": 0.24447852550694812,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": 0.2769552399634679,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_strata": 15,
+        "same_exposure_draws": 0,
+        "null_mean": 0.04597010686892525,
+        "null_q025": -0.07653721974305228,
+        "null_q975": 0.154703859646213,
+        "observed_minus_null": 0.19850841863802288,
+        "p_two_centered": 0.0018,
+        "p_one_direction_positive": 0.0002
+      }
+    },
+    "M1eff_port_host_taxa_given_alien_flora": {
+      "n": 98,
+      "level1_regions": 9,
+      "response": "log_host",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_alien",
+        "log_native_flora",
+        "ln_botanical_effort",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.041526655753407464,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.04067623649702234,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_strata": 15,
+        "same_exposure_draws": 0,
+        "null_mean": -0.009610370363482515,
+        "null_q025": -0.046913913328842885,
+        "null_q975": 0.0265141181929691,
+        "observed_minus_null": -0.03191628538992495,
+        "p_two_centered": 0.093,
+        "p_one_direction_positive": 0.9468
+      }
+    },
+    "M1pre1900eff_port_host_taxa_given_alien_flora": {
+      "n": 98,
+      "level1_regions": 9,
+      "response": "log_host",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_alien",
+        "log_native_flora",
+        "ln_pre1900_botanical_effort",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.046567701866677705,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.04550006304505027,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_strata": 15,
+        "same_exposure_draws": 0,
+        "null_mean": -0.008617876076567726,
+        "null_q025": -0.0465837220025623,
+        "null_q975": 0.026905596391260556,
+        "observed_minus_null": -0.03794982579010998,
+        "p_two_centered": 0.0432,
+        "p_one_direction_positive": 0.9748
+      }
+    },
+    "M2eff_port_added_butterfly_resources_given_hosts": {
+      "n": 98,
+      "level1_regions": 9,
+      "response": "log_added",
+      "exposure": "log2(1+2023 WPI indexed ports)",
+      "controls": [
+        "const",
+        "ln_area",
+        "log_host",
+        "log_native_resource",
+        "ln_botanical_effort",
+        "level1=2",
+        "level1=3",
+        "level1=4",
+        "level1=5",
+        "level1=6",
+        "level1=7",
+        "level1=8",
+        "level1=9"
+      ],
+      "coefficient": -0.05260482509198194,
+      "per_port_doubling_multiplicative_change_in_1plus_outcome": -0.05124513747271508,
+      "within_level1_and_area_half_label_permutation": {
+        "permutations": 4999,
+        "exchangeable_islands": 93,
+        "exchangeable_strata": 15,
+        "same_exposure_draws": 0,
+        "null_mean": -0.017080664318254564,
+        "null_q025": -0.044044737388317115,
+        "null_q975": 0.013362885578093625,
+        "observed_minus_null": -0.03552416077372737,
+        "p_two_centered": 0.016,
+        "p_one_direction_positive": 0.994
+      }
+    }
+  },
+  "conditional_port_host_effect_support_diagnostics": {
+    "min_75_introduced_flora_species": {
+      "status": "ESTIMATED_DESCRIPTIVE",
+      "n": 98,
+      "beta": -0.039469470793554416,
+      "port_positive_n": 84
+    },
+    "ports_present_only": {
+      "status": "ESTIMATED_DESCRIPTIVE",
+      "n": 91,
+      "beta": -0.03301286391171596,
+      "port_positive_n": 91
+    },
+    "port_count_0_to_15_only": {
+      "status": "ESTIMATED_DESCRIPTIVE",
+      "n": 111,
+      "beta": -0.04451925230467626,
+      "port_positive_n": 79
+    },
+    "without_pacific_antarctic": {
+      "status": "ESTIMATED_DESCRIPTIVE",
+      "n": 87,
+      "beta": -0.025210602651701695,
+      "port_positive_n": 69
+    },
+    "effort_measured_port_positive": {
+      "status": "ESTIMATED_DESCRIPTIVE",
+      "n": 69,
+      "beta": -0.021125040921200326,
+      "port_positive_n": 69
+    }
+  },
+  "conditional_port_host_effect_leave_level1_out": [
+    {
+      "removed_level1": "1",
+      "n": 113,
+      "beta": -0.019121501964252986
+    },
+    {
+      "removed_level1": "2",
+      "n": 105,
+      "beta": -0.05786532416699841
+    },
+    {
+      "removed_level1": "3",
+      "n": 113,
+      "beta": -0.03685746608796606
+    },
+    {
+      "removed_level1": "4",
+      "n": 105,
+      "beta": -0.04884363283485983
+    },
+    {
+      "removed_level1": "5",
+      "n": 116,
+      "beta": -0.042413526841835365
+    },
+    {
+      "removed_level1": "6",
+      "n": 95,
+      "beta": -0.0354335674581944
+    },
+    {
+      "removed_level1": "7",
+      "n": 118,
+      "beta": -0.05199802479391047
+    },
+    {
+      "removed_level1": "8",
+      "n": 104,
+      "beta": -0.05110914415978508
+    },
+    {
+      "removed_level1": "9",
+      "n": 115,
+      "beta": -0.03478811824977019
+    }
+  ],
+  "sensitivity_leave_one_island_out_primary": {
+    "n": 123,
+    "positive": 0,
+    "minimum": -0.05400609957492739,
+    "maximum": -0.03224631830347773,
+    "note": "Range of fitted coefficients, NOT a confidence interval",
+    "extreme_cases": [
+      {
+        "excluded": "ALU",
+        "beta": -0.05400609957492739
+      },
+      {
+        "excluded": "SEL",
+        "beta": -0.047406967110609134
+      },
+      {
+        "excluded": "HAW",
+        "beta": -0.04735756875100212
+      },
+      {
+        "excluded": "MAQ",
+        "beta": -0.038127765309571904
+      },
+      {
+        "excluded": "SVA",
+        "beta": -0.03492150338728261
+      },
+      {
+        "excluded": "GRB",
+        "beta": -0.03224631830347773
+      }
+    ]
+  },
+  "sample_bias": {
+    "effort_complete_islands": 98,
+    "effort_missing_islands": 25,
+    "cannot_assume_missing_at_random": true
+  },
+  "limits": [
+    "Current 2023 indexed WPI ports do not measure historical ship connectivity or actual larval/egg transport.",
+    "WCVP native/introduced plant status is current and not the age of introductions.",
+    "The number of HOSTS-matched larval host taxa is derived from selected butterfly species; HOSTS records and underlying accepted plant taxa differ in taxonomic resolution from all WCVP accepted flora species. 'Host taxa per all flora species' is a descriptive index, not an exact plant-species proportion.",
+    "Resource gain in butterfly x island cells is algebraically related to the number of introduced hosts, so M2 is a structural comparison not independent confirmation.",
+    "Area, Level1 and botanical GBIF plant record count do not control economy, human population, tourism, shipping volume, land use, network connectivity, or spatial autocorrelation.",
+    "GBIF botanical reporting itself rises with ports; only 98 island polygons have a successful count and this subset differs geographically/area-wise.",
+    "Within region/area label permutations are descriptive and cannot establish causal ship-mediated plant introduction.",
+    "These analyses do not measure butterfly island establishment, lag, flight capacity, climate suitability, or the last gate to open.",
+    "Do not interpret conditioning on contemporaneous alien flora as a causal mediation model."
+  ]
+}

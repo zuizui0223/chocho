@@ -1,0 +1,51 @@
+name: chocho Q4 revised 230 indexed host years botanical-effort sensitivity
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/test_q4_hostyear_effort_after_source_recovery.py
+      - .github/workflows/chocho-q4-revised-index-year-bias.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  replicated-botanical-effort-bias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric dependencies
+        run: python -m pip install 'numpy>=1.26,<3'
+      - name: Fit updated fixed 500 sample with all 230 historical source years
+        run: |
+          python -m py_compile scripts/test_q4_hostyear_effort_after_source_recovery.py
+          python scripts/test_q4_hostyear_effort_after_source_recovery.py \
+            --plant-dates results/q4-fixed500-gbif-years-v02/fixed500_gbif_first_years_v02.csv \
+            --original-audit results/q4-fixed500-gbif-years-v02/fixed500_source_recovery_audit_v02.json \
+            --botanical-effort results/q4-gbif-first-year-pilot/island_plant_effort_year_facets.csv \
+            --all-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --area results/island-mainland-resource-area-v02/region_area_metrics.csv \
+            --out-dir results/q4-hostyear-botanical-effort-v03
+      - name: Keep all dated-source effort results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-Q4-fixed500-230-recovered-dates-botanical-effort-v03
+          path: results/q4-hostyear-botanical-effort-v03/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Archive v03 independent of original v01/v02 analyses
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-hostyear-botanical-effort-v03/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Revalidate indexed-year observation-effort dependence with 230 recovered plant records [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

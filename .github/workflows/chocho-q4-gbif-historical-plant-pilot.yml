@@ -1,0 +1,79 @@
+name: chocho Q4 earliest GBIF plant year pilot
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/extract_q4_wcvp_plant_names.R
+      - scripts/audit_q4_gbif_plant_first_year_pilot.py
+      - .github/workflows/chocho-q4-gbif-historical-plant-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  gbif-first-years:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Install geographic query tools
+        run: python -m pip install "shapely>=2,<3" "pyproj>=3.6,<4"
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Restore source-audited 5,545 host × island pairs and fixed 500-pair pilot
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-q4-pair-source-and-pilot-v1
+          run-id: 41395335003
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          path: work/q4
+      - name: Map 560 pinned WCVP accepted IDs to their scientific names
+        run: |
+          Rscript scripts/extract_q4_wcvp_plant_names.R \
+            _external/WCVP work/q4/all_introduced_host_island_pairs.csv work/q4/q4_wcvp_accepted_names.csv
+      - name: Query response-blind GBIF indexed first years and all-botanical effort
+        run: |
+          python -m py_compile scripts/audit_q4_gbif_plant_first_year_pilot.py
+          python scripts/audit_q4_gbif_plant_first_year_pilot.py \
+            --pairs work/q4/fixed_first_year_sample_pairs.csv \
+            --wcvp-names work/q4/q4_wcvp_accepted_names.csv \
+            --wgsrpd-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/q4-gbif-first-year-pilot \
+            --max-workers 6
+      - name: Upload full taxonomy, effort and plant-year source audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q4-first-year-frozen-500-pilot
+          path: |
+            work/q4/q4_wcvp_accepted_names.csv
+            results/q4-gbif-first-year-pilot/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Commit only small aggregate and pilot result
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/q4-gbif-first-year-pilot/gbif_first_year_pilot_audit.json \
+                  results/q4-gbif-first-year-pilot/island_plant_effort_year_facets.csv
+          git diff --cached --quiet && exit 0
+          git commit -m 'Audit earliest indexed host plants across frozen islands and recording effort [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

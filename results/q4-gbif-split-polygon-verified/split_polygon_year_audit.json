@@ -1,0 +1,76 @@
+{
+  "schema": "chocho_GBIF_Q4_repeatable_polygon_split_year_rescue_v0.1",
+  "status": "VALIDATED_SPLIT_POLYGON_GBIF_QUERY",
+  "reference_MRQ_Canna_indica_original_records": 6,
+  "reference_MRQ_Canna_indica_original_first_year": 2004,
+  "positive_control_match": true,
+  "selected_http400_islands": [
+    "MOL",
+    "TUA"
+  ],
+  "original_http400_failures": 7,
+  "total_GBIF_queries": 5,
+  "max_queries": 20,
+  "stopped_after_two_consecutive_429": false,
+  "fully_recovered_original_400_pairs": 2,
+  "new_dated_host_island_pairs": 2,
+  "fully_covered_no_plant_index_pairs": 0,
+  "per_case": [
+    {
+      "kind": "VALIDATION",
+      "region": "MRQ",
+      "plant_id": "223906",
+      "plant_name": "Canna indica",
+      "source_status": "DATED_OCCURRENCE_FOUND",
+      "source_component_polygons": 11,
+      "total_chunks": 1,
+      "successful_chunks": 1,
+      "complete_full_WGSRPD_region": true,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "total_records_if_complete": 6,
+      "earliest_indexed_year_if_complete": 2004,
+      "latest_indexed_year_if_complete": 2026,
+      "dated_yearfacet_records_if_complete": 6
+    },
+    {
+      "kind": "RESCUE",
+      "region": "MOL",
+      "plant_id": "2559676",
+      "plant_name": "Passiflora foetida",
+      "source_status": "HTTP_400",
+      "source_component_polygons": 36,
+      "total_chunks": 2,
+      "successful_chunks": 2,
+      "complete_full_WGSRPD_region": true,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "total_records_if_complete": 11,
+      "earliest_indexed_year_if_complete": 1938,
+      "latest_indexed_year_if_complete": 2012,
+      "dated_yearfacet_records_if_complete": 11
+    },
+    {
+      "kind": "RESCUE",
+      "region": "TUA",
+      "plant_id": "2394644",
+      "plant_name": "Oxalis corniculata",
+      "source_status": "HTTP_400",
+      "source_component_polygons": 44,
+      "total_chunks": 2,
+      "successful_chunks": 2,
+      "complete_full_WGSRPD_region": true,
+      "status": "DATED_OCCURRENCE_FOUND",
+      "total_records_if_complete": 1,
+      "earliest_indexed_year_if_complete": 1988,
+      "latest_indexed_year_if_complete": 1988,
+      "dated_yearfacet_records_if_complete": 1
+    }
+  ],
+  "limits": [
+    "Geographically disjoint source polygons, but boundary points can be counted in adjacent components.",
+    "If any chunk fails, first year for the full region is unknown. Partial search is not absence.",
+    "GBIF indexed plant years are not introduction, establishment or residence time.",
+    "Two original 400 failures are selected by source polygon complexity, not by ecological outcome.",
+    "Public API rate limits and per-query URL length cap bound the diagnostic.",
+    "No butterfly occurrences or historical transport routes are inferred."
+  ]
+}

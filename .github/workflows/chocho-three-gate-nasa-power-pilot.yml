@@ -1,0 +1,51 @@
+name: chocho three-gate NASA POWER thermal history pilot
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/audit_three_gate_nasa_power_pilot.py
+      - .github/workflows/chocho-three-gate-nasa-power-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  thermal-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install official polygon reader
+        run: python -m pip install "shapely>=2,<3"
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _external/WGSRPD
+      - name: Audit NASA POWER 1981–2020 T2M coverage without inferring biological gates
+        run: |
+          python -m py_compile scripts/audit_three_gate_nasa_power_pilot.py
+          python scripts/audit_three_gate_nasa_power_pilot.py \
+            --wgsrpd3-geojson _external/WGSRPD/geojson/level3.geojson \
+            --out-dir results/three-gate-nasa-power
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-three-gate-nasa-power-source-1981-2020
+          path: results/three-gate-nasa-power/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit climate source audit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/three-gate-nasa-power/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Save sourced 1981–2020 NASA POWER island meteorological baseline [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

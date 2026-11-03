@@ -1,0 +1,67 @@
+name: chocho Q2 introduced host native source
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - scripts/analyze_colonial_host_source_q2.py
+      - .github/workflows/chocho-colonial-host-source-q2.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  introduced-host-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+      - name: Rebuild exactly matched WCVP–HOSTS native / introduced layers
+        run: |
+          Rscript scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS work/native work/contemporary
+      - name: Attribute confirmed island opportunity gains to introduced hosts and home native distribution
+        run: |
+          python -m py_compile scripts/analyze_colonial_host_source_q2.py
+          python scripts/analyze_colonial_host_source_q2.py \
+            --panel-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --host-csv work/native/insect_host_accepted.csv \
+            --native-csv work/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-csv work/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --q1-summary results/island-mainland-resource-q1/island_mainland_summary.json \
+            --level1-json data/frozen/wgsrpd3_level1_lookup_v0.1.json \
+            --output-dir results/colonial-host-native-source-q2
+      - name: Preserve all source attribution outputs in artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-q2-introduced-host-native-source
+          path: results/colonial-host-native-source-q2/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Commit only result summaries; keep detailed provenance artifact
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github-actions.github.com"
+          git add results/colonial-host-native-source-q2/host_source_audit.json \
+            results/colonial-host-native-source-q2/island_source_summary.csv
+          git diff --cached --quiet && exit 0
+          git commit -m "Measure introduced-host native-source geography for 5,674 island resource gains [skip ci]"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"

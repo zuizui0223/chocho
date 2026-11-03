@@ -1,0 +1,57 @@
+name: chocho recover corrected 126-island Q1 source receipt
+on:
+  push:
+    branches:
+      - analysis/island-mainland-host-opportunity-20261102
+    paths:
+      - .github/workflows/chocho-q1-recover-canary-artifact.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  recover-q1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Restore successful corrected geography calculations from WCVP HOSTS run
+        uses: actions/download-artifact@v4
+        with:
+          name: chocho-island-mainland-q1-source-results
+          run-id: 41397844865
+          repository: zuizui0223/chocho
+          github-token: ${{ github.token }}
+          path: work/q1corrected
+      - name: Verify 126 island and 237 mainland regions and global 239-species source counts
+        run: |
+          python - <<'PY'
+          import json,csv,shutil
+          from pathlib import Path
+          source=Path('work/q1corrected')
+          target=Path('results/island-mainland-resource-q1')
+          a=json.loads((source/'island_mainland_summary.json').read_text())
+          g=a['groups']
+          if a['schema']!='chocho_wgsrpd3_strict_island_mainland_resource_q1_v0.2' or (g['island']['all_regions'],g['mainland']['all_regions'])!=(126,237):raise SystemExit('Wrong source classification')
+          if (g['island']['native_butterfly_region_units'],g['island']['contemporary_butterfly_region_units'],g['island']['added_butterfly_region_units'])!=(4829,10570,5741):raise SystemExit('Island source mismatch')
+          if (g['mainland']['native_butterfly_region_units'],g['mainland']['contemporary_butterfly_region_units'],g['mainland']['added_butterfly_region_units'])!=(21215,29901,8686):raise SystemExit('Mainland source mismatch')
+          assert a['panel_total']['native_total']==26530 and a['panel_total']['contemporary_total']==41083
+          r=list(csv.DictReader((source/'region_metrics.csv').open(newline='',encoding='utf8')))
+          assert len(r)==369 and next(x for x in r if x['area_code_l3']=='CNY')['class']=='island'
+          for name in ('island_mainland_summary.json','region_metrics.csv','reconstruction_audit.json'):
+              shutil.copy2(source/name,target/name)
+          print('RESTORED_126_ISLAND_RESULTS',g)
+          PY
+      - name: Commit corrected audit and region metrics without rerunning WCVP
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/island-mainland-resource-q1/island_mainland_summary.json \
+                  results/island-mainland-resource-q1/region_metrics.csv \
+                  results/island-mainland-resource-q1/reconstruction_audit.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Restore audited CNY geography correction for butterfly resource islands [skip ci]'
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
