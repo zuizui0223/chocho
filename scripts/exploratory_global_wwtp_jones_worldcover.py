@@ -43,6 +43,11 @@ def read_source(jones_path:Path,worldcover_path:Path):
             "crop_fraction_2021","tree_fraction_2021",
             "terrestrial_pixels","fraction_nonwater"]].copy()
     matched=j.merge(land,on="port_id",validate="one_to_one")
+    # keep_default_na=False preserves source ISO 'NA', but also keeps missing
+    # built/crop fields as strings; formula regressors MUST be real floats.
+    for col in ("built_fraction_2021","crop_fraction_2021",
+                "tree_fraction_2021","terrestrial_pixels","fraction_nonwater"):
+        matched[col]=pd.to_numeric(matched[col],errors="coerce")
     if len(matched)!=1596:
         raise ValueError("Original 1596 port grid join incomplete")
     return matched
