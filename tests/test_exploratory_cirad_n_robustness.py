@@ -1,6 +1,6 @@
 """Country-cluster estimator and source support tests; no internet."""
 import pytest
-for dep in ("numpy","pandas","statsmodels","scipy","rasterio","pyproj","pycountry"):
+for dep in ("numpy","pandas","statsmodels","scipy","rasterio","pyproj"):
     pytest.importorskip(dep)
 import importlib.util, sys, numpy as np, pandas as pd
 from pathlib import Path
