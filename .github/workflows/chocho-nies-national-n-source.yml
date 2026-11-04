@@ -28,6 +28,26 @@ jobs:
             'https://db.cger.nies.go.jp/nies_data/10.17595/20260227.001/GNINPO-DSM_v2025.csv' \
             -o /tmp/nies_2025/GNINPO-DSM_v2025.csv
           echo '67db41b6d892c5f1055b9403e194d046  /tmp/nies_2025/GNINPO-DSM_v2025.csv' | md5sum -c -
+      - name: Inspect NIES official dictionary and country map for units and code semantics
+        run: |
+          curl -fLsS --retry 3 --connect-timeout 20 --max-time 90 \
+            -H 'Referer: https://db.cger.nies.go.jp/DL/10.17595/20260227.001.html.en' \
+            'https://db.cger.nies.go.jp/nies_data/10.17595/20260227.001/supplement/DataDictionary_GNINPO-DSM.csv' \
+            -o /tmp/nies_2025/DataDictionary_GNINPO-DSM.csv
+          echo '1eae40ffea35e3a918d0c4a7f2abd87d  /tmp/nies_2025/DataDictionary_GNINPO-DSM.csv' | md5sum -c -
+          curl -fLsS --retry 3 --connect-timeout 20 --max-time 90 \
+            'https://db.cger.nies.go.jp/nies_data/10.17595/20260227.001/supplement/CountryList_GNINPO-DSM.csv' \
+            -o /tmp/nies_2025/CountryList_GNINPO-DSM.csv
+          echo 'a75b666159e997ff72cb6a3f7a9c0658  /tmp/nies_2025/CountryList_GNINPO-DSM.csv' | md5sum -c -
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          for name in ('DataDictionary_GNINPO-DSM.csv', 'CountryList_GNINPO-DSM.csv'):
+              p=Path('/tmp/nies_2025') / name
+              rows=list(csv.reader(p.open(encoding='utf-8-sig')))
+              print('NIES_OFFICIAL_AUX_SCHEMA',name,'N_ROWS',len(rows),
+                    'FIRST',json.dumps(rows[:22 if name.startswith('Data') else 5],ensure_ascii=False))
+          PY
       - name: Verify official-country annual nutrient schema without port-level imputation
         run: |
           python scripts/exploratory_nies_nitrogen_source_probe.py \
@@ -40,6 +60,8 @@ jobs:
           name: nies-2025-global-domestic-sewage-n-source-qa
           path: |
             /tmp/nies_2025/GNINPO-DSM_v2025.csv
+            /tmp/nies_2025/DataDictionary_GNINPO-DSM.csv
+            /tmp/nies_2025/CountryList_GNINPO-DSM.csv
             /tmp/nies_2025/nies_GNINPO_countryyear_source_qa.json
           if-no-files-found: warn
           retention-days: 30
