@@ -43,17 +43,27 @@ def read_nitrogen(path: Path):
         raise ValueError("Malformed ISO3 country code")
     for col in ["Year",*N_CODES]:
         d[col]=pd.to_numeric(d[col],errors="coerce")
-    if d[["Year",*N_CODES]].isna().any().any() or not np.isfinite(d[N_CODES].to_numpy()).all():
-        raise ValueError("Missing or non-finite official NIES N flows")
-    if not (d.Year.astype(int)==d.Year).all():
-        raise ValueError("Non-integer annual dates")
+    # Official source contains some genuinely unavailable country-year flows.
+    # Preserve a missingness audit and EXCLUDE, never set missing kgN to zero.
+    missing_fields={k:int(d[k].isna().sum()) for k in ["Year",*N_CODES]}
+    missing_example=d.loc[d[N_CODES].isna().any(axis=1),
+        ["ISO3","Year",*N_CODES]].head(12).to_dict(orient="records")
+    if d.Year.isna().any() or not (d.Year.astype(int)==d.Year).all():
+        raise ValueError("Invalid official annual dates")
     d["Year"]=d["Year"].astype(int)
     if (d.Year.min(),d.Year.max())!=(2005,2022):
         raise ValueError("NIES official temporal coverage changed")
     if d.duplicated(["ISO3","Year"]).any():
         raise ValueError("Duplicate ISO3/year N measurements")
-    if (d[N_CODES]<0).any().any():
+    bad_negative=(d[N_CODES]<0).any(axis=1)
+    if bad_negative.any():
         raise ValueError("Physically invalid negative N flow")
+    source_rows=len(d)
+    source_countries=int(d.ISO3.nunique())
+    complete=d[N_CODES].notna().all(axis=1)
+    d=d.loc[complete].copy()
+    if len(d)<2000 or d.ISO3.nunique()<120:
+        raise ValueError(f"NIES has insufficient complete national N flows: {len(d)}")
     d["managed_N_kg"]=d[["PMN1","PMN2","PMN3"]].sum(axis=1)
     d["unmanaged_N_kg"]=d[[f"UNM{i}" for i in range(1,6)]].sum(axis=1)
     d["input_NIS_kg"]=d[[f"NIS{i}" for i in range(1,6)]].sum(axis=1)
@@ -71,8 +81,13 @@ def read_nitrogen(path: Path):
     diag={
         "source_year_count":d.Year.nunique(),
         "source_year_minmax":[int(d.Year.min()),int(d.Year.max())],
-        "source_rows":len(d),
-        "source_country_count":int(d.ISO3.nunique()),
+        "source_rows":source_rows,
+        "source_country_count":source_countries,
+        "national_N_flow_complete_rows":len(d),
+        "national_N_flow_complete_country_count":int(d.ISO3.nunique()),
+        "national_N_flow_missing_source_rows":source_rows-len(d),
+        "missing_fields_NIES_columns":missing_fields,
+        "missing_official_source_examples":missing_example,
         "countries_in_2015":int((d.Year==2015).sum()),
         "source_MD5":md5,
         "all_flow_units":"kg N / year (NIES official DataDictionary)",
