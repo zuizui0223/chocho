@@ -87,6 +87,35 @@ jobs:
           (base/'source_schema.json').write_text(json.dumps(out,ensure_ascii=False,indent=2,default=str)+'\n')
           print('CIRAD_2022_3KM_N_SPATIAL_SOURCE_SCHEMA',json.dumps(out,sort_keys=True,default=str)[:13000],flush=True)
           PY
+      - name: Check actual GDAL raster subdatasets, 3km pixels, CRS and nodata
+        run: |
+          python -m pip install --quiet rasterio pyproj numpy
+          python - <<'PY'
+          import rasterio,json,numpy as np
+          from pathlib import Path
+          base=Path('/tmp/cirad_2022')
+          results={}
+          for filename in ('Human_nutrient_excretion2022.gpkg','Nutrient_supply_to_cropland2022.gpkg'):
+              src=base/filename
+              with rasterio.open(src) as root:
+                  subs=list(root.subdatasets)
+              infos=[]
+              for sub in subs:
+                  with rasterio.open(sub) as ds:
+                      info={'subdataset':sub.split(':')[-1],
+                            'width':ds.width,'height':ds.height,
+                            'resolution':list(ds.res),'crs':str(ds.crs),
+                            'nodata':ds.nodata,'bounds':list(ds.bounds),
+                            'dtypes':list(ds.dtypes),
+                            'tags':ds.tags(),
+                            'compression':ds.compression.value if ds.compression else None}
+                      infos.append(info)
+              results[filename]=infos
+          p=base/'gdal_raster_layers.json'
+          p.write_text(json.dumps(results,indent=2,default=str)+'\n')
+          print('CIRAD_2022_GDAL_GRID_LAYERS',json.dumps(results,sort_keys=True,default=str)[:12000],flush=True)
+          assert sum(len(v) for v in results.values())>=4
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,5 +123,6 @@ jobs:
           path: |
             /tmp/cirad_2022/manifest.json
             /tmp/cirad_2022/source_schema.json
+            /tmp/cirad_2022/gdal_raster_layers.json
           if-no-files-found: warn
           retention-days: 30
