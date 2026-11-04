@@ -1,0 +1,75 @@
+name: chocho GNINPO 2005–2022 national sewage N moderators at WPI ports
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_nies_country_port_interaction.py"
+      - "tests/test_exploratory_nies_country_port_interaction.py"
+      - ".github/workflows/chocho-nies-port-n-crosslevel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  NIES-national-N-within-country-WPI-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-free FE estimator, ISO3 and country-grain QA
+        run: |
+          python -m pip install --quiet pytest numpy pandas scipy pycountry statsmodels
+          python -m pytest -q tests/test_exploratory_nies_country_port_interaction.py
+      - name: Reuse independently downloaded source-pinned GNINPO, Jones2015 and WorldCover2021
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/chocho_nies/nies /tmp/chocho_nies/jones /tmp/chocho_nies/urban
+          gh run download 41921696817 --name nies-2025-global-domestic-sewage-n-source-qa --dir /tmp/chocho_nies/nies --repo zuizui0223/chocho
+          gh run download 41563940689 --name pangaea-jones2015-5arc-wpi1596-wastewater-wwtp --dir /tmp/chocho_nies/jones --repo zuizui0223/chocho
+          gh run download 41562997326 --name hydroWASTE-WPI1596-WorldCover2021-urban --dir /tmp/chocho_nies/urban --repo zuizui0223/chocho
+          test -s /tmp/chocho_nies/nies/GNINPO-DSM_v2025.csv
+          test -s /tmp/chocho_nies/nies/DataDictionary_GNINPO-DSM.csv
+          test -s /tmp/chocho_nies/jones/Jones2015_WPI1596_port_grid_census.csv
+          test -s /tmp/chocho_nies/urban/WPI1596_worldcover2021_port_measurements.csv
+      - name: Keep 2015 national N moderated within-country WWp distinct from site-level nitrogen exposure
+        run: |
+          python -u scripts/exploratory_nies_country_port_interaction.py \
+            --nies /tmp/chocho_nies/nies/GNINPO-DSM_v2025.csv \
+            --jones /tmp/chocho_nies/jones/Jones2015_WPI1596_port_grid_census.csv \
+            --worldcover /tmp/chocho_nies/urban/WPI1596_worldcover2021_port_measurements.csv \
+            --output /tmp/chocho_nies/NIES2015_country_N_x_port_urban_host_models.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          o=json.loads(Path('/tmp/chocho_nies/NIES2015_country_N_x_port_urban_host_models.json').read_text())
+          n=o['source_details']
+          assert n['source_rows']==3110
+          assert n['source_year_minmax']==[2005,2022]
+          assert o['frozen_original_WPI_complete_ports']==1596
+          assert len(o['population'])==6
+          x=o['models']['primary_2015_urban_controlled']['unmanaged']['interaction_unmanaged']
+          assert math.isfinite(x['beta'])
+          assert all(math.isfinite(v) for v in x['95_country_cluster'])
+          print('GNINPO_GLOBAL_N_COUNTRY_MODERATOR_SOURCE_VERIFIED',json.dumps({
+            'n':o['population']['primary_2015_urban_controlled'],
+            'coef':x,'negative_control':o['models']['primary_2015_urban_controlled']['native_record_negative_control_unmanaged']
+          },sort_keys=True))
+          PY
+      - name: Archive source-locked independent N pathway country-moderation estimates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nies-2015-country-N-wwtp-wpi1596-port-host-joint
+          path: /tmp/chocho_nies/NIES2015_country_N_x_port_urban_host_models.json
+          if-no-files-found: warn
+          retention-days: 30
