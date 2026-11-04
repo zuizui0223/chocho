@@ -1,4 +1,7 @@
 """Source-free GIS vector/raster math, missingness, noncausal N grid QA."""
+import pytest
+for dep in ("numpy","pandas","statsmodels","scipy","rasterio","pyproj","pycountry"):
+    pytest.importorskip(dep)
 import importlib.util, sys, numpy as np
 from pathlib import Path
 import rasterio

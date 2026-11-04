@@ -1,4 +1,7 @@
 """Source-constrained national N country-year parsing and FE model tests."""
+import pytest
+for dep in ("numpy","pandas","statsmodels","scipy","rasterio","pyproj","pycountry"):
+    pytest.importorskip(dep)
 import importlib.util
 import math
 import sys
