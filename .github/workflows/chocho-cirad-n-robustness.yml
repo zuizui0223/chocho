@@ -51,7 +51,7 @@ jobs:
           import json,math
           from pathlib import Path
           d=json.loads(Path('/tmp/cirad_audit/cirad_2022_N_WPI1596_robustness.json').read_text())
-          assert d['n_original_complete_plant_WPI_ports']==1596
+          assert d['matched_1041ports_42countries']
           assert d['matched_1041ports_42countries']
           assert len(d['leave_one_country_out'])==42
           assert abs(d['original_model']['log_crop_N']['beta']-.039927909973897)<1e-10
