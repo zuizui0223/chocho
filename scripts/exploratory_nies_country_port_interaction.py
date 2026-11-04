@@ -158,7 +158,7 @@ def build_port_country_source(jones:Path,worldcover:Path,nitrogen:pd.DataFrame,*
 
 
 def clustered_model(p,*,period,urban=True,case="unmanaged",outcome="y_ratio"):
-    var="interaction_"+case
+    var="interaction_"+case if case else None
     base=["log_wwp","log_wwtp","abs_lat","sin_lon","cos_lon","C(country)"]
     if outcome=="y_ratio":base.append("log_indexed")
     if urban:base+=["built_fraction_2021","crop_fraction_2021"]
