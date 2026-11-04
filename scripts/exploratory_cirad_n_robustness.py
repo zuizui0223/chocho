@@ -42,6 +42,11 @@ def run(jones,urban,source):
     features=pd.read_csv(source,keep_default_na=False)
     if (len(features),features.port_id.nunique())!=(1596,1596):
         raise ValueError("Source WPI port identity mismatch")
+    # A saved CSV stores missing raster cells as empty strings. keep_default_na=False
+    # preserves source ISO2 'NA' but requires explicit float parsing for N layers.
+    for col in features:
+        if col.startswith(("human_","crop_")) or col in ("projected_x","projected_y"):
+            features[col]=pd.to_numeric(features[col],errors="coerce")
     r25,p25=models_on_same_coverage(src,features,radius=25,urban=True)
     r10,p10=models_on_same_coverage(src,features,radius=10,urban=True)
     if (len(p25),p25.country.nunique(),len(p10),p10.country.nunique())!=(1041,42,1020,40):
