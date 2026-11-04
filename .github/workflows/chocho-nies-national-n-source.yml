@@ -1,0 +1,45 @@
+name: chocho NIES national sewage nitrogen GNINPO official-source schema
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_nies_nitrogen_source_probe.py"
+      - ".github/workflows/chocho-nies-national-n-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-locked-nitrogen-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Retrieve 2005–2022 independent NIES modelled nitrogen inventory
+        run: |
+          mkdir -p /tmp/nies_2025
+          curl -fLsS --retry 2 --retry-delay 3 --connect-timeout 20 --max-time 90 \
+            -H 'Referer: https://db.cger.nies.go.jp/DL/10.17595/20260227.001.html.en' \
+            -A 'Mozilla/5.0 (compatible; chocho research verification)' \
+            'https://db.cger.nies.go.jp/nies_data/10.17595/20260227.001/GNINPO-DSM_v2025.csv' \
+            -o /tmp/nies_2025/GNINPO-DSM_v2025.csv
+          echo '67db41b6d892c5f1055b9403e194d046  /tmp/nies_2025/GNINPO-DSM_v2025.csv' | md5sum -c -
+      - name: Verify official-country annual nutrient schema without port-level imputation
+        run: |
+          python scripts/exploratory_nies_nitrogen_source_probe.py \
+            --source /tmp/nies_2025/GNINPO-DSM_v2025.csv \
+            --out /tmp/nies_2025/nies_GNINPO_countryyear_source_qa.json
+          test -s /tmp/nies_2025/nies_GNINPO_countryyear_source_qa.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nies-2025-global-domestic-sewage-n-source-qa
+          path: |
+            /tmp/nies_2025/GNINPO-DSM_v2025.csv
+            /tmp/nies_2025/nies_GNINPO_countryyear_source_qa.json
+          if-no-files-found: warn
+          retention-days: 30
