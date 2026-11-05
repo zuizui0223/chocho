@@ -1,0 +1,123 @@
+name: chocho independent full-HOSTS butterfly diet traits to island resource gains
+
+on:
+  push:
+    branches:
+      - analysis/island-port-trait-selection-gate-20261105
+    paths:
+      - "scripts/audit_full_HOSTS_GIFT_diet_island_resource.py"
+      - "scripts/build_239_HOSTS_WCVP_accepted_sidecar.py"
+      - "scripts/audit_all_diet_GIFT_family_degree_network_null.py"
+      - "tests/test_audit_all_diet_GIFT_family_degree_network_null.py"
+      - "tests/test_audit_full_HOSTS_GIFT_diet_island_resource.py"
+      - ".github/workflows/chocho-full-HOSTS-diet-trait-island-gain.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  full-diet-independent-of-added-island-plant-selection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate butterfly full-host phenotype and missing/zero gain handling
+        run: |
+          python -m pip install --quiet pytest numpy pandas pyreadr
+          python -m pytest -q tests/test_audit_full_HOSTS_GIFT_diet_island_resource.py tests/test_audit_all_diet_GIFT_family_degree_network_null.py
+      - name: Retrieve original exact 2024 WCVP v13 names/distribution, GIFT 3.2 and fixed Q2 resource edges
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/dietsource/wcvp/data /tmp/dietsource/q2 /tmp/dietsource/gift /tmp/dietsource/native /tmp/dietsource/contemporary
+          curl -fLsS --retry 4 --max-time 240 https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_names.rda -o /tmp/dietsource/wcvp/data/wcvp_names.rda
+          test "$(git hash-object /tmp/dietsource/wcvp/data/wcvp_names.rda)" = "fa567a7e0e5c0962207b79dee7a62c64e915421a"
+          curl -fLsS --retry 4 --max-time 180 https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_distributions.rda -o /tmp/dietsource/wcvp/data/wcvp_distributions.rda
+          test "$(git hash-object /tmp/dietsource/wcvp/data/wcvp_distributions.rda)" = "60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a"
+          gh run download 41946522894 --name WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical --dir /tmp/dietsource/gift --repo zuizui0223/chocho
+          gh run download 41398149093 --name chocho-q2-introduced-host-native-source-v02-CNY --dir /tmp/dietsource/q2 --repo zuizui0223/chocho
+          find /tmp/dietsource/q2 -type f -name introduced_host_source_edges.csv > /tmp/dietsource/q2_edges_path
+          test "$(wc -l < /tmp/dietsource/q2_edges_path)" -eq 1
+          test -s /tmp/dietsource/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+      - name: Stream pinned HOSTS for 239 target butterflies and match accepted WCVP names without selecting gains
+        run: |
+          python -u scripts/build_239_HOSTS_WCVP_accepted_sidecar.py \
+            --hosts _external/HOSTS/resource.csv \
+            --wcvp-names /tmp/dietsource/wcvp/data/wcvp_names.rda \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out /tmp/dietsource/native/insect_host_accepted.csv \
+            --audit /tmp/dietsource/native/full_239_HOSTS_source_audit.json
+          test -s /tmp/dietsource/native/insect_host_accepted.csv
+          test -s /tmp/dietsource/native/full_239_HOSTS_source_audit.json
+      - name: Test original full diet plant trait index against all butterfly island gain counts including zero-gain taxa
+        run: |
+          python -u scripts/audit_full_HOSTS_GIFT_diet_island_resource.py \
+            --hosts /tmp/dietsource/native/insect_host_accepted.csv \
+            --crosswalk /tmp/dietsource/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --descriptors data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --edges "$(cat /tmp/dietsource/q2_edges_path)" \
+            --draws 799 \
+            --out /tmp/dietsource/full_HOSTS_GIFT_island_and_global_gain_models.json \
+            --species-out /tmp/dietsource/full_HOSTS_GIFT_239butterfly_diet_traits.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v=json.loads(Path('/tmp/dietsource/full_HOSTS_GIFT_island_and_global_gain_models.json').read_text())
+          d=v['source_population']
+          assert d['fixed_butterfly_panel_species']==239
+          assert d['Q2_island_new_opportunity_cells']==5741
+          assert d['butterflies_with_zero_island_added_cells']>=1
+          assert d['distinct_accepted_host_plants_with_any_GIFT_trait']>=250
+          assert len(v['scenarios'])==4
+          print('FULL_HOSTS_GIFT_DIET_239_BUTTERFLY_INDEPENDENT_ZERO_GAIN_TEST_PASS',d)
+          PY
+      - name: Compare full-diet plant trait association to plant-family × network-degree and native-range shuffle
+        run: |
+          python -u scripts/audit_all_diet_GIFT_family_degree_network_null.py \
+            --host /tmp/dietsource/native/insect_host_accepted.csv \
+            --cross /tmp/dietsource/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv \
+            --wcvp-dist /tmp/dietsource/wcvp/data/wcvp_distributions.rda \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --desc data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --edges "$(cat /tmp/dietsource/q2_edges_path)" \
+            --q1 results/island-mainland-resource-q1/island_mainland_summary.json \
+            --draws 799 \
+            --out /tmp/dietsource/full_HOSTS_GIFT_family_degree_island_resource_null.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path('/tmp/dietsource/full_HOSTS_GIFT_family_degree_island_resource_null.json').read_text())
+          assert d["n_distinct_wcvp_hosts"]==1706
+          assert set(d["cohorts"])=={"all_191_source_positive_and_zero_gain","disturbance_146_species","disturbance_tight_116_species"}
+          assert all(len(x["nulls"])==4 for x in d["cohorts"].values())
+          assert all(0<=v["p_two_centered_descriptive"]<=1 for x in d["cohorts"].values() for v in x["nulls"].values())
+          print("FULL_HOST_DIET_GIFT_FAMILY_DEGREE_RANGE_NULL_REPRODUCED")
+          PY
+      - name: Preserve all-239-diet trait indices and source evidence, not external original datasets
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP-HOSTS-GIFT239-full-diet-independent-island-gain
+          path: |
+            /tmp/dietsource/full_HOSTS_GIFT_island_and_global_gain_models.json
+            /tmp/dietsource/full_HOSTS_GIFT_239butterfly_diet_traits.csv
+            /tmp/dietsource/native/full_239_HOSTS_source_audit.json
+            /tmp/dietsource/native/insect_host_accepted.csv
+            /tmp/dietsource/full_HOSTS_GIFT_family_degree_island_resource_null.json
+          if-no-files-found: warn
+          retention-days: 30

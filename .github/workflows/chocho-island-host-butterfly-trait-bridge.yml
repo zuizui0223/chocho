@@ -1,0 +1,75 @@
+name: chocho island introduced-host traits versus butterfly disturbance
+
+on:
+  push:
+    branches:
+      - analysis/island-port-trait-selection-gate-20261105
+    paths:
+      - "scripts/exploratory_island_host_trait_butterfly_bridge.py"
+      - "tests/test_exploratory_island_host_trait_butterfly_bridge.py"
+      - ".github/workflows/chocho-island-host-butterfly-trait-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  frozen-Q2-GIFT-butterfly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit-test host identity and genus-cluster resampling
+        run: |
+          python -m pip install --quiet pytest pandas numpy
+          python -m pytest -q tests/test_exploratory_island_host_trait_butterfly_bridge.py
+      - name: Restore source-verified Q2 butterfly hosts and original accepted WCVP GIFT crosswalk
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/hostbridge/q2 /tmp/hostbridge/gift
+          gh run download 41398149093 --name chocho-q2-introduced-host-native-source-v02-CNY --dir /tmp/hostbridge/q2 --repo zuizui0223/chocho
+          gh run download 41946522894 --name WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical --dir /tmp/hostbridge/gift --repo zuizui0223/chocho
+          test "$(find /tmp/hostbridge/q2 -type f -name introduced_host_source_edges.csv | wc -l)" -eq 1
+          find /tmp/hostbridge/q2 -type f -name introduced_host_source_edges.csv > /tmp/hostbridge/q2_edges_path.txt
+          test -s /tmp/hostbridge/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv
+      - name: Test distinct introduced hosts, butterfly disturbance and species resource gain
+        run: |
+          python -u scripts/exploratory_island_host_trait_butterfly_bridge.py \
+            --q2-edges "$(cat /tmp/hostbridge/q2_edges_path.txt)" \
+            --wcvp-gift-crosswalk /tmp/hostbridge/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --descriptors data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --bootstrap 799 \
+            --out /tmp/hostbridge/introduction_trait_to_butterfly_models.json \
+            --species-out /tmp/hostbridge/introduction_trait_butterfly_species.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('/tmp/hostbridge/introduction_trait_to_butterfly_models.json').read_text())
+          s=r['design']
+          assert s['source_intro_plant_island_edges']==11573
+          assert s['source_species_island_added_cells']==5741
+          assert s['distinct_introduced_hosts']==564
+          assert 0<s['distinct_butterflies_with_added_island_resource']<=239
+          assert len(r['cohorts'])==5
+          print('ISLAND_HOST_BUTTERFLY_GIFT_SOURCE_RECEIPT_VERIFIED',s)
+          PY
+      - name: Preserve source-matched species-level trait uncertainty
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-island-Q2-GIFT-host-butterfly-disturbance-bridge
+          path: |
+            /tmp/hostbridge/introduction_trait_to_butterfly_models.json
+            /tmp/hostbridge/introduction_trait_butterfly_species.csv
+          if-no-files-found: warn
+          retention-days: 30

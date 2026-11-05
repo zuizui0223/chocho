@@ -1,0 +1,62 @@
+name: chocho WCVP-GIFT island annual trait bias and quality audit
+
+on:
+  push:
+    branches:
+      - analysis/island-port-trait-selection-gate-20261105
+    paths:
+      - "scripts/audit_island_annual_port_trait_sensitivity.py"
+      - "tests/test_audit_island_annual_port_trait_sensitivity.py"
+      - ".github/workflows/chocho-island-port-annual-trait-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-frozen-independent-coverage-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline BH, missing-trait and cohort-gate tests
+        run: |
+          python -m pip install --quiet pytest pyreadr numpy pandas
+          python -m pytest -q tests/test_audit_island_annual_port_trait_sensitivity.py
+      - name: Reuse successful frozen v13 WCVP×GIFT v3.2 exact-species artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/gift_annual_audit
+          gh run download 41946522894 \
+            --name WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical \
+            --dir /tmp/gift_annual_audit --repo zuizui0223/chocho
+          test -s /tmp/gift_annual_audit/GIFT3p2_WCVP_island_port_flora_trait_selection.json
+      - name: Test six primary outcomes, origin negative control, trait coverage and independent geography
+        run: |
+          python -u scripts/audit_island_annual_port_trait_sensitivity.py \
+            --source /tmp/gift_annual_audit/GIFT3p2_WCVP_island_port_flora_trait_selection.json \
+            --out /tmp/gift_annual_audit/GIFT_annual_herb_trait_selection_robustness.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v=json.loads(Path('/tmp/gift_annual_audit/GIFT_annual_herb_trait_selection_robustness.json').read_text())
+          assert len(v["raw_six_tests_BH_q"])==6
+          assert v["source_run"]==41946522894
+          assert len(v["leave_one_Level1_out"])==9
+          print("WCVP_GIFT_ANNUAL_HERB_TRAIT_SELECTION_ROBUSTNESS_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: WCVP13-GIFT32-annual-herb-island-port-robustness
+          path: /tmp/gift_annual_audit/GIFT_annual_herb_trait_selection_robustness.json
+          if-no-files-found: warn
+          retention-days: 30
