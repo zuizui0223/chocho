@@ -5,7 +5,10 @@ import importlib.util
 from pathlib import Path
 import numpy as np
 import pandas as pd
-p=Path(__file__).resolve().parents[1]/"scripts"/"audit_host_trait_island_gain_network_null.py"
+directory=Path(__file__).resolve().parents[1]/"scripts"
+import sys
+sys.path.insert(0,str(directory))
+p=directory/"audit_host_trait_island_gain_network_null.py"
 spec=importlib.util.spec_from_file_location("networkplantnull",p)
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
