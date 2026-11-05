@@ -1,0 +1,75 @@
+name: chocho CIRAD-N candidate-host ratio and observation-denominator stress test
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_cirad_n_estimand_stress.py"
+      - "tests/test_exploratory_cirad_n_estimand_stress.py"
+      - ".github/workflows/chocho-cirad-n-estimand-stress.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-frozen-response-definitions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate independent port-level share, pseudo-count and country FE estimators
+        run: |
+          python -m pip install --quiet pytest numpy pandas scipy statsmodels rasterio pyproj
+          python -m pytest -q tests/test_exploratory_cirad_n_estimand_stress.py
+      - name: Retrieve verified frozen 2015 wastewater, 2021 urban pixels and 2022 N grid port samples
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/nratio/jones /tmp/nratio/urban /tmp/nratio/n
+          gh run download 41563940689 --name pangaea-jones2015-5arc-wpi1596-wastewater-wwtp --dir /tmp/nratio/jones --repo zuizui0223/chocho
+          gh run download 41562997326 --name hydroWASTE-WPI1596-WorldCover2021-urban --dir /tmp/nratio/urban --repo zuizui0223/chocho
+          gh run download 41923811745 --name cirad-2022-human-vs-cropland-N-WPI1596-source-checked --dir /tmp/nratio/n --repo zuizui0223/chocho
+          test -s /tmp/nratio/jones/Jones2015_WPI1596_port_grid_census.csv
+          test -s /tmp/nratio/urban/WPI1596_worldcover2021_port_measurements.csv
+          test -s /tmp/nratio/n/WPI1596_human_crop_N_source_features.csv
+      - name: Compare alien share to 0.1/0.5/1/2 pseudo-count log ratios in identical port samples
+        run: |
+          python -u scripts/exploratory_cirad_n_estimand_stress.py \
+            --jones /tmp/nratio/jones/Jones2015_WPI1596_port_grid_census.csv \
+            --urban /tmp/nratio/urban/WPI1596_worldcover2021_port_measurements.csv \
+            --N-features /tmp/nratio/n/WPI1596_human_crop_N_source_features.csv \
+            --out /tmp/nratio/cirad_2022_host_ratio_estimand_audit.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          v=json.loads(Path('/tmp/nratio/cirad_2022_host_ratio_estimand_audit.json').read_text())
+          assert v['n_source_mapped_ports']==1041
+          assert len(v['cohorts'])==5
+          base=v['cohorts']['original_1041_all_indexed']
+          assert base['ports']>=900 and base['countries']>=35
+          for name,c in v['cohorts'].items():
+              if c['status']=='ESTIMATED_COUNTRY_FE_SOURCE_DESCRIPTIVE':
+                  assert 'ratio_pc_0p5_with_indexed_total' in c['models']
+                  for model in c['models'].values():
+                      if 'log_crop_N' in model:
+                          assert math.isfinite(model['log_crop_N']['beta'])
+          print('WPI_CIRAD_N_RATIO_ESTIMAND_SOURCE_QA_PASS',
+                json.dumps({k:{'n':s.get('ports'),'status':s.get('status')}
+                            for k,s in v['cohorts'].items()},sort_keys=True))
+          PY
+      - name: Save source-pinned independent response-definition audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cirad-crop-N-WPI1596-estimand-share-vs-logratio
+          path: /tmp/nratio/cirad_2022_host_ratio_estimand_audit.json
+          if-no-files-found: warn
+          retention-days: 30
