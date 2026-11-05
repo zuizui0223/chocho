@@ -6,19 +6,17 @@
 
 ## Abstract
 
-**Aim:** Plant globalization can change the geography of insect resources without changing insects' ability to disperse. We tested whether potential butterfly larval-host resource opportunities have expanded disproportionately on islands, whether regions with more ports harbour more introduced plants and larval-host taxa, and whether ports are associated with a specific enrichment of larval hosts or with broader introduced-flora accumulation.
+**Aim:** Plant introductions alter the geography of potential insect resources without necessarily changing insect dispersal. We asked whether butterfly larval-host resource opportunities expand disproportionately on islands and whether port-associated introduced floras are specifically enriched in butterfly hosts.
 
-**Location:** Global WGSRPD Level 3 island and mainland botanical regions, with a complementary island-assemblage comparison.
+**Location:** Global WGSRPD Level 3 insular and mainland botanical regions; supplementary island-pair comparisons.
 
-**Taxon:** A fixed panel of 239 butterfly species and their documented larval-host plants.
+**Taxon:** A fixed network of 239 butterflies and their documented larval hosts.
 
-**Methods:** Native-only and contemporary plant distributions were combined with fixed butterfly–host relationships to reconstruct potential butterfly × region resources. We compared 126 strict island and 237 mainland regions and related modern World Port Index counts to introduced-plant and introduced larval-host richness. Models accounted for region area, broad biogeography, native flora and botanical recording effort; a nested model then controlled for introduced plant richness. Across 51 island landmasses we compared pairwise similarities of candidate port-host plants and butterfly assemblage records.
+**Methods:** We reconstructed native-only and contemporary butterfly × region host opportunities from pinned plant distributions and host links. We compared islands and mainland regions, and associated modern indexed port counts with introduced-plant and distinct larval-host taxon richness, adjusting for area, broad biogeography, native resources and botanical recording coverage. We then conditioned host richness on all introduced flora and compared host and butterfly assemblage similarities among islands.
 
-**Results:** Insular potential resources expanded by **118.9%**, compared with **40.9%** on mainland regions. The excess island introduced-resource share remained +10.7 percentage points in area–biogeographic overlap strata. Among 98 islands with botanical effort data, port counts were positively associated with introduced flora (β = **+0.244**, descriptive permutation *p* = **0.0012**) and introduced larval-host taxa (β = **+0.164**, *p* = **0.011**). A positive host-specific association did not remain after conditioning on introduced flora (β = −0.042, *p* = 0.093). Pairwise similarity in candidate port-host plants corresponded positively to subsequently indexed butterfly assemblage similarity (51 islands; 1,275 non-independent pairs; Spearman ρ = **+0.300**), but its association with earlier butterfly assemblages was stronger.
+**Results:** Potential resources increased by **118.9% on islands** versus **40.9% on mainland regions**. An area–biogeographic comparison retained an insular excess of 10.7 percentage points in introduced-resource share. Among 98 insular regions with botanical effort data, port counts correlated positively with all introduced plants (β = **+0.244**, descriptive *p* = 0.0012) and introduced larval-host taxa (β = **+0.164**, *p* = 0.011). A positive host-specific residual was absent after conditioning on all introduced flora (β = −0.042, *p* = 0.093). Among 51 island landmasses, candidate port-host and later butterfly assemblage similarities were positively correlated (ρ = **+0.300**, 1,275 non-independent pairs), but the earlier butterfly correspondence was stronger.
 
-**Main conclusions:** Island resource opportunities have expanded disproportionately under contemporary introduced plant distributions. Port-rich islands harbour more introduced flora and more potential larval hosts, with no evidence of an additional positive port-specific enrichment of hosts after accounting for broader introduced flora. This supports an observational plant-assembly interpretation of island host-resource change, **not** historical proof of ship-borne plant imports, butterfly establishment or nutrient-driven growth.
-
-**Keywords:** island biogeography; port infrastructure; butterfly–host interaction; alien flora; herbivore resources; plant globalization; potential distributions.
+**Main conclusions:** Port-rich insular regions have broader introduced floras encompassing more potential butterfly hosts, without a detectable additional positive host-specific port association. These are observational resource-geography patterns, not evidence of ship-borne introduction, realized host use or butterfly colonization.
 
 ## Introduction
 
