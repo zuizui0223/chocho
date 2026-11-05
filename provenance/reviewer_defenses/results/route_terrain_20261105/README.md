@@ -1,0 +1,1 @@
+Pre-acquisition route-terrain design. Source geodesics use pre-origin butterfly records. All175625 routes retained; terrain samples at<=2km are distinct from250m marine sampling. Design running; no acquired route elevation, fitted model or barrier effect claimed. Original scripts require work/barriers paths and local source inputs.
