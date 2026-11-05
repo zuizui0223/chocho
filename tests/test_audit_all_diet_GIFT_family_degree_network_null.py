@@ -30,8 +30,9 @@ def toy():
         "native_bin":"native0to3" if i%5 else "native4to20",
         } for i in range(plants)])
     M=np.zeros((n,plants),dtype=float)
+    rng=np.random.default_rng(3)
     for i in range(n):
-        M[i,[(i+2*j)%plants for j in range(5)]]=1
+        M[i,rng.choice(plants,5,replace=False)]=1
     return d,pl,M,M.sum(axis=1)
 
 def test_full_host_plant_shuffle_is_not_synthetic_butterfly_repetition():
