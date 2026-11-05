@@ -185,8 +185,6 @@ def run(host,cross,wdist,panel,desc,edges,q1,*,B=799):
                        "p":v["p_two_centered_descriptive"],
                        "movable":v["shuffle_species_count"]}
                     for k,v in rec["nulls"].items()}},sort_keys=True),flush=True)
-    # descriptive plant trait vs WCVP geographic introduced island range
-    plants=p
     result["limitations"]=[
       "Family × butterfly degree permutations preserve broad phylogenetic proxy but not exact plant phylogeny or trait syndromes.",
       "Further matching on native regional breadth is a conservative constraint that can remove a real trait-to-range association; not a definitive no-effect test.",
