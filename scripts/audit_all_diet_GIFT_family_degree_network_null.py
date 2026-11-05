@@ -141,6 +141,7 @@ def pnull(d,p,M,denom,*,outcome,stratify,B=799,seed=SEED):
       "known_plant_species_count":len(p),"shuffle_strata":len(movable),
       "plant_network_preserved":True,
       "source_flora_traits_missing_preserved":True,
+      "permutations":len(numbers),
       "controls":term,
       "no_biological_introduction_or_breeding_inference":True}
 
