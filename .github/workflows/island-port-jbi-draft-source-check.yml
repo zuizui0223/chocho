@@ -1,0 +1,48 @@
+name: island-port JBI manuscript v0.1 numeric source gate
+
+on:
+  push:
+    branches:
+      - manuscript/island-ports-flora-assembly-jbi-v01-20261105
+    paths:
+      - "manuscript/island_port_flora_assembly_20261105/**"
+      - "scripts/verify_island_port_jbi_v01.py"
+      - ".github/workflows/island-port-jbi-draft-source-check.yml"
+  pull_request:
+    paths:
+      - "manuscript/island_port_flora_assembly_20261105/**"
+      - "scripts/verify_island_port_jbi_v01.py"
+      - ".github/workflows/island-port-jbi-draft-source-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manuscript-locked-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify raw island opportunity, port flora, host and butterfly numbers
+        run: |
+          python scripts/verify_island_port_jbi_v01.py --out /tmp/island_port_jbi_v01_source_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          o=json.loads(Path('/tmp/island_port_jbi_v01_source_audit.json').read_text())
+          assert o['status']=='PASS_SOURCE_NUMERIC_AND_CLAIM_LABELS_ONLY'
+          assert o['island_mainland_regions']==[126,237]
+          assert o['effort_complete_port_flora_regions']==98
+          assert o['island_butterfly_network']==[51,1275]
+          print('ISLAND_PORT_JBI_FIRST_DRAFT_SOURCE_GATES_PASS',o['abstract_word_tokens'])
+          PY
+      - name: Archive scientific scope and source verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: island-port-jbi-v01-source-audit
+          path: /tmp/island_port_jbi_v01_source_audit.json
+          retention-days: 30
