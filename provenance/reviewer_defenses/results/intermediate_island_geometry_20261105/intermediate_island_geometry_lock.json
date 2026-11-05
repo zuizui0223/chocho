@@ -1,0 +1,9 @@
+{
+ "status":"FIXED_BEFORE_INTERMEDIATE_LANDMASS_ID_EXTRACTION_AFTER_PRIMARY_MODEL_RESULTS",
+ "cohort":"All existing175625 route geometries and225 candidate population retained; focus detailed landmass labeling on known-endpoint routes with >=2 sampled marine segments",
+ "geometry":"Reuse original WGS84 geodesics and <=250m midpoint locations exactly. For routes with >=2 sea runs, identify unique GSHHG sibling IDs in the interior between first and last sampled sea points. Exclude source and target landmass IDs. Count island IDs with source polygon area<7000000km2 separately from other intermediate landmasses.",
+ "zero":"Known-endpoint routes with <2 marine segments cannot contain a sampled land interruption between two sea runs at this resolution; encode0 as a geometric sampled quantity, not biological absence. Unknown endpoints retain missing descriptors and an explicit flag.",
+ "validation":"Match original source/target coordinates and route keys; independently reproduce total sampled marine km and marine segment count during identity labeling. Flag points matched to more than one sibling ID rather than treating overlapping geography as distinct stepping stones.",
+ "planned_contrast":"If extraction is supported, B5 plus intermediate-island count and uncertainty flag versus unchanged B5, same full155-species temporal/spatial evaluation and RF settings; no selecting improved species or islands.",
+ "limits":"Static geodesic corridor potential, not shortest island-network path, biological occupancy, actual relay, flight route or causal effect. Islands narrower than250m can be missed. Parent shorelines do not subtract inland lakes. No future occurrence information is added. New analysis follows inspection of earlier model results."
+}
