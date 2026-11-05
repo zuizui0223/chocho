@@ -1,0 +1,128 @@
+name: chocho gridded human-excreted nitrogen 2022 independent source probe
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-cirad-global-human-n-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-cirad-dataverse-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Get DOI-pinned public dataset manifest from official Dataverse API
+        run: |
+          mkdir -p /tmp/cirad_2022
+          curl -fLsS --retry 3 --connect-timeout 20 --max-time 60 \
+            'https://dataverse.cirad.fr/api/datasets/:persistentId/?persistentId=doi%3A10.18167%2FDVN1%2FAWQNSR' \
+            -o /tmp/cirad_2022/official_metadata.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/cirad_2022/official_metadata.json')
+          obj=json.loads(p.read_text())
+          if obj.get('status')!='OK':
+              raise ValueError('Unexpected Dataverse response: '+str(obj)[:300])
+          files=obj['data']['latestVersion']['files']
+          names={r['dataFile']['filename']:r['dataFile'] for r in files}
+          need=('Human_nutrient_excretion2022.gpkg','Nutrient_supply_to_cropland2022.gpkg')
+          for name in need:
+              if name not in names:raise ValueError('Missing promised original gridded N source '+name)
+          out={k:{'id':v['id'],'size':v.get('filesize'),
+                   'md5':v.get('md5'),'contentType':v.get('contentType')}
+               for k,v in names.items()}
+          Path('/tmp/cirad_2022/manifest.json').write_text(json.dumps(out,indent=2)+'\n')
+          print('CIRAD_HUMAN_NUTRIENTS_GLOBAL_SOURCE_MANIFEST',json.dumps(out,sort_keys=True),flush=True)
+          PY
+      - name: Fetch original excreted human N and cropland nutrient supply 3km GeoPackages
+        run: |
+          python - <<'PY'
+          import json,subprocess
+          from pathlib import Path
+          base=Path('/tmp/cirad_2022')
+          d=json.loads((base/'manifest.json').read_text())
+          for name,expected in [('Human_nutrient_excretion2022.gpkg','b8876ecda3456dbd7cfd5f007683771c'),
+                                ('Nutrient_supply_to_cropland2022.gpkg','281be6848535701b1acf65aa4bf87491')]:
+              fid=d[name]['id']
+              subprocess.run(['curl','-fLsS','--retry','2','--connect-timeout','20',
+                              '--max-time','180',
+                              f'https://dataverse.cirad.fr/api/access/datafile/{fid}',
+                              '-o',str(base/name)],check=True)
+              import hashlib
+              actual=hashlib.md5((base/name).read_bytes()).hexdigest()
+              if actual!=expected:raise ValueError(name+' original source MD5 mismatch '+actual)
+              print('CIRAD_OFFICIAL_GPKG_MD5_PASS',name,(base/name).stat().st_size,flush=True)
+          PY
+      - name: Verify original 3km N raster or vector schema without guessing values
+        run: |
+          python - <<'PY'
+          import json,sqlite3,hashlib
+          from pathlib import Path
+          base=Path('/tmp/cirad_2022')
+          out={'doi':'10.18167/DVN1/AWQNSR',
+               'period':2022,'spatial_grain':'3 km Equal Earth',
+               'scope':'modeled human excretion potential, NOT actual sewage emission to port soils',
+               'files':{}}
+          for name in ('Human_nutrient_excretion2022.gpkg','Nutrient_supply_to_cropland2022.gpkg'):
+              p=base/name
+              con=sqlite3.connect('file:'+str(p)+'?mode=ro',uri=True)
+              cur=con.cursor()
+              tables=[x[0] for x in cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()]
+              meta={}
+              for table in ('gpkg_contents','gpkg_tile_matrix_set','gpkg_raster_columns','gpkg_geometry_columns'):
+                  if table in tables:
+                      meta[table]=cur.execute('SELECT * FROM '+table+' LIMIT 10').fetchall()
+              con.close()
+              out['files'][name]={'size':p.stat().st_size,
+                                  'MD5':hashlib.md5(p.read_bytes()).hexdigest(),
+                                  'tables':tables[:50],'metadata':meta}
+          (base/'source_schema.json').write_text(json.dumps(out,ensure_ascii=False,indent=2,default=str)+'\n')
+          print('CIRAD_2022_3KM_N_SPATIAL_SOURCE_SCHEMA',json.dumps(out,sort_keys=True,default=str)[:13000],flush=True)
+          PY
+      - name: Check actual GDAL raster subdatasets, 3km pixels, CRS and nodata
+        run: |
+          python -m pip install --quiet rasterio pyproj numpy
+          python - <<'PY'
+          import rasterio,json,numpy as np
+          from pathlib import Path
+          base=Path('/tmp/cirad_2022')
+          results={}
+          for filename in ('Human_nutrient_excretion2022.gpkg','Nutrient_supply_to_cropland2022.gpkg'):
+              src=base/filename
+              with rasterio.open(src) as root:
+                  subs=list(root.subdatasets)
+              infos=[]
+              for sub in subs:
+                  with rasterio.open(sub) as ds:
+                      info={'subdataset':sub.split(':')[-1],
+                            'width':ds.width,'height':ds.height,
+                            'resolution':list(ds.res),'crs':str(ds.crs),
+                            'nodata':ds.nodata,'bounds':list(ds.bounds),
+                            'dtypes':list(ds.dtypes),
+                            'tags':ds.tags(),
+                            'compression':ds.compression.value if ds.compression else None}
+                      infos.append(info)
+              results[filename]=infos
+          p=base/'gdal_raster_layers.json'
+          p.write_text(json.dumps(results,indent=2,default=str)+'\n')
+          print('CIRAD_2022_GDAL_GRID_LAYERS',json.dumps(results,sort_keys=True,default=str)[:12000],flush=True)
+          assert sum(len(v) for v in results.values())>=4
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cirad-human-vs-cropland-N-2022-source-schema
+          path: |
+            /tmp/cirad_2022/manifest.json
+            /tmp/cirad_2022/source_schema.json
+            /tmp/cirad_2022/gdal_raster_layers.json
+          if-no-files-found: warn
+          retention-days: 30

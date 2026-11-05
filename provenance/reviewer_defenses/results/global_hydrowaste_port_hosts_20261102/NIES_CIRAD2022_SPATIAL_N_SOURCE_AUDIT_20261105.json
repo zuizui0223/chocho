@@ -1,0 +1,150 @@
+{
+  "schema": "chocho_NIES_CIRAD2022_WPI1596_sewageN_vs_agriculturalN_macro_20261105",
+  "status": "MODELED_GLOBAL_N_ASSOCIATIONS_NOT_SEWAGE_CAUSAL_N_TO_BUTTERFLIES",
+  "doi": {
+    "NIES": "10.17595/20260227.001",
+    "CIRAD": "10.18167/DVN1/AWQNSR"
+  },
+  "populations": {
+    "NIES_country_2015_urban": [
+      993,
+      38
+    ],
+    "CIRAD_25km_urban": [
+      1041,
+      42
+    ],
+    "CIRAD_25km_no_urban": [
+      1336,
+      52
+    ],
+    "CIRAD_10km_urban": [
+      1020,
+      40
+    ]
+  },
+  "NIES_2015_unmanaged_country_moderation": {
+    "b": -0.032379835864823986,
+    "CI95": [
+      -0.06807098933409855,
+      0.003311317604450574
+    ]
+  },
+  "CIRAD_2022_25km_urban": {
+    "human_excreted_N": {
+      "b": 0.029014541057957415,
+      "CI95": [
+        -0.05162891532894726,
+        0.1096579974448621
+      ]
+    },
+    "cropland_N": {
+      "b": 0.039927909973897,
+      "CI95": [
+        0.013346335791472718,
+        0.06650948415632128
+      ]
+    },
+    "WWproduction": {
+      "b": 0.016631398385459167,
+      "CI95": [
+        -0.06512043530050074,
+        0.09838323207141908
+      ]
+    },
+    "WWTP": {
+      "b": 0.0386502658850991,
+      "CI95": [
+        -0.08158959297675608,
+        0.15889012474695427
+      ]
+    }
+  },
+  "CIRAD_2022_10km_urban": {
+    "cropland_N": {
+      "b": 0.0506459001131595,
+      "CI95": [
+        0.02370335696816991,
+        0.07758844325814909
+      ]
+    }
+  },
+  "source_robustness_run_initial": 41924855106,
+  "CIRAD_sensitivities": {
+    "both_native_alien_present": {
+      "n": 732,
+      "cropN": 0.030653403943273202,
+      "CI95": [
+        0.006270010982829463,
+        0.05503679690371694
+      ]
+    },
+    "candidate_host_5plus": {
+      "n": 716,
+      "cropN": 0.0384325754387803,
+      "CI95": [
+        0.010361304185628528,
+        0.06650384669193207
+      ]
+    },
+    "N_grid_valid_50pct": {
+      "n": 732,
+      "cropN": 0.025106813123135258,
+      "CI95": [
+        -0.012814253163916343,
+        0.06302787941018687
+      ]
+    },
+    "trim_cropN_99percent": {
+      "n": 1030,
+      "cropN": 0.042325439009027126,
+      "CI95": [
+        0.016084361614889093,
+        0.06856651640316516
+      ]
+    },
+    "no_indexed_total_proxy": {
+      "n": 1041,
+      "cropN": 0.040444299261142354,
+      "CI95": [
+        0.012089041318660787,
+        0.06879955720362392
+      ]
+    },
+    "country_loo_cropN_brange": [
+      0.03197058969305851,
+      0.04420900065397422
+    ],
+    "negative_control_alien": {
+      "cropN": -0.0070987887258928215,
+      "cropN_CI95": [
+        -0.06498495347848023,
+        0.050787376026694586
+      ],
+      "humanN": 0.12078909367124006,
+      "humanN_CI95": [
+        0.0371877996074544,
+        0.2043903877350257
+      ]
+    },
+    "negative_control_native": {
+      "cropN": -0.04681598494955121,
+      "cropN_CI95": [
+        -0.10850235333042693,
+        0.014870383431324512
+      ],
+      "humanN": 0.09985480648737076,
+      "humanN_CI95": [
+        0.03470046220753656,
+        0.16500915076720496
+      ]
+    }
+  },
+  "limitations": [
+    "2022 CIRAD 3km modeled input potential (10 kg N ha-1 yr-1) is not actual wastewater effluent or nitrogen delivered to plants.",
+    "Response is 2001–2024 GBIF-indexed candidate alien/native host richness ratio; no caterpillar use or population.",
+    "CIRAD crop-N positives sensitive to >50% valid grid-coverage restriction and multiple posthoc comparisons.",
+    "National NIES N country-specific, its main effect unidentifiable in country fixed effect models.",
+    "NIES, Jones, WPI, ESA, GBIF are not time-matched, have different buffer scales."
+  ]
+}

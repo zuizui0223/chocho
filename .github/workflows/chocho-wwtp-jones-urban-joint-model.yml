@@ -1,0 +1,64 @@
+name: chocho 2015 untreated wastewater vs urban WWTP global FE source audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_global_wwtp_jones_worldcover.py"
+      - "tests/test_exploratory_global_wwtp_jones_worldcover.py"
+      - ".github/workflows/chocho-wwtp-jones-urban-joint-model.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  replay-three-successful-independent-global-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline validation, no source requery
+        run: |
+          python -m pip install --quiet numpy pandas scipy statsmodels pytest
+          python -m pytest -q tests/test_exploratory_global_wwtp_jones_worldcover.py
+      - name: Download only pinned global run artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/joint
+          gh run download 41563940689 --name pangaea-jones2015-5arc-wpi1596-wastewater-wwtp --dir /tmp/joint --repo zuizui0223/chocho
+          gh run download 41562997326 --name hydroWASTE-WPI1596-WorldCover2021-urban --dir /tmp/joint --repo zuizui0223/chocho
+          test -s /tmp/joint/Jones2015_WPI1596_port_grid_census.csv
+          test -s /tmp/joint/WPI1596_worldcover2021_port_measurements.csv
+      - name: Compare WWTP count, modeled 2015 WW production, treatment and 2021 built-up matched cohorts
+        run: |
+          python -u scripts/exploratory_global_wwtp_jones_worldcover.py \
+            --jones /tmp/joint/Jones2015_WPI1596_port_grid_census.csv \
+            --worldcover /tmp/joint/WPI1596_worldcover2021_port_measurements.csv \
+            --out /tmp/joint/global_WWTP_Jones2015_WorldCover2021_joint_model_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          z=json.loads(Path('/tmp/joint/global_WWTP_Jones2015_WorldCover2021_joint_model_audit.json').read_text())
+          assert z['full_WPI_ports']==1596
+          assert z['full_WPI_countries']==142
+          assert z['urban_raster_valid_ports']==1241
+          assert len(z['same_2015_grid_complete_cohort'])==9
+          assert len(z['same_urban_complete_cohort'])==9
+          print('GLOBAL_JONES_WWTP_URBAN_THREE_SOURCE_AUDIT_PASS')
+          PY
+      - name: Archive same-cohort urban and modeled untreated-flow models
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpi1596-wwtp-jones2015-urban2021-nested-models
+          path: /tmp/joint/global_WWTP_Jones2015_WorldCover2021_joint_model_audit.json
+          if-no-files-found: warn
+          retention-days: 30

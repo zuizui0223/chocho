@@ -1,0 +1,79 @@
+name: chocho CIRAD2022 3km excreted-N vs cropland-N global butterfly-host port model
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_cirad_n_excretion_ports.py"
+      - "tests/test_exploratory_cirad_n_excretion_ports.py"
+      - ".github/workflows/chocho-cirad-n-port-global.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  gridded-local-N-country-fixed-effects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate masked-grid and 3km projected raster extraction
+        run: |
+          python -m pip install --quiet pytest numpy pandas scipy pyproj rasterio statsmodels
+          python -m pytest -q tests/test_exploratory_cirad_n_excretion_ports.py
+      - name: Reuse source-locked Jones2015 WWp and WorldCover2021 port tables
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/cirad_wpi2022/jones /tmp/cirad_wpi2022/urban /tmp/cirad_wpi2022/grid
+          gh run download 41563940689 --name pangaea-jones2015-5arc-wpi1596-wastewater-wwtp --dir /tmp/cirad_wpi2022/jones --repo zuizui0223/chocho
+          gh run download 41562997326 --name hydroWASTE-WPI1596-WorldCover2021-urban --dir /tmp/cirad_wpi2022/urban --repo zuizui0223/chocho
+          test -s /tmp/cirad_wpi2022/jones/Jones2015_WPI1596_port_grid_census.csv
+          test -s /tmp/cirad_wpi2022/urban/WPI1596_worldcover2021_port_measurements.csv
+      - name: Retrieve external 2022 geospatial excretion and cropland-N source datasets MD5-locked
+        run: |
+          curl -fLsS --retry 2 --max-time 180 https://dataverse.cirad.fr/api/access/datafile/29428 -o /tmp/cirad_wpi2022/grid/Human_nutrient_excretion2022.gpkg
+          curl -fLsS --retry 2 --max-time 180 https://dataverse.cirad.fr/api/access/datafile/29427 -o /tmp/cirad_wpi2022/grid/Nutrient_supply_to_cropland2022.gpkg
+          echo 'b8876ecda3456dbd7cfd5f007683771c  /tmp/cirad_wpi2022/grid/Human_nutrient_excretion2022.gpkg' | md5sum -c -
+          echo '281be6848535701b1acf65aa4bf87491  /tmp/cirad_wpi2022/grid/Nutrient_supply_to_cropland2022.gpkg' | md5sum -c -
+      - name: Extract human and agricultural N on original 1596 WPI ports and fit matched controls
+        run: |
+          python -u scripts/exploratory_cirad_n_excretion_ports.py \
+            --jones /tmp/cirad_wpi2022/jones/Jones2015_WPI1596_port_grid_census.csv \
+            --worldcover /tmp/cirad_wpi2022/urban/WPI1596_worldcover2021_port_measurements.csv \
+            --source-dir /tmp/cirad_wpi2022/grid \
+            --port-table /tmp/cirad_wpi2022/WPI1596_human_crop_N_source_features.csv \
+            --out /tmp/cirad_wpi2022/global_human_crop_N_2022_source_models.json
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          r=json.loads(Path('/tmp/cirad_wpi2022/global_human_crop_N_2022_source_models.json').read_text())
+          assert r['WPI_ports']==1596
+          assert set(r['models'])=={'25km_urban_2021','25km_no_urban','10km_urban_2021','10km_no_urban'}
+          o=r['models']['25km_urban_2021']
+          assert o['support']['n_ports']>=400
+          assert o['support']['n_countries']>=15
+          for term in ('log_human_N','log_crop_N'):
+              z=o['models']['both_human_N_and_crop_N'][term]
+              assert math.isfinite(z['beta']) and len(z['CI95_country_cluster'])==2
+          print('CIRAD_2022_SOURCE_BACKED_WPI1596_N_GRID_MODEL_VERIFIED',
+                json.dumps(o['models']['both_human_N_and_crop_N'],sort_keys=True))
+          PY
+      - name: Archive derived WPI N inputs and source-backed model receipt only (no GPKG redistribution)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cirad-2022-human-vs-cropland-N-WPI1596-source-checked
+          path: |
+            /tmp/cirad_wpi2022/global_human_crop_N_2022_source_models.json
+            /tmp/cirad_wpi2022/WPI1596_human_crop_N_source_features.csv
+          if-no-files-found: warn
+          retention-days: 30

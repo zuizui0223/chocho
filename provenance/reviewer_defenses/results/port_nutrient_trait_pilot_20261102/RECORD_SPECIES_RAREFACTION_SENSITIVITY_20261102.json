@@ -1,0 +1,150 @@
+{
+  "schema": "chocho_WPI78_N_host_vs_other_record_versus_species_sampling_sensitivity_20261102_v1",
+  "status": "EXPLORATORY_GBIF_RECORD_AND_SPECIES_INDEX_SENSITIVITY_NO_TRUE_NUTRIENT_CAUSAL_IDENTIFICATION",
+  "source_runs": {
+    "global_positive_N_port_relation": 41403516863,
+    "strict_78_sites_35_islands": 41402214941,
+    "all_flora_312_speciesKey_facets": 41407370295,
+    "species_N_27pair_temporal_audit": 41408334693,
+    "initial_record_rarefaction_and_taxon_turnover": 41410195136,
+    "rarefaction_depth_comparison": 41410501626
+  },
+  "original_positive_global_adjusted_partial_rho": 0.20971005225460093,
+  "source_27_port_pairs_6_european_islands": true,
+  "country_codes": [
+    "GB",
+    "DK",
+    "FR",
+    "SE"
+  ],
+  "original_unthinned_island_weighted_host_vs_other_N_temporal_DiD": 0.1493596770601339,
+  "original_island_bootstrap95": [
+    0.05260689023531375,
+    0.2517750495007045
+  ],
+  "island_exact_signflip_two_sided_nominal": 0.03125,
+  "pooled_country_exact_signflip_two_sided_nominal": 0.125,
+  "island_even_mean": 0.1493596770601339,
+  "port_pair_even_mean": 0.07458711807842147,
+  "country_even_mean": 0.194495518861927,
+  "source_species_turnover_late_only_fraction_island_weighted": {
+    "candidate_hosts": {
+      "port": 0.2569019468817731,
+      "nonport": 0.2967641612878046
+    },
+    "other_scored_plants": {
+      "port": 0.33053899385378066,
+      "nonport": 0.3449358503715379
+    }
+  },
+  "original_fixed_120record_rarefaction_399_draws": {
+    "sample_size_per_site": 120,
+    "full_island_supported_draws": 397,
+    "simulation_draws": 399,
+    "island_mean_DiD_given_full_island_support": -0.08101178568836863,
+    "fraction_mean_positive_given_any_island": 0.40601503759398494
+  },
+  "sensitivity_299draws": [
+    {
+      "unit": "record",
+      "depth_cap": 30,
+      "full_six_islands_share": 0,
+      "mean_if_six": null
+    },
+    {
+      "unit": "record",
+      "depth_cap": 60,
+      "full_six_islands_share": 0.3411371237458194,
+      "mean_if_six": -0.013793147274263026,
+      "simulation95": [
+        -1.496363221162052,
+        1.117435535015633
+      ]
+    },
+    {
+      "unit": "record",
+      "depth_cap": 120,
+      "full_six_islands_share": 1,
+      "mean_if_six": -0.09362834142216751,
+      "simulation95": [
+        -0.8817157721954023,
+        0.743810650544836
+      ]
+    },
+    {
+      "unit": "record",
+      "depth_cap": 250,
+      "full_six_islands_share": 1,
+      "mean_if_six": -0.03847692321577653,
+      "simulation95": [
+        -0.556708859601202,
+        0.4236487773316318
+      ]
+    },
+    {
+      "unit": "record",
+      "depth_cap": 500,
+      "full_six_islands_share": 1,
+      "mean_if_six": -0.006758740881702403,
+      "simulation95": [
+        -0.3485146129679583,
+        0.3045072857815252
+      ]
+    },
+    {
+      "unit": "record",
+      "depth_cap": 1000,
+      "full_six_islands_share": 1,
+      "mean_if_six": 0.0438075280158917,
+      "simulation95": [
+        -0.1407365146540267,
+        0.23298999508087745
+      ]
+    },
+    {
+      "unit": "species",
+      "depth_cap": 20,
+      "full_six_islands_share": 0,
+      "mean_if_six": null
+    },
+    {
+      "unit": "species",
+      "depth_cap": 40,
+      "full_six_islands_share": 0.2608695652173913,
+      "mean_if_six": 0.21519949643839945,
+      "simulation95": [
+        -1.1290024884399354,
+        1.6372893269584448
+      ]
+    },
+    {
+      "unit": "species",
+      "depth_cap": 80,
+      "full_six_islands_share": 1,
+      "mean_if_six": 0.13641818259598978,
+      "simulation95": [
+        -0.9083720331507026,
+        1.1682690146892885
+      ]
+    },
+    {
+      "unit": "species",
+      "depth_cap": 160,
+      "full_six_islands_share": 1,
+      "mean_if_six": 0.12808922288752397,
+      "simulation95": [
+        -0.40592342702220885,
+        0.703761669183052
+      ]
+    }
+  ],
+  "boundaries": [
+    "This analysis evaluates GBIF-indexed plant species lists and GBIF-indexed record occurrence counts; neither equals plant abundance or independent survey effort.",
+    "Raw +0.149 N reflects equal plant-species weights; record-weighted rarefaction targets different selection probabilities.",
+    "When a draw loses a minimum of 2 N-scored host species and 5 other N-scored plant species on any sampled site-period, the pair is excluded and not an absence.",
+    "Early 2001–2010 and later 2011–2024 windows differ in length, geography and sampling circumstances.",
+    "Only six independent European islands / four countries; site pairs are non-independent in the same island.",
+    "All rarefaction simulations are post hoc measurement sensitivity studies; simulation quantiles are not uncertainty from biological independent experiments.",
+    "No proof of wastewater supply, soil N load, port introduction, butterfly host use or butterfly colonization."
+  ]
+}

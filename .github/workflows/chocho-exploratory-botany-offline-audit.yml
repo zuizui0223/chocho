@@ -1,0 +1,58 @@
+name: exploratory WPI79 botanical offline bias audit
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_port_botanical_offline_audit.py"
+      - ".github/workflows/chocho-exploratory-botany-offline-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-source-receipt-no-upstream-GBIF:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download exact successful WPI79/36-island GBIF source receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/wpi79_source
+          gh run download 41401009854 \
+            --name island-port-nonport-reselected-sites \
+            --dir /tmp/wpi79_source \
+            --repo zuizui0223/chocho
+          test -s /tmp/wpi79_source/matched_coast_control_sites.json
+          test -s /tmp/wpi79_source/matched_coast_botanical_full79_5km.json
+      - name: Independent island-unit and disjoint spatial-buffer quality audit
+        run: |
+          python scripts/exploratory_port_botanical_offline_audit.py \
+            --geometry /tmp/wpi79_source/matched_coast_control_sites.json \
+            --botany /tmp/wpi79_source/matched_coast_botanical_full79_5km.json \
+            --output /tmp/wpi79_offline_bias_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          v=json.loads(Path('/tmp/wpi79_offline_bias_audit.json').read_text())
+          assert v['source_sample_79_WPI_ports_36_islands']
+          for key,expect in [('early_2001_2010',0.04982158544928927),
+                             ('later_2011_2024',-0.2392758673942517)]:
+              r=v['periods'][key]
+              assert r['all_pairs']==79
+              assert r['all_islands']==36
+              assert abs(r['original_reported_threshold_only']['island_weighted_mean_port_minus_nonport_N']-expect)<1e-6,(key,r)
+              assert r['after_spatial_nonoverlap']['eligible_pairs']<=r['original_reported_threshold_only']['eligible_pairs']
+          print('WPI79_OFFLINE_AUDIT_SOURCE_AND_ARITHMETIC_PASS')
+          PY
+      - name: Archive source-only bias/overlap receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: wpi79-5km-botany-overlap-effort-island-audit
+          path: /tmp/wpi79_offline_bias_audit.json
+          retention-days: 30

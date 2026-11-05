@@ -1,0 +1,71 @@
+name: chocho 58502 HydroWASTE WWTPs versus globally indexed butterfly host ports
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_global_hydrowaste_ports.py"
+      - "tests/test_exploratory_global_hydrowaste_ports.py"
+      - ".github/workflows/chocho-global-hydrowaste-ports.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  global-wwtp-host-port:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    timeout-minutes: 32
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install independent spatial and regression tools
+        run: python -m pip install --quiet pytest numpy pandas scipy pycountry
+      - name: Verify frozen original host inventory, geodesic and fixed-effect estimator
+        run: python -m pytest -q tests/test_exploratory_global_hydrowaste_ports.py
+      - name: Retrieve HydroWASTE v1.0 58502 facilities, pin exact Git blob
+        run: |
+          mkdir -p /tmp/chocho_global_sewage
+          curl --fail --location --silent --show-error --retry 3 \
+            https://raw.githubusercontent.com/rfordatascience/tidytuesday/774fb8cc81e563d6d30efdcb7b48a38565e923cc/data/2022/2022-09-20/HydroWASTE_v10.csv \
+            -o /tmp/chocho_global_sewage/HydroWASTE_v10.csv
+          export INPUT_BLOB="$(git hash-object /tmp/chocho_global_sewage/HydroWASTE_v10.csv)"
+          test "$INPUT_BLOB" = "0506f873f6541c5f324478894a9731290d722bce"
+          test "$(wc -l < /tmp/chocho_global_sewage/HydroWASTE_v10.csv)" -ge 58503
+      - name: Source-locked full WWTP × WPI2019 port flora cross-sectional association
+        run: |
+          python -u scripts/exploratory_global_hydrowaste_ports.py \
+            --hydro /tmp/chocho_global_sewage/HydroWASTE_v10.csv \
+            --out /tmp/chocho_global_sewage/WWTP_global_port_host_models.json \
+            --port-table /tmp/chocho_global_sewage/WWTP_port_1596_features.csv
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path("/tmp/chocho_global_sewage/WWTP_global_port_host_models.json")
+          d=json.loads(p.read_text())
+          n=d["population"]
+          assert (n["WPI_ports_query_complete"],n["HydroWASTE_full_facility_count"])==(1596,58502)
+          assert n["predeclared_country_comparison"]["n_within_country_ports"]>=250
+          assert n["predeclared_country_comparison"]["countries_with_within_country_exposure_variation_and_5plus_ports"]>=10
+          assert len(d["country_stratified_models"])==7
+          m=d["country_stratified_models"]["ln_WWTP_25km"]["ln_alien_to_native"]
+          assert m["status"]=="ESTIMATED_EXPLORATORY_COUNTRY_FE"
+          assert math.isfinite(m["coefficient_per_log1p_exposure"])
+          print("GLOBAL_HYDROWASTE_AND_HOST_COUNTRY_FIXEDEFFECTS_VERIFIED",m)
+          PY
+      - name: Save full port-level source features and independent study receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: global-hydrowaste-58502-WPI1596-port-host-study
+          path: |
+            /tmp/chocho_global_sewage/WWTP_global_port_host_models.json
+            /tmp/chocho_global_sewage/WWTP_port_1596_features.csv
+          if-no-files-found: warn
+          retention-days: 30

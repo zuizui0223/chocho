@@ -1,0 +1,52 @@
+name: exploratory strict-disjoint WPI79 coastal geometry
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_port_nonport_coast.py"
+      - ".github/workflows/chocho-strict-disjoint-coast.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coastline-no-overlap:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --quiet pyshp shapely pyproj numpy pytest
+      - run: python -m pytest -q tests/test_exploratory_port_nonport_coast.py
+      - name: Source-locked WPI79 GSHHG candidate with 5km disjointness condition
+        run: |
+          python -u scripts/exploratory_port_nonport_coast.py \
+            --shore-candidates-per-island 768 \
+            --min-clearance-km 12 \
+            --avoid-overlap-radius-km 5 \
+            --out /tmp/strict_disjoint_wpi79_sites.json
+          python - <<'PY'
+          import json,statistics
+          from pathlib import Path
+          r=json.loads(Path('/tmp/strict_disjoint_wpi79_sites.json').read_text())
+          assert r['summary']['focal_ports']==79
+          assert r['summary']['focal_islands']==36
+          good=[x for x in r['rows'] if x['status']=='PAIRED']
+          assert all(x['five_km_radius_buffers_disjoint'] for x in good),good
+          assert all(x['sample_centres_separation_km']>=10.25-1e-7 for x in good),good
+          print('STRICT_DISJOINT_WPI79_GEOMETRY_GATE',json.dumps({
+            'candidate_ports':79,'candidate_islands':36,
+            'disjoint_matched_ports':len(good),
+            'disjoint_matched_islands':len({x['island_id'] for x in good}),
+            'unpaired_port_ids':[x['port_id'] for x in r['rows'] if x['status']!='PAIRED'],
+            'minimum_site_centre_separation_km':min(x['sample_centres_separation_km'] for x in good) if good else None
+          },sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: strict-disjoint-coastal-sites-wpi79
+          path: /tmp/strict_disjoint_wpi79_sites.json
+          retention-days: 30

@@ -1,0 +1,58 @@
+{
+  "schema": "chocho_global_port_host_nutrient_N_worldwide_GBIF_prevalence_partial_rank_v1",
+  "source_workflow_run": 41403516863,
+  "source_workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/41403516863",
+  "status": "EXPLORATORY_GBIF_GLOBAL_RECORD_PREVALENCE_CONTROL_ONLY_NOT_NITROGEN_CAUSATION",
+  "original_port_host_species": 687,
+  "german_ellenberg_N_exact": 183,
+  "accepted_GBIF_species_with_indexed_occurrences": 182,
+  "unmatched_accepted_GBIF_species": [
+    "Salix alba"
+  ],
+  "matched_genera": 126,
+  "period": "2001-2024",
+  "global_GBIF_record_count_median": 105644,
+  "global_GBIF_record_country_count_median": 56,
+  "rank_associations": {
+    "raw": {
+      "rho": 0.33848935098004657,
+      "genus_bootstrap_95": [
+        0.19683828981725762,
+        0.4692041013034496
+      ]
+    },
+    "controlling_global_occurrence_record_count": {
+      "partial_rho": 0.3343217828812828,
+      "genus_bootstrap_95": [
+        0.19592764610044627,
+        0.46440014651874784
+      ]
+    },
+    "controlling_global_observed_country_count": {
+      "partial_rho": 0.21358723823816145,
+      "genus_bootstrap_95": [
+        0.06771181003564584,
+        0.3485987552696208
+      ]
+    },
+    "controlling_both_global_record_count_and_observed_country_count": {
+      "partial_rho": 0.20971005225460093,
+      "genus_bootstrap_95": [
+        0.06489762446796277,
+        0.34838510080217716
+      ]
+    }
+  },
+  "genus_resampling_draws": 2999,
+  "interpretation": "Positive residual trait-to-port-record association after two imperfect worldwide GBIF reporting proxies; not evidence for sewage nutrient loading, local port enrichment, historical shipping, or butterfly colonization",
+  "warnings": [
+    "Global GBIF reports include some observations near indexed ports, so controls and response overlap",
+    "Country count and total GBIF records are reporting and geography proxies, not independent native ranges or total biological occupancy",
+    "Only 182/687 non-native candidate host plants score on Germany-centered nutrient indicator and map to exact accepted GBIF names",
+    "Ellenberg N is vegetation site fertility affinity, not direct measured tissue or soil nitrogen",
+    "No covariates for invasive planting, port effort, trade, country-specific sample biases, soil nutrient, urban land cover, or historical vessel arrivals",
+    "Port sites 2019 geodata used as retrospective sampling anchors, not proof of historic shipping",
+    "Genus bootstrap descriptive interval is not an experiment-based causal interval; within-genus N test remained inconclusive at p=0.38",
+    "Separate source-locked same-island 78-port 35-island analysis did not confirm robust local port nutrient-affinity enrichment"
+  ]
+}
