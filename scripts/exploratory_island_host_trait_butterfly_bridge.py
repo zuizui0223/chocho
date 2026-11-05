@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 import numpy as np
@@ -51,8 +52,27 @@ def read_and_check(edges_path:Path,crosswalk_path:Path,panel_path:Path,desc_path
     cross=pd.read_csv(crosswalk_path,dtype={"plant_name_id":str},keep_default_na=False)
     if not {"plant_name_id","taxon_key","lifecycle","growth_form"}.issubset(cross.columns):
         raise ValueError("WCVP×GIFT source crosswalk missing required columns")
+    # Source Q2 edges were exported by R as integer IDs, whereas the
+    # pyreadr/pandas GIFT crosswalk may export numeric R IDs with '.0'.
+    # Normalize only lossless integer-like WCVP keys; never fuzzy-match taxa.
+    def id_key(v):
+        t=str(v).strip()
+        if re.fullmatch(r"[0-9]+(?:\.0+)?",t):
+            return t.split(".")[0]
+        return t
+    # Python source code must use a single slash in the regex; verify first.
+    cross["plant_name_id"]=cross.plant_name_id.map(id_key)
+    edges["plant_id"]=edges.plant_id.map(id_key)
     if cross.plant_name_id.duplicated().any():
-        raise ValueError("Trait data one-to-many with accepted WCVP plant identity")
+        raise ValueError("Trait crosswalk has conflicting accepted WCVP IDs")
+    ids=set(edges.plant_id)
+    present=ids.intersection(set(cross.plant_name_id))
+    print("Q2_TO_GIFT_WCVP_ACCEPTED_ID_JOIN",
+          json.dumps({"q2_distinct_ids":len(ids),"matched_trait_crosswalk":len(present),
+                      "q2_sample":sorted(ids)[:12],
+                      "crosswalk_sample":cross.plant_name_id.head(12).to_list()},sort_keys=True),flush=True)
+    if len(present)<250:
+        raise ValueError("Too few exact accepted WCVP IDs crossmapped to Q2 introduced hosts; do not infer no known traits")
     cross["known_lifecycle"]=cross.lifecycle.isin(("annual","biennial","perennial"))
     cross["known_both"]=cross["known_lifecycle"]&cross.growth_form.isin(("herb","shrub","tree"))
     cross["annual"]=cross.lifecycle.eq("annual")
@@ -164,6 +184,8 @@ def analyze(expanded,candidates,panel,desc,*,B=1999):
     plants_total=len(candidates)
     known_both=int(candidates.known_both.sum())
     known_life=int(candidates.known_lifecycle.sum())
+    if known_life<100 or known_both<100:
+        raise ValueError(f"Insufficient trait-matched introduced host taxa: {known_life=} {known_both=}; source join/trait gate requires investigation")
     scored=species[species.disturbance_strong_binary.notna()].copy()
     if len(scored)<60:raise ValueError("Insufficient disturbance-trait butterflies")
     controls=["log_introduced_host_count","log_native","log_host_families",
