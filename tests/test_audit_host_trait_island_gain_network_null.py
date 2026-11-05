@@ -36,7 +36,7 @@ def test_plant_label_null_keeps_plant_traits_and_number_of_hosts_fixed():
         "log_introduced_host_count":np.log1p(4+i%7),
         "log_native":np.log1p(i+12),
         "log_host_families":np.log1p(2+i%5),
-        "distinct_both_trait_coverage":.80,
+        "distinct_both_trait_coverage":.75+.01*(i%4),
         "disturbance_strong_binary":float(i%2)
     } for i in range(n)])
     matrix=np.zeros((n,plants),dtype=float)
