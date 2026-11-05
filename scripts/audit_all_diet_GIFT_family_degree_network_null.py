@@ -60,7 +60,9 @@ def prepared(full_host,trait_cross,range_data,summary,*,scored_only=True,minimum
     c["annual_herb"]=(c.lifecycle.eq("annual")&c.growth_form.eq("herb")).astype(float)
     h=host.merge(c[["plant_id","annual_herb"]],on="plant_id",how="inner",validate="many_to_one")
     plant=h[["plant_id","annual_herb","family"]].drop_duplicates("plant_id")
-    r=pd.read_csv(range_data,dtype={"plant_id":str})
+    # run() passes the already source-verified regional counts as a DataFrame.
+    r=range_data.copy() if isinstance(range_data,pd.DataFrame) else pd.read_csv(range_data,dtype={"plant_id":str})
+    r["plant_id"]=r.plant_id.map(id_key)
     plant=plant.merge(r,on="plant_id",how="left",validate="one_to_one")
     for col in ("global_native_regions","global_introduced_regions","island_introduced_regions"):
         plant[col]=plant[col].fillna(0).astype(float)
