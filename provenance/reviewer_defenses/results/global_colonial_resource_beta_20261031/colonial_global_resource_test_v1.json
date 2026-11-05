@@ -1,0 +1,96 @@
+{
+  "status": "COLONIAL_LEGACY_REGION_PAIR_EXPLORATORY_ASSOCIATION_NOT_CAUSAL",
+  "source_info": {
+    "accepted_regions": 284,
+    "matched_region_pairs": 40171,
+    "source_butterfly_beta_pairs_sha256": "78341f2191f8295151358b67e91263f3b3e91c1ea0231526c96bf40bac3a5c05",
+    "source_colonial_crosswalk_sha256": "84838c4c5231af68b00e5d03b8efea82e3bb2e93e57f4f03b1b7fb6012b5cb6a",
+    "source_look_up_sha256": "85804d45b0a9ffb3620d13795015ca2a23d2ecd4c99e489f7d312906750d94d7",
+    "source_region_richness_sha256": "242f3495625694e6817c1de66018f401687f51f69a339f1aa45314fc6a58eb54",
+    "lock_sha256": "b7f8b8c6bce6784af5357186ebefaa5314de47de77c8a95cd91b3d5bc0163ae6",
+    "shared_any_empire_pairs": 6667,
+    "colonial_exposure_varies": 1.6635260882375258,
+    "paired_data_missingness_is_structural": true,
+    "eligible_regions_by_continent": {
+      "7": 68,
+      "3": 36,
+      "8": 33,
+      "1": 33,
+      "2": 65,
+      "4": 26,
+      "9": 5,
+      "6": 9,
+      "5": 9
+    }
+  },
+  "exposure_definition": "sum min(GB,ESP,PRT,NL area-weighted empire durations when each >=25y), log1p",
+  "controls": {
+    "plant": "region distance, same continent, temperature and aridity difference, native plant similarity, native plant richness min/max",
+    "resource": "plant controls plus native resource similarity",
+    "conditional_resource": "resource controls plus general-plant composition delta",
+    "negative_control": "geography, climate, prior plant similarity/richness"
+  },
+  "results": {
+    "colonial_vs_plant_beta": {
+      "observed_partial_rank_r": -0.0295952603003604,
+      "null_median": -0.023098562241607504,
+      "null_q025": -0.06259478675885059,
+      "null_q975": 0.016531796981202853,
+      "positive_direction_tail": 0.624,
+      "two_sided_abs_tail": 0.38,
+      "null_draws": 499
+    },
+    "colonial_vs_resource_beta": {
+      "observed_partial_rank_r": -0.022747122230422908,
+      "null_median": -0.02129985179299167,
+      "null_q025": -0.06611752484185086,
+      "null_q975": 0.023472949557830497,
+      "positive_direction_tail": 0.52,
+      "two_sided_abs_tail": 0.51,
+      "null_draws": 499
+    },
+    "colonial_vs_resource_beta_after_flora": {
+      "observed_partial_rank_r": -0.0034089660350616236,
+      "null_median": -0.007310512516135642,
+      "null_q025": -0.04745552248198384,
+      "null_q975": 0.03109132762743193,
+      "positive_direction_tail": 0.422,
+      "two_sided_abs_tail": 0.872,
+      "null_draws": 499
+    },
+    "native_resource_negative_control": {
+      "observed_partial_rank_r": -0.035607029036645255,
+      "null_median": -0.040141736913360024,
+      "null_q025": -0.07208153964435174,
+      "null_q975": -0.008441984980306821,
+      "positive_direction_tail": 0.416,
+      "two_sided_abs_tail": 0.586,
+      "null_draws": 499
+    }
+  },
+  "randomization": {
+    "seed": 31031,
+    "draws": 499,
+    "method": "shuffle full 4-empire region vectors at region nodes within official WGSRPD level1",
+    "continent_group_sizes": {
+      "7": 68,
+      "3": 36,
+      "8": 33,
+      "1": 33,
+      "2": 65,
+      "4": 26,
+      "9": 5,
+      "6": 9,
+      "5": 9
+    },
+    "movable_nodes": 284,
+    "not_exact_causal_p_values": true
+  },
+  "limits": [
+    "Region pairs share nodes, and within-continent exchangeability is not known to be exact.",
+    "Source histories may concern distinct colonial dates and do not represent observed bilateral shipping.",
+    "Native/current WCVP is a retrospective spatial comparison, not observed colonial-time change.",
+    "Lenzner GloNAF, WCVP and HOSTS have distinct observation and taxonomic biases.",
+    "Independent GBIF butterfly composition is a separate, not-yet-executed validation."
+  ]
+}

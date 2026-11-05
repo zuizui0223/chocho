@@ -1,0 +1,56 @@
+name: chocho colonial history against global butterfly-resource beta
+
+on:
+  push:
+    branches: [analysis/lenzner-colonial-region-source-20261031]
+    paths:
+      - ".github/workflows/chocho-colonial-resource-beta-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chocho-colonial-history-resource-beta-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  independent-history-association:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation environment and check for undefined code names
+        run: |
+          python -m pip install numpy pytest ruff
+          ruff check --select F821 scripts/analyze_colonial_legacy_resource_beta.py
+          python -m pytest -q tests/test_colonial_legacy_resource_beta_20261031.py
+      - name: Checkout current source-locked butterfly beta v1 data from first study branch
+        uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: analysis/global-colonial-host-resource-convergence-20261031
+          path: _external/butterfly_beta
+      - name: Rank-compare colonial sharing against flora and butterfly resource beta, continent-node null
+        run: |
+          python scripts/analyze_colonial_legacy_resource_beta.py \
+            --draws 499 \
+            --output provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/colonial_global_resource_test_v1.json
+      - name: Commit only aggregate source-derived association receipt
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/colonial_global_resource_test_v1.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Measure exploratory colony-history vs flora/consumer beta with region-node null [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"
+      - name: Drop temporary other-branch source checkout
+        if: always()
+        run: rm -rf _external
