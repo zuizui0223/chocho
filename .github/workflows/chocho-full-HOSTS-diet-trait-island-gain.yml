@@ -6,6 +6,7 @@ on:
       - analysis/island-port-trait-selection-gate-20261105
     paths:
       - "scripts/audit_full_HOSTS_GIFT_diet_island_resource.py"
+      - "scripts/build_239_HOSTS_WCVP_accepted_sidecar.py"
       - "tests/test_audit_full_HOSTS_GIFT_diet_island_resource.py"
       - ".github/workflows/chocho-full-HOSTS-diet-trait-island-gain.yml"
   workflow_dispatch:
@@ -27,12 +28,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: "release"
       - name: Validate butterfly full-host phenotype and missing/zero gain handling
         run: |
-          python -m pip install --quiet pytest numpy pandas
+          python -m pip install --quiet pytest numpy pandas pyreadr
           python -m pytest -q tests/test_audit_full_HOSTS_GIFT_diet_island_resource.py
       - name: Retrieve original exact 2024 WCVP v13 names/distribution, GIFT 3.2 and fixed Q2 resource edges
         env:
@@ -40,9 +38,7 @@ jobs:
         run: |
           mkdir -p /tmp/dietsource/wcvp/data /tmp/dietsource/q2 /tmp/dietsource/gift /tmp/dietsource/native /tmp/dietsource/contemporary
           curl -fLsS --retry 4 --max-time 240 https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_names.rda -o /tmp/dietsource/wcvp/data/wcvp_names.rda
-          curl -fLsS --retry 4 --max-time 240 https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_distributions.rda -o /tmp/dietsource/wcvp/data/wcvp_distributions.rda
           test "$(git hash-object /tmp/dietsource/wcvp/data/wcvp_names.rda)" = "fa567a7e0e5c0962207b79dee7a62c64e915421a"
-          test "$(git hash-object /tmp/dietsource/wcvp/data/wcvp_distributions.rda)" = "60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a"
           gh run download 41946522894 --name WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical --dir /tmp/dietsource/gift --repo zuizui0223/chocho
           gh run download 41398149093 --name chocho-q2-introduced-host-native-source-v02-CNY --dir /tmp/dietsource/q2 --repo zuizui0223/chocho
           find /tmp/dietsource/q2 -type f -name introduced_host_source_edges.csv > /tmp/dietsource/q2_edges_path
@@ -53,11 +49,16 @@ jobs:
           repository: globalbioticinteractions/HOSTS
           ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
           path: _external/HOSTS
-      - name: Rebuild full 239-butterfly original WCVP×HOSTS accepted taxon diet independently of island gains
+      - name: Stream pinned HOSTS for 239 target butterflies and match accepted WCVP names without selecting gains
         run: |
-          Rscript scripts/build_wcvp_hosts_null_sidecars.R /tmp/dietsource/wcvp _external/HOSTS /tmp/dietsource/native /tmp/dietsource/contemporary
+          python -u scripts/build_239_HOSTS_WCVP_accepted_sidecar.py \
+            --hosts _external/HOSTS/resource.csv \
+            --wcvp-names /tmp/dietsource/wcvp/data/wcvp_names.rda \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out /tmp/dietsource/native/insect_host_accepted.csv \
+            --audit /tmp/dietsource/native/full_239_HOSTS_source_audit.json
           test -s /tmp/dietsource/native/insect_host_accepted.csv
-          test -s /tmp/dietsource/native/null_sidecar_counts.tsv
+          test -s /tmp/dietsource/native/full_239_HOSTS_source_audit.json
       - name: Test original full diet plant trait index against all butterfly island gain counts including zero-gain taxa
         run: |
           python -u scripts/audit_full_HOSTS_GIFT_diet_island_resource.py \
@@ -89,6 +90,6 @@ jobs:
           path: |
             /tmp/dietsource/full_HOSTS_GIFT_island_and_global_gain_models.json
             /tmp/dietsource/full_HOSTS_GIFT_239butterfly_diet_traits.csv
-            /tmp/dietsource/native/null_sidecar_counts.tsv
+            /tmp/dietsource/native/full_239_HOSTS_source_audit.json
           if-no-files-found: warn
           retention-days: 30
