@@ -1,0 +1,186 @@
+{
+  "schema": "chocho_island_port_JBI_v01_source_claim_ledger",
+  "status": "DRAFT_PENDING_COAUTHOR_AND_DUPLICATE_PUBLICATION_REVIEW",
+  "date": "2026-11-05",
+  "original_branch": "analysis/island-mainland-host-opportunity-20261102",
+  "approach": "Island botanic resource geography and WPI port-associated total alien flora, not ship-transport causation",
+  "analytical_grains": {
+    "resource_Q1": "239 butterfly × WGSRPD3 region; 126 island, 237 mainland and six mixed excluded",
+    "port_flora": "123 active island WGSRPD3 regions; 98 with all-plant GBIF effort measures",
+    "island_pairs": "51 island landmasses; 1275 correlated pairwise comparisons",
+    "historical": "Sparse and biased archival host and butterfly indexing; not actual first arrival"
+  },
+  "claims": [
+    {
+      "id": "island_resource_expansion",
+      "status": "confirmed",
+      "source": "results/island-mainland-resource-q1/island_mainland_summary.json",
+      "population": {
+        "butterflies": 239,
+        "island_regions": 126,
+        "island_active": 123,
+        "mainland_regions": 237,
+        "mainland_active": 236
+      },
+      "island": {
+        "native": 4829,
+        "contemporary": 10570,
+        "added": 5741,
+        "pct_added_over_native": 118.88589770138745
+      },
+      "mainland": {
+        "native": 21215,
+        "contemporary": 29901,
+        "added": 8686,
+        "pct_added_over_native": 40.942729201037004
+      },
+      "limitation": "Potential butterfly × region HOSTS–WCVP occurrence opportunity; not actual occupancy"
+    },
+    {
+      "id": "area_adjusted_island_added_share",
+      "status": "descriptive association",
+      "source": "results/island-mainland-resource-area-v02/area_adjusted_summary.json",
+      "weighted_island_minus_mainland_added_share": 0.10702159757115921,
+      "permutation_p_descriptive": 0.0002,
+      "confounding": "Only overlap in Level1×area strata; spatial histories not independent"
+    },
+    {
+      "id": "port_total_introduced_flora",
+      "status": "confirmed descriptive association",
+      "source": "results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json",
+      "model": "all_flora_with_gbif_total_effort",
+      "n": 98,
+      "beta": 0.24447852550694815,
+      "permutation_p_descriptive": 0.0012,
+      "exposure": "log2(1+indexed WPI ports)",
+      "outcome": "log(1+introduced WCVP vascular taxa)",
+      "controls": [
+        "ln geographical area",
+        "WCVP native flora",
+        "WGSRPD Level1",
+        "ln1p GBIF all plant indexing"
+      ]
+    },
+    {
+      "id": "port_distinct_introduced_host_taxa",
+      "status": "confirmed descriptive association",
+      "source": "results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json",
+      "model": "host_taxa_with_effort",
+      "n": 98,
+      "beta": 0.16390595789001258,
+      "permutation_p_descriptive": 0.011,
+      "exposure": "log2(1+indexed WPI ports)",
+      "outcome": "log(1+distinct introduced plant taxa used by fixed 239 butterfly HOSTS network)",
+      "controls": [
+        "area",
+        "native host resource baseline",
+        "Level1",
+        "ln1p GBIF all-plant indexing"
+      ]
+    },
+    {
+      "id": "host_not_enriched_above_all_introduced_flora",
+      "status": "no positive residual",
+      "source": "results/three-gate-port-flora-host-conversion/island_port_flora_host_conversion_audit.json",
+      "model": "M1eff_port_host_taxa_given_alien_flora",
+      "n": 98,
+      "beta": -0.041526655753407464,
+      "permutation_p_descriptive": 0.093,
+      "interpretation": "Conditional association; no positive residual; not causal mediation"
+    },
+    {
+      "id": "host_flora_counts_source",
+      "status": "source crosscheck",
+      "source": "results/three-gate-port-introduced-host-taxa/introduced_host_taxon_port_association_audit.json",
+      "n_region": 123,
+      "distinct_introduced_plant_region_pairs": 5611,
+      "resource_cells": 5741,
+      "global_distinct_plants": 564,
+      "caveat": "Host identity panel restriction, not full alien flora"
+    },
+    {
+      "id": "island_host_butterfly_jaccard",
+      "status": "confirmed observational pairwise correspondence",
+      "source": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_audit.json",
+      "n_landmasses": 51,
+      "dependent_pairs": 1275,
+      "rho_later": 0.29980576483377025,
+      "rho_earlier": 0.4178255833828514,
+      "partial_rank_later_after_distance_earlier": 0.2153535842700987,
+      "caveat": "No pair-independent significance, no plant-before-butterfly historical time constraint"
+    },
+    {
+      "id": "disturbance_trait",
+      "status": "secondary exploratory",
+      "external_branch": "analysis/disturbance-filter-macro-20261024",
+      "source": "provenance/reviewer_defenses/results/butterfly_disturbance_resource_gain_20261024.json",
+      "n": 183,
+      "beta": 0.1466355951975994,
+      "bootstrap95": [
+        0.01109026451305352,
+        0.2868202110023301
+      ],
+      "adequate_subset": {
+        "n": 163,
+        "beta": 0.062292035017298256,
+        "bootstrap95": [
+          -0.06920775641470996,
+          0.19141259059701074
+        ]
+      },
+      "caveat": "Trait taxonomy robustness crosses zero"
+    },
+    {
+      "id": "last_gate_insufficient",
+      "status": "underpowered",
+      "source": "results/three-gate-integrated-targeted-v04/three_gate_enrichment_audit.json",
+      "documented_all_proxy_cases": 12,
+      "butterflies": 2,
+      "WGSRPD3_cells": 8,
+      "caveat": "Older audit had 11 documentary cases. Cases not independent biological events or identification of last condition"
+    },
+    {
+      "id": "wing_port_substitution_insufficient",
+      "status": "underpowered",
+      "source": "results/q3-wing-port-index-screen-v02/wing_port_observation_screen_audit.json",
+      "observed_index_cells": 13,
+      "caveat": "Insufficient wing×port interaction; index record not colonisation"
+    },
+    {
+      "id": "host_first_index_year_is_recording_biased",
+      "status": "confirmed observation bias",
+      "source": "results/q4-host-year-botanical-effort/host_first_record_botanical_effort_audit.json",
+      "regions": 78,
+      "change_year_per_log1p_effort": -8.720482664116073,
+      "descriptive_permutation_p": 0.0004,
+      "caveat": "First GBIF record year not local plant introduction date"
+    },
+    {
+      "id": "global_GEB_shared_source",
+      "status": "shared input not a novel second result",
+      "source": "main:manuscript/butterfly_specialization_ecology_v0.2.md",
+      "butterflies": 239,
+      "global_native": 26530,
+      "global_contemporary": 41083,
+      "global_increase_pct": 54.9,
+      "caveat": "Overlapping 239-butterfly reconstruction requires editor and coauthor disclosure"
+    }
+  ],
+  "submission_gates": {
+    "no_submission_without": [
+      "Coauthor approval",
+      "full bibliography verification",
+      "WCVP HOSTS WGSRPD WPI frozen source access",
+      "overlap disclosure with GEB",
+      "figure QA and data availability audit"
+    ],
+    "not_demonstrated": [
+      "Ship-mediated host introduction",
+      "butterfly breeding/establishment on islands",
+      "actual host plant increase",
+      "port-specific nutrient flux",
+      "timing of last ecological gate",
+      "port substituting for flight capacity"
+    ]
+  }
+}
