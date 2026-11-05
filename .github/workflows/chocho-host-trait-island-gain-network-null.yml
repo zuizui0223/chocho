@@ -1,0 +1,72 @@
+name: chocho introduced host life history island-gain network permutation null
+
+on:
+  push:
+    branches:
+      - analysis/island-port-trait-selection-gate-20261105
+    paths:
+      - "scripts/audit_host_trait_island_gain_network_null.py"
+      - "tests/test_audit_host_trait_island_gain_network_null.py"
+      - ".github/workflows/chocho-host-trait-island-gain-network-null.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-locked-island-and-global-gains:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Test network-aware null and distinct island-gain response
+        run: |
+          python -m pip install --quiet pytest pandas numpy
+          python -m pytest -q tests/test_audit_host_trait_island_gain_network_null.py
+      - name: Recover source-pinned plant network and taxonomic matched traits
+        env:
+          GH_${{ github.token }}: TOKEN
+        run: |
+          mkdir -p /tmp/island_host_null/q2 /tmp/island_host_null/gift
+          gh run download 41398149093 --name chocho-q2-introduced-host-native-source-v02-CNY --dir /tmp/island_host_null/q2 --repo zuizui0223/chocho
+          gh run download 41946522894 --name WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical --dir /tmp/island_host_null/gift --repo zuizui0223/chocho
+          test "$(find /tmp/island_host_null/q2 -type f -name introduced_host_source_edges.csv | wc -l)" -eq 1
+          find /tmp/island_host_null/q2 -type f -name introduced_host_source_edges.csv > /tmp/island_host_null/edges_path
+          test -s /tmp/island_host_null/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv
+      - name: Distinguish island only gain from global gain and preserve plant-network null
+        run: |
+          python -u scripts/audit_host_trait_island_gain_network_null.py \
+            --edges "$(cat /tmp/island_host_null/edges_path)" \
+            --crosswalk /tmp/island_host_null/gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv \
+            --panel data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --descriptors data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --draws 799 \
+            --out /tmp/island_host_null/island_only_global_gain_network_trait_permutations.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/island_host_null/island_only_global_gain_network_trait_permutations.json').read_text())
+          assert d['source_Q2_GIFT_bridge_run']==41973320821
+          assert set(d['cohorts'])=={'primary','adequate','tight'}
+          for key,v in d['cohorts'].items():
+              assert v['n_species']>=40
+              assert set(v['structural_null'])=={'log1p_added_island_cells','log_global_gain'}
+              assert v['structural_null']['log1p_added_island_cells']['plant_trait_label_null']['permutations']==799
+          print('WCVP_GIFT_ISLAND_ONLY_GAIN_NETWORK_NEGATIVE_CONTROL_VERIFIED')
+          PY
+      - name: Archive ecological null source evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island-Q2-host-annual-herb-plant-degree-network-null
+          path: /tmp/island_host_null/island_only_global_gain_network_trait_permutations.json
+          if-no-files-found: warn
+          retention-days: 30
