@@ -140,8 +140,10 @@ def read_wcvp(npath,dpath):
                     ["plant_name_id","taxon_name"]].copy()
     names["plant_name_id"]=names.plant_name_id.astype(str)
     names["taxon_key"]=names.taxon_name.map(as_bins)
-    names=names[names.taxon_key.notna()]
-    if len(names)<200000:raise ValueError("Unexpected WCVP accepted canonical species size")
+    # Preserve every accepted WCVP species in the ecological denominator.
+    # An unusual name or a missing GIFT match becomes an UNKNOWN trait,
+    # never a deleted plant or an assumed non-annual / non-herb species.
+    if len(names)<200000:raise ValueError("Unexpected WCVP accepted species size")
     if names.plant_name_id.duplicated().any():
         raise ValueError("WCVP accepted IDs unexpectedly ambiguous")
     return names,distr
@@ -196,7 +198,7 @@ def summarize(data,geography,effort,*,coverage_threshold=.2,min_scored=20):
                 f"{label}_both_trait_coverage":float(known_herb.sum()/n) if n else None
             })
         if stats["introduced_N"]!=int(r["introduced"]) or stats["native_N"]!=int(r["native"]):
-            raise ValueError("Complete pinned WCVP source island counts drift for "+code)
+            raise ValueError("Complete pinned WCVP source island counts drift for "+code+f" (introduced {stats['introduced_N']} expected {r['introduced']}; native {stats['native_N']} expected {r['native']})")
         if code in ef:
             stats["GBIF_allplant_indexed"]=float(ef[code]["gbif_all_plant_indexed_records"])
         else:stats["GBIF_allplant_indexed"]=None
