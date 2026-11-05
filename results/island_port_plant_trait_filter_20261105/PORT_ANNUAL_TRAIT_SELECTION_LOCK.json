@@ -1,0 +1,137 @@
+{
+  "schema": "chocho_island_port_trait_filter_source_lock_20261105_v1",
+  "status": "ABSOLUTE_INTRODUCED_ANNUAL_AND_ANNUAL_HERB_POSITIVE_PORT_FILTER_NOT_SUPPORTED",
+  "source": {
+    "WCVP_v13_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "GIFT_version": "3.2",
+    "GIFT_lifecycle": "2.1.1",
+    "GIFT_growth_form": "1.2.1",
+    "GIFT_min_agreement": 0.66,
+    "original_total_WCVP_accepted_species": 360064,
+    "plant_island_records": 224021,
+    "source_GIFT_pages": 32,
+    "primary_action": 41946522894,
+    "bias_and_sensitivity_action": 41947241042
+  },
+  "primary_n": {
+    "all_strict_island_WGSRPD3": 126,
+    "botanical_effort_complete": 98,
+    "annual_trait_support": 90,
+    "annual_herb_support": 87
+  },
+  "models": [
+    {
+      "response": "introduced annual fraction",
+      "n": 90,
+      "beta": -0.009387958325317266,
+      "p": 0.4085,
+      "BH_q": 0.4595
+    },
+    {
+      "response": "native annual fraction",
+      "n": 90,
+      "beta": -0.025303759360615095,
+      "p": 0.0285,
+      "BH_q": 0.057
+    },
+    {
+      "response": "introduced minus native annual",
+      "n": 90,
+      "beta": 0.01591580103529782,
+      "p": 0.0645,
+      "BH_q": 0.09675
+    },
+    {
+      "response": "introduced annual herb fraction",
+      "n": 87,
+      "beta": -0.010852244874817254,
+      "p": 0.4595,
+      "BH_q": 0.4595
+    },
+    {
+      "response": "native annual herb fraction",
+      "n": 87,
+      "beta": -0.0348986211152418,
+      "p": 0.0085,
+      "BH_q": 0.051
+    },
+    {
+      "response": "introduced minus native annual herb",
+      "n": 87,
+      "beta": 0.024046376240424543,
+      "p": 0.019,
+      "BH_q": 0.057
+    }
+  ],
+  "trait_coverage_median_in_98": {
+    "introduced_lifecycle": 0.8644384269583377,
+    "native_lifecycle": 0.6014968487394958,
+    "introduced_lifecycle_growth": 0.788089383085641,
+    "native_lifecycle_growth": 0.563091432225064
+  },
+  "annual_herb_coverage_sensitivity": [
+    {
+      "min_trait_known": 20,
+      "min_coverage": 0.2,
+      "n": 87,
+      "introduced_beta": -0.010852244874817254,
+      "relative_beta": 0.024046376240424543,
+      "relative_p": 0.015
+    },
+    {
+      "min_trait_known": 20,
+      "min_coverage": 0.3,
+      "n": 83,
+      "introduced_beta": -0.004125243952817109,
+      "relative_beta": 0.028544117617730368,
+      "relative_p": 0.02
+    },
+    {
+      "min_trait_known": 20,
+      "min_coverage": 0.4,
+      "n": 66,
+      "introduced_beta": 0.0014680376929530948,
+      "relative_beta": 0.03657625352305948,
+      "relative_p": 0.004
+    },
+    {
+      "min_trait_known": 40,
+      "min_coverage": 0.2,
+      "n": 77,
+      "introduced_beta": -0.005919394826534066,
+      "relative_beta": 0.022155166041587276,
+      "relative_p": 0.056
+    },
+    {
+      "min_trait_known": 40,
+      "min_coverage": 0.3,
+      "n": 73,
+      "introduced_beta": -0.000977300336955089,
+      "relative_beta": 0.023673041342962983,
+      "relative_p": 0.102
+    },
+    {
+      "min_trait_known": 30,
+      "min_coverage": 0.5,
+      "n": 45,
+      "introduced_beta": 0.002535345926971428,
+      "relative_beta": -0.003248703528577228,
+      "relative_p": 0.609
+    }
+  ],
+  "prior_positive_results_kept": [
+    "WGSRPD3 island resource opportunity +118.9% vs mainland +40.9% (239 butterfly panel)",
+    "port count vs all introduced flora beta +.2445 p=.0012 in GBIF effort 98 islands",
+    "port count vs distinct introduced larval host taxa beta +.1639 p=.011 n=98",
+    "conditional host port beta -.0415 p=.093 n=98, no positive additional host-specific association",
+    "host butterfly island community correlation rho +.300, 51 island landmasses"
+  ],
+  "interpretation": [
+    "Absolute introduced-plant annual fraction not positively associated with modern indexed port number.",
+    "Positive introduced-minus-native annual-herb difference largely reflects decreasing native trait fraction and is sensitive to trait coverage.",
+    "None of six primary posthoc permutation p-values survive BH q<.05, minimum q .051.",
+    "GIFT life cycle and growth form are not direct nitrophily, plant nitrogen content or measured ruderal abundance.",
+    "Observed contemporary port and WCVP introduced status cannot identify shipping causal introduction or butterfly population growth."
+  ],
+  "next_decision": "Do not upgrade the proposed port-to-ruderal-N-plant-to-butterfly mechanism into the island-port JBI manuscript without independent plant nutrient habitat affinity or observed local plant assemblages."
+}
