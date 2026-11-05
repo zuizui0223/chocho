@@ -1,0 +1,79 @@
+name: chocho island WCVP-GIFT annual-herb trait selection study
+
+on:
+  push:
+    branches:
+      - analysis/island-port-trait-selection-gate-20261105
+    paths:
+      - "scripts/exploratory_island_annual_trait_selection.py"
+      - "tests/test_exploratory_island_annual_trait_selection.py"
+      - ".github/workflows/chocho-island-port-annual-trait.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-locked-life-cycle-flora-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install WCVP RData parser and noncausal island regression requirements
+        run: |
+          python -m pip install --quiet pyreadr pandas numpy scipy pytest
+          python -m pytest -q tests/test_exploratory_island_annual_trait_selection.py
+      - name: Download original Kew WCVP v13 snapshot at pinned rWCVPdata commit
+        run: |
+          mkdir -p /tmp/wcvp_gift
+          curl -fLsS --retry 4 --retry-delay 4 --max-time 240 \
+            https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_names.rda \
+            -o /tmp/wcvp_gift/wcvp_names.rda
+          curl -fLsS --retry 4 --retry-delay 4 --max-time 240 \
+            https://raw.githubusercontent.com/matildabrown/rWCVPdata/65bed76bae9d644ccb6ad200c05f9f5071d89e05/data/wcvp_distributions.rda \
+            -o /tmp/wcvp_gift/wcvp_distributions.rda
+          test "$(git hash-object /tmp/wcvp_gift/wcvp_names.rda)" = "fa567a7e0e5c0962207b79dee7a62c64e915421a"
+          test "$(git hash-object /tmp/wcvp_gift/wcvp_distributions.rda)" = "60a2fa8e6c81fda225a8ba26bec7b5b3bf5bc18a"
+          echo 'PINNED_WCVP_V13_RDATA_GIT_BLOBS_MATCH'
+      - name: Exact accepted WCVP species to GIFT 3.2 lifecycle and herb, and 126-region port-structure tests
+        run: |
+          python -u scripts/exploratory_island_annual_trait_selection.py \
+            --wcvp-names /tmp/wcvp_gift/wcvp_names.rda \
+            --wcvp-distributions /tmp/wcvp_gift/wcvp_distributions.rda \
+            --q1-audit results/island-mainland-resource-q1/island_mainland_summary.json \
+            --island-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --botanical-effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --map-out /tmp/wcvp_gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv \
+            --out /tmp/wcvp_gift/GIFT3p2_WCVP_island_port_flora_trait_selection.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/wcvp_gift/GIFT3p2_WCVP_island_port_flora_trait_selection.json').read_text())
+          assert len(j['WCVP_island_trait_status'])==126
+          assert j['model_results']['n_regions']==126
+          assert j['model_results']['source_regions_with_botanical_effort']==98
+          assert j['crosswalk_accepted_WCVP_species_with_any_trait']>=20000
+          for value in j['model_results']['models'].values():
+              assert value['cohort_n']<=98
+              assert value['introduced_trait_selection']['status'] in (
+                  'EXPLORATORY_REGION_LEVEL_TRAIT_ASSOCIATION',
+                  'INSUFFICIENT_EXCHANGEABLE_GLOBAL_TRAIT_SUPPORT','NO_EXCHANGEABLE_PORTS')
+          print('WCVP_GIFT_LIFECYCLE_PORT_ISLAND_TRAIT_QA_PASS')
+          PY
+      - name: Save source SHA/provenance, island-level observations and trait crosswalk
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WCVP13-GIFT32-annual-herb-island-port-flora-trait-empirical
+          path: |
+            /tmp/wcvp_gift/GIFT3p2_WCVP_island_port_flora_trait_selection.json
+            /tmp/wcvp_gift/GIFT3p2_WCVP_v13_exact_taxon_annual_herb_crosswalk.csv
+          if-no-files-found: warn
+          retention-days: 30
