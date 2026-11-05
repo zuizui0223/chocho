@@ -33,7 +33,7 @@ jobs:
           python -m pytest -q tests/test_audit_host_trait_island_gain_network_null.py
       - name: Recover source-pinned plant network and taxonomic matched traits
         env:
-          GH_${{ github.token }}: TOKEN
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p /tmp/island_host_null/q2 /tmp/island_host_null/gift
           gh run download 41398149093 --name chocho-q2-introduced-host-native-source-v02-CNY --dir /tmp/island_host_null/q2 --repo zuizui0223/chocho
