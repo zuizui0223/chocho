@@ -1,0 +1,51 @@
+name: chocho WorldBank commercial AIS 2015–2021 real overview raster decode probe
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/extract_commercial_AIS_overview_range.py"
+      - ".github/workflows/chocho-island51-commercial-AIS-real-overview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  official-WorldBank-AIS-overview-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install geospatial TIFF overview parser
+        run: python -m pip install --quiet rasterio numpy
+      - name: Byte-range decompress only the 124MB compressed official AIS overview and CRC-validate 3.3GB source
+        run: |
+          mkdir -p /tmp/ais51_original
+          python -u scripts/extract_commercial_AIS_overview_range.py \
+            --overview /tmp/ais51_original/ShipDensity_Commercial1.tif.ovr \
+            --out /tmp/ais51_original/WorldBank_AIS_commercial_real_overview_schema.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('/tmp/ais51_original/WorldBank_AIS_commercial_real_overview_schema.json').read_text())
+          assert x['status']=="ORIGINAL_COMMERCIAL_AIS_OVERVIEW_GDAL_PIXEL_VALUES_READ_AND_CRC_VERIFIED"
+          assert x['compressed_member']['source_uncompressed_bytes']==3290970915
+          assert x['raster_overview']['count']>=1
+          print('WORLD_BANK_AIS_REAL_OVERVIEW_RASTER_CRC_SOURCE_VERIFIED')
+          PY
+      - name: Archive provenance metadata only, not huge original raster
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-original-WorldBank-commercial-AIS-GDAL-overview-schema
+          path: /tmp/ais51_original/WorldBank_AIS_commercial_real_overview_schema.json
+          if-no-files-found: warn
+          retention-days: 30
