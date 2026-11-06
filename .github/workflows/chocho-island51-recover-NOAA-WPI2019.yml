@@ -1,0 +1,45 @@
+name: chocho recover NOAA source WPI2019 all port WGS84 coordinates
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/probe_recover_NOAA_WPI2019.py"
+      - ".github/workflows/chocho-island51-recover-NOAA-WPI2019.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  NOAA-ArcGIS-source-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate historical published original NOAA WPI feature count and WGS84 coordinates
+        run: |
+          mkdir -p /tmp/wpi2019_orig
+          python -u scripts/probe_recover_NOAA_WPI2019.py \
+            --out-geojson /tmp/wpi2019_orig/ports_2019_source.geojson \
+            --out-receipt /tmp/wpi2019_orig/noaa_WPI2019_source_receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('/tmp/wpi2019_orig/noaa_WPI2019_source_receipt.json').read_text())
+          assert a['live_port_record_count']==3630
+          assert a['source_recovered_points']==3630
+          print('ORIGINAL_NOAA_WPI_PORT_COUNT_AND_WGS84_VERIFIED',a['port_id_minmax'])
+          PY
+      - name: Archive real WPI point source from original NOAA NGA service
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-recovered-2019-NGA-WPI3630-NOAA-coordinates
+          path: /tmp/wpi2019_orig/
+          if-no-files-found: warn
+          retention-days: 30

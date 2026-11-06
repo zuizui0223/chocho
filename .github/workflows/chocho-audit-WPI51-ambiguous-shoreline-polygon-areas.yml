@@ -1,0 +1,76 @@
+name: chocho explain three WPI island coordinate mismatches using original GSHHG polygon areas
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - ".github/workflows/chocho-audit-WPI51-ambiguous-shoreline-polygon-areas.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose-original-coastline-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Rehydrate 2019 WPI × 5km GSHHG source ambiguity receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/coastdiag /tmp/coastdiag/archive
+          gh run download 42172724063 \
+            --name WPI2019-GSHHG237-51-island-source-geolocation-check \
+            --dir /tmp/coastdiag/archive --repo zuizui0223/chocho
+          test -s /tmp/coastdiag/archive/WPI2019_GSHHG_51island_geometry_source_audit.json
+      - name: Load exact GSHHG high-resolution L1 area values for competing port-to-island candidates
+        run: |
+          python -m pip install --quiet geopandas pyogrio shapely numpy pandas
+          curl -fLsS --retry 3 --max-time 420 \
+            'https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip' \
+            -o /tmp/coastdiag/gshhg-shp-2.3.7.zip
+          echo '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  /tmp/coastdiag/gshhg-shp-2.3.7.zip' | sha256sum -c -
+          python - <<'PY'
+          import geopandas as gpd, pandas as pd, json
+          from pathlib import Path
+          a=Path('/tmp/coastdiag')
+          d=json.loads((a/'archive/WPI2019_GSHHG_51island_geometry_source_audit.json').read_text())
+          g=gpd.read_file('zip:///tmp/coastdiag/gshhg-shp-2.3.7.zip!GSHHS_shp/h/GSHHS_h_L1.shp')
+          assert 'area' in g.columns and 'sibling_id' in g.columns
+          g['sid']=g.sibling_id.astype(str)
+          sizes=g.groupby('sid').area.agg(['max','sum','count'])
+          expected=d['count_mismatch_summary']
+          assert set(expected)=={'12','26','276'}
+          result={'schema':'chocho_GSHHG237_WPI2019_51island_3port_geometric_ambiguity_v1',
+                  'GSHHG_polygon_count':len(g),'source_area_field_units':'GSHHG native area column, suspected km2 (source as-provided)',
+                  'area_51_source_islands':{x:{k:float(v) for k,v in sizes.loc[x].items()} for x in d['original_51_island_ids']},
+                  'three_mismatch_eligible_landmass_ids':list(expected),
+                  'ambiguous_target_candidates':{},'original_ambiguity_count':len(d['ambiguous_source_island_port_candidates'])}
+          for src in expected:
+              candidates=[x for x in d['ambiguous_source_island_port_candidates'] if src in x['eligible_source51_landmass_overlaps']]
+              report=[]
+              for item in candidates:
+                  size={sid:dict(zip(('max','sum','count'),map(float,sizes.loc[sid]))) for sid in item['all_sibling_landmass_overlaps'] if sid in sizes.index}
+                  report.append({'port_id':item['original_2019_WPI_port_id'],
+                      'lonlat':item['original_coordinates_lonlat'],
+                      'overlapping_GSHHG_sibling_areas':size,
+                      'source_target_id':src})
+              result['ambiguous_target_candidates'][src]=report
+          (a/'geometric_ambiguity_area_audit.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print('ORIGINAL_3_ISLAND_GSHHG_PORT_AMBIGUITY_AREAS',json.dumps({
+              'three_target_island_areas':{k:result['area_51_source_islands'][k] for k in expected},
+              'ambiguous_ports':result['ambiguous_target_candidates']},ensure_ascii=False)[:20000],flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WPI2019-GSHHG-original-3island-ambiguity-areas
+          path: /tmp/coastdiag/geometric_ambiguity_area_audit.json
+          if-no-files-found: warn
+          retention-days: 30

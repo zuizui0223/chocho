@@ -1,0 +1,64 @@
+name: chocho island51 original port geolocation requirements and World Bank AIS source HEAD probe
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/reconstruct_island51_verified_port_coordinates.py"
+      - "tests/test_reconstruct_island51_verified_port_coordinates.py"
+      - ".github/workflows/chocho-island51-ais-source-coordinates-gate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  real-raster-source-and-georeferencing-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original coordinate recovery math, antimeridian and missing-data safeguards
+        run: |
+          python -m pip install --quiet pytest
+          python -m pytest -q tests/test_reconstruct_island51_verified_port_coordinates.py
+      - name: Probe official World Bank commercial AIS archive via HEAD only without downloading 458MB dataset
+        run: |
+          mkdir -p /tmp/ais_source
+          python - <<'PY'
+          import urllib.request,urllib.error,json,datetime
+          from pathlib import Path
+          link='https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip'
+          x={'dataset':'World Bank / IMF Global Shipping Traffic Density - Commercial',
+             'catalogue':'https://datacatalog.worldbank.org/search/dataset/0037580/global-shipping-traffic-density',
+             'official_commercial_archive_url':link,
+             'observed_dates':'2015-01 to 2021-02',
+             'original_raster_resolution_degrees':.005,
+             'public_catalogue_licence':'CC BY 4.0',
+             'ships':['commercial'],
+             'metadata_only':True,
+             'actual_458MB_archive_downloaded':False,
+             'island51_absolute_geolocations_recovered_in_this_workflow':False}
+          try:
+              req=urllib.request.Request(link,method='HEAD',headers={
+                  'User-Agent':'chocho-island51-AIS-readiness-source-audit/1.0'})
+              with urllib.request.urlopen(req,timeout=22) as f:
+                  x.update({'head_http_status':f.status,
+                      'head_content_type':f.headers.get('Content-Type'),
+                      'head_content_length_bytes':f.headers.get('Content-Length'),
+                      'head_accept_ranges':f.headers.get('Accept-Ranges'),
+                      'head_last_modified':f.headers.get('Last-Modified')})
+          except Exception as e:
+              x['head_error']=type(e).__name__+': '+str(e)[:300]
+          Path('/tmp/ais_source/worldbank_commercial_ais_HEAD_gate.json').write_text(json.dumps(x,indent=2)+'\n')
+          print('WORLD_BANK_IMF_COMMERCIAL_AIS_OFFICIAL_HEAD_PROBE',json.dumps(x,sort_keys=True),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: island51-commercial-AIS-official-availability-HEAD
+          path: /tmp/ais_source/worldbank_commercial_ais_HEAD_gate.json
+          retention-days: 30

@@ -1,0 +1,86 @@
+name: chocho restore source-locked GSHHG237 × 2019 WPI 51 island georeference
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/recover_island51_WPI_GSHHG_source_geography.py"
+      - "tests/test_recover_island51_WPI_GSHHG_source_geography.py"
+      - ".github/workflows/chocho-island51-GSHHG-WPI-original-reconciliation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  strict-original-island-coordinate-source-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 21
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-free GSHHG and exact original spherical WPI port centroid verification
+        run: |
+          python -m pip install --quiet pytest numpy pandas shapely geopandas pyproj pyogrio
+          python -m pytest -q tests/test_recover_island51_WPI_GSHHG_source_geography.py
+      - name: Download pinned GSHHG 2.3.7 original high resolution coastline and verify source byte hash
+        run: |
+          mkdir -p /tmp/wpi51original/shore /tmp/wpi51original/WPI
+          curl -fLsS --retry 4 --retry-delay 3 --connect-timeout 30 --max-time 300 \
+            https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip \
+            -o /tmp/wpi51original/gshhg-shp-2.3.7.zip
+          echo '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  /tmp/wpi51original/gshhg-shp-2.3.7.zip' | sha256sum -c -
+          unzip -q -j -o /tmp/wpi51original/gshhg-shp-2.3.7.zip 'GSHHS_shp/h/GSHHS_h_L1.*' -d /tmp/wpi51original/shore/
+          test -s /tmp/wpi51original/shore/GSHHS_h_L1.shp
+          test -s /tmp/wpi51original/shore/GSHHS_h_L1.dbf
+          echo 'GSHHG_2_3_7_HIGH_RES_SOURCE_SHA256_MATCH'
+      - name: Restore original official NOAA NGA WPI2019 source 3630 coordinate points from successful frozen run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 42172382077 \
+            --name source-recovered-2019-NGA-WPI3630-NOAA-coordinates \
+            --dir /tmp/wpi51original/WPI --repo zuizui0223/chocho
+          test -s /tmp/wpi51original/WPI/ports_2019_source.geojson
+          test -s /tmp/wpi51original/WPI/noaa_WPI2019_source_receipt.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path('/tmp/wpi51original/WPI/noaa_WPI2019_source_receipt.json').read_text())
+          assert j['source_recovered_points']==3630
+          assert j['port_id_minmax']==[1,3630]
+          print('NOAA_2019_GSHHG_SOURCE_BOTH_PINNED')
+          PY
+      - name: Reconstruct GSHHG sibling-ID assigned completed ports and check 51 island counts and all 1275 original pair distances
+        run: |
+          python -u scripts/recover_island51_WPI_GSHHG_source_geography.py \
+            --gshhg-shp /tmp/wpi51original/shore/GSHHS_h_L1.shp \
+            --gshhg-zip /tmp/wpi51original/gshhg-shp-2.3.7.zip \
+            --wpi-geojson /tmp/wpi51original/WPI/ports_2019_source.geojson \
+            --plant-ports provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_all_ports.csv \
+            --islands provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv \
+            --pairs provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv \
+            --out /tmp/wpi51original/island51_GSHHG_WPI_source_reconstruction.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/wpi51original/island51_GSHHG_WPI_source_reconstruction.json')
+          j=json.loads(p.read_text())
+          assert j['status'] != 'SOURCE_GEOMETRY_RECONSTRUCTION_ERROR',j
+          assert j['target_51_polygon_row_count']>=51
+          assert j['NOAA_WPI_2019_coordinate_ports']==3630
+          print('ISLAND51_GSHHG_2019_RECONSTRUCTION_STATUS',j['status'])
+          print('ISLAND51_GSHHG_TARGET_COUNTS',j['geometry_scan_counts'])
+          PY
+      - name: Archive provenance evidence and failed-source gates without pretending restored AIS locations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-island51-source-GSHHG237-WPI2019-original-reconstruction
+          path: /tmp/wpi51original/island51_GSHHG_WPI_source_reconstruction.json
+          if-no-files-found: warn
+          retention-days: 30

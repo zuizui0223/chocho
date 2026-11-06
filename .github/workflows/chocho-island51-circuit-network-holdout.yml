@@ -1,0 +1,61 @@
+name: chocho island 51 circuit network steppingstone LOIO independent predictive benchmark
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/exploratory_island51_circuit_network_holdout.py"
+      - "tests/test_exploratory_island51_circuit_network_holdout.py"
+      - ".github/workflows/chocho-island51-circuit-network-holdout.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  geographic-graph-not-yet-maritime-or-wind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: "Offline math: series / parallel electrical circuits, graph connectivity and 51-island holdout"
+        run: |
+          python -m pip install --quiet pytest numpy pandas
+          python -m pytest -q tests/test_exploratory_island51_circuit_network_holdout.py
+      - name: Recompute original 51-island × 1275-pair Jaccard geometry / circuit resistance benchmark
+        run: |
+          mkdir -p /tmp/island51-circuit
+          python -u scripts/exploratory_island51_circuit_network_holdout.py \
+            --pairs provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv \
+            --islands provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv \
+            --out /tmp/island51-circuit/geography_circuit_loio_51islands.json
+          python - <<'PY'
+          from pathlib import Path
+          import json,math
+          j=json.loads(Path('/tmp/island51-circuit/geography_circuit_loio_51islands.json').read_text())
+          assert j['n_eligible_island_landmasses']==51
+          assert j['n_dependent_pairs']==1275
+          assert len(j['models'])==5
+          for v in j['models'].values():
+              assert v['graph']['n_nodes']==51
+              for t in v['targets'].values():
+                  assert t['n_islands_left_out']==51
+                  assert t['n_predictions_heldout_island_pairs']==2550
+                  assert math.isfinite(t['relative_MSE_reduction_percent'])
+          print('ISLAND51_GEOMETRIC_CIRCUIT_SOURCE_LOIO_VALIDATED')
+          PY
+      - name: Save source hashes, graph edges and full island-held-out prediction loss receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island-51-geographic-circuit-vs-distance-LOIO
+          path: /tmp/island51-circuit/geography_circuit_loio_51islands.json
+          if-no-files-found: warn
+          retention-days: 30
