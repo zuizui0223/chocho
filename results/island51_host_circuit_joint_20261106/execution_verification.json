@@ -65,5 +65,49 @@
     "Retained the fixed five models; host richness, climate and detailed recording effort remain stated limitations rather than post-result model sweeps.",
     "Continued through an independent fresh clone after the previous checkout lost its Git alternates; original files were not deleted or rewritten."
   ],
-  "remote_delivery": "Continuation branch and draft PR target the PR127 branch; remote commit and CI links are reported by the delivery message rather than retroactively inserted into this pre-commit receipt."
+  "remote_delivery": "Continuation branch and draft PR target the PR127 branch; remote commit and CI links are reported by the delivery message rather than retroactively inserted into this pre-commit receipt.",
+  "anonymous_snapshot_followup": {
+    "recorded_at_utc": "2026-11-06T12:44:31.542183+00:00",
+    "failed_run": "https://github.com/zuizui0223/chocho/actions/runs/42218779444",
+    "failure": "All13 newly added auditor tests reached the anonymous snapshot without their verifier under the intentionally excluded root results/ directory.",
+    "cause": "The independent GEB snapshot copies tests/ and scripts/ but deliberately omits root results/ and data/exploratory/.",
+    "fix": "Two explicit EXCLUDE_RELATIVE entries align the joint-only test modules with the existing anonymous export scope. Both modules remain active in the full repository and dedicated joint CI.",
+    "changed_implementation": "scripts/build_anonymous_review_bundle.py",
+    "scientific_runner_sources_predictions_and_tests_unchanged": true,
+    "controlled_staging_regression": "Observed failure before the exclusions; pass afterward.",
+    "real_archive_build": {
+      "exit_code": 0,
+      "files": 832,
+      "sha256": "7be3b4f57661fdaa6effab36114774f030727619d4891c2b4a4540fe718f1ca4"
+    },
+    "root_fresh_full_suite": {
+      "passed": 216,
+      "skipped": 1,
+      "warnings": 1,
+      "elapsed_seconds": 3.25,
+      "exit_code": 0,
+      "skip_reason": "netCDF4 is absent for the inherited optional wind-data builder; frozen wind matrices are reused here."
+    },
+    "independent_scoped_specification_review": "PASS",
+    "independent_scoped_quality_review": "PASS",
+    "scope_of_initial_parent_invariance": "The earlier all-parent-tracked-files invariant records the original joint-analysis commit; this followup changes only the separate packaging builder plus completion documentation.",
+    "actual_anonymous_stage_suite": {
+      "passed": 122,
+      "skipped": 31,
+      "warnings": 1,
+      "elapsed_seconds": 2.02,
+      "exit_code": 0
+    },
+    "anonymous_scope_verification": {
+      "status": "PASS_ANONYMOUS_EXPORT_BOUNDARY_AND_FROZEN_SOURCES",
+      "archive_files": 832,
+      "joint_tests_excluded_from_archive_only": [
+        "tests/test_run_island51_host_circuit_joint.py",
+        "tests/test_verify_island51_joint_predictions.py"
+      ],
+      "root_results_and_exploratory_data_remain_excluded": true,
+      "full_repository_analysis_tests_remain_present": true,
+      "frozen_figure_source_hashes_verified": 4
+    }
+  }
 }

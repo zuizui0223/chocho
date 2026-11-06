@@ -87,7 +87,7 @@ python results/island51_host_circuit_joint_20261106/render_summary.py --results-
 
 The scoped [GitHub workflow](../../.github/workflows/chocho-island51-host-circuit-joint.yml) runs the scientific regression tests, repeats the complete fixed analysis, independently reconstructs its losses, and archives predictions, receipts and the actual Python environment. The [run receipt](joint_run_receipt.json) records versions, implementation hashes, input hashes, output hashes, model feature membership and all interpretation limits. A [figure receipt](figure_receipt.json) binds the PNG/SVG to the exact saved numerical inputs.
 
-The final local repository suite passed **216 tests**, with one inherited optional-`xarray` wind-builder test skipped. A fresh complete run into a separate directory reproduced all five numerical output files, including the compressed individual predictions, **byte for byte**; its independent audit also passed. [execution_verification.json](execution_verification.json) records these checks and the independent specification/code reviews. The reused wind matrix is already frozen and validated, so this extension does not depend on running the skipped upstream data builder.
+The final local repository suite passed **216 tests**, with one inherited wind-builder test skipped for an unavailable optional dependency. A fresh complete run into a separate directory reproduced all five numerical output files, including the compressed individual predictions, **byte for byte**; its independent audit also passed. [execution_verification.json](execution_verification.json) records these checks and the independent specification/code reviews. The reused wind matrix is already frozen and validated, so this extension does not depend on running the skipped upstream data builder.
 
 ## Output index and continuation boundary
 
@@ -98,3 +98,7 @@ The final local repository suite passed **216 tests**, with one inherited option
 - [PROTOCOL.md](PROTOCOL.md), [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) and [input_lock.json](input_lock.json): immutable pre-fit specification and original source identities. Completion is recorded separately so their frozen bytes remain unchanged.
 
 This continuation completes the fixed conditional host/circuit comparison. Its concrete conclusion is additional retrospective predictive information from both represented resource composition and marine circuit fields for later records, with no identified transport mechanism. The original circuit/source outputs and manuscript analyses remain byte-identical to the parent revision.
+
+### Anonymous manuscript export integration
+
+The existing anonymous GEB review export deliberately omits root `results/` and exploratory island inputs. Its first remote run copied the two new joint-analysis test modules without that required context. The followup adds those two modules to the exporter's existing exclusion list; it changes neither test discovery in the complete repository nor the dedicated joint CI. The full repository still passes 216 tests, and all scientific code, source locks and numerical outputs remain unchanged. The failure, four-line packaging fix and verification evidence are recorded in [execution_verification.json](execution_verification.json).

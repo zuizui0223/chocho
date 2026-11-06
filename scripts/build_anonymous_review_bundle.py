@@ -43,6 +43,10 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_butterfly_climate_release_postgate_recovery.py"),
     Path("tests/test_butterfly_climate_release_execution_binding.py"),
     Path("tests/test_repository_layout.py"),
+    # Joint exploratory tests require results/ and data/exploratory/, which
+    # are outside this independent manuscript review snapshot.
+    Path("tests/test_run_island51_host_circuit_joint.py"),
+    Path("tests/test_verify_island51_joint_predictions.py"),
     Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
     Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
 }
