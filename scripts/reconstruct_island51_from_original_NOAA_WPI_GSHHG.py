@@ -123,8 +123,10 @@ def run(source_ports,land,complete,archived_islands,archived_pairs):
     ports=load_WPI(source_ports)
     polys,gsha=load_GSHHG(land)
     c=pd.read_csv(complete,dtype={"port_id":str},keep_default_na=False)
-    if len(c)!=1596 or c.port_id.nunique()!=1596:
-        raise ValueError("Original completed port host flora inventory drift")
+    # Archived status ledger includes ALL 3,630 indexed ports; only 1,596
+    # have a fully completed GBIF botanical query. Missing entries are NOT 0.
+    if len(c)!=3630 or c.port_id.nunique()!=3630:
+        raise ValueError("Original port ledger must contain 3630 unique WPI ports")
     q=c[c.query_complete.astype(str).str.casefold().eq("true")]
     valid=set(str(int(x)) for x in q.port_id)
     islands=pd.read_csv(archived_islands,dtype={"landmass_id":str})
