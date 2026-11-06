@@ -1,0 +1,69 @@
+{
+  "schema": "chocho_island51_joint_execution_verification_v1",
+  "recorded_at_utc": "2026-11-06T12:30:57.303863+00:00",
+  "base_commit": "a32975a45d372d2521ec9968bf4e4999fb540f09",
+  "local_execution_status": "COMPLETE_AND_INDEPENDENTLY_REVIEWED",
+  "full_repository_test_command": "python -m pytest -q",
+  "full_repository_test_result": {
+    "exit_code": 0,
+    "passed": 216,
+    "skipped": 1,
+    "warnings": 1,
+    "elapsed_seconds": 2.79,
+    "skip_reason": "Optional xarray is absent for the inherited NOAA wind-builder test; this extension reuses frozen wind matrices.",
+    "warning_reason": "Installed anyio plugin uses pytest CallSpec2 alias deprecated for pytest 10."
+  },
+  "fresh_runner_reproduction_exit_code": 0,
+  "numeric_reproduction": [
+    {
+      "file": "heldout_predictions.csv.gz",
+      "committed_output_sha256": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+      "fresh_reproduction_sha256": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+      "byte_identical": true
+    },
+    {
+      "file": "model_fold_losses.csv",
+      "committed_output_sha256": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+      "fresh_reproduction_sha256": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+      "byte_identical": true
+    },
+    {
+      "file": "comparison_fold_losses.csv",
+      "committed_output_sha256": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+      "fresh_reproduction_sha256": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+      "byte_identical": true
+    },
+    {
+      "file": "model_summary.csv",
+      "committed_output_sha256": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+      "fresh_reproduction_sha256": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+      "byte_identical": true
+    },
+    {
+      "file": "comparison_summary.csv",
+      "committed_output_sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "fresh_reproduction_sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "byte_identical": true
+    }
+  ],
+  "independent_saved_prediction_audit_exit_code": 0,
+  "fresh_audit_status": "PASS_SAVED_PREDICTIONS_AND_LOCKED_COMPARISONS_INDEPENDENTLY_RECONSTRUCTED",
+  "independent_reviews": {
+    "task1_specification": "PASS",
+    "task1_code_quality": "PASS",
+    "complete_branch_specification": "PASS",
+    "complete_branch_quality": "PASS",
+    "figure_metadata_correction": "PNG/SVG and renderer SHA256 added; regenerated receipt and independently verified each digest."
+  },
+  "figure_png_visually_inspected": true,
+  "all_parent_tracked_files_unchanged_before_staging": true,
+  "frozen_protocol_plan_and_lock_unchanged": true,
+  "scientific_results_selected_or_tuned_after_new_scores": false,
+  "implementation_and_review_decisions": [
+    "Preserved protocol and plan bytes; execution completion is recorded separately.",
+    "Reused specialised continuation agents with separate implementation and independent review ownership.",
+    "Retained the fixed five models; host richness, climate and detailed recording effort remain stated limitations rather than post-result model sweeps.",
+    "Continued through an independent fresh clone after the previous checkout lost its Git alternates; original files were not deleted or rewritten."
+  ],
+  "remote_delivery": "Continuation branch and draft PR target the PR127 branch; remote commit and CI links are reported by the delivery message rather than retroactively inserted into this pre-commit receipt."
+}

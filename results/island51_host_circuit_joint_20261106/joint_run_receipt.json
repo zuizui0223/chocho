@@ -1,0 +1,612 @@
+{
+  "schema": "chocho_fixed_island51_joint_host_circuit_run_v1",
+  "status": "FIVE_FIXED_JOINT_MODELS_AND_ALL_HELDOUT_PREDICTIONS_COMPLETE",
+  "completed_at_utc": "2026-11-06T12:23:06.349770+00:00",
+  "elapsed_seconds": 0.8555840650005848,
+  "prior_results_already_seen_when_design_frozen": true,
+  "new_joint_results_known_when_design_frozen": false,
+  "independent_validation_population": false,
+  "models_or_transforms_selected_by_new_scores": false,
+  "source_validation": {
+    "status": "ALL_LOCKED_JOINT_INPUTS_AND_PROTOCOL_VERIFIED",
+    "locked_files_verified": 12,
+    "input_lock_sha256": "8603741375c29ce175a7a7e0db78818d69ef892d0647c752162c794b62a900c3",
+    "protocol_sha256": "2ec6c5c195ce4139aac1fe7a8f179928684cece5a7aec036a05d7311e8efbb70",
+    "implementation_plan_sha256": "0f90cdc484c65a442a15dd047603800625ccd721e665d483f66e2c7a562551de",
+    "frozen_at_utc": "2026-11-06T12:10:44.591762+00:00",
+    "base_commit": "a32975a45d372d2521ec9968bf4e4999fb540f09",
+    "prior_results_already_seen_when_frozen": true,
+    "new_joint_results_already_seen_when_frozen": false,
+    "files": [
+      {
+        "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv",
+        "bytes": 80790,
+        "sha256": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34"
+      },
+      {
+        "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv",
+        "bytes": 2078,
+        "sha256": "bbcfaae2e10d13da0380a7de6059c0ee8f7df81e02cca7cbd255932eca8f53e8"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/uniform_distributed_port_resistance.npz",
+        "bytes": 13342,
+        "sha256": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/wind_distributed_port_resistance.npz",
+        "bytes": 13473,
+        "sha256": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_distributed_port_resistance.npz",
+        "bytes": 13344,
+        "sha256": "9d140feacaa547cfed36e4ee67e5a2d4552619203419b394a068cf02eaffb013"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/source_preparation.json",
+        "bytes": 83980,
+        "sha256": "06cdbb2b21cdb95b22fbb503648649f80983ef6d5b60fe7c557de7b758ee15db"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/model_comparison_summary.csv",
+        "bytes": 1867,
+        "sha256": "b043132aad9f63e7f63c6caf625fd58b8d4aac3439e18567f0eed579a837d8f2"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/all_island_holdout_losses.csv",
+        "bytes": 100318,
+        "sha256": "2021b1cb46f41955faf6cc4e6d1b39cc4dca05e5537b61efcb11742c07cb137a"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/official_circuitscape_validation.json",
+        "bytes": 9681,
+        "sha256": "07883e92279e1c8f1298efd7ee83363b914ca3c71536de1d8d483130956d80e4"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_official_validation.json",
+        "bytes": 3981,
+        "sha256": "772d6c81b7aabb48b77ae5fd790c14113c84addbfd1ae058caef1c106f1bc8ba"
+      },
+      {
+        "path": "data/exploratory/island51_observed_ocean_20261106/source_bundle_manifest.json",
+        "bytes": 3745,
+        "sha256": "14b23a4f514ce71a18cb0781667e2e63fdc4e23250763b8cf434e1f09ece624c"
+      },
+      {
+        "path": "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md",
+        "bytes": 7283,
+        "sha256": "3998f338051870a1e83db3874fee6f95349dca1fcdb15fa706e676e337a1004a"
+      }
+    ],
+    "completed_before_joint_fit_at_utc": "2026-11-06T12:23:05.519536+00:00",
+    "prior_frozen_source_bundle": {
+      "manifest_present": true,
+      "manifest_sha256": "14b23a4f514ce71a18cb0781667e2e63fdc4e23250763b8cf434e1f09ece624c",
+      "files_verified_count": 16,
+      "protocol_sha256_before_outcome_fit": "3998f338051870a1e83db3874fee6f95349dca1fcdb15fa706e676e337a1004a",
+      "protocol_frozen_at_utc": "2026-11-06T08:29:53Z"
+    },
+    "canonical_island_ids": [
+      "9",
+      "10",
+      "12",
+      "13",
+      "15",
+      "17",
+      "19",
+      "20",
+      "21",
+      "23",
+      "26",
+      "27",
+      "28",
+      "31",
+      "43",
+      "44",
+      "47",
+      "54",
+      "59",
+      "65",
+      "79",
+      "81",
+      "85",
+      "89",
+      "94",
+      "110",
+      "134",
+      "152",
+      "168",
+      "169",
+      "183",
+      "206",
+      "214",
+      "218",
+      "234",
+      "242",
+      "257",
+      "260",
+      "276",
+      "321",
+      "391",
+      "397",
+      "456",
+      "471",
+      "487",
+      "715",
+      "753",
+      "821",
+      "951",
+      "1210",
+      "1577"
+    ],
+    "original_islands": 51,
+    "original_pairs": 1275,
+    "original_ports": 194,
+    "marine_circuit_ports": 182,
+    "original_host_inventory_and_zero_similarities_retained": true,
+    "host_zero_similarity_pairs": 564,
+    "original_port_counts": {
+      "10": 4,
+      "110": 2,
+      "12": 5,
+      "1210": 1,
+      "13": 1,
+      "134": 1,
+      "15": 39,
+      "152": 2,
+      "1577": 1,
+      "168": 2,
+      "169": 2,
+      "17": 5,
+      "183": 2,
+      "19": 9,
+      "20": 2,
+      "206": 1,
+      "21": 2,
+      "214": 2,
+      "218": 1,
+      "23": 6,
+      "234": 1,
+      "242": 1,
+      "257": 3,
+      "26": 4,
+      "260": 1,
+      "27": 6,
+      "276": 4,
+      "28": 8,
+      "31": 3,
+      "321": 1,
+      "391": 1,
+      "397": 1,
+      "43": 5,
+      "44": 6,
+      "456": 1,
+      "47": 1,
+      "471": 1,
+      "487": 1,
+      "54": 2,
+      "59": 1,
+      "65": 2,
+      "715": 1,
+      "753": 1,
+      "79": 5,
+      "81": 9,
+      "821": 1,
+      "85": 5,
+      "89": 3,
+      "9": 21,
+      "94": 2,
+      "951": 2
+    },
+    "matrix_ids_aligned": true,
+    "matrices_finite_symmetric_zero_diagonal_positive_off_diagonal": true,
+    "native_AIS_matrix_used": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_distributed_port_resistance.npz",
+    "circuits_rebuilt": false
+  },
+  "prior_circuit_reproduction": {
+    "status": "PRIOR_NATIVE_G_AND_C_FOLDS_AND_SUMMARIES_REPRODUCED",
+    "prior_comparison_fold_rows_checked": 102,
+    "prior_model_fold_records_checked": 204,
+    "prior_summary_rows_checked": 2,
+    "maximum_absolute_numeric_difference": 8.881784197001252e-16,
+    "relative_tolerance": 1e-12,
+    "absolute_tolerance": 1e-12
+  },
+  "targets": [
+    "new_butterfly_jaccard",
+    "earlier_butterfly_jaccard"
+  ],
+  "models": [
+    "G",
+    "H",
+    "C",
+    "HC",
+    "I"
+  ],
+  "feature_sets": {
+    "new_butterfly_jaccard": {
+      "G": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "earlier_butterfly_Jaccard",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit"
+      ],
+      "H": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "earlier_butterfly_Jaccard",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard"
+      ],
+      "C": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "earlier_butterfly_Jaccard",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit"
+      ],
+      "HC": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "earlier_butterfly_Jaccard",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit"
+      ],
+      "I": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "earlier_butterfly_Jaccard",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit",
+        "host_times_AIS_connectivity",
+        "host_times_wind_connectivity"
+      ]
+    },
+    "earlier_butterfly_jaccard": {
+      "G": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit"
+      ],
+      "H": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard"
+      ],
+      "C": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit"
+      ],
+      "HC": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit"
+      ],
+      "I": [
+        "log_great_circle_distance",
+        "squared_log_great_circle_distance",
+        "sum_log1p_original_port_count",
+        "abs_difference_log1p_original_port_count",
+        "log1p_normalized_uniform_circuit",
+        "host_jaccard",
+        "log1p_normalized_ais_circuit",
+        "log1p_normalized_wind_circuit",
+        "host_times_AIS_connectivity",
+        "host_times_wind_connectivity"
+      ]
+    }
+  },
+  "model_fits": 510,
+  "individual_prediction_rows": 25500,
+  "model_fold_rows": 510,
+  "comparison_fold_rows": 510,
+  "comparison_summary_rows": 10,
+  "loss_aggregation": "Mean of50 individual losses within each island fold, then mean over51 folds; paired predictions are not averaged before loss.",
+  "improved_worse_tied_definition": "Strict comparisons of fold MSE: augmented<reference, augmented>reference, augmented==reference.",
+  "estimation": "Existing train_predict: training-only standardization, intercept, ordinary least squares, clipping to[0,1].",
+  "interaction_definition": "Raw host_jaccard times negative normalized log1p AIS resistance; same for wind; both enter together with all main effects.",
+  "comparisons": [
+    {
+      "comparison": "G_to_H",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "contextual",
+      "reference_model": "G",
+      "augmented_model": "H",
+      "MSE_reference": 0.00645230626088444,
+      "MSE_augmented": 0.006305452247441709,
+      "relative_MSE_reduction_percent": 2.275992606442099,
+      "MAE_reference": 0.05716343163790448,
+      "MAE_augmented": 0.055863130310107735,
+      "absolute_MSE_gain": 0.00014685401344273052,
+      "islands_improved": 33,
+      "islands_worse": 18,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "G_to_C",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "contextual",
+      "reference_model": "G",
+      "augmented_model": "C",
+      "MSE_reference": 0.00645230626088444,
+      "MSE_augmented": 0.006000226597362926,
+      "relative_MSE_reduction_percent": 7.006481794922515,
+      "MAE_reference": 0.05716343163790448,
+      "MAE_augmented": 0.054131850809005955,
+      "absolute_MSE_gain": 0.00045207966352151397,
+      "islands_improved": 40,
+      "islands_worse": 11,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "C_to_HC",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "C",
+      "augmented_model": "HC",
+      "MSE_reference": 0.006000226597362926,
+      "MSE_augmented": 0.005896352925833211,
+      "relative_MSE_reduction_percent": 1.731162479353141,
+      "MAE_reference": 0.054131850809005955,
+      "MAE_augmented": 0.05333332361158889,
+      "absolute_MSE_gain": 0.00010387367152971463,
+      "islands_improved": 31,
+      "islands_worse": 20,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "H_to_HC",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "H",
+      "augmented_model": "HC",
+      "MSE_reference": 0.006305452247441709,
+      "MSE_augmented": 0.005896352925833211,
+      "relative_MSE_reduction_percent": 6.488025054419857,
+      "MAE_reference": 0.055863130310107735,
+      "MAE_augmented": 0.05333332361158889,
+      "absolute_MSE_gain": 0.0004090993216084981,
+      "islands_improved": 39,
+      "islands_worse": 12,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "HC_to_I",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "secondary_interaction",
+      "reference_model": "HC",
+      "augmented_model": "I",
+      "MSE_reference": 0.005896352925833211,
+      "MSE_augmented": 0.0058761453477628135,
+      "relative_MSE_reduction_percent": 0.3427131707443032,
+      "MAE_reference": 0.05333332361158889,
+      "MAE_augmented": 0.05340323874467527,
+      "absolute_MSE_gain": 2.020757807039749e-05,
+      "islands_improved": 28,
+      "islands_worse": 23,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "G_to_H",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "contextual",
+      "reference_model": "G",
+      "augmented_model": "H",
+      "MSE_reference": 0.011004909422116583,
+      "MSE_augmented": 0.010413942902675645,
+      "relative_MSE_reduction_percent": 5.370026201699324,
+      "MAE_reference": 0.07072286908480196,
+      "MAE_augmented": 0.06789731920619052,
+      "absolute_MSE_gain": 0.0005909665194409382,
+      "islands_improved": 34,
+      "islands_worse": 17,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "G_to_C",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "contextual",
+      "reference_model": "G",
+      "augmented_model": "C",
+      "MSE_reference": 0.011004909422116583,
+      "MSE_augmented": 0.011142871691890398,
+      "relative_MSE_reduction_percent": -1.2536429377287883,
+      "MAE_reference": 0.07072286908480196,
+      "MAE_augmented": 0.07094180954469709,
+      "absolute_MSE_gain": -0.00013796226977381455,
+      "islands_improved": 26,
+      "islands_worse": 25,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "C_to_HC",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "C",
+      "augmented_model": "HC",
+      "MSE_reference": 0.011142871691890398,
+      "MSE_augmented": 0.010552854974823158,
+      "relative_MSE_reduction_percent": 5.29501490622605,
+      "MAE_reference": 0.07094180954469709,
+      "MAE_augmented": 0.06836894053150766,
+      "absolute_MSE_gain": 0.0005900167170672394,
+      "islands_improved": 33,
+      "islands_worse": 18,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "H_to_HC",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "H",
+      "augmented_model": "HC",
+      "MSE_reference": 0.010413942902675645,
+      "MSE_augmented": 0.010552854974823158,
+      "relative_MSE_reduction_percent": -1.3339046838044677,
+      "MAE_reference": 0.06789731920619052,
+      "MAE_augmented": 0.06836894053150766,
+      "absolute_MSE_gain": -0.00013891207214751337,
+      "islands_improved": 22,
+      "islands_worse": 29,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "HC_to_I",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "secondary_interaction",
+      "reference_model": "HC",
+      "augmented_model": "I",
+      "MSE_reference": 0.010552854974823158,
+      "MSE_augmented": 0.01056594923349756,
+      "relative_MSE_reduction_percent": -0.12408261750627086,
+      "MAE_reference": 0.06836894053150766,
+      "MAE_augmented": 0.06711677433813258,
+      "absolute_MSE_gain": -1.3094258674401296e-05,
+      "islands_improved": 27,
+      "islands_worse": 24,
+      "islands_tied": 0
+    }
+  ],
+  "model_summary": [
+    {
+      "target": "new_butterfly_jaccard",
+      "model": "G",
+      "MSE": 0.00645230626088444,
+      "MAE": 0.05716343163790448,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "new_butterfly_jaccard",
+      "model": "H",
+      "MSE": 0.006305452247441709,
+      "MAE": 0.055863130310107735,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "new_butterfly_jaccard",
+      "model": "C",
+      "MSE": 0.006000226597362926,
+      "MAE": 0.054131850809005955,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "new_butterfly_jaccard",
+      "model": "HC",
+      "MSE": 0.005896352925833211,
+      "MAE": 0.05333332361158889,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "new_butterfly_jaccard",
+      "model": "I",
+      "MSE": 0.0058761453477628135,
+      "MAE": 0.05340323874467527,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "earlier_butterfly_jaccard",
+      "model": "G",
+      "MSE": 0.011004909422116583,
+      "MAE": 0.07072286908480196,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "earlier_butterfly_jaccard",
+      "model": "H",
+      "MSE": 0.010413942902675645,
+      "MAE": 0.06789731920619052,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "earlier_butterfly_jaccard",
+      "model": "C",
+      "MSE": 0.011142871691890398,
+      "MAE": 0.07094180954469709,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "earlier_butterfly_jaccard",
+      "model": "HC",
+      "MSE": 0.010552854974823158,
+      "MAE": 0.06836894053150766,
+      "n_folds": 51,
+      "n_predictions": 2550
+    },
+    {
+      "target": "earlier_butterfly_jaccard",
+      "model": "I",
+      "MSE": 0.01056594923349756,
+      "MAE": 0.06711677433813258,
+      "n_folds": 51,
+      "n_predictions": 2550
+    }
+  ],
+  "python_environment": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scipy": "1.17.0"
+  },
+  "implementation_sha256": {
+    "scripts/run_island51_host_circuit_joint.py": "6977a4566e8194b05e641d3717692156766bb566fb474999fb8b4c2dec75b0fb",
+    "scripts/exploratory_island51_circuit_network_holdout.py": "4656af83656fe7d97dd6809ad4f1344c81830a9bf694412b1169adc341aea331",
+    "scripts/run_island51_observed_ocean_circuits.py": "b23975a1ad604f1dcdf3a21f332fde2572a6b6416b67a259d3e3dd824173990a",
+    "scripts/island51_ocean_circuit.py": "76388d28ab47b149060eb5be7b0f793ff31e9554be4680bab2245a5b9a96f1a6"
+  },
+  "outputs_sha256": {
+    "heldout_predictions.csv.gz": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+    "model_fold_losses.csv": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+    "comparison_fold_losses.csv": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+    "model_summary.csv": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+    "comparison_summary.csv": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+    "source_validation.json": "6c4d0ebd8b4f4561af052cf72327f16bd7871b14c54563c9952c9dbb13e4208a",
+    "prior_circuit_reproduction.json": "7851c5380fcf7221ac50b2a4375c649dad966e3033b22b48c690ca55dc065d6e"
+  },
+  "interpretation_limits": [
+    "Exploratory extension informed by known host/circuit results, fixed before these new joint fits.",
+    "Host inventory pools2001-2024 and can postdate2011-2022 butterfly records; no prospective or temporal mediation claim.",
+    "Candidate host composition and undirected marine fields do not establish plant carriage, butterfly movement or breeding.",
+    "Pair and fold dependence precludes independent-pair or independent-fold p-values and confidence intervals.",
+    "One held-out island is paired with otherwise represented islands; two unseen endpoints are not evaluated.",
+    "Conditional increments do not erase prior marginal host associations or identify a causal mechanism."
+  ]
+}
