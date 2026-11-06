@@ -92,6 +92,17 @@ def analyze(landfile,zipfile,geojsonfile,completefile,islandfile,pairfile):
     idx=STRtree(geom)
     target_hits=defaultdict(set)
     target_point_hits=defaultdict(set)
+    # Reconstruct the ORIGINAL single-landmass gate by checking *all* GSHHG
+    # L1 polygons, not just the subset of 51 target islands. Nearby small
+    # islands and continental coastlines disqualify ambiguous 5km buffers.
+    global_geoms=list(land.geometry)
+    global_ids=land.sibling_id.astype(str).tolist()
+    global_area=pd.to_numeric(land["area"],errors="coerce").to_numpy()
+    global_tree=STRtree(global_geoms)
+    globally_single_landmass=defaultdict(set)
+    globally_single_island=defaultdict(set)
+    target_with_point_and_unique_disk=defaultdict(set)
+    target_with_unique_island_and_point=defaultdict(set)
     all_diagnostics=Counter()
     for port in sorted(complete,key=int):
         lon,lat=loc[port]
@@ -107,11 +118,34 @@ def analyze(landfile,zipfile,geojsonfile,completefile,islandfile,pairfile):
         all_diagnostics[f"target_overlaps_{min(len(matches),3)}"]+=1
         for cid in matches:
             target_hits[cid].add(port)
-        near_points=idx.query(Point(lon,lat))
+        pt=Point(lon,lat)
+        near_points=idx.query(pt)
+        point_matches=set()
         for k in near_points:
             k=int(k)
-            if shapely.intersects(geom[k],Point(lon,lat)):
+            if shapely.intersects(geom[k],pt):
+                point_matches.add(code[k])
                 target_point_hits[code[k]].add(port)
+        near_global=global_tree.query(disk)
+        global_overlaps=set()
+        global_island_overlaps=set()
+        for k in near_global:
+            k=int(k)
+            if shapely.intersects(global_geoms[k],disk):
+                global_overlaps.add(global_ids[k])
+                if np.isfinite(global_area[k]) and 0<global_area[k]<7e6:
+                    global_island_overlaps.add(global_ids[k])
+        all_diagnostics[f"all_L1_5km_overlaps_{min(len(global_overlaps),4)}"]+=1
+        all_diagnostics[f"small_islands_5km_overlaps_{min(len(global_island_overlaps),4)}"]+=1
+        for cid in matches:
+            if global_overlaps=={cid}:
+                globally_single_landmass[cid].add(port)
+                if cid in point_matches:
+                    target_with_point_and_unique_disk[cid].add(port)
+            if global_island_overlaps=={cid}:
+                globally_single_island[cid].add(port)
+                if cid in point_matches:
+                    target_with_unique_island_and_point[cid].add(port)
 
     pairs=pd.read_csv(pairfile,dtype={"island_a":str,"island_b":str})
     if len(pairs)!=1275:raise ValueError("Expected 1275 original pair distances")
@@ -160,7 +194,11 @@ def analyze(landfile,zipfile,geojsonfile,completefile,islandfile,pairfile):
       "geometry_scan_counts":dict(all_diagnostics),
       "source_mapping_methods":{
           "geodesic_5km_buffer_intersects_target_landmass":raw,
-          "WPI_point_intersects_target_landmass":contained},
+          "WPI_point_intersects_target_landmass":contained,
+          "geodesic_5km_intersects_exactly_one_global_landmass":variant(globally_single_landmass),
+          "geodesic_5km_intersects_exactly_one_small_island":variant(globally_single_island),
+          "WPI_point_inside_target_and_5km_exactly_one_global_landmass":variant(target_with_point_and_unique_disk),
+          "WPI_point_inside_target_and_5km_exactly_one_small_island":variant(target_with_unique_island_and_point)},
       "source_51_landmass_ids":sorted(target_ids,key=int),
       "resistance_map_use_gate":"All original archived pairwise distances must match within 0.01km and all 51 completed source port counts. No imputed geography.",
       "source_code_note":"Uses GSHHG high-res L1 sibling_id and NOAA WPI OBJECTID independently of butterfly Jaccard or host response",
@@ -174,11 +212,11 @@ def analyze(landfile,zipfile,geojsonfile,completefile,islandfile,pairfile):
     if len(passed)==1:
         src["status"]="PASS_51_SOURCE_PORT_COUNTS_AND_ALL_1275_DISTANCES"
     elif len(passed)>1:
-        a=src["source_mapping_methods"][passed[0]]["matched_port_id_lists"]
-        b=src["source_mapping_methods"][passed[1]]["matched_port_id_lists"]
-        if a==b:
-            src["status"]="PASS_TWO_EQUIVALENT_GEOMETRIES_51_PORT_COUNTS_AND_DISTANCES"
-        else:raise ValueError("Ambiguous distinct source-reproducing georeference methods")
+        candidates=[src["source_mapping_methods"][v]["matched_port_id_lists"] for v in passed]
+        if all(c==candidates[0] for c in candidates):
+            src["status"]="PASS_EQUIVALENT_GEOMETRIES_51_PORT_COUNTS_AND_DISTANCES"
+        else:
+            src["status"]="AMBIGUOUS_SOURCE_REPRODUCING_GEOMETRIES_DO_NOT_PROMOTE"
     return src
 
 
