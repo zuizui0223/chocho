@@ -75,7 +75,9 @@ def load_GSHHG(zip_file):
     if g.crs is None:raise ValueError("GSHHG land CRS not set")
     g=g.to_crs(4326)
     g["landmass_id"]=g.sibling_id.astype(str)
-    if g.landmass_id.duplicated().any():raise ValueError("GSHHG polygon sibling IDs are duplicated")
+    # GSHHG sibling_id is the parent landmass identity, and can legitimately
+    # occur on several polygon features. Port intersections are deduplicated by
+    # sibling_id; a one-to-many GSHHG feature grouping is not a data error.
     g=g[g.geometry.notna()].copy()
     return g,got
 
