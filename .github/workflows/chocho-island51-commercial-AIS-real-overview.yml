@@ -27,7 +27,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install geospatial TIFF overview parser
-        run: python -m pip install --quiet rasterio numpy pytest
+        run: |
+          python -m pip install --quiet rasterio numpy pytest
           python -m pytest -q tests/test_sample_AIS_island51_verified_source.py
       - name: Byte-range decompress only the 124MB compressed official AIS overview and CRC-validate 3.3GB source
         run: |
