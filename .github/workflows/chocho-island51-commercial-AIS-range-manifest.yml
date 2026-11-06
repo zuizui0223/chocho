@@ -1,0 +1,43 @@
+name: chocho original World Bank commercial AIS raster ZIP metadata via byte ranges
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/probe_commercial_AIS_ZIP_range_manifest.py"
+      - ".github/workflows/chocho-island51-commercial-AIS-range-manifest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actual-commercial-AIS-ZIP-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Read actual ZIP central directory by verified official HTTP byte ranges only
+        run: |
+          mkdir -p /tmp/ais51_manifest
+          python -u scripts/probe_commercial_AIS_ZIP_range_manifest.py \
+            --out /tmp/ais51_manifest/WorldBank_IMF_commercial_AIS_ZIP_manifest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('/tmp/ais51_manifest/WorldBank_IMF_commercial_AIS_ZIP_manifest.json').read_text())
+          assert m['status'].startswith('PUBLIC_OFFICIAL_AIS_ZIP_CENTRAL_DIRECTORY')
+          assert len(m['central_directory_members'])>=1
+          assert m['source_zip_bytes']==480353369
+          assert m['HTTP_byte_range_download_total_bytes']<20000000
+          print('WORLDBANK_AIS_ORIGINAL_INDEX_READ_SUCCESSFUL_WITHOUT_458MB_DOWNLOAD')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: island51-WorldBank-commercial-2015-2021-AIS-original-ZIP-manifest
+          path: /tmp/ais51_manifest/WorldBank_IMF_commercial_AIS_ZIP_manifest.json
+          retention-days: 30
