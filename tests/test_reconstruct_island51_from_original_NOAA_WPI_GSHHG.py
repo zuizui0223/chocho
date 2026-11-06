@@ -5,7 +5,10 @@ import importlib.util, json
 from pathlib import Path
 import geopandas as gpd
 from shapely.geometry import Point, box
-src=Path(__file__).resolve().parents[1]/"scripts"/"reconstruct_island51_from_original_NOAA_WPI_GSHHG.py"
+base=Path(__file__).resolve().parents[1]/"scripts"
+import sys
+sys.path.insert(0,str(base))
+src=base/"reconstruct_island51_from_original_NOAA_WPI_GSHHG.py"
 sp=importlib.util.spec_from_file_location("original_wpi_gshhg",src)
 m=importlib.util.module_from_spec(sp);sp.loader.exec_module(m)
 
