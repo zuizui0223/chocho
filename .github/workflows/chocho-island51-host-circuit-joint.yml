@@ -1,0 +1,87 @@
+name: chocho island51 fixed host and marine circuit joint comparison
+
+on:
+  push:
+    branches:
+      - analysis/island51-host-circuit-joint-20261106
+    paths:
+      - ".github/workflows/chocho-island51-host-circuit-joint.yml"
+      - "pyproject.toml"
+      - "scripts/run_island51_host_circuit_joint.py"
+      - "scripts/run_island51_observed_ocean_circuits.py"
+      - "scripts/exploratory_island51_circuit_network_holdout.py"
+      - "scripts/island51_ocean_circuit.py"
+      - "tests/test_run_island51_host_circuit_joint.py"
+      - "tests/test_verify_island51_joint_predictions.py"
+      - "results/island51_host_circuit_joint_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/**"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-host-circuit-joint.yml"
+      - "pyproject.toml"
+      - "scripts/run_island51_host_circuit_joint.py"
+      - "scripts/run_island51_observed_ocean_circuits.py"
+      - "scripts/exploratory_island51_circuit_network_holdout.py"
+      - "scripts/island51_ocean_circuit.py"
+      - "tests/test_run_island51_host_circuit_joint.py"
+      - "tests/test_verify_island51_joint_predictions.py"
+      - "results/island51_host_circuit_joint_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/**"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: island51-host-circuit-joint-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fixed-joint-models-and-prediction-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install the existing analysis environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_joint_results
+          python -m pip freeze > _ci_joint_results/python_environment.txt
+      - name: Verify frozen sources, model definitions and held-island leakage protection
+        run: |
+          python -m pytest -q \
+            tests/test_run_island51_host_circuit_joint.py \
+            tests/test_verify_island51_joint_predictions.py \
+            tests/test_exploratory_island51_circuit_network_holdout.py \
+            tests/test_run_island51_observed_ocean_circuits.py
+      - name: Reproduce all joint predictions and the prior native-AIS comparison
+        run: |
+          python scripts/run_island51_host_circuit_joint.py \
+            --out-dir _ci_joint_results
+      - name: Reconstruct all losses from saved predictions
+        run: |
+          python results/island51_host_circuit_joint_20261106/verify_saved_predictions.py \
+            --results-dir _ci_joint_results
+      - name: Archive predictions, losses, gates and actual environment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-host-circuit-joint-predictions-and-losses
+          path: |
+            _ci_joint_results/*.json
+            _ci_joint_results/*.csv
+            _ci_joint_results/*.csv.gz
+            _ci_joint_results/python_environment.txt
+          if-no-files-found: error
+          retention-days: 30
