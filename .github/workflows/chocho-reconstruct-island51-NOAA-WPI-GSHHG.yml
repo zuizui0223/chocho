@@ -1,0 +1,105 @@
+name: chocho original 2019 WPI 3630 × GSHHG 237 island 51 source coordinates reconstruction
+
+on:
+  push:
+    branches:
+      - analysis/island51-circuit-steppingstone-20261106
+    paths:
+      - "scripts/reconstruct_island51_from_original_NOAA_WPI_GSHHG.py"
+      - "tests/test_reconstruct_island51_from_original_NOAA_WPI_GSHHG.py"
+      - ".github/workflows/chocho-reconstruct-island51-NOAA-WPI-GSHHG.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover-historical-source-geocentres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install local GIS and polygon geography unit tests
+        run: |
+          python -m pip install --quiet pytest pandas numpy geopandas pyogrio shapely pyproj
+          python -m pytest -q tests/test_reconstruct_island51_from_original_NOAA_WPI_GSHHG.py
+      - name: Obtain original 2019 NOAA/PIRO layer 30 original OBJECTID and full worldwide points
+        run: |
+          mkdir -p /tmp/island51-original
+          python - <<'PY'
+          import json,urllib.request,urllib.parse,hashlib
+          from pathlib import Path
+          api='https://gis.ngdc.noaa.gov/arcgis/rest/services/nccos/PIRO_DigitalAtlas/MapServer/30/query'
+          collection=[]
+          receipt=[]
+          for offset,count in [(0,2000),(2000,2000)]:
+              qs={'where':'1=1','outFields':'*','outSR':4326,'returnGeometry':'true','orderByFields':'OBJECTID','resultOffset':offset,'resultRecordCount':count,'f':'geojson'}
+              url=api+'?'+urllib.parse.urlencode(qs)
+              req=urllib.request.Request(url,headers={'User-Agent':'chocho-port-island-source-2019-audit/1.0'})
+              with urllib.request.urlopen(req,timeout=100) as r:raw=r.read()
+              payload=json.loads(raw)
+              if payload.get('type')!='FeatureCollection' or 'features' not in payload:raise ValueError('Original WPI GIS not GeoJSON: '+str(payload)[:500])
+              features=payload['features']
+              collection.extend(features)
+              receipt.append({'page':offset,'count':len(features),'sha256':hashlib.sha256(raw).hexdigest()})
+              print('NOAA2019_WPI_ORIGINAL_PAGE',receipt[-1],flush=True)
+          if len(collection)!=3630 or len({int(x['properties']['OBJECTID']) for x in collection})!=3630:
+              raise ValueError(f'Expected original layer 30 3630 distinct NOAA WPI OBJECTIDs, got {len(collection)}')
+          Path('/tmp/island51-original/WPI2019_original_3630.geojson').write_text(json.dumps({'type':'FeatureCollection','features':collection}))
+          Path('/tmp/island51-original/WPI2019_page_receipts.json').write_text(json.dumps(receipt,indent=2))
+          print('NOAA_WPI2019_3630_OBJECTID_GEOLOCATION_SOURCE_VERIFIED')
+          PY
+      - name: Retrieve checksum-pinned GSHHG v2.3.7 original high-resolution landmass polygons
+        run: |
+          curl -fL --retry 3 --retry-delay 4 --connect-timeout 25 --max-time 600 \
+            'https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip' \
+            -o /tmp/island51-original/gshhg-shp-2.3.7.zip
+          echo '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  /tmp/island51-original/gshhg-shp-2.3.7.zip' | sha256sum -c -
+          python - <<'PY'
+          import zipfile
+          p='/tmp/island51-original/gshhg-shp-2.3.7.zip'
+          with zipfile.ZipFile(p) as z:
+              h=[n for n in z.namelist() if n.endswith('/h/GSHHS_h_L1.shp')]
+              print('GSHHG_ORIGINAL_2p3p7_H_L1',h,'all_archive_entries',len(z.namelist()))
+              assert len(h)==1
+          PY
+      - name: Rebuild 5km original WPI buffer to GSHHG sibling_id island polygon and verify 1275 pair distances
+        run: |
+          python -u scripts/reconstruct_island51_from_original_NOAA_WPI_GSHHG.py \
+            --WPI-geojson /tmp/island51-original/WPI2019_original_3630.geojson \
+            --GSHHG-zip /tmp/island51-original/gshhg-shp-2.3.7.zip \
+            --completed-port-inventory provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_all_ports.csv \
+            --island-source provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv \
+            --pair-source provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv \
+            --out /tmp/island51-original/WPI2019_GSHHG_51island_geometry_source_audit.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/island51-original/WPI2019_GSHHG_51island_geometry_source_audit.json')
+          x=json.loads(p.read_text())
+          assert x['expected_n_WPI']==3630
+          assert x['GSHHG_L1_polygons']>1000
+          print('ORIGINAL_WPI2019_TO_ISLAND51_SOURCE_STATUS',x['status'],
+                'number_matched',x['n_island_source_locations_rebuilt'],
+                'pair_distances_checked',x['n_matched_original_1275_pairs'],
+                'max_difference_km',x['max_pair_distance_error_km'],flush=True)
+          # Mismatch records are legitimate negative quality findings; never
+          # force positional joins to "pass" by changing biological outcomes.
+          PY
+      - name: Preserve coordinate-source receipt only, no upstream multi-GB source files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: WPI2019-GSHHG237-51-island-source-geolocation-check
+          path: |
+            /tmp/island51-original/WPI2019_page_receipts.json
+            /tmp/island51-original/WPI2019_GSHHG_51island_geometry_source_audit.json
+          if-no-files-found: warn
+          retention-days: 30
