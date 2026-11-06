@@ -160,13 +160,31 @@ def analyze(landfile,zipfile,geojsonfile,completefile,islandfile,pairfile):
         for lid,portids in matched.items():
             if len(portids)>0:centers[lid]=spherical_mean([loc[k] for k in portids])
         errs=[]
-        if len(centers)==51:
-            for row in pairs.itertuples(index=False):
-                expected=float(row.port_distance_km)
-                got=arc(centers[row.island_a],centers[row.island_b])
-                errs.append(abs(expected-got))
-        else:errs=[float("inf")]
+        by_id=defaultdict(list)
+        pairs_both_count_match=[]
+        for row in pairs.itertuples(index=False):
+            if row.island_a not in centers or row.island_b not in centers:
+                continue
+            expected=float(row.port_distance_km)
+            got=arc(centers[row.island_a],centers[row.island_b])
+            err=abs(expected-got)
+            errs.append(err)
+            by_id[row.island_a].append(err)
+            by_id[row.island_b].append(err)
+            if row.island_a not in mismatch and row.island_b not in mismatch:
+                pairs_both_count_match.append(err)
+        if not errs:errs=[float("inf")]
+        top_islands=sorted((
+            {"id":k,"mean_km":float(np.mean(v)),
+             "max_km":max(v),"above_0p01km":sum(t>.01 for t in v)}
+            for k,v in by_id.items()),key=lambda z:z["mean_km"],reverse=True)
         return {"count_matched_islands":51-len(mismatch),
+             "distances_both_port_counts_matched":{
+                "n_pairs":len(pairs_both_count_match),
+                "max_error_km":max(pairs_both_count_match) if pairs_both_count_match else None,
+                "n_pairs_error_over_0p01km":sum(x>.01 for x in pairs_both_count_match)
+            },
+             "top_distance_error_islands":top_islands[:15],
              "n_target_ports_overlaps":sum(counts.values()),
              "n_islands_with_coords":len(centers),
              "n_port_count_mismatch":len(mismatch),
@@ -241,6 +259,8 @@ def main():
                 "matched_islands":v["count_matched_islands"],
                 "n_port_count_mismatch":v["n_port_count_mismatch"],
                 "max_geodesic_error_km":v["max_pair_distance_error_km"],
+                "count_matched_pair_diagnostics":v["distances_both_port_counts_matched"],
+                "top_distance_error_islands":v["top_distance_error_islands"][:6],
                 "port_count_mismatch":v["port_count_mismatch"]
             },default=str)[:12000],flush=True)
     if result["status"].startswith("PASS_"):
