@@ -1,0 +1,26 @@
+[ Info: 2026-11-06 17:21:09 : Precision used: double
+[ Info: 2026-11-06 17:21:09 : Starting up Circuitscape to use 2 threads in parallel
+[ Info: 2026-11-06 17:21:10 : Node indices: Int32
+[ Info: 2026-11-06 17:21:15 : Graph has 3 nodes and 1 connected components
+[ Info: 2026-11-06 17:21:15 : Solver used: CHOLMOD
+[ Info: 2026-11-06 17:21:22 : Graph has 3 nodes, 3 focal points and 1 connected components
+[ Info: 2026-11-06 17:21:22 : Total number of pair solves = 3
+OFFICIAL_CIRCUITSCAPE_KNOWN_NETWORK_PASS series max_abs_error=4.440892098500626e-15
+[ Info: 2026-11-06 17:21:23 : Precision used: double
+[ Info: 2026-11-06 17:21:23 : Starting up Circuitscape to use 2 threads in parallel
+[ Info: 2026-11-06 17:21:23 : Node indices: Int32
+[ Info: 2026-11-06 17:21:23 : Graph has 4 nodes and 1 connected components
+[ Info: 2026-11-06 17:21:23 : Solver used: CHOLMOD
+[ Info: 2026-11-06 17:21:23 : Graph has 4 nodes, 4 focal points and 1 connected components
+[ Info: 2026-11-06 17:21:23 : Total number of pair solves = 6
+OFFICIAL_CIRCUITSCAPE_KNOWN_NETWORK_PASS ring max_abs_error=1.1102230246251565e-15
+Test Summary:                                   | Pass  Total   Time
+Official Circuitscape known electrical networks |    4      4  20.6s
+[ Info: 2026-11-06 17:21:24 : Precision used: double
+[ Info: 2026-11-06 17:21:24 : Node indices: Int32
+[ Info: 2026-11-06 17:21:24 : Graph has 4 nodes and 1 connected components
+[ Info: 2026-11-06 17:21:24 : Solver used: CHOLMOD
+OFFICIAL_CIRCUITSCAPE_DISTRIBUTED_PASS expected=1.5 actual=1.4999999999999858
+Test Summary:                                     | Pass  Total  Time
+Official Circuitscape distributed source and sink |    3      3  2.0s
+OFFICIAL_CIRCUITSCAPE_RUNTIME Julia=1.13.3 Circuitscape=6.1.0 threads=2

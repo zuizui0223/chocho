@@ -1,0 +1,107 @@
+{
+  "schema": "chocho_native_AIS_0p005_to_0p5_source_quality_v1",
+  "status": "DIRECT_NATIVE_SOURCE_QUALITY_SENSITIVITY_INPUT_VALIDATED_NO_BIOLOGICAL_FIT",
+  "started_at_utc": "2026-11-06T09:00:11.766892+00:00",
+  "finished_at_utc": "2026-11-06T09:01:05.038498+00:00",
+  "elapsed_seconds": 53.27162040300027,
+  "source_original_ZIP_url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip",
+  "source_original_SHA256": "0cfdce41d9934982bbc8f16bd92ce7545cc088839327cbaa9b0ed1469dda31e8",
+  "source_metadata": {
+    "native_width": 72006,
+    "native_height": 33998,
+    "native_dtype": "int32",
+    "native_nodata": 2147483647.0,
+    "native_crs": "EPSG:4326",
+    "native_transform": [
+      0.005,
+      0.0,
+      -180.015311275,
+      0.0,
+      -0.005,
+      85.00264793700009
+    ],
+    "native_scales": [
+      1.0
+    ],
+    "native_offsets": [
+      0.0
+    ],
+    "native_overview_factors": [],
+    "native_crc32_verified": "0ca2fef6",
+    "native_bytes": 9818136931,
+    "native_sha256": "c20e6c19532a9d421dcdb379a5d2d4af963696c4f36e3d43d3f445b4a9b2c76e"
+  },
+  "native_grid_path": "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021.npz",
+  "native_grid_sha256": "cbb3c963bd4f466453937f5792f2bbd47786fb7f380d38a4b128ab86295a475f",
+  "primary_grid_path": "data/exploratory/island51_observed_ocean_20261106/ais/commercial_AIS_mean_0p5deg_2015_2021.npz",
+  "primary_grid_sha256": "84c0b41c42414503aed846afee763eab9c32453a19662e3554212be85ab881d5",
+  "independent_overlap_audit_path": "results/island51_observed_ocean_circuit_20261106/ais_source_quality/published_AIS_source_quality_receipt.json",
+  "independent_overlap_audit_sha256": "466bc77a2bdd57b70e07cfb9e7256347a4f06cbefa8f62329aff585c0b204371",
+  "independent_overlap_validation_path": "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/native_overlap_validation_39_cells.json",
+  "independent_overlap_validation_sha256": "f5d7e61ad2ac6959bfb32b44d7e2b70cccaaa04e5e3dd01a1177f1dbad87fa69",
+  "independent_overlap_cells": 39,
+  "independent_overlap_all_passed": true,
+  "independent_overlap_maximum_relative_error": 5.0979225050703655e-08,
+  "plan_lock_path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity_plan_lock.json",
+  "plan_lock_sha256": "f2d81d8026d322618055243369e413d0dea9fc6b348c1e79e6035c54e9e967b9",
+  "plan_sha256": "f66a20bdc844f23964461fbe899783f1524faabbc016adfe735cdf22823318fe",
+  "plan_frozen_at_utc": "2026-11-06T08:54:25.598496+00:00",
+  "derived_grid": {
+    "shape": [
+      340,
+      720
+    ],
+    "transform": [
+      0.5,
+      0.0,
+      -180.0,
+      0.0,
+      -0.5,
+      85.0
+    ],
+    "crs": "EPSG:4326",
+    "resampling": "GDAL geographic area-overlap average directly from every native 0.005-degree base-band pixel",
+    "source_nodata_excluded": true,
+    "valid_zero_included": true,
+    "values_rescaled": false,
+    "overview_used": false,
+    "count_valid_pixels": 244800,
+    "fraction_valid_pixels": 1.0,
+    "count_missing_pixels": 0
+  },
+  "memory_limits": {
+    "gdal_cache_bytes": 134217728,
+    "warp_memory_megabytes": 128
+  },
+  "native_to_primary_source_comparison": {
+    "scope": "All common valid 0.5-degree cells, including valid land zeros; unweighted cell summaries, not global vessel totals",
+    "difference_sign": "primary overview-derived minus direct-native",
+    "common_valid_cells": 244800,
+    "same_valid_mask": true,
+    "native_valid_mean": 266369.66065149184,
+    "primary_valid_mean": 266606.6909134188,
+    "native_positive_cells": 161717,
+    "primary_positive_cells": 143780,
+    "native_observed_zero_cells": 83083,
+    "primary_observed_zero_cells": 101020,
+    "primary_zero_native_positive_cells": 18044,
+    "native_zero_primary_positive_cells": 107,
+    "mean_signed_difference": 237.0302619269461,
+    "mean_absolute_difference": 9989.656282497843,
+    "median_absolute_difference": 66.95733261108398,
+    "positive_native_relative_difference_quantiles": {
+      "0": -1.0,
+      "0.25": -0.24975814478034591,
+      "0.5": -0.013877774781686465,
+      "0.75": 0.13818051772991113,
+      "1": 11262490.739592597
+    },
+    "positive_native_median_absolute_relative_difference": 0.188175935419506,
+    "native_maximum": 33821708.0,
+    "primary_maximum": 33751896.0
+  },
+  "reproducer_path": "scripts/verification/derive_island51_native_AIS_quality_grid.py",
+  "reproducer_sha256": "aca06120ab78ba72902f27a536b4ba9e315bd82c0c5fc8e4e6539e39bac17677",
+  "units_note": "Published AIS density index retained without rescaling; independent physical calibration is unresolved.",
+  "scope_note": "Post hoc source-quality sensitivity after primary outcomes; no primary input, manifest, protocol, result, or biological model changed by this derivation."
+}

@@ -1,0 +1,127 @@
+name: chocho island51 observed marine circuit frozen-source reproduction
+
+on:
+  push:
+    branches:
+      - analysis/island51-ocean-circuit-run-20261106
+    paths:
+      - ".github/workflows/chocho-island51-observed-ocean-circuit.yml"
+      - "pyproject.toml"
+      - "scripts/island51_ocean_circuit.py"
+      - "scripts/run_island51_observed_ocean_circuits.py"
+      - "scripts/run_island51_native_AIS_source_sensitivity.py"
+      - "scripts/build_island51_coastal_ocean_graph.py"
+      - "scripts/build_island51_1degree_commercial_AIS_source.py"
+      - "scripts/preflight_island51_real_GSHHG_ocean_circuit.py"
+      - "scripts/exploratory_island51_circuit_network_holdout.py"
+      - "scripts/reconstruct_island51_verified_port_coordinates.py"
+      - "tests/test_island51_ocean_circuit.py"
+      - "tests/test_run_island51_observed_ocean_circuits.py"
+      - "tests/test_run_island51_native_AIS_source_sensitivity.py"
+      - "tests/test_build_island51_coastal_ocean_graph.py"
+      - "tests/test_build_island51_1degree_commercial_AIS_source.py"
+      - "tests/test_preflight_island51_real_GSHHG_ocean_circuit.py"
+      - "tests/test_exploratory_island51_circuit_network_holdout.py"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md"
+      - "results/island51_observed_ocean_circuit_20261106/NATIVE_SOURCE_SENSITIVITY_PLAN.md"
+      - "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity_plan_lock.json"
+      - "results/island51_observed_ocean_circuit_20261106/ais_source_quality/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-observed-ocean-circuit.yml"
+      - "pyproject.toml"
+      - "scripts/island51_ocean_circuit.py"
+      - "scripts/run_island51_observed_ocean_circuits.py"
+      - "scripts/run_island51_native_AIS_source_sensitivity.py"
+      - "scripts/build_island51_coastal_ocean_graph.py"
+      - "scripts/build_island51_1degree_commercial_AIS_source.py"
+      - "scripts/preflight_island51_real_GSHHG_ocean_circuit.py"
+      - "scripts/exploratory_island51_circuit_network_holdout.py"
+      - "scripts/reconstruct_island51_verified_port_coordinates.py"
+      - "tests/test_island51_ocean_circuit.py"
+      - "tests/test_run_island51_observed_ocean_circuits.py"
+      - "tests/test_run_island51_native_AIS_source_sensitivity.py"
+      - "tests/test_build_island51_coastal_ocean_graph.py"
+      - "tests/test_build_island51_1degree_commercial_AIS_source.py"
+      - "tests/test_preflight_island51_real_GSHHG_ocean_circuit.py"
+      - "tests/test_exploratory_island51_circuit_network_holdout.py"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md"
+      - "results/island51_observed_ocean_circuit_20261106/NATIVE_SOURCE_SENSITIVITY_PLAN.md"
+      - "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity_plan_lock.json"
+      - "results/island51_observed_ocean_circuit_20261106/ais_source_quality/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: island51-observed-ocean-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  frozen-marine-circuits-and-island-holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install analysis dependencies and record the actual environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_ocean_results
+          python -m pip freeze > _ci_ocean_results/python_environment.txt
+      - name: Verify circuit mathematics, source alignment, topology and held-out folds
+        run: |
+          python -m pytest -q \
+            tests/test_island51_ocean_circuit.py \
+            tests/test_run_island51_observed_ocean_circuits.py \
+            tests/test_run_island51_native_AIS_source_sensitivity.py \
+            tests/test_build_island51_coastal_ocean_graph.py \
+            tests/test_build_island51_1degree_commercial_AIS_source.py \
+            tests/test_preflight_island51_real_GSHHG_ocean_circuit.py \
+            tests/test_exploratory_island51_circuit_network_holdout.py
+      - name: Reproduce all three observed marine circuits and the frozen 51-island comparison
+        run: |
+          python -u scripts/run_island51_observed_ocean_circuits.py \
+            --input-root data/exploratory/island51_observed_ocean_20261106 \
+            --coast-dir data/exploratory/island51_observed_ocean_20261106/coast_0p0625 \
+            --marine-ports-only \
+            --out-dir _ci_ocean_results \
+            --network-dir /tmp/chocho-island51-observed-ocean-networks
+      - name: Reproduce the single native AIS source-quality sensitivity
+        run: |
+          python scripts/run_island51_native_AIS_source_sensitivity.py \
+            --input-root data/exploratory/island51_observed_ocean_20261106 \
+            --primary-results-dir _ci_ocean_results \
+            --native-grid data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021.npz \
+            --native-receipt data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021_receipt.json \
+            --native-audit results/island51_observed_ocean_circuit_20261106/ais_source_quality/published_AIS_source_quality_receipt.json \
+            --out-dir _ci_native_sensitivity \
+            --network-dir /tmp/chocho-native-quality-networks
+      - name: Archive small numerical results and the complete source-port eligibility ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-observed-marine-circuits-and-heldout-losses
+          path: |
+            _ci_ocean_results/*.json
+            _ci_ocean_results/*.csv
+            _ci_ocean_results/*_resistance.npz
+            _ci_ocean_results/python_environment.txt
+            _ci_native_sensitivity/*.json
+            _ci_native_sensitivity/*.csv
+            _ci_native_sensitivity/*_resistance.npz
+          if-no-files-found: warn
+          retention-days: 30

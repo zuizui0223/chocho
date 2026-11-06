@@ -81,6 +81,9 @@ def connect_ocean(sea,neighbors=8):
                 if not sea[y,x]:continue
                 xx=(x+dx)%w
                 if not sea[yy,xx]:continue
+                # A diagonal must not pass through the corner of a land
+                # cell. The side-cell check uses the same longitude wrap.
+                if dy and dx and not (sea[y,xx] and sea[yy,x]):continue
                 i=int(ids[y,x]);j=int(ids[yy,xx])
                 rows.extend((i,j));cols.extend((j,i))
     graph=ss.csr_matrix((np.ones(len(rows),dtype=np.uint8),(rows,cols)),
@@ -89,6 +92,7 @@ def connect_ocean(sea,neighbors=8):
     counts=np.bincount(components)
     return ids,graph,components,{
         "neighbor_definition":neighbors,
+        "diagonal_corner_rule":"both orthogonal side cells must be sea" if neighbors==8 else "no diagonal edges",
         "marine_cells":int(sea.sum()),
         "undirected_edges":len(rows)//2,
         "number_of_sea_components":int(n),
@@ -107,23 +111,17 @@ def snap_island_centroids(source,sea,ids,components,*,distance_limit_km=220):
     ocean_yx=np.argwhere(sea)
     tree=cKDTree(ocean_xyz)
     obs={}
-    used=set()
     for key,p in sorted(points.items(),key=lambda x:int(x[0])):
         xyz=to_xyz(float(p["longitude"]),float(p["latitude"]))
-        _, candidate=tree.query(xyz,k=32)
-        chosen=None
-        for k in np.atleast_1d(candidate):
-            y,x=map(int,ocean_yx[int(k)])
-            node=int(ids[y,x])
-            dist=float(R*np.arccos(np.clip(np.sum(ocean_xyz[int(k)]*xyz),-1,1)))
-            if node not in used and dist<=distance_limit_km:
-                chosen=(node,y,x,dist);break
-        if chosen is None:
-            obs[key]={"status":"FAILED_NO_UNIQUE_MARINE_CENTER_NEAR_WPI_CENTROID",
-                 "longitude":float(p["longitude"]),"latitude":float(p["latitude"])}
+        chord,k=tree.query(xyz,k=1)
+        y,x=map(int,ocean_yx[int(k)])
+        node=int(ids[y,x])
+        dist=float(2*R*np.arcsin(np.clip(chord/2,0,1)))
+        if dist>distance_limit_km:
+            obs[key]={"status":"FAILED_NO_MARINE_CENTER_WITHIN_DISTANCE_LIMIT",
+                 "longitude":float(p["longitude"]),"latitude":float(p["latitude"]),
+                 "nearest_ocean_grid_node":node,"nearest_displacement_km":dist}
         else:
-            node,y,x,dist=chosen
-            used.add(node)
             obs[key]={
               "status":"SOURCE_SITE_SNAPPED_TO_NEAREST_SEA_CELL",
               "original_longitude":float(p["longitude"]),
@@ -132,6 +130,14 @@ def snap_island_centroids(source,sea,ids,components,*,distance_limit_km=220):
               "ocean_grid_node":node,"raster_row":y,"raster_col":x,
               "displacement_km":dist,"sea_component_id":int(components[node])
             }
+    node_islands={}
+    for key,item in obs.items():
+        if item["status"].startswith("SOURCE_SITE_"):
+            node_islands.setdefault(str(item["ocean_grid_node"]),[]).append(key)
+    duplicate_nodes={node:keys for node,keys in node_islands.items() if len(keys)>1}
+    for keys in duplicate_nodes.values():
+        for key in keys:
+            obs[key]["shared_ocean_grid_node_with"]=[other for other in keys if other!=key]
     ok=[x for x in obs.values() if x["status"].startswith("SOURCE_SITE_")]
     groups={}
     for x in ok:
@@ -141,6 +147,10 @@ def snap_island_centroids(source,sea,ids,components,*,distance_limit_km=220):
        "islands_original":len(points),
        "islands_snapped":len(ok),
        "islands_failed":len(points)-len(ok),
+       "snapping_method":"independent nearest sea cell; no displacement to force distinct island nodes",
+       "unique_marine_nodes":len(node_islands),
+       "duplicate_marine_node_groups":duplicate_nodes,
+       "all_51_distinct_marine_nodes":len(ok)==51 and len(node_islands)==51,
        "snapped_components_counts":groups,
        "all_51_in_one_marine_component":len(ok)==51 and len(groups)==1,
        "max_snap_distance_km":max((x["displacement_km"] for x in ok),default=None),
@@ -151,11 +161,11 @@ def snap_island_centroids(source,sea,ids,components,*,distance_limit_km=220):
 
 
 def run(original_zip,source,*,neighbors):
-    sea,info=land_mask_from_GSHHG(original_zip)
-    ids,graph,comp,meta=connect_ocean(~sea,neighbors)
-    nodes,nodesmeta=snap_island_centroids(source,~sea,ids,comp)
+    land,info=land_mask_from_GSHHG(original_zip)
+    ids,graph,comp,meta=connect_ocean(~land,neighbors)
+    nodes,nodesmeta=snap_island_centroids(source,~land,ids,comp)
     return {"schema":"chocho_GSHHG237_51_WPI_source_1deg_ocean_topology_and_snapping_v1",
-        "status":"VALID_1DEG_OCEAN_DISCRETE_CIRCUIT_SOURCE_TOPOLOGY" if nodesmeta["all_51_in_one_marine_component"]
+        "status":"VALID_1DEG_OCEAN_DISCRETE_CIRCUIT_SOURCE_TOPOLOGY" if nodesmeta["all_51_in_one_marine_component"] and nodesmeta["all_51_distinct_marine_nodes"]
             else "INCOMPLETE_1DEG_OCEAN_CONNECTIVITY_DO_NOT_FIT_ALL_51",
         "GSHHG_original":info,"graph":meta,
         "WPI_centroid_marine_snapping":nodesmeta,
@@ -163,6 +173,7 @@ def run(original_zip,source,*,neighbors):
         "notes":[
           "1 degree seacell-centroid connectivity is extremely coarse; land and strait geometry can disconnect true oceanic routes.",
           "The original 51 islands are defined by existing biological data; no point excluded silently.",
+          "Island centroids are independently assigned to the nearest sea cell; shared coarse cells are retained and reported, never separated by moving an island.",
           "A 1-degree sea grid cannot resolve the shipping network itself and cannot assess current speed or wind direction.",
           "If not all islands are connected, do not fill missing marine routes with fabricated resistances or silently change sample."
         ]}

@@ -1,0 +1,54 @@
+[Circuitscape Mode]
+data_type = network
+scenario = advanced
+
+[Version]
+version = 5.0.0
+
+[Habitat raster or graph]
+habitat_file = /workspace/scratch/03ebdd5db04f/circuit_inputs/networks/ais_conductances.txt
+habitat_map_is_resistances = false
+
+[Connection Scheme for raster habitat data]
+connect_four_neighbors_only = false
+connect_using_avg_resistances = false
+
+[Short circuit regions (aka polygons)]
+use_polygons = false
+polygon_file = (Browse for a short-circuit region file)
+
+[Options for advanced mode]
+ground_file_is_resistances = true
+source_file = /workspace/scratch/03ebdd5db04f/circuitscape_runtime/observed_ocean_validation/pair_715_1577_sources.txt
+remove_src_or_gnd = keepall
+ground_file = /workspace/scratch/03ebdd5db04f/circuitscape_runtime/observed_ocean_validation/pair_715_1577_ground.txt
+use_unit_currents = false
+use_direct_grounds = true
+
+[Mask file]
+use_mask = false
+mask_file = None
+
+[Options for one-to-all and all-to-one modes]
+use_variable_source_strengths = false
+variable_source_file = None
+
+[Options for pairwise and one-to-all and all-to-one modes]
+included_pairs_file = (Browse for a file with pairs to include or exclude)
+use_included_pairs = false
+point_file = (Browse for file with locations of focal points or regions)
+
+[Calculation options]
+solver = cholmod
+residual_tolerance = 1.0e-9
+
+[Output options]
+write_cum_cur_map_only = false
+log_transform_maps = false
+output_file = /workspace/scratch/03ebdd5db04f/circuitscape_runtime/observed_ocean_validation/ais_pair_715_1577.out
+write_max_cur_maps = false
+write_volt_maps = false
+set_null_currents_to_nodata = false
+set_null_voltages_to_nodata = false
+compress_grids = false
+write_cur_maps = false
