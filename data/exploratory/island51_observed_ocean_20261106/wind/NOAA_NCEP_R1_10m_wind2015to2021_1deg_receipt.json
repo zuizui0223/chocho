@@ -1,0 +1,40 @@
+{
+  "schema": "chocho_NOAA_NCEP_R1_10m_UV_monthly_2015Jan_2021Feb_1deg_v1",
+  "status": "PUBLIC_NOAA_UV_REANALYSIS_SOURCE_VERIFIED_1DEG_UNDIRECTED_SPEED_PROXY_NOT_ADVECTION",
+  "source_DOI_or_url": "https://www.psl.noaa.gov/data/gridded/data.ncep.reanalysis.html",
+  "source_urls": {
+    "uwnd": "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/uwnd.10m.mon.mean.nc",
+    "vwnd": "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/vwnd.10m.mon.mean.nc"
+  },
+  "source_sha256": {
+    "u": "67b5502bc172e3e5d2d24917e073a9ad5e7643fdd8a6bc2a76bd2473d27420dc",
+    "v": "eaf843a722ab5d72ec68e80f065492cabec926c2a58f54ff7994b2673857272b"
+  },
+  "source_native_resolution": "~1.875 lon \u00d7 Gaussian ~1.9 lat",
+  "source_original_shape": [
+    74,
+    94,
+    192
+  ],
+  "observed_months": 74,
+  "source_wind_height_m": 10,
+  "source_UV_units": "m/s",
+  "derived_grid_degrees": 1,
+  "derived_grid_shape": [
+    170,
+    360
+  ],
+  "wind_speed_proxy": "Arithmetic monthly mean of magnitude of each monthly averaged U,V; NOT raw 6-hourly wind speed mean",
+  "median_wind_speed_proxy_m_s": 3.522748272426269,
+  "p05_p95_wind_speed_proxy_m_s": [
+    1.1751946274358975,
+    7.605526583495736
+  ],
+  "caveats": [
+    "NOAA NCEP/NCAR Reanalysis 1 (public), NOT NASA MERRA-2 or ERA5.",
+    "A 10m monthly vector-mean speed cannot represent individual butterfly flight altitude, flight season or transoceanic tailwind events.",
+    "Undirected scalar conductance loses true wind vector transport direction.",
+    "Interpolated NOAA ~2 degree climatology onto 1 degree output does not create new observed fine-scale wind resolution.",
+    "2015\u20132021 modern mean winds cannot explain the actual dates of historic nonnative plant introductions."
+  ]
+}

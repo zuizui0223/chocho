@@ -1,0 +1,67 @@
+name: chocho source-verified 1degree AIS commercial shipping traffic numerical raster
+
+on:
+  push:
+    branches:
+      - analysis/island51-observed-AIS-conductance-20261106
+    paths:
+      - "scripts/build_island51_1degree_commercial_AIS_source.py"
+      - "tests/test_build_island51_1degree_commercial_AIS_source.py"
+      - ".github/workflows/chocho-island51-commercial-AIS-1degree-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-AIS-GeoTIFF-to-global-1degree:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit original missing-value and resampling rules offline
+        run: |
+          python -m pip install --quiet pytest numpy rasterio
+          python -m pytest -q tests/test_build_island51_1degree_commercial_AIS_source.py
+      - name: Download source-sha-pinned published 2015–2021 commercial AIS density archive
+        run: |
+          mkdir -p /tmp/AIS51/coarse /tmp/AIS51/raw
+          curl -fLsS --retry 3 --retry-delay 3 --connect-timeout 30 --max-time 900 \
+            'https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip' \
+            -o /tmp/AIS51/raw/shipdensity_commercial_.zip
+          echo '0cfdce41d9934982bbc8f16bd92ce7545cc088839327cbaa9b0ed1469dda31e8  /tmp/AIS51/raw/shipdensity_commercial_.zip' | sha256sum -c -
+      - name: Read original TIFF overviews into 1 degree mean AIS observation index, excluding original NoData
+        run: |
+          python -u scripts/build_island51_1degree_commercial_AIS_source.py \
+            --source-zip /tmp/AIS51/raw/shipdensity_commercial_.zip \
+            --coarse-grid /tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021.npz \
+            --receipt /tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021_receipt.json
+          python - <<'PY'
+          from pathlib import Path
+          import numpy as np,json
+          p=Path('/tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021.npz')
+          a=np.load(p)
+          z=a['AIS_mean'];valid=a['source_valid_mask']
+          assert z.shape==(170,360) and valid.shape==z.shape
+          assert valid.sum()>40000
+          j=json.loads(Path('/tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021_receipt.json').read_text())
+          assert j['status']=='SOURCE_VERIFIED_ORIGINAL_TIFF_COARSENED_NOT_ROUTE_OR_VESSEL_FLOW'
+          print('WORLD_BANK_SOURCE_AIS_1DEG_READY',j['derived_grid'])
+          PY
+      - name: Archive numerical 1 degree source-derived grid and metadata, not original 480MB raster
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-WorldBank-2015to2021-commercial-AIS-1deg-source-verified
+          path: |
+            /tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021.npz
+            /tmp/AIS51/coarse/commercial_AIS_mean_1deg_2015_2021_receipt.json
+          if-no-files-found: warn
+          retention-days: 30

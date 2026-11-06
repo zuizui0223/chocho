@@ -1,0 +1,69 @@
+{
+  "schema": "chocho_independent_native_AIS_sensitivity_code_and_gate_review_v1",
+  "status": "PASS_NO_BLOCKING_OR_MEANINGFUL_DEFECT_FOUND_IN_REVIEWED_SCOPE",
+  "recorded_at_utc": "2026-11-06T09:03:43Z",
+  "scope": "Read-only review of the sensitivity runner, its tests, separate plan and lock, and execution of its source-validation functions only; no biological fit or original raster derivation was rerun by this review.",
+  "plan": {
+    "primary_outcomes_honestly_disclosed_as_already_seen": true,
+    "native_plan_locked_before_native_outcomes": true,
+    "plan_hash_matches_lock": true,
+    "native_derivation_receipt_matches_current_plan_and_lock_hashes": true,
+    "only_declared_change": "Direct native0.005-degree AIS pixel averaging onto the same0.5-degree grid",
+    "post_hoc_not_independent_validation_wording_present": true
+  },
+  "code_inspection": {
+    "primary_preparation_outputs_use_temporary_directories": true,
+    "output_directory_cannot_equal_primary_result_directory": true,
+    "native_source_validation_precedes_native_outcome_fit": true,
+    "original_frozen_manifest_and_primary_export_hashes_rechecked": true,
+    "uniform_and_wind_matrices_loaded_unchanged_from_primary": true,
+    "uniform_and_wind_network_and_terminal_weight_hash_invariants_present": true,
+    "all_individual_control_fold_losses_and_identities_checked": true,
+    "all_12_comparison_target_groups_and_612_fold_rows_retained": true,
+    "conductivity_transform_regression_and_folds_reused_from_primary": true,
+    "protected_primary_files_checked_for_unchanged_hashes_at_end": true,
+    "test_coverage_inspected": [
+      "Changed plan checksum rejection",
+      "Changed control fold loss rejection",
+      "Changed control fold identity rejection",
+      "Independent39-cell overlap gate",
+      "Native grid checksum and overview rejection"
+    ]
+  },
+  "executed_read_only_source_gate": {
+    "methods": [
+      "validate_plan with the actual separate plan and lock",
+      "verify_native_sources with the actual native grid, derivation receipt and independently computed source-quality audit"
+    ],
+    "native_grid_shape": [
+      340,
+      720
+    ],
+    "all_244800_cells_observed": true,
+    "independent_native_overlap_cells_verified": 39,
+    "maximum_scaled_overlap_error": 5.0979225050703655e-08,
+    "scaled_overlap_error_definition": "abs(derived-independent_mean)/max(abs(independent_mean),1)",
+    "error_tolerance": 3e-07,
+    "original_archive_sha256": "0cfdce41d9934982bbc8f16bd92ce7545cc088839327cbaa9b0ed1469dda31e8"
+  },
+  "findings": {
+    "blocking_issues": 0,
+    "meaningful_defects": 0
+  },
+  "review_limits": [
+    "No independent native biological model fit was executed by this review; runtime control invariance and new scores are produced by the sensitivity runner.",
+    "Native-pixel derivation and physical-unit semantics are covered by the separate source audit.",
+    "This receipt does not convert the post hoc sensitivity into independent validation."
+  ],
+  "checked_files_sha256": {
+    "scripts/run_island51_native_AIS_source_sensitivity.py": "ac41b99d7614d8ae15b1a3337014b3d7a5015e6d2aad5f5b6a9e6d34b551363c",
+    "tests/test_run_island51_native_AIS_source_sensitivity.py": "cae099cd2feae2f0ab0051e0a3159807dbbbf81199a3115c957af7dcdf9edefa",
+    "scripts/run_island51_observed_ocean_circuits.py": "b23975a1ad604f1dcdf3a21f332fde2572a6b6416b67a259d3e3dd824173990a",
+    "scripts/island51_ocean_circuit.py": "76388d28ab47b149060eb5be7b0f793ff31e9554be4680bab2245a5b9a96f1a6",
+    "results/island51_observed_ocean_circuit_20261106/NATIVE_SOURCE_SENSITIVITY_PLAN.md": "f66a20bdc844f23964461fbe899783f1524faabbc016adfe735cdf22823318fe",
+    "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity_plan_lock.json": "f2d81d8026d322618055243369e413d0dea9fc6b348c1e79e6035c54e9e967b9",
+    "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021.npz": "cbb3c963bd4f466453937f5792f2bbd47786fb7f380d38a4b128ab86295a475f",
+    "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021_receipt.json": "7543e26b5a4b8572be90cc01305b4ff14796af66b33cd1fa7f04be8a93f6382c",
+    "results/island51_observed_ocean_circuit_20261106/ais_source_quality/published_AIS_source_quality_receipt.json": "466bc77a2bdd57b70e07cfb9e7256347a4f06cbefa8f62329aff585c0b204371"
+  }
+}

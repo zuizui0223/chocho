@@ -1,0 +1,33 @@
+{
+  "schema": "chocho_official_circuitscape_runtime_verified_v1",
+  "status": "OFFICIAL_JULIA_CIRCUITSCAPE_6_1_EXECUTED_KNOWN_CIRCUITS_PASS",
+  "julia_version": "1.13.3",
+  "julia_archive_url": "https://julialang-s3.julialang.org/bin/linux/x64/1.13/julia-1.13.3-linux-x86_64.tar.gz",
+  "julia_archive_sha256": "5c61cb4b40332cb5a3504e7779e2f5dac093caa4a1116ded19f01413f85c63e4",
+  "circuitscape_version": "6.1.0",
+  "circuitscape_repository": "https://github.com/Circuitscape/Circuitscape.jl",
+  "circuitscape_tag": "v6.1.0",
+  "circuitscape_commit": "253a4189296a01158b8e38f48b9fcb1745815161",
+  "dependency_manifest_sha256": "0be996454077b0de717e4e3ee8d6934aff2c5c896c04fd3d9354bed7d231f1a2",
+  "verification_script_sha256": "c7d20e6eeda39cb240f2d499d2aa6837d7f9549b5c11e20edb1c8e3ab0ae26b0",
+  "verification_log_sha256": "e40bea5dff208695c15238c71009486b7a38dba7ecf542e1f9e9a9f3f757431b",
+  "test_assertions_passed": 7,
+  "fixtures": {
+    "series": {
+      "max_abs_error": 4.440892098500626e-15
+    },
+    "ring": {
+      "max_abs_error": 1.1102230246251565e-15
+    },
+    "distributed_chain": {
+      "expected_effective_resistance": 1.5,
+      "observed_effective_resistance": 1.4999999999999858,
+      "abs_error": 1.4210854715202004e-14
+    }
+  },
+  "solver": "cholmod",
+  "precision": "double",
+  "residual_tolerance": 1e-09,
+  "advanced_signed_source_note": "Balanced b represented by explicit signed currents at all but one negative-current node; that node is direct ground and supplies the omitted sink by conservation. This avoids v6.1 advanced_kernel skip on exact sum(sources)==0.",
+  "real_island_networks_checked": false
+}

@@ -1,0 +1,99 @@
+name: chocho actual World Bank commercial AIS 2015-2021 TIFF archive metadata source audit
+
+on:
+  push:
+    branches:
+      - analysis/island51-observed-AIS-conductance-20261106
+    paths:
+      - ".github/workflows/chocho-island51-commercial-AIS-original-archive-inspect.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actual-published-commercial-shipping-layer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore original 51 source geocentroids independently
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/ais51/original51 /tmp/ais51/raw
+          gh run download 42173654622 \
+            --name island51-NOAA2019-WPI-original-ports-georeference-unique-verification \
+            --dir /tmp/ais51/original51 --repo zuizui0223/chocho
+          test -s /tmp/ais51/original51/island51_original_WPI_ports_coords_unique_source.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          o=json.loads(Path('/tmp/ais51/original51/island51_original_WPI_ports_coords_unique_source.json').read_text())
+          assert o['status']=='ALL_51_SPHERICAL_WPI_CENTROIDS_REPRODUCE_ORIGINAL_1275_DISTANCES'
+          assert len(o['verified_source_51_mean_port_points'])==51
+          assert o['archive_original_1275_recovered_distance_max_km']<1e-6
+          print('AIS51_ORIGINAL_COORDINATES_SOURCE_READY')
+          PY
+      - name: Download full official commercial AIS density file once to inspect true grid and missing values
+        run: |
+          curl -fLsS --retry 3 --retry-delay 4 --connect-timeout 30 --max-time 900 \
+            'https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip' \
+            -o /tmp/ais51/raw/shipdensity_commercial_.zip
+          test "$(stat -c %s /tmp/ais51/raw/shipdensity_commercial_.zip)" -eq 480353369
+          sha256sum /tmp/ais51/raw/shipdensity_commercial_.zip | tee /tmp/ais51/shipdensity_commercial_source_sha256.txt
+      - name: Inspect original ZIP central directory, member types and TIF metadata without assumed values
+        run: |
+          python -m pip install --quiet rasterio numpy
+          python - <<'PY'
+          import zipfile,json,hashlib
+          from pathlib import Path
+          import rasterio
+          p=Path('/tmp/ais51/raw/shipdensity_commercial_.zip')
+          z=zipfile.ZipFile(p)
+          members=z.infolist()
+          out={'schema':'chocho_AIS_WorldBank2015_2021_commercial_original_source_zip_schema_v1',
+               'source':'https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip',
+               'bytes':p.stat().st_size,
+               'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+               'period':'2015-01 to 2021-02 (World Bank public catalog metadata)',
+               'application':'Potential ship-density resistance, not actual bilateral ship traffic or propagule movement',
+               'original_archive_members':[{'name':m.filename,'size':m.file_size,'compressed_size':m.compress_size,
+                                            'compress_type':m.compress_type} for m in members],
+               'TIFF_grids':[]}
+          print('WORLD_BANK_AIS_ARCHIVE_MEMBERS',json.dumps(out['original_archive_members'])[:18000],flush=True)
+          for m in members:
+              if m.filename.lower().endswith(('.tif','.tiff')):
+                  try:
+                      with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN='EMPTY_DIR'):
+                          uri=f'zip://{p}!{m.filename}'
+                          with rasterio.open(uri) as src:
+                              q={'source_member':m.filename,
+                                 'width':src.width,'height':src.height,'count':src.count,'crs':str(src.crs),
+                                 'transform':tuple(src.transform),'nodata':src.nodata,
+                                 'res':src.res,'bounds':tuple(src.bounds),
+                                 'dtypes':src.dtypes,'scales':src.scales,'offsets':src.offsets,
+                                 'block_shapes':src.block_shapes,'tags':src.tags()}
+                              out['TIFF_grids'].append(q)
+                              print('WORLD_BANK_AIS_ORIGINAL_TIFF_GRID',json.dumps(q,default=str)[:9000],flush=True)
+                  except Exception as e:
+                      out['TIFF_grids'].append({'source_member':m.filename,'error':type(e).__name__+': '+str(e)[:400]})
+                      print('WORLD_BANK_AIS_TIFF_GRID_METADATA_ERROR',m.filename,str(e)[:400],flush=True)
+          dest=Path('/tmp/ais51/commercialAIS_original_metadata.json')
+          dest.write_text(json.dumps(out,indent=2,default=str)+'\n')
+          assert len(members)>=1
+          print('WORLD_BANK_AIS_ORIGINAL_SOURCE_INSPECTED',out['sha256'],len(members),flush=True)
+          PY
+      - name: Archive only original raster metadata and source checksum, not bulky binary dataset
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-WorldBank2015-2021-original-commercial-AIS-source-schema
+          path: |
+            /tmp/ais51/commercialAIS_original_metadata.json
+            /tmp/ais51/shipdensity_commercial_source_sha256.txt
+          if-no-files-found: warn
+          retention-days: 30
