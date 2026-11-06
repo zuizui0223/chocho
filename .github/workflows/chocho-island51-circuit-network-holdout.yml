@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Offline math: series / parallel electrical circuits, graph connectivity and 51-island holdout
+      - name: "Offline math: series / parallel electrical circuits, graph connectivity and 51-island holdout"
         run: |
           python -m pip install --quiet pytest numpy pandas
           python -m pytest -q tests/test_exploratory_island51_circuit_network_holdout.py
