@@ -32,6 +32,7 @@ from shapely.ops import transform
 from reconstruct_island51_verified_port_coordinates import spherical_mean, arc_distance
 
 GSHHG_SHA="8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41"
+GSHHG_REPAIRS=set()
 
 
 def source_sha(path):
@@ -111,6 +112,13 @@ def region_overlaps(g,lon,lat,radius_m=5000):
         dy=(radius_m+2500)/110500.0
         dx=dy/max(.05,math.cos(math.radians(lat)))
         window=box(max(-180,lon-dx),max(-90,lat-dy),min(180,lon+dx),min(90,lat+dy))
+        # GSHHG high-resolution source contains a small number of invalid
+        # self-intersecting original coastline polygons. Repair their local
+        # geometry without changing sibling_id landmass classification; log
+        # each repaired feature for reproducibility.
+        if not shapely.is_valid(geom):
+            GSHHG_REPAIRS.add((str(g.iloc[int(i)].landmass_id),int(i)))
+            geom=shapely.make_valid(geom)
         clipped=shapely.intersection(geom,window)
         if clipped.is_empty:continue
         projected=transform(project,clipped)
@@ -174,6 +182,8 @@ def run(source_ports,land,complete,archived_islands,archived_pairs):
         "expected_n_WPI":3630,"source_complete_WPI":len(valid),
         "source_GSHHG":gsha,"original_51_island_ids":sorted(wanted,key=int),
         "GSHHG_L1_polygons":len(polys),
+        "source_GSHHG_invalid_geometries_repaired":len(GSHHG_REPAIRS),
+        "repaired_source_landmass_ids":sorted({x[0] for x in GSHHG_REPAIRS},key=int),
         "matching_sibling_landmasses":len(wanted&available),
         "n_complete_port_assignments":len(assignment),
         "n_island_source_locations_rebuilt":len(present),
