@@ -1,0 +1,84 @@
+name: chocho island51 fixed host and circuit gain atlas
+
+on:
+  push:
+    branches:
+      - analysis/island51-host-circuit-atlas-20261106
+    paths:
+      - ".github/workflows/chocho-island51-host-circuit-atlas.yml"
+      - "pyproject.toml"
+      - "scripts/summarize_island51_host_circuit_atlas.py"
+      - "tests/test_summarize_island51_host_circuit_atlas.py"
+      - "results/island51_host_circuit_atlas_20261106/**"
+      - "results/island51_host_circuit_joint_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/**"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-host-circuit-atlas.yml"
+      - "pyproject.toml"
+      - "scripts/summarize_island51_host_circuit_atlas.py"
+      - "tests/test_summarize_island51_host_circuit_atlas.py"
+      - "results/island51_host_circuit_atlas_20261106/**"
+      - "results/island51_host_circuit_joint_20261106/**"
+      - "results/island51_observed_ocean_circuit_20261106/**"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "provenance/reviewer_defenses/results/island_host_network_20261030/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: island51-host-circuit-atlas-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  frozen-prediction-geographic-accounting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install the existing test and figure environment
+        run: |
+          python -m pip install -e ".[test,figure]"
+          mkdir -p _ci_atlas_results
+          python -m pip freeze > _ci_atlas_results/python_environment.txt
+      - name: Test gain accounting, geographic joins and independent reconstruction
+        run: |
+          python -m pytest -q \
+            tests/test_summarize_island51_host_circuit_atlas.py \
+            results/island51_host_circuit_atlas_20261106/test_verify_atlas.py
+      - name: Audit parent predictions and reproduce all island summaries without refitting
+        run: |
+          python scripts/summarize_island51_host_circuit_atlas.py \
+            --out-dir _ci_atlas_results
+      - name: Independently verify gains, concentration and source geography
+        run: |
+          python results/island51_host_circuit_atlas_20261106/verify_atlas.py \
+            --results-dir _ci_atlas_results
+      - name: Render source-bound maps and all-island contributions
+        run: |
+          python results/island51_host_circuit_atlas_20261106/render_atlas.py \
+            --results-dir _ci_atlas_results
+      - name: Archive complete tables, figures and verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-host-circuit-gain-atlas
+          path: |
+            _ci_atlas_results/*.csv
+            _ci_atlas_results/*.json
+            _ci_atlas_results/*.png
+            _ci_atlas_results/*.svg
+            _ci_atlas_results/python_environment.txt
+          if-no-files-found: error
+          retention-days: 30
