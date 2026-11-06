@@ -1,0 +1,361 @@
+{
+  "schema": "chocho_island51_host_circuit_atlas_execution_verification_v1",
+  "status": "LOCAL_EXECUTION_REPRODUCTION_AND_ANONYMOUS_COMPATIBILITY_VERIFIED",
+  "verified_at_utc": "2026-11-06 13:20:05 UTC",
+  "base_commit": "17a4768cbb6cddf249449bd67e3ea1124e0db2f5",
+  "continuation_branch": "analysis/island51-host-circuit-atlas-20261106",
+  "no_models_refitted": true,
+  "full_repository_and_independent_verifier_suite": {
+    "command": "python -m pytest -q tests results/island51_host_circuit_atlas_20261106/test_verify_atlas.py",
+    "passed": 258,
+    "skipped": 1,
+    "warnings": 1,
+    "exit_code": 0,
+    "skip_reason": "Existing optional NOAA wind-builder test requires unavailable netCDF4; no circuit or wind source was rebuilt.",
+    "warning_reason": "Existing upstream anyio pytest_plugin CallSpec2 deprecation.",
+    "complete_stdout": "........................................................................ [ 27%]\n........................................................................ [ 55%]\n........................................................................ [ 83%]\n..........................................                               [100%]\n=============================== warnings summary ===============================\n../../../../opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14\n  /opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/pytest_plugin.py:14: PytestRemovedIn10Warning: _pytest.python.CallSpec2 has been renamed to CallSpec.\n  The CallSpec2 alias will be removed in pytest 10.\n  Update imports to use CallSpec instead.\n  See https://docs.pytest.org/en/stable/deprecations.html#callspec2-renamed\n    from _pytest.python import CallSpec2\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nSKIPPED [1] tests/test_build_island51_NOAA_R1_10m_monthly_wind_1degree.py:3: could not import 'netCDF4': No module named 'netCDF4'\n258 passed, 1 skipped, 1 warning in 3.57s\n"
+  },
+  "separate_reproduction": {
+    "commands": [
+      "python scripts/summarize_island51_host_circuit_atlas.py --out-dir /workspace/scratch/03ebdd5db04f/atlas_validation/reproduction",
+      "python results/island51_host_circuit_atlas_20261106/verify_atlas.py --results-dir /workspace/scratch/03ebdd5db04f/atlas_validation/reproduction",
+      "python results/island51_host_circuit_atlas_20261106/render_atlas.py --results-dir /workspace/scratch/03ebdd5db04f/atlas_validation/reproduction"
+    ],
+    "five_csv_files": {
+      "island_geography.csv": {
+        "sha256": "3727b1764a7416a85cbb28d573bdc6af3d401a54d3da3838c2e5de9fb913e89d",
+        "reproduced_sha256": "3727b1764a7416a85cbb28d573bdc6af3d401a54d3da3838c2e5de9fb913e89d",
+        "byte_identical": true
+      },
+      "original_port_geography.csv": {
+        "sha256": "590a3f92314eb7a1a89de913939e671c7cbc7e75735a696ad3b697bc80c8f154",
+        "reproduced_sha256": "590a3f92314eb7a1a89de913939e671c7cbc7e75735a696ad3b697bc80c8f154",
+        "byte_identical": true
+      },
+      "island_gain_decomposition.csv": {
+        "sha256": "779e268ddc4d3fa2a345b4ae2ce1e4f835c8a0cc474b0119ad5b0bd9528c2197",
+        "reproduced_sha256": "779e268ddc4d3fa2a345b4ae2ce1e4f835c8a0cc474b0119ad5b0bd9528c2197",
+        "byte_identical": true
+      },
+      "island_conditional_status.csv": {
+        "sha256": "235e73d9aa5b019d5ee9a192b8861644091ecaa3b982c838ff39d5841b649653",
+        "reproduced_sha256": "235e73d9aa5b019d5ee9a192b8861644091ecaa3b982c838ff39d5841b649653",
+        "byte_identical": true
+      },
+      "gain_concentration_summary.csv": {
+        "sha256": "60a13199f050ae568da40e9f118971585737c4308a17c9e68eede03e1e409121",
+        "reproduced_sha256": "60a13199f050ae568da40e9f118971585737c4308a17c9e68eede03e1e409121",
+        "byte_identical": true
+      }
+    },
+    "four_figures_and_figure_receipt_byte_identical": true,
+    "repeated_audit": "PASS_INDEPENDENT_SAVED_LOSS_ACCOUNTING_AND_SOURCE_GEOGRAPHY",
+    "parent_scientific_files_unchanged": 19,
+    "all_existing_tracked_files_unchanged": true,
+    "python": "3.12.14",
+    "versions": {
+      "numpy": "2.3.5",
+      "matplotlib": "3.10.8",
+      "pytest": "9.2.0",
+      "shapely": "2.1.2"
+    }
+  },
+  "independent_review": {
+    "source_and_summary_implementation": "PASS_SPEC_COMPLIANCE_AND_CODE_QUALITY; reviewed independently of the implementation agent.",
+    "numerical_reconstruction": "PASS_ALL_FIVE_TABLES_RECONSTRUCTED_WITHOUT_IMPORTING_SUMMARY_RUNNER",
+    "final_branch_specification": "PASS_NO_MATERIAL_DEPARTURE_FROM_FROZEN_SCOPE",
+    "final_branch_code_and_integration": "PASS_NO_BLOCKING_OR_MATERIAL_DEFECT",
+    "final_branch_report_and_visuals": "PASS_ACTUAL_PNGS_AND_SAVED_TABLES_INDEPENDENTLY_INSPECTED",
+    "final_review_execution_boundary": "Read-only independent review of sources, code, saved accounting, hashes, report and actual figures. Fresh test/reproduction runs are the separately recorded root execution evidence.",
+    "supporting_receipt": "independent_atlas_audit.json",
+    "all_twenty_locked_inputs_verified": true,
+    "all_nineteen_parent_scientific_files_byte_identical": true
+  },
+  "visual_qa": {
+    "status": "PASS_ROOT_VISUAL_INSPECTION_AFTER_COSMETIC_CORRECTIONS",
+    "pngs_inspected": [
+      "island_conditional_gain_maps.png",
+      "all_island_later_gain_contributions.png"
+    ],
+    "all_51_islands_and_all_adverse_contributions_retained": true,
+    "labels_are_landmass_ids_with_explicit_example_ports": true,
+    "both_response_maps_share_equal_size_and_category_colors": true,
+    "map_label_ids": [
+      "12",
+      "17",
+      "20",
+      "47",
+      "168",
+      "169",
+      "257",
+      "456",
+      "1577"
+    ],
+    "findings_and_resolutions": [
+      "Initial European map labels overlapped because offset changes were measured before updating annotation transforms; update_positions now precedes bounding-box checks. Re-rendered labels are separated without moving source points.",
+      "Initial ranking explanatory text overlapped its two-line panel headings; the plot top margin was lowered. Re-rendered headings and labels are separate and legible."
+    ],
+    "source_coordinates_and_numeric_values_unchanged": true,
+    "output_binding": "figure_receipt.json",
+    "separate_render_byte_identical": true
+  },
+  "anonymous_snapshot_validation": {
+    "started_at_utc": "2026-11-06T13:15:51.461183+00:00",
+    "source": "/workspace/scratch/03ebdd5db04f/chocho_atlas",
+    "run_directory": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j",
+    "stage": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage",
+    "bundle": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/butterfly_specialization_anonymous_review_bundle.zip",
+    "commands": [
+      {
+        "name": "render_blinded_manuscript",
+        "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python scripts/render_butterfly_specialization_blinded_manuscript.py --input manuscript/butterfly_specialization_ecology_v0.2.md --output /workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/butterfly_specialization_ecology_blinded_v0.2.md",
+        "cwd": "/workspace/scratch/03ebdd5db04f/chocho_atlas",
+        "returncode": 0,
+        "elapsed_seconds": 0.027721266000298783,
+        "log": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/render_blinded_manuscript.log"
+      },
+      {
+        "name": "build_anonymous_bundle",
+        "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python scripts/build_anonymous_review_bundle.py --output /workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/butterfly_specialization_anonymous_review_bundle.zip --keep-stage /workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage",
+        "cwd": "/workspace/scratch/03ebdd5db04f/chocho_atlas",
+        "returncode": 0,
+        "elapsed_seconds": 0.6353462430015497,
+        "log": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/build_anonymous_bundle.log"
+      },
+      {
+        "name": "snapshot_pytest",
+        "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m pytest -q --junitxml=/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/snapshot_pytest.xml",
+        "cwd": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage",
+        "returncode": 0,
+        "elapsed_seconds": 2.958911433001049,
+        "log": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/snapshot_pytest.log",
+        "environment_overrides": {
+          "PYTHONPATH": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage/src"
+        }
+      },
+      {
+        "name": "render_manuscript_figures",
+        "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python scripts/render_butterfly_specialization_v02_figures.py --anthropogenic-csv data/frozen/figure_sources/anthropogenic_species_metrics.csv --matched-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_matched_null_v0.2.json --hostbias-null-json provenance/reviewer_defenses/results/butterfly_resource_expansion_hostbias_null_v0.1.json --plant-prominence-json provenance/reviewer_defenses/results/butterfly_host_plant_prominence_expansion_v0.1.json --host-concentration-json provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json --occurrence-csv data/frozen/figure_sources/occurrence_resource_validation_species.csv --occurrence-null-json provenance/reviewer_defenses/results/butterfly_occurrence_overlap_null_v0.1.json --occurrence-species-robustness-json provenance/reviewer_defenses/results/butterfly_occurrence_species_robustness_v0.1.json --ceiling-json provenance/reviewer_defenses/results/butterfly_expansion_ceiling_sensitivity_v0.1.json --regional-json provenance/reviewer_defenses/results/butterfly_regional_robustness_v0.1.json --climate-csv data/frozen/figure_sources/climate_distance_sensitivity_species.csv --climate-effect-json provenance/reviewer_defenses/results/butterfly_climate_effect_size_v0.1.json --output-dir _review_figures",
+        "cwd": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage",
+        "returncode": 0,
+        "elapsed_seconds": 5.528096285001084,
+        "log": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/render_manuscript_figures.log",
+        "environment_overrides": {
+          "PYTHONPATH": "/workspace/scratch/03ebdd5db04f/atlas_validation/anonymous-41v5ct2j/_anonymous_stage/src"
+        }
+      }
+    ],
+    "dependencies_installed": false,
+    "protected_source_files": 1275,
+    "existing_dependency_versions": {
+      "numpy": "2.3.5",
+      "pytest": "9.2.0",
+      "shapely": "2.1.2",
+      "matplotlib": "3.10.8"
+    },
+    "fresh_blinded_manuscript_identical_to_source": true,
+    "blinded_manuscript_sha256": "3c4c4a48f892689c84a17adc50c6c77b8b6bafc2cb90612837130cd38277b295",
+    "identity_scan": {
+      "forbidden_paths_absent": 8,
+      "banned_tokens": [
+        "zuizui0223",
+        "ruiqi",
+        "zhang.ruiqi"
+      ],
+      "hits": []
+    },
+    "frozen_figure_sources_sha256": {
+      "data/frozen/figure_sources/s1_resource_descriptors.csv": "894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc",
+      "data/frozen/figure_sources/anthropogenic_species_metrics.csv": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+      "data/frozen/figure_sources/host_contribution_metrics.csv": "b0f16c5fa9a5b4a0842d6d23f69de7a1f5e938a4a96fea426c97df2dd73e63aa",
+      "data/frozen/figure_sources/independent_climate_primary_result.json": "a73dca6e8b669f721d8f2745f27198d9b47a5cbd05dde6146cc8d4f1ddfbf79b"
+    },
+    "archive_files": 834,
+    "bundle_manifest_files_verified": 833,
+    "anonymous_scope": {
+      "atlas_script_and_synthetic_tests_included_byte_identical": true,
+      "exploratory_results_and_data_excluded": true,
+      "parent_analysis_tests_remain_excluded": true
+    },
+    "bundle_sha256": "5e2521966d4e7c7191b0d21d8c337d7c8d8673bb401f75d517fe5e6501bf53f4",
+    "snapshot_pytest": {
+      "tests": 179,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 31
+    },
+    "atlas_synthetic_tests_passed_in_snapshot": 26,
+    "snapshot_skip_reasons": [
+      {
+        "test": ".tests.test_build_island51_NOAA_R1_10m_monthly_wind_1degree",
+        "reason": "collection skipped"
+      },
+      {
+        "test": "tests.test_all23_botanical_taxon_union_20261031.test_all23_port_taxon_union_snapshot",
+        "reason": "Botanical source provenance deliberately excluded from blinded GEB submission"
+      },
+      {
+        "test": "tests.test_botanical_coverage_quality_20261031.test_botanical_source_quality_reconciles",
+        "reason": "Private botanical index data excluded from GEB blinded review material"
+      },
+      {
+        "test": "tests.test_dated_focal_host_taxonomy_20261031.test_gbif_taxa_original_source_annual_host_before_butterfly",
+        "reason": "Exploratory maritime/port data excluded from independent anonymous GEB manuscript"
+      },
+      {
+        "test": "tests.test_dated_host_island_chain_20261030.test_real_prior_host_island_linkage_is_not_claimed_as_dispersal",
+        "reason": "Exploratory island source absent by design from original GEB anonymous bundle"
+      },
+      {
+        "test": "tests.test_early_botanical_opportunity_20261030.test_full_fixed_51_island_source_reconciliation",
+        "reason": "Anonymous manuscript export intentionally excludes exploratory island sources"
+      },
+      {
+        "test": "tests.test_geb_forecast_port_positive_evidence_20261031.test_forecast_improvement_verified_for_three_windows",
+        "reason": "Exploratory island-port evidence not included in independent blinded GEB paper"
+      },
+      {
+        "test": "tests.test_geb_forecast_port_positive_evidence_20261031.test_island_similarity_and_plant_network_overlap_recalculated",
+        "reason": "Exploratory island botanical source deliberately excluded from GEB review"
+      },
+      {
+        "test": "tests.test_geb_forecast_port_positive_evidence_20261031.test_gEB_to_port_record_correlation_not_transport_causality",
+        "reason": "Exploratory port source omitted from independent GEB manuscript"
+      },
+      {
+        "test": "tests.test_geb_gateway_species_bridge_20261031.test_pinned_global_GEB_and_observed_port_record_support",
+        "reason": "Exploratory island-port pipeline is not part of the independent GEB anonymous review pack"
+      },
+      {
+        "test": "tests.test_geb_observational_gateway_claim_20261031.test_positive_observational_island_port_claim_preserved_without_shipping_causality",
+        "reason": "Exploratory harbor/island synthesis excluded from standalone GEB blinded paper"
+      },
+      {
+        "test": "tests.test_geb_port_island_realization_risk_20261031.test_private_original_year_hash_and_source_subpopulation",
+        "reason": "Original island source and exploratory gateway excluded from anonymous GEB review bundle"
+      },
+      {
+        "test": "tests.test_geb_port_island_realization_risk_20261031.test_at_risk_vs_nonindex_not_absent_and_holdout_null",
+        "reason": "Exploratory private-year risk panel not part of independent GEB manuscript"
+      },
+      {
+        "test": "tests.test_geb_top10_pre2011_port_plant_20261031.test_GEB_resource_top10_in_actual_historic_port_sources",
+        "reason": "Historical port host sources are exploratory; not in the independent GEB review pack"
+      },
+      {
+        "test": "tests.test_historical_botanical_17island_sensitivity_20261031.test_historical_source_and_quality_gates_are_not_caused_by_future_butterflies",
+        "reason": "Exploratory source island data absent from independent GEB reviewer pack"
+      },
+      {
+        "test": "tests.test_historical_host_controls_20261031.test_source_pinned_14_pair_gate",
+        "reason": "Exploratory host/port source excluded from anonymous GEB manuscript"
+      },
+      {
+        "test": "tests.test_island_port_first_paper_20261031.test_40_island_cover_and_richness_source_replay",
+        "reason": "Exploratory island-port evidence omitted from independent GEB review pack"
+      },
+      {
+        "test": "tests.test_island_port_first_paper_20261031.test_79_identical_ports_plant_5km_and_urban_1km_source_gates",
+        "reason": "Exploratory port observational source gate omitted from blinded GEB reviewer pack"
+      },
+      {
+        "test": "tests.test_island_port_first_paper_20261031.test_island_first_submission_fencing",
+        "reason": "Independently submitted GEB manuscript unchanged by island first-paper plan"
+      },
+      {
+        "test": "tests.test_maritime_container_seed_crosswalk_20261030.test_port_seed_crosswalk_does_not_equate_congeners",
+        "reason": "Exploratory island source is intentionally excluded from blinded GEB export"
+      },
+      {
+        "test": "tests.test_maritime_host_steppingstone_support_20261030.test_source_locked_support_and_separate_denominators",
+        "reason": "Exploratory island inputs excluded by original anonymous GEB export policy"
+      },
+      {
+        "test": "tests.test_near_island_relay_holdout_20261031.test_source_locked_botanical_opportunity_and_risk_support",
+        "reason": "Anonymous GEB manuscript excludes exploratory original island sources"
+      },
+      {
+        "test": "tests.test_near_island_relay_holdout_20261031.test_time_holdout_predictions_not_overstated_as_causation",
+        "reason": "Exploratory island prediction snapshot excluded from anonymous GEB manuscript"
+      },
+      {
+        "test": "tests.test_original230_historical_host_recurrence_20261031.test_private_source_temporal_host_cohort_denominators",
+        "reason": "This exploratory original230 host and port source is withheld from anonymous GEB review bundle"
+      },
+      {
+        "test": "tests.test_original230_historical_host_recurrence_20261031.test_original230_positive_structural_overlap_vs_negative_re_record",
+        "reason": "Private author source provenance excluded from manuscript export"
+      },
+      {
+        "test": "tests.test_original230_host_geographic_null_20261031.test_source_geo_null_population_and_structural_integrity",
+        "reason": "Original source host and new island observational analyses are excluded from GEB anonymous bundle"
+      },
+      {
+        "test": "tests.test_original230_host_geographic_null_20261031.test_plant_geographic_sampling_explains_unconditioned_host_overlap_excess",
+        "reason": "Exploratory historical host network evidence excluded from GEB blinded bundle"
+      },
+      {
+        "test": "tests.test_original_year_observed_resolution_20261030.test_original_source_identity_and_replay_without_private_raw",
+        "reason": "Exploratory original-island source intentionally redacted in anonymous GEB bundle"
+      },
+      {
+        "test": "tests.test_port_rank_taxonomic_coverage_20261031.test_port_rank_sampling_bias_from_gbif_facets",
+        "reason": "Exploratory plant source excluded from GEB anonymous review bundle"
+      },
+      {
+        "test": "tests.test_region_preserving_host_overlap_null_20261031.test_source_pins_and_preserved_degrees",
+        "reason": "Exploratory private-host source intentionally omitted from anonymous GEB review"
+      },
+      {
+        "test": "tests.test_region_preserving_host_overlap_null_20261031.test_global_and_region_marginal_null_not_causal",
+        "reason": "Original private HOSTS links not redistributed for blind GEB review"
+      }
+    ],
+    "manuscript_figures": {
+      "png_count": 4,
+      "pdf_count": 4,
+      "files": {
+        "Figure1_resource_expansion_matched_null.png": {
+          "bytes": 610406,
+          "sha256": "7e9a9b8d823bfdc323172d49f9e1be7b4fec2653a9a9afb187b99990bad7ac5a"
+        },
+        "Figure2_occurrence_validation.png": {
+          "bytes": 402028,
+          "sha256": "2a05eafdbc56430157195cfab48b49522b0371be56eb28ca5bc70cca56bd0990"
+        },
+        "Figure3_expansion_robustness.png": {
+          "bytes": 330035,
+          "sha256": "28d097e2bbda5b0553a1700d0fc44746e02594f497fc29097705c81cacf8aa2b"
+        },
+        "FigureS1_climate_filtering_and_precision.png": {
+          "bytes": 349851,
+          "sha256": "6b24502061e01f8869f4357c89c3b1faeb7e63ef2175ac9b702ebb35f064b701"
+        },
+        "Figure1_resource_expansion_matched_null.pdf": {
+          "bytes": 36516,
+          "sha256": "1d37d31726416d2bce5cafdcc8a6b36ae101acc215b56159b795896f10bebb50"
+        },
+        "Figure2_occurrence_validation.pdf": {
+          "bytes": 26347,
+          "sha256": "3f71dfe40633922a7d22a7401548965ae953e0a1cde7eab4dc0f0e43875cec13"
+        },
+        "Figure3_expansion_robustness.pdf": {
+          "bytes": 22374,
+          "sha256": "1d4ddf1df94d3f23baa6bebe371dc95621a89dabb9eb0fd342b5c0e1880ed5cd"
+        },
+        "FigureS1_climate_filtering_and_precision.pdf": {
+          "bytes": 42781,
+          "sha256": "c157dfcdb81494161f8d725586063a9027520512756270d38efdd570b0808bb0"
+        }
+      }
+    },
+    "status": "PASS_ANONYMOUS_BUNDLE_ATLAS_COMPATIBILITY_AND_MANUSCRIPT_REGENERATION",
+    "changed_protected_source_files": [],
+    "completed_at_utc": "2026-11-06T13:16:00.871592+00:00"
+  },
+  "publication_tracking": {
+    "base_branch": "analysis/island51-host-circuit-joint-20261106",
+    "intended_state": "draft_pull_request",
+    "remote_ci_evidence_location": "The continuation pull request description records its exact final commit and successful GitHub Actions run links. This file records pre-publication local evidence."
+  }
+}
