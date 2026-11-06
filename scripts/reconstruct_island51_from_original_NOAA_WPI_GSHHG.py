@@ -147,12 +147,20 @@ def run(source_ports,land,complete,archived_islands,archived_pairs):
         raise ValueError("The original 51 landmass sibling_id keys aren't in this GSHHG dataset: "+str(sorted(wanted-available)))
     assignment={}
     distribution=collections.Counter()
+    ambiguous_source_island_candidates=[]
     for t,portid in enumerate(sorted(valid,key=int),1):
         if portid not in ports:raise ValueError("Original WPI OBJECTID not in current public layer: "+portid)
         lon,lat=ports[portid]
         overlaps=region_overlaps(polys,lon,lat,5000)
         if len(overlaps)==1:
             assignment[portid]=overlaps[0]
+        elif len(overlaps)>1 and (set(overlaps)&wanted):
+            ambiguous_source_island_candidates.append({
+                "original_2019_WPI_port_id":portid,
+                "original_coordinates_lonlat":[lon,lat],
+                "all_sibling_landmass_overlaps":overlaps,
+                "eligible_source51_landmass_overlaps":sorted(set(overlaps)&wanted,key=int),
+                "n_intersecting_GSHHG_L1_landmasses":len(overlaps)})
         distribution[str(len(overlaps))]+=1
         if t%200==0 or t==len(valid):
             print("WPI_GSHHG_PORT_5KM_LANDMASS_PROGRESS",t,len(valid),
@@ -191,6 +199,7 @@ def run(source_ports,land,complete,archived_islands,archived_pairs):
         "max_pair_distance_error_km":max(errors,default=None),
         "median_pair_distance_error_km":float(np.median(errors)) if errors else None,
         "count_mismatch_summary":difference,
+        "ambiguous_source_island_port_candidates":ambiguous_source_island_candidates,
         "port_buffer_polygon_overlap_counts":dict(distribution),
         "source_files_sha256":{"WPI":source_sha(source_ports),
                                "GSHHG":gsha,"completed_index":source_sha(complete),
