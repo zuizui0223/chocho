@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent standard-library audit of all host-richness sensitivity predictions."""
+"""Independent standard-library audit of pre-2011 botanical-record effort sensitivity predictions."""
 from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
@@ -101,13 +101,13 @@ def audit(directory):
                     raise ValueError("Comparison value differs: " + str((key, column)))
     if len(checked) != 14:
         raise ValueError("Missing comparisons")
-    receipt = {"schema": "chocho_island51_richness_independent_audit_v1",
+    receipt = {"schema": "chocho_island51_pre2011_effort_independent_audit_v1",
                "status": "ALL_INDEPENDENT_ENDPOINT_FOLD_AND_SUMMARY_CHECKS_PASS",
                "predictions": count, "model_target_pair_endpoints_checked": len(pair_count),
                "source_target_observations_checked": len(observed_pair),
                "folds_checked": len(fold), "comparisons_checked": len(checked)}
     (directory/"independent_audit.json").write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n")
-    print("RICHNESS_AUDIT_JSON="+json.dumps(receipt,sort_keys=True),flush=True)
+    print("PRE2011_EFFORT_AUDIT_JSON="+json.dumps(receipt,sort_keys=True),flush=True)
     return receipt
 
 if __name__ == "__main__":

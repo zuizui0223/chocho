@@ -40,6 +40,10 @@ PARENT_RICHNESS_MSE = {
     "new_butterfly_jaccard":{"CR":0.005849988979,"HR":0.005954970620,"HCR":0.005716559115},
     "earlier_butterfly_jaccard":{"CR":0.010607946157,"HR":0.010007384512,"HCR":0.010104237739},
 }
+PARENT_RICHNESS_MAE = {
+    "new_butterfly_jaccard":{"CR":0.053338303691,"HR":0.053883752394,"HCR":0.052531444456},
+    "earlier_butterfly_jaccard":{"CR":0.068154599964,"HR":0.066458025189,"HCR":0.066369520658},
+}
 
 def git_blob_sha(raw):
     import hashlib
@@ -238,6 +242,10 @@ def run(out_dir):
             original=float(fold_frame[(fold_frame.target==target)&(fold_frame.model==model)].MSE.mean())
             if abs(original-expected)>1e-9:
                 raise ValueError("PR130 original richness-control MSE not reproduced: "+target+"/"+model)
+            mae_expected=PARENT_RICHNESS_MAE[target][model]
+            mae_observed=float(fold_frame[(fold_frame.target==target)&(fold_frame.model==model)].MAE.mean())
+            if abs(mae_observed-mae_expected)>1e-9:
+                raise ValueError("PR130 original richness-control MAE not reproduced: "+target+"/"+model)
     summary = compare_folds(fold_frame)
     if len(summary) != 14:
         raise ValueError("Missing fixed model comparisons")
