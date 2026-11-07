@@ -1,0 +1,28 @@
+name: chocho original PortWatch registry and five-WPI-source pilot independent offline audit
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-global-connections-source-20261107
+    paths:
+      - ".github/workflows/chocho-portwatch-source-ID-and-WPI5-offline.yml"
+      - "results/island51_portwatch_global_connections_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-portwatch-source-ID-and-WPI5-offline.yml"
+      - "results/island51_portwatch_global_connections_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source_id_registry_3_and_original_WPI5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Independently audit published PortWatch network port ID to registry matching
+        run: python results/island51_portwatch_global_connections_20261107/verify_portwatch_3id_registry.py
+      - name: Independently audit original five WPI port names countries and provider coordinates
+        run: python results/island51_portwatch_global_connections_20261107/verify_portwatch_WPI5.py
