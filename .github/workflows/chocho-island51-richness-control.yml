@@ -1,0 +1,51 @@
+name: chocho original51 host identity versus richness sensitivity
+on:
+  push:
+    branches:
+      - analysis/island51-richness-control-20261107
+    paths:
+      - ".github/workflows/chocho-island51-richness-control.yml"
+      - "scripts/run_island51_richness_control.py"
+      - "tests/test_run_island51_richness_control.py"
+      - "results/island51_richness_control_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-richness-control.yml"
+      - "scripts/run_island51_richness_control.py"
+      - "tests/test_run_island51_richness_control.py"
+      - "results/island51_richness_control_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  marginal-host-richness-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install locked source analysis dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_richness
+          python -m pip freeze > _ci_richness/environment.txt
+      - name: Run fixed specification tests
+        run: python -m pytest -q tests/test_run_island51_richness_control.py
+      - name: Reproduce parent C H HC and test marginal richness adjustment
+        run: python scripts/run_island51_richness_control.py --out-dir _ci_richness
+      - name: Independently reconstruct all endpoint errors, folds and comparisons
+        run: python results/island51_richness_control_20261107/verify_predictions.py --results-dir _ci_richness
+      - name: Archive every fold, prediction and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-richness-control-predictions-and-scores
+          path: _ci_richness/
+          if-no-files-found: error
+          retention-days: 30
