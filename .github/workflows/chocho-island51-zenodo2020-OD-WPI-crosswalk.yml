@@ -1,0 +1,63 @@
+name: chocho 2020 actual AIS WPI194 port OD crosswalk and coverage source audit
+on:
+  push:
+    branches:
+      - analysis/island51-zenodo2020-port-voyage-audit-20261107
+    paths:
+      - ".github/workflows/chocho-island51-zenodo2020-OD-WPI-crosswalk.yml"
+      - "scripts/reconcile_island51_zenodo2020_WPI_port_voyages.py"
+      - "tests/test_reconcile_island51_zenodo2020_WPI_port_voyages.py"
+      - "results/island51_zenodo2020_portvoyage_audit_20261107/CROSSWALK_PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original194-real-vessel-port-matching:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only pytest
+        run: python -m pip install pytest
+      - name: Validate pinned WPI194, pure geodistance, normalized port name and ambiguity rejection
+        run: python -m pytest -q tests/test_reconcile_island51_zenodo2020_WPI_port_voyages.py
+      - name: Get publisher MD5 verified public 2020 AIS source archive
+        run: |
+          mkdir -p _ci_zenodo2020_source _ci_zenodo2020_WPI194_match
+          python scripts/audit_island51_zenodo2020_voyage_source.py --out-dir _ci_zenodo2020_source
+      - name: Scan all actual 2020 origin/destination events and independently match source ports
+        run: |
+          python scripts/reconcile_island51_zenodo2020_WPI_port_voyages.py --zip-path _ci_zenodo2020_source/triplet_2020_zenodo10783698_original.zip --out-dir _ci_zenodo2020_WPI194_match
+      - name: Verify complete original 194 port/51 island mapping and aggregate voyage evidence
+        run: |
+          python results/island51_zenodo2020_portvoyage_audit_20261107/verify_WPI_crosswalk.py --results-dir _ci_zenodo2020_WPI194_match
+      - name: Preserve source and all direct 2020 voyage source matching evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-actual2020-zenodo-portOD-WPI-source-reconciliation
+          path: |
+            _ci_zenodo2020_source/original2020_AIS_triplet_schema_receipt.json
+            _ci_zenodo2020_WPI194_match/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit fully source-audited 2020 port voyage coverage, without raw vessel identifiers
+        if: success()
+        run: |
+          TARGET=results/island51_zenodo2020_portvoyage_audit_20261107
+          cp _ci_zenodo2020_WPI194_match/source_matched_voyage_receipt.json "$TARGET/"
+          cp _ci_zenodo2020_WPI194_match/external2020_endpoints_to_WPI194_crosswalk.csv "$TARGET/"
+          cp _ci_zenodo2020_WPI194_match/original194_source_matched_port_coverage.csv "$TARGET/"
+          cp _ci_zenodo2020_WPI194_match/observed2020_verified_WPI_port_links.csv "$TARGET/"
+          cp _ci_zenodo2020_WPI194_match/original51_all1275_direct2020_source_pair_observation.csv "$TARGET/"
+          cp _ci_zenodo2020_WPI194_match/independent_crosswalk_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive verified actual 2020 vessel origin/destination source matching to original194 ports"
+            git push origin HEAD:analysis/island51-zenodo2020-port-voyage-audit-20261107
+          fi
