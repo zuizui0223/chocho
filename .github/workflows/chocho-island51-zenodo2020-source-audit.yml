@@ -1,0 +1,50 @@
+name: chocho direct 2020 public AIS date-ship-port source schema audit
+on:
+  push:
+    branches:
+      - analysis/island51-zenodo2020-port-voyage-audit-20261107
+    paths:
+      - ".github/workflows/chocho-island51-zenodo2020-source-audit.yml"
+      - "scripts/audit_island51_zenodo2020_voyage_source.py"
+      - "tests/test_audit_island51_zenodo2020_voyage_source.py"
+      - "results/island51_zenodo2020_portvoyage_audit_20261107/PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  zenodo2020-public-source-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate original 194 WPI port identities and pinned Zenodo source description
+        run: |
+          python -m pytest -q tests/test_audit_island51_zenodo2020_voyage_source.py
+      - name: Retrieve full original vessel-port ZIP from Zenodo and audit schema
+        run: |
+          mkdir -p _ci_zenodo2020
+          python scripts/audit_island51_zenodo2020_voyage_source.py --out-dir _ci_zenodo2020
+      - name: Preserve full publisher-source digest and member inspection artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-Zenodo-2020-AIS-vessel-port-source-schema
+          path: _ci_zenodo2020/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Commit small integrity verified source schema receipt
+        if: success()
+        run: |
+          TARGET=results/island51_zenodo2020_portvoyage_audit_20261107
+          mkdir -p "$TARGET"
+          cp _ci_zenodo2020/original2020_AIS_triplet_schema_receipt.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive publisher-md5-verified Zenodo 2020 vessel-port triplet source schema"
+            git push origin HEAD:analysis/island51-zenodo2020-port-voyage-audit-20261107
+          fi
