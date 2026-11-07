@@ -1,0 +1,53 @@
+name: chocho original51 both-endpoints-unseen longitude block validation
+on:
+  push:
+    branches:
+      - analysis/island51-double-unseen-longitude-block-20261107
+    paths:
+      - ".github/workflows/chocho-island51-double-unseen.yml"
+      - "scripts/run_island51_double_unseen_blocks.py"
+      - "tests/test_run_island51_double_unseen_blocks.py"
+      - "results/island51_double_unseen_blocks_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-double-unseen.yml"
+      - "scripts/run_island51_double_unseen_blocks.py"
+      - "tests/test_run_island51_double_unseen_blocks.py"
+      - "results/island51_double_unseen_blocks_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  double-unseen-evaluation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original analysis environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_double_unseen
+          python -m pip freeze > _ci_double_unseen/environment.txt
+      - name: Test target-independent block assignment and complete pair partition
+        run: python -m pytest -q tests/test_run_island51_double_unseen_blocks.py
+      - name: Refit all target/model/folds and save 7650 predictions
+        run: python scripts/run_island51_double_unseen_blocks.py --out-dir _ci_double_unseen
+      - name: Reconstruct every source pair prediction, fold, and contrast
+        run: python results/island51_double_unseen_blocks_20261107/verify_double_unseen.py --results-dir _ci_double_unseen
+      - name: Verify published 12 result rows and 51 source geography blocks
+        run: python results/island51_double_unseen_blocks_20261107/verify_published_tables.py --results-dir _ci_double_unseen
+      - name: Archive source folds, all predictions and auditing receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-double-unseen-longitude-block-predictions
+          path: _ci_double_unseen/
+          if-no-files-found: error
+          retention-days: 30
