@@ -1,0 +1,54 @@
+name: chocho original51 AIS latitude-band graph-label placebo under double-unseen folds
+on:
+  push:
+    branches:
+      - analysis/island51-AIS-latitude-matched-node-null-20261107
+    paths:
+      - ".github/workflows/chocho-island51-AIS-latitude-node-null.yml"
+      - "scripts/run_island51_AIS_node_null.py"
+      - "tests/test_run_island51_AIS_node_null.py"
+      - "results/island51_AIS_latitude_node_null_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-AIS-latitude-node-null.yml"
+      - "scripts/run_island51_AIS_node_null.py"
+      - "tests/test_run_island51_AIS_node_null.py"
+      - "results/island51_AIS_latitude_node_null_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  latitude-band-source-relabel-falsification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install existing scientific and testing dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_AIS_node_null
+          python -m pip freeze > _ci_AIS_node_null/environment.txt
+      - name: Verify exact source geography, 199 maps and symmetric native-AIS circuit
+        run: |
+          python -m pytest -q tests/test_run_island51_AIS_node_null.py
+      - name: Reproduce observed AIS reference and fit 199 latitude-band graph relabelings
+        run: |
+          python scripts/run_island51_AIS_node_null.py --out-dir _ci_AIS_node_null
+      - name: Independently audit all source-pair predictions and true-versus-placebo ranks
+        run: |
+          python results/island51_AIS_latitude_node_null_20261107/verify_AIS_node_null.py --results-dir _ci_AIS_node_null
+      - name: Archive full original and placebo predictions, node maps, source and environment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original51-AIS-latitude-band-graph-node-placebos
+          path: _ci_AIS_node_null/
+          if-no-files-found: error
+          retention-days: 30
