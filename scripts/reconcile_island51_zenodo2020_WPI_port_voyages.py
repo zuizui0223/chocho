@@ -312,7 +312,7 @@ def run(zip_path,out_dir):
         "raw_unique_external_endpoint_nodes":len(nodes),
         "match_status_nodes":dict(Counter(x["status"] for x in lookup.values())),
         "verified_external_endpoint_nodes":verified_node,
-        "verified_original_WPI_ports_with_one_or_more_external_endpoints":len(original_port_nodes),
+        "verified_original_WPI_ports_with_one_or_more_external_endpoints":sum(bool(original_port_nodes.get(k)) for k in wp),
         "original_islands_with_one_or_more_verified_2020_endpoints":len(island_port_covered),
         "WPI_port_departure_arrival_observation_events_at_verified_nodes":
              {"departures":sum(original_port_departs.values()),"arrivals":sum(original_port_arrivals.values())},
