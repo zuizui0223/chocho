@@ -97,13 +97,23 @@ def verify(repo_results=HERE):
             distances.append((d,int(pid),pid))
         distances.sort()
         distance_to_nearest,_,nearest=distances[0]
-        if nearest!=row["geography_only_nearest_WPI_id_NOT_VERIFIED"]:
-            raise ValueError("Original nearest source WPI diagnostic ID wrong")
-        assert_near(distance_to_nearest,row["geography_only_nearest_distance_km"],"nearest WPI haversine")
-        if (row["geo_only_5km_NOT_VERIFIED"].lower()=="true")!=(distance_to_nearest<=5.):
-            raise ValueError("Original 5-km geography diagnostic mismatch")
-        if (row["geo_only_10km_NOT_VERIFIED"].lower()=="true")!=(distance_to_nearest<=10.):
-            raise ValueError("Original 10-km geography diagnostic mismatch")
+        if not name:
+            # Source matcher intentionally refuses even geographic diagnostics
+            # for missing/unknown port names, rather than issuing a nearest
+            # WPI suggestion that a reviewer could mistake for verified ID.
+            if (row["geography_only_nearest_WPI_id_NOT_VERIFIED"] or
+                row["geography_only_nearest_distance_km"] or
+                row["geo_only_5km_NOT_VERIFIED"].lower()!="false" or
+                row["geo_only_10km_NOT_VERIFIED"].lower()!="false"):
+                raise ValueError("Unnamed source endpoints must have NO geographic WPI suggestion")
+        else:
+            if nearest!=row["geography_only_nearest_WPI_id_NOT_VERIFIED"]:
+                raise ValueError("Original nearest source WPI diagnostic ID wrong")
+            assert_near(distance_to_nearest,row["geography_only_nearest_distance_km"],"nearest WPI haversine")
+            if (row["geo_only_5km_NOT_VERIFIED"].lower()=="true")!=(distance_to_nearest<=5.):
+                raise ValueError("Original 5-km geography diagnostic mismatch")
+            if (row["geo_only_10km_NOT_VERIFIED"].lower()=="true")!=(distance_to_nearest<=10.):
+                raise ValueError("Original 10-km geography diagnostic mismatch")
         candidates=sorted(
             ((d,int(pid),pid) for d,n,pid in distances if pid in by_name.get(name,[]) and d<=MAX_MATCH_KM),
             key=lambda z:(z[0],z[1])
