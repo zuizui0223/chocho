@@ -1,0 +1,171 @@
+{
+  "status": "PASS_COVERAGE_RECONCILIATION_NOT_GOAL_COMPLETION",
+  "candidates": 225,
+  "mode_states": {
+    "temporal": "COMPLETE",
+    "spatial": "COMPLETE",
+    "species": "COMPLETE",
+    "temporal_effort20": "COMPLETE",
+    "temporal_exclude_top_provider": "COMPLETE",
+    "joint_temporal": "COMPLETE",
+    "joint_spatial": "COMPLETE",
+    "joint_temporal_effort20": "COMPLETE",
+    "joint_temporal_exclude_top_provider": "COMPLETE",
+    "joint_island": "COMPLETE",
+    "intermediate_temporal": "COMPLETE",
+    "intermediate_spatial": "COMPLETE",
+    "route_terrain_temporal": "COMPLETE",
+    "route_terrain_spatial": "COMPLETE"
+  },
+  "mode_coverage": {
+    "temporal": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "T0_port_location",
+        "T1_port_connectivity"
+      ]
+    },
+    "spatial": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "T0_port_location",
+        "T1_port_connectivity"
+      ]
+    },
+    "species": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "T0_port_location",
+        "T1_port_connectivity"
+      ]
+    },
+    "temporal_effort20": {
+      "rows": 159084,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "T0_port_location",
+        "T1_port_connectivity"
+      ]
+    },
+    "temporal_exclude_top_provider": {
+      "rows": 191004,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "T0_port_location",
+        "T1_port_connectivity"
+      ]
+    },
+    "joint_temporal": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "T1_port_connectivity",
+        "J1_natural_transport"
+      ]
+    },
+    "joint_spatial": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "T1_port_connectivity",
+        "J1_natural_transport"
+      ]
+    },
+    "joint_temporal_effort20": {
+      "rows": 159084,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "T1_port_connectivity",
+        "J1_natural_transport"
+      ]
+    },
+    "joint_temporal_exclude_top_provider": {
+      "rows": 191004,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "T1_port_connectivity",
+        "J1_natural_transport"
+      ]
+    },
+    "joint_island": {
+      "rows": 41812,
+      "species": 95,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "J1_natural_transport"
+      ],
+      "islands": 25
+    },
+    "intermediate_temporal": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "B6_intermediate_islands"
+      ]
+    },
+    "intermediate_spatial": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "B6_intermediate_islands"
+      ]
+    },
+    "route_terrain_temporal": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "B7_route_terrain"
+      ]
+    },
+    "route_terrain_spatial": {
+      "rows": 208482,
+      "species": 155,
+      "models": [
+        "M5_host_composition",
+        "B5_sea_terrain",
+        "B7_route_terrain"
+      ]
+    }
+  },
+  "original_dispositions": {
+    "MODELED_ALL_PLANNED_VALIDATIONS": 155,
+    "FEWER_THAN_10_BASELINE_SHARED_CELLS": 62,
+    "FEWER_THAN_30_BASELINE_RECORDS": 7,
+    "NO_2001_2024_RECORDS": 1
+  },
+  "island_dispositions": {
+    "EVALUATED_SECONDARY_ISLAND_SUBSET": 95,
+    "NOT_PRIMARY_ELIGIBLE": 70,
+    "PRIMARY_MODELED_NO_ELIGIBLE_ISLAND_TEST_ROWS": 60
+  },
+  "missing": "Blank means no completed comparison yet; zero means absent from completed comparison, not biological absence. Original disposition labels refer only to original forecast validations, not completion of this extended goal.",
+  "checks": [
+    "225 unique candidate names and keys",
+    "prediction keys and species names agree with original candidates",
+    "all required model columns and targets finite and bounded",
+    "candidate row sums match completed prediction tables"
+  ]
+}
