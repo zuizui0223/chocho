@@ -1,0 +1,39 @@
+name: chocho 2020 AIS real-port coverage and near-port false-match offline audit
+on:
+  push:
+    branches:
+      - analysis/island51-zenodo2020-port-voyage-audit-20261107
+    paths:
+      - ".github/workflows/chocho-zenodo2020-WPI194-offline-verification.yml"
+      - "results/island51_zenodo2020_portvoyage_audit_20261107/**"
+      - "tests/test_audit_island51_zenodo2020_voyage_source.py"
+      - "tests/test_reconcile_island51_zenodo2020_WPI_port_voyages.py"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-zenodo2020-WPI194-offline-verification.yml"
+      - "results/island51_zenodo2020_portvoyage_audit_20261107/**"
+      - "tests/test_audit_island51_zenodo2020_voyage_source.py"
+      - "tests/test_reconcile_island51_zenodo2020_WPI_port_voyages.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only-WPI-match-and-nearby-candidate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original source-only testing prerequisites
+        run: python -m pip install pytest
+      - name: Verify original source port count and conservative matching contract
+        run: |
+          python -m pytest -q tests/test_audit_island51_zenodo2020_voyage_source.py tests/test_reconcile_island51_zenodo2020_WPI_port_voyages.py
+      - name: Recheck all original 194 WPI identities and 1,275 source island OD coverage entries
+        run: |
+          python results/island51_zenodo2020_portvoyage_audit_20261107/verify_WPI_crosswalk.py --results-dir results/island51_zenodo2020_portvoyage_audit_20261107
+      - name: Independently validate every external node status and 27 unverified 5/10km candidates
+        run: |
+          python results/island51_zenodo2020_portvoyage_audit_20261107/verify_unverified_nearby_candidates.py --results-dir results/island51_zenodo2020_portvoyage_audit_20261107
