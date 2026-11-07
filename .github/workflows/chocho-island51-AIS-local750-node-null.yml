@@ -1,0 +1,54 @@
+name: chocho original51 750km source-local AIS whole-graph node placebo
+on:
+  push:
+    branches:
+      - analysis/island51-AIS-local-750km-node-null-20261107
+    paths:
+      - ".github/workflows/chocho-island51-AIS-local750-node-null.yml"
+      - "scripts/run_island51_AIS_local750_node_null.py"
+      - "tests/test_run_island51_AIS_local750_node_null.py"
+      - "results/island51_AIS_local750_node_null_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-AIS-local750-node-null.yml"
+      - "scripts/run_island51_AIS_local750_node_null.py"
+      - "tests/test_run_island51_AIS_local750_node_null.py"
+      - "results/island51_AIS_local750_node_null_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local750-AIS-whole-graph-vertex-swap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen original scientific test dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_local750
+          python -m pip freeze > _ci_local750/environment.txt
+      - name: Verify source 18 local pairs, immutable nodes and 199 distinct maps
+        run: |
+          python -m pytest -q tests/test_run_island51_AIS_local750_node_null.py
+      - name: Reproduce observed AIS and fit 199 local geographically matched node-swaps
+        run: |
+          python scripts/run_island51_AIS_local750_node_null.py --out-dir _ci_local750
+      - name: Independently re-audit all source-pair predictions and descriptive ranks
+        run: |
+          python results/island51_AIS_local750_node_null_20261107/verify_AIS_local_null.py --results-dir _ci_local750
+      - name: Archive all local source-pair maps, raw scores, predictions and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-750km-local-AIS-vertex-placebos
+          path: _ci_local750/
+          if-no-files-found: error
+          retention-days: 30
