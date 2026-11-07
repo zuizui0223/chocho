@@ -1,0 +1,69 @@
+name: chocho original51 indexed-plant and butterfly marine cross-community prediction
+on:
+  push:
+    branches:
+      - analysis/island51-three-community-marine-comparison-20261107
+    paths:
+      - ".github/workflows/chocho-island51-cross-community-marine.yml"
+      - "scripts/run_island51_cross_community_marine.py"
+      - "tests/test_island51_cross_community_marine.py"
+      - "results/island51_cross_community_marine_20261107/PROTOCOL.md"
+      - "results/island51_cross_community_marine_20261107/verify_cross_community.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-51-island-common-plant-butterfly-panels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original scientific analysis environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_cross_community
+          python -m pip freeze > _ci_cross_community/environment.txt
+      - name: Verify original194 WPI, GBIF source and plant-only response baseline
+        run: |
+          python -m pytest -q tests/test_island51_cross_community_marine.py
+      - name: Fit four models to three historically aligned community responses and the retrospective host panel
+        run: |
+          python scripts/run_island51_cross_community_marine.py --out-dir _ci_cross_community
+      - name: Independently reconstruct 990 original plant-indexed pairs, all 15840 predictions and 80 contrasts
+        run: |
+          python results/island51_cross_community_marine_20261107/verify_cross_community.py --results-dir _ci_cross_community
+      - name: Save full scored original pair evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-original990-matched-plant-butterfly-marine-comparisons
+          path: _ci_cross_community/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit source-locked original matched butterfly and plant model predictions
+        if: success()
+        run: |
+          OUT=results/island51_cross_community_marine_20261107
+          mkdir -p "$OUT"
+          cp _ci_cross_community/heldout_predictions.csv.gz "$OUT/"
+          cp _ci_cross_community/source_pair_community_panel.csv "$OUT/"
+          cp _ci_cross_community/source_eligible_geo_folds.csv "$OUT/"
+          cp _ci_cross_community/model_fold_losses.csv "$OUT/"
+          cp _ci_cross_community/comparison_fold_losses.csv "$OUT/"
+          cp _ci_cross_community/comparison_scope_summary.csv "$OUT/"
+          cp _ci_cross_community/execution_receipt.json "$OUT/"
+          cp _ci_cross_community/independent_audit.json "$OUT/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$OUT"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive all 990 matched source-pair plant and butterfly marine comparison results"
+            git push origin HEAD:analysis/island51-three-community-marine-comparison-20261107
+          fi
