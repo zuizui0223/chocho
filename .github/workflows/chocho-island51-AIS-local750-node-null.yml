@@ -44,6 +44,9 @@ jobs:
       - name: Independently re-audit all source-pair predictions and descriptive ranks
         run: |
           python results/island51_AIS_local750_node_null_20261107/verify_AIS_local_null.py --results-dir _ci_local750
+      - name: Verify permanently published 12 score rows and 18 source-matched local pairs
+        run: |
+          python results/island51_AIS_local750_node_null_20261107/verify_published_tables.py --results-dir _ci_local750
       - name: Archive all local source-pair maps, raw scores, predictions and audit
         if: always()
         uses: actions/upload-artifact@v4
