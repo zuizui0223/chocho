@@ -146,7 +146,7 @@ def audit(folder):
     ledger=load(folder/"original51_all1275_direct2020_source_pair_observation.csv")
     if len(ledger)!=1275:
         raise ValueError("Original 1275 pair all-source scope lost")
-    matched_islands={ports[pid]["island_id"] for pid in verified_nodes}
+    matched_islands={ports[pid]["island_id"] for pid,links in verified_nodes.items() if links}
     if len(matched_islands)!=receipt["original_islands_with_one_or_more_verified_2020_endpoints"]:
         raise ValueError("Actual 2020 WPI endpoint source island cohort changed")
     seen_pairs=set()
@@ -173,7 +173,7 @@ def audit(folder):
        "original_WPI_ports":194,"original_marine_port_nodes":182,"original_landmass_groups":51,
        "raw_source_external_endpoint_nodes_reconciled":len(rows),
        "verified_external_nodes_name_and_geo":external_match,
-       "source_verified_WPI_ports":len(verified_nodes),
+       "source_verified_WPI_ports":sum(bool(links) for links in verified_nodes.values()),
        "source_verified_island_groups":len(matched_islands),
        "source_matched_directed_WPI_port_pairs":len(seen_edges),
        "source_matched_directed_original_island_pairs":len(cross),
