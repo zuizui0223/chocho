@@ -1,0 +1,51 @@
+name: chocho source-only 3 PortWatch connection IDs to global provider-port registry
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-global-connections-source-20261107
+    paths:
+      - ".github/workflows/chocho-island51-portwatch-3id-registry.yml"
+      - "scripts/audit_island51_portwatch_3id_registry_compatibility.py"
+      - "tests/test_audit_island51_portwatch_3id_registry_compatibility.py"
+      - "results/island51_portwatch_global_connections_20261107/REGISTRY_ID_CHECK_PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  three_source_network_IDs_are_in_provider_registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only test dependency
+        run: python -m pip install pytest
+      - name: Verify original WPI194 and three source-selected network port IDs
+        run: python -m pytest -q tests/test_audit_island51_portwatch_3id_registry_compatibility.py
+      - name: Bounded non-systematic provider sample of three port registry IDs and port-count only
+        run: |
+          mkdir -p _ci_portwatch_3id
+          python scripts/audit_island51_portwatch_3id_registry_compatibility.py --out-dir _ci_portwatch_3id
+      - name: Save source-only registry identity check for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-portwatch-3-connection-provider-ID-bounded-check
+          path: _ci_portwatch_3id/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit source-only three-provider-ID check, not network bulk data
+        if: success()
+        run: |
+          TARGET=results/island51_portwatch_global_connections_20261107
+          mkdir -p "$TARGET"
+          cp _ci_portwatch_3id/source_bounded_connection_registry_3id_receipt.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive bounded three-port PortWatch source ID and coordinates match"
+            git push origin HEAD:analysis/island51-portwatch-global-connections-source-20261107
+          fi
