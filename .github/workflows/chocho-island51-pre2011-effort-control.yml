@@ -1,0 +1,52 @@
+name: chocho original51 pre2011 botanical observation control
+on:
+  push:
+    branches: [analysis/island51-pre2011-effort-control-20261107]
+    paths:
+      - ".github/workflows/chocho-island51-pre2011-effort-control.yml"
+      - "scripts/run_island51_pre2011_effort_control.py"
+      - "tests/test_run_island51_pre2011_effort_control.py"
+      - "results/island51_pre2011_effort_control_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-pre2011-effort-control.yml"
+      - "scripts/run_island51_pre2011_effort_control.py"
+      - "tests/test_run_island51_pre2011_effort_control.py"
+      - "results/island51_pre2011_effort_control_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historical-botanical-effort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install analysis and test packages
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_historic
+          python -m pip freeze > _ci_historic/environment.txt
+      - name: Test historical-source identity
+        run: python -m pytest -q tests/test_run_island51_pre2011_effort_control.py
+      - name: Reproduce original parent and fit fixed six models
+        run: python scripts/run_island51_pre2011_effort_control.py --out-dir _ci_historic
+      - name: Audit endpoint predictions and fold comparisons independently
+        run: python results/island51_pre2011_effort_control_20261107/verify_predictions.py --results-dir _ci_historic
+      - name: Verify committed numerical and island coverage tables against fresh outputs
+        run: python results/island51_pre2011_effort_control_20261107/verify_published_tables.py --results-dir _ci_historic
+      - name: Archive source audit and predictions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-historical-botanical-effort
+          path: _ci_historic/
+          if-no-files-found: error
+          retention-days: 30
