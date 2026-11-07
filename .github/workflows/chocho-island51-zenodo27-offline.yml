@@ -1,0 +1,33 @@
+name: chocho original51 verified vs hypothetical 27 source-route feasibility offline verification
+on:
+  push:
+    branches:
+      - analysis/island51-zenodo2020-geoonly-27-coverage-envelope-20261107
+    paths:
+      - ".github/workflows/chocho-island51-zenodo27-offline.yml"
+      - "results/island51_zenodo2020_nearby27_envelope_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-zenodo27-offline.yml"
+      - "results/island51_zenodo2020_nearby27_envelope_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  complete_source_only_feasibility_verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Independently verify original194 WPI and all original verified source OD island pairs
+        run: |
+          python results/island51_zenodo2020_portvoyage_audit_20261107/verify_WPI_crosswalk.py --results-dir results/island51_zenodo2020_portvoyage_audit_20261107
+      - name: Ensure 27 source-near WPI nodes have NO verified identity or route status
+        run: |
+          python results/island51_zenodo2020_portvoyage_audit_20261107/verify_unverified_nearby_candidates.py --results-dir results/island51_zenodo2020_portvoyage_audit_20261107
+      - name: Independently recheck 1275 verified versus hypothetical OD source pair events and raw-source receipt
+        run: |
+          python results/island51_zenodo2020_nearby27_envelope_20261107/verify_published_source.py

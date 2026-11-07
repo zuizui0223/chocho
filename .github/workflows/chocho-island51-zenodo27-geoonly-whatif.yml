@@ -1,0 +1,57 @@
+name: chocho 2020 source-only overinclusive 27 near-port voyage coverage what-if
+on:
+  push:
+    branches:
+      - analysis/island51-zenodo2020-geoonly-27-coverage-envelope-20261107
+    paths:
+      - ".github/workflows/chocho-island51-zenodo27-geoonly-whatif.yml"
+      - "scripts/audit_island51_zenodo2020_nearby27_whatif_coverage.py"
+      - "results/island51_zenodo2020_nearby27_envelope_20261107/PROTOCOL.md"
+      - "results/island51_zenodo2020_nearby27_envelope_20261107/verify_27_envelope_from_raw.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_only_27_unverified_port_whatif:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch original 2020 OD source from publisher and verify MD5
+        run: |
+          mkdir -p _ci_original_2020 _ci_unverified27_whatif
+          python scripts/audit_island51_zenodo2020_voyage_source.py --out-dir _ci_original_2020
+      - name: Reproduce 46 verified source nodes; evaluate exact 27 NOT VERIFIED 10-km geographic assumptions
+        run: |
+          python scripts/audit_island51_zenodo2020_nearby27_whatif_coverage.py --zip-path _ci_original_2020/triplet_2020_zenodo10783698_original.zip --out-dir _ci_unverified27_whatif
+      - name: Independently reparse all original ship-port records and all 1275 island pairs
+        run: |
+          python results/island51_zenodo2020_nearby27_envelope_20261107/verify_27_envelope_from_raw.py --zip-path _ci_original_2020/triplet_2020_zenodo10783698_original.zip --results-dir _ci_unverified27_whatif
+      - name: Preserve publisher and source-only hypothetical record, without raw vessel identifiers
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-original2020-27-unverified-port-coverage-whatif
+          path: |
+            _ci_original_2020/original2020_AIS_triplet_schema_receipt.json
+            _ci_unverified27_whatif/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Commit small audited source-only scenario totals and 1275 pair comparison
+        if: success()
+        run: |
+          TARGET=results/island51_zenodo2020_nearby27_envelope_20261107
+          mkdir -p "$TARGET"
+          cp _ci_unverified27_whatif/original51_verified_vs_UNVERIFIED_geonear_alias_2020_OD_pair_scenarios.csv "$TARGET/"
+          cp _ci_unverified27_whatif/source_only_geonear27_whatif_receipt.json "$TARGET/"
+          cp _ci_unverified27_whatif/independent_raw_source_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive overinclusive hypothetical 27 near-port coverage with zero promoted verified routes"
+            git push origin HEAD:analysis/island51-zenodo2020-geoonly-27-coverage-envelope-20261107
+          fi
