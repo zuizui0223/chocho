@@ -258,6 +258,15 @@ def run(source_dir,out_dir):
     geographic,where=partition_geographic_blocks(GEOGRAPHY,ids)
     folds,fold_support=holdout_plan(q,ids,geographic)
     designs,feature_names,masks,historical=build_models(q,ids,original_ports,matrices,flora)
+    initial_controls,early_jaccard,quality=general_flora_features(q,ids,flora)
+    source_pair_features=pd.DataFrame({
+        "source_pair_index":np.arange(1275,dtype=int),
+        "island_a":q.island_a.to_numpy(dtype=str),
+        "island_b":q.island_b.to_numpy(dtype=str),
+        "early_general_plant_specieskey_jaccard_imputed":early_jaccard,
+        "both_early_species_indexed":quality["both_early_species_indexed"],
+        **initial_controls,
+    })
     source_pair_category=np.array(["within_longitude_block" if geographic[str(r.island_a)]==geographic[str(r.island_b)]
          else "between_longitude_blocks" for r in q.itertuples(index=False)],dtype=object)
     if int(np.sum(source_pair_category=="within_longitude_block"))!=235:
@@ -304,6 +313,7 @@ def run(source_dir,out_dir):
         "comparison_scope_summary.csv":summary,
         "original51_early_general_flora_coverage.csv":island_table,
         "source_geographic_folds.csv":fold_support,
+        "source_pair_general_flora_covariates.csv":source_pair_features,
     }
     for name,frame in file_outputs.items():
         frame.to_csv(out/name,index=False,float_format="%.17g")

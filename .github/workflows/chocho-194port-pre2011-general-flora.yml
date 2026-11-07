@@ -1,0 +1,86 @@
+name: chocho all-194 original WPI port historical Plantae speciesKey acquisition and island prediction
+on:
+  push:
+    branches:
+      - analysis/island51-pre2011-public-flora-direct-20261107
+    paths:
+      - ".github/workflows/chocho-194port-pre2011-general-flora.yml"
+      - "scripts/acquire_island51_pre2011_public_flora.py"
+      - "scripts/run_island51_pre2011_general_flora_prediction.py"
+      - "tests/test_island51_pre2011_general_flora.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  historic-public-flora-complete:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original analysis dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_early_flora_source _ci_early_flora_prediction
+          python -m pip freeze > _ci_early_flora_source/environment.txt
+      - name: Assert frozen 194 original WPI source ports and model family
+        run: python -m pytest -q tests/test_island51_pre2011_general_flora.py
+      - name: Acquire all 194 original port 2001-2010 general plant speciesKey facets from live GBIF
+        run: |
+          if [ -s results/island51_pre2011_public_general_flora_20261107/source/GBIF_original194_port_2001_2010_speciesKey.csv.gz ] && [ -s results/island51_pre2011_public_general_flora_20261107/source/source_receipt.json ]; then
+            cp results/island51_pre2011_public_general_flora_20261107/source/GBIF_original194_port_2001_2010_speciesKey.csv.gz _ci_early_flora_source/
+            cp results/island51_pre2011_public_general_flora_20261107/source/GBIF_original194_port_2001_2010_coverage.csv _ci_early_flora_source/
+            cp results/island51_pre2011_public_general_flora_20261107/source/GBIF_original51_early_general_flora_islands.csv _ci_early_flora_source/
+            cp results/island51_pre2011_public_general_flora_20261107/source/source_receipt.json _ci_early_flora_source/
+          else
+            python scripts/acquire_island51_pre2011_public_flora.py --out-dir _ci_early_flora_source
+          fi
+      - name: Fit dated general flora controls on every original island-pair block
+        run: |
+          python scripts/run_island51_pre2011_general_flora_prediction.py --source-dir _ci_early_flora_source --out-dir _ci_early_flora_prediction
+      - name: Independently audit GBIF source, dates, predictor sets, model errors and all comparisons
+        run: |
+          python results/island51_pre2011_public_general_flora_20261107/verify_early_flora.py --source-dir _ci_early_flora_source --results-dir _ci_early_flora_prediction
+      - name: Archive full indexed general flora evidence and matching source reproduction
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-public-194-port-2001-2010-Plantae-and-predictions
+          path: |
+            _ci_early_flora_source/
+            _ci_early_flora_prediction/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Persist source-locked public general-flora snapshot and fully audited prediction results
+        if: success()
+        run: |
+          TARGET=results/island51_pre2011_public_general_flora_20261107
+          mkdir -p "$TARGET/source"
+          cp _ci_early_flora_source/GBIF_original194_port_2001_2010_speciesKey.csv.gz "$TARGET/source/"
+          cp _ci_early_flora_source/GBIF_original194_port_2001_2010_coverage.csv "$TARGET/source/"
+          cp _ci_early_flora_source/GBIF_original51_early_general_flora_islands.csv "$TARGET/source/"
+          cp _ci_early_flora_source/source_receipt.json "$TARGET/source/"
+          cp _ci_early_flora_prediction/heldout_predictions.csv.gz "$TARGET/"
+          cp _ci_early_flora_prediction/model_fold_losses.csv "$TARGET/"
+          cp _ci_early_flora_prediction/comparison_fold_losses.csv "$TARGET/"
+          cp _ci_early_flora_prediction/comparison_scope_summary.csv "$TARGET/"
+          cp _ci_early_flora_prediction/original51_early_general_flora_coverage.csv "$TARGET/"
+          cp _ci_early_flora_prediction/source_geographic_folds.csv "$TARGET/"
+          cp _ci_early_flora_prediction/source_pair_general_flora_covariates.csv "$TARGET/"
+          cp _ci_early_flora_prediction/execution_receipt.json "$TARGET/"
+          cp _ci_early_flora_prediction/independent_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive all194 GBIF Plantae 2001-2010 source taxa and 51-island audited comparisons"
+            git push origin HEAD:analysis/island51-pre2011-public-flora-direct-20261107
+          fi
