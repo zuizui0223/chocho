@@ -1,0 +1,52 @@
+name: chocho original51 cross-community source snapshot offline replication
+on:
+  push:
+    branches:
+      - analysis/island51-three-community-marine-comparison-20261107
+    paths:
+      - ".github/workflows/chocho-island51-cross-community-offline.yml"
+      - "results/island51_cross_community_marine_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-cross-community-offline.yml"
+      - "results/island51_cross_community_marine_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cross-community-offline-replication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-locked scientific test environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_cross_community_offline
+          python -m pip freeze > _ci_cross_community_offline/environment.txt
+      - name: Verify historical GBIF source and original community outcome separation
+        run: python -m pytest -q tests/test_island51_cross_community_marine.py
+      - name: Refit all shared botanical-indexed island-pair source models without internet
+        run: |
+          python scripts/run_island51_cross_community_marine.py --out-dir _ci_cross_community_offline
+      - name: Independently audit source-indexed historical plant community and all saved model errors
+        run: |
+          python results/island51_cross_community_marine_20261107/verify_cross_community.py --results-dir _ci_cross_community_offline
+      - name: Confirm all six saved source/model CSV tables are reproducible
+        run: |
+          python results/island51_cross_community_marine_20261107/verify_published_tables.py --results-dir _ci_cross_community_offline
+      - name: Preserve complete source audit and checked forecast reconstruction
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-matched-990-plant-butterfly-crosscommunity-offline-refit
+          path: _ci_cross_community_offline/
+          retention-days: 30
+          if-no-files-found: error
