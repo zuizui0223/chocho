@@ -115,3 +115,9 @@ python scripts/release_preflight.py
 ```
 
 Neither preflight requests nor authorizes additional ecological analyses.
+
+## Parallel island–port/marine research and wastewater boundary (2026-11-07)
+
+The original **GEB butterfly host-resource manuscript and its frozen result receipts remain unchanged**. An independent island–port research track investigates **introduced host floras, island stepping-stones, ports, wind, observed AIS vessel routes and marine effective-resistance/Circuitscape predictors**. Its draft analyses are separate from the submitted-paper evidence path; see [the research boundary note](docs/ISLAND_PORT_MARINE_AND_GESUI_BOUNDARY_20261107.md) and the original [marine source runs / draft PRs #127–137](https://github.com/zuizui0223/chocho/pulls).
+
+**Wastewater, WWTP facilities, modeled sewage volumes, sanitation/agricultural N, all-flora nutrient-affinity studies and freshwater/riparian ecology** are now curated in the independent [gesui repository](https://github.com/zuizui0223/gesui). The complete 80-file source archive of the original [Draft PR #122](https://github.com/zuizui0223/chocho/pull/122) was copied to [gesui/archive/chocho_pr122](https://github.com/zuizui0223/gesui/tree/main/archive/chocho_pr122) with all 80 Git blob SHAs matching. The original PR branch and historical data are **not deleted or altered**, and no cross-repository migration changes any ecological coefficient, original manuscript claim, or CI gate.
