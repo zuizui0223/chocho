@@ -1,0 +1,57 @@
+name: chocho 51-island top-port training-influence double-unseen test
+on:
+  push:
+    branches:
+      - analysis/island51-top-port-training-influence-20261107
+    paths:
+      - ".github/workflows/chocho-island51-top-port-influence.yml"
+      - "scripts/run_island51_top_port_training_influence.py"
+      - "tests/test_run_island51_top_port_training_influence.py"
+      - "results/island51_top_port_training_influence_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-top-port-influence.yml"
+      - "scripts/run_island51_top_port_training_influence.py"
+      - "tests/test_run_island51_top_port_training_influence.py"
+      - "results/island51_top_port_training_influence_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  port-training-influence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original analysis dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_port_influence
+          python -m pip freeze > _ci_port_influence/environment.txt
+      - name: Test original port ranking and unchanged pair/holdout support
+        run: |
+          python -m pytest -q tests/test_run_island51_top_port_training_influence.py
+      - name: Refit four training cohorts and reproduce previous latitude-adjusted contrasts
+        run: |
+          python scripts/run_island51_top_port_training_influence.py --out-dir _ci_port_influence
+      - name: Independently audit all source pairs, training omissions, predictions and scores
+        run: |
+          python results/island51_top_port_training_influence_20261107/verify_port_influence.py --results-dir _ci_port_influence
+      - name: Verify published 120 comparison rows and 51 original port ranks
+        run: |
+          python results/island51_top_port_training_influence_20261107/verify_published_tables.py --results-dir _ci_port_influence
+      - name: Archive full predictions, source manifests and model errors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-original-top-port-training-influence
+          path: _ci_port_influence/
+          if-no-files-found: error
+          retention-days: 30
