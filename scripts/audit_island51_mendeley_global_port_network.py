@@ -145,8 +145,8 @@ def sample_binary(filename,raw):
 
 def safe_file_probe(public,full):
     name=public["name"]
-    return bool(re.search(r"(^|[^a-z])(port[_ -]?to[_ -]?port|maritime[_ -]?network|network|ports|port[_ -]?stat)",name.lower())) and
-            full["bytes"]>0 and full["bytes"]<=MAX_DOWNLOAD)
+    return (bool(re.search(r"(^|[^a-z])(port[_ -]?to[_ -]?port|maritime[_ -]?network|network|ports|port[_ -]?stat)",name.lower()))
+            and full["bytes"]>0 and full["bytes"]<=MAX_DOWNLOAD)
 
 def main(outdir):
     out=Path(outdir).resolve()
