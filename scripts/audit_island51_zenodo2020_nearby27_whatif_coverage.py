@@ -152,9 +152,9 @@ def run(zip_path,out_dir):
     states,origin,destination,segments,first,last=read_external(zip_path)
     if states["source_rows"]!=OUTPUT_REQUIRED_OLD["source_event_rows"]:
         raise ValueError("Original publisher source 645581 rows changed")
-    if set(origin)|set(destination)!=set(real)|set(candidates)|(
-        (set(origin)|set(destination))-(set(real)|set(candidates))):
-        raise ValueError("Unexpected external source endpoint set")
+    source_nodes=set(origin)|set(destination)
+    if not set(real).issubset(source_nodes) or not set(candidates).issubset(source_nodes):
+        raise ValueError("One of the 46 verified or 27 hypothetical source nodes is absent from the original 2020 AIS records")
     if len(set(origin)|set(destination))!=1923:
         raise ValueError("Original source endpoints differ from 1923 recorded nodes")
     base_status,base_ports,base_islands,base_direction,_=aggregate(segments,original_ports,real,{})
@@ -162,7 +162,7 @@ def run(zip_path,out_dir):
         base_status["cross_original_island_events"]!=133 or
         len(base_islands)!=12 or len(base_ports)!=94 or len(base_direction)!=20):
         raise ValueError("Original verified WPI source voyages not exactly reproduced")
-    optimistic=dict(real,**candidates) if False else {**real,**candidates}
+    optimistic={**real,**candidates}
     hypo_status,hypo_ports,hypo_islands,hypo_direction,provisional=aggregate(
         segments,original_ports,optimistic,candidates)
     if (hypo_status["both_endpoints_mapped"]<442 or
