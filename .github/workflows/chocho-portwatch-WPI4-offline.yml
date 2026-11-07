@@ -1,0 +1,30 @@
+name: chocho four-WPI PortWatch static model links and 2020 OD offline source audit
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-four-port-directed-connections-20261107
+    paths:
+      - ".github/workflows/chocho-portwatch-WPI4-offline.yml"
+      - "results/island51_portwatch_four_port_model_edge_pilot_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-portwatch-WPI4-offline.yml"
+      - "results/island51_portwatch_four_port_model_edge_pilot_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified_original_four_port_source_and_published_tables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Independent original WPI194 and Zenodo2020 directed source audit
+        run: |
+          python results/island51_portwatch_four_port_model_edge_pilot_20261107/verify_four_directed.py --results-dir results/island51_portwatch_four_port_model_edge_pilot_20261107
+      - name: Verify the published 12 directions and four model degree counts offline
+        run: |
+          python results/island51_portwatch_four_port_model_edge_pilot_20261107/verify_published_four.py

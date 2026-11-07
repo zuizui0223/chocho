@@ -1,0 +1,61 @@
+name: chocho PortWatch four original WPI source IDs fixed directed model-edge pilot
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-four-port-directed-connections-20261107
+    paths:
+      - ".github/workflows/chocho-portwatch-WPI4-directed-model-edge.yml"
+      - "scripts/audit_island51_portwatch_four_source_directed_links.py"
+      - "tests/test_audit_island51_portwatch_four_source_directed_links.py"
+      - "results/island51_portwatch_four_port_model_edge_pilot_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  four_original_wpi_ports_twelve_fixed_directed_model_pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only tests
+        run: python -m pip install pytest
+      - name: Verify four frozen original WPI identities and exactly 12 directed source conditions
+        run: |
+          python -m pytest -q tests/test_audit_island51_portwatch_four_source_directed_links.py
+      - name: Reuse pinned four-WPI public provider sample; fetch bounded rows ONLY if no snapshot exists
+        run: |
+          mkdir -p _ci_portwatch_WPI4
+          FROZEN=results/island51_portwatch_four_port_model_edge_pilot_20261107/source_four_port_directed_model_edge_pilot.json
+          if [ -s "$FROZEN" ]; then
+            cp "$FROZEN" _ci_portwatch_WPI4/source_four_port_directed_model_edge_pilot.json
+            echo "Reusing source-locked PortWatch first verified snapshot; no new provider requests"
+          else
+            python scripts/audit_island51_portwatch_four_source_directed_links.py --out-dir _ci_portwatch_WPI4
+          fi
+      - name: Reconstruct all 12 original/source model pairs and previous verified Zenodo OD source counts
+        run: |
+          python results/island51_portwatch_four_port_model_edge_pilot_20261107/verify_four_directed.py --results-dir _ci_portwatch_WPI4
+      - name: Archive source-only four-port static network evidence with IMF attribution
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-PortWatch-WPI4-static-model-12-direction-sample
+          path: _ci_portwatch_WPI4/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit bounded source metadata receipt without harvesting global network
+        if: success()
+        run: |
+          TARGET=results/island51_portwatch_four_port_model_edge_pilot_20261107
+          cp _ci_portwatch_WPI4/source_four_port_directed_model_edge_pilot.json "$TARGET/"
+          cp _ci_portwatch_WPI4/independent_four_port_model_edge_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive four source-verified PortWatch directed model network probes"
+            git push origin HEAD:analysis/island51-portwatch-four-port-directed-connections-20261107
+          fi
