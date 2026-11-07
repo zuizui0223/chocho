@@ -9,6 +9,8 @@ from reconcile_island51_zenodo2020_WPI_port_voyages import (
 )
 
 def test_original_WPI_194_port_51_island_source_and_marine_scope():
+    if not (Path(__file__).resolve().parents[1]/"results/island51_host_circuit_atlas_20261106/original_port_geography.csv").is_file():
+        pytest.skip("Original WPI source omitted intentionally from anonymous review snapshot")
     ports,by_name=original()
     assert len(ports)==194
     assert len({r["island_id"] for r in ports.values()})==51

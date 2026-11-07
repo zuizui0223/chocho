@@ -9,6 +9,8 @@ from audit_island51_zenodo2020_voyage_source import (
 )
 
 def test_original_194_source_port_roster_reproduces_previous_study():
+    if not PORTS.is_file():
+        pytest.skip("Original WPI source omitted intentionally from anonymous review snapshot")
     r=original_port_roster()
     assert len(r)==194
     assert len({x["island_id"] for x in r})==51
