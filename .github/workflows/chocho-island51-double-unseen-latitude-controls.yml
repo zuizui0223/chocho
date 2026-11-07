@@ -47,6 +47,8 @@ jobs:
       - name: Independently reconstruct all predictions, model folds and contrasts
         run: |
           python results/island51_latitude_controls_20261107/verify_latitude_controls.py --results-dir _ci_latitude
+      - name: Verify all published latitude-control comparisons against fresh outputs
+        run: python results/island51_latitude_controls_20261107/verify_published_tables.py --results-dir _ci_latitude
       - name: Archive full unrounded scores and source evidence
         if: always()
         uses: actions/upload-artifact@v4
