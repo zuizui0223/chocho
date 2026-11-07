@@ -41,6 +41,8 @@ jobs:
         run: python scripts/run_island51_double_unseen_blocks.py --out-dir _ci_double_unseen
       - name: Reconstruct every source pair prediction, fold, and contrast
         run: python results/island51_double_unseen_blocks_20261107/verify_double_unseen.py --results-dir _ci_double_unseen
+      - name: Verify published 12 result rows and 51 source geography blocks
+        run: python results/island51_double_unseen_blocks_20261107/verify_published_tables.py --results-dir _ci_double_unseen
       - name: Archive source folds, all predictions and auditing receipts
         if: always()
         uses: actions/upload-artifact@v4
