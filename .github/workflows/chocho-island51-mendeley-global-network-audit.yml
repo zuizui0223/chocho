@@ -1,0 +1,51 @@
+name: chocho original51 public modelled global network source availability and schema
+on:
+  push:
+    branches:
+      - analysis/island51-mendeley-global-port-network-audit-20261107
+    paths:
+      - ".github/workflows/chocho-island51-mendeley-global-network-audit.yml"
+      - "scripts/audit_island51_mendeley_global_port_network.py"
+      - "tests/test_audit_island51_mendeley_global_port_network.py"
+      - "results/island51_mendeley_global_maritime_audit_20261107/PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original194_public_global_maritime_network_source_metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install minimal source-only testing dependencies
+        run: python -m pip install pytest
+      - name: Test original WPI194 source and direct public Mendeley metadata parser
+        run: python -m pytest -q tests/test_audit_island51_mendeley_global_port_network.py
+      - name: Probe official public Mendeley Data API (no login or OAuth)
+        run: |
+          mkdir -p _ci_global_port_network
+          python scripts/audit_island51_mendeley_global_port_network.py --out-dir _ci_global_port_network
+      - name: Archive publisher model-output network source metadata receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-mendeley2022-global-port-network-public-metadata
+          path: _ci_global_port_network/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit public data source metadata and model-versus-observation warning
+        if: success()
+        run: |
+          TARGET=results/island51_mendeley_global_maritime_audit_20261107
+          mkdir -p "$TARGET"
+          cp _ci_global_port_network/source_metadata_and_schema_receipt.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive public global maritime port-network file metadata and source format verification"
+            git push origin HEAD:analysis/island51-mendeley-global-port-network-audit-20261107
+          fi
