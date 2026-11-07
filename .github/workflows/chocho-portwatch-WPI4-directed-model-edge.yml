@@ -45,7 +45,7 @@ jobs:
         run: |
           TARGET=results/island51_portwatch_four_port_model_edge_pilot_20261107
           cp _ci_portwatch_WPI4/source_four_port_directed_model_edge_pilot.json "$TARGET/"
-          cp _ci_portwatch_WPI4/independent_port_id_edge_audit.json "$TARGET/"
+          cp _ci_portwatch_WPI4/independent_four_port_model_edge_audit.json "$TARGET/"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
           git add "$TARGET"
