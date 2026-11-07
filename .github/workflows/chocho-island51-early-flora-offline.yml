@@ -1,0 +1,53 @@
+name: chocho original51 early general flora source-snapshot independent offline regeneration
+on:
+  push:
+    branches:
+      - analysis/island51-pre2011-public-flora-direct-20261107
+    paths:
+      - ".github/workflows/chocho-island51-early-flora-offline.yml"
+      - "results/island51_pre2011_public_general_flora_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-early-flora-offline.yml"
+      - "results/island51_pre2011_public_general_flora_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay-without-network:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen repository analysis environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_early_flora_offline
+          python -m pip freeze > _ci_early_flora_offline/environment.txt
+      - name: Validate original WPI-194/GBIF archived source locks and source-only covariate tests
+        run: |
+          python -m pytest -q tests/test_island51_pre2011_general_flora.py
+      - name: Refit all 6 original latitude-controlled and dated general flora models
+        run: |
+          python scripts/run_island51_pre2011_general_flora_prediction.py --source-dir results/island51_pre2011_public_general_flora_20261107/source --out-dir _ci_early_flora_offline
+      - name: Independently re-audit original port GBIF speciesKey sets, all 15300 predictions, all fold errors
+        run: |
+          python results/island51_pre2011_public_general_flora_20261107/verify_early_flora.py --source-dir results/island51_pre2011_public_general_flora_20261107/source --results-dir _ci_early_flora_offline
+      - name: Check all 7 published tables, including 15300 predictions, against fresh offline output
+        run: |
+          python results/island51_pre2011_public_general_flora_20261107/verify_published_tables.py --results-dir _ci_early_flora_offline
+      - name: Preserve environment, numerical score diffs and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-early-general-flora-full-offline-audited-regeneration
+          path: _ci_early_flora_offline/
+          if-no-files-found: error
+          retention-days: 30
