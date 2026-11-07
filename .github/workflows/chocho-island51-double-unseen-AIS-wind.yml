@@ -1,0 +1,51 @@
+name: chocho original51 AIS versus wind double-unseen decomposition
+on:
+  push:
+    branches:
+      - analysis/island51-double-unseen-AIS-vs-wind-20261107
+    paths:
+      - ".github/workflows/chocho-island51-double-unseen-AIS-wind.yml"
+      - "scripts/run_island51_AIS_wind_decomposition.py"
+      - "tests/test_run_island51_AIS_wind_decomposition.py"
+      - "results/island51_AIS_wind_decomposition_20261107/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-double-unseen-AIS-wind.yml"
+      - "scripts/run_island51_AIS_wind_decomposition.py"
+      - "tests/test_run_island51_AIS_wind_decomposition.py"
+      - "results/island51_AIS_wind_decomposition_20261107/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-AIS-versus-wind:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned scientific analysis environment
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_AIS_wind
+          python -m pip freeze > _ci_AIS_wind/environment.txt
+      - name: Verify 2-by-2 nested models and frozen geographic split
+        run: python -m pytest -q tests/test_run_island51_AIS_wind_decomposition.py
+      - name: Reproduce prior combined contrast and fit 2-by-2 source decomposition
+        run: python scripts/run_island51_AIS_wind_decomposition.py --out-dir _ci_AIS_wind
+      - name: Independent 10200-prediction and 30-summary audit
+        run: python results/island51_AIS_wind_decomposition_20261107/verify_AIS_wind_decomposition.py --results-dir _ci_AIS_wind
+      - name: Archive all source, prediction and comparison results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-AIS-versus-wind-double-unseen
+          path: _ci_AIS_wind/
+          if-no-files-found: error
+          retention-days: 30
