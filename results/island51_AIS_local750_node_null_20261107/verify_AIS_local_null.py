@@ -311,7 +311,7 @@ def quantile_linear(numbers,p):
     return s[low]*(high-x)+s[high]*(x-low) if high!=low else s[low]
 
 def verify_ranks(output,scores):
-    saved=rows(output/"observed_vs_latitude_node_null.csv")
+    saved=rows(output/"observed_vs_local750_node_null.csv")
     if len(saved)!=12:
         raise ValueError("Expected 12 actual-versus-199 placebo rank comparisons")
     seen=set()

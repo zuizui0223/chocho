@@ -339,7 +339,7 @@ def run(out_dir):
     if len(comparison)!=12:
         raise ValueError("Expected twelve fixed observed/null source comparisons")
     summary.to_csv(out/"AIS_relabeling_scope_scores.csv",index=False,float_format="%.17g")
-    pd.DataFrame(comparison).to_csv(out/"observed_vs_latitude_node_null.csv",index=False,float_format="%.17g")
+    pd.DataFrame(comparison).to_csv(out/"observed_vs_local750_node_null.csv",index=False,float_format="%.17g")
     manifest={"schema":"chocho_original51_750km_AIS_graph_vertex_swap_null_v1",
       "status":"199_MAXIMUM_750KM_SOURCE_PAIR_VERTEX_NULLS_EVALUATED",
       "source_islands":51,"biological_ports":194,"pairs":1275,
