@@ -1,0 +1,9 @@
+{
+ "status":"FIXED_AFTER_SUPPORT_AUDIT_BEFORE_WHOLE_ISLAND_MODEL_FITS",
+ "scope":"Original225 candidate population and155-species primary models retained. Secondary island evaluation:25 area-supported and original-coordinate-consistent islands,95 species,41812 rows.",
+ "folds":"SHA256 landmass_id first8 hex modulo5; same island always same fold. Remove from training every cell with any positive polygon-area intersection with any held island, including ambiguous coastal cells. Retain all other eligible training rows.",
+ "models":["M5_host_composition","B5_sea_terrain","J1_natural_transport"],
+ "settings":"Same original RF and2011-2014->2015-2018 training,2015-2018->2019-2022 evaluation; refit all3 comparators in each fold, never reuse ordinary spatial/temporal predictions as comparators.",
+ "scores":"Paired species-equal MSE and MAE; all islands and excludingGB/Ireland. Island-equal summaries separately; no threshold tuning or selecting improved islands.",
+ "limits":"Past occurrence predictors remain available up to the prediction origin, including held-island history; this tests exclusion of training response rows, not prediction of islands with no historical records. Species and islands remain ecologically dependent. Port-index coverage and retrospective2019 coordinates remain limits."
+}

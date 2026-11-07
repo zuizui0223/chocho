@@ -1,0 +1,63 @@
+{
+  "status": "PASS_FEATURE_SUPPORT_NOT_MODEL_RESULT",
+  "source_sha256": "4b12b875d12b76f27445bd3266b1365ca45579c7b359960477ae03929e9b4e15",
+  "summary": [
+    {
+      "period": "train",
+      "category": "evaluated",
+      "rows": 193703,
+      "species": 155,
+      "cells": 3277,
+      "routes": 95946
+    },
+    {
+      "period": "train",
+      "category": "intermediate_positive",
+      "rows": 8143,
+      "species": 100,
+      "cells": 1728,
+      "routes": 7955
+    },
+    {
+      "period": "train",
+      "category": "geometry_unknown",
+      "rows": 10589,
+      "species": 140,
+      "cells": 2046,
+      "routes": 8126
+    },
+    {
+      "period": "test",
+      "category": "evaluated",
+      "rows": 208482,
+      "species": 155,
+      "cells": 3495,
+      "routes": 97101
+    },
+    {
+      "period": "test",
+      "category": "intermediate_positive",
+      "rows": 8154,
+      "species": 99,
+      "cells": 1802,
+      "routes": 7968
+    },
+    {
+      "period": "test",
+      "category": "geometry_unknown",
+      "rows": 10612,
+      "species": 135,
+      "cells": 2067,
+      "routes": 7845
+    }
+  ],
+  "checks": [
+    "225-candidate ledger retained",
+    "unique feature keys",
+    "unknown preserved",
+    "intermediate-positive implies multiple sea runs",
+    "all training/test eligible rows have a feature match",
+    "test keys exactly match B5 temporal predictions"
+  ],
+  "limits": "No response association tested; positive means sampled geometric intermediate island, not occupancy or relay."
+}

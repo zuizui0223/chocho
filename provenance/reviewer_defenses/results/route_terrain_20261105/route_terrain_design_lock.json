@@ -1,0 +1,9 @@
+{
+ "status":"FIXED_BEFORE_ROUTE_DSM_EXTRACTION_AFTER_B5_AND_INTERMEDIATE_TEMPORAL_RESULTS",
+ "cohort":"All175625 existing pre-origin nearest-record geodesics; preserve225 candidate and155 modeled species. No selection by forecast errors.",
+ "sampling":"WGS84 geodesic midpoint samples at <=2km spacing, including one midpoint for zero-length routes. GSHHG high-resolution level1 land mask. Retain count of all and land samples; ocean samples are not zero elevation. This is separate from250m marine-gap and intermediate-island sampling.",
+ "DSM":"Copernicus GLO90 DSM; use its native pixel values at land sample coordinates, no interpolation or invented missing values. Existing cell sample caches identify previously accessed tiles but do not provide unsampled route elevations.",
+ "features":"Route land elevation P90 and P90-P10 sampled spread; log1p of values clipped below at0 as numerical transforms. At least3 valid land sample points and >=80% valid fraction of planned land samples required; otherwise numeric placeholders0 with explicit route-terrain-unknown flag. Keep raw quantiles and support fractions.",
+ "planned_comparison":"B5 plus route P90, spread and unknown flag versus unchanged B5; original full155-species temporal/spatial evaluation, same rows and RF settings. Secondary island summaries explicitly separate. No threshold optimization on heldout outcomes.",
+ "limits":"2km samples can miss narrow ridges or islands; quantiles are not full-route extrema, slope, least-cost path or proven mountain resistance. Modern DSM includes buildings/vegetation, not historical terrain. Routes follow nearest past record, not known movement. Acquisition coverage must be audited before model fitting."
+}
