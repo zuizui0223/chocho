@@ -65,8 +65,9 @@ def audit(folder):
         receipt["source_original_194_WPI_ports"]!=194 or
         receipt["source_original_182_marine_eligible"]!=182 or
         receipt["source_original_51_landmasses"]!=51 or
-        receipt["original_WPI_port_source_modified"] if False else False):
-        raise ValueError("Original verified original port source receipt changed")
+        receipt["source_original194_WPI_git_blob"]!=ORIGINAL_GIT_BLOB or
+        receipt["published_archive_md5"]!="af27e1bef1f706e2e29ed53aee47ff10"):
+        raise ValueError("Original verified WPI port source receipt changed")
     rows=load(folder/"external2020_endpoints_to_WPI194_crosswalk.csv")
     if len(rows)!=receipt["raw_unique_external_endpoint_nodes"]:
         raise ValueError("External source node list incomplete")
