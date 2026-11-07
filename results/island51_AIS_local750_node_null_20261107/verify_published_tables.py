@@ -31,7 +31,7 @@ def verify_table(name,n,results):
 
 def verify(directory):
     result={
-        "original_vs_local_placebo_rank":verify_table("observed_vs_latitude_node_null.csv",12,directory),
+        "original_vs_local_placebo_rank":verify_table("observed_vs_local750_node_null.csv",12,directory),
         "geography_only_selected_swap_pairs":verify_table("local_swap_pairs.csv",18,directory),
     }
     print("AIS_LOCAL_NULL_PUBLISHED_TABLES_MATCH_FRESH_RESULTS="+str(result),flush=True)
