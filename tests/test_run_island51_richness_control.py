@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
-import numpy as np
-import pandas as pd
 import pytest
+np = pytest.importorskip("numpy")
+pd = pytest.importorskip("pandas")
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from run_island51_richness_control import richness_features, host_counts, compare_folds, MODELS, COMPARISONS
