@@ -1,0 +1,51 @@
+name: chocho original194 bounded IMF PortWatch maritime-connections source metadata audit
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-global-connections-source-20261107
+    paths:
+      - ".github/workflows/chocho-island51-portwatch-connection-metadata.yml"
+      - "scripts/audit_island51_portwatch_maritime_connections_metadata.py"
+      - "tests/test_audit_island51_portwatch_maritime_connections_metadata.py"
+      - "results/island51_portwatch_global_connections_20261107/PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original194_IMF_portwatch_public_source_metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install minimal metadata-only tests
+        run: python -m pip install pytest
+      - name: Test exact original WPI source and strict no-personal-vessel-metadata sample parsing
+        run: python -m pytest -q tests/test_audit_island51_portwatch_maritime_connections_metadata.py
+      - name: Retrieve public IMF ArcGIS service and network-layer metadata with bounded sample only
+        run: |
+          mkdir -p _ci_portwatch_connections
+          python scripts/audit_island51_portwatch_maritime_connections_metadata.py --out-dir _ci_portwatch_connections
+      - name: Archive small public source registry and schema metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-IMF-PortWatch-connection-public-schema-metadata
+          path: _ci_portwatch_connections/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit bounded metadata receipt without systematic source record harvesting
+        if: success()
+        run: |
+          TARGET=results/island51_portwatch_global_connections_20261107
+          mkdir -p "$TARGET"
+          cp _ci_portwatch_connections/portwatch_maritime_connections_metadata_receipt.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive bounded public IMF PortWatch maritime-connectivity metadata and source rights"
+            git push origin HEAD:analysis/island51-portwatch-global-connections-source-20261107
+          fi
