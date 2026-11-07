@@ -97,7 +97,6 @@ def fixed_sources():
     edges=csv_rows(ZENODO_VERIFIED)
     if len(edges)!=94 or len({(r["origin_WPI_port_id"],r["dest_WPI_port_id"]) for r in edges})!=94:
         raise ValueError("Previous verified 2020 WPI 94 port edges source missing")
-    2020_unused = 1
     old={(r["origin_WPI_port_id"],r["dest_WPI_port_id"]):int(r["source_observed_2020_triplet_count"])
          for r in edges}
     if any(n<=0 for n in old.values()):
