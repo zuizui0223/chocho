@@ -20,6 +20,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install lightweight source-inspection test dependencies
+        run: python -m pip install pytest
       - name: Validate original 194 WPI port identities and pinned Zenodo source description
         run: |
           python -m pytest -q tests/test_audit_island51_zenodo2020_voyage_source.py
