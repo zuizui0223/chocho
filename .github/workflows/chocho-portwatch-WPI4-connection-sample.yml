@@ -1,0 +1,50 @@
+name: chocho four verified original WPI ports and PortWatch aggregate marine edge source sample
+on:
+  push:
+    branches:
+      - analysis/island51-portwatch-global-connections-source-20261107
+    paths:
+      - ".github/workflows/chocho-portwatch-WPI4-connection-sample.yml"
+      - "scripts/audit_island51_portwatch_WPI4_induced_source_edges.py"
+      - "tests/test_audit_island51_portwatch_WPI4_induced_source_edges.py"
+      - "results/island51_portwatch_global_connections_20261107/WPI4_EDGES_PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_only_four_WPI_ports_micrograph:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install small source-only test dependency
+        run: python -m pip install pytest
+      - name: Verify four WPI→PortWatch source IDs and fixed model/observed boundary
+        run: python -m pytest -q tests/test_audit_island51_portwatch_WPI4_induced_source_edges.py
+      - name: Query at most 16 PortWatch aggregate maritime model edge sample rows over four verified WPI ports
+        run: |
+          mkdir -p _ci_portwatch_WPI4
+          python scripts/audit_island51_portwatch_WPI4_induced_source_edges.py --out-dir _ci_portwatch_WPI4
+      - name: Archive original four-port model network example source receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-only-4-WPI-to-PortWatch-model-edge-source-example
+          path: _ci_portwatch_WPI4/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Save bounded four-port PortWatch model edge sample in source PR
+        if: success()
+        run: |
+          TARGET=results/island51_portwatch_global_connections_20261107
+          cp _ci_portwatch_WPI4/WPI4_bounded_portwatch_maritime_micrograph_receipt.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive four verified WPI port PortWatch-model source edge sample without any bulk download"
+            git push origin HEAD:analysis/island51-portwatch-global-connections-source-20261107
+          fi
