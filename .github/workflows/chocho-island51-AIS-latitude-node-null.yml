@@ -44,6 +44,9 @@ jobs:
       - name: Independently audit all source-pair predictions and true-versus-placebo ranks
         run: |
           python results/island51_AIS_latitude_node_null_20261107/verify_AIS_node_null.py --results-dir _ci_AIS_node_null
+      - name: Recheck permanently published AIS placebo ranks and source latitude groups
+        run: |
+          python results/island51_AIS_latitude_node_null_20261107/verify_published_tables.py --results-dir _ci_AIS_node_null
       - name: Archive full original and placebo predictions, node maps, source and environment
         if: always()
         uses: actions/upload-artifact@v4
