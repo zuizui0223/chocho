@@ -1,0 +1,38 @@
+name: chocho NC fixed-margin prior-source access audit
+on:
+  push:
+    branches:
+      - analysis/ncomms-public17-access-holdout-20261108
+    paths:
+      - scripts/run_ncomms_conditional_source_access_20261108.py
+      - .github/workflows/chocho-ncomms-conditional-source-access.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  conditional-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout pinned branch content
+        uses: actions/checkout@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install original source code dependencies
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn
+      - name: Validate 20,000 synthetic constrained-switch moves
+        run: python scripts/run_ncomms_conditional_source_access_20261108.py --self-test
+      - name: Recompute from exact source-locked original public 17-island records
+        run: python scripts/run_ncomms_conditional_source_access_20261108.py --out-dir results/ncomms_conditional_source_access_20261108
+      - name: Persist complete conditional null and chain diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ncomms-prior-source-conditional-margin-20261108
+          path: results/ncomms_conditional_source_access_20261108/
+          if-no-files-found: error
+          retention-days: 45
