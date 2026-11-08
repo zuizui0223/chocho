@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render JBI Figure 2: original island-resource contrasts and sampled GBIF overlap.
+"""Render JBI Figure 2: original island resources and matched-stratum contrast.
 
 Reads ONLY three Git-blob-pinned published JSON source receipts. No model fitting.
 The archival butterfly panel is a selected observation sample, NOT an estimate
@@ -116,36 +116,40 @@ def render(data, out):
     bx.grid(axis="x", alpha=0.14)
     bx.set_axisbelow(True)
     bx.text(0.04, -0.37,
-            "Area + biogeography matched:\n"
-            f"   island excess = +{100*match['weighted_island_minus_mainland_share']:.1f} pp"
-            f"  (descriptive p = {match['within_stratum_descriptive_p_two_sided']:.4f})\n"
-            "Matched comparison ≠ pooled-share difference.",
-            transform=bx.transAxes, ha="left", va="top", fontsize=9.1)
+            "Pooled added-share contrast is descriptive;\n"
+            "the area-and-biogeography-matched contrast is in C.",
+            transform=bx.transAxes, ha="left", va="top", fontsize=9.2)
 
-    cx.set_title("C  Indexed butterfly overlap\nIndependent limited GBIF archive", loc="left")
-    denom=val["sampled_species_added_island_opportunity_cells"]
-    yes=val["recorded_butterfly_in_new_opportunity_cells"]
-    cx.barh([0], [yes], color="#537492", height=0.40)
-    cx.barh([0], [denom-yes], left=[yes], color="#d9dce0", height=0.40)
-    cx.set_yticks([])
-    cx.set_xlim(0,denom)
-    cx.set_xticks([0,denom/2,denom], [0,460,920])
-    cx.set_xlabel("Sampled added opportunity cells (n=920)")
-    cx.annotate(f"{yes} cells with\nindexed butterfly records",
-                xy=(yes,0), xytext=(110,0.6), fontsize=10.5,
-                arrowprops={"arrowstyle":"-", "lw":1.1}, va="center")
-    cx.text(denom/2, -0.40, f"{denom-yes} without records in this archive",
-            fontsize=9.7, ha="center")
-    cx.set_ylim(-0.75,0.97)
-    cx.text(0.05, -0.37,
-            f"{yes}/{denom} = {yes/denom*100:.2f}% record overlap\n"
-            f"31 butterfly species with indexed data\n"
-            "No record is NOT ecological absence.",
-            transform=cx.transAxes, fontsize=9.2, va="top")
+    # Visualise the source-fixed overlap strata directly rather than
+    # elevating the very limited GBIF index-overlap screen to a main panel.
+    strata = match["strata_with_both_classes"]
+    assert len(strata) == 15
+    weights = np.array([z["weight"] for z in strata],dtype=float)
+    deviations = 100*np.array([z["difference"] for z in strata],dtype=float)
+    weighted = np.average(deviations,weights=weights)
+    assert math.isclose(weighted,100*match["weighted_island_minus_mainland_share"],abs_tol=1e-10)
+    yjit = np.linspace(-0.21,0.21,len(strata))
+    cx.axvline(0,color="#505861",linewidth=1,linestyle="--",zorder=1)
+    cx.axvline(weighted,color="#d59d55",linewidth=2.4,zorder=2)
+    cx.scatter(deviations,yjit,s=38+28*weights,color="#537492",
+               alpha=.84,edgecolors="white",linewidths=.7,zorder=3)
+    cx.set_title("C  Island excess in matched strata\\n15 Level 1 × area overlap strata",
+                 loc="left")
+    cx.set_xlim(-4,30); cx.set_ylim(-.34,.34); cx.set_yticks([])
+    cx.set_xticks([0,10,20,30])
+    cx.set_xlabel("Island − mainland added-share difference (pp)")
+    cx.grid(axis="x",alpha=.13); cx.set_axisbelow(True)
+    cx.text(weighted+.85,.295,f"Weighted +{weighted:.1f} pp",
+            color="#805521",fontsize=10.2,va="top")
+    cx.text(0.03,-0.37,
+            "Each dot is one matched stratum; size ∝ minimum\\n"
+            "of island and mainland region counts. Descriptive\\n"
+            f"within-stratum permutation p = {match['within_stratum_descriptive_p_two_sided']:.4f}.",
+            transform=cx.transAxes,fontsize=9.0,va="top")
 
     fig.text(0.5,0.052,
-             "Potential resources are defined by plant distributions; GBIF overlap is a selected observational sample, "
-             "not feeding, occupancy or colonisation.",
+             "Resource cells are reconstructed host opportunities, not observed feeding or butterfly populations. "
+             "Matched strata are descriptive, not independent causal replicates.",
              fontsize=9.4, ha="center")
     fig.subplots_adjust(left=0.08, right=0.98, bottom=0.40, top=0.79, wspace=0.44)
     out.mkdir(parents=True, exist_ok=True)
