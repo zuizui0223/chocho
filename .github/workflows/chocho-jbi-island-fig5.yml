@@ -1,0 +1,47 @@
+name: chocho JBI island maritime-proxy Figure 5
+
+on:
+  push:
+    branches:
+      - manuscript/island-resources-marine-access-jbi-v02-20261108
+    paths:
+      - "scripts/render_jbi_island_fig5.py"
+      - "manuscript/island_resources_marine_access_20261108/FIG5_FROZEN_VALUES_V01.json"
+      - ".github/workflows/chocho-jbi-island-fig5.yml"
+  pull_request:
+    paths:
+      - "scripts/render_jbi_island_fig5.py"
+      - "manuscript/island_resources_marine_access_20261108/FIG5_FROZEN_VALUES_V01.json"
+      - ".github/workflows/chocho-jbi-island-fig5.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-audited-fig5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install figure dependencies
+        run: python -m pip install "matplotlib>=3.9,<4" "numpy>=1.26,<3"
+      - name: Verify original CSV blob identities and render all Fig 5 formats
+        run: python scripts/render_jbi_island_fig5.py --out-dir _ci_jbi_fig5
+      - name: Archive PDF/SVG/PNG and original-source receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jbi-island-fig5-source-verified-maritime-specificity
+          path: |
+            _ci_jbi_fig5/fig5_maritime_proxy_specificity.png
+            _ci_jbi_fig5/fig5_maritime_proxy_specificity.svg
+            _ci_jbi_fig5/fig5_maritime_proxy_specificity.pdf
+            _ci_jbi_fig5/fig5_receipt.json
+          if-no-files-found: error
+          retention-days: 30
