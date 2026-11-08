@@ -1,0 +1,74 @@
+name: chocho NC public 17-island prior-source ocean circuit holdout
+
+on:
+  push:
+    branches: [analysis/ncomms-public17-access-holdout-20261108]
+    paths:
+      - ".github/workflows/chocho-ncomms-public17-ocean-holdout.yml"
+      - "scripts/run_ncomms_public17_ocean_access_holdout.py"
+      - "tests/test_ncomms_public17_ocean_access.py"
+      - "data/exploratory/ncomms_public17_access_20261108/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-ncomms-public17-ocean-holdout.yml"
+      - "scripts/run_ncomms_public17_ocean_access_holdout.py"
+      - "tests/test_ncomms_public17_ocean_access.py"
+      - "data/exploratory/ncomms_public17_access_20261108/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-record-index-heldout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install fixed-source regression/prediction dependencies
+        run: python -m pip install "numpy>=1.26,<3" "scikit-learn>=1.5,<2"
+      - name: Audit original GBIF 17×225 risk, topology and pre-window outcome limitations
+        run: python -m unittest discover -s tests -p test_ncomms_public17_ocean_access.py -v
+      - name: Recompute blocked ocean-current versus direct-distance prediction
+        run: |
+          python -u scripts/run_ncomms_public17_ocean_access_holdout.py \
+            --out-dir _ci_ncomms_public17_ocean
+      - name: Independently verify complete OOF predictions and honest sample denominators
+        run: |
+          python - <<'PY'
+          import csv,json,pathlib,math
+          base=pathlib.Path("_ci_ncomms_public17_ocean")
+          q=json.loads((base/"source_prediction_receipt.json").read_text())
+          assert q["status"]=="INDEPENDENT_PUBLIC_GBIF_REINDEX_PREDICTION_NOT_CAUSAL"
+          assert q["fixed_candidate_butterflies"]==225 and q["original_landmass_groups"]==17
+          for period,cases,cells in [("2011_2017",80,3584),("2018_2022",18,3504)]:
+            t=q["periods"][period]
+            assert t["source"]["first_index_cases"]==cases
+            assert t["source"]["risk_rows"]==cells
+            for split,fold_count in [("island",17),("component",6),("species",5)]:
+              s=t["heldout"][split]
+              assert s["n_test_cells"]==cells and s["n_positive_index_cases"]==cases
+              assert s["n_folds"]==fold_count and s["nothing_is_fit_on_test_labels"]
+              with (base/(period+"_"+split+"_heldout_predictions.csv")).open() as f:
+                rows=list(csv.DictReader(f))
+              assert len(rows)==cells and sum(int(z["first_index_case"]) for z in rows)==cases
+              assert all(0<float(z["pred_"+x])<1 for z in rows for x in ("B","D","C","DC"))
+              assert all(math.isfinite(s["out_of_fold_scores"][x][metric])
+                         for x in ("B","D","C","DC") for metric in ("brier","logloss"))
+          print("SOURCE_VERIFIED_PUBLIC_17_ISLAND_CV_COMPLETED__NO_HISTORICAL_HOST_CLAIM")
+          PY
+      - name: Publish source-specific scores and per-cell heldout predictions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ncomms-public17-source-access-heldout-all225
+          path: _ci_ncomms_public17_ocean/
+          if-no-files-found: error
+          retention-days: 30
