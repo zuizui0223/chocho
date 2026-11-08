@@ -1,0 +1,59 @@
+name: chocho Nature Communications temporal host-access feasibility
+
+on:
+  push:
+    branches:
+      - analysis/ncomms-temporal-access-gate-20261108
+    paths:
+      - ".github/workflows/chocho-ncomms-temporal-host-access.yml"
+      - "analysis/ncomms_temporal_access_20261108/**"
+      - "scripts/audit_ncomms_temporal_gate.py"
+      - "tests/test_ncomms_temporal_gate.py"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-ncomms-temporal-host-access.yml"
+      - "analysis/ncomms_temporal_access_20261108/**"
+      - "scripts/audit_ncomms_temporal_gate.py"
+      - "tests/test_ncomms_temporal_gate.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archived-temporal-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check 225 taxa, 1,163 later cases and prior host-record source identities
+        run: python -m unittest discover -s tests -p "test_ncomms_temporal_gate.py" -v
+      - name: Recompute time-ordered host-support and independent botanical coverage audit
+        run: python scripts/audit_ncomms_temporal_gate.py --out-dir _ci_ncomms_temporal
+      - name: Verify source audit succeeded but NC causal-model gate remains blocked
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("_ci_ncomms_temporal/temporal_source_gate.json")
+          r=json.loads(p.read_text())
+          assert r["status"]=="ARCHIVED_SOURCE_COUNTS_RECOMPUTED_NO_ECOLOGICAL_MODEL"
+          assert r["primary_test_readiness"].startswith("BLOCKED_")
+          assert r["prior_host_record_support"]["later_indexed_butterfly_species_island_pairs"]==1163
+          assert r["prior_host_record_support"]["later_pairs_with_recorded_earlier_matching_host"]==5
+          assert not r["screening_passed"]
+          print("SOURCE_AUDIT_PASS__PRIMARY_NC_TEMPORAL_GATE_BLOCKED_WITH_PRESENT_ARCHIVE")
+          PY
+      - name: Archive temporal source screen and interpretative caveats
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-ncomms-20261108-temporal-source-audit
+          path: |
+            _ci_ncomms_temporal/temporal_source_gate.json
+            _ci_ncomms_temporal/SUMMARY.md
+          retention-days: 30
+          if-no-files-found: warn
