@@ -1,0 +1,107 @@
+{
+  "license": "MIT",
+  "liner_network_edges_not_necessarily_consecutive_port_calls": true,
+  "observed_real_port_to_port_voyages": false,
+  "publisher_repo": "Network-Maritime-Complexity/GLSN-efficiency-vulnerability",
+  "schema": "chocho_GLSN2018_recovered_original_github_excel_source_v1",
+  "source_retrieval_utc": "2026-11-08T00:34:54.054752+00:00",
+  "sources": [
+    {
+      "download": {
+        "http_status": 200,
+        "retrieved_utc": "2026-11-08T00:34:53.266182+00:00",
+        "url": "https://api.github.com/repos/Network-Maritime-Complexity/GLSN-efficiency-vulnerability/git/blobs/5486d8c204a7c49b375a14762fe5cb36c7877d96"
+      },
+      "original_publisher_git_blob": "5486d8c204a7c49b375a14762fe5cb36c7877d96",
+      "original_publisher_path": "data/port 2018.xlsx",
+      "original_recovered_bytes": 34675,
+      "original_sha256": "40c3c55fa9a60fe8a2bf0f1080161aaac79c8c0e36b6064d33699c9deb46538c",
+      "publisher_license": "MIT",
+      "role": "PORTS",
+      "sheets": [
+        {
+          "all_nonempty_rows": 888,
+          "column_header_candidates": [
+            "port",
+            "ISO3",
+            "Country Name"
+          ],
+          "columns": 3,
+          "example_rows": [
+            [
+              "Houston",
+              "USA",
+              "United States"
+            ],
+            [
+              "Antwerp",
+              "BEL",
+              "Belgium"
+            ],
+            [
+              "Bremerhaven",
+              "DEU",
+              "Germany"
+            ]
+          ],
+          "extracted_csv_file": "GLSN2018_ports_original_sheet_1.csv",
+          "extracted_csv_sha256": "ae0b293fe64b723d81d734f5b9622943f1ac7ff565a2469c3b36320f95e1ed4d",
+          "name": "port 2018",
+          "sheet_index": 1
+        }
+      ],
+      "source_url": "https://github.com/Network-Maritime-Complexity/GLSN-efficiency-vulnerability/blob/main/data/port%202018.xlsx"
+    },
+    {
+      "download": {
+        "http_status": 200,
+        "retrieved_utc": "2026-11-08T00:34:53.666359+00:00",
+        "url": "https://api.github.com/repos/Network-Maritime-Complexity/GLSN-efficiency-vulnerability/git/blobs/18098cab432ddbcd7e0a7091fc1c4cedbda40fb7"
+      },
+      "original_publisher_git_blob": "18098cab432ddbcd7e0a7091fc1c4cedbda40fb7",
+      "original_publisher_path": "data/Edge 2018_with great circle distance (GC) and weight.xlsx",
+      "original_recovered_bytes": 1018504,
+      "original_sha256": "a0fabfabe8f05d0ef8eadbf7192bd53525d09bf5964ca83c8aaca2c181f345e8",
+      "publisher_license": "MIT",
+      "role": "EDGES",
+      "sheets": [
+        {
+          "all_nonempty_rows": 28105,
+          "column_header_candidates": [
+            "port1",
+            "port2",
+            "GC",
+            "weight"
+          ],
+          "columns": 4,
+          "example_rows": [
+            [
+              "Antwerp",
+              "Charleston",
+              "6846.0933142023196",
+              "211450"
+            ],
+            [
+              "Antwerp",
+              "Port Everglades",
+              "7404.5997193127196",
+              "40295"
+            ],
+            [
+              "Antwerp",
+              "Norfolk",
+              "6304.3852276702601",
+              "157853"
+            ]
+          ],
+          "extracted_csv_file": "GLSN2018_edges_original_sheet_1.csv",
+          "extracted_csv_sha256": "df36e68c07161e01d83fa567bfefa947a4030b693be5cd5f0685078c0585c818",
+          "name": "2018 edge GC and weight",
+          "sheet_index": 1
+        }
+      ],
+      "source_url": "https://github.com/Network-Maritime-Complexity/GLSN-efficiency-vulnerability/blob/main/data/Edge%202018_with%20great%20circle%20distance%20(GC)%20and%20weight.xlsx"
+    }
+  ],
+  "status": "ORIGINAL_PUBLISHER_GIT_BLOB_XLSX_AND_FULL_EXTRACTED_TABLES_VERIFIED"
+}
