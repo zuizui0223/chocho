@@ -19,6 +19,7 @@ from scipy.stats import rankdata
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap, LogNorm
 
 ROOT=Path(__file__).resolve().parents[1]
 PINNED={
@@ -115,7 +116,7 @@ def render(data,host,later,earlier,mse_loio,mse_both,map_image,out):
     fig=plt.figure(figsize=(17.4,12.2),constrained_layout=False)
     grid=fig.add_gridspec(2,2,height_ratios=[1.30,0.78],width_ratios=[1.18,0.82],
                          left=.065,right=.965,top=.925,bottom=.115,
-                         hspace=.24,wspace=.27)
+                         hspace=.24,wspace=.40)
     top=fig.add_subplot(grid[0,:])
     sc=fig.add_subplot(grid[1,0])
     bx=fig.add_subplot(grid[1,1])
@@ -132,8 +133,17 @@ def render(data,host,later,earlier,mse_loio,mse_both,map_image,out):
     top.set_title("A  Modelled over-water current concentration among 51 island groups",
                   loc="left",fontsize=13,pad=6)
 
-    sc.hexbin(host,later,gridsize=32,mincnt=1,cmap="Blues",extent=(0,1,0,1),
-              linewidths=.1)
+    # The original pair table is strongly concentrated at zero Jaccard.
+    # Ordinary linear Blues maps most nonempty source bins nearly white.
+    # A logarithmic *count* colour scale and a non-white low end preserve all
+    # 1,275 original observations without changing correlations or models.
+    count_cmap=LinearSegmentedColormap.from_list(
+        "island_pair_counts",["#96bedb","#3d7da9","#073a6e"])
+    hb=sc.hexbin(host,later,gridsize=32,mincnt=1,cmap=count_cmap,
+                 norm=LogNorm(vmin=1),extent=(0,1,0,1),linewidths=.08)
+    colorbar=fig.colorbar(hb,ax=sc,fraction=.040,pad=.024,shrink=.83)
+    colorbar.set_label("Island pairs / hexagon (log count)",fontsize=8.2)
+    colorbar.ax.tick_params(labelsize=7.5)
     sc.set_xlim(-.02,1.02);sc.set_ylim(-.02,1.02)
     sc.set_xlabel("Jaccard similarity of introduced candidate hosts")
     sc.set_ylabel("Jaccard similarity of later-indexed butterflies")
@@ -157,6 +167,7 @@ def render(data,host,later,earlier,mse_loio,mse_both,map_image,out):
     for y,val in zip(xs-.19,mse_both):
         bx.text(val+.11,y,f"+{val:.2f}%",va="center",fontsize=9.6)
     bx.set_yticks(xs,yy)
+    bx.tick_params(axis="y",labelsize=9.5)
     bx.set_xlim(0,8.4);bx.set_ylim(-.62,1.8)
     bx.set_xlabel("Decrease in held-out MSE (%)")
     bx.set_title("C  Conditional predictive information\nLater butterfly index similarity",
