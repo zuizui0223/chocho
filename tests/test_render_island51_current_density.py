@@ -3,6 +3,9 @@ import importlib.util
 from pathlib import Path
 
 import numpy as np
+import pytest
+
+pytest.importorskip("scipy")
 from scipy import sparse
 
 SCRIPT=Path(__file__).resolve().parents[1]/"scripts"/"render_island51_current_density.py"
