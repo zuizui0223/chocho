@@ -52,6 +52,8 @@ SOURCES={
                          "048fa6d644f5579879620deb394ce74ace653e26"),
  "wpi_islands":("provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv",
                 "18cecde5bf3066f276380167f451f1fa5cc1caa1"),
+ "global_area":("data/exploratory/ncomms_public17_access_20261108/original_global_GSHHG_area20_frame_source.csv",
+                "f0fabefd7b5e15d23c1ce7ad2127c8a03357f2a8"),
 }
 FEATURES={
  "B":["log_target_before_window_record_effort","log_prior_species_record_count_elsewhere",
@@ -142,7 +144,8 @@ def prepare(data:dict, period:str)->tuple[list[dict],dict]:
     geo={r["landmass_id"]:r for r in data["geography"]}
     early={r["island_id"]:r for r in data["early_general_botany"]}
     port={r["landmass_id"]:r for r in data["wpi_islands"]}
-    if not island_ids.issubset(set(geo)&set(early)&set(port)):
+    areamap={r["landmass_id"]:r for r in data["global_area"]}
+    if not island_ids.issubset(set(geo)&set(early)&set(port)&set(areamap)):
         raise ValueError("Missing original island geography/plant index/port controls")
     comp=source_components(data["islands"])
     raw_period=TARGETS[period]
@@ -178,8 +181,7 @@ def prepare(data:dict, period:str)->tuple[list[dict],dict]:
             for z in options)
         lat=float(geo[id]["representative_latitude"])
         lon=float(geo[id]["representative_longitude"])
-        area=float(next(z["original_area_km2"] for z in data["islands"]["islands"]
-                        if str(z["island_id"])==id))
+        area=float(areamap[id]["area_km2_equal_area"])
         island_ports=int(port[id]["ports"])
         plant_index=int(early[id]["unique_early_indexed_general_plant_speciesKeys"])
         if not(-90<=lat<=90 and -180<=lon<=180 and area>0 and island_ports>0 and plant_index>=0):
