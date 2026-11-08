@@ -7,7 +7,7 @@
 1. [Complete integrated English manuscript](ISLAND_RESOURCES_MARINE_ACCESS_MANUSCRIPT_V02.md): structured abstract, Introduction, Materials and methods, Results, Discussion, Conclusions, figure programme and explicit inference limits.
 2. [Machine-readable evidence ledger](EVIDENCE_LEDGER_V02.json): 16 source-linked results at their genuine independent population denominators and negative/null controls, plus claims withheld from publication.
 3. [Five-figure architecture and draft captions](FIGURES_CAPTIONS_V02.md): one coherent resource/access story; panels are **not** all rendered.
-4. [Figure 2 resource contrast renderer](../../scripts/render_jbi_island_fig2.py), [Figure 3 whole-flora/host coefficient renderer](../../scripts/render_jbi_island_fig3.py) and [Figure 5 AIS specificity renderer](../../scripts/render_jbi_island_fig5.py). The corresponding source-locked workflows export PNG/SVG/PDF, original-source checks and receipts; the separate Figure 4A marine-current map is already verified in PR #150.
+4. [Figure 1 two-layer framework](../../scripts/render_jbi_island_fig1.py), [Figure 4 full marine/host composite](../../scripts/render_jbi_island_fig4_composite.py), [Figure 2 resource contrast renderer](../../scripts/render_jbi_island_fig2.py), [Figure 3 whole-flora/host coefficient renderer](../../scripts/render_jbi_island_fig3.py) and [Figure 5 AIS specificity renderer](../../scripts/render_jbi_island_fig5.py). The corresponding source-locked workflows export PNG/SVG/PDF, original-source checks and receipts; the separate Figure 4A marine-current map is already verified in PR #150.
 5. [Source and number audit](../../scripts/verify_island_resources_marine_jbi_v02.py) with [dedicated GitHub Actions workflow](../../.github/workflows/chocho-island-resources-marine-jbi-v02.yml). This is **not** a statistical re-fit; it compares described numerical claims with saved source files.
 
 ## Distinct samples
@@ -32,8 +32,8 @@
 
 ## What is finished versus missing
 
-- **Finished:** integrated manuscript text, 16-item evidence crosswalk, source-checked rendered Figures **2, 3, 4A, and 5**, and manuscript-only number-audit logic. Dedicated Actions workflows for Figures 2, 3 and 5 have run successfully against exact repository sources; Figures 1 and the composite Fig. 4B–C are not rendered.
-- **Not finished:** the Figure 1 diagram and the final Figure 4 B–C composite, plus graphical harmonisation of all panels; a comprehensive literature/source-license audit; an independent fresh statistical reproduction of *all* previously saved analyses; journal-specific formatting and confirmed scientific overlap disclosure; coauthor approval and journal submission.
+- **Finished:** integrated manuscript text, 16-item evidence crosswalk, source-checked rendered **Figures 1–5** (including the full Figure 4A–C composite), and manuscript-only number-audit logic. Dedicated Actions workflows for every figure have succeeded against saved original sources.
+- **Not finished:** optional final graphical harmonisation of the five scientific draft figures; a comprehensive literature/source-license audit; an independent fresh statistical reproduction of *all* previously saved analyses; journal-specific formatting and confirmed scientific overlap disclosure; coauthor approval and journal submission.
 - **Coauthor decision:** the global GEB paper and this JBI draft share the 239-butterfly global resource reconstruction, so manuscript overlap must be disclosed and judged before initial submission.
 
 ## Run local manuscript-only audit
