@@ -72,11 +72,15 @@ def render(ledger,out):
     ax.text(.028,.565,"ACCESS  ·  separate physical island-group population",fontsize=12,
             color="#2d6550",weight="bold")
 
-    rectangle(ax,(.03,.69),.245,.20,"#edf3fa","Regional host opportunity",
-              "239 fixed butterflies\n126 insular / 237 mainland WGSRPD3\n+118.9% islands; +40.9% mainland",
+    # Plant redistribution changes candidate host availability, not the reverse.
+    # The left-to-right conceptual arrow is NOT an observed causal transport
+    # estimate: it only describes which constructed resource layer precedes
+    # the separate recorded-butterfly correspondence.
+    rectangle(ax,(.03,.69),.245,.20,"#edf3fa","Introduced plant assembly",
+              "Introduced flora includes larval hosts\nMatched island excess: +10.7 pp\nPort models: 98 insular regions",
               title_size=12.6)
-    rectangle(ax,(.37,.69),.245,.20,"#edf3fa","Introduced plant assembly",
-              "Added resources in the insular flora\nMatched island excess: +10.7 pp\nPort models: 98 insular regions",
+    rectangle(ax,(.37,.69),.245,.20,"#edf3fa","Regional host opportunity",
+              "239 fixed butterflies\n126 insular / 237 mainland WGSRPD3\n+118.9% islands; +40.9% mainland",
               title_size=12.6)
     arrow(ax,(.29,.79),(.356,.79))
     rectangle(ax,(.03,.33),.245,.20,"#eef7f0","Over-water accessibility",
