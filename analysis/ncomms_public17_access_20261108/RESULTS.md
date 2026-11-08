@@ -55,6 +55,17 @@ The tiny later event count (18 across 3,504 risk cells), near-neighbor selection
 - Separate global 155-butterfly time-held and spatial-held host-based recording prediction improved species-equal MSE **+4.12% / +3.00%**; static host covariates cannot document actual prior plant arrival.
 - The independent 35-butterfly / six-host-plant / 17-island *pre-2011 named-host* subset was separately source-recovered from [October 31 independent run](https://github.com/zuizui0223/chocho/actions/runs/41196373882). It contains **42 true HOSTS edges** and 595 source cells but was **posthoc selected**. Its earlier source-audited botanical conditional null did not establish host-specific exceptional first indexing. Do not treat this as a representative 225-species HOSTS panel.
 
+## Independent pre-2011 named-host overlap sensitivity — source-defined 35-species subset only
+
+The archived [October 31 named-plant 35-species × 17-island source](https://github.com/zuizui0223/chocho/actions/runs/41196373882) contains **42 authenticated HOSTS links to only six exact accepted plants**, not complete host diets. Its 35 butterflies were selected from earlier exploratory shared-host work and **not selected independently of the research outcome**, so these numbers cannot prove or refute the NC mechanism. Restricting to species×island cells not indexed before each period:
+
+| Period | Source index-eligible cells, first-index cases | Compatible named host **recorded 2001–2010** anywhere at sampled port/offport areas | Not indexed compatible named host in sampled source |
+|---|---:|---:|---:|
+| 2011–2017 | 505 cells, 33 first-index cases | **2/49** | **31/456** |
+| 2018–2022 | 472 cells, 6 first-index cases | **0/47** | **6/425** |
+
+These are **small, incomplete host-identity observation groups**, not true host absence/availability. The original study's within-island fixed-margin source controls also did not show an exceptional historical host signal. As a result, a valid, sufficiently supported *historically prior host × over-water access* inference is **not** obtained by simply adding these six plants to the 225-butterfly access model. This is a **data-support boundary**, not a biological rejection of introduced hosts.
+
 ## Science and inference limits
 
 1. A prior GBIF record on a second island is a *potential source index*, **not proof of a breeding colony**, immigration vector or true population movement. A first indexed record is not verified first arrival.
