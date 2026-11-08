@@ -166,6 +166,30 @@ def audit(directory):
             raise ValueError("Source observation absence illegally recoded as biological no ship")
     if len(checked)!=1275:
         raise ValueError("Original source all 1275 island pairs incomplete")
+    # The original PR147 15-port panel is a strict immutable subset of new 24-port outcomes.
+    prior_rows=read(P17/"WPI15_geoverified_all105_GLSN_UNCTAD_AIS_port_pair_comparison.csv")
+    original_fifteen={str(int(p["original_WPI_port_id"])) for p in old if p["verified_PortWatch_portid"]}
+    if len(original_fifteen)!=15 or len(prior_rows)!=105:
+        raise ValueError("Original PR147 15-port/105-pair source outcomes unavailable")
+    parent_pairs={key(x["original_WPI_port_a"],x["original_WPI_port_b"]):x for x in prior_rows}
+    child_pairs={key(x["original_WPI_port_a"],x["original_WPI_port_b"]):x
+                 for x in table if x["original_WPI_port_a"] in original_fifteen
+                                 and x["original_WPI_port_b"] in original_fifteen}
+    if len(parent_pairs)!=105 or len(child_pairs)!=105 or set(parent_pairs)!=set(child_pairs):
+        raise ValueError("Original 15-port study not preserved as exact subset")
+    for pair in parent_pairs:
+        previous,current=parent_pairs[pair],child_pairs[pair]
+        for col in ("GLSN2018_model_co_service_edge","GLSN2018_source_GC_km",
+                    "GLSN2018_source_weight_MODEL_NOT_SHIP_TRIPS",
+                    "Zenodo2020_AIS_OD_source_rows_a_to_b",
+                    "Zenodo2020_AIS_OD_source_rows_b_to_a",
+                    "Zenodo2020_AIS_OD_source_rows_both",
+                    "UNCTAD_2006_2010_available_quarters_a",
+                    "UNCTAD_2006_2010_available_quarters_b",
+                    "UNCTAD_2006_2010_index_mean_a",
+                    "UNCTAD_2006_2010_index_mean_b"):
+            if previous[col]!=current[col]:
+                raise ValueError("Previously independently audited 15-port source value changed: "+col)
     receipt=json.loads((path/"WPI24_3_source_verified_port_graph_audit.json").read_text())
     derived={
       "independently_geo_verified_WPI_ports":len(ids),
