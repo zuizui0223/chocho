@@ -85,7 +85,7 @@ def load(root: pathlib.Path=ROOT)->tuple[dict,dict]:
         digest=git_blob_sha(raw)
         if digest!=pin:raise ValueError("Input Git blob changed: "+path+" ["+digest+"]")
         if path.endswith(".csv"):
-            data[key]=list(csv.DictReader(raw.decode("utf8-sig").splitlines()))
+            data[key]=list(csv.DictReader(raw.decode("utf-8-sig").splitlines()))
         else:data[key]=json.loads(raw)
         pins[key]={"path":path,"git_blob_sha1":pin,"sha256":hashlib.sha256(raw).hexdigest()}
     return data,pins
