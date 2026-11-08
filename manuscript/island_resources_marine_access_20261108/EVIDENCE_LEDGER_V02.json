@@ -1,0 +1,231 @@
+{
+  "schema": "chocho_JBI_island_resource_marine_v02_evidence_ledger",
+  "date": "2026-11-08",
+  "status": "exploratory integrated manuscript; draft; not submitted or coauthor-approved",
+  "base_branch": "analysis/island51-current-density-20261108",
+  "commit_source": "8124a086d9eb450ca6fdc216b0e75226a54d4885",
+  "source_separation": {
+    "resource_panel": "239 butterflies × WGSRPD3 region; 126 strict island, 237 mainland, 6 mixed excluded; 123 island active",
+    "port_flora": "98 effort-documented WGSRPD3 insular regions; WPI exposure = log2(1 + ports)",
+    "island_community": "original independent candidate panel of 225 butterflies; 51 landmass groups, 194 indexed biological ports, 182 marine-qualified circuit terminals, 1,275 non-independent unordered pairs",
+    "historical": "17/51 original landmass groups with source-covered old PLSCIQ 2006–2010; 136 island pairs"
+  },
+  "evidence": [
+    {
+      "id": "island_resource",
+      "figure": "2",
+      "source": "results/island-mainland-resource-q1/island_mainland_summary.json",
+      "values": {
+        "island_native": 4829,
+        "island_current": 10570,
+        "island_added": 5741,
+        "island_pct": 118.88589770138745,
+        "mainland_native": 21215,
+        "mainland_current": 29901,
+        "mainland_added": 8686,
+        "mainland_pct": 40.942729201037004
+      },
+      "interpretation": "potential butterfly-by-region resource cells, not butterfly populations"
+    },
+    {
+      "id": "matched_island_excess",
+      "figure": "2",
+      "source": "results/island-mainland-resource-area-v02/area_adjusted_summary.json",
+      "values": {
+        "share_diff": 0.10702159757115921,
+        "descriptive_permutation_p": 0.0002
+      },
+      "interpretation": "10.7 percentage points after matched Level1×log-area overlap; do not substitute 14pp from different adjustment"
+    },
+    {
+      "id": "port_flora",
+      "figure": "3",
+      "source": "results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json",
+      "values": {
+        "n_regions": 98,
+        "beta": 0.24447852550694815,
+        "descriptive_p": 0.0012
+      },
+      "interpretation": "total introduced flora association; modern indexed ports not actual plant carriage"
+    },
+    {
+      "id": "port_hosts",
+      "figure": "3",
+      "source": "results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json",
+      "values": {
+        "n_regions": 98,
+        "beta": 0.16390595789001258,
+        "descriptive_p": 0.011
+      },
+      "interpretation": "distinct introduced host taxa; not butterfly resource-cell counts"
+    },
+    {
+      "id": "port_hosts_conditional",
+      "figure": "3",
+      "source": "results/three-gate-port-flora-host-conversion/island_port_flora_host_conversion_audit.json",
+      "values": {
+        "n_regions": 98,
+        "beta": -0.041526655753407464,
+        "descriptive_p": 0.093
+      },
+      "interpretation": "no detectable positive host-specific residual conditional on total alien flora; not causal mediation"
+    },
+    {
+      "id": "pair_correspondence",
+      "figure": "4B",
+      "source": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_audit.json",
+      "values": {
+        "n_island_groups": 51,
+        "dependent_pairs": 1275,
+        "spearman_later": 0.29980576483377025,
+        "spearman_earlier": 0.4178255833828514,
+        "partial_later": 0.2153535842700987
+      },
+      "interpretation": "historically non-prospective host record correspondence; early butterflies correlate more strongly"
+    },
+    {
+      "id": "marine_graph",
+      "figure": "4A",
+      "source": "results/island51_observed_ocean_circuit_20261106/source_preparation.json",
+      "values": {
+        "original_ports": 194,
+        "marine_ports": 182,
+        "graph_nodes": 189550,
+        "graph_edges": 370996
+      },
+      "interpretation": "GSHHG 2.3.7 geometry, distributed terminals; no through-island edges"
+    },
+    {
+      "id": "marine_current_map",
+      "figure": "4A",
+      "source": "results/island51_current_density_20261108/PROTOCOL.md",
+      "verifiable_run": "https://github.com/zuizui0223/chocho/actions/runs/42439384640",
+      "values": {
+        "island_pairs": 1275,
+        "independent_potential_solves": 50,
+        "max_grounded_residual": 1.3322676295501878e-13
+      },
+      "interpretation": "modelled over-water current concentration, not ship density, butterfly movement or island relays"
+    },
+    {
+      "id": "joint_LOIO_hosts",
+      "figure": "4C",
+      "source": "results/island51_host_circuit_joint_20261106/README.md",
+      "values": {
+        "n_held_islands": 51,
+        "mse_reference": 0.0060002266,
+        "mse_joint": 0.0058963529,
+        "relative_reduction_pct": 1.7312,
+        "improved_islands": 31
+      },
+      "interpretation": "exploratory host addition beyond circuit, single unseen endpoint; joint outcome shared with next row"
+    },
+    {
+      "id": "joint_LOIO_circuits",
+      "figure": "4C",
+      "source": "results/island51_host_circuit_joint_20261106/README.md",
+      "values": {
+        "n_held_islands": 51,
+        "mse_reference": 0.0063054522,
+        "mse_joint": 0.0058963529,
+        "relative_reduction_pct": 6.488,
+        "improved_islands": 39
+      },
+      "interpretation": "exploratory AIS/wind addition beyond hosts; not causal marine transport"
+    },
+    {
+      "id": "both_unseen",
+      "figure": "4C",
+      "source": "results/island51_double_unseen_blocks_20261107/README.md",
+      "values": {
+        "n_pairs": 1275,
+        "n_blocks": 15,
+        "marine_beyond_host_pct": 4.4744,
+        "host_beyond_marine_pct": 0.8808,
+        "between_block_host_pct": 0.1417,
+        "between_block_host_mae_pct": -0.3255
+      },
+      "interpretation": "both original pair endpoints held out; different controls and baseline from LOIO; not new biological population"
+    },
+    {
+      "id": "latitude_controls",
+      "figure": "5",
+      "source": "results/island51_latitude_controls_20261107/README.md",
+      "values": {
+        "later_AIS_alone_pct": 1.002,
+        "later_wind_alone_pct": -4.6618,
+        "later_both_pct": -4.0918
+      },
+      "interpretation": "modern source predictive increments are covariate-dependent"
+    },
+    {
+      "id": "AIS_latitude_placebo",
+      "figure": "5",
+      "source": "results/island51_AIS_latitude_node_null_20261107/README.md",
+      "values": {
+        "n_placebos": 199,
+        "placebos_equal_or_better": 5,
+        "actual_AIS_pct": 1.002
+      },
+      "interpretation": "source graph-node relabeling does not calibrate causal voyage p-value"
+    },
+    {
+      "id": "AIS_local_placebo",
+      "figure": "5",
+      "source": "results/island51_AIS_local750_node_null_20261107/README.md",
+      "values": {
+        "n_placebos": 199,
+        "placebos_equal_or_better": 100,
+        "placebo_median_pct": 1.06,
+        "actual_AIS_pct": 1.002,
+        "immovable_original_islands": 15
+      },
+      "interpretation": "local graph reassignments often equal/exceed observed AIS; cannot isolate shipping from geography"
+    },
+    {
+      "id": "historical_port_index",
+      "figure": "5",
+      "source": "results/island17_historic_PLSCIQ_LO2_20261108/README.md",
+      "values": {
+        "historical_years": "2006Q1–2010Q4",
+        "source_qualifying_ports": 22,
+        "n_islands": 17,
+        "n_pairs": 136,
+        "full_median_index_pct": -2.9233,
+        "non9_sensitivity_pct": 8.1461
+      },
+      "interpretation": "index rather than observed voyages; 16-island improvement sensitive to training composition; full primary adverse"
+    }
+  ],
+  "claims_excluded_from_manuscript": {
+    "1.4_percent_realization": "mentioned in prior discussion, but numerator, denominator, and a source-matched realization definition were not verified in this JBI ledger; do not publish as observed occupancy",
+    "14_percentage_point_island_effect": "not the conservative matched Level1×area contrast; use 10.7pp for the matched result",
+    "ports_causally_introduce_host_plants": "modern WPI covariate and floristic inventories do not observe transport",
+    "ships_move_butterflies": "AIS density proxy and PLSCIQ index do not observe butterfly movement",
+    "current_hotspot_equals_steppingstone": "no electrical transfer through an island in the source model",
+    "wind_is_directional": "source uses scalar mean wind speed",
+    "colonial_routes_explain_butterfly_composition": "not identified robustly in original evidence",
+    "nutrient_selection": "outside scope; gesui independent research track"
+  },
+  "figures_status": {
+    "1": "conceptual/sample-flow design only",
+    "2": "source-confirmed underlying results; final composite figure not newly rendered",
+    "3": "source-confirmed underlying results; final composite figure not newly rendered",
+    "5": "numerical figure plan; composite not rendered",
+    "4A": "current map rendered; source-run and tests succeeded; actual figure is stored as workflow artifact and local conversation files, not committed to the manuscript folder",
+    "4BC": "existing pair and predictor outputs saved; v0.2 composite not assembled"
+  },
+  "publication_boundary": {
+    "related_GEB_manuscript": "main:manuscript/butterfly_specialization_ecology_v0.2.md",
+    "shared_total_global_opportunity_pct": 54.9,
+    "shared_239_panel": true,
+    "not_submitted": true,
+    "before_submission": [
+      "coauthor and journal overlap review",
+      "full bibliography verification",
+      "data availability/license audit",
+      "5 figure panels rendered/inspected",
+      "source re-analysis and figure audits"
+    ]
+  }
+}
