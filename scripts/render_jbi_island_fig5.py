@@ -154,7 +154,7 @@ def render(data, out: Path):
     fig.text(0.5, 0.055, "Distinct source windows and baselines; percentages are not additive. "
              "No recorded plant carriage, butterfly arrival or breeding is identified.",
              ha="center", fontsize=9)
-    fig.subplots_adjust(left=0.11, right=0.975, top=0.79, bottom=0.27, wspace=0.48)
+    fig.subplots_adjust(left=0.11, right=0.975, top=0.79, bottom=0.40, wspace=0.48)
     outputs = {}
     for extension in ("png", "svg", "pdf"):
         path = out / f"fig5_maritime_proxy_specificity.{extension}"
