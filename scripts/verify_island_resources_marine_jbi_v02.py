@@ -71,7 +71,7 @@ def audit():
     manuscript = (FOLDER / "ISLAND_RESOURCES_MARINE_ACCESS_MANUSCRIPT_V02.md").read_text(encoding="utf-8")
     figures = (FOLDER / "FIGURES_CAPTIONS_V02.md").read_text(encoding="utf-8")
     assert ledger["schema"] == "chocho_JBI_island_resource_marine_v02_evidence_ledger"
-    assert len(ledger["evidence"]) == 15, "Source ledger was unexpectedly changed"
+    assert len(ledger["evidence"]) == 16, "Source ledger was unexpectedly changed"
     assert "239 butterfly" in manuscript and "225" in manuscript
     assert "1,275" in manuscript and "51" in manuscript
     assert "not submitted" in manuscript.lower()
@@ -80,8 +80,9 @@ def audit():
     assert "+1.7312%" in manuscript and "+6.4880%" in manuscript
     assert "100/199" in manuscript and "5/199" in manuscript
     assert "−2.9233%" in manuscript and "+8.1461%" in manuscript
-    assert "1.4_percent_realization" in ledger["claims_excluded_from_manuscript"]
+    assert "1.4_percent_as_biological_realization_rate" in ledger["claims_excluded_from_manuscript"]
     assert "14_percentage_point_island_effect" in ledger["claims_excluded_from_manuscript"]
+    assert "13 of 920" in manuscript and "1.413%" in manuscript
 
     failures, exceptions, checked = [], [], 0
     for entry in ledger["evidence"]:
