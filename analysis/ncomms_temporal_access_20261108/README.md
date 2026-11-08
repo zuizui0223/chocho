@@ -8,6 +8,12 @@
 - [Frozen, explicit methodological protocol](PROTOCOL.md); [source auditor](../../scripts/audit_ncomms_temporal_gate.py); [tests](../../tests/test_ncomms_temporal_gate.py); [dedicated workflow](../../.github/workflows/chocho-ncomms-temporal-host-access.yml).
 - **Status of original source and null:** all original 194 early-port botanical inventories are marked completed, 51 source landmass groups are source-indexed, and an independent original-matched comparison and family-structured null were verified. This is *not* the same as full historical host detectability.
 
+## Additional independently archived positive prediction evidence (different estimand)
+
+The original **155-butterfly** prediction panel is separate from both the **225-candidate/51-island** index dataset and **239-butterfly/WGSRPD3** region reconstruction. On the original **208,482** test rows, adding static host identity to the M3 background+climate+land-cover model (M5) lowers **species-equal MSE** by **4.1202%** in the temporal evaluation (0.032063883→0.030742795) and **2.9952%** in the spatial evaluation (0.032326905→0.031358648). The results remain reproducible against the original pinned `host_island_synthesis_20261030/forecast_temporal_results.json` and `forecast_spatial_results.json` and are a **positive result we do not discard**.
+
+**Critical distinction:** this forecasts a *rarefied/standardized butterfly recording probability*, not confirmed colonisation; the host distribution variables do **not** document a plant introduction before a butterfly record. A temporal split of the butterfly observations is not a proof of historical host arrival. The separate earlier-historical-host test below is the mandatory NC mechanism gate.
+
 ### Quantitative bottleneck — same 1,163 later-recorded butterfly×island pairs
 
 | Indicator | Fixed source observation | Meaning |
