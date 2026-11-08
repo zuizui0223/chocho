@@ -194,7 +194,7 @@ def audit(directory):
     derived={
       "independently_geo_verified_WPI_ports":len(ids),
       "independently_geo_verified_original_islands":len(cnt),
-      "all_15_source_port_pairs":len(seen),
+      "all_24_source_port_pairs":len(seen),
       "model_GLSN2018_co_service_port_pairs":model_count,
       "AIS2020_original_source_undirected_port_pairs":ais_count,
       "AIS2020_original_source_directed_port_links":directed_count,
@@ -217,7 +217,7 @@ def audit(directory):
        "index_missing_not_zero":True,
        "no_194_port_source_island_traffic_absences_inferred":True}
     (path/"independent_WPI24_3source_graph_audit.json").write_text(json.dumps(result,sort_keys=True,indent=2)+"\n")
-    print("PORTWATCH15_CROSS_SOURCE_INDEPENDENT_AUDIT_JSON="+json.dumps(result,sort_keys=True),flush=True)
+    print("PORTWATCH24_CROSS_SOURCE_INDEPENDENT_AUDIT_JSON="+json.dumps(result,sort_keys=True),flush=True)
     return result
 
 if __name__=="__main__":
