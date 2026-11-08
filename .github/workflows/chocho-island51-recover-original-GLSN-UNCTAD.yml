@@ -1,0 +1,64 @@
+name: chocho original GLSN2018 XLSX and UNCTAD legacy PLSCIQ source recovery
+on:
+  push:
+    branches:
+      - analysis/island51-GLSN2018-UNCTAD-raw-source-recovery-20261108
+    paths:
+      - ".github/workflows/chocho-island51-recover-original-GLSN-UNCTAD.yml"
+      - "scripts/recover_original_GLSN2018_Excel_source.py"
+      - "scripts/recover_original_UNCTAD_PLSCIQ_legacy_archive.py"
+      - "tests/test_recover_original_maritime_sources.py"
+      - "results/island51_maritime_raw_recovery_20261108/PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original_maritime_sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only audit dependencies
+        run: python -m pip install pytest pycountry
+      - name: Verify pinned XLSX blob and original WPI history source
+        run: python -m pytest -q tests/test_recover_original_maritime_sources.py
+      - name: Fetch and Git-blob-verify two original 2018 GLSN Excel files, extract all source sheets
+        run: |
+          mkdir -p _ci_glsn2018
+          python scripts/recover_original_GLSN2018_Excel_source.py --out-dir _ci_glsn2018
+      - name: Re-acquire all 3 historic UNCTAD/DBnomics PLSCIQ source pages and compare old SHA-256
+        run: |
+          mkdir -p _ci_unctad_plsciq
+          python scripts/recover_original_UNCTAD_PLSCIQ_legacy_archive.py --out-dir _ci_unctad_plsciq
+      - name: Archive original publisher sources and audited results without merging modeled and actual voyage data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-GLSN2018-XLSX-UNCTAD-PLSCIQ-source-recovery
+          path: |
+            _ci_glsn2018/
+            _ci_unctad_plsciq/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish original source blob receipts, MIT GLSN sheet tables and WPI194 PLSCIQ candidate summaries
+        if: success()
+        run: |
+          TARGET=results/island51_maritime_raw_recovery_20261108
+          mkdir -p "$TARGET"
+          cp _ci_glsn2018/GLSN2018_recovered_source_receipt.json "$TARGET/"
+          cp _ci_glsn2018/GLSN2018_*_original_sheet_*.csv "$TARGET/"
+          cp _ci_unctad_plsciq/UNCTAD_PLSCIQ_source_recovery_receipt.json "$TARGET/"
+          cp _ci_unctad_plsciq/UNCTAD_PLSCIQ_originalWPI194_name_country_candidates.csv "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive source-blob-verified GLSN2018 port/edge sheets and historic UNCTAD WPI194 index candidate summary"
+            git push origin HEAD:analysis/island51-GLSN2018-UNCTAD-raw-source-recovery-20261108
+          fi
