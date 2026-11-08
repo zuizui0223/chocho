@@ -1,0 +1,57 @@
+name: chocho JBI composite Figure 4 resource and marine access
+
+on:
+  push:
+    branches:
+      - manuscript/island-resources-marine-access-jbi-v02-20261108
+    paths:
+      - "scripts/render_jbi_island_fig4_composite.py"
+      - ".github/workflows/chocho-jbi-island-fig4-composite.yml"
+  pull_request:
+    paths:
+      - "scripts/render_jbi_island_fig4_composite.py"
+      - ".github/workflows/chocho-jbi-island-fig4-composite.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  source-audited-fig4-composite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      MPLBACKEND: "Agg"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original marine source and plot dependencies
+        run: python -m pip install -e ".[test,analysis,figure]"
+      - name: Re-run PR150 original verified marine current map without downloads
+        run: |
+          python -u scripts/render_island51_current_density.py \
+            --field uniform \
+            --out-dir _ci_jbi_fig4_source_map
+      - name: Verify 1275 original island pairs and two prediction splits; build integrated figure
+        run: |
+          python scripts/render_jbi_island_fig4_composite.py \
+            --current-map-dir _ci_jbi_fig4_source_map \
+            --out-dir _ci_jbi_fig4
+      - name: Archive four source-verified image, numerical and provenance outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jbi-fig4-source-verified-full-resource-marine-composite
+          path: |
+            _ci_jbi_fig4/fig4_resource_and_marine_circuit.png
+            _ci_jbi_fig4/fig4_resource_and_marine_circuit.svg
+            _ci_jbi_fig4/fig4_resource_and_marine_circuit.pdf
+            _ci_jbi_fig4/fig4_composite_receipt.json
+            _ci_jbi_fig4_source_map/figure4_uniform_marine_current.png
+            _ci_jbi_fig4_source_map/execution_receipt.json
+          if-no-files-found: error
+          retention-days: 30
