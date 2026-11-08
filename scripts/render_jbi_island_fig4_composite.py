@@ -123,13 +123,14 @@ def render(data,host,later,earlier,mse_loio,mse_both,map_image,out):
                  fontsize=17,weight="bold",y=.983)
 
     image=plt.imread(map_image)
-    top.imshow(image,aspect="auto")
+    # Reuse the inspected coastline/current panel but trim its own title and
+    # bottom narrative before it is embedded under this figure's panel title.
+    # Keep the original axes, centroids and colourbar.
+    image=image[75:-45,:,:]
+    top.imshow(image,aspect="equal")
     top.set_axis_off()
     top.set_title("A  Modelled over-water current concentration among 51 island groups",
                   loc="left",fontsize=13,pad=6)
-    top.text(.015,.025,"Uniform-ocean circuit, 1,275 equal-pair unit flows; not observed ship tracks or island relays.",
-             transform=top.transAxes,fontsize=9.5,
-             bbox=dict(facecolor="white",alpha=.86,edgecolor="none",pad=3))
 
     sc.hexbin(host,later,gridsize=32,mincnt=1,cmap="Blues",extent=(0,1,0,1),
               linewidths=.1)
