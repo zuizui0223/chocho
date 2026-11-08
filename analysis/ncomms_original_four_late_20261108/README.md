@@ -39,6 +39,14 @@ The regenerated 11,475-row source-visibility CSV sets these four additional cell
 - Source-checked GitHub workflow: [full reconstruction and independent 11,475-row audit](https://github.com/zuizui0223/chocho/actions/runs/42456536409). The artifact holds the enlarged visibility CSV, exact four recovered case CSV and pinned receipt.
 - Other GEB and JBI research sources/manuscripts are unchanged; NC source-dependent tests are excluded from the independent GEB anonymized export.
 
+## Ready-to-run full-original importer (not executed on the missing real bytes)
+
+- [SHA-locked original raw Parquet importer](../../scripts/import_ncomms_exact_original_year_parquet.py) and [eight synthetic-only regression tests](../../tests/test_ncomms_exact_original_year_importer.py) were added to this Draft branch.
+- The importer requires an **authorized local path** and checks the original SHA-256 before loading anything. It then checks the exact six original columns, **83,573 unique rows, 224 original species, 3,384 island IDs, 2001–2024**, original 14,425,536 precise recorded individuals, both positive source-year cohorts and the original 225×51 species/island margins. It never uploads the raw Parquet.
+- Its output, when the original becomes readable, will be a derived, explicitly index-based 225×51 table of historical first-index years and verified recording-window status—not true occupancy or colonization.
+- [Synthetic-only SHA/reconciliation pipeline](https://github.com/zuizui0223/chocho/actions/runs/42456772018) passed; this CI **does not claim to have read the original file**. It tests fail-closed behavior on deliberately synthetic rows.
+- Run only after real bytes become accessible: `python scripts/import_ncomms_exact_original_year_parquet.py --original-year-parquet /authorized/original/global_original_species_island_year.parquet --output-dir /private/results`.
+
 ## Original file status and next step
 
 ChatGPT Library currently indexes two copies of the matching original filename and 411,552-byte declared size under the project's butterfly and frog folders. Attempts to materialize or read either copy in this conversation were **blocked by file authorization**. Therefore neither copy has been byte-loaded or newly hash-checked and no claim of actual complete-Parquet recovery is made.
