@@ -25,7 +25,9 @@
 
 **Also keep:** stronger earlier host–butterfly correspondence, temporal leakage of pooled host candidates, adverse latitude-adjusted wind increment, local AIS-placebo non-discrimination, full 17-island historical index failure, and the successful current-density map's inability to identify biological relay islands.
 
-**Do not add:** unsupported “1.4% realised” number without a defined and source-verified numerator and denominator; full-area-adjustment “14 pp” in place of the actual matched 10.7 pp; direct shipping/colonisation/larval feeding causation; nutrient-driven host enrichment (owned by gesui).
+**Retain carefully:** the independent GBIF validation sample recorded butterflies in **13/920 (1.413%)** newly available candidate island resource cells across **31 butterfly species with archived observations** (32-species panel; DOI 10.15468/dl.pp5nc9). This is an indexed-record overlap, **not** the proportion of resources actually used or colonised across the full 239-species reconstruction.
+
+**Do not add:** a biological “98.6% unused” inference, or an unqualified “14 pp” matched effect in place of the actual area-and-region-matched 10.7 pp; direct shipping/colonisation/larval feeding causation; nutrient-driven host enrichment (owned by gesui).
 
 ## What is finished versus missing
 
