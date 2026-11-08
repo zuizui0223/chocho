@@ -72,4 +72,4 @@ wing_size_proxyはLepTraitsのWS・FWの上下限・性差を含む平均によ�
 - 分析コード: [scripts/run_butterfly_trait_marine_access_20261108.py](../../scripts/run_butterfly_trait_marine_access_20261108.py)
 - 種・島削除と係数方向・共通91島ペア再照合: [scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py](../../scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py)
 - [trait unit tests](../../tests/test_butterfly_trait_marine_20261108.py)
-- [GitHub Actions SUCCESS](https://github.com/zuizui0223/chocho/actions/runs/42464326454)（コード SHA 0a42b9c...）。Actions成果物 **butterfly-trait-marine-source17-20261108** に全4ファイル（形質対応表、種別OOF予測、群別136島ペア、元解析および感度のJSON）を保存。
+- [GitHub Actions SUCCESS](https://github.com/zuizui0223/chocho/actions/runs/42464326454)（コード SHA 0a42b9c...）。Actions成果物 **butterfly-trait-marine-source17-20261108** に全5ファイル（形質対応表、種別OOF予測、群別136島ペア、元解析JSON、感度JSON）を保存。
