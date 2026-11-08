@@ -147,7 +147,7 @@ def render(data, out):
              "Potential resources are defined by plant distributions; GBIF overlap is a selected observational sample, "
              "not feeding, occupancy or colonisation.",
              fontsize=9.4, ha="center")
-    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.29, top=0.79, wspace=0.44)
+    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.40, top=0.79, wspace=0.44)
     out.mkdir(parents=True, exist_ok=True)
     hashes={}
     for ext in ("png","svg","pdf"):
