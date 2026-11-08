@@ -1,0 +1,31 @@
+name: chocho JBI island resources + marine integrated v0.2 audit
+
+on:
+  push:
+    branches:
+      - manuscript/island-resources-marine-access-jbi-v02-20261108
+    paths:
+      - "manuscript/island_resources_marine_access_20261108/**"
+      - "scripts/verify_island_resources_marine_jbi_v02.py"
+      - ".github/workflows/chocho-island-resources-marine-jbi-v02.yml"
+  pull_request:
+    paths:
+      - "manuscript/island_resources_marine_access_20261108/**"
+      - "scripts/verify_island_resources_marine_jbi_v02.py"
+      - ".github/workflows/chocho-island-resources-marine-jbi-v02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  manuscript-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit source availability, rounded numerical claims and inference boundaries
+        run: python scripts/verify_island_resources_marine_jbi_v02.py
