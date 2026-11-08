@@ -120,12 +120,26 @@ def directional_fold_signs(m):
                 fields=base+extra
                 X=np.array([[r["features"][f] for f in fields] for r in rows])
                 coefs=[]
+                # True derivative on the ORIGINAL log-resistance/log-distance scale,
+                # conditional on the fitted wing-size interaction and other terms.
+                source_axis={"W_SEA":"min_log_uniform_effective_resistance",
+                             "W_DIST":"min_log_geodesic_km",
+                             "W_PORT":"log_island_ports"}[model]
+                wing_group_means={g:float(np.mean([q["wing_size_z"] for q in bridge.values()
+                    if q.get("trait_available") and q["wing_median_group"]==g]))
+                    for g in (m.SMALL,m.LARGE)}
+                slopes={group:[] for group in wing_group_means}
                 for grp in sorted(set(k)):
                     train=k!=grp
                     clf=make_pipeline(StandardScaler(),LogisticRegression(
                         C=1,solver="lbfgs",max_iter=1500,random_state=m.SEED))
                     clf.fit(X[train],y[train])
-                    coefs.append(float(clf.steps[-1][1].coef_[0][fields.index(interaction)]))
+                    beta=clf.named_steps["logisticregression"].coef_[0]
+                    scale=clf.named_steps["standardscaler"].scale_
+                    ai=fields.index(source_axis);ii=fields.index(interaction)
+                    coefs.append(float(beta[ii]))
+                    for group,wz in wing_group_means.items():
+                        slopes[group].append(float(beta[ai]/scale[ai]+wz*beta[ii]/scale[ii]))
                 by_model[model]={
                   "interaction":interaction,
                   "coef_train_standardized_min":float(min(coefs)),
@@ -133,6 +147,13 @@ def directional_fold_signs(m):
                   "coef_train_standardized_mean":float(np.mean(coefs)),
                   "positive_fold_coefficient_count":sum(z>0 for z in coefs),
                   "fold_count":len(coefs),
+                  "conditional_logit_slope_per_unit_log_source":{
+                    group:{"wing_size_z_mean":wing_group_means[group],
+                           "slope_mean":float(np.mean(a)),
+                           "slope_min":float(min(a)),
+                           "slope_max":float(max(a)),
+                           "slope_negative_fold_count":sum(v<0 for v in a)}
+                    for group,a in slopes.items()},
                   "coefficient_is_conditional_not_migration_rate":True,
                 }
             by_split[split]=by_model
