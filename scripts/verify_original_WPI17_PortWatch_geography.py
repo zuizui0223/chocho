@@ -13,7 +13,10 @@ from datetime import datetime,timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
-import pycountry
+try:
+    import pycountry
+except ImportError:
+    pycountry=None  # optional for paper-only test environments; source-run CI installs it
 
 ROOT=Path(__file__).resolve().parents[1]
 WPI=ROOT/"results/island51_host_circuit_atlas_20261106/original_port_geography.csv"
@@ -132,6 +135,8 @@ def write_csv(path,rows,fields):
         writer.writeheader();writer.writerows(rows)
 
 def run(out_dir):
+    if pycountry is None:
+        raise RuntimeError("pycountry source ISO3 mapping required; dedicated source workflow installs it")
     out=Path(out_dir).resolve()
     if any(out.is_relative_to((ROOT/s).resolve()) for s in ("data","results","provenance")):
         raise ValueError("Do not overwrite original scientific data")
