@@ -1,0 +1,66 @@
+name: chocho 15 independently geoverified WPI ports GLSN2018 UNCTAD2006 AIS2020 source comparison
+on:
+  push:
+    branches:
+      - analysis/island51-17-portwatch-independent-geography-20261108
+    paths:
+      - ".github/workflows/chocho-WPI15-cross-source-offline.yml"
+      - "scripts/summarize_original_WPI15_geoverified_maritime_sources.py"
+      - "tests/test_summarize_WPI15_geoverified_maritime_sources.py"
+      - "results/island51_PortWatch17_geoverification_20261108/verify_WPI15_cross_source.py"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-WPI15-cross-source-offline.yml"
+      - "scripts/summarize_original_WPI15_geoverified_maritime_sources.py"
+      - "tests/test_summarize_WPI15_geoverified_maritime_sources.py"
+      - "results/island51_PortWatch17_geoverification_20261108/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original_fifteen_cross_source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-only WPI15 no-inferred-route tests
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_summarize_WPI15_geoverified_maritime_sources.py
+      - name: Reconstruct original 105 port-pairs and 1275 island-pairs without external network
+        run: |
+          mkdir -p _ci_WPI15_source
+          python scripts/summarize_original_WPI15_geoverified_maritime_sources.py --out-dir _ci_WPI15_source
+      - name: Independently audit every 2018-model and 2020-OD port pair plus historical index coverage
+        run: |
+          python results/island51_PortWatch17_geoverification_20261108/verify_WPI15_cross_source.py --results-dir _ci_WPI15_source
+      - name: Preserve network-free WPI15 source-only graph audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original-WPI15-geo-verified-105-portpairs-1275-islandpairs
+          path: _ci_WPI15_source/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Publish only original WPI-source derived comparison tables and auditor receipt
+        if: success() && github.event_name == 'push'
+        run: |
+          BRANCH=analysis/island51-17-portwatch-independent-geography-20261108
+          TARGET=results/island51_PortWatch17_geoverification_20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          mkdir -p "$TARGET"
+          cp _ci_WPI15_source/WPI15_geoverified_all105_GLSN_UNCTAD_AIS_port_pair_comparison.csv "$TARGET/"
+          cp _ci_WPI15_source/original51_all1275_geo_verified15_source_island_pair_observation.csv "$TARGET/"
+          cp _ci_WPI15_source/WPI15_3_source_verified_port_graph_audit.json "$TARGET/"
+          cp _ci_WPI15_source/independent_WPI15_3source_graph_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive independently geoverified WPI15 2018/2006/2020 network source comparisons"
+            git push origin HEAD:"$BRANCH"
+          fi
