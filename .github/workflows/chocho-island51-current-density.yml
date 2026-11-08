@@ -1,0 +1,64 @@
+name: chocho 51-island frozen marine current-density Fig4
+
+on:
+  push:
+    branches:
+      - analysis/island51-current-density-20261108
+    paths:
+      - ".github/workflows/chocho-island51-current-density.yml"
+      - "scripts/render_island51_current_density.py"
+      - "tests/test_render_island51_current_density.py"
+      - "results/island51_current_density_20261108/PROTOCOL.md"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island51-current-density.yml"
+      - "scripts/render_island51_current_density.py"
+      - "tests/test_render_island51_current_density.py"
+      - "results/island51_current_density_20261108/PROTOCOL.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chocho-island51-current-density
+  cancel-in-progress: false
+
+jobs:
+  current-density-from-frozen-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-locked analysis and rendering dependencies
+        run: python -m pip install -e ".[test,analysis,figure]"
+      - name: Verify exact circuit-current superposition on known networks
+        run: python -m pytest -q tests/test_render_island51_current_density.py
+      - name: Compute all 1275 island-pair mean current flows on frozen uniform ocean graph
+        run: |
+          python -u scripts/render_island51_current_density.py \
+            --field uniform \
+            --out-dir _ci_island51_current_density
+      - name: Archive source-verified current map and exact numeric outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-figure4-uniform-marine-current-density
+          path: |
+            _ci_island51_current_density/figure4_uniform_marine_current.png
+            _ci_island51_current_density/figure4_uniform_marine_current.svg
+            _ci_island51_current_density/figure4_uniform_marine_current.pdf
+            _ci_island51_current_density/uniform_mean_pair_node_current.npz
+            _ci_island51_current_density/original51_centroids.csv
+            _ci_island51_current_density/README.md
+            _ci_island51_current_density/execution_receipt.json
+          if-no-files-found: warn
+          retention-days: 30
