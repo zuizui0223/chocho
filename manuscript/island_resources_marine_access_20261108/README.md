@@ -6,8 +6,8 @@
 
 1. [Complete integrated English manuscript](ISLAND_RESOURCES_MARINE_ACCESS_MANUSCRIPT_V02.md): structured abstract, Introduction, Materials and methods, Results, Discussion, Conclusions, figure programme and explicit inference limits.
 2. [Machine-readable evidence ledger](EVIDENCE_LEDGER_V02.json): 16 source-linked results at their genuine independent population denominators and negative/null controls, plus claims withheld from publication.
-3. [Five-figure architecture and draft captions](FIGURES_CAPTIONS_V02.md): one coherent resource/access story; panels are **not** all rendered.
-4. [Figure 1 two-layer framework](../../scripts/render_jbi_island_fig1.py), [Figure 4 full marine/host composite](../../scripts/render_jbi_island_fig4_composite.py), [Figure 2 resource contrast renderer](../../scripts/render_jbi_island_fig2.py), [Figure 3 whole-flora/host coefficient renderer](../../scripts/render_jbi_island_fig3.py) and [Figure 5 AIS specificity renderer](../../scripts/render_jbi_island_fig5.py). The corresponding source-locked workflows export PNG/SVG/PDF, original-source checks and receipts; the separate Figure 4A marine-current map is already verified in PR #150.
+3. [Five-figure architecture and draft captions](FIGURES_CAPTIONS_V02.md): one coherent resource/access story; all five figure pipelines are source-audited and rendered, but the outputs remain scientific drafts.
+4. [Figure 1 two-layer framework](../../scripts/render_jbi_island_fig1.py), [Figure 4 full marine/host composite](../../scripts/render_jbi_island_fig4_composite.py), [Figure 2 resource/matched-stratum renderer](../../scripts/render_jbi_island_fig2.py), [Figure 3 whole-flora/host coefficient renderer](../../scripts/render_jbi_island_fig3.py) and [Figure 5 AIS specificity renderer](../../scripts/render_jbi_island_fig5.py). The corresponding source-locked workflows export PNG/SVG/PDF, original-source checks and receipts; the separate Figure 4A marine-current map is already verified in PR #150.
 5. [Source and number audit](../../scripts/verify_island_resources_marine_jbi_v02.py) with [dedicated GitHub Actions workflow](../../.github/workflows/chocho-island-resources-marine-jbi-v02.yml). This is **not** a statistical re-fit; it compares described numerical claims with saved source files.
 
 ## Distinct samples
@@ -32,8 +32,8 @@
 
 ## What is finished versus missing
 
-- **Finished:** integrated manuscript text, 16-item evidence crosswalk, source-checked rendered **Figures 1–5** (including the full Figure 4A–C composite), and manuscript-only number-audit logic. Dedicated Actions workflows for every figure have succeeded against saved original sources.
-- **Not finished:** optional final graphical harmonisation of the five scientific draft figures; a comprehensive literature/source-license audit; an independent fresh statistical reproduction of *all* previously saved analyses; journal-specific formatting and confirmed scientific overlap disclosure; coauthor approval and journal submission.
+- **Finished:** integrated manuscript text, 16-item evidence crosswalk, source-checked rendered **Figures 1–5**, corrected Fig. 1 ordering (introduced flora → potential resources), Fig. 2's 15 actual overlap strata (+10.7 pp; with limited 13/920 indexed overlap retained as Supplementary), legible Fig. 3 conditional coefficient, and improved Fig. 4B source-pair density/colorbar and A–C composite. Manuscript-only number audit and all five figure workflows have succeeded. Dedicated Actions workflows for every figure have succeeded against saved original sources.
+- **Not finished:** final journal-style figure harmonisation, comprehensive literature/source licence/data availability audit, independent full statistical refit of *all* earlier analyses, confirmed GEB overlap/editor disclosure, coauthor approval and journal submission.
 - **Coauthor decision:** the global GEB paper and this JBI draft share the 239-butterfly global resource reconstruction, so manuscript overlap must be disclosed and judged before initial submission.
 
 ## Run local manuscript-only audit
