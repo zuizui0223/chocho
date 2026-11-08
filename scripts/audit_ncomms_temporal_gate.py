@@ -207,9 +207,9 @@ def audit(records: dict, provenance: dict) -> dict:
             int(candidate["test_rows"]) != 208482 or
             int(candidate["test_species"]) != 155):
             raise ValueError("Original fixed 155-butterfly " + mode + " forecast source changed")
-        m = candidate["results"]
-        e0 = float(m["M3_both"]["species_equal_mse"])
-        e1 = float(m["M5_host_composition"]["species_equal_mse"])
+        forecast_models = candidate["results"]
+        e0 = float(forecast_models["M3_both"]["species_equal_mse"])
+        e1 = float(forecast_models["M5_host_composition"]["species_equal_mse"])
         if not (0 < e1 < e0 < 1):
             raise ValueError("Original fixed host-prediction signs or errors changed")
         gain = 100*(e0-e1)/e0
