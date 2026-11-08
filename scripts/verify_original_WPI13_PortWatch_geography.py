@@ -244,8 +244,8 @@ def run(out_dir):
         "source_verified_WPI_ports_with_LOCODE":sum(bool(r["verified_PortWatch_LOCODE"]) for r in all_checks),
         "source_unmatched_or_incomplete_source_WPI_ports":sum(not r["verified_PortWatch_portid"] for r in all_checks),
         "source_status_counts":dict(Counter(r["external_registry_box_status"] for r in all_checks)),
-        "exact_original_4_prior_pilot_ids_unchanged_when_reverified":all(
-            r["prior_pilot_compatible_if_both_verified"] is not False for r in all_checks),
+        "original_previous_four_pilot_WPI_IDs_not_in_new13_subset":all(
+            r["prior_pilot_provider_id"]=="" for r in all_checks),
         "no_global_registry_download":True,
         "no_global_maritime_connection_edges_downloaded":True,
         "no_butterfly_fits_or_true_ship_voyage_claim":True,

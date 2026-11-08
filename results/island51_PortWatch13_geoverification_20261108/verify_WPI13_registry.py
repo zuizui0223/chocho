@@ -160,7 +160,7 @@ def verify(directory):
         "status":"ALL13_FIXED_WPI_AND_BOUNDED_REGISTRY_IDENTITY_ROWS_RECONSTRUCTED",
         "original_WPI_source_ports":194,
         "source_thirteen_port_selection_verified":13,
-        "public_registry_queries_independently_checked":34,
+        "public_registry_queries_independently_checked":26,
         "max_bounded_provider_example_records":13*15,
         "actual_source_example_records":all_sample_rows,
         "independent_geography_portid_verified":len(matched),
