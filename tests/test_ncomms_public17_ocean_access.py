@@ -5,13 +5,25 @@ import unittest
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-spec=importlib.util.spec_from_file_location("ncomms_p17",ROOT/"scripts/run_ncomms_public17_ocean_access_holdout.py")
-m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+# The independent GEB paper CI intentionally installs a lean environment.
+# Only the dedicated NC job has scikit-learn. Do not fail collection of the
+# independent GEB manuscript suite when optional exploratory dependencies
+# are absent. The dedicated NC workflow fully executes these tests.
+try:
+    import sklearn
+except ImportError:
+    m=None
+else:
+    spec=importlib.util.spec_from_file_location("ncomms_p17",ROOT/"scripts/run_ncomms_public17_ocean_access_holdout.py")
+    m=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
 
 
 class SourceLockedAccessTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        if m is None:
+            raise unittest.SkipTest("Optional scikit-learn absent in lean non-NC paper CI")
         cls.sources,cls.pins=m.load()
         cls.early,cls.early_info=m.prepare(cls.sources,"2011_2017")
         cls.late,cls.late_info=m.prepare(cls.sources,"2018_2022")
