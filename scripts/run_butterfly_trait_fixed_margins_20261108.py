@@ -113,6 +113,30 @@ def run_period(m,data,bridge,period):
     wing={k:float(z["wing_size_z"]) for k,z in traits.items()}
     disturbance={k:int(z["disturbance_category"]) for k,z in traits.items()}
     obs=stats(events,lookup,small,wing,disturbance)
+    # Additional geographic-component blocking is NOT a valid full null when
+    # very few event edges are swappable. Diagnose support before testing.
+    component={int(r["landmass_id"]):int(r["component"]) for r in rows}
+    can_swap=[]
+    for ii,a in enumerate(events):
+        for b in events[ii+1:]:
+            if a[0]==b[0] or a[1]==b[1] or component[a[1]]!=component[b[1]]:
+                continue
+            cross1,cross2=(a[0],b[1]),(b[0],a[1])
+            if cross1 in eligible and cross2 in eligible and cross1 not in events and cross2 not in events:
+                can_swap.append((a,b))
+    involved=set(x for pair in can_swap for x in pair)
+    regional_support={
+       "distinct_original_components_with_events":len({component[e[1]] for e in events}),
+       "initially_valid_within_component_2x2_event_pairs":len(can_swap),
+       "events_initially_involved_in_eligible_component_swaps":len(involved),
+       "events_all":len(events),
+       "fraction_initially_swappable":len(involved)/len(events),
+       "regional_matched_null_not_promoted_without_support":True,
+       "note":"Initial state structural support only, not a uniform randomization inference on regional groups"
+    }
+    if (period=="2011_2017" and (len(can_swap),len(involved))!=(6,8)) or (
+        period=="2018_2022" and (len(can_swap),len(involved))!=(5,6)):
+        raise ValueError("Original within-component swap support changed")
     samples=[]
     diagnostics=[]
     for ch in range(4):
@@ -150,6 +174,7 @@ def run_period(m,data,bridge,period):
       "disturbance_assoc_positive_count":sum(disturbance[e[0]]==1 for e in events),
       "disturbance_avoid_positive_count":sum(disturbance[e[0]]==-1 for e in events),
       "sea_log_resistance_on_geo_log_dist_quadratic":list(map(float,fit)),
+      "regional_component_null_support_audit":regional_support,
       "four_chain_diagnostics":diagnostics,
       "tests":tests,
     }
