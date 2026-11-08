@@ -1,0 +1,50 @@
+name: chocho butterfly trait x marine access source-verified pilot
+
+on:
+  push:
+    branches:
+      - analysis/chocho-butterfly-trait-marine-20261108
+    paths:
+      - scripts/run_butterfly_trait_marine_access_20261108.py
+      - scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py
+      - scripts/run_butterfly_trait_fixed_margins_20261108.py
+      - .github/workflows/chocho-butterfly-trait-marine-20261108.yml
+      - tests/test_butterfly_trait_marine_20261108.py
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  butterfly-trait-marine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout pinned source and numerical code
+        uses: actions/checkout@v4
+      - name: Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned-required analysis packages
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn pytest
+      - name: Compile and test butterfly traits
+        run: |
+          python -m py_compile scripts/run_butterfly_trait_marine_access_20261108.py
+          python -m pytest tests/test_butterfly_trait_marine_20261108.py -q
+      - name: Calculate wing x distance/ocean/port and trait-group butterfly fauna
+        run: python scripts/run_butterfly_trait_marine_access_20261108.py --out-dir results/butterfly_trait_marine_access_20261108
+      - name: Check trait direction and re-fit same-island-pair controls
+        run: python scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py --source-dir results/butterfly_trait_marine_access_20261108
+      - name: Synthetic null-switch validation and real conditional original-source test
+        run: |
+          python scripts/run_butterfly_trait_fixed_margins_20261108.py --self-test
+          python scripts/run_butterfly_trait_fixed_margins_20261108.py --out-dir results/butterfly_trait_marine_access_20261108
+      - name: Archive all scored out-of-fold predictions and trait audit
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-trait-marine-source17-20261108
+          path: results/butterfly_trait_marine_access_20261108/
+          if-no-files-found: error
+          retention-days: 45
