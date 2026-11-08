@@ -1,0 +1,43 @@
+name: chocho JBI Figure 1 resource vs marine access framework
+
+on:
+  push:
+    branches:
+      - manuscript/island-resources-marine-access-jbi-v02-20261108
+    paths:
+      - "scripts/render_jbi_island_fig1.py"
+      - ".github/workflows/chocho-jbi-island-fig1.yml"
+  pull_request:
+    paths:
+      - "scripts/render_jbi_island_fig1.py"
+      - ".github/workflows/chocho-jbi-island-fig1.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audited-fig1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install figure dependencies
+        run: python -m pip install "matplotlib>=3.9,<4"
+      - name: Render source-anchored two-layer diagram
+        run: python scripts/render_jbi_island_fig1.py --out-dir _ci_jbi_fig1
+      - name: Archive Figure 1 PNG SVG PDF and audit receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jbi-fig1-source-anchored-resource-access-framework
+          path: |
+            _ci_jbi_fig1/fig1_two_layer_framework.png
+            _ci_jbi_fig1/fig1_two_layer_framework.svg
+            _ci_jbi_fig1/fig1_two_layer_framework.pdf
+            _ci_jbi_fig1/fig1_receipt.json
+          if-no-files-found: error
+          retention-days: 30
