@@ -1,0 +1,57 @@
+name: chocho recovered GLSN2018 full 14052 weighted edges and WPI194 historical UNCTAD join audit
+on:
+  push:
+    branches:
+      - analysis/island51-GLSN2018-UNCTAD-raw-source-recovery-20261108
+    paths:
+      - ".github/workflows/chocho-island51-audit-recovered-GLSN-UNCTAD.yml"
+      - "scripts/audit_original_GLSN2018_UNCTAD_WPI194_join.py"
+      - "tests/test_audit_recovered_GLSN_WPI194.py"
+      - "results/island51_maritime_raw_recovery_20261108/verify_GLSN2018_original_WPI_source.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original_GL_model_edges_and_legacy_UNCTAD_WPI194:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only audit dependency
+        run: python -m pip install pytest pycountry
+      - name: Verify source-pinned original 887 ports, 28104 edge rows, 194 WPI and old PLSCIQ
+        run: python -m pytest -q tests/test_audit_recovered_GLSN_WPI194.py
+      - name: Reconstruct 2018 GLSN modelled co-service edges and original source WPI194 candidate connections
+        run: |
+          mkdir -p _ci_original_marine_join
+          python scripts/audit_original_GLSN2018_UNCTAD_WPI194_join.py --out-dir _ci_original_marine_join
+      - name: Independently reconstruct source graph, country/name matching and all 1275 island pairs
+        run: |
+          python results/island51_maritime_raw_recovery_20261108/verify_GLSN2018_original_WPI_source.py --directory _ci_original_marine_join
+      - name: Archive checked source-only island maritime network candidate join
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island51-verified-GLSN2018-source-graph-WPI194-country-name-AIS-UNCTAD-join
+          path: _ci_original_marine_join/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Save derived MIT GLSN port-edge matched source and original landmass pair audit
+        if: success()
+        run: |
+          TARGET=results/island51_maritime_raw_recovery_20261108
+          cp _ci_original_marine_join/GLSN2018_UNCTAD2006_2010_Zenodo2020_originalWPI194_candidate_join.csv "$TARGET/"
+          cp _ci_original_marine_join/GLSN2018_originalWPI_source_candidate_model_edges.csv "$TARGET/"
+          cp _ci_original_marine_join/GLSN2018_original51_all1275_modelled_island_pair_candidates.csv "$TARGET/"
+          cp _ci_original_marine_join/GLSN2018_WPI194_full_source_edge_audit.json "$TARGET/"
+          cp _ci_original_marine_join/independent_full_GLSN2018_WPI_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive country-aware candidate GLSN 2018 weighted network edges and all 51 island pair source audit"
+            git push origin HEAD:analysis/island51-GLSN2018-UNCTAD-raw-source-recovery-20261108
+          fi
