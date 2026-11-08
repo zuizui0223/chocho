@@ -53,6 +53,8 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_ncomms_temporal_gate.py"),
     Path("scripts/build_ncomms_island_risk_visibility.py"),
     Path("tests/test_ncomms_island_risk_visibility.py"),
+    Path("scripts/recover_ncomms_four_original_late_year_cases.py"),
+    Path("tests/test_ncomms_four_original_late_years.py"),
     Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
     Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
 }
