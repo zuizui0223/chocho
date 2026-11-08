@@ -379,9 +379,12 @@ def main() -> None:
     write_csv(files["visibility"],grid,MATRIX_FIELDS)
     write_csv(files["island"],islands,ISLAND_FIELDS)
     write_csv(files["species"],species,SPECIES_FIELDS)
-    files["audit"].write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
-    for name,path in files.items():
-        report.setdefault("output_files_sha256",{})[name]=hashlib.sha256(path.read_bytes()).hexdigest()
+    # The audit JSON cannot contain its own SHA-256: doing so would make
+    # the receipt self-referential and the published hash immediately stale.
+    report["output_csv_sha256"]={
+        name:hashlib.sha256(path.read_bytes()).hexdigest()
+        for name,path in files.items() if name!="audit"
+    }
     files["audit"].write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
     print(json.dumps({
         "status":report["status"],
