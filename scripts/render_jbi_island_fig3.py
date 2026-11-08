@@ -73,9 +73,10 @@ def render(rows,dest):
         ax.plot([0,x],[v,v],linewidth=5,color="#64839d" if x>0 else "#a0a5ad",
                 solid_capstyle="round")
         ax.scatter([x],[v],s=115,zorder=3,color="#24435b" if x>0 else "#555a64")
-        ax.text(x+(0.013 if x>=0 else -0.013),v,
+        label_x=x+0.013 if x>=0 else 0.02
+        ax.text(label_x,v,
                 f"β {x:+.3f}   (descriptive p={item['descriptive_p']:.4f})",
-                fontsize=11,va="center",ha="left" if x>=0 else "right")
+                fontsize=11,va="center",ha="left")
     ax.axvline(0,color="black",lw=1)
     ax.set_yticks(y,[x["label"] for x in rows],fontsize=11)
     ax.set_xlim(-0.235,0.55)
