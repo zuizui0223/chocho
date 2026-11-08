@@ -51,6 +51,14 @@ SOURCE = {
         "provenance/reviewer_defenses/results/island_dated_host_match_20261030/island_dated_host_match_comparison.csv",
         "15b2282b0cd255a2f3d518e495727353bee8b1e0",
     ),
+    "host_forecast_temporal": (
+        "provenance/reviewer_defenses/results/host_island_synthesis_20261030/forecast_temporal_results.json",
+        "a1cf305f7c7c7967ef81b7d50a7b615e9d218528",
+    ),
+    "host_forecast_spatial": (
+        "provenance/reviewer_defenses/results/host_island_synthesis_20261030/forecast_spatial_results.json",
+        "d5e55dfd92c04037638e4bf12cefcfd5a9de1465",
+    ),
 }
 
 
@@ -190,6 +198,36 @@ def audit(records: dict, provenance: dict) -> dict:
     if observed_plant_ports != 149 or indexed_plant_islands != 45:
         raise ValueError("Public 2001–2010 **general** flora coverage changed")
 
+    separate_155_species_forecasts = {}
+    for mode, source_key in [("temporal", "host_forecast_temporal"),
+                             ("spatial", "host_forecast_spatial")]:
+        candidate = records[source_key]
+        if (candidate.get("status") != "COMPLETE" or
+            candidate.get("mode") != mode or
+            int(candidate["test_rows"]) != 208482 or
+            int(candidate["test_species"]) != 155):
+            raise ValueError("Original fixed 155-butterfly " + mode + " forecast source changed")
+        m = candidate["results"]
+        e0 = float(m["M3_both"]["species_equal_mse"])
+        e1 = float(m["M5_host_composition"]["species_equal_mse"])
+        if not (0 < e1 < e0 < 1):
+            raise ValueError("Original fixed host-prediction signs or errors changed")
+        gain = 100*(e0-e1)/e0
+        baseline = 4.120175607931823 if mode == "temporal" else 2.9952059516988134
+        if not math.isclose(gain,baseline,rel_tol=0,abs_tol=1e-8):
+            raise ValueError("Original host-prediction increment changed")
+        separate_155_species_forecasts[mode] = {
+            "species":155, "test_rows":208482,
+            "model_without_hosts":"M3_both",
+            "model_with_hosts":"M5_host_composition",
+            "species_equal_MSE_without_hosts":e0,
+            "species_equal_MSE_with_hosts":e1,
+            "percentage_relative_species_equal_MSE_improvement":gain,
+            "same_source_as_225_species_island_pairs":False,
+            "time_prior_host_arrivals_verified":False,
+            "outcome":"standardized butterfly recording probability, not breeding or colonization",
+        }
+
     # A block because original HOSTS × port × year identities are not available
     # in the reproducible Git tree. The 194-port general flora is not a substitute.
     # This is a conservative support screen, not a power test.
@@ -215,6 +253,7 @@ def audit(records: dict, provenance: dict) -> dict:
         "publication_target": "Nature Communications (target only, not submitted)",
         "primary_test_readiness": readiness,
         "source_pins": provenance,
+        "separate_existing_155_species_host_forecast": separate_155_species_forecasts,
         "prior_host_record_support": species,
         "source_coverage": {
             "original_source_landmass_groups": 51,
@@ -267,10 +306,13 @@ def render_markdown(report: dict) -> str:
     n=s["later_indexed_butterfly_species_island_pairs"]
     m=s["later_pairs_with_recorded_earlier_matching_host"]
     names=", ".join(z["butterfly"] for z in s["exact_butterflies_with_earlier_recorded_host_overlap"])
+    temporal=report["separate_existing_155_species_host_forecast"]["temporal"]
+    spatial=report["separate_existing_155_species_host_forecast"]["spatial"]
     return f"""# Nature Communications temporal support diagnostic — original sources only
 
 **Result: {report["primary_test_readiness"]}**. The source audit passed, but this is **not a new fitted predictive result**, an ecological absence estimate, or a rejection of the existing island/port positives.
 
+- Separate existing species-general prediction source: **155 butterflies / 208,482 evaluated species×cell×period rows**, adding static host composition reduces species-equal MSE **{temporal["percentage_relative_species_equal_MSE_improvement"]:.2f}% in temporal** and **{spatial["percentage_relative_species_equal_MSE_improvement"]:.2f}% in spatial** validation. This is a genuine prior source-backed positive predictive comparison, **not** a dated host arrival or island-specific result.
 - Original panel: **{s["original_candidate_butterflies"]}** butterflies; **{s["butterflies_with_later_source_pairs"]}** with later 2011–2022 butterfly pairs; **{n}** original butterfly×island later-index records.
 - Verified *recorded* pre-2011 matching host: **{m}/{n} ({100*m/n:.2f}%)**, across **{s["butterfly_species_with_verified_prior_host_overlap"]}** butterfly species: {names}. Remaining {n-m} are unmatched in this record-based screen, **not known host absences**.
 - The same later-pair population with **pooled 2001–2024** host records gives **{c["later_record_pairs_with_matching_host_2001_2024"]}/{n}** observed host correspondences. The **{c["extra_matches_in_pooled_window_without_verified_prior_support"]}** extra pooled-window matches cannot be claimed as time-prior hosts.
