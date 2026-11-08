@@ -113,8 +113,8 @@ def audit(directory):
     for row in islands:
         island=row["original_island_id"]
         values=med.get(island,[])
-        if (row["historical_index_eligible"].lower()=="true")!=bool(values) or
-            int(row["qualified_geoverified_historical_index_ports"])!=len(values):
+        if ((row["historical_index_eligible"].lower()=="true")!=bool(values) or
+            int(row["qualified_geoverified_historical_index_ports"])!=len(values)):
             raise ValueError("Source historical index island eligibility not observed")
         if values:
             near(row["historical_2006_2010_median_index"],statistics.median(values),"median source port index")
