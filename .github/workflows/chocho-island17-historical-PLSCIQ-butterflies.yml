@@ -1,0 +1,71 @@
+name: chocho old UNCTAD 2006-2010 PLSCIQ -> later butterfly 17-island LO2 source prediction
+on:
+  push:
+    branches:
+      - analysis/island17-historic2006PLSCIQ-LO2-20261108
+    paths:
+      - ".github/workflows/chocho-island17-historical-PLSCIQ-butterflies.yml"
+      - "scripts/run_island17_historical_PLSCIQ_butterfly_LO2.py"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/verify_LO2_source.py"
+      - "tests/test_island17_historical_PLSCIQ_butterflies.py"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  historical_port_index_butterfly_LO2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original scientific model and unit-test dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_old_port_index_butterflies
+          python -m pip freeze > _ci_old_port_index_butterflies/environment.txt
+      - name: Verify 17 source original islands / 22 old historical index ports and future-feature rejection
+        run: python -m pytest -q tests/test_island17_historical_PLSCIQ_butterflies.py
+      - name: Fit source-only 136 and 120 original butterfly pairs with both test endpoints withheld
+        run: |
+          python scripts/run_island17_historical_PLSCIQ_butterfly_LO2.py --out-dir _ci_old_port_index_butterflies
+      - name: Independently audit source historical index, original butterfly Jaccards and all LO2 loss comparisons
+        run: |
+          python results/island17_historic_PLSCIQ_LO2_20261108/verify_LO2_source.py --results-dir _ci_old_port_index_butterflies
+      - name: Preserve complete old-PLSCIQ index science and audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island17-old2006-2010-PLSCIQ-butterfly-double-unseen-predictions
+          path: _ci_old_port_index_butterflies/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit original-source 136-pair forecasts and independent audit only after success
+        if: success()
+        run: |
+          TARGET=results/island17_historic_PLSCIQ_LO2_20261108
+          BRANCH=analysis/island17-historic2006PLSCIQ-LO2-20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          mkdir -p "$TARGET"
+          cp _ci_old_port_index_butterflies/original24_geoverified_ports_historical_PLSCIQ_quality.csv "$TARGET/"
+          cp _ci_old_port_index_butterflies/original51_historical_PLSCIQ_island_eligibility.csv "$TARGET/"
+          cp _ci_old_port_index_butterflies/original17_136_source_pair_manifest.csv "$TARGET/"
+          cp _ci_old_port_index_butterflies/double_unseen_source_folds.csv "$TARGET/"
+          cp _ci_old_port_index_butterflies/comparison_scope_summary.csv "$TARGET/"
+          cp _ci_old_port_index_butterflies/LO2_heldout_predictions.csv.gz "$TARGET/"
+          cp _ci_old_port_index_butterflies/execution_receipt.json "$TARGET/"
+          cp _ci_old_port_index_butterflies/independent_source_and_prediction_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive old pre2011 port connectivity butterfly LO2 source predictions and independent audit"
+            git push origin HEAD:"$BRANCH"
+          fi

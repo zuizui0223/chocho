@@ -1,0 +1,54 @@
+name: chocho source-preserving post-result historical PLSCIQ group9 train/test influence decomposition
+on:
+  push:
+    branches:
+      - analysis/island17-historic2006PLSCIQ-LO2-20261108
+    paths:
+      - ".github/workflows/chocho-island17-PLSCIQ-group9-decomposition.yml"
+      - "scripts/diagnose_island17_historic_PLSCIQ_group9_training_vs_testing.py"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/verify_group9_decomposition.py"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/POSTRESULT_GROUP9_DIAGNOSTIC_PROTOCOL.md"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_frozen_group9_train_test_decomposition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Decompose original existing historical PLSCIQ source-group9 test and training populations
+        run: |
+          mkdir -p _ci_group9_decomposition
+          python scripts/diagnose_island17_historic_PLSCIQ_group9_training_vs_testing.py --out-dir _ci_group9_decomposition
+      - name: Independent stdlib audit of all forty source-controlled contrasts and original 2048 model predictions
+        run: |
+          python results/island17_historic_PLSCIQ_LO2_20261108/verify_group9_decomposition.py --out-dir _ci_group9_decomposition
+      - name: Archive original model source-only 40 contrast diagnostic and audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island17-PLSCIQ-historical-group9-train-vs-test-score-replay
+          path: _ci_group9_decomposition/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit exact original-model 40 group9 diagnostic contrasts and separate audit receipt
+        if: success()
+        run: |
+          TARGET=results/island17_historic_PLSCIQ_LO2_20261108
+          BRANCH=analysis/island17-historic2006PLSCIQ-LO2-20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          cp _ci_group9_decomposition/group9_training_vs_testing_loss_decomposition_40.csv "$TARGET/"
+          cp _ci_group9_decomposition/group9_diagnostic_receipt.json "$TARGET/"
+          cp _ci_group9_decomposition/group9_independent_diagnostic_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive post-result historical PLSCIQ group9 training-versus-test influence, 40 original score comparisons"
+            git push origin HEAD:"$BRANCH"
+          fi

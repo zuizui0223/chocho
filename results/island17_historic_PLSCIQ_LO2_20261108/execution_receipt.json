@@ -1,0 +1,167 @@
+{
+  "PLSCIQ_is_port_index_not_ship_voyage_or_actual_butterfly_colonization": true,
+  "all_file_sha256": {
+    "LO2_heldout_predictions.csv.gz": "691b4dcea6bcf34ad7385f16b3e2f7e5019d44f501c33edcccaa08c8568e39f8",
+    "comparison_scope_summary.csv": "91468df8cbe6e1ec5e951c229a8c76cdb0dbda37c75e757ea452b053f9f5d834",
+    "double_unseen_source_folds.csv": "18627d3d9a32745e7916b145ddfb7e4b4e34728fd840642da0bc5ae02071b954",
+    "environment.txt": "16d4f9fb391c22fd56adfaf9a23b698a6e08b4eb0c7da3ca8bac6064e0554c22",
+    "original17_136_source_pair_manifest.csv": "f5cb43459918cc1eb7aeccf9e0594dce800b7a43bafb459b6ddab10153f8afb5",
+    "original24_geoverified_ports_historical_PLSCIQ_quality.csv": "9b8127bc115ef86472a8e9a12bd5ecde27bd5c7f593616d58fd13a1e18b43789",
+    "original51_historical_PLSCIQ_island_eligibility.csv": "e23e28542b74f687120fb73773f941769dffbbff2c91d21e1e395ac04e65fc7c"
+  },
+  "candidate_HOSTS_2001_2024_and_modernAIS_or_modelledGLSN_not_used_as_primary_predictors": true,
+  "comparison_rows": 20,
+  "contrasts": [
+    "BASE_to_MED_SUM",
+    "BASE_to_MED_SUM_DIFF",
+    "MED_SUM_to_MED_SUM_DIFF",
+    "BASE_to_MAX_SUM_DIFF",
+    "MED_SUM_DIFF_to_MAX_SUM_DIFF"
+  ],
+  "early_butterfly_2001_2010_target_contextual_not_forward_prediction": true,
+  "feature_names": {
+    "earlier_butterfly_jaccard": {
+      "BASE": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records"
+      ],
+      "MAX_SUM_DIFF": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "historical2006_2010_PLSCIQ_max_endpoint_sum",
+        "historical2006_2010_PLSCIQ_max_endpoint_absdiff"
+      ],
+      "MED_SUM": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "historical2006_2010_PLSCIQ_median_endpoint_sum"
+      ],
+      "MED_SUM_DIFF": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "historical2006_2010_PLSCIQ_median_endpoint_sum",
+        "historical2006_2010_PLSCIQ_median_endpoint_absdiff"
+      ]
+    },
+    "new_butterfly_jaccard": {
+      "BASE": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "previous_2001_2010_butterfly_Jaccard"
+      ],
+      "MAX_SUM_DIFF": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "previous_2001_2010_butterfly_Jaccard",
+        "historical2006_2010_PLSCIQ_max_endpoint_sum",
+        "historical2006_2010_PLSCIQ_max_endpoint_absdiff"
+      ],
+      "MED_SUM": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "previous_2001_2010_butterfly_Jaccard",
+        "historical2006_2010_PLSCIQ_median_endpoint_sum"
+      ],
+      "MED_SUM_DIFF": [
+        "log_original_port_distance",
+        "squared_log_original_port_distance",
+        "sum_log1p_original_source_WPI_port_counts",
+        "abs_difference_log1p_original_source_WPI_port_counts",
+        "original_latitude_separation_degrees",
+        "sum_log1p_2001_2010_allplant_buffer_records",
+        "abs_difference_log1p_2001_2010_allplant_buffer_records",
+        "previous_2001_2010_butterfly_Jaccard",
+        "historical2006_2010_PLSCIQ_median_endpoint_sum",
+        "historical2006_2010_PLSCIQ_median_endpoint_absdiff"
+      ]
+    }
+  },
+  "historical_2001_2010_botanical_record_effort_receipt": {
+    "files": {
+      "island_port_early_inventory_audit.json": {
+        "git_blob_sha": "95a8ea7dc2096611837ebbd66aa27025b7fc9c96",
+        "sha256": "5fff0a7189da9d14364f9b8a8ab05a05cc510cadabc31659b1e805d9326059fd"
+      },
+      "island_port_early_inventory_status.csv": {
+        "git_blob_sha": "30ffb98ac91aa3cc56451f5202000bb10ccdb023",
+        "sha256": "6e3b49ec63e43e894954ecb3d6931e9af6b669a7162e7db317e787e4b403ab13"
+      },
+      "island_port_early_plant_availability.csv": {
+        "git_blob_sha": "0a01831056c2cd59a4bd41bd1dbd4c84d77cf922",
+        "sha256": "51dac833250fc71299313148ec2de9ea05071c64f23dd223527af01723344c49"
+      }
+    },
+    "historical_host_species_identities_not_included": true,
+    "islands_with_early_plant_records": 44,
+    "islands_without_early_plant_records": 7,
+    "overlapping_port_buffers_can_duplicate_observations": true,
+    "sum_port_buffer_early_plant_records": 155002,
+    "zero_record_not_absence": true
+  },
+  "individual_predictions": 2048,
+  "models": [
+    "BASE",
+    "MED_SUM",
+    "MED_SUM_DIFF",
+    "MAX_SUM_DIFF"
+  ],
+  "old_UNCTAD_source_receipt_sha256": "78c5c611955aae1e3d684dc5e8fcfc9074cb5d3bd524f4414d5dc3c079dc81d4",
+  "original_WPI_ports": 194,
+  "prior_source_original24_verified_port_files_sha256": {
+    "WPI13": "de73751c3ddcaacce81ef57f190be3f4c3d5fd11e67c35e3857bdb05f5c2b577",
+    "WPI17": "a24911e8e560b5b1b30d4dc578e97479bae69914d1b43b3bb2c266d5cf419e79"
+  },
+  "schema": "chocho_historical_2006_2010_port_liner_PLSCIQ_butterfly_LO2_v1",
+  "scopes": [
+    "all17",
+    "leave_original_landmass9_out"
+  ],
+  "source_all17_pairs": 136,
+  "source_double_unseen_pair_folds": 256,
+  "source_index_supported_island_groups": 17,
+  "source_island9_mixed_country_grouping_kept_primary_and_dropped_only_in_fixed_sensitivity": true,
+  "source_no_group9_pairs": 120,
+  "source_old_UNCTAD_index_ports_min16quarters": 22,
+  "source_original_islands": 51,
+  "source_verified_ports": 24,
+  "status": "ALL_SOURCE_FIXED_17_ISLANDS_AND_GROUP9_EXCLUDED_LO2_FORECASTS_COMPLETE",
+  "targets": [
+    "new_butterfly_jaccard",
+    "earlier_butterfly_jaccard"
+  ]
+}
