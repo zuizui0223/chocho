@@ -1,0 +1,67 @@
+name: chocho 24 independently geoverified original WPI ports across GLSN UNCTAD AIS and all 1275 island pairs
+on:
+  push:
+    branches:
+      - analysis/island51-PortWatch13-GLSN-UNCTAD-source-geoverification-20261108
+    paths:
+      - ".github/workflows/chocho-WPI24-GLSN-UNCTAD-AIS-source-audit.yml"
+      - "scripts/summarize_original_WPI24_geoverified_maritime_sources.py"
+      - "tests/test_summarize_original_WPI24_maritime_source.py"
+      - "results/island51_PortWatch13_geoverification_20261108/COMBINED30_PROTOCOL.md"
+      - "results/island51_PortWatch13_geoverification_20261108/verify_WPI24_cross_source.py"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-WPI24-GLSN-UNCTAD-AIS-source-audit.yml"
+      - "scripts/summarize_original_WPI24_geoverified_maritime_sources.py"
+      - "tests/test_summarize_original_WPI24_maritime_source.py"
+      - "results/island51_PortWatch13_geoverification_20261108/**"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  frozen_original_24_port_three_marine_source_audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source-only test environment
+        run: python -m pip install pytest
+      - name: Check exact two independent PortWatch source cohorts and immutable 194 original WPI ports
+        run: python -m pytest -q tests/test_summarize_original_WPI24_maritime_source.py
+      - name: Reconstruct all 276 source model/OD/PLSCIQ port-pairs and all 1275 original island-pairs
+        run: |
+          mkdir -p _ci_WPI24_source
+          python scripts/summarize_original_WPI24_geoverified_maritime_sources.py --out-dir _ci_WPI24_source
+      - name: Independently reconstruct original source 2018 model edges, 2020 OD, old UNCTAD and prior WPI15 source values
+        run: |
+          python results/island51_PortWatch13_geoverification_20261108/verify_WPI24_cross_source.py --results-dir _ci_WPI24_source
+      - name: Archive complete 276/1275 source-only verified original WPI port and island-pair audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-WPI24-independent-276-port-pair-1275-island-pair-three-source-comparison
+          path: _ci_WPI24_source/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Persist derived source-only compact 24-port and original 51-island scientific audit
+        if: success() && github.event_name == 'push'
+        run: |
+          BRANCH=analysis/island51-PortWatch13-GLSN-UNCTAD-source-geoverification-20261108
+          TARGET=results/island51_PortWatch13_geoverification_20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          mkdir -p "$TARGET"
+          cp _ci_WPI24_source/WPI24_geoverified_all276_GLSN_UNCTAD_AIS_port_pair_comparison.csv "$TARGET/"
+          cp _ci_WPI24_source/original51_all1275_geo_verified24_source_island_pair_observation.csv "$TARGET/"
+          cp _ci_WPI24_source/WPI24_3_source_verified_port_graph_audit.json "$TARGET/"
+          cp _ci_WPI24_source/independent_WPI24_3source_graph_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive all 276 WPI24 geoverified GLSN-UNCTAD-AIS port pairs and 1275 island source pairs"
+            git push origin HEAD:"$BRANCH"
+          fi

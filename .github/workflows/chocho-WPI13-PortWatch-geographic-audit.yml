@@ -1,0 +1,60 @@
+name: chocho bounded PortWatch registry 13-source-second-cohort WPI geographic and LOCODE audit
+on:
+  push:
+    branches:
+      - analysis/island51-PortWatch13-GLSN-UNCTAD-source-geoverification-20261108
+    paths:
+      - ".github/workflows/chocho-WPI13-PortWatch-geographic-audit.yml"
+      - "scripts/verify_original_WPI13_PortWatch_geography.py"
+      - "tests/test_verify_original_WPI13_PortWatch.py"
+      - "results/island51_PortWatch13_geoverification_20261108/PROTOCOL.md"
+      - "results/island51_PortWatch13_geoverification_20261108/verify_WPI13_registry.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_only_13_additional_WPI_registry_identities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install strict source-country verification dependencies
+        run: python -m pip install pytest pycountry
+      - name: Verify frozen original 13 source-selected WPI identities and rejection logic
+        run: python -m pytest -q tests/test_verify_original_WPI13_PortWatch.py
+      - name: Query only 13 source-selected WPI 0.35 degree boxes with at most 15 registry rows each
+        run: |
+          mkdir -p _ci_WPI13_source
+          python scripts/verify_original_WPI13_PortWatch_geography.py --out-dir _ci_WPI13_source
+      - name: Independently reconstruct all 13 WPI name ISO3 geodesic decisions and complete source query receipts
+        run: |
+          python results/island51_PortWatch13_geoverification_20261108/verify_WPI13_registry.py --results-dir _ci_WPI13_source
+      - name: Preserve complete 26 bounded registry request evidence without full-provider bulk copying
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-WPI13-UNCTAD-GLSN-PortWatch-independent-geographic-audit
+          path: _ci_WPI13_source/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Commit only 13 compact source identity/LOCODE statuses and source audit
+        if: success()
+        run: |
+          BRANCH=analysis/island51-PortWatch13-GLSN-UNCTAD-source-geoverification-20261108
+          TARGET=results/island51_PortWatch13_geoverification_20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          mkdir -p "$TARGET"
+          cp _ci_WPI13_source/WPI13_independent_PortWatch_source_geography_LOCODE.csv "$TARGET/"
+          cp _ci_WPI13_source/WPI13_PortWatch_source_identity_receipt.json "$TARGET/"
+          cp _ci_WPI13_source/independent_WPI13_source_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive 13 additional source-selected WPI port geographic identities and PortWatch LOCODE audit"
+            git push origin HEAD:"$BRANCH"
+          fi
