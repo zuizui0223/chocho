@@ -2,6 +2,11 @@
 import importlib.util
 from pathlib import Path
 import numpy as np
+import pytest
+
+# scikit-learn is optional in the frozen independent GEB reviewer test environment.
+# This exploratory trait test still runs fully in its dedicated source-locked CI.
+pytest.importorskip("sklearn")
 
 ROOT=Path(__file__).resolve().parents[1]
 S=ROOT/"scripts/run_butterfly_trait_marine_access_20261108.py"
