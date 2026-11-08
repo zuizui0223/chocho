@@ -1,0 +1,43 @@
+name: chocho JBI Figure 2 island resource expansion
+
+on:
+  push:
+    branches:
+      - manuscript/island-resources-marine-access-jbi-v02-20261108
+    paths:
+      - "scripts/render_jbi_island_fig2.py"
+      - ".github/workflows/chocho-jbi-island-fig2.yml"
+  pull_request:
+    paths:
+      - "scripts/render_jbi_island_fig2.py"
+      - ".github/workflows/chocho-jbi-island-fig2.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-audited-fig2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install figure dependencies
+        run: python -m pip install "matplotlib>=3.9,<4" "numpy>=1.26,<3"
+      - name: Verify source Git blob identities and render all outputs
+        run: python scripts/render_jbi_island_fig2.py --out-dir _ci_jbi_fig2
+      - name: Archive source-verified original-source figure and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jbi-fig2-source-verified-island-resource-expansion
+          path: |
+            _ci_jbi_fig2/fig2_island_resource_expansion.png
+            _ci_jbi_fig2/fig2_island_resource_expansion.svg
+            _ci_jbi_fig2/fig2_island_resource_expansion.pdf
+            _ci_jbi_fig2/fig2_receipt.json
+          if-no-files-found: error
+          retention-days: 30
