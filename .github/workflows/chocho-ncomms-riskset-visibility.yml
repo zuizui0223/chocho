@@ -1,0 +1,67 @@
+name: chocho NC original 225x51 butterfly record-index visibility
+
+on:
+  push:
+    branches: [analysis/ncomms-riskset-visibility-20261108]
+    paths:
+      - "scripts/build_ncomms_island_risk_visibility.py"
+      - "tests/test_ncomms_island_risk_visibility.py"
+      - "analysis/ncomms_riskset_visibility_20261108/**"
+      - ".github/workflows/chocho-ncomms-riskset-visibility.yml"
+  pull_request:
+    paths:
+      - "scripts/build_ncomms_island_risk_visibility.py"
+      - "tests/test_ncomms_island_risk_visibility.py"
+      - "analysis/ncomms_riskset_visibility_20261108/**"
+      - ".github/workflows/chocho-ncomms-riskset-visibility.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-source-visibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-pinned visibility and missingness regression checks
+        run: python -m unittest discover -s tests -p "test_ncomms_island_risk_visibility.py" -v
+      - name: Construct 225 species x 51 islands and audit published historical aggregate
+        run: |
+          python scripts/build_ncomms_island_risk_visibility.py \
+            --output-dir _ci_ncomms_risk_visibility
+      - name: Verify all 11,475 rows and exact source counts independently
+        run: |
+          python - <<'PY'
+          import csv,json,pathlib
+          root=pathlib.Path("_ci_ncomms_risk_visibility")
+          a=json.loads((root/"risk_visibility_audit.json").read_text())
+          assert a["schema"]=="chocho_NC_island225x51_temporal_risk_visibility_v1"
+          assert a["status"]=="SOURCE_VERIFIED_VISIBILITY_PANEL_NOT_READY_FOR_EVENT_PREDICTION"
+          assert a["all_potential_species_by_island_cells"]==11475
+          assert a["published_pre2011_butterfly_indexed_species_island_cells"]==524
+          assert a["published_first2011_2022_indexed_species_island_cells"]==430
+          assert a["archived_row_identified_first2011_2017_species_island_cells"]==302
+          assert a["unassigned_2018_2022_positive_identities_but_known_marginal_total"]==128
+          assert a["all_cells_not_indexed_in_original_butterfly_2001_2010_by_count"]==10951
+          assert a["all_cells_without_butterfly_index_in_original_2001_2022_by_count"]==10521
+          with (root/"species_island_225x51_visibility_NOT_EVENT_RISK.csv").open() as f:
+            rows=list(csv.DictReader(f))
+          assert len(rows)==11475
+          assert sum(x["butterfly_first_index_2011_2017_at_THIS_species_island"]=="CONFIRMED_FIRST_INDEX" for x in rows)==302
+          assert sum(x["butterfly_pre2011_index_at_THIS_species_island"].startswith("NOT_RECOVERED") for x in rows)==11173
+          assert all(x["historical_2001_2010_HOSTS_record_at_THIS_species_island"].startswith("NOT_RECOVERED") for x in rows)
+          print("PASS: 11,475 source matrix rows; NO 11,173 unobserved row-level negatives invented")
+          PY
+      - name: Archive complete visibility grid and original source checksums
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-ncomms-225x51-index-visibility-NOT-RISK-COHORT
+          path: _ci_ncomms_risk_visibility/
+          if-no-files-found: error
+          retention-days: 30

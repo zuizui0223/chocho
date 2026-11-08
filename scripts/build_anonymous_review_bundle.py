@@ -51,6 +51,8 @@ EXCLUDE_RELATIVE = {
     # the independent anonymous GEB review package. Keep it in the full repo.
     Path("scripts/audit_ncomms_temporal_gate.py"),
     Path("tests/test_ncomms_temporal_gate.py"),
+    Path("scripts/build_ncomms_island_risk_visibility.py"),
+    Path("tests/test_ncomms_island_risk_visibility.py"),
     Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
     Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
 }
