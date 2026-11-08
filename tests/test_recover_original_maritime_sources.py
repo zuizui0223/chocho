@@ -35,6 +35,10 @@ def test_original_WPI_source_and_legacy_PLSCIQ_vintage():
     assert len({x["island_id"] for x in a})==51
     assert sum(x["included"].lower()=="true" for x in a)==182
     assert len(HISTORIC_SHA)==3 and Q_START=="2006-Q1" and Q_STOP=="2021-Q3"
+    try:
+        import pycountry
+    except ImportError:
+        pytest.skip("Dedicated scientific data workflow installs pycountry; paper-only CI need not")
     assert country_iso2("Japan")=="JP"
     assert clean("Santa Cruz de Tenerife")=="SANTACRUZDETENERIFE"
     assert parse_value("NA") is None
