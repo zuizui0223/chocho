@@ -38,6 +38,21 @@
       "interpretation": "10.7 percentage points after matched Level1×log-area overlap; do not substitute 14pp from different adjustment"
     },
     {
+      "id": "independent_gbif_record_overlap",
+      "figure": "2 (optional D) / supplement",
+      "source": "results/q3-observed-butterfly-island-opportunity-v02/q3_archival_gbif_overlap_audit.json",
+      "values": {
+        "gbif_validation_species": 32,
+        "gbif_species_with_original_records": 31,
+        "sampled_species_added_island_opportunity_cells": 920,
+        "recorded_butterfly_in_new_opportunity_cells": 13,
+        "fraction_sampled_added_opportunity_cells_with_any_gbif_record": 0.014130434782608696
+      },
+      "interpretation": "13/920 = 1.413% of plant-defined added cells have a butterfly GBIF index record in a selective 31-observed-species archived sample; NOT full239 realization, true absence or confirmed breeding",
+      "source_doi": "10.15468/dl.pp5nc9",
+      "record_total_caveat": "source DOI rebuild returned 290 fewer original API occurrence records"
+    },
+    {
       "id": "port_flora",
       "figure": "3",
       "source": "results/three-gate-port-botanical-effort/botanical_effort_adjusted_port_flora_audit.json",
@@ -201,18 +216,18 @@
     }
   ],
   "claims_excluded_from_manuscript": {
-    "1.4_percent_realization": "mentioned in prior discussion, but numerator, denominator, and a source-matched realization definition were not verified in this JBI ledger; do not publish as observed occupancy",
     "14_percentage_point_island_effect": "not the conservative matched Level1×area contrast; use 10.7pp for the matched result",
     "ports_causally_introduce_host_plants": "modern WPI covariate and floristic inventories do not observe transport",
     "ships_move_butterflies": "AIS density proxy and PLSCIQ index do not observe butterfly movement",
     "current_hotspot_equals_steppingstone": "no electrical transfer through an island in the source model",
     "wind_is_directional": "source uses scalar mean wind speed",
     "colonial_routes_explain_butterfly_composition": "not identified robustly in original evidence",
-    "nutrient_selection": "outside scope; gesui independent research track"
+    "nutrient_selection": "outside scope; gesui independent research track",
+    "1.4_percent_as_biological_realization_rate": "The 13/920=1.413% result is now retained as sampled GBIF record overlap ONLY; missing records cannot be called unoccupied or unrealized resources."
   },
   "figures_status": {
     "1": "conceptual/sample-flow design only",
-    "2": "source-confirmed underlying results; final composite figure not newly rendered",
+    "2": "source-confirmed underlying results and optional limited 31-species 13/920 index-overlap inset; final figure not newly rendered",
     "3": "source-confirmed underlying results; final composite figure not newly rendered",
     "5": "numerical figure plan; composite not rendered",
     "4A": "current map rendered; source-run and tests succeeded; actual figure is stored as workflow artifact and local conversation files, not committed to the manuscript folder",
