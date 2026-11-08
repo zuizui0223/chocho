@@ -50,7 +50,44 @@ jobs:
         if: success()
         run: |
           TARGET=results/island51_maritime_raw_recovery_20261108
+          BRANCH=analysis/island51-GLSN2018-UNCTAD-raw-source-recovery-20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
           mkdir -p "$TARGET"
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root=Path("results/island51_maritime_raw_recovery_20261108")
+          freshglsn=json.loads(Path("_ci_glsn2018/GLSN2018_recovered_source_receipt.json").read_text())
+          freshunctad=json.loads(Path("_ci_unctad_plsciq/UNCTAD_PLSCIQ_source_recovery_receipt.json").read_text())
+          oldglsn=root/"GLSN2018_recovered_source_receipt.json"
+          oldunctad=root/"UNCTAD_PLSCIQ_source_recovery_receipt.json"
+          stable=False
+          if oldglsn.exists() and oldunctad.exists():
+              priorglsn=json.loads(oldglsn.read_text())
+              priorunctad=json.loads(oldunctad.read_text())
+              glsn=lambda x: [(z["original_publisher_git_blob"],
+                      tuple(s["extracted_csv_sha256"] for s in z["sheets"])) for z in x["sources"]]
+              unctad=lambda x: (x["source_version"]["is_exact_2026_10_30_original_recovered"],
+                      tuple(z["sha256"] for z in x["page_receipts"]))
+              actual=[("GLSN2018_ports_original_sheet_1.csv","_ci_glsn2018/GLSN2018_ports_original_sheet_1.csv"),
+                      ("GLSN2018_edges_original_sheet_1.csv","_ci_glsn2018/GLSN2018_edges_original_sheet_1.csv"),
+                      ("UNCTAD_PLSCIQ_originalWPI194_name_country_candidates.csv",
+                       "_ci_unctad_plsciq/UNCTAD_PLSCIQ_originalWPI194_name_country_candidates.csv")]
+              same_tables=all((root/a).exists() and
+                       hashlib.sha256((root/a).read_bytes()).hexdigest()==
+                       hashlib.sha256(Path(b).read_bytes()).hexdigest() for a,b in actual)
+              stable=(glsn(priorglsn)==glsn(freshglsn)
+                     and unctad(priorunctad)==unctad(freshunctad)
+                     and same_tables)
+          if stable:
+              Path("_ci_original_sources_unchanged").write_text("publisher XLSX blob and all old UNCTAD SHA-256 match; no source replacement necessary")
+          print("MARITIME_SOURCE_DATA_UNCHANGED="+str(stable),flush=True)
+          PY
+          if [ -f _ci_original_sources_unchanged ]; then
+            echo "Already stored exact published GLSN and UNCTAD source bytes; skip timestamp-only commits"
+            exit 0
+          fi
           cp _ci_glsn2018/GLSN2018_recovered_source_receipt.json "$TARGET/"
           cp _ci_glsn2018/GLSN2018_*_original_sheet_*.csv "$TARGET/"
           cp _ci_unctad_plsciq/UNCTAD_PLSCIQ_source_recovery_receipt.json "$TARGET/"
