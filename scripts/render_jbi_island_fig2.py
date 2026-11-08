@@ -133,7 +133,7 @@ def render(data, out):
     cx.axvline(weighted,color="#d59d55",linewidth=2.4,zorder=2)
     cx.scatter(deviations,yjit,s=38+28*weights,color="#537492",
                alpha=.84,edgecolors="white",linewidths=.7,zorder=3)
-    cx.set_title("C  Island excess in matched strata\\n15 Level 1 × area overlap strata",
+    cx.set_title("C  Island excess in matched strata\n15 Level 1 × area overlap strata",
                  loc="left")
     cx.set_xlim(-4,30); cx.set_ylim(-.34,.34); cx.set_yticks([])
     cx.set_xticks([0,10,20,30])
@@ -142,8 +142,8 @@ def render(data, out):
     cx.text(weighted+.85,.295,f"Weighted +{weighted:.1f} pp",
             color="#805521",fontsize=10.2,va="top")
     cx.text(0.03,-0.37,
-            "Each dot is one matched stratum; size ∝ minimum\\n"
-            "of island and mainland region counts. Descriptive\\n"
+            "Each dot is one matched stratum; size ∝ minimum\n"
+            "of island and mainland region counts. Descriptive\n"
             f"within-stratum permutation p = {match['within_stratum_descriptive_p_two_sided']:.4f}.",
             transform=cx.transAxes,fontsize=9.0,va="top")
 
