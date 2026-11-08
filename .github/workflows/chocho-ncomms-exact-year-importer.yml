@@ -1,0 +1,39 @@
+name: chocho NC SHA-verified original-year Parquet recovery importer (synthetic tests only)
+
+on:
+  push:
+    branches: [analysis/ncomms-original-year-four-late-20261108]
+    paths:
+      - "scripts/import_ncomms_exact_original_year_parquet.py"
+      - "tests/test_ncomms_exact_original_year_importer.py"
+      - ".github/workflows/chocho-ncomms-exact-year-importer.yml"
+  pull_request:
+    paths:
+      - "scripts/import_ncomms_exact_original_year_parquet.py"
+      - "tests/test_ncomms_exact_original_year_importer.py"
+      - ".github/workflows/chocho-ncomms-exact-year-importer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-importer-guard-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify time-slicing and source mismatch guards on SYNTHETIC year records only
+        run: python -m unittest discover -s tests -p test_ncomms_exact_original_year_importer.py -v
+      - name: Verify exact importer cannot silently substitute another Parquet
+        run: |
+          python scripts/import_ncomms_exact_original_year_parquet.py --help
+          python - <<'PY'
+          import pathlib
+          p=pathlib.Path("work/barriers/global_original_species_island_year.parquet")
+          assert not p.exists(), "Unexpected tracked private raw file: stop and audit"
+          print("PASS: Original private source NOT mounted in CI. Real 83,573-row importer run is not claimed.")
+          PY

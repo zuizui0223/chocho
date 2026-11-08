@@ -1,0 +1,68 @@
+name: chocho NC recover four verified original 2018–2022 butterfly years
+
+on:
+  push:
+    branches:
+      - analysis/ncomms-original-year-four-late-20261108
+    paths:
+      - "scripts/recover_ncomms_four_original_late_year_cases.py"
+      - "tests/test_ncomms_four_original_late_years.py"
+      - "analysis/ncomms_original_four_late_20261108/**"
+      - ".github/workflows/chocho-ncomms-four-original-year-recovery.yml"
+  pull_request:
+    paths:
+      - "scripts/recover_ncomms_four_original_late_year_cases.py"
+      - "tests/test_ncomms_four_original_late_years.py"
+      - "analysis/ncomms_original_four_late_20261108/**"
+      - ".github/workflows/chocho-ncomms-four-original-year-recovery.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover-four-original-years:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Revalidate original 225x51 event source and all ten five-link endpoints
+        run: python -m unittest discover -s tests -p test_ncomms_four_original_late_years.py -v
+      - name: Regenerate full source visibility with exactly four additional late first-index identities
+        run: |
+          python scripts/recover_ncomms_four_original_late_year_cases.py \
+            --out-dir _ci_nc_four_original_years
+      - name: Independently verify exactly four newly recovered cases and remaining 124 unknown positive pairs
+        run: |
+          python - <<'PY'
+          import csv,json,pathlib
+          p=pathlib.Path("_ci_nc_four_original_years")
+          z=json.loads((p/"original_four_late_source_audit.json").read_text())
+          assert z["new_original_source_year_2018_2022_case_IDs"]==4
+          assert z["all_year_resolved_original_source_endpoints"]==10
+          assert z["remaining_2018_2022_positive_identity_deficit"]==124
+          with (p/"original_four_2018_2022_first_index_cases.csv").open() as f:
+            a=list(csv.DictReader(f))
+          assert len(a)==4
+          expected={("Colias croceus","169","2019"),("Colias hyale","169","2019"),
+                    ("Pieris rapae","951","2019"),("Nymphalis antiopa","715","2021")}
+          assert {(r["butterfly"],r["landmass_id"],r["first_index_year"]) for r in a}==expected
+          with (p/"species_island_225x51_with_4_original_late_positive_years.csv").open() as f:
+            rows=list(csv.DictReader(f))
+          assert len(rows)==11475
+          assert sum(r["full_index_2011_2022_at_THIS_species_island"]=="CONFIRMED_FIRST_INDEX_2018_2022_ORIGINAL_YEAR_SOURCE" for r in rows)==4
+          assert sum(r["butterfly_first_index_2011_2017_at_THIS_species_island"]=="CONFIRMED_FIRST_INDEX" for r in rows)==302
+          assert sum(r["full_index_2011_2022_at_THIS_species_island"].startswith("NOT_RECOVERED") for r in rows)==11169
+          print("PASS original 302+4 year-identified positives; other 11169 cells remain UNKNOWN not false non-events")
+          PY
+      - name: Archive complete chronological case-only visibility and checksums
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-ncomms-4-recovered-late-original-years-NOT-CAUSAL
+          path: _ci_nc_four_original_years/
+          if-no-files-found: error
+          retention-days: 30
