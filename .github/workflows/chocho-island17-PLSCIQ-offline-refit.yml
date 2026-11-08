@@ -1,0 +1,60 @@
+name: chocho original historical port PLSCIQ 17-island butterfly LO2 offline deterministic refit
+on:
+  push:
+    branches:
+      - analysis/island17-historic2006PLSCIQ-LO2-20261108
+    paths:
+      - ".github/workflows/chocho-island17-PLSCIQ-offline-refit.yml"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/**"
+  pull_request:
+    paths:
+      - ".github/workflows/chocho-island17-PLSCIQ-offline-refit.yml"
+      - "results/island17_historic_PLSCIQ_LO2_20261108/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source_snapshot_full_17island_historical_index_refit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original published source scientific fitting dependencies
+        run: |
+          python -m pip install -e ".[test,analysis]"
+          mkdir -p _ci_PLSCIQ_offline
+          python -m pip freeze > _ci_PLSCIQ_offline/environment.txt
+      - name: Reconfirm original 17 historical source islands and no future time predictors
+        run: |
+          python -m pytest -q tests/test_island17_historical_PLSCIQ_butterflies.py
+      - name: Refit all original-source 17 and 16 island double-unseen models offline
+        run: |
+          python scripts/run_island17_historical_PLSCIQ_butterfly_LO2.py --out-dir _ci_PLSCIQ_offline
+      - name: Independently audit all source-qualified WPI ports, early index values, 256 folds, 2048 losses and 20 contrasts
+        run: |
+          python results/island17_historic_PLSCIQ_LO2_20261108/verify_LO2_source.py --results-dir _ci_PLSCIQ_offline
+      - name: Verify all original 2048 saved model predictions, original 20 contrasts and source data tables are numerically identical
+        run: |
+          python results/island17_historic_PLSCIQ_LO2_20261108/verify_published_offline_refit.py --results-dir _ci_PLSCIQ_offline
+      - name: Independently reconstruct original 40 postresult group9 score stratum contrasts from published source
+        run: |
+          mkdir -p _ci_group9_offline
+          python scripts/diagnose_island17_historic_PLSCIQ_group9_training_vs_testing.py --out-dir _ci_group9_offline
+          python results/island17_historic_PLSCIQ_LO2_20261108/verify_group9_decomposition.py --out-dir _ci_group9_offline
+      - name: Preserve complete refit and independent-source audit outcomes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island17-original-2006to10-port-index-offline-full-reproduction
+          path: |
+            _ci_PLSCIQ_offline/
+            _ci_group9_offline/
+          retention-days: 30
+          if-no-files-found: error
