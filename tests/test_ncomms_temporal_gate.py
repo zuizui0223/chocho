@@ -18,8 +18,8 @@ class SourceAuditTests(unittest.TestCase):
         cls.data,cls.pins=nc.read_pinned(ROOT)
 
     def test_source_identity_and_coverage(self):
-        self.assertEqual(len(self.data),8)
-        self.assertEqual(len(self.pins),8)
+        self.assertEqual(len(self.data),10)
+        self.assertEqual(len(self.pins),10)
         for key,pin in self.pins.items():
             self.assertEqual(pin["source_git_blob_sha1"],nc.SOURCE[key][1])
 
@@ -41,6 +41,20 @@ class SourceAuditTests(unittest.TestCase):
         self.assertEqual(result["retrospective_vs_prior_comparison"]["later_record_pairs_with_matching_host_2001_2024"],208)
         self.assertEqual(result["retrospective_vs_prior_comparison"]["later_record_pairs_with_matching_host_2001_2010"],5)
         self.assertEqual(result["dated_host_family_preserving_null"]["draws_matching_or_exceeding_observed_pair_fraction"],44)
+
+    def test_existing_155_species_temporal_spatial_host_positive_is_separate(self):
+        result=nc.audit(self.data,self.pins)
+        models=result["separate_existing_155_species_host_forecast"]
+        self.assertEqual(set(models),{"temporal","spatial"})
+        self.assertAlmostEqual(models["temporal"]["percentage_relative_species_equal_MSE_improvement"],
+                               4.120175607931823,places=9)
+        self.assertAlmostEqual(models["spatial"]["percentage_relative_species_equal_MSE_improvement"],
+                               2.9952059516988134,places=9)
+        for item in models.values():
+            self.assertEqual(item["species"],155)
+            self.assertEqual(item["test_rows"],208482)
+            self.assertFalse(item["time_prior_host_arrivals_verified"])
+            self.assertFalse(item["same_source_as_225_species_island_pairs"])
 
     def test_duplicate_species_rejected(self):
         rows=copy.deepcopy(self.data["species"])
