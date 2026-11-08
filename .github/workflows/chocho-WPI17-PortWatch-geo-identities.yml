@@ -1,0 +1,60 @@
+name: chocho bounded independent PortWatch geographic verification of 17 original WPI ports
+on:
+  push:
+    branches:
+      - analysis/island51-17-portwatch-independent-geography-20261108
+    paths:
+      - ".github/workflows/chocho-WPI17-PortWatch-geo-identities.yml"
+      - "scripts/verify_original_WPI17_PortWatch_geography.py"
+      - "tests/test_verify_original_WPI17_PortWatch.py"
+      - "results/island51_PortWatch17_geoverification_20261108/PROTOCOL.md"
+      - "results/island51_PortWatch17_geoverification_20261108/verify_WPI17_registry.py"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source_selected_seventeen_WPI_portwatch_identities:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install independent source country and test dependencies
+        run: python -m pip install pytest pycountry
+      - name: Verify exact original seventeen GLSN, UNCTAD and Zenodo WPI source identities
+        run: python -m pytest -q tests/test_verify_original_WPI17_PortWatch.py
+      - name: Query only 17 prespecified original port boxes, two bounded queries each
+        run: |
+          mkdir -p _ci_WPI17_source
+          python scripts/verify_original_WPI17_PortWatch_geography.py --out-dir _ci_WPI17_source
+      - name: Reconstruct every source bounded query and PortWatch source name country geographic decision independently
+        run: |
+          python results/island51_PortWatch17_geoverification_20261108/verify_WPI17_registry.py --results-dir _ci_WPI17_source
+      - name: Preserve raw source bounded 17-port queries for source audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-original17-WPI-PortWatch-independent-geographic-source-audit
+          path: _ci_WPI17_source/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish only compact source-confirmed WPI port IDs and independent audit (not full PortWatch registry)
+        if: success()
+        run: |
+          BRANCH=analysis/island51-17-portwatch-independent-geography-20261108
+          TARGET=results/island51_PortWatch17_geoverification_20261108
+          git fetch origin "$BRANCH"
+          git checkout -B "$BRANCH" "origin/$BRANCH"
+          mkdir -p "$TARGET"
+          cp _ci_WPI17_source/WPI17_independent_PortWatch_source_geography_LOCODE.csv "$TARGET/"
+          cp _ci_WPI17_source/WPI17_PortWatch_source_identity_receipt.json "$TARGET/"
+          cp _ci_WPI17_source/independent_WPI17_source_audit.json "$TARGET/"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add "$TARGET"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive 17 bounded original WPI versus IMF PortWatch independent port identities"
+            git push origin HEAD:"$BRANCH"
+          fi
