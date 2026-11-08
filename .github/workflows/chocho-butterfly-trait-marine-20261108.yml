@@ -6,6 +6,7 @@ on:
       - analysis/chocho-butterfly-trait-marine-20261108
     paths:
       - scripts/run_butterfly_trait_marine_access_20261108.py
+      - scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py
       - .github/workflows/chocho-butterfly-trait-marine-20261108.yml
       - tests/test_butterfly_trait_marine_20261108.py
   workflow_dispatch:
@@ -32,6 +33,8 @@ jobs:
           python -m pytest tests/test_butterfly_trait_marine_20261108.py -q
       - name: Calculate wing x distance/ocean/port and trait-group butterfly fauna
         run: python scripts/run_butterfly_trait_marine_access_20261108.py --out-dir results/butterfly_trait_marine_access_20261108
+      - name: Check trait direction and re-fit same-island-pair controls
+        run: python scripts/summarize_butterfly_trait_marine_sensitivity_20261108.py --source-dir results/butterfly_trait_marine_access_20261108
       - name: Archive all scored out-of-fold predictions and trait audit
         if: success()
         uses: actions/upload-artifact@v4
