@@ -1,0 +1,113 @@
+{
+  "schema": "chocho_JBI_fig5_frozen_observational_proxy_comparison_v1",
+  "created": "2026-11-08",
+  "status": "read-only extraction from five committed original result CSVs; no new model fitting; not causal inference",
+  "source_files": {
+    "lat": {
+      "path": "results/island51_latitude_controls_20261107/contrast_scope_summary.csv",
+      "blob_sha": "0d7189c9a7f538116c9ba4eaabe52644126f77c1"
+    },
+    "latNull": {
+      "path": "results/island51_AIS_latitude_node_null_20261107/observed_vs_latitude_node_null.csv",
+      "blob_sha": "663a400cca4d718cbd086b8daf44133916d6a332"
+    },
+    "localNull": {
+      "path": "results/island51_AIS_local750_node_null_20261107/observed_vs_local750_node_null.csv",
+      "blob_sha": "171709781b112fca66371f7ebb552b7cd363aca1"
+    },
+    "hist": {
+      "path": "results/island17_historic_PLSCIQ_LO2_20261108/comparison_scope_summary.csv",
+      "blob_sha": "986fb1ba0fd0fb36321cec591d09f7b4ca121785"
+    },
+    "histDiag": {
+      "path": "results/island17_historic_PLSCIQ_LO2_20261108/group9_training_vs_testing_loss_decomposition_40.csv",
+      "blob_sha": "3485401b9f5d7219a29ae4fc6c2775bac1aa4b8f"
+    }
+  },
+  "target": "new_butterfly_jaccard; first indexed 2011–2022, not documented arrival",
+  "source_population_warning": "51 island-pair predictions differ from 17-island historical source subset; use separate panel axes and explicitly label",
+  "latitude_controlled": {
+    "panel": "A",
+    "samples": [
+      {
+        "label": "AIS alone",
+        "contrast": "HRE_to_HRE_AIS_LAT",
+        "mse_gain": 1.001974506595,
+        "mae_gain": 0.848549344562,
+        "n_pairs": 1275
+      },
+      {
+        "label": "Mean wind alone",
+        "contrast": "HRE_to_HRE_WIND_LAT",
+        "mse_gain": -4.661759477075,
+        "mae_gain": -1.689193739551,
+        "n_pairs": 1275
+      },
+      {
+        "label": "AIS + wind",
+        "contrast": "HRE_to_HCRE_LAT",
+        "mse_gain": -4.091802441072,
+        "mae_gain": -0.935663658835,
+        "n_pairs": 1275
+      }
+    ]
+  },
+  "spatial_placebo": {
+    "panel": "B",
+    "contrast": "AIS_without_wind",
+    "sets": [
+      {
+        "label": "Latitude-band graph relabelings",
+        "actual_mse_gain": 1.001974506595,
+        "median_mse_gain": -0.50415365064,
+        "interval025": -2.822050019018,
+        "interval975": 0.975567023387,
+        "placebos_at_least_as_good": 5,
+        "n_placebos": 199,
+        "n_pairs": 1275
+      },
+      {
+        "label": "Local ≤750 km node swaps",
+        "actual_mse_gain": 1.001974506595,
+        "median_mse_gain": 1.059983578371,
+        "interval025": -0.933996597824,
+        "interval975": 3.941033560342,
+        "placebos_at_least_as_good": 100,
+        "n_placebos": 199,
+        "n_pairs": 1275
+      }
+    ]
+  },
+  "historic": {
+    "panel": "C",
+    "index_window": "2006Q1–2010Q4",
+    "rows": [
+      {
+        "label": "Full 17 islands; all 136 test pairs",
+        "mse_gain": -2.9232515343442858,
+        "mae_gain": -0.552881178751991,
+        "n_pairs": 136
+      },
+      {
+        "label": "Full-17 fit; same 120 no-group-9 test pairs",
+        "mse_gain": -1.894292104553568,
+        "mae_gain": -0.15841948416733528,
+        "n_pairs": 120
+      },
+      {
+        "label": "Refit without group 9; same 120 test pairs",
+        "mse_gain": 8.146126807524332,
+        "mae_gain": 5.463573865660578,
+        "n_pairs": 120
+      }
+    ]
+  },
+  "cautions": [
+    "Latitude-controlled contrasts are within a single original 51-island source cohort and use retrospective models.",
+    "Placebo bands denote 2.5–97.5 percentiles of 199 graph-label surrogates, not confidence intervals on causal transport.",
+    "100/199 close-distance relabelings matching/exceeding actual AIS prevents claiming ship-network specificity.",
+    "17-island historical index is not directly observed vessel voyages or propagule carriage.",
+    "Full17-trained versus refitted16 results on the same 120 tests have different baseline errors and training membership.",
+    "No source rows or numeric values were selected based on displaying a desired sign."
+  ]
+}
