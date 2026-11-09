@@ -1,0 +1,92 @@
+name: Full 225 butterfly x original 51 GSHHG-island GBIF index panel
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/build_public51_butterfly_risk_20261109.py
+      - scripts/merge_public51_butterfly_risk_20261109.py
+      - .github/workflows/chocho-public51-full-reindex.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-shards:
+    name: Source shard ${{ matrix.batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - batch: 1
+          islands: "9,19,28,59,94,183,257,456,951"
+        - batch: 2
+          islands: "10,20,31,65,110,206,260,471,1210"
+        - batch: 3
+          islands: "12,21,43,79,134,214,276,487,1577"
+        - batch: 4
+          islands: "13,23,44,81,152,218,321,715"
+        - batch: 5
+          islands: "15,26,47,85,168,234,391,753"
+        - batch: 6
+          islands: "17,27,54,89,169,242,397,821"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install verified polygon requirements
+        run: python -m pip install --disable-pip-version-check "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - uses: actions/cache@v4
+        with:
+          key: chocho-original-gshhg-shp-237-sha8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Verify GSHHG 2.3.7 source archive
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Requery source-frozen 225 butterflies on independently shaped original island geometries
+        run: |
+          python scripts/build_public51_butterfly_risk_20261109.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/public51_${{ matrix.batch }} \
+            --islands "${{ matrix.islands }}" --wkt-max-chars 2300
+      - name: Save each original GBIF facet and geometry source audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-public51-shard-${{ matrix.batch }}
+          path: results/public51_butterfly_index_source_20261109/
+          if-no-files-found: warn
+          retention-days: 45
+  consolidate:
+    needs: source-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch all six successfully reindexed original source shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: butterfly-public51-shard-*
+          merge-multiple: true
+          path: _scratch_public51_parts
+      - name: Validate exact 11,475 butterfly-by-island cells and audit GBIF snapshot drift against the previous 17-island study
+        run: |
+          python scripts/merge_public51_butterfly_risk_20261109.py \
+            --parts _scratch_public51_parts \
+            --out-dir results/public51_consolidated_20261109 \
+            --expected-shards 6
+      - name: Save independently reconstructed original51 source table and all input receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-public51-consolidated-source-20261109
+          path: results/public51_consolidated_20261109/
+          if-no-files-found: error
+          retention-days: 60
