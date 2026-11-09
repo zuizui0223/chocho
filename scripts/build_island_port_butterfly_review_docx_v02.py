@@ -15,6 +15,7 @@ import subprocess
 import tempfile
 import zipfile
 from pathlib import Path
+from docx import Document
 
 ROOT=Path(__file__).resolve().parents[1]
 M=ROOT/"manuscript/integrated_butterfly_resource_access_20261109"
@@ -91,6 +92,20 @@ def build(output:Path):
         p=subprocess.run(cmd,cwd=ROOT,text=True,capture_output=True)
         if p.returncode:
             raise RuntimeError(f"Pandoc failed: {p.stderr[-2500:]}")
+    # The five-panel appendix previously left only the end of Figure 5's
+    # scientific caption on an orphan final page. Keep the complete final
+    # figure and its caption on one page in the coauthor review DOCX.
+    # The canonical figure PDF and its source hashes are never modified.
+    review=Document(output)
+    final_headings=[
+        p for p in review.paragraphs
+        if p.style.name.startswith("Heading")
+        and p.text.startswith("Figure 5 |")
+    ]
+    if len(final_headings)!=1:
+        raise ValueError(f"Cannot locate unique Figure 5 heading: {len(final_headings)}")
+    final_headings[0].paragraph_format.page_break_before=True
+    review.save(output)
     with zipfile.ZipFile(output) as z:
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
