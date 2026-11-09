@@ -33,10 +33,10 @@ STATUS="DRAFT_FOR_COAUTHOR_REVIEW_NOT_SUBMITTED"
 def caption_sections():
     text=CAPTIONS.read_text(encoding="utf8")
     chunks=re.split(r"(?m)^## Figure (\d+) \| ",text)
-    if len(chunks)!=16:raise ValueError("Expected five full scientific figure captions")
+    if len(chunks)!=11:raise ValueError("Expected five full scientific figure captions")
     # Each figure consumes id, title and paragraph until next heading.
     out={}
-    for i in range(1,len(chunks),3):
+    for i in range(1,len(chunks),2):
         n=int(chunks[i])
         title_body=chunks[i+1]
         title,_,body=title_body.partition("\n")
