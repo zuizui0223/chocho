@@ -337,6 +337,10 @@ def main():
          "No observed larval feeding, butterfly breeding, ship cargo, boat itinerary, true absence or causal colonisation is measured",
          "Port vs remote-coast habitats differ; land cover, effort, climate and human disturbance not fully matched",
          "Island is the independent bootstrap/permutation sampling unit; multiple ports within same island are not independent"]}
-    (args.out/"audit.json").write_text(json.dumps(audit,indent=2,sort_keys=True,ensure_ascii=False)+"\n",encoding="utf8")
-    print("ISLAND_PORT_NONPORT_LAG_PILOT",json.dumps(model,sort_keys=True),flush=True)
+    def numpy_json(value):
+        if isinstance(value,np.generic):
+            return value.item()
+        raise TypeError("Unexpected non-JSON source result: "+type(value).__name__)
+    (args.out/"audit.json").write_text(json.dumps(audit,indent=2,sort_keys=True,ensure_ascii=False,default=numpy_json)+"\n",encoding="utf8")
+    print("ISLAND_PORT_NONPORT_LAG_PILOT",json.dumps(model,sort_keys=True,default=numpy_json),flush=True)
 if __name__=="__main__":main()
