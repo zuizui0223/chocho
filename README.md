@@ -1,5 +1,13 @@
 # chocho — Butterfly resource geography under host redistribution
 
+## Canonical ONE-PAPER manuscript (9 November 2026)
+
+**Only one active paper narrative**: [Integrated butterfly-first GEB Research Article v0.1](manuscript/integrated_butterfly_resource_access_20261109/INTEGRATED_RESEARCH_ARTICLE_V01.md). This integrates the original 239-butterfly global host-resource reconstruction, the island/port resource and marine evidence formerly developed as a separate JBI draft, and the independently sourced 225-butterfly×51-landmass record history. Scientific framing, methods and numerical denominators are cross-checked in the [one-paper evidence ledger](manuscript/integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V01.json); [five-figure design](manuscript/integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V01.md); [Japanese one-paper decision](manuscript/integrated_butterfly_resource_access_20261109/ONE_PAPER_DECISION_JA.md).
+
+**Editorial target:** Global Ecology and Biogeography first; Journal of Biogeography is a possible later alternative for the SAME manuscript, not a second parallel publication. Old manuscript v0.2, JBI PR #151 and JBI PR #123 are frozen supporting source versions, **not current separate submission surfaces**. Only the new one-paper branch/PR #157 is active for scientific integration. **Draft; not submitted; no new five-figure render yet.** The frozen original GEB code, figures and tests remain valid source evidence; their CI still runs unchanged.
+
+---
+
 Reproducible code, frozen analysis receipts, and manuscript materials for:
 
 > **Anthropogenic host redistribution expands butterfly resource geography across the specialization spectrum**
