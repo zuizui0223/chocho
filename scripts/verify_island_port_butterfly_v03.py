@@ -76,9 +76,15 @@ def run():
     close(cross("earlier_butterflies","BASE_to_AIS"),-8.5406192351514054)
     close(cross("early_general_flora","BASE_to_AIS"),-1.2943024214677576)
     lat=rows("results/island51_latitude_controls_20261107/contrast_scope_summary.csv")
-    assert any("wind" in x.lower() for x in lat[0])
+    w=[x for x in lat if x["target"]=="new_butterfly_jaccard" and
+       x["contrast"]=="HRE_to_HRE_WIND_LAT" and x["pair_class"]=="all_pairs"]
+    assert len(w)==1
+    close(w[0]["MSE_reduction_percent"],-4.661759477075)
     local=rows("results/island51_AIS_local750_node_null_20261107/observed_vs_local750_node_null.csv")
-    assert len(local)>=1
+    a=[x for x in local if x["target"]=="new_butterfly_jaccard" and
+       x["contrast"]=="AIS_without_wind" and x["pair_class"]=="all_pairs"]
+    assert len(a)==1 and int(a[0]["MSE_null_ge_observed_count"])==100
+    assert int(a[0]["null_replicates"])==199
     idx=data("data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json")
     assert idx["cells"]==11475 and idx["totals"]["first_indexed_in_2011_2017"]==221
     assert idx["totals"]["first_indexed_in_2018_2022"]==96
