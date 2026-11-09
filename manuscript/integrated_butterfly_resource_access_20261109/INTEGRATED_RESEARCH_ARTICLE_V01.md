@@ -6,21 +6,19 @@
 
 ## Structured abstract
 
-**Aim.** Human activities redistribute the plants on which butterflies depend, potentially changing the geography of larval resources even when butterflies retain the same host lists. We asked which butterflies gain new resource opportunities, whether gains differ between islands and mainland regions, and how potential resources relate to the geography of recorded butterflies and marine access.
+**Aim.** Human redistribution of larval-host plants may alter where butterflies can find resources without changing their diets. We asked which butterflies gain geographic resource opportunity, whether gains are amplified on islands, and how butterfly records relate to resource geography and marine accessibility.
 
-**Location.** Worldwide botanical regions, complemented by a separately sourced 51-landmass island and port panel.
+**Location.** Worldwide botanical regions and a separately reconstructed 51-landmass island panel.
 
-**Time period.** Native and contemporary plant distributions; retrospective butterfly-record analyses spanning 2001–2022, with a separate recent occurrence-prediction evaluation.
+**Time period.** Native and contemporary plant distributions; retrospective butterfly records spanning 2001–2022 and separate recent-record prediction tests.
 
-**Major taxa studied.** Butterflies and their larval host plants.
+**Major taxa studied.** Butterflies and larval-host plants.
 
-**Methods.** We reconstructed native-only and contemporary potential larval-host resource geography for 239 butterflies, holding recorded host identities fixed. We assessed diet breadth, insularity, and the contributions of redistributed hosts, then examined port-associated floras and butterfly occurrences. Separate 155-species predictions and a fixed 225-butterfly by 51-landmass recording panel evaluated the observational correspondence of resources and access; species-, island- and region-constrained tests assessed spatial structure.
+**Methods.** We reconstructed native-only and contemporary host geography for 239 butterflies using fixed host identities, evaluated diet breadth and insular gains, and tested port associations with introduced floras. Separate 155-butterfly occurrence predictions and a 225-butterfly × 51-landmass source-index panel examined recording patterns, prior conspecific geography and modelled marine resistance using spatial holdouts and constrained nulls.
 
-**Results.** Introduced host distributions expanded potential resource geography for 206/239 butterflies, increasing butterfly–region combinations by 54.9%. Expansion was widespread among narrow- and broad-diet butterflies and was concentrated in a minority of host plants. Potential opportunity increased by 118.9% in insular versus 40.9% in mainland regions, with a 10.7-percentage-point matched insular excess in added-resource share. Port-rich regions contained more introduced flora, including larval hosts, without a further positive host-specific enrichment. Host information improved retrospective butterfly-record prediction, and later island first-index records were spatially associated with previously indexed conspecific islands. Ocean-resistance and wing-size effects were less transferable across regions.
+**Results.** Introduced hosts expanded opportunity for 206/239 butterflies and increased aggregate butterfly–region combinations by 54.9%, with gains concentrated among host plants but widespread across dietary specialists and generalists. Insular potential opportunity increased by 118.9%, versus 40.9% on the mainland; matched strata retained a 10.7-percentage-point insular excess. Port-rich regions contained more introduced flora, including hosts, without positive enrichment beyond whole-flora richness. Host geography improved retrospective butterfly-record prediction. Later island first-index records were spatially associated with earlier indexed conspecifics; additional marine resistance and wing-size effects were less transferable across regions.
 
-**Main conclusions.** Global plant redistribution reorganizes the potential resource geography of butterflies across diet breadths, especially on islands. The geography of recorded butterflies retains additional spatial structure that cannot yet be interpreted as verified host-facilitated colonisation or shipborne transport. Butterfly conservation and biogeography therefore require distinguishing taxonomic diet breadth, partner geography and access.
-
-**Keywords:** anthropogenic biotic redistribution; butterfly biogeography; ecological interactions; host plants; insularity; macroecology; marine barriers; naturalised plants; specialization
+**Main conclusions.** Human-redistributed hosts reshape butterfly resource opportunity across diets and islands. Recorded butterfly geography retains further structure, but these observational layers do not identify historical host-facilitated colonisation, sea crossings or shipborne transport.
 
 ---
 
