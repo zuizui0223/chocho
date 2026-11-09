@@ -1,0 +1,322 @@
+{
+  "schema": "chocho_single_integrated_butterfly_GEB_claim_ledger_v0.1",
+  "date": "2026-11-09",
+  "status": "SINGLE_UNSUBMITTED_RESEARCH_ARTICLE_SOURCE_LEDGER",
+  "canonical_manuscript": "manuscript/integrated_butterfly_resource_access_20261109/INTEGRATED_RESEARCH_ARTICLE_V01.md",
+  "editorial_policy": "One active butterfly-centred manuscript; other GEB/JBI drafts are archived provenance, never separately submitted alongside this without reevaluation",
+  "journal_target": "Global Ecology and Biogeography; fallback Journal of Biogeography after GEB decision only",
+  "source_separation": [
+    "239-species global butterfly×WGSRPD3 potential resource reconstruction",
+    "155-species retrospective host-predictive evaluation",
+    "225 original candidate butterflies×51 WPI-associated GSHHG landmass source; 199 trait-complete, 111 indirect migration list positives",
+    "98 botanical-effort-covered insular regions and 51-landmass pairs do not share population",
+    "No private 83573-row original Parquet was accessed"
+  ],
+  "claims": [
+    {
+      "id": "R1",
+      "tier": "primary",
+      "figure": "2A",
+      "population": "239 butterflies × WGSRPD3 resource units",
+      "estimate": {
+        "native": 26530,
+        "contemporary": 41083,
+        "added": 14553,
+        "relative_pct": 54.9,
+        "expanding_species": 206,
+        "n_species": 239
+      },
+      "source": "benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json",
+      "interpretation": "Potential host-resource availability; not butterfly occupancy or abundance"
+    },
+    {
+      "id": "R2",
+      "tier": "primary",
+      "figure": "2B",
+      "population": "239 butterflies, host-family diet breadth",
+      "estimate": {
+        "rho": 0.008,
+        "bootstrap95": [
+          -0.111,
+          0.128
+        ],
+        "TOST_margin_abs": 0.1,
+        "posthoc_TOST_p": 0.078,
+        "one_family_expanded": 82,
+        "one_family_total": 97
+      },
+      "source": "manuscript/butterfly_specialization_claim_map_v0.2.json",
+      "interpretation": "Estimated small association; exact zero/equivalence not established"
+    },
+    {
+      "id": "R3",
+      "tier": "primary",
+      "figure": "2C",
+      "population": "670 contributing butterfly larval-host plants",
+      "estimate": {
+        "contributors": 670,
+        "half_gain_host_species": 38,
+        "top10_added_credit_pct": 25.1,
+        "Poaceae_and_pasture_prominence": "observed, not causal shipping"
+      },
+      "source": "manuscript/butterfly_specialization_ecology_v0.2.md",
+      "interpretation": "Fractional attribution of potential opportunity, not observed feeding"
+    },
+    {
+      "id": "R4",
+      "tier": "sensitivity",
+      "figure": "supp",
+      "population": "239 butterflies, FAO crop-host exclusions",
+      "estimate": {
+        "exact_crop_exclusion_added_pct": 47,
+        "conservative_genus_crop_exclusion_added_pct": 46
+      },
+      "source": "manuscript/butterfly_specialization_supplement_v0.2.md",
+      "interpretation": "Non-crop opportunity persists; not a species-level weed mechanism"
+    },
+    {
+      "id": "I1",
+      "tier": "primary",
+      "figure": "3A",
+      "population": "126 strict insular and 237 mainland WGSRPD3 regions",
+      "estimate": {
+        "island_native": 4829,
+        "island_contemporary": 10570,
+        "island_gain_pct": 118.88589770138745,
+        "mainland_native": 21215,
+        "mainland_contemporary": 29901,
+        "mainland_gain_pct": 40.942729201037004
+      },
+      "source": "results/island-mainland-resource-q1/island_mainland_summary.json",
+      "interpretation": "Potential butterfly×region cell gains; not direct population benefits"
+    },
+    {
+      "id": "I2",
+      "tier": "primary",
+      "figure": "3B",
+      "population": "15 comparable WGSRPD3 Level1×area strata",
+      "estimate": {
+        "matched_island_added_share_excess_pp": 10.70215975711592,
+        "descriptive_permutation_p": 0.0002
+      },
+      "source": "results/island-mainland-resource-area-v02/area_adjusted_summary.json",
+      "interpretation": "Supported overlap strata; not experimental difference"
+    },
+    {
+      "id": "P1",
+      "tier": "support",
+      "figure": "3C",
+      "population": "98 botanical-effort-covered insular WCVP regions",
+      "estimate": {
+        "whole_introduced_flora_beta": 0.24447852550694815,
+        "distinct_introduced_host_beta": 0.16390595789001258,
+        "host_given_whole_flora_beta": -0.041526655753407464
+      },
+      "source": "manuscript/island_resources_marine_access_20261108/EVIDENCE_LEDGER_V02.json",
+      "source_ref": "https://github.com/zuizui0223/chocho/blob/manuscript/island-resources-marine-access-jbi-v02-20261108/manuscript/island_resources_marine_access_20261108/EVIDENCE_LEDGER_V02.json",
+      "interpretation": "Three separate association models; not selective sea transport or mediation"
+    },
+    {
+      "id": "O1",
+      "tier": "validation",
+      "figure": "supp",
+      "population": "32 climate-stratified butterflies, 31 with indexed records",
+      "estimate": {
+        "recorded_species_region_outside_native": 115,
+        "recovered_with_introduced_hosts": 66,
+        "recovered_pct": 57.4
+      },
+      "source": "manuscript/butterfly_specialization_ecology_v0.2.md",
+      "interpretation": "Presence-index overlap, not observed larval feeding/establishment"
+    },
+    {
+      "id": "O2",
+      "tier": "primary_butterfly_record",
+      "figure": "4A",
+      "population": "155 recorded butterfly species, 208482 held-period combinations",
+      "estimate": {
+        "time_held_species_equal_MSE_reduction_pct": 4.12017560793182,
+        "spatial_held_species_equal_MSE_reduction_pct": 2.9952059516988094,
+        "evaluation_rows": 208482
+      },
+      "source": "provenance/reviewer_defenses/results/host_island_synthesis_20261030/forecast_temporal_results.json",
+      "other_sources": [
+        "provenance/reviewer_defenses/results/host_island_synthesis_20261030/forecast_spatial_results.json"
+      ],
+      "interpretation": "Retrospective index recording prediction, not pre-introduction host chronology; species-unseen transfer not supported"
+    },
+    {
+      "id": "A1",
+      "tier": "support",
+      "figure": "4B",
+      "population": "225 candidate butterflies, 51 landmass groups, 1275 non-independent island pairs",
+      "estimate": {
+        "later_host_butterfly_rho": 0.29980576483377025,
+        "earlier_host_butterfly_rho": 0.4178255833828514,
+        "partial_later": 0.2153535842700987
+      },
+      "source": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_audit.json",
+      "interpretation": "Retrospective community correspondence; earlier stronger so no causal botanical arrival order"
+    },
+    {
+      "id": "A2",
+      "tier": "exploratory",
+      "figure": "supp",
+      "population": "51-island holdout pairwise Jaccard",
+      "estimate": {
+        "host_beyond_marine_MSE_gain_pct": 1.7312,
+        "marine_beyond_hosts_MSE_gain_pct": 6.488
+      },
+      "source": "results/island51_host_circuit_joint_20261106/README.md",
+      "interpretation": "Different response and baseline from binary first-index; AIS/wind noncausal"
+    },
+    {
+      "id": "A3",
+      "tier": "primary_butterfly_record",
+      "figure": "4C",
+      "population": "225 butterflies × original 51 landmass recording panel",
+      "estimate": {
+        "cells": 11475,
+        "first2011_2017": 221,
+        "first2018_2022": 96,
+        "periods": [
+          "2001–2010",
+          "2011–2017",
+          "2018–2022"
+        ]
+      },
+      "source": "data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json",
+      "interpretation": "New public GBIF source, no biological absence or true arrival; different from private 83573-row original"
+    },
+    {
+      "id": "A4",
+      "tier": "exploratory",
+      "figure": "5A",
+      "population": "199 complete LepTraits butterflies, prior conspecific indexed sources among 51 sampled groups",
+      "estimate": {
+        "eligible2011_2017": 4374,
+        "first2011_2017": 187,
+        "eligible2018_2022": 4933,
+        "first2018_2022": 83,
+        "recorded_event_rows": 270
+      },
+      "source": "results/public51_butterfly_trait_access_20261109/public51_trait_summary.json",
+      "other_sources": [
+        "results/public51_butterfly_species_index_profiles_20261109/butterfly_candidate_source_event_audit.json"
+      ],
+      "interpretation": "Source conditional indices; nearest sampled prior source not true biological origin"
+    },
+    {
+      "id": "A5",
+      "tier": "exploratory",
+      "figure": "5B",
+      "population": "199-trait-subset, constrained event location null, 2018–2022",
+      "estimate": {
+        "region_fixed_geo_proximity_p": 0.0003332222592469177,
+        "region_fixed_ocean_access_residual_p": 0.0023325558147284237
+      },
+      "source": "results/public51_butterfly_trait_access_20261109/public51_butterfly_conditional_trait_marine.json",
+      "interpretation": "Conditional null alignment, not independent prediction or causal movement"
+    },
+    {
+      "id": "A6",
+      "tier": "negative_transfer",
+      "figure": "5C",
+      "population": "2018–2022 geographic cluster holdout, 51 landmass source",
+      "estimate": {
+        "sea_beyond_distance_Brier_reduction_pct": -6.479
+      },
+      "source": "results/public51_butterfly_trait_access_20261109/public51_trait_summary.json",
+      "interpretation": "Modelled sea resistance worsens geographic transfer beyond distance"
+    },
+    {
+      "id": "A7",
+      "tier": "qualified_trait",
+      "figure": "5D",
+      "population": "199 LepTraits butterflies, 2018–2022, three holdouts",
+      "estimate": {
+        "wing_by_geo_Brier_gain_island_pct": 0.349,
+        "wing_by_geo_Brier_gain_region_pct": 1.861,
+        "wing_by_geo_Brier_gain_species_pct": 0.134,
+        "within_region_wing_geo_p": 0.227,
+        "within_region_wing_ocean_p": 0.645
+      },
+      "source": "results/public51_butterfly_trait_access_20261109/public51_trait_summary.json",
+      "other_sources": [
+        "results/public51_butterfly_trait_access_20261109/public51_butterfly_conditional_trait_marine.json"
+      ],
+      "interpretation": "Wing size proxy is not independently measured dispersal ability; no universal size×ocean effect"
+    },
+    {
+      "id": "A8",
+      "tier": "exploratory_and_negative",
+      "figure": "5E/supp",
+      "population": "225 butterflies, 111 author-listed indirect migratory candidates, 114 migration unknown",
+      "estimate": {
+        "candidate_migrant_species": 111,
+        "unknown_not_sedentary": 114,
+        "early_risk": 2542,
+        "early_first_index": 145,
+        "late_risk": 2793,
+        "late_first_index": 68,
+        "late_geo_regionfixed_p": 0.0006664445184938354,
+        "late_sea_regionfixed_p": 0.04731756081306231,
+        "late_sea_after_removing_landmass9_15_p": 0.229
+      },
+      "source": "results/public51_author_selected_migrant_access_20261109/author_selected_migrant_two_margin_index_null.json",
+      "other_sources": [
+        "results/public51_author_selected_migrant_access_20261109/author_selected_migrant_no9_15_source_null.json",
+        "data/exploratory/public51_author_migrant_20261109/migration_gbif_predicate_audit.json"
+      ],
+      "interpretation": "2021 review supplementary roster unavailable; author 2025 GBIF positive-list only; lacks non-migrant comparator"
+    },
+    {
+      "id": "N1",
+      "tier": "negative_specificity",
+      "figure": "supp",
+      "population": "AIS local graph-label placebo and historical liner index",
+      "estimate": {
+        "latitude_adjusted_AIS_gain_pct": 1.002,
+        "local_AIS_placebos_equal_or_better": 100,
+        "n_local_placebos": 199,
+        "full_historical_liner_MSE_gain_pct": -2.9233
+      },
+      "source": "manuscript/island_resources_marine_access_20261108/EVIDENCE_LEDGER_V02.json",
+      "source_ref": "https://github.com/zuizui0223/chocho/blob/manuscript/island-resources-marine-access-jbi-v02-20261108/manuscript/island_resources_marine_access_20261108/EVIDENCE_LEDGER_V02.json",
+      "interpretation": "Shipping-specific mechanism cannot be isolated from local geography"
+    },
+    {
+      "id": "N2",
+      "tier": "not_identified",
+      "figure": "none",
+      "population": "Cross-grain historical butterfly × larval host × island × year",
+      "estimate": null,
+      "source": "analysis/public51_butterfly_trait_access_20261109/RESULTS_JA.md",
+      "interpretation": "No direct temporal preceding introduced larval-host presence, documented feeding, breeding, colonisation or shipborne stage"
+    }
+  ],
+  "prohibitions": [
+    "Do not identify butterfly host opportunity with actual occurrence or reproduction",
+    "Do not report 111 author-selected migrant candidates versus 114 UNKNOWN species as migrant versus nonmigrant",
+    "Do not represent first GBIF index as true arrival or an earlier source as actual exporter",
+    "Do not infer shipborne host propagation, colonial trading paths or steppingstone hubs from uniform-ocean electrical circuits",
+    "Do not merge +54.9%, +118.9% and +40.9% as independent repeated biological gains",
+    "Do not claim wing-size modulation of sea resistance is robust or a measured flight ability",
+    "Do not count 1275 island pairs as 1275 independent islands",
+    "Do not present a unified causal chain, given no historically prior species-specific host×island×year exposure"
+  ],
+  "references_to_source_manuscripts": [
+    {
+      "purpose": "original_GLOBAL_239_resource_methods",
+      "path": "manuscript/butterfly_specialization_ecology_v0.2.md"
+    },
+    {
+      "purpose": "original_ISLAND_P0RT_marine_draft",
+      "url": "https://github.com/zuizui0223/chocho/blob/manuscript/island-resources-marine-access-jbi-v02-20261108/manuscript/island_resources_marine_access_20261108/ISLAND_RESOURCES_MARINE_ACCESS_MANUSCRIPT_V02.md"
+    },
+    {
+      "purpose": "original_BUTTERFLY_225x51_new_source",
+      "path": "data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json"
+    }
+  ]
+}
