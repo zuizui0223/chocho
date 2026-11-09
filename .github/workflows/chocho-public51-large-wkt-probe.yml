@@ -29,12 +29,12 @@ jobs:
             curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
           fi
           echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
-      - name: Two high-coastline original IDs via bounded 4300-WKT polygon fragments
+      - name: Two high-coastline original IDs via bounded 10000-WKT polygon fragments
         run: |
           python scripts/build_public51_butterfly_risk_20261109.py \
             --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
-            --work _scratch_coastal/large_wkt4300 \
-            --islands 15,21 --wkt-max-chars 4300
+            --work _scratch_coastal/large_wkt10000 \
+            --islands 15,21 --wkt-max-chars 10000
       - name: Archive source and area-preservation geometry receipt
         if: always()
         uses: actions/upload-artifact@v4
