@@ -99,7 +99,7 @@ def figure2(out):
     ax.set_ylabel("Island minus mainland\nintroduced-added share (pp)")
     ax.set_ylim(min(-3,float(vals.min())-4),max(31,float(vals.max())+4))
     ax.annotate("Weighted +10.7 pp\n15 supported strata",
-                xy=(.98,.94),xycoords="axes fraction",ha="right",va="top",fontsize=9)
+                xy=(.03,.94),xycoords="axes fraction",ha="left",va="top",fontsize=9)
     ax.set_title("B  Matched biogeographic / area strata",fontsize=11,loc="left")
 
     ax=axs[2]
@@ -114,13 +114,11 @@ def figure2(out):
                     (t.get_x()+t.get_width()/2,t.get_height()),xytext=(0,4),
                     textcoords="offset points",ha="center",fontsize=8)
     ax.set_ylabel("Butterflies with any potential gain (%)")
-    ax.text(.03,.08,"Global 239 species: +54.9% resource units\n206 species expand; fixed known host list",
-            transform=ax.transAxes,fontsize=8.7,va="bottom")
     ax.set_title("C  Gains across dietary specialization",fontsize=11,loc="left")
     for ax in axs: ax.spines[['top','right']].set_visible(False)
     fig.subplots_adjust(left=.065,right=.985,top=.83,bottom=.27,wspace=.43)
     finish(fig,out,"Fig2_islands_resource_butterflies_v02",
-           "Source: frozen HOSTS/WCVP × WGSRPD3; 126 insular, 237 mainland regions. Potential host-resource opportunities; NOT butterfly occurrence or colonisation.")
+           "Source: 239 butterflies / frozen HOSTS–WCVP; 126 insular, 237 mainland WGSRPD3 regions. Overall +54.9% potential resource units (206 species gained); NOT butterfly occurrence.")
 
 def figure3(out):
     ports=load("ports")
@@ -143,9 +141,6 @@ def figure3(out):
     for b,x in zip(bars,vals):ax.annotate(f"{x:,}",(x,b.get_y()+b.get_height()/2),
                                            xytext=(5,0),textcoords="offset points",va="center",fontsize=8.7)
     ax.set_xlim(0,4300);ax.set_xlabel("WPI port buffers (counts)")
-    ax.text(.02,.95,"142 country codes\n687 host candidate plant taxa\n25,742 plant × port pairs",
-            transform=ax.transAxes,va="top",fontsize=8.8,
-            bbox={"facecolor":"white","edgecolor":"0.85","alpha":.9})
     ax.set_title("A  Global plant-index inventory",loc="left",fontsize=11)
 
     ax=axs[1]
@@ -188,14 +183,11 @@ def figure3(out):
         ax.text(x+.2,b.get_y()+b.get_height()/2,
                 f"{x} buffers  |  {share:.1f}% global resource credit",
                 ha="left",va="center",fontsize=7.6)
-    ax.text(.98,.98,"8 of 10 taxa indexed early\n17 studied landmasses",
-            transform=ax.transAxes,va="top",ha="right",fontsize=8,
-            bbox={"facecolor":"white","edgecolor":"0.8","alpha":.9})
-    ax.set_title("C  Globally influential hosts already indexed near ports",loc="left",fontsize=11)
+    ax.set_title("C  Top global hosts (8/10 indexed before 2011)",loc="left",fontsize=11)
     for ax in axs:ax.spines[['top','right']].set_visible(False)
     fig.subplots_adjust(left=.11,right=.99,top=.81,bottom=.22,wspace=.73)
     finish(fig,out,"Fig3_ports_aliens_known_butterfly_hosts_v02",
-           "Source: WPI/GBIF port-flora inventory, n=98 effort-covered island botanical regions, 2001–2010 plants at 38 port buffers. Not plant carriage, larval use or island-specific introduction dates.")
+           "Source: 1,596 complete port queries / 142 country codes / 687 candidate host plants / 25,742 plant×port records; 98 island regions, 38 early port buffers. Not plant carriage or larval use.")
 
 def figure4(out):
     butterfly=load("global_butterflies")
@@ -276,14 +268,11 @@ def figure4(out):
         ax.text(bp.get_x()+bp.get_width()/2,value+.15,f"{value:+.2f}% MSE",ha="center",fontsize=10)
     ax.set_ylim(0,5.6)
     ax.set_ylabel("Species-equal MSE reduction with host geography (%)")
-    ax.text(.05,.92,"155 known butterfly species · 208,482\nrecording evaluation rows\nHost map contemporary, not prior arrival",
-            transform=ax.transAxes,va="top",fontsize=8.5,
-            bbox={"facecolor":"white","edgecolor":"0.85","alpha":.9})
     ax.set_title("D  Added host geography predicts recorded butterflies",loc="left",fontsize=11)
     for ax in axs.flat:ax.spines[['top','right']].set_visible(False)
     fig.subplots_adjust(left=.095,right=.97,top=.90,bottom=.095,wspace=.40,hspace=.50)
     finish(fig,out,"Fig4_butterflies_and_port_host_geography_v02",
-           "Independent original populations: A 225 butterflies; B 51 landmasses/1275 dependent pairs; C 1163 candidate butterfly×pair records; D 155 butterfly model evaluations. No feeding, causal plant shipment or butterfly colonisation inferred.")
+           "Distinct sources: A 225 butterfly species; B 51 landmasses/1,275 dependent pairs; C 1,163 butterfly×pair records; D 155 species/208,482 scores (contemporary hosts). No feeding, shipment or colonisation inferred.")
     return {"species_rank_rho":rho,"host_pair_rho":rhoh,"forecast_time_pct":a,"forecast_spatial_pct":b}
 
 def main():
