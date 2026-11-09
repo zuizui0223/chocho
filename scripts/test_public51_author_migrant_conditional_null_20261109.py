@@ -116,7 +116,7 @@ def test_null(events,elig,lookup,wing,*,regional,seed,draws,chains=4):
             "support":support,"chains":diag,"tests":tests,
             "not_arrival_colonisation_or_actual_migration":True}
 
-def run(outdir):
+def run(outdir,exclude_islands=()):
     synthetic()
     base=module(PARENT,"existing_public51_source")
     migr=module(MIGRANT,"original_author_migrant_proxy")
@@ -125,13 +125,25 @@ def run(outdir):
     roster=migr.migration_crosswalk(panel)
     src,trait,data,pins,bridge,bmeta=base.data_bridge()
     islands={z["landmass_id"] for z in panel}
+    # Freeze original SOURCE-only regional split before any influence deletion.
     regional=base.geographic_blocks(data,islands)
+    excluded={str(x) for x in exclude_islands}
+    if not excluded.issubset(islands):
+        raise ValueError("Cannot exclude landmass outside original 51 source")
+    if excluded:
+        panel=[r for r in panel if r["landmass_id"] not in excluded]
+    if len(panel)!=225*(51-len(excluded)):
+        raise ValueError("Source-only island deletion unexpectedly changed candidate panel")
     report={"schema":"chocho_public51_author_selected_migrant_two_margin_20261109_v1",
             "source_sha256":receipt["merged_table_sha256"],
             "roster_git_sha1":migr.CROSSWALK_BLOB,
             "status":"EXPLORATORY_WITHIN_POSITIVELY_AUTHOR_REVIEW_SELECTED_SPECIES_NOT_MIGRANT_VS_NONMIGRANT",
             "migrant_proxy_source":"Author-released GBIF predicate derived from published migration review; original Table S1 inaccessible",
             "nonlisted_migration":"UNKNOWN_NOT_NONMIGRANT",
+            "sensitivity_excluded_original_landmass_ids":sorted(excluded,key=int),
+            "source_island_groups_remaining":51-len(excluded),
+            "strictly_remove_excluded_islands_from_both_target_records_and_prior_conspecific_index_sources":True,
+            "region_groups_frozen_from_all_51_before_exclusion":True,
             "null_method":"2x2 species/island case count fixed, + species/region case counts for constrained null",
             "scientific_target":"GBIF first INDEX of butterflies with previous indexed conspecific source within the 51 landmass sample; not real dispersal",
             "periods":{}}
@@ -190,5 +202,10 @@ def run(outdir):
 if __name__=="__main__":
     a=argparse.ArgumentParser()
     a.add_argument("--out-dir",type=Path,required=True)
+    a.add_argument("--exclude-island-ids",default="",
+                   help="Comma-separated ORIGINAL GSHHG sibling IDs; exclude as targets AND as prior indexed candidate sources")
     z=a.parse_args()
-    run(z.out_dir)
+    ids=tuple(x.strip() for x in z.exclude_island_ids.split(",") if x.strip())
+    if len(ids)!=len(set(ids)):
+        a.error("Duplicate island exclusion")
+    run(z.out_dir,exclude_islands=ids)
