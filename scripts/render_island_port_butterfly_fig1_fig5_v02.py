@@ -94,29 +94,29 @@ def fig1(out):
                  x=.025,y=.986,ha="left",fontsize=17,fontweight="bold",color="#14263a")
     ax.set_xlim(0,1);ax.set_ylim(0,1);ax.axis("off")
     # Boxes are empirical/operational layers, not an observed sequence of organisms transported.
-    box(ax,(.025,.56),.27,.23,"KNOWN BUTTERFLY–HOST LINKS",
+    box(ax,(.025,.61),.27,.26,"KNOWN BUTTERFLY–HOST LINKS",
         "239 butterfly species\nHost list held fixed\nNative vs introduced WCVP ranges",
         fc="#eef1ff",ec="#5f70a8")
-    box(ax,(.385,.56),.27,.23,"POTENTIAL RESOURCES",
+    box(ax,(.385,.61),.27,.26,"POTENTIAL RESOURCES",
         "Island +118.9%; mainland +40.9%\nGlobal +54.9% opportunity\n206 / 239 butterfly species gained")
-    box(ax,(.745,.56),.23,.23,"BUTTERFLY RECORDS",
+    box(ax,(.745,.61),.23,.26,"BUTTERFLY RECORDS",
         "155-species prediction\n225 × 51 landmass indexing\nNot observed colonisation",
         fc="#eff8e9",ec="#729052")
-    arrow(ax,(.305,.68),(.373,.68),"Defined resource\nconstruction",dy=.02)
-    arrow(ax,(.665,.68),(.733,.68),"Observed record\ncorrespondence",dashed=True,dy=.02)
-    box(ax,(.17,.155),.34,.22,"PORTS AND INTRODUCED FLORA",
+    arrow(ax,(.305,.74),(.373,.74))
+    arrow(ax,(.665,.74),(.733,.74),dashed=True)
+    box(ax,(.17,.20),.34,.29,"PORTS AND INTRODUCED FLORA",
         "1,596 surveyed ports / 142 countries\n687 candidate introduced host plants\n98 insular flora models",fc="#fff6eb",ec="#b57736")
-    box(ax,(.615,.155),.33,.22,"ISLAND / OCEAN GEOGRAPHY",
+    box(ax,(.615,.20),.33,.29,"ISLAND / OCEAN GEOGRAPHY",
         "51 selected landmass groups\nEarlier conspecific record proximity\nMarine resistance: modelled, not routes",
         fc="#f1f4f8",ec="#718096")
-    arrow(ax,(.36,.385),(.49,.545),"Same host taxa at\nsome port localities",dashed=True,rad=.17,dy=.01)
-    arrow(ax,(.78,.385),(.84,.545),"Association and\nindex prediction",dashed=True,rad=-.05,dy=.005)
-    ax.text(.5,.445,"Ports ↔ host geography ↔ butterfly indexes are observational connections",
+    arrow(ax,(.36,.50),(.49,.605),dashed=True,rad=.17)
+    arrow(ax,(.78,.50),(.84,.605),dashed=True,rad=-.05)
+    ax.text(.5,.56,"Ports ↔ host geography ↔ butterfly indexes: observed associations",
             ha="center",va="center",fontsize=10,color="#5b6573")
-    ax.plot([.04,.96],[.09,.09],color="#a2a7b1",lw=.8)
-    ax.text(.045,.067,"Solid = defined data reconstruction",fontsize=10,va="center",color="#155461")
-    ax.text(.39,.067,"Dashed = observational association / proposed access comparison",fontsize=10,va="center",color="#606976")
-    ax.text(.045,.028,"No historical host shipment, larval feeding, butterfly movement or breeding inferred.",
+    ax.plot([.04,.96],[.15,.15],color="#a2a7b1",lw=.8)
+    ax.text(.045,.124,"Solid = defined data reconstruction",fontsize=10,va="center",color="#155461")
+    ax.text(.39,.124,"Dashed = observational association / proposed access comparison",fontsize=10,va="center",color="#606976")
+    ax.text(.045,.075,"No historical host shipment, larval feeding, butterfly movement or breeding inferred.",
             fontsize=9.7,va="center",fontweight="bold",color="#5f4b43")
     save(fig,out,"Fig1_island_port_butterfly_framework_v02",
          "Distinct grains: 239 resource butterflies; 98 botanical island regions; 225 candidates/51 landmass groups. Diagrams do not establish a port-to-plant-to-butterfly colonisation path.")
@@ -193,8 +193,6 @@ def fig5(out):
         ax.annotate(f"{dist:,.0f} km | {n} new indexes",(dist,yy),xytext=(7,0),
                     textcoords="offset points",va="center",fontsize=8.4)
     ax.set_title("B  Which butterflies? (2018–2022)",loc="left",fontsize=11.1)
-    ax.text(.97,.97,"5 examples / 83 trait-complete first-index cases",
-            va="top",ha="right",transform=ax.transAxes,fontsize=8.5,color="#435064")
 
     # C: Geographic association vs actual constrained null
     ax=axs[1,0]
@@ -207,7 +205,7 @@ def fig5(out):
                     textcoords="offset points",fontsize=9)
     ax.axvline(0,color="#64748b",ls=":",lw=1)
     ax.set_yticks([0,1],["Geographic\nproximity","Residual\nmarine access"],fontsize=10)
-    ax.invert_yaxis()
+    ax.set_ylim(1.75,-.65)
     ax.set_xlim(-.09,max(near["observed_minus_null"],sea["observed_minus_null"])+.10)
     ax.set_xlabel("Observed minus fixed-margin null mean\n(standardized access; 95% null reference band)")
     ax.set_title("C  Index association after species/island/region controls",loc="left",fontsize=11)
@@ -229,12 +227,12 @@ def fig5(out):
             ax.annotate(f"{vv:+.2f}%",(b.get_x()+b.get_width()/2,vv),
                         xytext=(0,4 if vv>=0 else -11),
                         textcoords="offset points",fontsize=8,ha="center")
-    ax.legend(loc="lower left",bbox_to_anchor=(.0,.06),fontsize=7.6,frameon=True)
-    ax.text(.98,.97,
+    ax.legend(loc="upper left",bbox_to_anchor=(0.0,1.0),fontsize=7.4,frameon=True)
+    ax.text(.98,.08,
         f"Independently author-listed migrant candidate subset:\n"
         f"sea-residual p={oldp:.3f} (51 groups) → {newp:.3f} (49)\n"
         "after excluding two port-heavy target/source groups",
-        transform=ax.transAxes,ha="right",va="top",fontsize=8.1,
+        transform=ax.transAxes,ha="right",va="bottom",fontsize=8.1,
         bbox=dict(facecolor="white",edgecolor="0.9",alpha=.95,pad=4))
     ax.set_title("D  Marine predictive transfer and geographic sensitivity",loc="left",fontsize=11)
     for ax in axs.flat:ax.spines[["top","right"]].set_visible(False)
