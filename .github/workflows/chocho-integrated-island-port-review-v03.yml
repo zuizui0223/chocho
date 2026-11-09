@@ -36,6 +36,10 @@ jobs:
             sudo apt-get update -qq
             sudo apt-get install -y libreoffice-writer
           fi
+          if ! command -v pdfinfo >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y poppler-utils
+          fi
           command -v pdfinfo
       - name: Generate actual source-matched v0.3 five-figure manuscript DOCX
         run: |
