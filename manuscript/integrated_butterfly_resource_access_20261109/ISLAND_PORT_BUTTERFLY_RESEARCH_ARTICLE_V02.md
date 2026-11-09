@@ -187,6 +187,20 @@ Human-redistributed larval hosts have greatly expanded potential resource geogra
 
 **Supplementary:** full per-family and plant contribution results; all 15 area-matched strata; port inventory QA and 17-port butterfly co-index tables; 32-species 66/115 recovered-index source; local-to-island 95-species +4.98% with 97.2% Great Britain/Ireland concentration; exact structural and geographic host null; source-year recurrence; all 51-landmass trait transfer tests; indirect author migration proxy; current-density Circuitscape map and AIS/liner negative specificity controls. The previous JBI 5-figure renderings are *source reference artifacts*, not the same final integrated figure suite.
 
+## Data and code availability (draft; final rights and archive check required)
+
+The integrated analyses reuse several distinct datasets rather than a single interchangeable global butterfly–host–island observation file. Accepted butterfly larval-host identities are based on the Natural History Museum HOSTS source (DOI: 10.5519/havt50xw) and source-versioned WCVP distributions; butterfly traits are from the source-locked LepTraits dataset (DOI: 10.1038/s41597-022-01473-5). Original population definitions, archived source commit identities, reconstruction scripts, result receipts and figure data are maintained in the project's GitHub repository. The old 32-species GBIF occurrence validation source has the archived GBIF DOI **10.15468/dl.pp5nc9**; **this DOI does not describe the new 225-by-51 public GBIF reindex or all other butterfly occurrence analyses**.
+
+For the new island record analysis, a derived **11,475-row, 225-butterfly × 51-landmass GBIF period-index table**, six original GBIF query receipt/geometry audits, the fixed source panels, every main-figure renderer and source-checker script have been committed on the single working Draft branch, under data/exploratory/public51_butterfly_index_20261109/, results/, scripts/ and figures/integrated_island_port_butterfly_v02/. GBIF indexing is not verified establishment. Global 1,596-completed-port plant inventory metrics, original butterfly–host concordance, pre-2011 38-port botanical audit and the original 239-species resource envelopes remain source-referenced with their own cohort and permission boundaries.
+
+**Important reproducibility limitation:** The historical 83,573-row author-side butterfly×island×year Parquet and some original author-side butterfly–host linking / occurrence-level coordinate inputs have not been released as raw files in this Draft. Certain historic named-host comparisons can therefore currently be checked against source-locked published aggregate receipts and preserved scripts, but not fully rebuilt by an unauthenticated reviewer from publicly committed raw rows alone. We will not imply complete reproduction of those analyses until licence and permission checks, restricted-input access or an approved public derivative are resolved.
+
+The current PNG/SVG main Figures 1–5, vector PDF exports for Figures 1 and 5, five figure legends, numerical ledgers and audit scripts were generated for scientific review; they are **not yet a journal-approved final artwork bundle**. Final data licences, source metadata/GBIF citations for all independent acquisitions, coauthor rights, long-term repository DOI, unblinded/anonymous submission-package segregation and figure accessibility remain to be audited before submission.
+
+## Figure legends
+
+The complete panel-by-panel legends, including each data grain, temporal window and negative biological inference boundary, accompany the five figures in [FIGURE_CAPTIONS_V02.md](FIGURE_CAPTIONS_V02.md). These captions are part of the integrated single-paper source; earlier independent GEB/JBI figure captions are preserved only as development records.
+
 ## Selected references from the two source manuscripts (bibliographic audit pending)
 
 - Braga, M. P. (2023). Are exotic host plants a life raft or a trap for butterflies? Current Opinion in Insect Science, 58, 101074. https://doi.org/10.1016/j.cois.2023.101074
