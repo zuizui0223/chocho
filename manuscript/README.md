@@ -3,13 +3,13 @@
 ## ONLY ACTIVE integrated manuscript — island/port butterfly v0.2 (9 November 2026)
 
 - **[English island-port-butterfly integrated Research Article v0.2](integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V02.md)** — single active paper, led by 126-island resource amplification, 1596 global completed port flora queries, effort-controlled n98 island port–flora/host models, taxon-matched butterfly–alien-host relations, 155-species recording forecasts and 225×51 species-specific island indexes.
-- **[Five main figure plan v0.2](integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V02.md)** — planned and source-audited in concept, not yet five combined rendered figure files.
+- **[Five main figure plan v0.2](integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V02.md)** — all five newly rendered PNG/SVG figures are committed at [figures/integrated_island_port_butterfly_v02/](../figures/integrated_island_port_butterfly_v02/), with source-receipt SHA audits; Figures 1 and 5 also have vector PDFs. Final journal typography/availability checks remain.
 - **[27 source-typed claims, including positive and adverse mechanisms](integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V02.json)**.
 - **[Japanese evidence and publication judgement](integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_DECISION_JA_V02.md)**.
 - **[Cross-source scientific audit script](../scripts/verify_island_port_butterfly_v02.py)** — runs in CI.
 - **Previous drafts are source archives:** old global GEB v0.2, old JBI island/port v0.2, and the previous one-paper v0.1. They are **not concurrent independent manuscripts**.
 
-*Global Ecology and Biogeography* is the first submission candidate; *Journal of Biogeography* may be considered later for the same paper after an editorial decision. Submission, coauthor approval, source-licensing checks and integrated final figure rendering are pending.
+*Global Ecology and Biogeography* is the first submission candidate; *Journal of Biogeography* may be considered later for the same paper after an editorial decision. Submission, coauthor approval, source-licensing checks and final journal figure artwork review remain pending; source-rendered integrated five-figure drafts are complete.
 
 
 
@@ -17,7 +17,7 @@
 
 This directory contains the submission-facing paper package and its scientific-control metadata.
 
-## Primary v0.2 submission surfaces
+## ARCHIVED previous GEB v0.2 source surfaces
 
 - `butterfly_specialization_ecology_v0.2.md` — current main manuscript.
 - `generated/butterfly_specialization_ecology_blinded_v0.2.md` — current double-anonymous manuscript source.
