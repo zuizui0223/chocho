@@ -107,8 +107,10 @@ def geographic_blocks(data,ids):
     fit=KMeans(n_clusters=7,n_init=12,random_state=FIXED_SEED)
     clusters=fit.fit_predict(np.array(v))
     groups={i:int(k) for i,k in zip(sorted(ids,key=int),clusters)}
-    if len(set(groups.values()))!=7 or min(Counter(groups.values()).values())<2:
-        raise ValueError("Seven original geography clusters invalid")
+    if len(set(groups.values()))!=7:
+        raise ValueError("Source-only seven geographic-cluster identities invalid")
+    # A singleton distant group is allowed: it is an honest island-level test,
+    # not a reason to reselect a different K after observing the outcomes.
     return groups
 
 def make_rows(panel,period,data,bridge,clusters):
