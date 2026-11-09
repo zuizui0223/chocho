@@ -111,8 +111,6 @@ def fig1(out):
         fc="#f1f4f8",ec="#718096")
     arrow(ax,(.36,.50),(.49,.605),dashed=True,rad=.17)
     arrow(ax,(.78,.50),(.84,.605),dashed=True,rad=-.05)
-    ax.text(.5,.56,"Ports ↔ host geography ↔ butterfly indexes: observed associations",
-            ha="center",va="center",fontsize=10,color="#5b6573")
     ax.plot([.04,.96],[.15,.15],color="#a2a7b1",lw=.8)
     ax.text(.045,.124,"Solid = defined data reconstruction",fontsize=10,va="center",color="#155461")
     ax.text(.39,.124,"Dashed = observational association / proposed access comparison",fontsize=10,va="center",color="#606976")
@@ -228,12 +226,8 @@ def fig5(out):
                         xytext=(0,4 if vv>=0 else -11),
                         textcoords="offset points",fontsize=8,ha="center")
     ax.legend(loc="upper left",bbox_to_anchor=(0.0,1.0),fontsize=7.4,frameon=True)
-    ax.text(.98,.08,
-        f"Independently author-listed migrant candidate subset:\n"
-        f"sea-residual p={oldp:.3f} (51 groups) → {newp:.3f} (49)\n"
-        "after excluding two port-heavy target/source groups",
-        transform=ax.transAxes,ha="right",va="bottom",fontsize=8.1,
-        bbox=dict(facecolor="white",edgecolor="0.9",alpha=.95,pad=4))
+    fig.text(.61,.074,f"Migrant-candidate sea-residual p={oldp:.3f} (51 groups) → {newp:.3f} (49 groups, two high-port landmasses excluded)",
+             fontsize=8,color="#5b6573",ha="left")
     ax.set_title("D  Marine predictive transfer and geographic sensitivity",loc="left",fontsize=11)
     for ax in axs.flat:ax.spines[["top","right"]].set_visible(False)
 
