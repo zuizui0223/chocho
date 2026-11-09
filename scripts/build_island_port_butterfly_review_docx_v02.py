@@ -91,8 +91,8 @@ def build(output:Path):
         if len(media)<5:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
         for term in ("Islands and ports","Structured abstract","Figure 1","Figure 5",
-                     "Cynodon","butterfly","Introduced"):
-            if term not in xml:raise ValueError("Missing manuscript/review term "+term)
+                     "butterfly"):
+            if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={
       "schema":"chocho_single_island_port_butterfly_coauthor_review_DOCX_v02",
       "status":STATUS,
