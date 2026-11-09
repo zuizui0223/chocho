@@ -175,22 +175,52 @@ def load_polygons(zip_path,working,ids,max_chars):
         short=shorten(poly,.96 if depth==0 else .985)
         if short is not None:return [short]
         if depth>=10:raise ValueError("Cannot preserve coastline in 10 geographic splits")
+        # Original centre-of-BBOX cutter can strand an extremely narrow
+        # coastal sliver on one side: it does not divide the polygon into two
+        # admissible pieces. Search several disjoint axis-aligned cuts, and
+        # select the most area-balanced cut. Preserve exactly the original
+        # region (up to <0.01% numerical/fragment threshold loss).
         minx,miny,maxx,maxy=poly.bounds
         kmx=(maxx-minx)*111*max(.05,abs(math.cos(math.radians((miny+maxy)/2))))
         kmy=(maxy-miny)*111
-        if kmx<=0 or kmy<=0:raise ValueError("Degenerate geographic island extent")
-        if kmx>=kmy:
-            mid=(minx+maxx)/2
-            sides=(box(minx-1,miny-1,mid,maxy+1),box(mid,miny-1,maxx+1,maxy+1))
-        else:
-            mid=(miny+maxy)/2
-            sides=(box(minx-1,miny-1,maxx+1,mid),box(minx-1,mid,maxx+1,maxy+1))
-        part=[g for side in sides for g in polys(poly.intersection(side)) if area(g)>1.0]
-        if len(part)<2:raise ValueError("Island component could not be divided into disjoint geographic tiles")
+        if kmx<=0 or kmy<=0:
+            raise ValueError(f"Degenerate geographic island {island} extent: {poly.bounds}")
+        original_area=area(poly)
+        tol_area=max(1e-6,min(1.0,original_area*0.005))
+        choices=[]
+        axes=("x","y") if kmx>=kmy else ("y","x")
+        for axis in axes:
+            lo,hi=(minx,maxx) if axis=="x" else (miny,maxy)
+            for frac in (.5,.35,.65,.2,.8):
+                cut=lo+(hi-lo)*frac
+                if axis=="x":
+                    sides=(box(minx-1,miny-1,cut,maxy+1),
+                           box(cut,miny-1,maxx+1,maxy+1))
+                else:
+                    sides=(box(minx-1,miny-1,maxx+1,cut),
+                           box(minx-1,cut,maxx+1,maxy+1))
+                both=[]
+                for side in sides:
+                    pieces=[g for g in polys(poly.intersection(side)) if area(g)>tol_area]
+                    both.append(pieces)
+                if not all(both):
+                    continue
+                retained=sum(area(g) for side in both for g in side)
+                if abs(retained-original_area)>max(0.001,original_area*.0001):
+                    continue
+                aa=[sum(area(g) for g in side) for side in both]
+                choices.append((min(aa),[g for side in both for g in side],axis,frac))
+        if not choices:
+            raise ValueError(f"GSHHG island {island} polygon cannot split at depth={depth}, "
+                             f"area_m2={original_area:.8g}, bounds={poly.bounds}, "
+                             f"raw_WKT_chars={len(wkt.dumps(poly,rounding_precision=5,trim=True))}")
+        part=max(choices,key=lambda x:x[0])[1]
         out=[]
         for g in part:
             out.extend(fragments(g,depth+1))
-            if len(out)>100:raise ValueError("More than 100 island fragments needed")
+            if len(out)>100:
+                raise ValueError(f"GSHHG island {island} requires more than 100 "
+                                 f"non-overlapping WKT fragments at depth={depth}")
         return out
 
     result={};audit=[]
