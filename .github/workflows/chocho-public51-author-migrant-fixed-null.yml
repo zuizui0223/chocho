@@ -1,0 +1,33 @@
+name: "Author-selected migrant butterflies - fixed-margins original51 island record test"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/test_public51_author_migrant_conditional_null_20261109.py
+      - .github/workflows/chocho-public51-author-migrant-fixed-null.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  documented-migrant-record-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical packages without modifying frozen GEB source
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn
+      - name: Test actual migrant-selected butterfly GBIF index permutation under fixed species/target/region cases
+        run: |
+          python -m py_compile scripts/test_public51_author_migrant_conditional_null_20261109.py
+          python scripts/test_public51_author_migrant_conditional_null_20261109.py \
+            --out-dir results/public51_author_selected_migrant_null_20261109
+      - name: Preserve independent conditional source-exact inference and chain diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly51-author-selected-migrant-two-margin-null-20261109
+          path: results/public51_author_selected_migrant_null_20261109/
+          if-no-files-found: error
+          retention-days: 60
