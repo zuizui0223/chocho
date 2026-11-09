@@ -1,0 +1,840 @@
+{
+  "analysis_class": "EXPLORATORY_RETROSPECTIVE_GBIF_RECORD_INDEX_TRAIT_MODERATION",
+  "frozen_17_control_source_Git_blobs": {
+    "butterflies": {
+      "git_blob_sha1": "60e38e31d1d1b8896fb925aaa5ee0a405fbef2df",
+      "path": "data/exploratory/ncomms_public17_access_20261108/full17_butterfly_island_225_atrisk_source.csv",
+      "sha256": "302d27f58172469f303ddbc18a0048d00e639ffd3acea4b4691cb264a75a95cb"
+    },
+    "early_general_botany": {
+      "git_blob_sha1": "048fa6d644f5579879620deb394ce74ace653e26",
+      "path": "results/island51_pre2011_public_general_flora_20261107/source/GBIF_original51_early_general_flora_islands.csv",
+      "sha256": "8e42be0605bfcb3b8e1d326cdb179897c2db90214548ca5389d32642ef459f04"
+    },
+    "geography": {
+      "git_blob_sha1": "f0c5b1139e54b4872d28682f0991f89f2368ab43",
+      "path": "results/island51_host_circuit_atlas_20261106/island_geography.csv",
+      "sha256": "3727b1764a7416a85cbb28d573bdc6af3d401a54d3da3838c2e5de9fb913e89d"
+    },
+    "global_area": {
+      "git_blob_sha1": "f0fabefd7b5e15d23c1ce7ad2127c8a03357f2a8",
+      "path": "data/exploratory/ncomms_public17_access_20261108/original_global_GSHHG_area20_frame_source.csv",
+      "sha256": "d10316f2b3f980983de20566b424a8a189913df80dfda3a2e46c677f68ee0ea6"
+    },
+    "islands": {
+      "git_blob_sha1": "54c4515947d2a3ee7545e4007985ef82a2af6868",
+      "path": "provenance/reviewer_defenses/results/historical_botanical_17island_20261031/near_pair_pre2011_plant_composition.json",
+      "sha256": "a7b598d8ae06bacf5bbdefa5c1d0dcbb66907ae31271a1b456f63671730e187a"
+    },
+    "ocean": {
+      "git_blob_sha1": "7832b1d9d8b1047027fd5197d7bc0d31c22cad3f",
+      "path": "results/island51_observed_ocean_circuit_20261106/island51_observed_circuit_pairs.csv",
+      "sha256": "9a7c6e2e97e0b05fa7547f0d454da879b101dc12adce824920615e4b21e9a668"
+    },
+    "receipt": {
+      "git_blob_sha1": "6ef70869578e1bde3bca13bb49e44ef3b4fb4360",
+      "path": "data/exploratory/ncomms_public17_access_20261108/full17_query_receipt_source.json",
+      "sha256": "2b7ed26e165faf0ec7f3f99ddccbfb4bc838a1bfa3668de87792203b5546be2c"
+    },
+    "wpi_islands": {
+      "git_blob_sha1": "18cecde5bf3066f276380167f451f1fa5cc1caa1",
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv",
+      "sha256": "bbcfaae2e10d13da0380a7de6059c0ee8f7df81e02cca7cbd255932eca8f53e8"
+    }
+  },
+  "geographic_blocking": "KMeans k=7 on original geography xyz unit-sphere coordinates, source-only, seed 20261109",
+  "geographic_groups": {
+    "10": 4,
+    "110": 5,
+    "12": 0,
+    "1210": 0,
+    "13": 3,
+    "134": 0,
+    "15": 1,
+    "152": 1,
+    "1577": 1,
+    "168": 1,
+    "169": 1,
+    "17": 0,
+    "183": 4,
+    "19": 0,
+    "20": 6,
+    "206": 5,
+    "21": 5,
+    "214": 2,
+    "218": 4,
+    "23": 0,
+    "234": 5,
+    "242": 2,
+    "257": 2,
+    "26": 1,
+    "260": 1,
+    "27": 3,
+    "276": 1,
+    "28": 3,
+    "31": 0,
+    "321": 1,
+    "391": 5,
+    "397": 5,
+    "43": 3,
+    "44": 3,
+    "456": 1,
+    "47": 0,
+    "471": 0,
+    "487": 3,
+    "54": 1,
+    "59": 6,
+    "65": 0,
+    "715": 1,
+    "753": 1,
+    "79": 5,
+    "81": 2,
+    "821": 2,
+    "85": 1,
+    "89": 1,
+    "9": 0,
+    "94": 1,
+    "951": 2
+  },
+  "limits": [
+    "2026 reindex source not the private 83573-row historical author source",
+    "51 landmass groups selected via port+host source eligibility, not representative of all islands",
+    "Contemporary source-index nonobservations do not prove biological absence",
+    "Nearest prior-indexed same-species source only among 51 sampled landmasses",
+    "Modern WPI port counts are not verified historical trajectories",
+    "Wing span/forewing proxy averages are not a validated flight or movement rate",
+    "Uniform ocean resistance is not a historical route, and islands do not act as stopover nodes",
+    "Early general plant richness captures indexing opportunity, not dated species-specific HOSTS availability",
+    "No evidence of butterfly reproduction, plant/larva carriage, successful crossing or causal stepping stones"
+  ],
+  "original51_island_groups": 51,
+  "periods": {
+    "2011_2017": {
+      "cohort": {
+        "first_index_events": 221,
+        "index_eligible": 10739,
+        "islands_in_risk_set": 51,
+        "prior_source_and_trait_events": 187,
+        "prior_source_and_trait_rows": 4374,
+        "species_in_risk_set": 99,
+        "trait_eligible": 9474,
+        "trait_eligible_events": 206
+      },
+      "heldout": {
+        "geographic_cluster": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.03283090436568172,
+                "brier_or_logloss_reduction_pct": 0.10104878604410962,
+                "extended": 0.0327977291353729
+              },
+              "logloss": {
+                "baseline": 0.1254347244516423,
+                "brier_or_logloss_reduction_pct": -0.10554465222136107,
+                "extended": 0.1255671140953296
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.03275641342651803,
+                "brier_or_logloss_reduction_pct": -0.2274087159474865,
+                "extended": 0.03283090436568172
+              },
+              "logloss": {
+                "baseline": 0.12263786135079266,
+                "brier_or_logloss_reduction_pct": -2.280586981902361,
+                "extended": 0.1254347244516423
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.03275641342651803,
+                "brier_or_logloss_reduction_pct": 0.8326166116750529,
+                "extended": 0.03248367808693988
+              },
+              "logloss": {
+                "baseline": 0.12263786135079266,
+                "brier_or_logloss_reduction_pct": 0.6517542279036732,
+                "extended": 0.12183856390442822
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.03283090436568172,
+                "brier_or_logloss_reduction_pct": 0.3376408908007734,
+                "extended": 0.032720053807723484
+              },
+              "logloss": {
+                "baseline": 0.1254347244516423,
+                "brier_or_logloss_reduction_pct": 0.11270071419981743,
+                "extended": 0.12529335862133073
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.03283090436568172,
+                "brier_or_logloss_reduction_pct": 0.3779255632520127,
+                "extended": 0.03270682798543699
+              },
+              "logloss": {
+                "baseline": 0.1254347244516423,
+                "brier_or_logloss_reduction_pct": 0.44972982729795546,
+                "extended": 0.12487060708199427
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.03265992646977732,
+                "brier_or_logloss_reduction_pct": 0.5956826580692544,
+                "extended": 0.03246537695165869
+              },
+              "logloss": {
+                "baseline": 0.12497400268802575,
+                "brier_or_logloss_reduction_pct": 0.6156385899287115,
+                "extended": 0.12420461450009972
+              }
+            }
+          },
+          "first_index_events": 187,
+          "n_holdout_folds": 7,
+          "scores": {
+            "distance": {
+              "brier": 0.03275641342651803,
+              "logloss": 0.12263786135079266
+            },
+            "distance_sea": {
+              "brier": 0.03283090436568172,
+              "logloss": 0.1254347244516423
+            },
+            "distance_sea_disturb": {
+              "brier": 0.0327977291353729,
+              "logloss": 0.1255671140953296
+            },
+            "distance_sea_wn": {
+              "brier": 0.03270682798543699,
+              "logloss": 0.12487060708199427
+            },
+            "distance_sea_wport": {
+              "brier": 0.032720053807723484,
+              "logloss": 0.12529335862133073
+            },
+            "distance_wn": {
+              "brier": 0.03248367808693988,
+              "logloss": 0.12183856390442822
+            },
+            "distance_wn_sea": {
+              "brier": 0.03265992646977732,
+              "logloss": 0.12497400268802575
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.03246537695165869,
+              "logloss": 0.12420461450009972
+            }
+          },
+          "source_cells": 4374
+        },
+        "island": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.03108761420991126,
+                "brier_or_logloss_reduction_pct": -0.15902002227630777,
+                "extended": 0.031137049740953035
+              },
+              "logloss": {
+                "baseline": 0.11731677768631922,
+                "brier_or_logloss_reduction_pct": -0.26211505548909975,
+                "extended": 0.11762428262324974
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.03090796912174927,
+                "brier_or_logloss_reduction_pct": -0.5812257914920018,
+                "extended": 0.03108761420991126
+              },
+              "logloss": {
+                "baseline": 0.11645535858885032,
+                "brier_or_logloss_reduction_pct": -0.7396989781381947,
+                "extended": 0.11731677768631922
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.03090796912174927,
+                "brier_or_logloss_reduction_pct": 0.1758559558944251,
+                "extended": 0.030853615617202665
+              },
+              "logloss": {
+                "baseline": 0.11645535858885032,
+                "brier_or_logloss_reduction_pct": 0.08825305887797687,
+                "extended": 0.11635258317266835
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.03108761420991126,
+                "brier_or_logloss_reduction_pct": 0.08423463818150097,
+                "extended": 0.031061427670562282
+              },
+              "logloss": {
+                "baseline": 0.11731677768631922,
+                "brier_or_logloss_reduction_pct": 0.00921478298479267,
+                "extended": 0.11730596719985067
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.03108761420991126,
+                "brier_or_logloss_reduction_pct": -0.05558317857464341,
+                "extended": 0.031104893694032153
+              },
+              "logloss": {
+                "baseline": 0.11731677768631922,
+                "brier_or_logloss_reduction_pct": -0.023769689675302044,
+                "extended": 0.11734466352031232
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.03105423886466247,
+                "brier_or_logloss_reduction_pct": 0.4118342313413249,
+                "extended": 0.03092634687873529
+              },
+              "logloss": {
+                "baseline": 0.11735129285512168,
+                "brier_or_logloss_reduction_pct": 0.379580716174907,
+                "extended": 0.1169058499772617
+              }
+            }
+          },
+          "first_index_events": 187,
+          "n_holdout_folds": 51,
+          "scores": {
+            "distance": {
+              "brier": 0.03090796912174927,
+              "logloss": 0.11645535858885032
+            },
+            "distance_sea": {
+              "brier": 0.03108761420991126,
+              "logloss": 0.11731677768631922
+            },
+            "distance_sea_disturb": {
+              "brier": 0.031137049740953035,
+              "logloss": 0.11762428262324974
+            },
+            "distance_sea_wn": {
+              "brier": 0.031104893694032153,
+              "logloss": 0.11734466352031232
+            },
+            "distance_sea_wport": {
+              "brier": 0.031061427670562282,
+              "logloss": 0.11730596719985067
+            },
+            "distance_wn": {
+              "brier": 0.030853615617202665,
+              "logloss": 0.11635258317266835
+            },
+            "distance_wn_sea": {
+              "brier": 0.03105423886466247,
+              "logloss": 0.11735129285512168
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.03092634687873529,
+              "logloss": 0.1169058499772617
+            }
+          },
+          "source_cells": 4374
+        },
+        "species": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.030008528011513207,
+                "brier_or_logloss_reduction_pct": -0.24155135816883713,
+                "extended": 0.030081014018491493
+              },
+              "logloss": {
+                "baseline": 0.11305776669097192,
+                "brier_or_logloss_reduction_pct": -0.3196343534680567,
+                "extended": 0.11341913815258003
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.029855665614377663,
+                "brier_or_logloss_reduction_pct": -0.5120046530194559,
+                "extended": 0.030008528011513207
+              },
+              "logloss": {
+                "baseline": 0.11227659671150589,
+                "brier_or_logloss_reduction_pct": -0.6957549501373348,
+                "extended": 0.11305776669097192
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.029855665614377663,
+                "brier_or_logloss_reduction_pct": 0.06776287399200061,
+                "extended": 0.02983543455730792
+              },
+              "logloss": {
+                "baseline": 0.11227659671150589,
+                "brier_or_logloss_reduction_pct": -0.0540847939182977,
+                "extended": 0.11233732127745578
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.030008528011513207,
+                "brier_or_logloss_reduction_pct": -0.10011460424586612,
+                "extended": 0.030038570930571943
+              },
+              "logloss": {
+                "baseline": 0.11305776669097192,
+                "brier_or_logloss_reduction_pct": -0.1094757740854711,
+                "extended": 0.11318153755622061
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.030008528011513207,
+                "brier_or_logloss_reduction_pct": 0.1511727091379004,
+                "extended": 0.029963163306745796
+              },
+              "logloss": {
+                "baseline": 0.11305776669097192,
+                "brier_or_logloss_reduction_pct": 0.10982663586232802,
+                "extended": 0.11293359914923415
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.02997929642784089,
+                "brier_or_logloss_reduction_pct": 0.560072175725682,
+                "extended": 0.02981139073007023
+              },
+              "logloss": {
+                "baseline": 0.11309613349732375,
+                "brier_or_logloss_reduction_pct": 0.43660330272327874,
+                "extended": 0.11260235204322211
+              }
+            }
+          },
+          "first_index_events": 187,
+          "n_holdout_folds": 5,
+          "scores": {
+            "distance": {
+              "brier": 0.029855665614377663,
+              "logloss": 0.11227659671150589
+            },
+            "distance_sea": {
+              "brier": 0.030008528011513207,
+              "logloss": 0.11305776669097192
+            },
+            "distance_sea_disturb": {
+              "brier": 0.030081014018491493,
+              "logloss": 0.11341913815258003
+            },
+            "distance_sea_wn": {
+              "brier": 0.029963163306745796,
+              "logloss": 0.11293359914923415
+            },
+            "distance_sea_wport": {
+              "brier": 0.030038570930571943,
+              "logloss": 0.11318153755622061
+            },
+            "distance_wn": {
+              "brier": 0.02983543455730792,
+              "logloss": 0.11233732127745578
+            },
+            "distance_wn_sea": {
+              "brier": 0.02997929642784089,
+              "logloss": 0.11309613349732375
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.02981139073007023,
+              "logloss": 0.11260235204322211
+            }
+          },
+          "source_cells": 4374
+        }
+      }
+    },
+    "2018_2022": {
+      "cohort": {
+        "first_index_events": 96,
+        "index_eligible": 10518,
+        "islands_in_risk_set": 51,
+        "prior_source_and_trait_events": 83,
+        "prior_source_and_trait_rows": 4933,
+        "species_in_risk_set": 114,
+        "trait_eligible": 9268,
+        "trait_eligible_events": 87
+      },
+      "heldout": {
+        "geographic_cluster": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.019689209835898044,
+                "brier_or_logloss_reduction_pct": 1.4792860133230163,
+                "extended": 0.019397950108661785
+              },
+              "logloss": {
+                "baseline": 0.09239676135513344,
+                "brier_or_logloss_reduction_pct": 1.202958228144708,
+                "extended": 0.09128526691187264
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.018491106152793528,
+                "brier_or_logloss_reduction_pct": -6.479351063178629,
+                "extended": 0.019689209835898044
+              },
+              "logloss": {
+                "baseline": 0.08545723161292816,
+                "brier_or_logloss_reduction_pct": -8.12047103706488,
+                "extended": 0.09239676135513344
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.018491106152793528,
+                "brier_or_logloss_reduction_pct": 1.861147412025314,
+                "extended": 0.018146959409175958
+              },
+              "logloss": {
+                "baseline": 0.08545723161292816,
+                "brier_or_logloss_reduction_pct": 1.1503343961194927,
+                "extended": 0.08447418768371315
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.019689209835898044,
+                "brier_or_logloss_reduction_pct": -0.6790733237377593,
+                "extended": 0.01982291400754838
+              },
+              "logloss": {
+                "baseline": 0.09239676135513344,
+                "brier_or_logloss_reduction_pct": -0.5039008249444574,
+                "extended": 0.09286234939782392
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.019689209835898044,
+                "brier_or_logloss_reduction_pct": -1.9095828578879965,
+                "extended": 0.02006519161177795
+              },
+              "logloss": {
+                "baseline": 0.09239676135513344,
+                "brier_or_logloss_reduction_pct": -1.385626290434983,
+                "extended": 0.09367703517198064
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.019404449632328534,
+                "brier_or_logloss_reduction_pct": -1.1004892689371484,
+                "extended": 0.019617993518228623
+              },
+              "logloss": {
+                "baseline": 0.0913078066023063,
+                "brier_or_logloss_reduction_pct": -1.325248030653714,
+                "extended": 0.09251786151113646
+              }
+            }
+          },
+          "first_index_events": 83,
+          "n_holdout_folds": 7,
+          "scores": {
+            "distance": {
+              "brier": 0.018491106152793528,
+              "logloss": 0.08545723161292816
+            },
+            "distance_sea": {
+              "brier": 0.019689209835898044,
+              "logloss": 0.09239676135513344
+            },
+            "distance_sea_disturb": {
+              "brier": 0.019397950108661785,
+              "logloss": 0.09128526691187264
+            },
+            "distance_sea_wn": {
+              "brier": 0.02006519161177795,
+              "logloss": 0.09367703517198064
+            },
+            "distance_sea_wport": {
+              "brier": 0.01982291400754838,
+              "logloss": 0.09286234939782392
+            },
+            "distance_wn": {
+              "brier": 0.018146959409175958,
+              "logloss": 0.08447418768371315
+            },
+            "distance_wn_sea": {
+              "brier": 0.019404449632328534,
+              "logloss": 0.0913078066023063
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.019617993518228623,
+              "logloss": 0.09251786151113646
+            }
+          },
+          "source_cells": 4933
+        },
+        "island": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.015709959022977893,
+                "brier_or_logloss_reduction_pct": 0.12664866062963506,
+                "extended": 0.015690062570289827
+              },
+              "logloss": {
+                "baseline": 0.0657452233390314,
+                "brier_or_logloss_reduction_pct": 0.20645448059081706,
+                "extended": 0.06560948937967354
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.015620242254424117,
+                "brier_or_logloss_reduction_pct": -0.5743622095769086,
+                "extended": 0.015709959022977893
+              },
+              "logloss": {
+                "baseline": 0.06495988928855055,
+                "brier_or_logloss_reduction_pct": -1.208952261282983,
+                "extended": 0.0657452233390314
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.015620242254424117,
+                "brier_or_logloss_reduction_pct": 0.3485446007555972,
+                "extended": 0.015565798743421377
+              },
+              "logloss": {
+                "baseline": 0.06495988928855055,
+                "brier_or_logloss_reduction_pct": 0.5347229872172126,
+                "extended": 0.06461253382805382
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.015709959022977893,
+                "brier_or_logloss_reduction_pct": -0.3115054889209402,
+                "extended": 0.0157588964076417
+              },
+              "logloss": {
+                "baseline": 0.0657452233390314,
+                "brier_or_logloss_reduction_pct": -0.16089080160520833,
+                "extended": 0.06585100135587871
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.015709959022977893,
+                "brier_or_logloss_reduction_pct": 0.8042409500312883,
+                "extended": 0.01558361309928197
+              },
+              "logloss": {
+                "baseline": 0.0657452233390314,
+                "brier_or_logloss_reduction_pct": 0.8963953587012291,
+                "extended": 0.06515588620845257
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.015588886784015788,
+                "brier_or_logloss_reduction_pct": 0.028265304562240735,
+                "extended": 0.015584480537688423
+              },
+              "logloss": {
+                "baseline": 0.06510039584932872,
+                "brier_or_logloss_reduction_pct": 0.011435839335015708,
+                "extended": 0.06509295107265294
+              }
+            }
+          },
+          "first_index_events": 83,
+          "n_holdout_folds": 51,
+          "scores": {
+            "distance": {
+              "brier": 0.015620242254424117,
+              "logloss": 0.06495988928855055
+            },
+            "distance_sea": {
+              "brier": 0.015709959022977893,
+              "logloss": 0.0657452233390314
+            },
+            "distance_sea_disturb": {
+              "brier": 0.015690062570289827,
+              "logloss": 0.06560948937967354
+            },
+            "distance_sea_wn": {
+              "brier": 0.01558361309928197,
+              "logloss": 0.06515588620845257
+            },
+            "distance_sea_wport": {
+              "brier": 0.0157588964076417,
+              "logloss": 0.06585100135587871
+            },
+            "distance_wn": {
+              "brier": 0.015565798743421377,
+              "logloss": 0.06461253382805382
+            },
+            "distance_wn_sea": {
+              "brier": 0.015588886784015788,
+              "logloss": 0.06510039584932872
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.015584480537688423,
+              "logloss": 0.06509295107265294
+            }
+          },
+          "source_cells": 4933
+        },
+        "species": {
+          "contrasts": {
+            "disturbance_by_sea": {
+              "brier": {
+                "baseline": 0.014652654310333453,
+                "brier_or_logloss_reduction_pct": 0.1571188628903955,
+                "extended": 0.014629632226497796
+              },
+              "logloss": {
+                "baseline": 0.060989906096276796,
+                "brier_or_logloss_reduction_pct": 0.28794215496644593,
+                "extended": 0.060814290446351164
+              }
+            },
+            "sea_over_geodesic": {
+              "brier": {
+                "baseline": 0.014745012131508731,
+                "brier_or_logloss_reduction_pct": 0.6263665322995441,
+                "extended": 0.014652654310333453
+              },
+              "logloss": {
+                "baseline": 0.0608894340572342,
+                "brier_or_logloss_reduction_pct": -0.16500734585273397,
+                "extended": 0.060989906096276796
+              }
+            },
+            "wing_by_geodesic": {
+              "brier": {
+                "baseline": 0.014745012131508731,
+                "brier_or_logloss_reduction_pct": 0.13449710312806457,
+                "extended": 0.01472518051733597
+              },
+              "logloss": {
+                "baseline": 0.0608894340572342,
+                "brier_or_logloss_reduction_pct": 0.07565229487216751,
+                "extended": 0.06084336980303523
+              }
+            },
+            "wing_by_port": {
+              "brier": {
+                "baseline": 0.014652654310333453,
+                "brier_or_logloss_reduction_pct": -0.28416977372408153,
+                "extended": 0.0146942927249317
+              },
+              "logloss": {
+                "baseline": 0.060989906096276796,
+                "brier_or_logloss_reduction_pct": -0.12144219304316481,
+                "extended": 0.06106397357577508
+              }
+            },
+            "wing_by_sea": {
+              "brier": {
+                "baseline": 0.014652654310333453,
+                "brier_or_logloss_reduction_pct": 0.535321059709878,
+                "extended": 0.01457421556600375
+              },
+              "logloss": {
+                "baseline": 0.060989906096276796,
+                "brier_or_logloss_reduction_pct": 0.4808533825463979,
+                "extended": 0.06069663406980098
+              }
+            },
+            "wing_by_sea_after_wing_distance": {
+              "brier": {
+                "baseline": 0.014620281283605242,
+                "brier_or_logloss_reduction_pct": 0.20598384419114432,
+                "extended": 0.014590165866185714
+              },
+              "logloss": {
+                "baseline": 0.06086692320938784,
+                "brier_or_logloss_reduction_pct": 0.13503884076048925,
+                "extended": 0.0607847292218793
+              }
+            }
+          },
+          "first_index_events": 83,
+          "n_holdout_folds": 5,
+          "scores": {
+            "distance": {
+              "brier": 0.014745012131508731,
+              "logloss": 0.0608894340572342
+            },
+            "distance_sea": {
+              "brier": 0.014652654310333453,
+              "logloss": 0.060989906096276796
+            },
+            "distance_sea_disturb": {
+              "brier": 0.014629632226497796,
+              "logloss": 0.060814290446351164
+            },
+            "distance_sea_wn": {
+              "brier": 0.01457421556600375,
+              "logloss": 0.06069663406980098
+            },
+            "distance_sea_wport": {
+              "brier": 0.0146942927249317,
+              "logloss": 0.06106397357577508
+            },
+            "distance_wn": {
+              "brier": 0.01472518051733597,
+              "logloss": 0.06084336980303523
+            },
+            "distance_wn_sea": {
+              "brier": 0.014620281283605242,
+              "logloss": 0.06086692320938784
+            },
+            "distance_wn_sea_wn": {
+              "brier": 0.014590165866185714,
+              "logloss": 0.0607847292218793
+            }
+          },
+          "source_cells": 4933
+        }
+      }
+    }
+  },
+  "schema": "chocho_public51_butterfly_wing_disturbance_access_v1",
+  "source_panel_SHA256": "d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887",
+  "trait_coverage": {
+    "disturbance_groups": {
+      "-1": 33,
+      "1": 166
+    },
+    "matched_complete_trait_species": 199,
+    "missing_or_unclassified_trait_species": 26,
+    "resource_descriptor_linked_species": 199,
+    "source_candidate_species": 225,
+    "trait_groups": {
+      "large_50pct": 99,
+      "small_50pct": 100
+    },
+    "wing_proxy_mixes_ws_fw_bounds_not_dispersal_rate": true,
+    "wing_size_proxy_mean": 4.498553733601202,
+    "wing_size_proxy_median": 4.050000000000001,
+    "wing_size_proxy_sd": 1.8872330451451935
+  },
+  "traits_source_Git_blob": "09541b5894529cc8629c7515ea9022ded9edead2"
+}
