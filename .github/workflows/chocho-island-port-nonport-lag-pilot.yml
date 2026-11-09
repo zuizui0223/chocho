@@ -1,10 +1,5 @@
 name: Same-island port vs nonport historical host and later butterfly GBIF pilot
 on:
-  push:
-    branches: [analysis/island-port-nonport-lag-20261109]
-    paths:
-      - scripts/island_port_nonport_lag_pilot_20261109.py
-      - .github/workflows/chocho-island-port-nonport-lag-pilot.yml
   workflow_dispatch:
 permissions:
   contents: write
