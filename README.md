@@ -1,10 +1,17 @@
 # chocho — Butterfly resource geography under host redistribution
 
-## Canonical ONE-PAPER manuscript (9 November 2026)
+## Canonical ONE-PAPER manuscript — islands, ports and butterflies (9 November 2026)
 
-**Only one active paper narrative**: [Integrated butterfly-first GEB Research Article v0.1](manuscript/integrated_butterfly_resource_access_20261109/INTEGRATED_RESEARCH_ARTICLE_V01.md). This integrates the original 239-butterfly global host-resource reconstruction, the island/port resource and marine evidence formerly developed as a separate JBI draft, and the independently sourced 225-butterfly×51-landmass record history. Scientific framing, methods and numerical denominators are cross-checked in the [one-paper evidence ledger](manuscript/integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V01.json); [five-figure design](manuscript/integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V01.md); [Japanese one-paper decision](manuscript/integrated_butterfly_resource_access_20261109/ONE_PAPER_DECISION_JA.md).
+**The active scientific paper is now island- and port-first.** Its central question is where human-redistributed alien plants create potential larval-host opportunities for butterflies on islands and how island/port botanical geographies correspond to recorded butterfly species. The previous global-diet-centred v0.1 is retained as a provenance draft, NOT the active submission target.
 
-**Editorial target:** Global Ecology and Biogeography first; Journal of Biogeography is a possible later alternative for the SAME manuscript, not a second parallel publication. Old manuscript v0.2, JBI PR #151 and JBI PR #123 are frozen supporting source versions, **not current separate submission surfaces**. Only the new one-paper branch/PR #157 is active for scientific integration. **Draft; not submitted; no new five-figure render yet.** The frozen original GEB code, figures and tests remain valid source evidence; their CI still runs unchanged.
+- **[English integrated Research Article v0.2](manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V02.md)** — only canonical English manuscript. First target *Global Ecology and Biogeography*; *Journal of Biogeography* is a possible later destination for the **same** paper, not another concurrent paper.
+- **[Island/port-focused Figure Plan v0.2](manuscript/integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V02.md)** — five main figures led by island resource amplification, port whole-alien-flora assembly and butterfly species/records.
+- **[27 claim evidence ledger v0.2](manuscript/integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V02.json)** and **[Japanese scientific result and editorial decision](manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_DECISION_JA_V02.md)**.
+- **[Independent original-source claim verifier](scripts/verify_island_port_butterfly_v02.py)** — original 239 resource butterflies, 1596 complete queried ports, island98 region models, 225×51 records and all positive/negative taxon-matched tests.
+
+The frozen original GEB v0.2, island-port JBI v0.2, earlier one-paper integrated v0.1 and source experiment PRs are historical evidence; **none is a separate current article to submit concurrently.** No final newly rendered five figures, journal submission or coauthor approval is claimed.
+
+
 
 ---
 
