@@ -50,7 +50,7 @@
 - results/public51_butterfly_trait_access_20261109/public51_butterfly_conditional_trait_marine.json
 - results/public51_author_selected_migrant_access_20261109/author_selected_migrant_no9_15_source_null.json
 
-**No figures have been newly rendered from this updated v0.2 plan yet.** Existing earlier JBI results are source-audited but different manuscript figures. Integrate them only after numerical and visual source-denominator checks.
+**Updated after execution, 9 Nov 2026:** All five *new integrated v0.2* main figures are now rendered and permanently committed to figures/integrated_island_port_butterfly_v02/. Figures 1–5 have PNG/SVG and source-hash receipts, with PDF also produced for Figures 1 and 5. The new scientific manuscript and 27-source-claim + five-actual-figure verifier have passed CI. These are manuscript-working scientific renderings, not a completed journal production/rights review; [complete five legends](FIGURE_CAPTIONS_V02.md).
 
 ## Figure caption discipline
 
