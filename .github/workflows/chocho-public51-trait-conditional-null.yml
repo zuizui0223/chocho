@@ -26,6 +26,8 @@ jobs:
           github-token: ${{ github.token }}
           name: butterfly-original51-public-index-consolidated-20261109
           path: _scratch_public51_verified
+      - name: Compile centered trait-interaction null
+        run: python -m py_compile scripts/run_public51_butterfly_trait_fixed_margins_20261109.py
       - name: Fixed species and island index-count null, plus within geographic cluster support test
         run: |
           python scripts/run_public51_butterfly_trait_fixed_margins_20261109.py \
