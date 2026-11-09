@@ -172,9 +172,19 @@ def load_polygons(zip_path,working,ids,max_chars):
                     return text,tol,original,ratio
         return None
     def fragments(poly,depth=0):
-        short=shorten(poly,.96 if depth==0 else .985)
+        short=shorten(poly,.96 if depth==0 else .97)
         if short is not None:return [short]
-        if depth>=10:raise ValueError("Cannot preserve coastline in 10 geographic splits")
+        if depth>=12:
+            probe=[]
+            ar=area(poly)
+            for tol in (.01,.05,.1):
+                q=poly.simplify(tol,preserve_topology=True)
+                if isinstance(q,Polygon) and q.is_valid:
+                    q_wkt=wkt.dumps(orient(q,sign=1.0),rounding_precision=5,trim=True)
+                    probe.append((tol,len(q_wkt),area(wkt.loads(q_wkt))/ar))
+            raise ValueError(f"GSHHG original island {island}: 12-level limit at area_m2={ar:.5g}, "
+                             f"bbox={poly.bounds}, simplification_probe={probe}; "
+                             f"cannot preserve polygon and query limits")
         # Original centre-of-BBOX cutter can strand an extremely narrow
         # coastal sliver on one side: it does not divide the polygon into two
         # admissible pieces. Search several disjoint axis-aligned cuts, and
