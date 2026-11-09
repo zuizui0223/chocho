@@ -1,0 +1,39 @@
+name: "Coauthor review: single island-port-butterfly paper v0.2 with five source-verified figures"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/build_island_port_butterfly_review_docx_v02.py
+      - .github/workflows/chocho-integrated-island-port-review-docx.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+jobs:
+  integrated-v02-review-docx:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pandoc if not in Ubuntu action image
+        run: |
+          if ! command -v pandoc; then
+            sudo apt-get update -qq
+            sudo apt-get install -y pandoc
+          fi
+          pandoc --version | head -n 1
+      - name: Build the NEW island/port butterfly integrated manuscript and figures review copy
+        run: |
+          python -m py_compile scripts/build_island_port_butterfly_review_docx_v02.py
+          python scripts/build_island_port_butterfly_review_docx_v02.py \
+            --output _scratch_review/ISLAND_PORT_BUTTERFLIES_INTEGRATED_MANUSCRIPT_V02_REVIEW.docx
+      - name: Archive the actual integrated coauthor manuscript, not the old GEB resource-only DOCX
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-island-port-integrated-v02-coauthor-DOCX
+          path: _scratch_review/
+          if-no-files-found: error
+          retention-days: 60
