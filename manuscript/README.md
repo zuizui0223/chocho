@@ -1,5 +1,17 @@
 # Manuscript map
 
+## ONLY ACTIVE working manuscript (9 November 2026)
+
+- **[Integrated butterfly-first article v0.1](manuscript/integrated_butterfly_resource_access_20261109/INTEGRATED_RESEARCH_ARTICLE_V01.md)** — SINGLE combined GEB Research Article, 239-species resource reconstruction + insular/port analyses + butterfly-record validation + 225×51 source-history/access evidence.
+- **[Five new main figures, source support and required captions](manuscript/integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V01.md)** — planned integrated figures, not yet rendered.
+- **[19 source-grounded claim ledger](manuscript/integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V01.json)** — positive, adverse, source-typed and noncausal evidence together.
+- **[Japanese submission and overlap decision](manuscript/integrated_butterfly_resource_access_20261109/ONE_PAPER_DECISION_JA.md)** — only GEB first; JBI only a possible later destination for the SAME manuscript; old GEB/JBI packages are source references rather than parallel submissions.
+- **[Source-claim verifier](../scripts/verify_single_integrated_butterfly_paper_20261109.py)** — checks all substantive denominations on the frozen 239, 155, 98 and 225×51 sources.
+
+All 'current v0.2' statements below describe the **frozen pre-integration GEB package**, not the active submission manuscript. No actual journal submission, coauthor approval or completed five-composite-figure bundle has been performed.
+
+---
+
 This directory contains the submission-facing paper package and its scientific-control metadata.
 
 ## Primary v0.2 submission surfaces
