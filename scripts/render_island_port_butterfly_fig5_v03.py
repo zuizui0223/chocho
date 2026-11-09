@@ -16,6 +16,7 @@ R=Path(__file__).resolve().parents[1]
 OUT=R/"figures/integrated_island_port_butterfly_v03"
 PATHS={
     "joint":"results/island51_host_circuit_joint_20261106/comparison_summary.csv",
+    "uniform":"results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
     "historical_cross":"results/island51_cross_community_marine_20261107/comparison_scope_summary.csv",
     "early_host":"provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json",
     "host_null":"provenance/reviewer_defenses/results/host_geographic_prevalence_null_20261031/host_geo_frequency_null_results.json",
@@ -28,7 +29,7 @@ def read(k):
     if p.suffix==".json":return json.loads(p.read_text(encoding="utf8"))
     with p.open(encoding="utf-8-sig",newline="") as f:return list(csv.DictReader(f))
 def numbers():
-    joint=read("joint");cross=read("historical_cross");early=read("early_host")
+    joint=read("joint");cross=read("historical_cross");early=read("early_host");uniform=read("uniform")
     null=read("host_null");g=read("public51");idx=read("firstidx");t=read("firsttransfer")
     def j(c):
         x=[float(z["relative_MSE_reduction_percent"]) for z in joint
@@ -40,7 +41,12 @@ def numbers():
              and z["pair_class"]=="all_both_plants_indexed"]
         if len(a)!=1 or int(a[0]["unique_source_pairs"])!=990:raise ValueError("cross community source mismatched")
         return float(a[0]["MSE_gain_percent"])
+    geo=[p for p in uniform if p["comparison"]=="base_vs_uniform" and p["target"]=="new_butterfly_jaccard"]
+    if len(geo)!=1:raise ValueError("Geometric-ocean source comparison unavailable")
     vals={
+       "geometry_only_beyond_distance":float(geo[0]["relative_MSE_reduction_percent"]),
+       "geometry_only_baseline_MSE":float(geo[0]["MSE_reference"]),
+       "geometry_only_augmented_MSE":float(geo[0]["MSE_augmented"]),
        "host_given_marine":j("C_to_HC"),
        "marine_given_host":j("H_to_HC"),
        "base_to_hosts":j("G_to_H"),
@@ -61,7 +67,8 @@ def numbers():
     tests=idx["periods"]["2018_2022"]["within_geographic_cluster_two_margin"]["tests"]
     vals["source_proximity_p"]=float(tests["geo_access_mean"]["p_two_sided_monte_carlo"])
     vals["residual_sea_p"]=float(tests["sea_residual_access_mean"]["p_two_sided_monte_carlo"])
-    check={"host_given_marine":1.731162479353141,
+    check={"geometry_only_beyond_distance":5.0818868452225594,
+           "host_given_marine":1.731162479353141,
            "marine_given_host":6.4880250544198574,
            "later_butterflies_ais_with_host":.67755574674502794,
            "later_butterflies_ais_wind_with_host":-4.6985954047498986,
@@ -74,19 +81,19 @@ def numbers():
 
 def build(v,output):
     fig,ax=plt.subplots(2,2,figsize=(14.8,9.3),layout="constrained")
-    fig.suptitle("Figure 5  |  Host and marine geography: complementary records, uncertain pathways",
+    fig.suptitle("Figure 5  |  Ocean geometry, host resources and marine-specificity limits",
                  x=.02,ha="left",fontsize=15.2,fontweight="bold")
     # A: conditional same-fold held-island prediction.
-    a=ax[0,0]; y=np.arange(3)
-    data=[v["host_given_marine"],v["marine_given_host"],8.6164]
-    labels=["Add hosts to AIS/wind\n(C → HC)","Add AIS/wind to hosts\n(H → HC)","Both vs base geography\n(G → HC; contextual)"]
-    bars=a.barh(y,data,color=["#529b83","#2c6c8e","#8b929a"])
+    a=ax[0,0]; y=np.arange(4)
+    data=[v["geometry_only_beyond_distance"],v["host_given_marine"],v["marine_given_host"],8.6164]
+    labels=["Ocean geometry only\n(Base → uniform)","Hosts beyond AIS/wind\n(C → HC; conditional)","AIS/wind beyond hosts\n(H → HC; exploratory)","Full model vs uniform\n(G → HC; exploratory)"]
+    bars=a.barh(y,data,color=["#287e8e","#529b83","#9da6ae","#c1c6cb"])
     a.invert_yaxis();a.set_yticks(y,labels,fontsize=8.6)
     a.set_xlim(0,10.3);a.set_xlabel("Relative held-island MSE reduction (%)")
     for q,x in zip(bars,data):
         a.text(x+.15,q.get_y()+q.get_height()/2,f"+{x:.2f}%",va="center",fontsize=10,fontweight="bold")
-    a.set_title("A  51 islands: complementary conditional predictors",loc="left",fontsize=11)
-    a.text(.01,.02,"Same leave-one-island-out folds; host lists visible on the test island.\nComparisons have different denominators—do not sum gains.",
+    a.set_title("A  51 islands: sea geometry first, then conditional models",loc="left",fontsize=11)
+    a.text(.01,.02,"Ocean-only source uses no AIS/wind. Other bars are exploratory.\nDifferent reference models: do not sum these gains.",
            transform=a.transAxes,va="bottom",fontsize=8.0,color="#536070")
 
     # B: stricter independent double-unseen geography.
