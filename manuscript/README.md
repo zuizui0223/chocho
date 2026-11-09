@@ -19,10 +19,10 @@ This directory contains the submission-facing paper package and its scientific-c
 
 ## ARCHIVED previous GEB v0.2 source surfaces
 
-- `butterfly_specialization_ecology_v0.2.md` — current main manuscript.
-- `generated/butterfly_specialization_ecology_blinded_v0.2.md` — current double-anonymous manuscript source.
-- `butterfly_specialization_geb_cover_letter_v0.2.md` — current cover letter.
-- `butterfly_specialization_geb_title_page_template_v0.2.md` — current identifying title-page template.
+- `butterfly_specialization_ecology_v0.2.md` — archived pre-integration resource-only manuscript.
+- `generated/butterfly_specialization_ecology_blinded_v0.2.md` — archived pre-integration double-anonymous manuscript source.
+- `butterfly_specialization_geb_cover_letter_v0.2.md` — archived resource-only cover-letter draft.
+- `butterfly_specialization_geb_title_page_template_v0.2.md` — archived resource-only title-page template.
 - `butterfly_specialization_claim_map_v0.2.json` — allowed claims and inference boundaries.
 - `butterfly_specialization_supplement_v0.2.md` — robustness tables and supplementary inference boundaries.
 - `butterfly_specialization_submission_readiness_v0.2.json` — current scientific/submission readiness and remaining external blockers.
