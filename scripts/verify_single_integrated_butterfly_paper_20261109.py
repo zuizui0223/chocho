@@ -38,7 +38,6 @@ def check() -> dict:
     if not all(x.get("population") and x.get("interpretation") and x.get("source")
                for x in ledger["claims"]):
         raise AssertionError("All claims require a population, interpretation and source")
-    assert "ONE" not in "" # no-op avoided below
     assert "唯一の文章正本" in decision
     assert "GEB" in decision and "同時投稿" in decision
     assert "JBI" in decision
