@@ -1,0 +1,32 @@
+name: "Butterfly candidate migrant island-access sensitivity - exclude 2 port-heavy landmasses"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-author-migrant-port-heavy-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  delete-port-heavy-landmass-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-locked scientific test requirements
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn
+      - name: Delete original source landmass ID 15 and 9 (39 and 21 original WPI ports), from targets AND candidate sources
+        run: |
+          python scripts/test_public51_author_migrant_conditional_null_20261109.py \
+            --exclude-island-ids 9,15 \
+            --out-dir results/public49_author_selected_migrant_null_20261109
+      - name: Archive original 49-source sensitivity and full null-chain diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-author-migrant-49-source-no-9-15-two-margin-20261109
+          path: results/public49_author_selected_migrant_null_20261109/
+          if-no-files-found: error
+          retention-days: 60
