@@ -40,7 +40,11 @@ def caption_sections():
         n=int(chunks[i])
         title_body=chunks[i+1]
         title,_,body=title_body.partition("\n")
-        out[n]={"title":title.strip(),"body":body.strip()}
+        # The source and CI links below the five scientific captions are
+        # internal author QA, not a Figure 5 legend. Keep them in the GitHub
+        # scientific record, not in the coauthor manuscript appendix.
+        body=body.split("\n## Shared scientific source and QA",1)[0].strip()
+        out[n]={"title":title.strip(),"body":body}
     if sorted(out)!=list(range(1,6)):raise ValueError("Figure number/order changed")
     return out
 
