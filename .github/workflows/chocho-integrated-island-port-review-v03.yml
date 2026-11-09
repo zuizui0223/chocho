@@ -1,0 +1,80 @@
+name: GEB v0.3 one-paper five-figure verification and coauthor DOCX
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/verify_island_port_butterfly_v03.py
+      - scripts/build_island_port_butterfly_review_docx_v03.py
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
+      - figures/integrated_island_port_butterfly_v03/FIGURE5_V03_SOURCE_RECEIPT.json
+      - .github/workflows/chocho-integrated-island-port-review-v03.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-and-coauthor-copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original-source model improvements, abstract limit and five scientific figures
+        run: |
+          python -m py_compile scripts/verify_island_port_butterfly_v03.py scripts/build_island_port_butterfly_review_docx_v03.py
+          python scripts/verify_island_port_butterfly_v03.py | tee /tmp/v03-verification-log.json
+      - name: Install review DOCX and PDF tools
+        run: |
+          python -m pip install --disable-pip-version-check 'python-docx>=1.1,<2'
+          if ! command -v pandoc >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y pandoc
+          fi
+          if ! command -v libreoffice >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y libreoffice-writer
+          fi
+          command -v pdfinfo
+      - name: Generate actual source-matched v0.3 five-figure manuscript DOCX
+        run: |
+          mkdir -p _scratch_v03
+          python scripts/build_island_port_butterfly_review_docx_v03.py \
+            --output _scratch_v03/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.docx
+      - name: Render Word into PDF and run document structure checks
+        run: |
+          mkdir -p _scratch_v03/pdf
+          libreoffice -env:UserInstallation=file:///tmp/libreoffice-v03-$(date +%s) \
+            --headless --convert-to pdf --outdir _scratch_v03/pdf \
+            _scratch_v03/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.docx
+          test -s _scratch_v03/pdf/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.pdf
+          pdfinfo _scratch_v03/pdf/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.pdf | tee _scratch_v03/PDFINFO_REVIEW.txt
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from docx import Document
+          root=Path('_scratch_v03')
+          p=root/'ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.docx'
+          doc=Document(p)
+          paras=[x.text for x in doc.paragraphs]
+          assert sum(x.startswith('Figure 5 |') for x in paras)==1
+          assert sum(x.startswith('Figure ') and '|' in x for x in paras)>=5
+          assert any('6.488%' in x for x in paras)
+          with ZipFile(p) as z:
+            imgs=[x for x in z.namelist() if x.startswith('word/media/')]
+            assert len(imgs)>=5
+          print('V03_DOCX_SOURCE_FIVE_IMAGES_ONE_FIGURE5_AND_MARINE_POSITIVE_RESULT_PASS',len(paras),len(imgs))
+          PY
+      - name: Archive version-specific DOCX, visual-review PDF, and provenance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-integrated-islands-ports-marine-GEB-v03-coauthor-review
+          path: |
+            _scratch_v03/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.docx
+            _scratch_v03/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.source_receipt.json
+            _scratch_v03/pdf/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.pdf
+            _scratch_v03/PDFINFO_REVIEW.txt
+          retention-days: 60
+          if-no-files-found: warn
