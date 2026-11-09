@@ -1,14 +1,17 @@
 # Manuscript map
 
-## ONLY ACTIVE working manuscript (9 November 2026)
+## ONLY ACTIVE integrated manuscript — island/port butterfly v0.2 (9 November 2026)
 
-- **[Integrated butterfly-first article v0.1](manuscript/integrated_butterfly_resource_access_20261109/INTEGRATED_RESEARCH_ARTICLE_V01.md)** — SINGLE combined GEB Research Article, 239-species resource reconstruction + insular/port analyses + butterfly-record validation + 225×51 source-history/access evidence.
-- **[Five new main figures, source support and required captions](manuscript/integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V01.md)** — planned integrated figures, not yet rendered.
-- **[19 source-grounded claim ledger](manuscript/integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V01.json)** — positive, adverse, source-typed and noncausal evidence together.
-- **[Japanese submission and overlap decision](manuscript/integrated_butterfly_resource_access_20261109/ONE_PAPER_DECISION_JA.md)** — only GEB first; JBI only a possible later destination for the SAME manuscript; old GEB/JBI packages are source references rather than parallel submissions.
-- **[Source-claim verifier](../scripts/verify_single_integrated_butterfly_paper_20261109.py)** — checks all substantive denominations on the frozen 239, 155, 98 and 225×51 sources.
+- **[English island-port-butterfly integrated Research Article v0.2](integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V02.md)** — single active paper, led by 126-island resource amplification, 1596 global completed port flora queries, effort-controlled n98 island port–flora/host models, taxon-matched butterfly–alien-host relations, 155-species recording forecasts and 225×51 species-specific island indexes.
+- **[Five main figure plan v0.2](integrated_butterfly_resource_access_20261109/FIGURE_PLAN_V02.md)** — planned and source-audited in concept, not yet five combined rendered figure files.
+- **[27 source-typed claims, including positive and adverse mechanisms](integrated_butterfly_resource_access_20261109/EVIDENCE_LEDGER_V02.json)**.
+- **[Japanese evidence and publication judgement](integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_DECISION_JA_V02.md)**.
+- **[Cross-source scientific audit script](../scripts/verify_island_port_butterfly_v02.py)** — runs in CI.
+- **Previous drafts are source archives:** old global GEB v0.2, old JBI island/port v0.2, and the previous one-paper v0.1. They are **not concurrent independent manuscripts**.
 
-All 'current v0.2' statements below describe the **frozen pre-integration GEB package**, not the active submission manuscript. No actual journal submission, coauthor approval or completed five-composite-figure bundle has been performed.
+*Global Ecology and Biogeography* is the first submission candidate; *Journal of Biogeography* may be considered later for the same paper after an editorial decision. Submission, coauthor approval, source-licensing checks and integrated final figure rendering are pending.
+
+
 
 ---
 
