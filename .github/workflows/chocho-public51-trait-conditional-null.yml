@@ -1,0 +1,40 @@
+name: Butterfly traits x nearest island access with species/island fixed margins
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-trait-conditional-null.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-conditional-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install narrow original-source and conditional null dependencies
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn
+      - name: Reuse source-verified 225 butterfly x 51 landmass original-index panel
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556346640
+          github-token: ${{ github.token }}
+          name: butterfly-original51-public-index-consolidated-20261109
+          path: _scratch_public51_verified
+      - name: Fixed species and island index-count null, plus within geographic cluster support test
+        run: |
+          python scripts/run_public51_butterfly_trait_fixed_margins_20261109.py \
+            --source-dir _scratch_public51_verified \
+            --out-dir results/public51_trait_conditional_null_20261109
+      - name: Archive source-hash locked conditional observations and four MCMC chain checks
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-51-two-margin-trait-null-20261109
+          path: results/public51_trait_conditional_null_20261109/
+          if-no-files-found: error
+          retention-days: 60
