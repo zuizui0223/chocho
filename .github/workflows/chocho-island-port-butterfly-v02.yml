@@ -1,0 +1,31 @@
+name: "Island-port butterfly one-paper v0.2 - cross-source scientific audit"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - manuscript/integrated_butterfly_resource_access_20261109/**
+      - scripts/verify_island_port_butterfly_v02.py
+      - .github/workflows/chocho-island-port-butterfly-v02.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-island-port-positive-and-negative-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original-source and new one-paper narrative numerical consistency
+        run: |
+          python -m py_compile scripts/verify_island_port_butterfly_v02.py
+          python scripts/verify_island_port_butterfly_v02.py | tee island_port_butterfly_v02_source_audit.json
+      - name: Archive auditable claim check
+        uses: actions/upload-artifact@v4
+        with:
+          name: island-port-butterfly-single-paper-v02-source-audit
+          path: island_port_butterfly_v02_source_audit.json
+          if-no-files-found: error
+          retention-days: 60
