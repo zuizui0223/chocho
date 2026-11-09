@@ -56,7 +56,7 @@ def source_check():
     if not all(x in ref_audit for x in ("10.15468/dl.pp5nc9","GBIF","WPI","WCVP")):
         raise AssertionError("Missing independent data-origin and citation audit")
     reference_section=doc.split("## References (",1)[1].split("### Source archive",1)[0]
-    if len(re.findall(r"https://doi.org/10\\.",reference_section))<15:
+    if reference_section.count("https://doi.org/10.")<15:
         raise AssertionError("The bibliographic DOI checks fell out of the canonical manuscript")
     if "does NOT identify" not in ref_audit or "Independent GBIF provenance and citation gate" not in doc:
         raise AssertionError("GBIF derived-citation blocker was lost from the manuscript")
