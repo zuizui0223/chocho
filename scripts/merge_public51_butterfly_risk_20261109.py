@@ -110,7 +110,14 @@ def merge(part_dir,output,expect_parts=6):
             if x["source_not_future_selected"]!="True" or x["index_not_true_absence_or_colonization"]!="True":
                 raise ValueError("Future-selected or mislabeled historical response")
             rows.append(x)
-        if len(rr)!=src["risk_cells"] or any(summaries[k]!=src[k] for k in binary):
+        receipt_names={
+          "eligible_2011_2017":"eligible_2011_2017",
+          "first_indexed_in_2011_2017":"first_indexed_2011_2017",
+          "eligible_2018_2022":"eligible_2018_2022",
+          "first_indexed_in_2018_2022":"first_indexed_2018_2022",
+        }
+        if len(rr)!=src["risk_cells"] or any(
+            summaries[k]!=src[receipt_names[k]] for k in binary):
             raise ValueError("Shard receipt and row counts disagree")
         audits.append({"prefix":prefix,"ids":sorted(ids,key=int),"risk_cells":len(rr),
             "csv_sha256":sha(p),"receipt_sha256":sha(receipt_prefix[prefix]),
