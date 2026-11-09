@@ -1,0 +1,53 @@
+name: "Render complete integrated butterfly island-port Figures 1 and 5"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/render_island_port_butterfly_fig1_fig5_v02.py
+      - .github/workflows/chocho-render-island-port-butterfly-fig15-v02.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  butterfly-figure-one-and-five:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical and research-vector-figure dependencies
+        run: python -m pip install --disable-pip-version-check numpy matplotlib
+      - name: Render source-locked noncausal island-port-butterfly framework and butterfly index falsification
+        run: |
+          python -m py_compile scripts/render_island_port_butterfly_fig1_fig5_v02.py
+          python scripts/render_island_port_butterfly_fig1_fig5_v02.py --out-dir figures/integrated_island_port_butterfly_v02
+      - name: Archive both original scientific figures with source hashes
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-island-port-integrated-Fig1-Fig5-v02
+          path: |
+            figures/integrated_island_port_butterfly_v02/Fig1_*
+            figures/integrated_island_port_butterfly_v02/Fig5_*
+            figures/integrated_island_port_butterfly_v02/FIGURES_15_SOURCE_RECEIPT_V02.json
+          if-no-files-found: error
+          retention-days: 60
+      - name: Persist figure sources and PNG SVG PDF images for the ONE manuscript
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add figures/integrated_island_port_butterfly_v02/Fig1_* figures/integrated_island_port_butterfly_v02/Fig5_* figures/integrated_island_port_butterfly_v02/FIGURES_15_SOURCE_RECEIPT_V02.json
+          if git diff --cached --quiet; then echo "Figures already verified and archived"; exit 0; fi
+          git commit -m "Render and archive source-validated island-port butterfly main Figures 1 and 5 [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
