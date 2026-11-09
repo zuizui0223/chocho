@@ -33,7 +33,7 @@ def run():
     body_words=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",body))
     for x in ("239 butterflies","126 insular","237 mainland","1,596",
               "98","155","225 butterflies","1,275","1.731%",
-              "6.488%","6.48%","4.699%","0.300","0.2445",
+              "6.488%","6.48%","4.699%","5.082%","100/199","4.662%","0.300","0.2445",
               "0.1639","0.0415","17-island","2001–2010"):
         if x not in t:raise AssertionError("v0.3 essential source population or number missing: "+x)
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
@@ -54,6 +54,14 @@ def run():
         close((ref-new)/ref*100,pct,tol=1e-6)
         close(float(z["relative_MSE_reduction_percent"]),pct,tol=1e-6)
         assert int(z["islands_improved"])==improved
+    geom=rows("results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv")
+    geom=[x for x in geom if x["comparison"]=="base_vs_uniform" and x["target"]=="new_butterfly_jaccard"]
+    assert len(geom)==1
+    g=geom[0]
+    close(float(g["MSE_reference"]),0.006797760771290343)
+    close(float(g["MSE_augmented"]),0.0064523062608844396)
+    close(float(g["relative_MSE_reduction_percent"]),5.0818868452225594)
+    assert int(g["islands_improved"])==33
     check_j("C_to_HC",1.731162479353141,31)
     check_j("H_to_HC",6.4880250544198574,39)
     total=(float(jc["G_to_H"]["MSE_reference"])-float(jc["H_to_HC"]["MSE_augmented"]))/float(jc["G_to_H"]["MSE_reference"])*100
@@ -67,6 +75,10 @@ def run():
     close(cross("later_butterflies_retro_hosts","BASE_to_BOTH"),-4.6985954047498986)
     close(cross("earlier_butterflies","BASE_to_AIS"),-8.5406192351514054)
     close(cross("early_general_flora","BASE_to_AIS"),-1.2943024214677576)
+    lat=rows("results/island51_latitude_controls_20261107/contrast_scope_summary.csv")
+    assert any("wind" in x.lower() for x in lat[0])
+    local=rows("results/island51_AIS_local750_node_null_20261107/observed_vs_local750_node_null.csv")
+    assert len(local)>=1
     idx=data("data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json")
     assert idx["cells"]==11475 and idx["totals"]["first_indexed_in_2011_2017"]==221
     assert idx["totals"]["first_indexed_in_2018_2022"]==96
@@ -89,12 +101,15 @@ def run():
         if sha(p)!=desc["sha256"] or p.stat().st_size!=desc["bytes"]:
             raise ValueError("Figure 5 hash mismatch "+name)
         if p.suffix==".svg":ET.parse(p)
+    close(receipt["values"]["geometry_only_beyond_distance"],5.0818868452225594)
+    assert "uniform" in receipt["sources"]
     close(receipt["values"]["host_given_marine"],float(jc["C_to_HC"]["relative_MSE_reduction_percent"]))
     close(receipt["values"]["marine_given_host"],float(jc["H_to_HC"]["relative_MSE_reduction_percent"]))
     assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 5" in captions
     report={"status":"V03_SINGLE_PAPER_SCIENTIFIC_SOURCE_VERIFICATION_PASS",
             "abstract_word_count":wc,"body_word_count_approx":body_words,
-            "independently_verified_model_improvements_pct":{"host_beyond_marine":1.731162479353141,
+            "independently_verified_model_improvements_pct":{"geometry_only_ocean_beyond_geo_and_history":5.0818868452225594,
+              "host_beyond_marine":1.731162479353141,
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
