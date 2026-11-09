@@ -52,6 +52,14 @@ def source_check():
               "## 3. Results","## 4. Discussion","## 5. Limitations",
               "## 6. Conclusions"):
         if doc.count(x)!=1:raise AssertionError("Single article section absent or duplicate: "+x)
+    ref_audit=(D/"REFERENCE_DATA_ATTRIBUTION_AUDIT_V02.md").read_text(encoding="utf8")
+    if not all(x in ref_audit for x in ("10.15468/dl.pp5nc9","GBIF","WPI","WCVP")):
+        raise AssertionError("Missing independent data-origin and citation audit")
+    reference_section=doc.split("## References (",1)[1].split("### Source archive",1)[0]
+    if len(re.findall(r"https://doi.org/10\\.",reference_section))<15:
+        raise AssertionError("The bibliographic DOI checks fell out of the canonical manuscript")
+    if "does NOT identify" not in ref_audit or "Independent GBIF provenance and citation gate" not in doc:
+        raise AssertionError("GBIF derived-citation blocker was lost from the manuscript")
     if "five figures" not in plan.lower() and "figure 5" not in plan.lower() and "5." not in plan:
         raise AssertionError("Figure plan not five-part")
     if not all(("Figure "+str(i)) in doc or ("**Figure "+str(i)) in doc for i in range(1,6)):
@@ -196,7 +204,7 @@ def source_check():
     close(m49["periods"]["2018_2022"]["within_original_geographic_region"]["tests"]["residual_uniform_ocean_access"]["p_two_sided_monte_carlo"],
           claims["A8"]["late_sea_after_removing_landmass9_15_p"],tol=.001)
 
-    body=doc.split("## 1. Introduction",1)[1].split("## Selected references",1)[0]
+    body=doc.split("## 1. Introduction",1)[1].split("## Proposed main display pieces",1)[0]
     body_words=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",body))
     return {"status":"SOURCE_NUMBERS_PASS","claims":len(claims),
             "abstract_words":abw,"body_approx_words":body_words,
@@ -230,11 +238,13 @@ def figures_check():
         if path.name not in receipt or hashlib.sha256(path.read_bytes()).hexdigest()!=receipt[path.name]["sha256"]:
             raise AssertionError("Scientific raster figure SHA differs from source-rendered output: "+base)
     return {"status":"FIVE_ORIGINAL_PNG_AND_SVG_FIGURES_REAL_AND_SOURCE_HASH_VERIFIED","count":5,
-            "pdf_available_figures":[1,5],"figure2_to4_PDF":"Not generated; SVG is the vector archival source"}
+            "individual_PDF_available_figures":[1,5],"figure2_to4_vector":"SVG sources converted into pages 2–4 of the five-page integrated review PDF"}
 
 if __name__=="__main__":
     result={"scientific":source_check(),"visual":figures_check(),
-            "not_verified":["bibliographic identity","license/granular data availability",
-                            "five-PDF submission figure package","coauthor approval",
-                            "causal butterfly host/ship arrivals","journal submission"]}
+            "not_verified":["independent GBIF derived data DOI / dataset publisher attribution",
+                            "WCVP source snapshot and licence, exact WPI file version",
+                            "journal-size artwork accessibility and publisher approval",
+                            "coauthor approval, actual butterfly host feeding / ship crossing",
+                            "journal submission"]}
     print(json.dumps(result,indent=2,ensure_ascii=False))
