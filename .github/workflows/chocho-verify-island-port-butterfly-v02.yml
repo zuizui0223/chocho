@@ -1,0 +1,32 @@
+name: "One island-port butterfly paper v0.2 - 27 claims and five actual figures"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/verify_island_port_butterfly_integrated_v02.py
+      - manuscript/integrated_butterfly_resource_access_20261109/**
+      - .github/workflows/chocho-verify-island-port-butterfly-v02.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scientific-manuscript-and-five-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile scientific validation
+        run: python -m py_compile scripts/verify_island_port_butterfly_integrated_v02.py
+      - name: Verify 27 source-typed results, all distinct butterfly/plant cohorts and 5 rendered main figures
+        run: |
+          python scripts/verify_island_port_butterfly_integrated_v02.py | tee island_port_butterfly_integrated_v02_validation.json
+      - name: Preserve inspectable source and figure verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: island-port-butterfly-v02-27claims-5figures-audit
+          path: island_port_butterfly_integrated_v02_validation.json
+          if-no-files-found: error
+          retention-days: 60
