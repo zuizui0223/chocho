@@ -1,0 +1,10 @@
+{
+ "status":"FIXED_BEFORE_JOINT_PROVIDER_EXCLUSION_FITS_AFTER_PRIMARY_AND_ISLAND_RESULTS",
+ "variant":"temporal_exclude_top_provider",
+ "population":"225 candidates retained; existing155-species provider-excluded panel;191004 heldout rows",
+ "models":"Refit B5 natural geography and J1 natural plus transport using unchanged original random-forest settings. Reuse only exact matching existing M5 and T1 provider-excluded predictions.",
+ "response":"Probability of one or more records in10 recording days after largest-provider removal; verify hypergeometric response against days and successes before fitting.",
+ "contrasts":["B5 versus M5","J1 versus M5","J1 versus B5","J1 versus T1"],
+ "evaluation":"Same2011-2014 predictors/2015-2018 training response and2015-2018 predictors/2019-2022 evaluation response; full supported155-species sample; secondary strict-island summaries explicitly labeled.",
+ "limits":"Provider removal changes effort and response, not all historical geography inputs or the original candidate domain. Historical-distance features, static host catalogue, coastline, DSM and port features retained. Not full provider-independent reconstruction, not spatial/species sensitivity. No tuning or outcome-selected species. Absolute errors across different observation panels are not causal effects."
+}

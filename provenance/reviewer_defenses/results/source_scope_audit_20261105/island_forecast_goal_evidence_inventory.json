@@ -1,0 +1,68 @@
+{
+  "status": "GOAL_INCOMPLETE",
+  "date": "2026-11-05",
+  "requirements": [
+    {
+      "requirement": "225候補の採否と完成済み比較の被覆",
+      "status": "VERIFIED_CURRENT",
+      "evidence": "outputs/transport_all225_coverage_audit.json",
+      "sha256": "4fb796eb41e3b93cf0ff39693a0601d8d5ff9363c383d5411c42a0471c3230f7",
+      "limits": "225候補、主解析155種。12比較の行数・種名を照合済み。"
+    },
+    {
+      "requirement": "座標・島・海・セル地形",
+      "status": "AVAILABLE_COMPARISONS_COMPLETE",
+      "evidence": "outputs/island_forecast_source_alignment_audit.json",
+      "sha256": "e72886b548fcb63d5f9c2f93a9ca2f736d87cceb54682c3914445148286111a2",
+      "limits": "既存比較あり。原座標・面積支持を保持。経路地形は別途未完了。"
+    },
+    {
+      "requirement": "自然地理と港の時間外・空間外・観測努力比較",
+      "status": "AVAILABLE_COMPARISONS_COMPLETE",
+      "evidence": "outputs/joint_observation_sensitivity_validation.json",
+      "sha256": "5d025a905021bfb4b277c3c9fbb53edb68cf28d3ae348f2e78ba0b36677eb657",
+      "limits": "全155種と島部分の結論を区別。全入力を提供者除外した再構築ではない。"
+    },
+    {
+      "requirement": "中間島の追加価値",
+      "status": "VERIFIED_CURRENT",
+      "evidence": "outputs/intermediate_spatial_validation.json",
+      "sha256": "8fd37086fa51e9ed68a03a195ccee17d068169e15f9caf036350c8bde3d3e635",
+      "limits": "時間外・空間外完了。中間島の実利用や中継は未識別。"
+    },
+    {
+      "requirement": "経路地形の追加価値",
+      "status": "IN_PROGRESS",
+      "evidence": "outputs/route_terrain_design_lock.json",
+      "sha256": "16a8e26345714dd6115f54b2b9187d0506638bc4e0ead12a030fd0ba5085a0ed",
+      "limits": "全1902タイル取得中。集計・モデル・結果検証は未完了。"
+    },
+    {
+      "requirement": "実航路の時期と対象の整合",
+      "status": "AUDITED_NOT_IDENTIFIABLE",
+      "evidence": "outputs/voyage_forecast_overlap_audit.json",
+      "sha256": "e6c77bf8067bce211f7818a0527cfbf0ab76ebeb068ab9f5361a7779054d568e",
+      "limits": "AIS2020は予測起点より後。VOCは現代輸送強度でない。未照合を無輸送にしない。"
+    },
+    {
+      "requirement": "独立年代と広域記録時間差",
+      "status": "DESCRIPTIVE_ONLY",
+      "evidence": "outputs/first_record_report_replay.json",
+      "sha256": "2814d9bca37a1c8819e51f165b43af721eedb39ab9523f5bb877ff729edf39e3",
+      "limits": "独立資料265組を検算。導入・定着年ではない。広域の記録順序と区別。"
+    },
+    {
+      "requirement": "全出典の利用条件",
+      "status": "PARTIAL",
+      "evidence": "outputs/island_forecast_source_alignment.csv",
+      "sha256": "0f02ec70a8d276bb5a54d0858b7018b30c64a5f2c7faf8e22ca704316917ff9d",
+      "limits": "GLO90・GBIF等を確認。NASAは公開カタログにライセンス指定なし。WPI、UNCTAD、元食草等は確認残。"
+    }
+  ],
+  "next_required": [
+    "Complete route DSM acquisition, resolve retrieval errors, validate full support",
+    "Run locked temporal/spatial route-terrain comparison and paired uncertainty",
+    "Finish source-specific terms audit and integrated final figures/report"
+  ],
+  "limits": "This inventory records current artifacts and known limits; hashes alone do not establish scientific correctness or goal completion."
+}

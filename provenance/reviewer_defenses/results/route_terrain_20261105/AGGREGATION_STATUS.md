@@ -1,0 +1,1 @@
+Locked aggregation implementation added. Python syntax checked; actual incomplete acquisition correctly refuses to create route features. Full quantile/support aggregation remains unexecuted until full acquisition succeeds. Requires original local paths and numeric Parquet caches. This is preparation, not a fitted terrain result.

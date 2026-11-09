@@ -1,0 +1,27 @@
+{
+  "status": "PASS_THREE_VARIANT_PAIRED_REPLAY",
+  "sources": [
+    {
+      "variant": "temporal",
+      "prediction_sha256": "7f9f6d13070624cb19df6ad1d88ac14e1fd33037654305ac8b8dc688af909473",
+      "receipt_sha256": "c9847ef8f6552364389e1e134cab9ae9d6f5e884507a8e8cc63014444f83a7f6"
+    },
+    {
+      "variant": "temporal_effort20",
+      "prediction_sha256": "b885b57196af1334efedf8c19fe004b7107b7a4ca4ee44c33353aa27bae25123",
+      "receipt_sha256": "4550ac8c10ca7d8423a829698352c6ce1a05c585a789afd05c738560ee402271"
+    },
+    {
+      "variant": "temporal_exclude_top_provider",
+      "prediction_sha256": "c2aeef50f4a960338d5ee670e2f063771d362d82e0812ad409f64a90e8f41298",
+      "receipt_sha256": "21d22990cef1779db89ec7957710bf3cebd7382e3a2ceffe0aa2e6e0fa4a0c71"
+    }
+  ],
+  "checks": [
+    "155 species each variant",
+    "M5/T1 exact matching keys targets and predictions",
+    "sensitivity lock and source panel hashes",
+    "independent MSE/MAE replay"
+  ],
+  "limits": "Comparison within each variant only; recording probability targets differ across variants. No model-refit uncertainty or complete provider-removal geography."
+}
