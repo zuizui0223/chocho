@@ -49,6 +49,9 @@ def build(output:Path):
         raise RuntimeError("pandoc is needed to build the formatted review manuscript")
     original=SOURCE.read_text(encoding="utf8")
     if not original.startswith("# Islands and ports"):raise ValueError("Wrong canonical manuscript")
+    # The DOCX title comes from Pandoc metadata; avoid duplicating the same
+    # heading immediately below it in the manuscript body.
+    original=original.partition("\n")[2].lstrip("\n")
     if original.count("## Structured abstract")!=1 or original.count("## 3. Results")!=1:
         raise ValueError("Not one canonical manuscript")
     caps=caption_sections()
