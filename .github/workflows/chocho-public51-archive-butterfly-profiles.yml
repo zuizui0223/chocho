@@ -1,0 +1,71 @@
+name: Archive butterfly-species-specific original51 GBIF first-index profiles
+
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-archive-butterfly-profiles.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  archive-butterfly-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve numerical source-verified individual butterfly output
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42558552064
+          github-token: ${{ github.token }}
+          name: butterfly-original51-indexed-event-species-profiles-20261109
+          path: _scratch_original_butterfly_profiles
+      - name: Check exact parent 51 island source, event counts and explicit scientific caveats
+        run: |
+          python - <<'PY'
+          import csv, json, hashlib
+          from pathlib import Path
+          root=Path("_scratch_original_butterfly_profiles")
+          doc=json.loads((root/"butterfly_candidate_source_event_audit.json").read_text())
+          original=json.loads(Path("data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json").read_text())
+          assert doc["original_51_source_sha256"]==original["merged_table_sha256"]
+          with (root/"butterfly_first_index_candidate_source_events_270.csv").open() as f:
+            records=list(csv.DictReader(f))
+          assert len(records)==270
+          assert sum(x["period"]=="2011_2017" for x in records)==187
+          assert sum(x["period"]=="2018_2022" for x in records)==83
+          assert len({x["species"] for x in records if x["period"]=="2018_2022"})==50
+          assert len({x["species"] for x in records if x["period"]=="2011_2017"})==76
+          assert all(x["candidate_is_actual_biological_origin"]=="FALSE" for x in records)
+          assert all(x["GBIF_first_index_not_colonization"]=="TRUE" for x in records)
+          assert not any("latitude" in x or "longitude" in x for x in records)
+          print("PASS butterfly-specific public index provenance and 270 verified cells")
+          PY
+      - name: Copy only public index observations and reproducible descriptive scores
+        run: |
+          mkdir -p results/public51_butterfly_species_index_profiles_20261109
+          cp _scratch_original_butterfly_profiles/butterfly_*.csv results/public51_butterfly_species_index_profiles_20261109/
+          cp _scratch_original_butterfly_profiles/butterfly_candidate_source_event_audit.json results/public51_butterfly_species_index_profiles_20261109/
+      - name: Commit durable public butterfly records without changing GEB/JBI papers
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/public51_butterfly_species_index_profiles_20261109/
+          if git diff --cached --quiet; then echo "Already archived"; exit 0; fi
+          git commit -m "Archive 270 observed butterfly indexed species-island cases and 126 species-period profiles [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
