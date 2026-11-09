@@ -66,10 +66,17 @@ def get_scores(events,lookup,traits):
         raise ValueError("Disturbance groups missing among positive index records")
     return np.array([
       np.mean(v[:,0]),np.mean(v[:,1]),
-      np.mean(wing*v[:,0]),np.mean(wing*v[:,1]),
+      # Under fixed species event margins, the event-weighted trait means
+      # are constant. Centering them here removes the shared access main effect
+      # from each trait-interaction statistic. Without this correction, an
+      # overwhelmingly disturbance-associated positive cohort can fake a
+      # significant disturbance × sea effect whenever sea has a main effect.
+      np.mean((wing-wing.mean())*v[:,0]),
+      np.mean((wing-wing.mean())*v[:,1]),
       np.mean(v[grp==0,0])-np.mean(v[grp==1,0]),
       np.mean(v[grp==0,1])-np.mean(v[grp==1,1]),
-      np.mean(dis*v[:,0]),np.mean(dis*v[:,1]),
+      np.mean((dis-dis.mean())*v[:,0]),
+      np.mean((dis-dis.mean())*v[:,1]),
     ],dtype=float)
 
 def valid_switch_support(events,eligible,regional=None):
@@ -193,12 +200,13 @@ def run(source_dir,outdir):
     src,trait,data,pins,bridge,bmeta=base.data_bridge()
     groups=base.geographic_blocks(data,{r["landmass_id"] for r in panel})
     result={
-      "schema":"chocho_public51_butterfly_trait_two_margin_geo_conditional_20261109_v1",
+      "schema":"chocho_public51_butterfly_trait_two_margin_geo_conditional_20261109_v2",
       "status":"EXPLORATORY_FIRST_GBIF_INDEX_NOT_BIOLOGICAL_COLONIZATION",
       "source_sha256":receipt["merged_table_sha256"],
       "traits_git_sha1":trait.TRAITS[1],
       "data_selection":"199 LepTraits matched taxon names among 225 original butterflies; prior indexed same-species sources on original 51 only",
       "design":"2x2 species × island first-index switches; spatial sensitivity also constrains species × KMeans-7 geographic cluster counts",
+      "interaction_calculation":"center each trait by its event-weighted mean (fixed by species event totals) before multiplying by access, removing the main access effect",
       "no_truth_assumptions":["no historical larval host at endpoint","no actual butterfly migration","no documented boat transport","non-index not ecological absence"],
       "periods":{},
     }
