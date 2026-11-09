@@ -1,0 +1,93 @@
+name: "Archive source-audited butterfly candidate migrant results"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-archive-author-migrant-results.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive-migrant-science:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve source-frozen candidate-migrant wing/distance/ocean OOF results
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42559615327
+          github-token: ${{ github.token }}
+          name: butterfly51-author-selected-migrant-proxy-OOF-20261109
+          path: _scratch_author_migrant_oof
+      - name: Retrieve within-111-positive-candidate migration status null
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42559943705
+          github-token: ${{ github.token }}
+          name: butterfly51-author-selected-migrant-two-margin-null-20261109
+          path: _scratch_author_migrant_null
+      - name: Retrieve original two port-heavy landmass exclusion sensitivity
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42560365745
+          github-token: ${{ github.token }}
+          name: butterfly-author-migrant-49-source-no-9-15-two-margin-20261109
+          path: _scratch_author_migrant_49
+      - name: Independently check original 225-species migration source, cohort and outcomes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import csv,json,hashlib
+          raw=Path("data/exploratory/public51_author_migrant_20261109/migration_gbif_author2025_crosswalk.csv").read_bytes()
+          assert hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()=="439dd1034ca16f96ff94222695d98dc39747c2e4"
+          with Path("data/exploratory/public51_author_migrant_20261109/migration_gbif_author2025_crosswalk.csv").open() as f:
+            names=list(csv.DictReader(f))
+          assert len(names)==225
+          assert sum(x["author_2025_GBIF_requested_taxon_key_proxy"]=="REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST" for x in names)==111
+          known_source="d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887"
+          oof=json.loads(Path("_scratch_author_migrant_oof/migrant_author_selected_access_audit.json").read_text())
+          full=json.loads(Path("_scratch_author_migrant_null/author_selected_migrant_two_margin_index_null.json").read_text())
+          cut=json.loads(Path("_scratch_author_migrant_49/author_selected_migrant_two_margin_index_null.json").read_text())
+          assert oof["source_sha256"]==full["source_sha256"]==cut["source_sha256"]==known_source
+          assert oof["source_author_migrant_proxy_git_blob"]==full["roster_git_sha1"]==cut["roster_git_sha1"]
+          assert oof["cohorts"]["2011_2017"]["REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST"]["first_index_cases"]==145
+          assert oof["cohorts"]["2018_2022"]["REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST"]["first_index_cases"]==68
+          assert full["periods"]["2011_2017"]["indexed_first_cases"]==145
+          assert full["periods"]["2018_2022"]["indexed_first_cases"]==68
+          assert cut["sensitivity_excluded_original_landmass_ids"]==["9","15"]
+          assert cut["source_island_groups_remaining"]==49
+          assert cut["periods"]["2011_2017"]["indexed_first_cases"]==139
+          assert cut["periods"]["2018_2022"]["indexed_first_cases"]==64
+          for doc in (full,cut):
+            for p in ("2011_2017","2018_2022"):
+              assert doc["periods"][p]["within_original_geographic_region"]["status"]=="EXPLORATORY_AUTHOR_SELECTED_MIGRANT_CONDITIONAL_GBIF_INDEX"
+          assert oof["reconstructed_225_species_roster"]["unlisted_migration_status_unknown"]==114
+          print("PASS positive-only migrant author proxy and exact original full/49 observational records")
+          PY
+      - name: Persist small scientific results, not original restricted Parquet or biological coordinates
+        run: |
+          mkdir -p results/public51_author_selected_migrant_access_20261109
+          cp _scratch_author_migrant_oof/migrant_author_selected_access_audit.json results/public51_author_selected_migrant_access_20261109/
+          cp _scratch_author_migrant_null/author_selected_migrant_two_margin_index_null.json results/public51_author_selected_migrant_access_20261109/
+          cp _scratch_author_migrant_49/author_selected_migrant_two_margin_index_null.json results/public51_author_selected_migrant_access_20261109/author_selected_migrant_no9_15_source_null.json
+      - name: Commit source-locked small output tables without changing GEB/JBI manuscripts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/public51_author_selected_migrant_access_20261109/
+          if git diff --cached --quiet; then echo "Already archived"; exit 0; fi
+          git commit -m "Archive migrated butterfly author candidate OOF, fixed-null and port-heavy exclusion receipts [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
