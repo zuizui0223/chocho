@@ -29,6 +29,23 @@ def run():
     abstract=t.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     wc=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",abstract))
     if wc>300:raise ValueError(f"GEB abstract exceeds 300-word bound: {wc}")
+    # Kew archived source is WCVP v13 (2024-05-21), NOT the v10 DOI in the
+    # frozen rWCVPdata v13 package's historical CITATION file.
+    for term in ("10.34885/0yex-xv26", "WCVP v13", "21 May 2024",
+                 "65bed76bae9d644ccb6ad200c05f9f5071d89e05"):
+        if term not in t:raise AssertionError("Correct WCVP v13 source citation missing: "+term)
+    if "Govaerts, R. (ed.) (2024)" not in t:
+        raise AssertionError("Kew v13 archived dataset citation absent from references")
+    for source in ("**Running title:**", "**Keywords:**"):
+        if source not in t:raise AssertionError("Missing GEB research article metadata: "+source)
+    running=t.split("**Running title:**",1)[1].split("\n",1)[0].strip()
+    if len(running)>=40:raise AssertionError(f"GEB running title is >=40 characters: {len(running)}")
+    keyword_line=t.split("**Keywords:**",1)[1].split("\n",1)[0]
+    keys=[v.strip() for v in keyword_line.split(",") if v.strip()]
+    if len(keys)<6 or len(keys)>10 or keys!=sorted(keys,key=str.lower):
+        raise AssertionError("GEB keywords must be 6–10 and alphabetized: "+str(keys))
+    if not (DIR/"REFERENCE_DATA_ATTRIBUTION_AUDIT_V03.md").exists():
+        raise AssertionError("No versioned GBIF/WCVP/GEB pre-submission audit")
     body=t.split("## 1. Introduction",1)[1].split("## Proposed main display pieces",1)[0]
     body_words=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",body))
     for x in ("239 butterflies","126 insular","237 mainland","1,596",
