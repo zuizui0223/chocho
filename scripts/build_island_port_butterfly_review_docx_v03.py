@@ -74,7 +74,7 @@ def build(output:Path):
            "",
            "> **REVIEW COPY (2026-11-09):** One combined study. No coauthor approval, publisher style or transport/colonisation mechanism is claimed.",
            "",
-           original.strip(), "",
+           original.replace("../../figures/", "figures/").strip(), "",
            "# Five verified scientific figures - review appendix", "",
            "Figures 1–4 retain their previously validated original source figures; Figure 5 was newly rendered and checked against source-locked marine/host results. Captions distinguish their butterfly, botanical and geographic populations. These are *not* biological observations of shipping, host feeding or butterfly arrival.", ""]
     for i,stem in FIG_STEMS.items():
@@ -112,7 +112,7 @@ def build(output:Path):
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
         media=[n for n in z.namelist() if n.startswith("word/media/")]
-        if len(media)<5:raise ValueError(f"Only {len(media)} embedded butterfly figures")
+        if len(media)<6:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
         for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 5",
                      "butterfly"):
@@ -123,6 +123,7 @@ def build(output:Path):
       "source_manuscript":SOURCE.relative_to(ROOT).as_posix(),
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
       "figure_count":5,
+      "in_text_case_maps":1,
       "embedded_media_files":len(media),
       "not_yet_checked":["Word/PDF full-page visual rendering by LibreOffice",
          "journal formatting compliance","bibliography and data licenses","coauthor approval",
