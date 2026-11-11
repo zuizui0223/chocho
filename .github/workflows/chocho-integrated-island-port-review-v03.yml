@@ -10,6 +10,9 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/TABLE_S1_six_island_cases.md
+      - scripts/analyze_island_resource_gap_filling.py
+      - results/island_resource_gap_filling/**
+      - figures/integrated_island_port_butterfly_v03/FigS11_native_host_gaps.png
       - scripts/analyze_route_free_host_influence.py
       - scripts/render_route_free_host_influence.py
       - results/route_free_host_influence/**
@@ -94,7 +97,9 @@ jobs:
           assert any('6.488%' in x for x in paras)
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
-            assert len(imgs)>=16
+            assert len(imgs)>=17
+            gaps = Path('figures/integrated_island_port_butterfly_v03/FigS11_native_host_gaps.png').read_bytes()
+            assert any(z.read(name) == gaps for name in imgs)
             influence = Path('figures/integrated_island_port_butterfly_v03/FigS10_overlap_influence.png').read_bytes()
             assert any(z.read(name) == influence for name in imgs)
             expanded = Path('figures/integrated_island_port_butterfly_v03/FigS9_route_free_ports.png').read_bytes()

@@ -62,6 +62,15 @@ def run():
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
     assert (im["island"]["native_butterfly_region_units"],im["island"]["contemporary_butterfly_region_units"])==(4829,10570)
     assert (im["mainland"]["native_butterfly_region_units"],im["mainland"]["contemporary_butterfly_region_units"])==(21215,29901)
+    for record in rows("results/island_resource_gap_filling/pooled.csv"):
+        group=im[record["geography"]]
+        native=group["native_butterfly_region_units"]
+        added=group["contemporary_butterfly_region_units"]-native
+        total=239*group["all_regions"]
+        close(record["empty"],total-native)
+        close(record["coverage"],native/total)
+        close(record["fill"],added/(total-native))
+        close(record["gain"],added/native)
     joint=rows("results/island51_host_circuit_joint_20261106/comparison_summary.csv")
     jc={z["comparison"]:z for z in joint if z["target"]=="new_butterfly_jaccard"}
     assert set(["G_to_H","G_to_C","C_to_HC","H_to_HC","HC_to_I"])<=set(jc)
