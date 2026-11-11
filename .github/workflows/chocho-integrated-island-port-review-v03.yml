@@ -7,6 +7,8 @@ on:
       - scripts/build_island_port_butterfly_review_docx_v03.py
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
+      - manuscript/integrated_butterfly_resource_access_20261109/TABLE_S1_six_island_cases.md
+      - figures/integrated_island_port_butterfly_v03/FigS1_six_island_cases.png
       - figures/integrated_island_port_butterfly_v03/Box1_bornholm.png
       - figures/integrated_island_port_butterfly_v03/FIGURE5_V03_SOURCE_RECEIPT.json
       - .github/workflows/chocho-integrated-island-port-review-v03.yml
@@ -68,7 +70,8 @@ jobs:
           assert any('6.488%' in x for x in paras)
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
-            assert len(imgs)>=6
+            assert len(imgs)>=7
+            assert any("Table S1." in x for x in paras)
             assert any("Box 1" in x for x in paras)
           print('V03_DOCX_SOURCE_FIVE_IMAGES_ONE_FIGURE5_AND_MARINE_POSITIVE_RESULT_PASS',len(paras),len(imgs))
           PY
