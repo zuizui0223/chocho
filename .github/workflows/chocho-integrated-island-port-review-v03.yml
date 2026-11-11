@@ -10,6 +10,10 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/TABLE_S1_six_island_cases.md
+      - scripts/analyze_route_free_port_hosts.py
+      - scripts/acquire_route_free_port_flora.py
+      - results/route_free_port_hosts/**
+      - figures/integrated_island_port_butterfly_v03/FigS9_route_free_ports.png
       - scripts/analyze_native_plus_introduced_27.py
       - results/native_plus_introduced_27/**
       - figures/integrated_island_port_butterfly_v03/FigS8_native_plus_introduced.png
@@ -86,7 +90,9 @@ jobs:
           assert any('6.488%' in x for x in paras)
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
-            assert len(imgs)>=14
+            assert len(imgs)>=15
+            expanded = Path('figures/integrated_island_port_butterfly_v03/FigS9_route_free_ports.png').read_bytes()
+            assert any(z.read(name) == expanded for name in imgs)
             origin_comparison = Path('figures/integrated_island_port_butterfly_v03/FigS8_native_plus_introduced.png').read_bytes()
             assert any(z.read(name) == origin_comparison for name in imgs)
             alternatives = Path('figures/integrated_island_port_butterfly_v03/FigS7_local_native_hosts.png').read_bytes()

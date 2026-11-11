@@ -20,11 +20,13 @@ OUT=ROOT/"results/native_plus_introduced_27"
 FIG=ROOT/"figures/integrated_island_port_butterfly_v03/FigS8_native_plus_introduced"
 
 
-def classify(workspace):
+def classify(workspace, previous=None, coverage=None, taxa=None, output=OUT):
     w=workspace/"work/barriers"
     s=workspace/"work/remote_sensing/host_source/extracted/inputs"
-    previous=archived("species_islands.csv")
-    coverage=archived("plant_coverage.csv")
+    if previous is None:
+        previous=archived("species_islands.csv")
+    if coverage is None:
+        coverage=archived("plant_coverage.csv")
     coverage=coverage[coverage.island.isin(previous.island.unique())]
     edges=pd.read_parquet(w/"all225_named_host_edges_local.parquet").drop_duplicates()
     lookup=pd.read_parquet(w/"host_flora_name_join_audit.parquet").query("join_status=='SPECIES_FACET_COMPATIBLE'")
@@ -32,7 +34,7 @@ def classify(workspace):
     reg=json.loads((w/"ports_2019.geojson").read_text())["features"]
     countries={p["properties"]["OBJECTID"]:p["properties"]["COUNTRY"] for p in reg}
     registry=coverage.assign(country=coverage.port_id.map(countries)).groupby("island").country.agg(lambda x:"|".join(sorted(set(x))))
-    registry.to_csv(OUT/"island_registry.csv")
+    registry.to_csv(output/"island_registry.csv")
     xy={p["properties"]["OBJECTID"]:p["geometry"]["coordinates"][:2] for p in reg}
     units=gpd.read_file(s/"level3.geojson").to_crs(4326)
     geod=Geod(ellps="WGS84")
@@ -48,13 +50,16 @@ def classify(workspace):
     present=catalogue("original/extant_nondoubtful_wgsrpd3.csv","bce/additional_contemporary_wgsrpd3.csv")
     rows=[]
     for r in coverage.itertuples():
-        if r.method=="prior_complete":
+        if taxa is not None:
+            keys=taxa.get(r.port_id,set())
+        elif r.method=="prior_complete":
             d=json.loads((w/f"port_flora_2001_2010/{r.port_id}.json").read_text())
             keys={int(x["name"]) for x in d["species_counts"]}
         else:
             d=json.loads((w/f"expanded_port_flora_2001_2010/{r.port_id}.json").read_text())
             keys=set(d["keys"])
-        assert int(r.plant_records)==d["count"]
+        if taxa is None:
+            assert int(r.plant_records)==d["count"]
         polygon=Polygon([geod.fwd(*xy[r.port_id],-angle,5000)[:2] for angle in range(0,360,15)])
         codes=set(units.iloc[units.sindex.query(polygon,predicate="intersects")].LEVEL3_COD.dropna())
         for key in sorted(keys & names.keys()):
@@ -66,7 +71,7 @@ def classify(workspace):
                 status="introduced"
             rows.append((r.island,r.port_id,host,status))
     plants=pd.DataFrame(rows,columns=["island","port_id","host_name","status"])
-    plants.to_csv(OUT/"port_host_status.csv",index=False)
+    plants.to_csv(output/"port_host_status.csv",index=False)
     species=previous[["key","species"]].drop_duplicates()
     cells=species.merge(previous[["island"]].drop_duplicates(),how="cross")
     links=plants.merge(edges,on="host_name").merge(species,on="species")
@@ -74,8 +79,8 @@ def classify(workspace):
         counts=links[links.status.eq(status)].groupby(["island","key"]).host_name.nunique().rename(status)
         cells=cells.join(counts,on=["island","key"])
         cells[status]=cells[status].fillna(0).astype(int)
-    cells.to_csv(OUT/"species_island_hosts.csv",index=False)
-    assert len(cells)==27*132
+    cells.to_csv(output/"species_island_hosts.csv",index=False)
+    assert len(cells)==species.key.nunique()*previous.island.nunique()
     return cells
 
 
