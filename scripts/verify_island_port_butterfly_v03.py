@@ -108,7 +108,24 @@ def run():
     f17=data("provenance/reviewer_defenses/results/paired_island_port_nonport_coast_20261109/audit.json")
     assert f17["cohort"]["matched_islands"]==17 and f17["cohort"]["matched_port_nonport_pairs"]==24
     close(f17["associations"]["relative_host_enrichment_vs_new_2011_2017"]["rho"],-.08513459437657447)
-    # Figure 1-4 retain the already separately verified source locked v0.2 figures.
+    # Match the active summary figure labels to the source tables.
+    fig1 = F3 / "Fig1_resource_geography_scales_v03.svg"
+    labels = " ".join(ET.parse(fig1).getroot().itertext())
+    for key in ("island", "mainland"):
+        n = im[key]["native_butterfly_region_units"]
+        c = im[key]["contemporary_butterfly_region_units"]
+        assert f"{n:,} → {c:,}" in labels and f"+{100*(c/n-1):.1f}%" in labels
+    inventory = data("provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_validation.json")
+    assert f"{inventory['ports_with_alien_candidates']:,} / {inventory['complete_ports']:,}" in labels
+    annual = rows("results/annual_port_host_27/annual_counts.csv")
+    for host in ("0", "1"):
+        group = [r for r in annual if r["host"] == host]
+        n = sum(int(r["at_risk"]) for r in group)
+        k = sum(int(r["first_indices"]) for r in group)
+        assert f"{k} / {n:,}" in labels and f"{100*k/n:.2f}%" in labels
+    assert fig1.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
+    assert fig1.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
+    # Retain the legacy v0.2 source-file checks.
     for i in range(1,5):
         fs=list(F2.glob(f"Fig{i}_*.png"))
         if len(fs)!=1 or not fs[0].read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):

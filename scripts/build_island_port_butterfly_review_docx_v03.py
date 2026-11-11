@@ -24,7 +24,7 @@ CAPTIONS=M/"FIGURE_CAPTIONS_V03.md"
 F=ROOT/"figures/integrated_island_port_butterfly_v02"
 F5=ROOT/"figures/integrated_island_port_butterfly_v03"
 FIG_STEMS={
-  1:"Fig1_island_port_butterfly_framework_v02",
+  1:"Fig1_resource_geography_scales_v03",
   2:"Fig2_islands_resource_butterflies_v02",
   3:"Fig3_ports_aliens_known_butterfly_hosts_v02",
   4:"Fig4_butterflies_and_port_host_geography_v02",
@@ -62,7 +62,7 @@ def build(output:Path):
         raise ValueError("Not one canonical manuscript")
     caps=caption_sections()
     for i,stem in FIG_STEMS.items():
-        p=(F5 if i==5 else F)/(stem+".png")
+        p=(F5 if i in (1,5) else F)/(stem+".png")
         if not p.exists():
             raise ValueError(f"Missing source-reviewed Figure {i} image")
 
@@ -76,10 +76,10 @@ def build(output:Path):
            "",
            original.replace("../../figures/", "figures/").strip(), "",
            "# Five verified scientific figures - review appendix", "",
-           "Figures 1–4 retain their previously validated original source figures; Figure 5 was newly rendered and checked against source-locked marine/host results. Captions distinguish their butterfly, botanical and geographic populations. These are *not* biological observations of shipping, host feeding or butterfly arrival.", ""]
+           "Figure 1 summarizes three scales of host availability and recording. Figures 2–4 retain their source plots. Figure 5 compares marine and host predictors. Captions distinguish their butterfly, botanical and geographic populations. These are *not* biological observations of shipping, host feeding or butterfly arrival.", ""]
     for i,stem in FIG_STEMS.items():
         name=f"Figure {i} | {caps[i]['title']}"
-        p=(F5 if i==5 else F)/(stem+".png")
+        p=(F5 if i in (1,5) else F)/(stem+".png")
         # The embedded figure is review-only; the five-page vector PDF separately
         # preserves the original vector plot and exact source receipt hashes.
         draft.extend([f"## {name}","",f"![{name}]({p.relative_to(ROOT).as_posix()}){{width=15cm}}",

@@ -3,6 +3,8 @@ on:
   push:
     branches: [analysis/butterfly-trait-public51-20261109]
     paths:
+      - scripts/render_island_port_butterfly_fig1_v03.py
+      - figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.*
       - scripts/verify_island_port_butterfly_v03.py
       - scripts/build_island_port_butterfly_review_docx_v03.py
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
@@ -75,6 +77,8 @@ jobs:
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
             assert len(imgs)>=11
+            summary = Path('figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.png').read_bytes()
+            assert any(z.read(name) == summary for name in imgs)
             assert any("Table S1." in x for x in paras)
             assert any("Box 1" in x for x in paras)
           print('V03_DOCX_SOURCE_FIVE_IMAGES_ONE_FIGURE5_AND_MARINE_POSITIVE_RESULT_PASS',len(paras),len(imgs))
