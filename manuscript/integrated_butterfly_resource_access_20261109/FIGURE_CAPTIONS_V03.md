@@ -1,6 +1,6 @@
 # Main figure legends | Integrated island–port–marine butterfly paper v0.3
 
-These five figures serve ONE Research Article, *Human-redistributed host plants amplify butterfly resources on islands: ports and marine geography*. Figures 1 and 5 use v0.3 plots. Figures 2–4 retain the v0.2 source plots. Each panel retains its own population, endpoint, holdout and period; no image depicts actual shipping, butterfly flight, larval feeding or biological colonisation.
+These five figures serve ONE Research Article, *Human-redistributed host plants disproportionately expand potential larval resources in island regions*. Figures 1 and 5 use v0.3 plots. Figures 2–4 retain the v0.2 source plots. Each panel retains its own population, endpoint, holdout and period; no image depicts actual shipping, butterfly flight, larval feeding or biological colonisation.
 
 ## Figure 1 | Introduced host plants across botanical regions, ports and island recording histories
 

@@ -67,7 +67,7 @@ def build(output:Path):
             raise ValueError(f"Missing source-reviewed Figure {i} image")
 
     draft=["---",
-           "title: 'Human-redistributed host plants amplify butterfly resources on islands: ports and marine geography'",
+           "title: 'Human-redistributed host plants disproportionately expand potential larval resources in island regions'",
            "subtitle: 'Single integrated Research Article v0.3 - coauthor review draft, not for submission'",
            "lang: en",
            "---",
