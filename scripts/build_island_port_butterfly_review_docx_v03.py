@@ -114,7 +114,7 @@ def build(output:Path):
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
         media=[n for n in z.namelist() if n.startswith("word/media/")]
-        if len(media)<7:raise ValueError(f"Only {len(media)} embedded butterfly figures")
+        if len(media)<8:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
         for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 5",
                      "butterfly"):
@@ -126,7 +126,7 @@ def build(output:Path):
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
       "figure_count":5,
       "in_text_case_maps":1,
-      "supplementary_figures":1,
+      "supplementary_figures":2,
       "supplementary_tables":1,
       "embedded_media_files":len(media),
       "not_yet_checked":["Word/PDF full-page visual rendering by LibreOffice",
