@@ -46,7 +46,7 @@ def run():
         raise AssertionError("GEB keywords must be 6–10 and alphabetized: "+str(keys))
     if not (DIR/"REFERENCE_DATA_ATTRIBUTION_AUDIT_V03.md").exists():
         raise AssertionError("No versioned GBIF/WCVP/GEB pre-submission audit")
-    body=t.split("## 1. Introduction",1)[1].split("## Proposed main display pieces",1)[0]
+    body=t.split("## 1. Introduction",1)[1].split("## Data and code availability",1)[0]
     body_words=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",body))
     for x in ("239 butterflies","126 insular","237 mainland","1,596",
               "98","155","225 butterflies","1,275","1.731%",
@@ -56,7 +56,7 @@ def run():
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
         raise AssertionError("Predictive loss direction or historical scope boundary not clearly reported")
     assert t.count("## 3. Results")==1 and t.count("## 4. Discussion")==1
-    assert captions.count("## Figure ")==5
+    assert captions.count("## Figure ")==2
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
@@ -120,20 +120,20 @@ def run():
     # Match the active summary figure labels to the source tables.
     fig1 = F3 / "Fig1_resource_geography_scales_v03.svg"
     labels = " ".join(ET.parse(fig1).getroot().itertext())
-    for key in ("island", "mainland"):
-        n = im[key]["native_butterfly_region_units"]
-        c = im[key]["contemporary_butterfly_region_units"]
-        assert f"{n:,} → {c:,}" in labels and f"+{100*(c/n-1):.1f}%" in labels
-    inventory = data("provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_validation.json")
-    assert f"{inventory['ports_with_alien_candidates']:,} / {inventory['complete_ports']:,}" in labels
-    annual = rows("results/annual_port_host_27/annual_counts.csv")
-    for host in ("0", "1"):
-        group = [r for r in annual if r["host"] == host]
-        n = sum(int(r["at_risk"]) for r in group)
-        k = sum(int(r["first_indices"]) for r in group)
-        assert f"{k} / {n:,}" in labels and f"{100*k/n:.2f}%" in labels
-    assert fig1.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
-    assert fig1.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
+    for row in rows("results/island_resource_gap_filling/pooled.csv"):
+        for field in ("coverage", "fill", "gain"):
+            assert f"{100*float(row[field]):.1f}%" in labels
+    fig2 = F3 / "Fig2_global_contributors_at_ports.svg"
+    port_labels = {text.strip() for text in ET.parse(fig2).getroot().itertext()}
+    port_hosts = data("provenance/reviewer_defenses/results/geb_port_island_realization_20261031/GEB_top10_pre2011_port_plant_overlap.json")
+    for plant in port_hosts["source_contributor_plants"]:
+        assert plant["plant_name"] in port_labels
+        assert str(plant["n_port_buffers_with_pre2011_record"]) in port_labels
+        assert f"{100*plant['GEB_fraction_of_added_species_region_opportunity_attributed_to_this_plant']:.2f}" in port_labels
+    for figure in (fig1, fig2):
+        assert figure.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
+        assert figure.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
+        assert figure.with_suffix(".png").name in body
     # Retain the legacy v0.2 source-file checks.
     for i in range(1,5):
         fs=list(F2.glob(f"Fig{i}_*.png"))
@@ -154,7 +154,7 @@ def run():
     assert "uniform" in receipt["sources"]
     close(receipt["values"]["host_given_marine"],float(jc["C_to_HC"]["relative_MSE_reduction_percent"]))
     close(receipt["values"]["marine_given_host"],float(jc["H_to_HC"]["relative_MSE_reduction_percent"]))
-    assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 5" in captions
+    assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 2" in captions
     report={"status":"V03_SINGLE_PAPER_SCIENTIFIC_SOURCE_VERIFICATION_PASS",
             "abstract_word_count":wc,"body_word_count_approx":body_words,
             "independently_verified_model_improvements_pct":{"geometry_only_ocean_beyond_geo_and_history":5.0818868452225594,
@@ -162,7 +162,7 @@ def run():
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
-            "figures_verified":5,"new_Figure5_input_and_output_hashes_verified":True,
+            "main_figures_verified":2,"new_Figure5_input_and_output_hashes_verified":True,
             "warnings":["The 51-island host+marine positive increments are retrospective and not causal",
                "Historic host list may contain 2001–2024 records after target butterflies",
                "The strict 990-pair geographic holdout is a different population/estimand",
