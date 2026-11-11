@@ -14,6 +14,7 @@ from scipy.optimize import linear_sum_assignment
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("barriers", type=Path, help="Directory containing original species–island annual counts")
+parser.add_argument("--regional", action="store_true", help="Run the wider regional comparison in a separate output directory")
 args = parser.parse_args()
 out = root/"results/annual_maritime_links_27"
 out.mkdir(exist_ok=True, parents=True)
@@ -32,6 +33,9 @@ edges = pd.concat([edges, f[edges.columns]]).drop_duplicates()
 for col, direction in [("a","out"),("b","in")]:
     nf = f.rename(columns={col:"island"}).assign(direction=direction)
     nodes = pd.concat([nodes,nf[nodes.columns]]).drop_duplicates()
+if args.regional:
+    from regional_maritime_comparison import expanded_endpoints
+    edges, nodes = expanded_endpoints(root, edges, nodes)
 edges=edges[edges.a.isin(universe) & edges.b.isin(universe) & edges.a.ne(edges.b)]
 nodes=nodes[nodes.island.isin(universe)]
 inbound=nodes[nodes.direction.eq("in")].groupby(["year","island"]).source.agg(set).to_dict()
@@ -43,12 +47,14 @@ first=raw[raw.records.gt(0)&raw.year.between(2001,2024)&raw.island.isin(universe
 panel=pd.read_csv(root/"results/annual_port_host_27/risk_years.csv.gz")
 edges_by_year={k:list(g.itertuples()) for k,g in edges.groupby(["year","b"])}
 first=first.to_dict()
-def classify(lag):
+def classify(lag, excluded=()):
     rr=[]
     for r in panel[panel.year.sub(lag).between(2019,2023)].itertuples():
+        if r.island in excluded:
+            continue
         service_year=r.year-lag
         registries=inbound.get((service_year,r.island),set())
-        eligible=set().union(*(departure.get((service_year,s),set()) for s in registries))-{r.island}
+        eligible=set().union(*(departure.get((service_year,s),set()) for s in registries))-{r.island}-set(excluded)
         prior={i for i in eligible if first.get((r.key,i),9999)<service_year}
         e=edges_by_year.get((service_year,r.island),[])
         hits=[edge for edge in e if edge.a in prior]
@@ -74,6 +80,10 @@ def match(g, strata, tie_target=None, sign=0):
             if ok[x,y]:
                 rows.append((a.index[x],b.index[y],dist[x,y]))
     return pd.DataFrame(rows,columns=["a","b","log_gap"]).astype({"a":int,"b":int})
+if args.regional:
+    from regional_maritime_comparison import compare
+    compare(root, classify, match, archived)
+    raise SystemExit(0)
 summary=[]; matches=[]
 for lag in (0,1):
     d=classify(lag)
