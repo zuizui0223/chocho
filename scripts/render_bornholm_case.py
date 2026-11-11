@@ -68,5 +68,5 @@ fig.text(.61,.16,"Hasle:  Populus nigra\nRønne:  Salix alba",fontsize=10,linesp
 fig.text(.03,.045,"Bornholm, 2024    •    Three records of Nymphalis polychloros in its first indexed year here since 2001.",fontsize=11)
 for ext in ("png","svg"):
     fig.savefig(out / ("Box1_bornholm."+ext),dpi=220)
-
-
+svg = out / "Box1_bornholm.svg"
+svg.write_text("\n".join(line.rstrip() for line in svg.read_text(encoding="utf8").splitlines()) + "\n", encoding="utf8")
