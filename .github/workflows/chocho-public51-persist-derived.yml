@@ -1,0 +1,107 @@
+name: Archive verified public 225 butterfly x 51 island source and results
+
+on:
+  push:
+    branches:
+      - analysis/butterfly-trait-public51-20261109
+    paths:
+      - .github/workflows/chocho-public51-persist-derived.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  archive-public-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve exact six public GBIF source query receipts (no new external queries)
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556025391
+          github-token: ${{ github.token }}
+          pattern: butterfly-public51-shard-*
+          merge-multiple: true
+          path: _scratch_archived_original_source
+      - name: Retrieve independently source-validated 11,475-row panel
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556346640
+          github-token: ${{ github.token }}
+          name: butterfly-original51-public-index-consolidated-20261109
+          path: _scratch_archived_merged
+      - name: Retrieve verified butterfly trait model score summaries
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556346640
+          github-token: ${{ github.token }}
+          name: butterfly-original51-trait-oof-models-20261109
+          path: _scratch_archived_trait
+      - name: Retrieve centered fixed species/island/region margins source audit
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42557250091
+          github-token: ${{ github.token }}
+          name: butterfly-51-two-margin-trait-null-20261109
+          path: _scratch_archived_null
+      - name: Verify original fingerprints, all 51 sources, and nonprivate derived output
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import csv, hashlib, json
+          src=Path("_scratch_archived_merged")
+          panel=src/"full51_225butterfly_period_index.csv"
+          receipt=json.loads((src/"full51_source_validation.json").read_text())
+          sha=hashlib.sha256(panel.read_bytes()).hexdigest()
+          assert receipt["merged_table_sha256"]==sha=="d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887"
+          with panel.open() as f: rows=list(csv.DictReader(f))
+          assert len(rows)==11475
+          assert len({(z["speciesKey"],z["landmass_id"]) for z in rows})==11475
+          assert len({z["speciesKey"] for z in rows})==225
+          assert len({z["landmass_id"] for z in rows})==51
+          assert sum(int(z["first_indexed_in_2011_2017"]) for z in rows)==221
+          assert sum(int(z["first_indexed_in_2018_2022"]) for z in rows)==96
+          assert len(list(Path("_scratch_archived_original_source").glob("batch_*_butterfly_island_225_atrisk.csv")))==6
+          assert len(list(Path("_scratch_archived_original_source").glob("batch_*_query_receipt.json")))==6
+          model=json.loads(Path("_scratch_archived_trait/public51_trait_access_audit.json").read_text())
+          null=json.loads(Path("_scratch_archived_null/public51_butterfly_conditional_trait_marine.json").read_text())
+          assert model["source_panel_SHA256"]==null["source_sha256"]==sha
+          assert null["schema"]=="chocho_public51_butterfly_trait_two_margin_geo_conditional_20261109_v2"
+          assert model["original51_island_groups"]==51
+          assert set(model["periods"])==set(null["periods"])=={"2011_2017","2018_2022"}
+          print("PASS original public GBIF source / model / corrected null SHA and 51-island/225-taxon cohort")
+          PY
+      - name: Archive public, source-reproducible tables and model receipts only
+        run: |
+          mkdir -p data/exploratory/public51_butterfly_index_20261109/source_shards
+          mkdir -p results/public51_butterfly_trait_access_20261109
+          cp _scratch_archived_original_source/batch_*_butterfly_island_225_atrisk.csv data/exploratory/public51_butterfly_index_20261109/source_shards/
+          cp _scratch_archived_original_source/batch_*_query_receipt.json data/exploratory/public51_butterfly_index_20261109/source_shards/
+          cp _scratch_archived_merged/full51_225butterfly_period_index.csv data/exploratory/public51_butterfly_index_20261109/
+          cp _scratch_archived_merged/full51_source_validation.json data/exploratory/public51_butterfly_index_20261109/
+          cp _scratch_archived_trait/public51_trait_access_audit.json results/public51_butterfly_trait_access_20261109/
+          cp _scratch_archived_trait/public51_trait_summary.json results/public51_butterfly_trait_access_20261109/
+          cp _scratch_archived_null/public51_butterfly_conditional_trait_marine.json results/public51_butterfly_trait_access_20261109/
+      - name: Save only audited non-private research data (no force push)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/exploratory/public51_butterfly_index_20261109/ results/public51_butterfly_trait_access_20261109/
+          if git diff --cached --quiet; then echo "Same public source snapshot already archived"; exit 0; fi
+          git commit -m "Archive public original51 butterfly GBIF indices and corrected trait null [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          echo "Saved upload in GitHub Actions logs; branch is protected or changed" >&2
+          exit 1

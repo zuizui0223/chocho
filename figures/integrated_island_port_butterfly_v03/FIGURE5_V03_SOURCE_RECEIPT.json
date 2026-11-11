@@ -1,0 +1,87 @@
+{
+  "digests": {
+    "early_host": {
+      "git_blob": "0272020aad8967bcd1a8eb8a6ca3995e33a15ccc",
+      "sha256": "0bf725421e6e51a74c6e02044299b6a0ce01dc945622fda9655c20f855b5f191"
+    },
+    "firstidx": {
+      "git_blob": "a7b4dcb75fff77aed19eee405cb7283c13e0cb0f",
+      "sha256": "17e97df98d1b678e1222851c8bb726c56aa98f74ed3d2fdff7864b57381f3fc2"
+    },
+    "firsttransfer": {
+      "git_blob": "5d30531238871606b2642a2dc72301f5211a81b4",
+      "sha256": "cb22672e7aeff5df3c803c8388f83c86e707677b3d7c474f95ae58366b399273"
+    },
+    "historical_cross": {
+      "git_blob": "d4cf324df8c0ee490d7b1b7f302fe19c8f39baa3",
+      "sha256": "3017ca303da5dac5c4ee48b4c15d9877138af6cfb8159789260a5c43d38e20c9"
+    },
+    "host_null": {
+      "git_blob": "94c4d515db6f71f5cdd0195a76c264f2013d7169",
+      "sha256": "f0a3f71cef64d0eee7eb4e57e96b645335011d74b366f60e42580d1650cdeb73"
+    },
+    "joint": {
+      "git_blob": "96a690d59e70b5abb4fab780723c5ee61aa48c88",
+      "sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee"
+    },
+    "public51": {
+      "git_blob": "57b46fff412c3498758fb33cd84acc4945d91361",
+      "sha256": "9794a3518cad82a92da6e6a7d38e0c380f1c26e5e8ab74cada34d77de4152ba5"
+    },
+    "uniform": {
+      "git_blob": "636533131b07ea9f6beb99261e2112271a43d838",
+      "sha256": "09e656816dd37e5279e209b6a5151bbd12ffb31e441ccc49b20bc64c3cca5828"
+    }
+  },
+  "figures": {
+    "Fig5_hosts_marine_conditional_vs_transfer_v03.png": {
+      "bytes": 527342,
+      "sha256": "d39382481a01b5225ace0ceb02109d738a0f47eb28f95df1a06eea153a09c2a7"
+    },
+    "Fig5_hosts_marine_conditional_vs_transfer_v03.svg": {
+      "bytes": 197159,
+      "sha256": "14bbc857f665176425cb3cc9a60a6fc3caad65ff910fde6fcea60d707d5a00bb"
+    }
+  },
+  "limitations": [
+    "No causal access or realized colonisation",
+    "GBIF indexing not arrival",
+    "Host lists pooled 2001-2024 may postdate indexed butterfly response",
+    "AIS source modern; no historical vessel itineraries",
+    "Held-island and both-endpoint unseen comparisons are distinct population and forecast designs"
+  ],
+  "schema": "chocho_integrated_butterfly_figure5_v03",
+  "sources": {
+    "early_host": "provenance/reviewer_defenses/results/original230_dated_host_join_20261031/original230_prior_host_recurrence_audit.json",
+    "firstidx": "results/public51_butterfly_trait_access_20261109/public51_butterfly_conditional_trait_marine.json",
+    "firsttransfer": "results/public51_butterfly_trait_access_20261109/public51_trait_summary.json",
+    "historical_cross": "results/island51_cross_community_marine_20261107/comparison_scope_summary.csv",
+    "host_null": "provenance/reviewer_defenses/results/host_geographic_prevalence_null_20261031/host_geo_frequency_null_results.json",
+    "joint": "results/island51_host_circuit_joint_20261106/comparison_summary.csv",
+    "public51": "data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json",
+    "uniform": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv"
+  },
+  "status": "SOURCE_LOCKED_FIGURE_RENDERED",
+  "values": {
+    "base_to_hosts": 2.275992606442099,
+    "base_to_marine": 7.006481794922515,
+    "early_butterflies_ais": -8.540619235151405,
+    "family_null": 25.24935626128392,
+    "first_late": 96,
+    "first_pre": 221,
+    "flora_ais": -1.2943024214677576,
+    "geo_null": 30.2587475836629,
+    "geometry_only_augmented_MSE": 0.00645230626088444,
+    "geometry_only_baseline_MSE": 0.006797760771290343,
+    "geometry_only_beyond_distance": 5.081886845222559,
+    "host_given_marine": 1.731162479353141,
+    "later_butterflies_ais": 0.8307958998294671,
+    "later_butterflies_ais_wind_with_host": -4.698595404749899,
+    "later_butterflies_ais_with_host": 0.6775557467450279,
+    "marine_given_host": 6.488025054419857,
+    "prior_host_share": 30.08849557522124,
+    "residual_sea_p": 0.0023325558147284237,
+    "sea_first_transfer": -6.479351063178629,
+    "source_proximity_p": 0.0003332222592469177
+  }
+}

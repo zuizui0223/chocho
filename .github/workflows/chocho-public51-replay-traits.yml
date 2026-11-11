@@ -1,0 +1,53 @@
+name: Reconcile six archived 51-island GBIF facets and fit butterfly trait-access models
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-replay-traits.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  historical-source-and-butterfly-traits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install trait and source-only numerical packages
+        run: python -m pip install --disable-pip-version-check numpy scikit-learn
+      - name: Reuse completed original GSHHG+GBIF species-index source shards, WITHOUT requery
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556025391
+          github-token: ${{ github.token }}
+          pattern: butterfly-public51-shard-*
+          merge-multiple: true
+          path: _scratch_public51_parts
+      - name: Exact original225 x original51 binary-event source merge
+        run: |
+          python scripts/merge_public51_butterfly_risk_20261109.py \
+            --parts _scratch_public51_parts \
+            --out-dir results/public51_consolidated_20261109 --expected-shards 6
+      - name: Upload full 11,475-cell source and reindex-drift audit before modelling
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-original51-public-index-consolidated-20261109
+          path: results/public51_consolidated_20261109/
+          if-no-files-found: error
+          retention-days: 60
+      - name: Evaluate butterfly wing-size and disturbance x source distance x uniform sea resistance
+        run: |
+          python scripts/run_public51_butterfly_trait_access_20261109.py \
+            --source-dir results/public51_consolidated_20261109 \
+            --out-dir results/public51_butterfly_trait_access_20261109
+      - name: Archive all out-of-fold species-by-island models and negative controls
+        uses: actions/upload-artifact@v4
+        with:
+          name: butterfly-original51-trait-oof-models-20261109
+          path: results/public51_butterfly_trait_access_20261109/
+          if-no-files-found: error
+          retention-days: 60

@@ -1,0 +1,551 @@
+{
+  "LepTraits_complete_species": 199,
+  "cohorts": {
+    "2011_2017": {
+      "NOT_LISTED_OR_TAXON_UNRESOLVED_UNKNOWN": {
+        "at_risk_rows": 1832,
+        "butterfly_species": 39,
+        "first_index_cases": 42,
+        "landmass_groups": 51,
+        "not_nonmigrant_control": true
+      },
+      "REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST": {
+        "at_risk_rows": 2542,
+        "butterfly_species": 60,
+        "first_index_cases": 145,
+        "landmass_groups": 51,
+        "not_nonmigrant_control": false
+      }
+    },
+    "2018_2022": {
+      "NOT_LISTED_OR_TAXON_UNRESOLVED_UNKNOWN": {
+        "at_risk_rows": 2140,
+        "butterfly_species": 46,
+        "first_index_cases": 15,
+        "landmass_groups": 51,
+        "not_nonmigrant_control": true
+      },
+      "REVIEW_SELECTED_NAME_MATCHED_GBIF_REQUEST": {
+        "at_risk_rows": 2793,
+        "butterfly_species": 68,
+        "first_index_cases": 68,
+        "landmass_groups": 51,
+        "not_nonmigrant_control": false
+      }
+    }
+  },
+  "heldout": {
+    "2011_2017": {
+      "geographic_cluster": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.04035103513659207,
+              "extended": 0.040427477711392865,
+              "percent_reduction": -0.18944390036594577
+            },
+            "logloss": {
+              "baseline": 0.15119688561808037,
+              "extended": 0.15408800415135082,
+              "percent_reduction": -1.9121548181708903
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.04035103513659207,
+              "extended": 0.04017755979161869,
+              "percent_reduction": 0.42991547648319817
+            },
+            "logloss": {
+              "baseline": 0.15119688561808037,
+              "extended": 0.1510298771440193,
+              "percent_reduction": 0.11045761516736778
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.04035542895656336,
+              "extended": 0.04016368802898618,
+              "percent_reduction": 0.4751304410208727
+            },
+            "logloss": {
+              "baseline": 0.15433115030360578,
+              "extended": 0.15274959511519387,
+              "percent_reduction": 1.0247802762440488
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.040427477711392865,
+              "extended": 0.04035581422042084,
+              "percent_reduction": 0.17726431385015898
+            },
+            "logloss": {
+              "baseline": 0.15408800415135082,
+              "extended": 0.15334964487790248,
+              "percent_reduction": 0.4791802434685948
+            }
+          }
+        },
+        "first_indexed_cases": 145,
+        "model_losses": {
+          "geo": {
+            "brier": 0.04035103513659207,
+            "logloss": 0.15119688561808037
+          },
+          "geo_sea": {
+            "brier": 0.040427477711392865,
+            "logloss": 0.15408800415135082
+          },
+          "geo_sea_wing": {
+            "brier": 0.04035581422042084,
+            "logloss": 0.15334964487790248
+          },
+          "geo_wing": {
+            "brier": 0.04017755979161869,
+            "logloss": 0.1510298771440193
+          },
+          "geo_wing_sea": {
+            "brier": 0.04035542895656336,
+            "logloss": 0.15433115030360578
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.04016368802898618,
+            "logloss": 0.15274959511519387
+          }
+        },
+        "n_folds": 7,
+        "risk_cells": 2542
+      },
+      "island": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.039303178940063764,
+              "extended": 0.03955054662301281,
+              "percent_reduction": -0.629383397526881
+            },
+            "logloss": {
+              "baseline": 0.14766158596270912,
+              "extended": 0.1487314125545547,
+              "percent_reduction": -0.7245124619721649
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.039303178940063764,
+              "extended": 0.03931975603792232,
+              "percent_reduction": -0.04217749888332933
+            },
+            "logloss": {
+              "baseline": 0.14766158596270912,
+              "extended": 0.14791341973256733,
+              "percent_reduction": -0.1705479243070101
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.03957246917824809,
+              "extended": 0.03941264829463445,
+              "percent_reduction": 0.4038688687677033
+            },
+            "logloss": {
+              "baseline": 0.14899047805244736,
+              "extended": 0.148328197022666,
+              "percent_reduction": 0.44451231947066017
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.03955054662301281,
+              "extended": 0.03957590084635457,
+              "percent_reduction": -0.06410587338635532
+            },
+            "logloss": {
+              "baseline": 0.1487314125545547,
+              "extended": 0.14873733855208895,
+              "percent_reduction": -0.003984361764932282
+            }
+          }
+        },
+        "first_indexed_cases": 145,
+        "model_losses": {
+          "geo": {
+            "brier": 0.039303178940063764,
+            "logloss": 0.14766158596270912
+          },
+          "geo_sea": {
+            "brier": 0.03955054662301281,
+            "logloss": 0.1487314125545547
+          },
+          "geo_sea_wing": {
+            "brier": 0.03957590084635457,
+            "logloss": 0.14873733855208895
+          },
+          "geo_wing": {
+            "brier": 0.03931975603792232,
+            "logloss": 0.14791341973256733
+          },
+          "geo_wing_sea": {
+            "brier": 0.03957246917824809,
+            "logloss": 0.14899047805244736
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.03941264829463445,
+            "logloss": 0.148328197022666
+          }
+        },
+        "n_folds": 51,
+        "risk_cells": 2542
+      },
+      "species": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.038129731149758594,
+              "extended": 0.038396337460766664,
+              "percent_reduction": -0.6992084732015138
+            },
+            "logloss": {
+              "baseline": 0.14348696622550805,
+              "extended": 0.14486637206890474,
+              "percent_reduction": -0.9613457442739252
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.038129731149758594,
+              "extended": 0.038191529814386706,
+              "percent_reduction": -0.1620747452568979
+            },
+            "logloss": {
+              "baseline": 0.14348696622550805,
+              "extended": 0.14394643738699447,
+              "percent_reduction": -0.3202180473760292
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.03849127996426629,
+              "extended": 0.038297998755053644,
+              "percent_reduction": 0.5021428473983667
+            },
+            "logloss": {
+              "baseline": 0.14547946651467927,
+              "extended": 0.14468281878573017,
+              "percent_reduction": 0.5476014918357726
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.038396337460766664,
+              "extended": 0.03833801567914908,
+              "percent_reduction": 0.1518941270822415
+            },
+            "logloss": {
+              "baseline": 0.14486637206890474,
+              "extended": 0.144591898789255,
+              "percent_reduction": 0.1894665240316736
+            }
+          }
+        },
+        "first_indexed_cases": 145,
+        "model_losses": {
+          "geo": {
+            "brier": 0.038129731149758594,
+            "logloss": 0.14348696622550805
+          },
+          "geo_sea": {
+            "brier": 0.038396337460766664,
+            "logloss": 0.14486637206890474
+          },
+          "geo_sea_wing": {
+            "brier": 0.03833801567914908,
+            "logloss": 0.144591898789255
+          },
+          "geo_wing": {
+            "brier": 0.038191529814386706,
+            "logloss": 0.14394643738699447
+          },
+          "geo_wing_sea": {
+            "brier": 0.03849127996426629,
+            "logloss": 0.14547946651467927
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.038297998755053644,
+            "logloss": 0.14468281878573017
+          }
+        },
+        "n_folds": 5,
+        "risk_cells": 2542
+      }
+    },
+    "2018_2022": {
+      "geographic_cluster": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.0265102857883406,
+              "extended": 0.027422399952155518,
+              "percent_reduction": -3.440604794294871
+            },
+            "logloss": {
+              "baseline": 0.12019342544722535,
+              "extended": 0.12553331120579472,
+              "percent_reduction": -4.44274363485382
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.0265102857883406,
+              "extended": 0.02652560971043057,
+              "percent_reduction": -0.05780368500105355
+            },
+            "logloss": {
+              "baseline": 0.12019342544722535,
+              "extended": 0.12029521094989944,
+              "percent_reduction": -0.08468475068029574
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.027546701258319428,
+              "extended": 0.02757901885884372,
+              "percent_reduction": -0.11731931246951095
+            },
+            "logloss": {
+              "baseline": 0.1260849728731943,
+              "extended": 0.12708604119894892,
+              "percent_reduction": -0.7939632320509773
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.027422399952155518,
+              "extended": 0.027943368545542427,
+              "percent_reduction": -1.899792119930622
+            },
+            "logloss": {
+              "baseline": 0.12553331120579472,
+              "extended": 0.12785680532100407,
+              "percent_reduction": -1.8508984530809516
+            }
+          }
+        },
+        "first_indexed_cases": 68,
+        "model_losses": {
+          "geo": {
+            "brier": 0.0265102857883406,
+            "logloss": 0.12019342544722535
+          },
+          "geo_sea": {
+            "brier": 0.027422399952155518,
+            "logloss": 0.12553331120579472
+          },
+          "geo_sea_wing": {
+            "brier": 0.027943368545542427,
+            "logloss": 0.12785680532100407
+          },
+          "geo_wing": {
+            "brier": 0.02652560971043057,
+            "logloss": 0.12029521094989944
+          },
+          "geo_wing_sea": {
+            "brier": 0.027546701258319428,
+            "logloss": 0.1260849728731943
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.02757901885884372,
+            "logloss": 0.12708604119894892
+          }
+        },
+        "n_folds": 7,
+        "risk_cells": 2793
+      },
+      "island": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.02267276491097838,
+              "extended": 0.0228227453201724,
+              "percent_reduction": -0.6615003056878954
+            },
+            "logloss": {
+              "baseline": 0.09171990916392073,
+              "extended": 0.09280291782284557,
+              "percent_reduction": -1.1807781634293832
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.02267276491097838,
+              "extended": 0.022653998789262744,
+              "percent_reduction": 0.08276944514407568
+            },
+            "logloss": {
+              "baseline": 0.09171990916392073,
+              "extended": 0.09160267872835144,
+              "percent_reduction": 0.12781351032497434
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.02280698884642608,
+              "extended": 0.022770992790889052,
+              "percent_reduction": 0.15782905748501297
+            },
+            "logloss": {
+              "baseline": 0.09266609453356976,
+              "extended": 0.09256763998674561,
+              "percent_reduction": 0.10624656981576633
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.0228227453201724,
+              "extended": 0.022756998253458983,
+              "percent_reduction": 0.28807694162588504
+            },
+            "logloss": {
+              "baseline": 0.09280291782284557,
+              "extended": 0.0925526079842769,
+              "percent_reduction": 0.269721948879331
+            }
+          }
+        },
+        "first_indexed_cases": 68,
+        "model_losses": {
+          "geo": {
+            "brier": 0.02267276491097838,
+            "logloss": 0.09171990916392073
+          },
+          "geo_sea": {
+            "brier": 0.0228227453201724,
+            "logloss": 0.09280291782284557
+          },
+          "geo_sea_wing": {
+            "brier": 0.022756998253458983,
+            "logloss": 0.0925526079842769
+          },
+          "geo_wing": {
+            "brier": 0.022653998789262744,
+            "logloss": 0.09160267872835144
+          },
+          "geo_wing_sea": {
+            "brier": 0.02280698884642608,
+            "logloss": 0.09266609453356976
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.022770992790889052,
+            "logloss": 0.09256763998674561
+          }
+        },
+        "n_folds": 51,
+        "risk_cells": 2793
+      },
+      "species": {
+        "comparisons": {
+          "sea_beyond_geodesic": {
+            "brier": {
+              "baseline": 0.021911731722385266,
+              "extended": 0.021901043662317047,
+              "percent_reduction": 0.04877779722585994
+            },
+            "logloss": {
+              "baseline": 0.08801408966697866,
+              "extended": 0.08833158107210158,
+              "percent_reduction": -0.36072793154394417
+            }
+          },
+          "wing_x_geodesic": {
+            "brier": {
+              "baseline": 0.021911731722385266,
+              "extended": 0.02194408108012869,
+              "percent_reduction": -0.14763487502164965
+            },
+            "logloss": {
+              "baseline": 0.08801408966697866,
+              "extended": 0.08815902801463521,
+              "percent_reduction": -0.16467630149327317
+            }
+          },
+          "wing_x_sea_after_wing_x_distance": {
+            "brier": {
+              "baseline": 0.02194192850340058,
+              "extended": 0.021965595778551034,
+              "percent_reduction": -0.10786324067542458
+            },
+            "logloss": {
+              "baseline": 0.08850707319253344,
+              "extended": 0.0885693719572088,
+              "percent_reduction": -0.07038845871656571
+            }
+          },
+          "wing_x_sea_given_distance": {
+            "brier": {
+              "baseline": 0.021901043662317047,
+              "extended": 0.021903433858373282,
+              "percent_reduction": -0.010913617145778947
+            },
+            "logloss": {
+              "baseline": 0.08833158107210158,
+              "extended": 0.08837283478394439,
+              "percent_reduction": -0.04670324174220104
+            }
+          }
+        },
+        "first_indexed_cases": 68,
+        "model_losses": {
+          "geo": {
+            "brier": 0.021911731722385266,
+            "logloss": 0.08801408966697866
+          },
+          "geo_sea": {
+            "brier": 0.021901043662317047,
+            "logloss": 0.08833158107210158
+          },
+          "geo_sea_wing": {
+            "brier": 0.021903433858373282,
+            "logloss": 0.08837283478394439
+          },
+          "geo_wing": {
+            "brier": 0.02194408108012869,
+            "logloss": 0.08815902801463521
+          },
+          "geo_wing_sea": {
+            "brier": 0.02194192850340058,
+            "logloss": 0.08850707319253344
+          },
+          "geo_wing_sea_wing": {
+            "brier": 0.021965595778551034,
+            "logloss": 0.0885693719572088
+          }
+        },
+        "n_folds": 5,
+        "risk_cells": 2793
+      }
+    }
+  },
+  "limits": [
+    "The selected category is a positive author-selected taxon proxy, not a validated independent observation of the target-island butterflies migrating.",
+    "The NOT_LISTED category is UNKNOWN, not a sedentary or non-migrant control.",
+    "The source-selected migration roster likely depends on reporting and species detectability.",
+    "All GBIF first indexing events are retrospective observations and not confirmed biological arrivals or establishment.",
+    "Wingspan/forewing composite proxy is not flight performance.",
+    "Circuitscape uniform-sea resistance is not shipping density or true movement route.",
+    "No documented historical larval host at each target island or observed ship transport.",
+    "Only original 51 port-eligible landmasses are observed; unseen sources elsewhere could be closer.",
+    "Source-only 7-region KMeans and species modulo-5 folds test geographic/source transport of a retrospective model, not out-of-time forecast."
+  ],
+  "models": "Fixed L2 logistic, source effort, port, geography, wing, disturbance and original Circuitscape; island/geographic-area/species out-of-fold",
+  "proxy_originally_prepared_from": "2025 author GBIF request derived indirectly from 2021 migration review; NOT original supplemental Table S1",
+  "reconstructed_225_species_roster": {
+    "author_selected_candidates": 111,
+    "unlisted_migration_status_unknown": 114
+  },
+  "schema": "chocho_225x51_indirect_documented_migrant_subset_access_oof_20261109_v1",
+  "source_author_migrant_proxy_git_blob": "439dd1034ca16f96ff94222695d98dc39747c2e4",
+  "source_selection": "previously indexed conspecific elsewhere among original 51; original source risk and complete LepTraits only",
+  "source_sha256": "d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887",
+  "status": "EXPLORATORY_WITHIN_REVIEW_SELECTED_MIGRANT_PROXY_NOT_NONMIGRANT_COMPARISON"
+}

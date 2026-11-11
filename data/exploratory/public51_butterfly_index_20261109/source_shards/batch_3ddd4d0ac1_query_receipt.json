@@ -1,0 +1,1182 @@
+{
+  "schema": "chocho_public_GBIF_unselected_225_butterfly_x_original51_island_window_v1",
+  "status": "PUBLIC_REINDEXED_OCCURRENCE_HISTORY_NOT_TRUE_COLONIZATION_OR_HOST_MEDIATION",
+  "snapshot_timestamp_utc": "2026-11-09T03:23:54.008511+00:00",
+  "data_source": "https://api.gbif.org/v1/occurrence/search",
+  "source_git_blob_pins": {
+    "butterflies": {
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_all225.csv",
+      "sha": "39fe84981cab2b0e47063399f0a5c0c9731e800d"
+    },
+    "islands": {
+      "path": "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv",
+      "sha": "18cecde5bf3066f276380167f451f1fa5cc1caa1"
+    }
+  },
+  "gshhg_shape_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "gshhg_source": "https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip",
+  "butterfly_taxon_filter": {
+    "method": "REPEATED_GBIF_FAMILY_TAXONKEY_OR_FILTER",
+    "family_taxonkeys": {
+      "Nymphalidae": "7017",
+      "Pieridae": "5481",
+      "Lycaenidae": "5473",
+      "Papilionidae": "9417",
+      "Hesperiidae": "6953",
+      "Riodinidae": "1933999"
+    },
+    "papilionoidea_strict_match_failed": true,
+    "papilionoidea_source_match": {
+      "matchType": "NONE",
+      "synonym": false
+    },
+    "unverified_if_any_candidate_225_outside_six_families": true
+  },
+  "islands_tested": [
+    "15",
+    "26",
+    "47",
+    "85",
+    "168",
+    "234",
+    "391",
+    "753"
+  ],
+  "species_candidates_frozen_before_future_225": 225,
+  "all_51_original_islands": 51,
+  "geometry_audit": [
+    {
+      "island_id": "15",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 219502.41966300784,
+      "original_polygon_components": 1,
+      "query_fragments": 28,
+      "simplified_area_retained": 0.9946704441851973,
+      "max_fragment_WKT_chars": 2245,
+      "WKT_sha256_fragments": [
+        "0bfd2351bac4d9ea3e94c9545372cf9895f94ec15ed1398e08d9cc7b9b9be463",
+        "9245bd500866650a47d73d52cc44e578cf07c6cc1bfc8fc200b2c139a08a7464",
+        "5bfc764adff34c1250281d9fa4499a562b9f31f656af5bbbebdf1fcc396f23bd",
+        "402e7d0d05c91ffd3ba6d2891aff287d227cce2f858ec2cdc47ca4cb8b037d1a",
+        "65fe014be9361555bd2ff6311f62e1a74f889ca49bd62aa90b3143deccb90c66",
+        "8939830deb6e4c696e092002e66429749a07e28a4743ad6aeb1e084ae86073bb",
+        "296567255e54189276bc29f2d54226798ae902e3f251827c52d3ad3aa97dcfad",
+        "9ee77afb8cb677fa6a1c798bd26f3547ff50b70bfc71237aec7f0f336f3f9f3d",
+        "53c56226a4af15300af0e3862beb35644b320456c9f93862d79b2c5d925671d8",
+        "ff93889bed7c47d5119858a03f7b8464c72914f217ba93046bd6fc77e747beaa",
+        "e39a39d971963ec04f7b064ee8efe20cde83879a355cd9046da80c1b5f02a3fe",
+        "097657cc76faa6ab06ef5fa7bfb21c5a2388d836171a7470b6bf57447e9de0e2",
+        "12de74efb573d74399302e824c9d316bc405aaa15d8c91488f9b0edddd9c38f0",
+        "601d09ee14d12d675bfbd091d585dc861c2cd5d58379fcdcfa42ea880f6b15e8",
+        "35338a689b8031e00ec8056d855c2a11bf0b3d14138d694ffdb4f0e771b5fac3",
+        "5eaa61c5de3a47dd8baee4491b0de177841af31a56ac982c706ccc4b5e0a9bbc",
+        "7013bc9de8b45175a3a67e25f6d19be5d684a75de44c5d209fee6612fec73b9b",
+        "c38ad0487683a31f23b9da959ca18ae51147a4604bfdb3ee47621cf25ca7e162",
+        "b4fbe2f53a6854d7edbb8740d6f3285f33796bf7de9f096112889249abc7457d",
+        "a9a8e323261b440e8e35cdd57aafca13e91740d70dbb7ecb48a8846c4f208369",
+        "ed4909cf5ea72b879575258b3687ac1e85d8ed33bd4e90da16c65d012210cd92",
+        "d871de1d9cce766d525370870326278e0feb2aaa1118150d0b9b5d4eab99b85d",
+        "0b62fe06f6110ff615fb0c3ab76b09fb19654cc3277480d2054e3321ba97f711",
+        "79c42c4904fcf08e4f34800671d32ad6fa53ee303be33d197bc0395ccaa4e752",
+        "0c565c8ac617f2aa1a45d1c532f3ec864768aba5dd96e132bae733a0047f0657",
+        "778f354b95dbcf841b72606c6b54829e8da03ff9416f657fe82ee0cc38fd0534",
+        "2b50641a25dd1bb1d51797e548953627a5414883f7259c1c0193bd6e3e66e356",
+        "c367bb4d227a0126d6c05c18e1bef82a522cb41599d31a6ea41830bfc3fae398"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": true
+    },
+    {
+      "island_id": "26",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 83886.66817939802,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 0.9933962648063853,
+      "max_fragment_WKT_chars": 2245,
+      "WKT_sha256_fragments": [
+        "3423e121a4fff7cb9cfd0542b02603924f8fdd343f528e4ace4cdca4b59a0ba2"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "47",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 33985.9017865247,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 1.006121107787093,
+      "max_fragment_WKT_chars": 1789,
+      "WKT_sha256_fragments": [
+        "44c9250c0cb2474f99018f5215f174dd88946aa05a237737539284b1994c2c23"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "85",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 9319.80607176119,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 1.003283913921245,
+      "max_fragment_WKT_chars": 1767,
+      "WKT_sha256_fragments": [
+        "a9333ed8eb392a502c972fa7d1110ecc294391c38d3315ef202c21908bf099d8"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "168",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 3029.62812553945,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 0.9982078302810748,
+      "max_fragment_WKT_chars": 1826,
+      "WKT_sha256_fragments": [
+        "f7d3f992814e4cb4eabc8a6263cdef47db4f82244d99558db811e682f7951a47"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "234",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 1658.9771850959405,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 1.0023385141005634,
+      "max_fragment_WKT_chars": 1310,
+      "WKT_sha256_fragments": [
+        "16da81f54e6fdb49f20f1293e323ad2c38a4c249e51fa2bbd74ed5c53ada21ac"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "391",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 747.2032543712089,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 1.0000112215123527,
+      "max_fragment_WKT_chars": 1986,
+      "WKT_sha256_fragments": [
+        "bef5511276740b680d4e873780ecca4c4a68f150a0641c663a8b0fa50483a855"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    },
+    {
+      "island_id": "753",
+      "status": "AREA_PRESERVED_COUNTERCLOCKWISE_DISJOINT_FRAGMENT_GEOMETRY",
+      "original_area_km2": 297.4592021284299,
+      "original_polygon_components": 1,
+      "query_fragments": 1,
+      "simplified_area_retained": 0.9999967091340104,
+      "max_fragment_WKT_chars": 1179,
+      "WKT_sha256_fragments": [
+        "db255516f5e49b1466d67531e027139cf8e2a4bc2007cc157c61c2132e729e75"
+      ],
+      "source_GSHHG_zip_SHA256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+      "fragmentation_invoked": false
+    }
+  ],
+  "GBIF_index_query_receipts": [
+    {
+      "island_id": "15",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 6952818,
+      "gbif_specieskey_count": 76,
+      "geometry_fragments": 28,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "0bfd2351bac4d9ea3e94c9545372cf9895f94ec15ed1398e08d9cc7b9b9be463",
+          "indexed_occurrences": 5058886,
+          "species_keys_indexed": 71,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 2,
+          "WKT_sha256": "9245bd500866650a47d73d52cc44e578cf07c6cc1bfc8fc200b2c139a08a7464",
+          "indexed_occurrences": 68309,
+          "species_keys_indexed": 37,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 3,
+          "WKT_sha256": "5bfc764adff34c1250281d9fa4499a562b9f31f656af5bbbebdf1fcc396f23bd",
+          "indexed_occurrences": 13917,
+          "species_keys_indexed": 25,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 4,
+          "WKT_sha256": "402e7d0d05c91ffd3ba6d2891aff287d227cce2f858ec2cdc47ca4cb8b037d1a",
+          "indexed_occurrences": 15296,
+          "species_keys_indexed": 24,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 5,
+          "WKT_sha256": "65fe014be9361555bd2ff6311f62e1a74f889ca49bd62aa90b3143deccb90c66",
+          "indexed_occurrences": 2624,
+          "species_keys_indexed": 27,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 6,
+          "WKT_sha256": "8939830deb6e4c696e092002e66429749a07e28a4743ad6aeb1e084ae86073bb",
+          "indexed_occurrences": 377,
+          "species_keys_indexed": 16,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 7,
+          "WKT_sha256": "296567255e54189276bc29f2d54226798ae902e3f251827c52d3ad3aa97dcfad",
+          "indexed_occurrences": 31,
+          "species_keys_indexed": 8,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 8,
+          "WKT_sha256": "9ee77afb8cb677fa6a1c798bd26f3547ff50b70bfc71237aec7f0f336f3f9f3d",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 9,
+          "WKT_sha256": "53c56226a4af15300af0e3862beb35644b320456c9f93862d79b2c5d925671d8",
+          "indexed_occurrences": 14491,
+          "species_keys_indexed": 25,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 10,
+          "WKT_sha256": "ff93889bed7c47d5119858a03f7b8464c72914f217ba93046bd6fc77e747beaa",
+          "indexed_occurrences": 464,
+          "species_keys_indexed": 21,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 11,
+          "WKT_sha256": "e39a39d971963ec04f7b064ee8efe20cde83879a355cd9046da80c1b5f02a3fe",
+          "indexed_occurrences": 425,
+          "species_keys_indexed": 19,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 12,
+          "WKT_sha256": "097657cc76faa6ab06ef5fa7bfb21c5a2388d836171a7470b6bf57447e9de0e2",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 13,
+          "WKT_sha256": "12de74efb573d74399302e824c9d316bc405aaa15d8c91488f9b0edddd9c38f0",
+          "indexed_occurrences": 13258,
+          "species_keys_indexed": 24,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 14,
+          "WKT_sha256": "601d09ee14d12d675bfbd091d585dc861c2cd5d58379fcdcfa42ea880f6b15e8",
+          "indexed_occurrences": 13186,
+          "species_keys_indexed": 27,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 15,
+          "WKT_sha256": "35338a689b8031e00ec8056d855c2a11bf0b3d14138d694ffdb4f0e771b5fac3",
+          "indexed_occurrences": 7,
+          "species_keys_indexed": 4,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 16,
+          "WKT_sha256": "5eaa61c5de3a47dd8baee4491b0de177841af31a56ac982c706ccc4b5e0a9bbc",
+          "indexed_occurrences": 354,
+          "species_keys_indexed": 16,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 17,
+          "WKT_sha256": "7013bc9de8b45175a3a67e25f6d19be5d684a75de44c5d209fee6612fec73b9b",
+          "indexed_occurrences": 15707,
+          "species_keys_indexed": 24,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 18,
+          "WKT_sha256": "c38ad0487683a31f23b9da959ca18ae51147a4604bfdb3ee47621cf25ca7e162",
+          "indexed_occurrences": 105077,
+          "species_keys_indexed": 34,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 19,
+          "WKT_sha256": "b4fbe2f53a6854d7edbb8740d6f3285f33796bf7de9f096112889249abc7457d",
+          "indexed_occurrences": 7,
+          "species_keys_indexed": 3,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 20,
+          "WKT_sha256": "a9a8e323261b440e8e35cdd57aafca13e91740d70dbb7ecb48a8846c4f208369",
+          "indexed_occurrences": 170210,
+          "species_keys_indexed": 42,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 21,
+          "WKT_sha256": "ed4909cf5ea72b879575258b3687ac1e85d8ed33bd4e90da16c65d012210cd92",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 22,
+          "WKT_sha256": "d871de1d9cce766d525370870326278e0feb2aaa1118150d0b9b5d4eab99b85d",
+          "indexed_occurrences": 11246,
+          "species_keys_indexed": 24,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 23,
+          "WKT_sha256": "0b62fe06f6110ff615fb0c3ab76b09fb19654cc3277480d2054e3321ba97f711",
+          "indexed_occurrences": 1497,
+          "species_keys_indexed": 22,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 24,
+          "WKT_sha256": "79c42c4904fcf08e4f34800671d32ad6fa53ee303be33d197bc0395ccaa4e752",
+          "indexed_occurrences": 302,
+          "species_keys_indexed": 18,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 25,
+          "WKT_sha256": "0c565c8ac617f2aa1a45d1c532f3ec864768aba5dd96e132bae733a0047f0657",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 26,
+          "WKT_sha256": "778f354b95dbcf841b72606c6b54829e8da03ff9416f657fe82ee0cc38fd0534",
+          "indexed_occurrences": 1390191,
+          "species_keys_indexed": 57,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 27,
+          "WKT_sha256": "2b50641a25dd1bb1d51797e548953627a5414883f7259c1c0193bd6e3e66e356",
+          "indexed_occurrences": 34295,
+          "species_keys_indexed": 28,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 28,
+          "WKT_sha256": "c367bb4d227a0126d6c05c18e1bef82a522cb41599d31a6ea41830bfc3fae398",
+          "indexed_occurrences": 22661,
+          "species_keys_indexed": 21,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "15",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 7350276,
+      "gbif_specieskey_count": 75,
+      "geometry_fragments": 28,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "0bfd2351bac4d9ea3e94c9545372cf9895f94ec15ed1398e08d9cc7b9b9be463",
+          "indexed_occurrences": 5776735,
+          "species_keys_indexed": 68,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 2,
+          "WKT_sha256": "9245bd500866650a47d73d52cc44e578cf07c6cc1bfc8fc200b2c139a08a7464",
+          "indexed_occurrences": 59758,
+          "species_keys_indexed": 42,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 3,
+          "WKT_sha256": "5bfc764adff34c1250281d9fa4499a562b9f31f656af5bbbebdf1fcc396f23bd",
+          "indexed_occurrences": 12639,
+          "species_keys_indexed": 28,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 4,
+          "WKT_sha256": "402e7d0d05c91ffd3ba6d2891aff287d227cce2f858ec2cdc47ca4cb8b037d1a",
+          "indexed_occurrences": 10224,
+          "species_keys_indexed": 26,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 5,
+          "WKT_sha256": "65fe014be9361555bd2ff6311f62e1a74f889ca49bd62aa90b3143deccb90c66",
+          "indexed_occurrences": 2185,
+          "species_keys_indexed": 26,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 6,
+          "WKT_sha256": "8939830deb6e4c696e092002e66429749a07e28a4743ad6aeb1e084ae86073bb",
+          "indexed_occurrences": 516,
+          "species_keys_indexed": 16,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 7,
+          "WKT_sha256": "296567255e54189276bc29f2d54226798ae902e3f251827c52d3ad3aa97dcfad",
+          "indexed_occurrences": 21,
+          "species_keys_indexed": 8,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 8,
+          "WKT_sha256": "9ee77afb8cb677fa6a1c798bd26f3547ff50b70bfc71237aec7f0f336f3f9f3d",
+          "indexed_occurrences": 2,
+          "species_keys_indexed": 1,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 9,
+          "WKT_sha256": "53c56226a4af15300af0e3862beb35644b320456c9f93862d79b2c5d925671d8",
+          "indexed_occurrences": 13688,
+          "species_keys_indexed": 25,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 10,
+          "WKT_sha256": "ff93889bed7c47d5119858a03f7b8464c72914f217ba93046bd6fc77e747beaa",
+          "indexed_occurrences": 627,
+          "species_keys_indexed": 19,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 11,
+          "WKT_sha256": "e39a39d971963ec04f7b064ee8efe20cde83879a355cd9046da80c1b5f02a3fe",
+          "indexed_occurrences": 374,
+          "species_keys_indexed": 17,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 12,
+          "WKT_sha256": "097657cc76faa6ab06ef5fa7bfb21c5a2388d836171a7470b6bf57447e9de0e2",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 13,
+          "WKT_sha256": "12de74efb573d74399302e824c9d316bc405aaa15d8c91488f9b0edddd9c38f0",
+          "indexed_occurrences": 3328,
+          "species_keys_indexed": 25,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 14,
+          "WKT_sha256": "601d09ee14d12d675bfbd091d585dc861c2cd5d58379fcdcfa42ea880f6b15e8",
+          "indexed_occurrences": 13434,
+          "species_keys_indexed": 27,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 15,
+          "WKT_sha256": "35338a689b8031e00ec8056d855c2a11bf0b3d14138d694ffdb4f0e771b5fac3",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 16,
+          "WKT_sha256": "5eaa61c5de3a47dd8baee4491b0de177841af31a56ac982c706ccc4b5e0a9bbc",
+          "indexed_occurrences": 146,
+          "species_keys_indexed": 17,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 17,
+          "WKT_sha256": "7013bc9de8b45175a3a67e25f6d19be5d684a75de44c5d209fee6612fec73b9b",
+          "indexed_occurrences": 6657,
+          "species_keys_indexed": 24,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 18,
+          "WKT_sha256": "c38ad0487683a31f23b9da959ca18ae51147a4604bfdb3ee47621cf25ca7e162",
+          "indexed_occurrences": 79851,
+          "species_keys_indexed": 34,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 19,
+          "WKT_sha256": "b4fbe2f53a6854d7edbb8740d6f3285f33796bf7de9f096112889249abc7457d",
+          "indexed_occurrences": 11,
+          "species_keys_indexed": 3,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 20,
+          "WKT_sha256": "a9a8e323261b440e8e35cdd57aafca13e91740d70dbb7ecb48a8846c4f208369",
+          "indexed_occurrences": 130142,
+          "species_keys_indexed": 42,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 21,
+          "WKT_sha256": "ed4909cf5ea72b879575258b3687ac1e85d8ed33bd4e90da16c65d012210cd92",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 22,
+          "WKT_sha256": "d871de1d9cce766d525370870326278e0feb2aaa1118150d0b9b5d4eab99b85d",
+          "indexed_occurrences": 8153,
+          "species_keys_indexed": 23,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 23,
+          "WKT_sha256": "0b62fe06f6110ff615fb0c3ab76b09fb19654cc3277480d2054e3321ba97f711",
+          "indexed_occurrences": 737,
+          "species_keys_indexed": 21,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 24,
+          "WKT_sha256": "79c42c4904fcf08e4f34800671d32ad6fa53ee303be33d197bc0395ccaa4e752",
+          "indexed_occurrences": 187,
+          "species_keys_indexed": 17,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 25,
+          "WKT_sha256": "0c565c8ac617f2aa1a45d1c532f3ec864768aba5dd96e132bae733a0047f0657",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 26,
+          "WKT_sha256": "778f354b95dbcf841b72606c6b54829e8da03ff9416f657fe82ee0cc38fd0534",
+          "indexed_occurrences": 1203189,
+          "species_keys_indexed": 59,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 27,
+          "WKT_sha256": "2b50641a25dd1bb1d51797e548953627a5414883f7259c1c0193bd6e3e66e356",
+          "indexed_occurrences": 13732,
+          "species_keys_indexed": 26,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 28,
+          "WKT_sha256": "c367bb4d227a0126d6c05c18e1bef82a522cb41599d31a6ea41830bfc3fae398",
+          "indexed_occurrences": 13940,
+          "species_keys_indexed": 20,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "15",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 4925107,
+      "gbif_specieskey_count": 68,
+      "geometry_fragments": 28,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "0bfd2351bac4d9ea3e94c9545372cf9895f94ec15ed1398e08d9cc7b9b9be463",
+          "indexed_occurrences": 3824887,
+          "species_keys_indexed": 64,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 2,
+          "WKT_sha256": "9245bd500866650a47d73d52cc44e578cf07c6cc1bfc8fc200b2c139a08a7464",
+          "indexed_occurrences": 46459,
+          "species_keys_indexed": 38,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 3,
+          "WKT_sha256": "5bfc764adff34c1250281d9fa4499a562b9f31f656af5bbbebdf1fcc396f23bd",
+          "indexed_occurrences": 11862,
+          "species_keys_indexed": 27,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 4,
+          "WKT_sha256": "402e7d0d05c91ffd3ba6d2891aff287d227cce2f858ec2cdc47ca4cb8b037d1a",
+          "indexed_occurrences": 15055,
+          "species_keys_indexed": 27,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 5,
+          "WKT_sha256": "65fe014be9361555bd2ff6311f62e1a74f889ca49bd62aa90b3143deccb90c66",
+          "indexed_occurrences": 422,
+          "species_keys_indexed": 22,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 6,
+          "WKT_sha256": "8939830deb6e4c696e092002e66429749a07e28a4743ad6aeb1e084ae86073bb",
+          "indexed_occurrences": 373,
+          "species_keys_indexed": 17,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 7,
+          "WKT_sha256": "296567255e54189276bc29f2d54226798ae902e3f251827c52d3ad3aa97dcfad",
+          "indexed_occurrences": 62,
+          "species_keys_indexed": 12,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 8,
+          "WKT_sha256": "9ee77afb8cb677fa6a1c798bd26f3547ff50b70bfc71237aec7f0f336f3f9f3d",
+          "indexed_occurrences": 52,
+          "species_keys_indexed": 15,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 9,
+          "WKT_sha256": "53c56226a4af15300af0e3862beb35644b320456c9f93862d79b2c5d925671d8",
+          "indexed_occurrences": 2980,
+          "species_keys_indexed": 23,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 10,
+          "WKT_sha256": "ff93889bed7c47d5119858a03f7b8464c72914f217ba93046bd6fc77e747beaa",
+          "indexed_occurrences": 281,
+          "species_keys_indexed": 23,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 11,
+          "WKT_sha256": "e39a39d971963ec04f7b064ee8efe20cde83879a355cd9046da80c1b5f02a3fe",
+          "indexed_occurrences": 118,
+          "species_keys_indexed": 16,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 12,
+          "WKT_sha256": "097657cc76faa6ab06ef5fa7bfb21c5a2388d836171a7470b6bf57447e9de0e2",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 13,
+          "WKT_sha256": "12de74efb573d74399302e824c9d316bc405aaa15d8c91488f9b0edddd9c38f0",
+          "indexed_occurrences": 1392,
+          "species_keys_indexed": 22,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 14,
+          "WKT_sha256": "601d09ee14d12d675bfbd091d585dc861c2cd5d58379fcdcfa42ea880f6b15e8",
+          "indexed_occurrences": 5357,
+          "species_keys_indexed": 26,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 15,
+          "WKT_sha256": "35338a689b8031e00ec8056d855c2a11bf0b3d14138d694ffdb4f0e771b5fac3",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 16,
+          "WKT_sha256": "5eaa61c5de3a47dd8baee4491b0de177841af31a56ac982c706ccc4b5e0a9bbc",
+          "indexed_occurrences": 90,
+          "species_keys_indexed": 16,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 17,
+          "WKT_sha256": "7013bc9de8b45175a3a67e25f6d19be5d684a75de44c5d209fee6612fec73b9b",
+          "indexed_occurrences": 1465,
+          "species_keys_indexed": 23,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 18,
+          "WKT_sha256": "c38ad0487683a31f23b9da959ca18ae51147a4604bfdb3ee47621cf25ca7e162",
+          "indexed_occurrences": 35890,
+          "species_keys_indexed": 34,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 19,
+          "WKT_sha256": "b4fbe2f53a6854d7edbb8740d6f3285f33796bf7de9f096112889249abc7457d",
+          "indexed_occurrences": 30,
+          "species_keys_indexed": 8,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 20,
+          "WKT_sha256": "a9a8e323261b440e8e35cdd57aafca13e91740d70dbb7ecb48a8846c4f208369",
+          "indexed_occurrences": 94450,
+          "species_keys_indexed": 42,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 21,
+          "WKT_sha256": "ed4909cf5ea72b879575258b3687ac1e85d8ed33bd4e90da16c65d012210cd92",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 22,
+          "WKT_sha256": "d871de1d9cce766d525370870326278e0feb2aaa1118150d0b9b5d4eab99b85d",
+          "indexed_occurrences": 3489,
+          "species_keys_indexed": 22,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 23,
+          "WKT_sha256": "0b62fe06f6110ff615fb0c3ab76b09fb19654cc3277480d2054e3321ba97f711",
+          "indexed_occurrences": 145,
+          "species_keys_indexed": 18,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 24,
+          "WKT_sha256": "79c42c4904fcf08e4f34800671d32ad6fa53ee303be33d197bc0395ccaa4e752",
+          "indexed_occurrences": 26,
+          "species_keys_indexed": 11,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 25,
+          "WKT_sha256": "0c565c8ac617f2aa1a45d1c532f3ec864768aba5dd96e132bae733a0047f0657",
+          "indexed_occurrences": 0,
+          "species_keys_indexed": 0,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 26,
+          "WKT_sha256": "778f354b95dbcf841b72606c6b54829e8da03ff9416f657fe82ee0cc38fd0534",
+          "indexed_occurrences": 855551,
+          "species_keys_indexed": 52,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 27,
+          "WKT_sha256": "2b50641a25dd1bb1d51797e548953627a5414883f7259c1c0193bd6e3e66e356",
+          "indexed_occurrences": 16782,
+          "species_keys_indexed": 25,
+          "facet_pages": 1
+        },
+        {
+          "geometry_fragment": 28,
+          "WKT_sha256": "c367bb4d227a0126d6c05c18e1bef82a522cb41599d31a6ea41830bfc3fae398",
+          "indexed_occurrences": 7889,
+          "species_keys_indexed": 21,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "26",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 83353,
+      "gbif_specieskey_count": 42,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "3423e121a4fff7cb9cfd0542b02603924f8fdd343f528e4ace4cdca4b59a0ba2",
+          "indexed_occurrences": 83353,
+          "species_keys_indexed": 42,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "26",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 198154,
+      "gbif_specieskey_count": 44,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "3423e121a4fff7cb9cfd0542b02603924f8fdd343f528e4ace4cdca4b59a0ba2",
+          "indexed_occurrences": 198154,
+          "species_keys_indexed": 44,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "26",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 199662,
+      "gbif_specieskey_count": 44,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "3423e121a4fff7cb9cfd0542b02603924f8fdd343f528e4ace4cdca4b59a0ba2",
+          "indexed_occurrences": 199662,
+          "species_keys_indexed": 44,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "47",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 207,
+      "gbif_specieskey_count": 108,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "44c9250c0cb2474f99018f5215f174dd88946aa05a237737539284b1994c2c23",
+          "indexed_occurrences": 207,
+          "species_keys_indexed": 108,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "47",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 242,
+      "gbif_specieskey_count": 109,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "44c9250c0cb2474f99018f5215f174dd88946aa05a237737539284b1994c2c23",
+          "indexed_occurrences": 242,
+          "species_keys_indexed": 109,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "47",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 1193,
+      "gbif_specieskey_count": 198,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "44c9250c0cb2474f99018f5215f174dd88946aa05a237737539284b1994c2c23",
+          "indexed_occurrences": 1193,
+          "species_keys_indexed": 198,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "85",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 221,
+      "gbif_specieskey_count": 37,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "a9333ed8eb392a502c972fa7d1110ecc294391c38d3315ef202c21908bf099d8",
+          "indexed_occurrences": 221,
+          "species_keys_indexed": 37,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "85",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 707,
+      "gbif_specieskey_count": 47,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "a9333ed8eb392a502c972fa7d1110ecc294391c38d3315ef202c21908bf099d8",
+          "indexed_occurrences": 707,
+          "species_keys_indexed": 47,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "85",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 3460,
+      "gbif_specieskey_count": 50,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "a9333ed8eb392a502c972fa7d1110ecc294391c38d3315ef202c21908bf099d8",
+          "indexed_occurrences": 3460,
+          "species_keys_indexed": 50,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "168",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 12009,
+      "gbif_specieskey_count": 63,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "f7d3f992814e4cb4eabc8a6263cdef47db4f82244d99558db811e682f7951a47",
+          "indexed_occurrences": 12009,
+          "species_keys_indexed": 63,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "168",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 37627,
+      "gbif_specieskey_count": 67,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "f7d3f992814e4cb4eabc8a6263cdef47db4f82244d99558db811e682f7951a47",
+          "indexed_occurrences": 37627,
+          "species_keys_indexed": 67,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "168",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 60024,
+      "gbif_specieskey_count": 67,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "f7d3f992814e4cb4eabc8a6263cdef47db4f82244d99558db811e682f7951a47",
+          "indexed_occurrences": 60024,
+          "species_keys_indexed": 67,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "234",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 88,
+      "gbif_specieskey_count": 13,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "16da81f54e6fdb49f20f1293e323ad2c38a4c249e51fa2bbd74ed5c53ada21ac",
+          "indexed_occurrences": 88,
+          "species_keys_indexed": 13,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "234",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 1006,
+      "gbif_specieskey_count": 19,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "16da81f54e6fdb49f20f1293e323ad2c38a4c249e51fa2bbd74ed5c53ada21ac",
+          "indexed_occurrences": 1006,
+          "species_keys_indexed": 19,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "234",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 1440,
+      "gbif_specieskey_count": 17,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "16da81f54e6fdb49f20f1293e323ad2c38a4c249e51fa2bbd74ed5c53ada21ac",
+          "indexed_occurrences": 1440,
+          "species_keys_indexed": 17,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "391",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 240,
+      "gbif_specieskey_count": 13,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "bef5511276740b680d4e873780ecca4c4a68f150a0641c663a8b0fa50483a855",
+          "indexed_occurrences": 240,
+          "species_keys_indexed": 13,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "391",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 1376,
+      "gbif_specieskey_count": 15,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "bef5511276740b680d4e873780ecca4c4a68f150a0641c663a8b0fa50483a855",
+          "indexed_occurrences": 1376,
+          "species_keys_indexed": 15,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "391",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 4856,
+      "gbif_specieskey_count": 18,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "bef5511276740b680d4e873780ecca4c4a68f150a0641c663a8b0fa50483a855",
+          "indexed_occurrences": 4856,
+          "species_keys_indexed": 18,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "753",
+      "period": "pre2001_2010",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 45,
+      "gbif_specieskey_count": 21,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "db255516f5e49b1466d67531e027139cf8e2a4bc2007cc157c61c2132e729e75",
+          "indexed_occurrences": 45,
+          "species_keys_indexed": 21,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "753",
+      "period": "first2011_2017",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 233,
+      "gbif_specieskey_count": 30,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "db255516f5e49b1466d67531e027139cf8e2a4bc2007cc157c61c2132e729e75",
+          "indexed_occurrences": 233,
+          "species_keys_indexed": 30,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    },
+    {
+      "island_id": "753",
+      "period": "holdout2018_2022",
+      "all_butterfly_indexed_occurrences_disjoint_polygon_sum": 405,
+      "gbif_specieskey_count": 43,
+      "geometry_fragments": 1,
+      "fragment_receipts": [
+        {
+          "geometry_fragment": 1,
+          "WKT_sha256": "db255516f5e49b1466d67531e027139cf8e2a4bc2007cc157c61c2132e729e75",
+          "indexed_occurrences": 405,
+          "species_keys_indexed": 43,
+          "facet_pages": 1
+        }
+      ],
+      "index_is_not_biological_occupancy": true
+    }
+  ],
+  "risk_cells": 1800,
+  "eligible_2011_2017": 1628,
+  "first_indexed_2011_2017": 24,
+  "eligible_2018_2022": 1604,
+  "first_indexed_2018_2022": 20,
+  "limits": [
+    "This GBIF 2026 index snapshot differs from the private original 2001–2024 precise coordinate source.",
+    "225 candidate butterfly species are fixed before looking at later island first indexing; no 60-species outcome preselection.",
+    "GSHHG disjoint fragment polygons retain >=97% island area; simplified coastlines can change nearshore assignment.",
+    "Zero-overlap fragment interiors can share borders; GBIF points exactly on a split border may be double-indexed.",
+    "All 225 species × island cells are included; many are geographically infeasible, so all-species crude risk rates are not transport effects.",
+    "Query negatives are GBIF nonindexes, not biological absences, occupancy, or proof of no colonization.",
+    "Accepted family taxonKey filters and the 225 source speciesKey concepts may drift under GBIF checklist upgrades; audit exact overlap.",
+    "Three window-specific speciesKey facets lack exact first year/individual observation providers and are not true sampling histories.",
+    "Current source has no plant × butterfly host-edge supply, transport vector or independent regional establishment observations.",
+    "Do not reuse 2001–2024 pooled port plant inventory as a pre-outcome foodplant exposure."
+  ]
+}

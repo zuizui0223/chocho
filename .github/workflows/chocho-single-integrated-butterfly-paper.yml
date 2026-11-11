@@ -1,0 +1,32 @@
+name: "One integrated GEB butterfly manuscript - source and scientific-claim verification"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - manuscript/integrated_butterfly_resource_access_20261109/**
+      - scripts/verify_single_integrated_butterfly_paper_20261109.py
+      - .github/workflows/chocho-single-integrated-butterfly-paper.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-single-butterfly-article:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile source-locked manuscript evidence verifier
+        run: python -m py_compile scripts/verify_single_integrated_butterfly_paper_20261109.py
+      - name: Validate all major butterfly positive and negative scientific claims on original source data
+        run: |
+          python scripts/verify_single_integrated_butterfly_paper_20261109.py | tee integrated_paper_validation_receipt.json
+      - name: Preserve source evidence receipt for coauthor manuscript review
+        uses: actions/upload-artifact@v4
+        with:
+          name: single-butterfly-article-source-claim-audit-20261109
+          path: integrated_paper_validation_receipt.json
+          if-no-files-found: error
+          retention-days: 60

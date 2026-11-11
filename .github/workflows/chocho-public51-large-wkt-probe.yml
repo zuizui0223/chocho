@@ -1,0 +1,45 @@
+name: Verify large GSHHG butterfly polygons against real GBIF index
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-public51-large-wkt-probe.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  two-original-complex-islands:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original GSHHG toolchain
+        run: python -m pip install --disable-pip-version-check "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - uses: actions/cache@v4
+        with:
+          key: chocho-original-gshhg-shp-237-sha8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Verify GSHHG source
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Two high-coastline original IDs via bounded 10000-WKT polygon fragments
+        run: |
+          python scripts/build_public51_butterfly_risk_20261109.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/large_wkt10000 \
+            --islands 15,21 --wkt-max-chars 10000
+      - name: Archive source and area-preservation geometry receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original51-large-polygons-15-21-index-probe
+          path: results/public51_butterfly_index_source_20261109/
+          if-no-files-found: warn
+          retention-days: 45

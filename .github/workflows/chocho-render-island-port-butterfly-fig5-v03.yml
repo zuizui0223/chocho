@@ -1,0 +1,58 @@
+name: Render and audit GEB integrated butterfly Figure 5 v0.3
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/render_island_port_butterfly_fig5_v03.py
+      - .github/workflows/chocho-render-island-port-butterfly-fig5-v03.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fig5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-figure renderer and verify syntax
+        run: |
+          python -m pip install --quiet 'numpy>=1.26,<3' 'matplotlib>=3.8,<4'
+          python -m py_compile scripts/render_island_port_butterfly_fig5_v03.py
+      - name: Render Fig5 from the archived 51/990-island original source tables and historical host null
+        run: |
+          python -u scripts/render_island_port_butterfly_fig5_v03.py --out-dir figures/integrated_island_port_butterfly_v03
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("figures/integrated_island_port_butterfly_v03")
+          j=json.loads((root/"FIGURE5_V03_SOURCE_RECEIPT.json").read_text())
+          assert j["status"]=="SOURCE_LOCKED_FIGURE_RENDERED"
+          assert len(j["figures"])==2
+          assert abs(j["values"]["host_given_marine"]-1.731162479353141)<1e-10
+          assert abs(j["values"]["marine_given_host"]-6.4880250544198574)<1e-10
+          assert j["values"]["first_pre"]==221 and j["values"]["first_late"]==96
+          for x in j["figures"]:
+              assert (root/x).stat().st_size>10000
+          print("FIG5_V03_ORIGINAL_RESULTS_AND_FILES_PASS")
+          PY
+      - name: Store v0.3 source-aligned vector/raster Figure 5 and source SHA audit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add figures/integrated_island_port_butterfly_v03/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Render original-source-backed integrated GEB Figure5 v0.3 [skip ci]'
+          git push origin 'HEAD:refs/heads/analysis/butterfly-trait-public51-20261109'
+      - name: Preserve actual plot and source ledger as review artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-GEB-integrated-Figure5-v03
+          path: figures/integrated_island_port_butterfly_v03/
+          retention-days: 60
+          if-no-files-found: warn

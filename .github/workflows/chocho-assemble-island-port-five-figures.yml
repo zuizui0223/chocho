@@ -1,0 +1,50 @@
+name: "Assemble verified island-port butterfly Figures 1-5 as vector PDF"
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/assemble_island_port_butterfly_five_figures_v02.py
+      - .github/workflows/chocho-assemble-island-port-five-figures.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-locked-fiver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install vector assembly dependencies
+        run: python -m pip install --disable-pip-version-check cairosvg pymupdf
+      - name: Compile and crosscheck all five original source renders and produce review PDF
+        run: |
+          python -m py_compile scripts/assemble_island_port_butterfly_five_figures_v02.py
+          python scripts/assemble_island_port_butterfly_five_figures_v02.py
+      - name: Archive five-page scientific vector review PDF plus SHA receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: island-port-butterfly-five-main-figures-review-pdf-v02
+          path: |
+            figures/integrated_island_port_butterfly_v02/ISLAND_PORT_BUTTERFLIES_MAIN_FIGURES_1_TO_5_REVIEW_V02.pdf
+            figures/integrated_island_port_butterfly_v02/ISLAND_PORT_BUTTERFLIES_FIVE_FIGURES_PDF_RECEIPT_V02.json
+          if-no-files-found: error
+          retention-days: 60
+      - name: Persist source-checked vector review to PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add figures/integrated_island_port_butterfly_v02/ISLAND_PORT_BUTTERFLIES_MAIN_FIGURES_1_TO_5_REVIEW_V02.pdf figures/integrated_island_port_butterfly_v02/ISLAND_PORT_BUTTERFLIES_FIVE_FIGURES_PDF_RECEIPT_V02.json
+          if git diff --cached --quiet; then echo "Review package already in branch"; exit 0; fi
+          git commit -m "Archive 5-vector-figure butterfly island-port research review PDF [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase FETCH_HEAD || exit 1
+            if git push origin "HEAD:refs/heads/${GITHUB_REF_NAME}"; then exit 0; fi
+            sleep 2
+          done
+          exit 1
