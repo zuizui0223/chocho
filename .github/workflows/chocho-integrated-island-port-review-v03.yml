@@ -10,6 +10,9 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/TABLE_S1_six_island_cases.md
+      - scripts/trace_top_hosts_to_island_records.py
+      - results/top_host_island_chronology/**
+      - figures/integrated_island_port_butterfly_v03/FigS6_named_host_chronology.png
       - figures/integrated_island_port_butterfly_v03/FigS5_regional_routes.png
       - figures/integrated_island_port_butterfly_v03/FigS4_annual_maritime_links.png
       - figures/integrated_island_port_butterfly_v03/FigS3_annual_port_host.png
@@ -76,7 +79,9 @@ jobs:
           assert any('6.488%' in x for x in paras)
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
-            assert len(imgs)>=11
+            assert len(imgs)>=12
+            named = Path('figures/integrated_island_port_butterfly_v03/FigS6_named_host_chronology.png').read_bytes()
+            assert any(z.read(name) == named for name in imgs)
             summary = Path('figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.png').read_bytes()
             assert any(z.read(name) == summary for name in imgs)
             assert any("Table S1." in x for x in paras)
