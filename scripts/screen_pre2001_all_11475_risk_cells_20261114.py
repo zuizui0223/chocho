@@ -62,7 +62,10 @@ def main():
     print("FULL_HISTORY_BATCH_START",json.dumps({
         "batch":a.batch_id, "original_islands":len(ids),"panel_species":225,
         "total_cells":len(selection), "original_fragments":n}),flush=True)
-    source_key_list=sorted(species,key=int)
+    # Reuse the ORIGINAL fixed six butterfly-family taxonKeys from the 2026-11-09
+    # 225 x 51 source receipts. GBIF does not accept the full 225 speciesKey
+    # repetition in one GET (HTTP 400); family-level facet pagination works.
+    original_family_keys=["7017","5481","5473","9417","6953","1933999"]
     counts=defaultdict(int)
     receipts=[]
     failures=[]
@@ -75,38 +78,60 @@ def main():
                 "source_status":"UNKNOWN",
             }
             try:
-                result=get_json(GBIF+"/occurrence/search",{
-                    "geometry":polygon,
-                    "year":"1700,2000",
-                    "taxonKey":source_key_list,
-                    "hasCoordinate":"true",
-                    "hasGeospatialIssue":"false",
-                    "occurrenceStatus":"PRESENT",
-                    "facet":"speciesKey","facetLimit":1000,
-                    "limit":0,
-                })
-                total=int(result["count"])
-                facet={str(x.get("field","")).upper():x.get("counts",[])
-                    for x in result.get("facets",[])}
-                if total>0 and "SPECIES_KEY" not in facet:
-                    raise ValueError("Nonzero GBIF count without SPECIES_KEY facet")
                 observed=defaultdict(int)
-                for z in facet.get("SPECIES_KEY",[]):
-                    key=str(z["name"])
-                    if key not in species:raise ValueError("GBIF returned speciesKey not frozen in panel "+key)
-                    observed[key]+=int(z["count"])
-                if sum(observed.values())>total:
-                    raise ValueError("GBIF facet sum exceeds total")
+                page_hashes=[]
+                seen_facets=set()
+                total=None
+                indexed_other_species=0
+                for page_index in range(40):
+                    result=get_json(GBIF+"/occurrence/search",{
+                        "geometry":polygon, "year":"1700,2000",
+                        "taxonKey":original_family_keys,
+                        "hasCoordinate":"true", "hasGeospatialIssue":"false",
+                        "occurrenceStatus":"PRESENT",
+                        "facet":"speciesKey", "facetLimit":1000,
+                        "facetOffset":page_index*1000, "limit":0,
+                    })
+                    page_n=int(result["count"])
+                    if total is not None and total != page_n:
+                        raise ValueError("GBIF full count changed across facet pagination")
+                    total=page_n
+                    facet={str(x.get("field","")).upper():x.get("counts",[])
+                           for x in result.get("facets",[])}
+                    if total>0 and "SPECIES_KEY" not in facet:
+                        raise ValueError("Nonzero GBIF count without SPECIES_KEY facet")
+                    entries=facet.get("SPECIES_KEY",[])
+                    for z in entries:
+                        key=str(z["name"])
+                        if key in seen_facets:
+                            raise ValueError("GBIF repeated speciesKey in facet pages: "+key)
+                        seen_facets.add(key)
+                        count=int(z["count"])
+                        if count<0:raise ValueError("Negative GBIF facet count")
+                        if key in species:
+                            observed[key]+=count
+                        else:
+                            indexed_other_species+=count
+                    page_hashes.append(hashlib.sha256(
+                        json.dumps(result,sort_keys=True,ensure_ascii=False).encode()
+                    ).hexdigest())
+                    if len(entries)<1000:
+                        break
+                else:
+                    raise ValueError("More than 40 GBIF species facet pages")
+                if sum(observed.values())+indexed_other_species>total:
+                    raise ValueError("GBIF facet sum exceeds response count")
                 for key,count in observed.items():
                     counts[island,key]+=count
                 receipt.update({
                     "source_status":"COMPLETE",
                     "indexed_total":total,
                     "candidate_indexed":sum(observed.values()),
-                    "source_response_sha256":hashlib.sha256(
-                        json.dumps(result,sort_keys=True,ensure_ascii=False).encode()
-                    ).hexdigest(),
+                    "family_taxon_keys":original_family_keys,
+                    "facet_pages":len(page_hashes),
+                    "source_response_page_sha256":page_hashes,
                     "source_faceted_species":len(observed),
+                    "source_faceted_nonpanel_species":len(seen_facets)-len(observed),
                 })
             except Exception as exc:
                 receipt.update(source_status="INCOMPLETE_UNKNOWN",error=repr(exc))
