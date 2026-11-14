@@ -114,6 +114,7 @@ def main():
             target=int(historic[f"indexed_first_{period}_longer_history"])
             group.append({
                 "species":x["speciesKey"],
+                "species_name":x["species"],
                 "island":x["landmass_id"],
                 "earlier_island":source,
                 "event":target,
@@ -169,6 +170,13 @@ def main():
             for k,v in model_sets(oldrisk).items()
         },
         "extended_time_risk_support":audits,
+        "revised_historical_candidate_first_index_intro_host_cases":{
+            era:[
+                {k:row[k] for k in ("species","species_name","island","earlier_island","distance_km","access_residual","native","introduced","effort")}
+                for row in modeled[era]
+                if row["event"] and row["introduced"] and row["effort"]>=10
+            ] for era in ("2011_2017","2018_2022")
+        },
         "extended_time_model_results":results,
         "inference":manuscript_notice,
     }
