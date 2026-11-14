@@ -1,0 +1,51 @@
+name: Temporary licensed photo inspection for two Catalina Pieris larvae
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - .github/workflows/chocho-pieris-photo-inspection.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  retrieve-two-author-attributed-source-photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch original two photos for evidence assessment (no repo commit)
+        run: |
+          python - <<'PY'
+          import hashlib,json,mimetypes
+          from pathlib import Path
+          from urllib.request import Request,urlopen
+          out=Path("_scratch_pieris_photo_review");out.mkdir(exist_ok=True)
+          entries=[
+            ("2020_Pieris_rapae_iNat48671907.jpg","https://inaturalist-open-data.s3.amazonaws.com/photos/77240414/original.jpg","48671907"),
+            ("2022_Pieris_rapae_iNat113604519.jpeg","https://inaturalist-open-data.s3.amazonaws.com/photos/191918586/original.jpeg","113604519"),
+          ]
+          receipt=[]
+          for name,url,obsid in entries:
+            with urlopen(Request(url,headers={"User-Agent":"chocho-noncommercial-source-inspection/20261114"}),timeout=45) as r:
+              b=r.read(15*1024*1024+1)
+              typ=r.headers.get("Content-Type")
+              if len(b)>15*1024*1024 or not (b.startswith(b"\xff\xd8\xff") and typ and "image" in typ):
+                raise ValueError("Not a valid bounded JPEG original source image "+name)
+            (out/name).write_bytes(b)
+            receipt.append(dict(filename=name,source_url=url,observation_id=obsid,size_bytes=len(b),sha256=hashlib.sha256(b).hexdigest(),
+                    license="CC BY-NC 4.0",rights_holder="Jeanie Shelton",inspection_only=True,
+                    source_page="https://www.inaturalist.org/observations/"+obsid,
+                    no_derivative_distribution=True))
+          (out/"PROVENANCE_AND_LICENSE.json").write_text(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps({"count":len(receipt),"photos":[{"name":z["filename"],"size":z["size_bytes"],"sha256":z["sha256"]} for z in receipt]}))
+          PY
+      - name: Temporary licensed inspection artifact, not committed or included in manuscript
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-two-original-catalina-photos-internal-inspection
+          path: _scratch_pieris_photo_review/
+          retention-days: 1
+          if-no-files-found: error
