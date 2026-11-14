@@ -1,0 +1,47 @@
+name: Verify two Catalina Pieris larvae against original plant-host evidence
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_pieris_rapae_original_host_evidence_20261114.py
+      - .github/workflows/chocho-pieris-original-host-evidence.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-GBIF-iNaturalist-two-records:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile original observation source audit
+        run: python -m py_compile scripts/audit_pieris_rapae_original_host_evidence_20261114.py
+      - name: Reacquire public GBIF occurrence and original-observation metadata
+        run: |
+          python scripts/audit_pieris_rapae_original_host_evidence_20261114.py \
+            --out-dir results/port_host_original_observation_20261114
+      - name: Verify both source records or transparently flag source failure
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('results/port_host_original_observation_20261114/original_observation_audit.json').read_text())
+          assert [x['gbifID'] for x in d['records']] == ['2814126623','3772636962']
+          for row in d['records']:
+              if row['status']=='GBIF_RETRIEVED':
+                  assert str(row['gbif_fields']['speciesKey']) == '1920496'
+                  assert str(row['gbif_fields']['lifeStage']).lower() == 'larva'
+                  assert row.get('gbif_response_sha256')
+          print('GBIF RAW EVIDENCE SOURCE STATUS:',*[r['status'] for r in d['records']])
+          PY
+      - name: Archive evidence without copying copyrighted photo bytes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-catalina-pieris-original-evidence
+          path: results/port_host_original_observation_20261114/
+          if-no-files-found: warn
+          retention-days: 90
