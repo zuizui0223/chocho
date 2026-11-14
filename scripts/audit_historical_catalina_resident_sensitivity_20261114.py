@@ -76,7 +76,7 @@ def main():
     before=old["2011_2017"]["plant_records_ge_10"]
     after=changed["2011_2017"]["plant_records_ge_10"]
     assert before["n"]-after["n"]==1 and before["events"]-after["events"]==1
-    assert before["intro_events"]-after["intro_events"]==1
+    assert before["introduced_event_cells"]-after["introduced_event_cells"]==1
     assert old["2018_2022"]==changed["2018_2022"]
 
     cases,reindex_hashes=reindex_case_rows(a.repo_root)
@@ -118,8 +118,8 @@ def main():
     print(json.dumps({
         "output":str(path),
         "historic":HISTORY["historic_pre2001_occurrence_year"],
-        "original_early_interaction":before["coef_interaction_pp_perSD"],
-        "excl_historic_early_interaction":after["coef_interaction_pp_perSD"],
+        "original_early_interaction":before["introduce_x_sea_access_effect_pp_per_SD"],
+        "excl_historic_early_interaction":after["introduce_x_sea_access_effect_pp_per_SD"],
         "reindex_before":cohort["risk_difference_pp"],
         "reindex_excl_historic":corrected["risk_difference_pp"],
         "reindex_excl_intro_n":corrected["introduced_host_indexed"]["n"],
