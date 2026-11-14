@@ -1,0 +1,62 @@
+name: Historic pre-2001 butterfly GBIF index gate for original 15 port-host cases
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/acquire_pre2001_original15_butterfly_indices_20261114.py
+      - .github/workflows/chocho-port-host-pre2001-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-older-butterflies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "numpy>=1.26,<3" "geopandas>=1.0,<2" "pyproj>=3.5,<4" "shapely>=2,<3"
+      - uses: actions/cache@v4
+        with:
+          key: chocho-original-gshhg-shp-237-sha8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Verify independent original GSHHG 2.3.7 zip hash
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Rebuild exact fifteen post-2011 first-index cases without modifying them
+        run: |
+          python scripts/audit_port_host_later_reindex_20261114.py --out-dir results/port_host_reindex_20261114
+      - name: Requery original species and island polygons before 2001
+        run: |
+          python -m py_compile scripts/acquire_pre2001_original15_butterfly_indices_20261114.py
+          python scripts/acquire_pre2001_original15_butterfly_indices_20261114.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/port_host_pre2001 \
+            --source-case-audit results/port_host_reindex_20261114/audit.json \
+            --out-dir results/port_host_pre2001_20261114 --max-facets 50 --wkt-max-chars 2300
+      - name: Verify coverage and explicit nonindex interpretation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path("results/port_host_pre2001_20261114/source_audit.json").read_text())
+          assert len(data["case_records"])==15
+          assert len({r["island"] for r in data["case_records"]})==11
+          assert data["query_count_executed"]==data["query_count_planned"]
+          assert all(r["do_not_infer_true_recent_colonization"] for r in data["case_records"])
+          print("PRE2001 CASE AUDIT completed; queries",data["query_count_executed"],"failed",len(data["query_errors"]))
+          PY
+      - name: Preserve all historic GBIF query receipts, including failed/unknown
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-20261114-original15-pre2001-gbif-index
+          path: results/port_host_pre2001_20261114/
+          if-no-files-found: warn
+          retention-days: 90
