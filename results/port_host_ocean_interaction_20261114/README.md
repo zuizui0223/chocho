@@ -57,11 +57,11 @@ This pilot **does not overwrite or refute other endpoints**:
 
 From repo root, with NumPy 1.26+:
 
-\`\`\`bash
+```bash
 python scripts/analyze_port_host_ocean_interaction_20261114.py \
   --out-dir results/port_host_ocean_interaction_20261114
-\`\`\`
+```
 
-The generated \`source_join_pilot.json\` preserves four input SHA-256 hashes, exact populations, coefficients, interval approximations and interpretation limits. The dedicated CI workflow checks frozen original source dimensions and both periods.
+The generated `source_join_pilot.json` preserves four input SHA-256 hashes, exact populations, coefficients, interval approximations and interpretation limits. The dedicated CI workflow checks frozen original source dimensions and both periods.
 
 **Next experiment should not be response-driven fishing among AIS, wind, butterfly wing size and multiple access metrics.** A genuine test of the proposed mechanism needs prior-dated *island-local* host abundance/use, independently measured dispersal capability, equal butterfly observation opportunity, and breeding/persistence events. Monthly **directional** winds and currents can then be added to an independent arrival model; the current undirected circuits cannot substitute for such trajectories.
