@@ -1,0 +1,95 @@
+name: Exploratory pre-2011 port-host x ocean access (51 islands)
+on:
+  push:
+    branches:
+      - analysis/port-host-ocean-interaction-20261114
+    paths:
+      - scripts/analyze_port_host_ocean_interaction_20261114.py
+      - scripts/audit_port_host_later_reindex_20261114.py
+      - scripts/audit_port_host_migrant_stage_support_20261114.py
+      - .github/workflows/chocho-port-host-ocean-interaction.yml
+  pull_request:
+    branches:
+      - analysis/butterfly-trait-public51-20261109
+    paths:
+      - scripts/analyze_port_host_ocean_interaction_20261114.py
+      - scripts/audit_port_host_later_reindex_20261114.py
+      - scripts/audit_port_host_migrant_stage_support_20261114.py
+      - .github/workflows/chocho-port-host-ocean-interaction.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  joined-historical-port-host-marine-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26'
+      - name: Compile analysis code
+        run: python -m py_compile scripts/analyze_port_host_ocean_interaction_20261114.py scripts/audit_port_host_later_reindex_20261114.py scripts/audit_port_host_migrant_stage_support_20261114.py
+      - name: Execute source-locked join and fixed-effect sensitivity
+        run: |
+          python scripts/analyze_port_host_ocean_interaction_20261114.py \
+            --out-dir results/port_host_ocean_interaction_20261114
+      - name: Validate input denominators and both result eras
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('results/port_host_ocean_interaction_20261114/source_join_pilot.json').read_text())
+          assert d['source_support']['butterfly_cells'] == 11475
+          assert d['source_support']['marine_pairs'] == 1275
+          assert d['source_support']['host_crosswalk_islands'] == 41
+          assert set(d['periods']) == {'2011_2017', '2018_2022'}
+          for era, r in d['periods'].items():
+              m = r['plant_records_ge_10']
+              assert m['n'] > 0 and m['events'] > 0, (era, m)
+              assert m['islands'] >= 20, (era, m)
+              assert all(x == x for x in m['approximate_95pct_interval_pp']), (era, m)
+          print("SOURCE/COHORT/AUDIT OK")
+          PY
+      - name: Execute post-first-index later re-index (not establishment) audit
+        run: |
+          python scripts/audit_port_host_later_reindex_20261114.py --out-dir results/port_host_reindex_20261114
+      - name: Verify independently specified re-index denominators
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("results/port_host_reindex_20261114/audit.json").read_text())
+          m = data["audit_subsets"]["main_pre2011_plant_records_ge10"]
+          assert m["n_total"] == 159, m
+          assert m["introduced_host_indexed"]["n"] == 15, m
+          assert m["introduced_host_indexed"]["later_reindexed"] == 11, m
+          assert m["introduced_host_not_indexed_unknown_presence"]["n"] == 144, m
+          assert m["introduced_host_not_indexed_unknown_presence"]["later_reindexed"] == 100, m
+          assert len(data["introduced_case_index"]) == 15, data["introduced_case_index"]
+          print("RE-INDEX DENOMINATORS AND HISTORICAL PLANT CROSSWALK OK")
+          PY
+      - name: Audit independent migrant-candidate positive list and stage-record support
+        run: |
+          python scripts/audit_port_host_migrant_stage_support_20261114.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('results/port_host_reindex_20261114/candidate_migration_and_stage_source_audit.json')
+          data=json.loads(p.read_text())
+          a=data['main']['historic_introduced_host_indexed']
+          b=data['main']['historic_introduced_host_not_indexed_unknown_presence']
+          assert (a['n'],a['author_selected_migrant_candidate'],a['archived_immature_stage_match'])==(15,14,0),a
+          assert (b['n'],b['author_selected_migrant_candidate'],b['archived_immature_stage_match'])==(144,101,0),b
+          print('SOURCE COVERAGE AND INDIRECT-TRAIT LABELS OK')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-port-host-ocean-pilot
+          path: |
+            results/port_host_ocean_interaction_20261114/source_join_pilot.json
+            results/port_host_reindex_20261114/audit.json
+            results/port_host_reindex_20261114/candidate_migration_and_stage_source_audit.json
+          if-no-files-found: error
+          retention-days: 90

@@ -1,0 +1,59 @@
+name: Retest port-host x marine access with same-source 1700-2010 GBIF history
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/analyze_port_host_ocean_long_history_20261114.py
+      - .github/workflows/chocho-long-history-port-host-ocean.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-time-coherent-conditional-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Fetch exactly verified original 11,475 historical source and its hash receipt
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43586278558
+          github-token: ${{ github.token }}
+          name: chocho-20261114-full11475-pre2001-index-risk-panel
+          path: _scratch_pre2001_full11475
+      - name: Refit original species-island conditional model under all-cell historical eligibility
+        run: |
+          python -m py_compile scripts/analyze_port_host_ocean_long_history_20261114.py
+          python scripts/analyze_port_host_ocean_long_history_20261114.py \
+            --history-csv _scratch_pre2001_full11475/full_11475_same_source_pre2001_risk_cells.csv \
+            --history-summary _scratch_pre2001_full11475/full_risk_source_summary.json \
+            --out-dir results/port_host_ocean_long_history_20261114
+      - name: Guard against unsupported establishment or automatic positive interpretation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/port_host_ocean_long_history_20261114/long_history_port_host_ocean_model.json")
+          d=json.loads(p.read_text())
+          assert d["inference"]["do_not_use_as_colonization_effect"]
+          assert d["historical_risk_stats"]["all_11475"]["cells"]==11475
+          assert d["historical_risk_stats"]["2011_2017"]["more_consistent_1700_2010_index_only_first_indices"]==99
+          assert d["historical_risk_stats"]["2018_2022"]["more_consistent_1700_2010_index_only_first_indices"]==73
+          for period in ("2011_2017","2018_2022"):
+              risk=d["extended_time_risk_support"][period]
+              assert risk["current_model_first_index_rows"]<=risk["source_total_extended_first_event"]
+              assert d["extended_time_model_results"][period]["plant_records_ge_10"]["n"]>=0
+          print("HISTORICALLY UNIFORM INDEX-RISK ESTIMANDS VERIFIED; NOT COLONIZATION")
+          PY
+      - name: Preserve all updated comparisons and source receipts without changing manuscript
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-port-host-ocean-history-adjusted-estimands
+          path: results/port_host_ocean_long_history_20261114/
+          if-no-files-found: error
+          retention-days: 90

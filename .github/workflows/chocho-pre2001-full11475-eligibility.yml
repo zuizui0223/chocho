@@ -1,0 +1,108 @@
+name: Historical pre-2001 GBIF index screen of all 11475 butterfly island cells
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/screen_pre2001_all_11475_risk_cells_20261114.py
+      - scripts/merge_pre2001_all_11475_risk_cells_20261114.py
+      - .github/workflows/chocho-pre2001-full11475-eligibility.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-geography-shards:
+    name: Historical GBIF batch ${{ matrix.batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - batch: 1
+          islands: "9,19,28,59,94,183,257,456,951"
+        - batch: 2
+          islands: "10,20,31,65,110,206,260,471,1210"
+        - batch: 3
+          islands: "12,21,43,79,134,214,276,487,1577"
+        - batch: 4
+          islands: "13,23,44,81,152,218,321,715"
+        - batch: 5
+          islands: "15,26,47,85,168,234,391,753"
+        - batch: 6
+          islands: "17,27,54,89,169,242,397,821"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original GSHHG geography dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'geopandas>=1.0,<2' 'pyproj>=3.5,<4' 'shapely>=2,<3'
+      - uses: actions/cache@v4
+        with:
+          key: chocho-original-gshhg-shp-237-sha8dbbe7e
+          path: _scratch_coastal/gshhg-shp-2.3.7.zip
+      - name: Verify exact original GSHHG 2.3.7 source
+        run: |
+          mkdir -p _scratch_coastal
+          if test ! -s _scratch_coastal/gshhg-shp-2.3.7.zip; then
+            curl -fSL --retry 3 --max-time 360 -o _scratch_coastal/gshhg-shp-2.3.7.zip https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          fi
+          echo "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_coastal/gshhg-shp-2.3.7.zip" | sha256sum --check
+      - name: Screen all frozen first-index events for pre-2001 presence-index
+        run: |
+          python -m py_compile scripts/screen_pre2001_all_11475_risk_cells_20261114.py
+          python scripts/screen_pre2001_all_11475_risk_cells_20261114.py \
+            --gshhg-zip _scratch_coastal/gshhg-shp-2.3.7.zip \
+            --work _scratch_coastal/all317_batch_${{ matrix.batch }} \
+            --islands "${{ matrix.islands }}" --batch-id ${{ matrix.batch }} \
+            --max-queries 120 --wkt-max-chars 2300 \
+            --out-dir results/pre2001_full_shard_${{ matrix.batch }}
+      - name: Archive facet receipts for each source island
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-pre2001-fullpanel-batch-${{ matrix.batch }}
+          path: results/pre2001_full_shard_${{ matrix.batch }}/
+          if-no-files-found: warn
+          retention-days: 90
+  merge-317:
+    needs: original-geography-shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: chocho-pre2001-fullpanel-batch-*
+          merge-multiple: true
+          path: _scratch_pre2001_full_shards
+      - name: Verify all six source shards and original denominators
+        run: |
+          python -m py_compile scripts/merge_pre2001_all_11475_risk_cells_20261114.py
+          python scripts/merge_pre2001_all_11475_risk_cells_20261114.py \
+            --shards _scratch_pre2001_full_shards \
+            --out-dir results/pre2001_full11475_risk_20261114
+      - name: Validate uniformly screened 11475 historical-risk cells
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/pre2001_full11475_risk_20261114/full_risk_source_summary.json")
+          d=json.loads(p.read_text())
+          assert d['status']=='SOURCE_COMPLETE'
+          assert len(d['six_batch_provenance'])==6
+          assert d['stats']['all_11475']['cells']==11475
+          assert d['stats']['2011_2017']['original_2001_2010_baseline_first_indices']==221
+          assert d['stats']['2018_2022']['original_2001_2010_baseline_first_indices']==96
+          assert d['stats']['same_day_history_source_agrees_with_prior_317_screen']
+          print('ALL 11475 UNIFORM HISTORICAL SOURCE CELLS VERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-full11475-pre2001-index-risk-panel
+          path: results/pre2001_full11475_risk_20261114/
+          if-no-files-found: error
+          retention-days: 90
