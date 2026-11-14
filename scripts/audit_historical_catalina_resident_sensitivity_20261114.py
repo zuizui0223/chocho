@@ -68,10 +68,10 @@ def main():
     a=ap.parse_args()
     rows,hashes,sea_beta,support=source_join(a.repo_root)
     old=model_sets(rows)
-    matched=[r for r in rows["2011_2017"] if (r["sp"],r["isl"])==KEY]
-    if len(matched)!=1 or matched[0]["event"]!=1 or matched[0]["host"]!=1:
+    matched=[r for r in rows["2011_2017"] if (r["species"],r["island"])==KEY]
+    if len(matched)!=1 or matched[0]["event"]!=1 or matched[0]["introduced"]!=1:
         raise ValueError(f"Expected one early event with intro-host index, got {matched}")
-    filtered={p:[r for r in sub if (r["sp"],r["isl"])!=KEY] for p,sub in rows.items()}
+    filtered={p:[r for r in sub if (r["species"],r["island"])!=KEY] for p,sub in rows.items()}
     changed=model_sets(filtered)
     before=old["2011_2017"]["plant_records_ge_10"]
     after=changed["2011_2017"]["plant_records_ge_10"]
