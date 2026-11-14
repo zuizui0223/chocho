@@ -184,6 +184,42 @@ def main():
             "this pilot is not a globally comprehensive breeding comparison",
         ],
     }
+    # Inspect actual publicly indexed record metadata for any positive species-stage
+    # cell. This verifies species identity but does not verify host consumption.
+    samples = []
+    for positive in audit["complete_positive_case_stage_rows"]:
+        island = positive["island"]
+        key = positive["speciesKey"]
+        period = PERIODS[positive["era"]]
+        stage = positive["stage"]
+        retrieved = []
+        for index, fragment in enumerate(shape[island], 1):
+            params = {
+                "geometry": fragment, "year": period, "taxonKey": key,
+                "lifeStage": stage, "hasCoordinate": "true",
+                "hasGeospatialIssue": "false", "occurrenceStatus": "PRESENT",
+                "limit": 5,
+            }
+            response = get_json(GBIF + "/occurrence/search", params)
+            for record in response.get("results", []):
+                retrieved.append({
+                    "gbifID": record.get("gbifID"),
+                    "speciesKey": record.get("speciesKey"),
+                    "species": record.get("species"),
+                    "year": record.get("year"),
+                    "eventDate": record.get("eventDate"),
+                    "lifeStage": record.get("lifeStage"),
+                    "basisOfRecord": record.get("basisOfRecord"),
+                    "datasetKey": record.get("datasetKey"),
+                    "coordinateUncertaintyInMeters": record.get("coordinateUncertaintyInMeters"),
+                    "polygon_fragment": index,
+                    "speciesKey_exact_match": str(record.get("speciesKey")) == key,
+                })
+        samples.append({"positive": positive, "GBIF_record_metadata": retrieved,
+                        "n_sampled": len(retrieved)})
+    audit["positive_record_samples"] = samples
+    print("POSITIVE_CASES_AND_GBIF_RECORD_IDENTITIES",
+          json.dumps(samples, ensure_ascii=False), flush=True)
     (args.out_dir / "source_audit.json").write_text(
         json.dumps(audit, indent=2, ensure_ascii=False) + "\n", encoding="utf8")
     print(json.dumps({
