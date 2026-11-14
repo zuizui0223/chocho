@@ -1,0 +1,58 @@
+name: Same-island port vs nonport historical host and later butterfly GBIF pilot
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  matched-sites-and-lag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify Python pilot syntax and source-locked dependencies
+        run: |
+          python -m py_compile scripts/island_port_nonport_lag_pilot_20261109.py
+          python -m pip install --disable-pip-version-check --quiet 'numpy>=1.26,<3' 'scipy>=1.12,<2' 'scikit-learn>=1.4,<2' 'geopandas>=1.0,<2' 'pyproj>=3.5,<4' 'shapely>=2,<3' pyogrio
+      - name: Download and verify original GSHHG 2.3.7 high-resolution coast
+        run: |
+          mkdir -p _scratch_nonport
+          curl -fLsS --retry 4 --retry-delay 3 --max-time 360 \
+            'https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip' \
+            -o _scratch_nonport/gshhg-shp-2.3.7.zip
+          echo '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _scratch_nonport/gshhg-shp-2.3.7.zip' | sha256sum --check
+      - name: Recover original NOAA NGA WPI 2019 3630 port points
+        run: |
+          python -u scripts/probe_recover_NOAA_WPI2019.py \
+            --out-geojson _scratch_nonport/ports_2019_source.geojson \
+            --out-receipt _scratch_nonport/noaa_WPI2019_source_receipt.json
+      - name: Retrieve historical GBIF botanical and independent later butterfly indices at matched same-island sites
+        run: |
+          python -u scripts/island_port_nonport_lag_pilot_20261109.py \
+            --gshhg _scratch_nonport/gshhg-shp-2.3.7.zip \
+            --wpi _scratch_nonport/ports_2019_source.geojson \
+            --out results/island_port_nonport_lag_20261109 \
+            --candidate-limit 687
+      - name: Commit only aggregate site/pair/island and species-specific time-order summaries
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/island_port_nonport_lag_20261109/
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Record paired island port/nonport historical botanical and butterfly GBIF index results [skip ci]'
+          git push origin 'HEAD:refs/heads/analysis/island-port-nonport-lag-20261109'
+      - name: Archive aggregate reproducibility receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: island-port-nonport-plant-butterfly-index-pilot
+          path: |
+            results/island_port_nonport_lag_20261109/
+            _scratch_nonport/noaa_WPI2019_source_receipt.json
+          if-no-files-found: warn
+          retention-days: 30
