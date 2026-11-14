@@ -1,0 +1,45 @@
+name: Recheck historic Catalina residency vs GBIF pseudo-first-index
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_historical_catalina_resident_sensitivity_20261114.py
+      - .github/workflows/chocho-catalina-resident-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historical-residency-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "numpy>=1.26"
+      - run: |
+          python -m py_compile scripts/audit_historical_catalina_resident_sensitivity_20261114.py
+          python scripts/audit_historical_catalina_resident_sensitivity_20261114.py
+      - name: Validate historical contra-indication and model support
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("results/port_host_historic_resident_20261114/historical_catalina_pre2001_counterexample.json").read_text())
+          assert j["historical_case"]["historic_pre2001_occurrence_year"]==1927
+          a=j["first_index_interaction"]["2011_2017_original"]
+          b=j["first_index_interaction"]["2011_2017_excluding_historically_resident_951"]
+          assert (a["n"]-b["n"],a["events"]-b["events"])==(1,1)
+          assert j["first_index_interaction"]["2018_2022_unchanged"]
+          x=j["later_reindex"]["excluding_historically_resident_951"]
+          assert x["n_total"]==158 and x["introduced_host_indexed"]["n"]==14
+          assert x["introduced_host_indexed"]["later_reindexed"]==10
+          print("HISTORICAL RESIDENCY EXCLUSION AND SPECIES-ISLAND DENOMINATORS VALID")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261114-catalina-historic-resident-negative-control
+          path: results/port_host_historic_resident_20261114/
+          if-no-files-found: error
+          retention-days: 90
