@@ -2,7 +2,7 @@
 """Build the ONE island-and-port butterfly Research Article as coauthor review DOCX.
 
 This builds the ONE integrated manuscript v0.3, not the frozen global-only GEB
-source. The three main figures appear in Results with their
+source. The four main figures appear in Results with their
 source-audited, noncausal captions. Document is DRAFT; not submitted, journal
 typeset, bibliographically verified or coauthor approved.
 """
@@ -32,6 +32,24 @@ def build(output:Path):
     original=original.partition("\n")[2].lstrip("\n")
     if original.count("## Structured abstract")!=1 or original.count("## 3. Results")!=1:
         raise ValueError("Not one canonical manuscript")
+    # Main Figure 4 is committed as readable SVG source. For the Word review
+    # package, convert that exact vector file to a lossless PNG; the SVG itself
+    # remains the canonical GitHub-viewable figure and is independently audited.
+    figure4_svg=ROOT/"figures/integrated_island_port_butterfly_v03/Fig4_marine_predictability_vs_transfer_v03.svg"
+    figure4_png=figure4_svg.with_suffix(".png")
+    if not figure4_svg.is_file():
+        raise FileNotFoundError(f"Original source-locked Figure 4 missing: {figure4_svg}")
+    if shutil.which("rsvg-convert"):
+        command=["rsvg-convert","--width","1800","--output",str(figure4_png),str(figure4_svg)]
+    elif shutil.which("inkscape"):
+        command=["inkscape",str(figure4_svg),"--export-filename="+str(figure4_png),
+                 "--export-width=1800"]
+    else:
+        raise RuntimeError("rsvg-convert or inkscape is required to rasterize main Figure 4 SVG for DOCX")
+    subprocess.run(command,check=True,capture_output=True,text=True)
+    if not figure4_png.is_file() or not figure4_png.read_bytes().startswith(bytes.fromhex("89504e470d0a1a0a")):
+        raise ValueError("SVG -> PNG Figure 4 conversion failed")
+
     draft=["---",
            "title: 'Human-redistributed host plants disproportionately expand potential larval resources in island regions'",
            "subtitle: 'Single integrated Research Article v0.3 - coauthor review draft, not for submission'",
@@ -40,7 +58,7 @@ def build(output:Path):
            "",
            "> **REVIEW COPY (2026-11-09):** One combined study. No coauthor approval, publisher style or transport/colonisation mechanism is claimed.",
            "",
-           original.replace("../../figures/", "figures/").replace("../../provenance/", "provenance/").strip(), ""]
+           original.replace("../../figures/", "figures/").replace("../../provenance/", "provenance/").replace("Fig4_marine_predictability_vs_transfer_v03.svg", "Fig4_marine_predictability_vs_transfer_v03.png").strip(), ""]
     supplement = (M / "TABLE_S1_six_island_cases.md").read_text(encoding="utf8")
     draft.extend(["", supplement])
     output.parent.mkdir(parents=True,exist_ok=True)
@@ -59,7 +77,7 @@ def build(output:Path):
         media=[n for n in z.namelist() if n.startswith("word/media/")]
         if len(media)<15:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
-        for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2","Figure 3",
+        for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2","Figure 3","Figure 4",
                      "butterfly"):
             if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={
@@ -67,7 +85,7 @@ def build(output:Path):
       "status":STATUS,
       "source_manuscript":SOURCE.relative_to(ROOT).as_posix(),
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
-      "figure_count":3,
+      "figure_count":4,
       "in_text_case_maps":1,
       "supplementary_figures":12,
       "supplementary_tables":1,
