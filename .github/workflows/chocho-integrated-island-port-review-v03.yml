@@ -137,6 +137,23 @@ jobs:
             assert any(z.read(name) == summary for name in imgs)
             assert any("Table S1." in x for x in paras)
             assert any("Box 1" in x for x in paras)
+          # PDF layout gate: Figure 4's full in-text caption must be on the
+          # same physical page, not split across pages by the inserted chart.
+          import subprocess,re
+          pdf=root/'pdf/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.pdf'
+          page_info=subprocess.check_output(['pdfinfo',str(pdf)],text=True)
+          page_count=int(re.search(r'^Pages:\\s+(\\d+)',page_info,re.M).group(1))
+          caption_pages=[]
+          for page in range(1,page_count+1):
+              page_text=subprocess.check_output(
+                  ['pdftotext','-f',str(page),'-l',str(page),str(pdf),'-'],text=True)
+              normalized=' '.join(page_text.split())
+              if 'Figure 4. Marine geography improves' in normalized:
+                  caption_pages.append(page)
+                  assert 'migration route' in normalized, (
+                      'Figure 4 caption splits over PDF page',page)
+          assert len(caption_pages)==1, caption_pages
+          print('FIGURE4_CAPTION_SINGLE_PDF_PAGE',caption_pages[0])
           print('V03_DOCX_FOUR_MAIN_FIGURES_AND_SUPPLEMENT_PASS',len(paras),len(imgs))
           PY
       - name: Archive version-specific DOCX, visual-review PDF, and provenance report
