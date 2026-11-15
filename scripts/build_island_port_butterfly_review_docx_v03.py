@@ -2,7 +2,7 @@
 """Build the ONE island-and-port butterfly Research Article as coauthor review DOCX.
 
 This builds the ONE integrated manuscript v0.3, not the frozen global-only GEB
-source. The two main figures appear in Results with their
+source. The three main figures appear in Results with their
 source-audited, noncausal captions. Document is DRAFT; not submitted, journal
 typeset, bibliographically verified or coauthor approved.
 """
@@ -40,7 +40,7 @@ def build(output:Path):
            "",
            "> **REVIEW COPY (2026-11-09):** One combined study. No coauthor approval, publisher style or transport/colonisation mechanism is claimed.",
            "",
-           original.replace("../../figures/", "figures/").strip(), ""]
+           original.replace("../../figures/", "figures/").replace("../../provenance/", "provenance/").strip(), ""]
     supplement = (M / "TABLE_S1_six_island_cases.md").read_text(encoding="utf8")
     draft.extend(["", supplement])
     output.parent.mkdir(parents=True,exist_ok=True)
@@ -59,7 +59,7 @@ def build(output:Path):
         media=[n for n in z.namelist() if n.startswith("word/media/")]
         if len(media)<15:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
-        for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2",
+        for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2","Figure 3",
                      "butterfly"):
             if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={
@@ -67,7 +67,7 @@ def build(output:Path):
       "status":STATUS,
       "source_manuscript":SOURCE.relative_to(ROOT).as_posix(),
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
-      "figure_count":2,
+      "figure_count":3,
       "in_text_case_maps":1,
       "supplementary_figures":12,
       "supplementary_tables":1,
