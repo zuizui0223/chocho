@@ -1,0 +1,112 @@
+{
+  "schema": "chocho_fixed8_historic_source_crosswalk_20261115_v1",
+  "source": "Frozen 1700–2010 225 butterfly × 51 original GSHHG landmass port-host × uniform marine-access refit",
+  "historical_model_artifact": "https://github.com/zuizui0223/chocho/actions/runs/43586888038/artifacts/14110663509",
+  "what_this_is": "Independent literature triage for the entire fixed 3+5 host-indexed after-1700 historical source-first candidate sample, not chosen by ecological outcome",
+  "evidence_classes": {
+    "HISTORICAL_ISLAND_OCCURRENCE": "Dated or before-2001 published report of species on the same whole GSHHG landmass; disqualifies as first-known island appearance but NOT necessarily as recent recolonization",
+    "PUBLISHED_PRE2001_ISLAND_REPORT": "Earlier island report available in historical synthesis but original specimen and date not independently recovered; cannot call it post-2010 first island observation",
+    "SOURCE_CONFLICT_NEEDS_RECORD_VALIDATION": "Current later GBIF index inconsistent with regional-checklist descriptions; original occurrence taxon and locality need verification",
+    "NO_ESTABLISHMENT_VERIFICATION": "Occurrence could be a vagrant or a recent record, but no verified historical arrival or breeding evidence"
+  },
+  "cases": [
+    {
+      "period": "2011_2017",
+      "speciesKey": "8277078",
+      "species": "Carcharodus alceae",
+      "landmass_id": "15",
+      "island": "Great Britain",
+      "class": "HISTORICAL_ISLAND_OCCURRENCE",
+      "earliest_external_record": "Surrey 1923",
+      "source_url": "https://www.hantsmoths.org.uk/lep.php?code=57.0011",
+      "claim": "Two 1923 Surrey specimens regarded as accidental introductions; pre-2001 occurrence not proof of resident breeding"
+    },
+    {
+      "period": "2011_2017",
+      "speciesKey": "1905383",
+      "species": "Issoria lathonia",
+      "landmass_id": "26",
+      "island": "Ireland",
+      "class": "PUBLISHED_PRE2001_ISLAND_REPORT",
+      "earliest_external_record": "Two historical Irish records cited in Baynes 1964 by checklist published 2006",
+      "source_url": "https://www.habitas.org.uk/invertebrateireland/species.asp?item=9044",
+      "claim": "Historical Irish vagrants reported; individual old occurrence dates and locations not independently audited"
+    },
+    {
+      "period": "2011_2017",
+      "speciesKey": "1924713",
+      "species": "Lampides boeticus",
+      "landmass_id": "214",
+      "island": "Maui, Hawaii",
+      "class": "HISTORICAL_ISLAND_OCCURRENCE",
+      "earliest_external_record": "Lepidopterists' Society 1983 newsletter documents multiple Maui observations",
+      "source_url": "https://images.peabody.yale.edu/lepsoc/nls/1980s/1983/1983_v25_n2.pdf",
+      "claim": "At least four Maui observations and another near Napili Shores appear in March/April 1983 report; site-level historical presence, not new after 2010"
+    },
+    {
+      "period": "2018_2022",
+      "speciesKey": "1932976",
+      "species": "Leptotes pirithous",
+      "landmass_id": "15",
+      "island": "Great Britain",
+      "class": "HISTORICAL_ISLAND_OCCURRENCE",
+      "earliest_external_record": "Bloxworth, Dorset 13 June 1938",
+      "source_url": "https://www.hantsmoths.org.uk/lep.php?code=61.009",
+      "claim": "Recorded rare migrant in Britain decades before 2018"
+    },
+    {
+      "period": "2018_2022",
+      "speciesKey": "7762841",
+      "species": "Nymphalis polychloros",
+      "landmass_id": "26",
+      "island": "Ireland",
+      "class": "SOURCE_CONFLICT_NEEDS_RECORD_VALIDATION",
+      "earliest_external_record": "No reliable Irish historic records supported by searched independent reviews",
+      "source_url": "https://butterflyconservation.ie/wp/2020/03/",
+      "secondary_url": "https://maps.biodiversityireland.ie/Dataset/363/Species/77534",
+      "claim": "No credible Irish historic checklist record established; public Irish map count zero and a 2019 phenology entry inconsistent; inspect actual 2018–2022 GBIF record"
+    },
+    {
+      "period": "2018_2022",
+      "speciesKey": "5130682",
+      "species": "Nymphalis antiopa",
+      "landmass_id": "28",
+      "island": "Sakhalin",
+      "class": "HISTORICAL_ISLAND_OCCURRENCE",
+      "earliest_external_record": "Matsumura 1925, as Vanessa antiopa, South-Saghalien",
+      "source_url": "https://eprints.lib.hokudai.ac.jp/repo/huscap/all/12580/15%283%29_p83-196.pdf",
+      "claim": "Original published numbered species 28, Vanessa antiopa; habitat explicitly South-Saghalien at Toyohara/Takinosawa/Merea"
+    },
+    {
+      "period": "2018_2022",
+      "speciesKey": "1929270",
+      "species": "Lycaena dispar",
+      "landmass_id": "391",
+      "island": "Madeira",
+      "class": "SOURCE_CONFLICT_NEEDS_RECORD_VALIDATION",
+      "earliest_external_record": "Not listed in specialist Madeira butterfly species inventory",
+      "source_url": "https://www.bc-europe.eu/webpage.php?name=endemic-butterflies-of-madeira",
+      "secondary_url": "https://www.madeirabirds.com/node/82",
+      "claim": "Madeira inventories include Lycaena phlaeas but not L. dispar; this is a data-quality flag, not independent proof the GBIF event is wrong"
+    },
+    {
+      "period": "2018_2022",
+      "speciesKey": "8049830",
+      "species": "Pararge aegeria",
+      "landmass_id": "456",
+      "island": "Orkney Mainland",
+      "class": "NO_ESTABLISHMENT_VERIFICATION",
+      "earliest_external_record": "No Northern Isles records shown in Highland & Islands atlas to 2019",
+      "source_url": "https://butterfly-conservation.org/sites/default/files/2024-04/Highland%20Butterfly%20Atlas%202022%20Online.pdf",
+      "claim": "Possible post-2019 range shift or vagrant, but atlas absence and a GBIF index do not establish arrival date or breeding"
+    }
+  ],
+  "inference_limits": [
+    "All eight source-defined GBIF initial indexes are indexed observation events, NOT confirmed new butterfly arrivals or population establishment",
+    "GBIF historic 1700–2000 nonindex can coexist with older published insect literature not ingested into GBIF",
+    "Published historic presence does not rule out later recolonization, nor specify migration route or carrier",
+    "The whole Great Britain and Ireland landmasses are geographic supports, not local port plots",
+    "The last three require raw GBIF record/provenance verification before an island population inference",
+    "This sample is response/exposure-selected; fractions are NOT population prevalence of GBIF-index error"
+  ]
+}
