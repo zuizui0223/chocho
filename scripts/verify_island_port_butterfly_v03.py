@@ -292,7 +292,7 @@ def run():
     occurrences = [x for x in manifest["files"] if x["file"]=="forecast_validation_transfer.png"]
     assert len(occurrences)==1 and f3.is_file()
     assert sha(f3)==occurrences[0]["sha256"]=="0c627a8ffc2c0e92ca3536eb7d141f130c17131fd8e3babde039cab5cf89f2f4"
-    assert f3.read_bytes().startswith(b"\\x89PNG".replace(b"\\x89", b"\x89")) if False else f3.read_bytes().startswith(bytes.fromhex("89504e470d0a1a0a"))
+    assert f3.read_bytes().startswith(bytes.fromhex("89504e470d0a1a0a"))
     assert "![Figure 3." in t and "../../provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png" in t
     assert "## Figure 3 |" in captions and "2,000" in captions
     assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 2" in captions and "Figure 3" in captions
