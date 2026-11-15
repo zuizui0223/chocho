@@ -314,7 +314,7 @@ def main():
         "noGBI":{"n":results["strict_islands_excluding_GB_Ireland"]["n_species"],
                  "gain_pct":results["strict_islands_excluding_GB_Ireland"]["T1_vs_M5_relative_MSE_reduction_pct"],
                  "rho_added":results["strict_islands_excluding_GB_Ireland"]["primary_rho_added_units_vs_absolute_M5_minus_T1_mse"]},
-        "output":str(a.out)},ensure_ascii=False,flush=True)
+        "output":str(a.out)},ensure_ascii=False),flush=True)
 
 if __name__=="__main__":
     main()
