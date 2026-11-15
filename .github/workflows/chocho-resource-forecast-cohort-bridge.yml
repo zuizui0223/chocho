@@ -1,0 +1,55 @@
+name: Audit selection bias linking 239 resource butterflies to 155 record-forecast butterflies
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_resource_forecast_cohort_selection_20261115.py
+      - .github/workflows/chocho-resource-forecast-cohort-bridge.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  resource-to-recording-eligibility-source-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconcile known butterfly species across original resource and recording support cohorts
+        run: |
+          python -m py_compile scripts/audit_resource_forecast_cohort_selection_20261115.py
+          python scripts/audit_resource_forecast_cohort_selection_20261115.py \
+            --out results/resource_forecast_cohort_selection_20261115
+      - name: Validate 239 global butterflies, 225 forecast candidates and actual 155/70 status
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('results/resource_forecast_cohort_selection_20261115')
+          a=json.loads((p/'summary.json').read_text())
+          assert list(a['counts'].values())==[239,225,155,70,14],a['counts']
+          assert a['forecast_record_test_row_sum']==208482
+          b=a['cohort_metrics']
+          assert b['modeled155']['n_species']==155 and b['excluded70']['n_species']==70
+          assert b['outsideOriginal225']['n_species']==14
+          with (p/'239_species_source_crosswalk.csv').open() as f:
+            rows=list(csv.DictReader(f))
+          assert len(rows)==239 and len({z['species'] for z in rows})==239
+          a1=a['conditional_selection_diagnostics']
+          for key in ['host_family_breadth_margin_preserved',
+                      'family_and_native_resource_quartile_preserved']:
+            q=a1[key]
+            assert q['n_matched_support_species']>120
+            assert q['permutation_replicates']==4999
+          assert not a['forecast_source_lock']['modeled155_species_specific_M3_M5_MSE_or_fitted_predictions_in_this_committed_source']
+          print('SOURCE-LOCKED RECRUITMENT SELECTION AUDIT OK; NO PER-SPECIES FORECAST RESULT INVENTED')
+          PY
+      - name: Archive identity-level cohort joins and source-locked selection audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261115-239-resource-155-forecast-selection-audit
+          path: results/resource_forecast_cohort_selection_20261115/
+          if-no-files-found: error
+          retention-days: 90
