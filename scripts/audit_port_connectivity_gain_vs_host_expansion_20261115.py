@@ -230,7 +230,9 @@ def main():
             ("M5_host_composition","m5"),("T0_port_location","t0"),
             ("T1_port_connectivity","t1")
         ]:
-            source=[z for z in data["comp"] if z["cohort"]==name
+            original_cohort_name = ("strict_islands_without_GB_Ireland"
+                                    if name=="strict_islands_excluding_GB_Ireland" else name)
+            source=[z for z in data["comp"] if z["cohort"]==original_cohort_name
                     and z["model"]==model]
             if len(source)!=1:
                 raise ValueError("Original port comparison scope missing "+name+" "+model)
