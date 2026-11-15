@@ -1,0 +1,57 @@
+name: Per-butterfly port connectivity gain versus global introduced host-resource expansion
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_port_connectivity_gain_vs_host_expansion_20261115.py
+      - .github/workflows/chocho-port-connectivity-host-expansion-species.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-reproduced-155-species-port-gain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check "numpy>=1.26,<3"
+      - name: Rebuild exact 155 source species errors and host-resource crosswalk
+        run: |
+          python -m py_compile scripts/audit_port_connectivity_gain_vs_host_expansion_20261115.py
+          python scripts/audit_port_connectivity_gain_vs_host_expansion_20261115.py \
+            --out results/port_resource_predgain_species_20261115
+      - name: Assert correct two-model estimand, original cohort and MSE loss signs
+        run: |
+          python - <<'PY'
+          import json,csv,math
+          from pathlib import Path
+          p=Path("results/port_resource_predgain_species_20261115")
+          d=json.loads((p/"summary.json").read_text())
+          r=d["results_by_scope"]
+          assert set(r)=={"all155","strict_islands","strict_islands_excluding_GB_Ireland"}
+          assert (r["all155"]["n_species"],r["strict_islands"]["n_species"],
+                  r["strict_islands_excluding_GB_Ireland"]["n_species"])==(155,95,95)
+          assert abs(r["all155"]["T1_vs_M5_relative_MSE_reduction_pct"]-.22476045477479722)<1e-9
+          assert abs(r["strict_islands"]["T1_vs_M5_relative_MSE_reduction_pct"]+.5953721285598235)<1e-9
+          assert abs(r["strict_islands_excluding_GB_Ireland"]["T1_vs_M5_relative_MSE_reduction_pct"]+.5056564926063656)<1e-9
+          assert not d["can_test_host_only_predictive_gain_M3_to_M5_from_these_files"]
+          assert d["can_test_added_port_connectivity_T1_beyond_M5_from_these_files"]
+          for group in r:
+              assert r[group]["rho_stratified_permutation"]["permutations"]==4999
+              assert math.isfinite(r[group]["primary_rho_added_units_vs_absolute_M5_minus_T1_mse"])
+          with (p/"original_species_port_forecast_and_resources.csv").open() as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==155+95+95
+          assert len({(z["species"],z["group"]) for z in rows})==len(rows)
+          print("PER-SPECIES PORT GAIN / HOST EXPANSION AUDIT PASSED; M3 NOT IMPLIED")
+          PY
+      - name: Archive source-hash-locked species errors and uncertainty
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261115-species-port-connection-resource-gain
+          path: results/port_resource_predgain_species_20261115/
+          if-no-files-found: error
+          retention-days: 90
