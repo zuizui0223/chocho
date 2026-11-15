@@ -232,6 +232,14 @@ def main():
     within_realm = conditional_chain(
         original_observations, flattened, realms, n_region, restricted=True, seed=SEED+1
     )
+    # Longer-thinning, independently seeded chains test whether the much more
+    # restricted realm conditioning suffers from mixing / first-chain bias.
+    sensitivity_chains = [
+        conditional_chain(original_observations, flattened, realms, n_region,
+                          restricted=True, replications=999, burn=120000, thin=3200,
+                          seed=SEED + offset)
+        for offset in (101, 503)
+    ]
     categorical = {
         "no_known_host": "No known larval-host species indexed in contemporary WCVP region",
         "introduced_only": "At least one known host is introduced; none native at WGSRPD3 region scale",
@@ -280,6 +288,18 @@ def main():
         "opportunity_by_category": marginal,
         "null_preserving_butterfly_and_island_GBIF_DOI_margins": globalscope,
         "null_also_preserving_species_by_biogeographic_level1": within_realm,
+        "realm_null_independent_seed_longer_thinning_sensitivities": [
+            {"seed_offset": offset, "n_samples": z["n_samples"],
+             "intro_null_mean": z["counts"]["introduced_only"]["null_mean"],
+             "intro_null_q025": z["counts"]["introduced_only"]["null_q025"],
+             "intro_null_q975": z["counts"]["introduced_only"]["null_q975"],
+             "intro_one_sided_enrichment": z["counts"]["introduced_only"]["p_one_sided_enrichment"],
+             "native_null_mean": z["counts"]["native_known"]["null_mean"],
+             "native_one_sided_enrichment": z["counts"]["native_known"]["p_one_sided_enrichment"],
+             "accepted_total_swaps": z["accepted_total_swaps"],
+             "acceptance_rate": z["acceptance_rate"]}
+            for offset, z in zip((101, 503), sensitivity_chains)
+        ],
         "scope_limitations": [
             "GBIF observation index 0 is NOT biological absence; result cannot be called occupancy probability",
             "The 2026 GBIF DOI archive returned 290 fewer records than original query and sampled 32 selected butterfly species",
