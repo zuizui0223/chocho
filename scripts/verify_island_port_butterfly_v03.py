@@ -155,6 +155,53 @@ def run():
         close(record["coverage"],native/total)
         close(record["fill"],added/(total-native))
         close(record["gain"],added/native)
+
+    # Direct source-recovered temporal species losses: port T1 incremental
+    # predictor beyond M5 host geography, not the unavailable species-level
+    # host-only M3->M5 contrast.
+    trport="provenance/reviewer_defenses/results/transport_forecast_temporal_20261030/"
+    srccomp=rows(trport+"transport_temporal_comparison.csv")
+    def ranks(v):
+        order=sorted(range(len(v)),key=lambda j:v[j])
+        rank=[0.]*len(v)
+        i=0
+        while i<len(v):
+            j=i+1
+            while j<len(v) and v[order[j]]==v[order[i]]:
+                j+=1
+            for k in range(i,j):
+                rank[order[k]]=(i+j+1)*.5
+            i=j
+        return rank
+    def pearson(a,b):
+        ax=sum(a)/len(a);by=sum(b)/len(b)
+        x=[v-ax for v in a];y=[v-by for v in b]
+        return sum(q*w for q,w in zip(x,y))/math.sqrt(sum(q*q for q in x)*sum(w*w for w in y))
+    for panel,file,n,sourcename,gain,rho_expected in [
+        ("all155","transport_temporal_all155_species_errors.csv",155,"all155",.22476045477479722,-.05258560436083878),
+        ("strict_islands","transport_temporal_strict_islands_species_errors.csv",95,"strict_islands",-.5953721285598235,.03395386772790756),
+        ("strict_islands_excluding_GB_Ireland","transport_temporal_strict_islands_without_GB_Ireland_species_errors.csv",
+         95,"strict_islands_without_GB_Ireland",-.5056564926063656,-.015492152519416567)
+    ]:
+        seq=rows(trport+file)
+        assert len(seq)==n and len({x["species"] for x in seq})==n
+        assert {x["species"] for x in seq}.issubset(modeled)
+        mse5=[float(x["M5_host_composition_sq"]) for x in seq]
+        mse0=[float(x["T0_port_location_sq"]) for x in seq]
+        mse1=[float(x["T1_port_connectivity_sq"]) for x in seq]
+        for model,values in (("M5_host_composition",mse5),("T0_port_location",mse0),
+                             ("T1_port_connectivity",mse1)):
+            o=[x for x in srccomp if x["cohort"]==sourcename and x["model"]==model]
+            assert len(o)==1
+            close(sum(values)/n,float(o[0]["species_equal_mse"]))
+        close(100*(sum(mse5)-sum(mse1))/sum(mse5),gain)
+        x=[float(family[z["species"]]["introduced_added_units"]) for z in seq]
+        d=[v-w for v,w in zip(mse5,mse1)]
+        close(pearson(ranks(x),ranks(d)),rho_expected)
+    assert "### S.C. Host assemblages and marine geography" in t
+    assert "ρ=−0.053" in t and "0.499" in t and "−0.595%" in t
+    assert (ROOT/"results/port_resource_predgain_species_20261115/README.md").exists()
+
     joint=rows("results/island51_host_circuit_joint_20261106/comparison_summary.csv")
     jc={z["comparison"]:z for z in joint if z["target"]=="new_butterfly_jaccard"}
     assert set(["G_to_H","G_to_C","C_to_HC","H_to_HC","HC_to_I"])<=set(jc)
