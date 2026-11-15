@@ -131,6 +131,8 @@ In a separate **155-butterfly** evaluation, adding known larval-host resources a
 | Held spatial blocks, ≥100 km from training cells (nested subset) | 102,728 | **+2.74%** |
 | Butterfly species absent from model training | 208,482 | **−0.21%**, with an interval crossing zero |
 
+![Figure 3. Independent GBIF-record prediction. Differences in species-equal mean squared error (left) and mean absolute error (right) after adding host-resource totals and host-family composition to the climate-and-land-cover model (M5 minus M3). Negative differences indicate improvement. Horizontal lines are descriptive 95% intervals from 2,000 crossed butterfly-species × spatial-block resamples of fixed predictions. Held-out species show no clear gain; the ≥100-km subset is nested within the spatial holdout, and four sensitivity panels reuse the same observation archive. All comparisons concern standardized recording probability rather than confirmed occupancy or butterfly establishment.](../../provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png)
+
 Among **154 butterflies and 133,557** combinations with no focal-species recording in the immediately preceding **2015–2018** interval, host-informed predictions still reduced MSE by **5.23%** in the later-period test and **5.28%** in held spatial blocks. Conversely, improvement did **not** transfer to previously untrained butterfly species (overall **−0.21%**; subset **−0.76%**). In held spatial blocks, host-family composition improved MSE by an additional **1.44% beyond aggregate host-resource indicators**; that additional increment was not clearly replicated in the later-period or untrained-species comparisons.
 
 These observations provide a complementary butterfly-recording endpoint, but the **155 recording species**, **239 global resource species**, and **51 selected island landmasses** represent different analysis populations. Current host distributions may postdate the butterfly records; neither model comparison establishes introduced-host feeding, a historical island arrival or a causal port–ocean-access pathway. Full model differences, recording-quality sensitivities and the original source-lock audit are documented in Supplementary Results S.A and the [155-species transfer audit](../../results/host_prediction_transfer_bridge_20261115/README.md). A selected **31-species** independent GBIF-DOI island overlap check did **not** show a positive surplus of butterfly source records in regions supported **only** by introduced known hosts after conditioning on species, island source margins and broad biogeography (13 observed versus 12.87 null expectation; Supplementary Results S.A); the positive 155-species prediction results must not be attributed specifically to alien hosts.
@@ -189,7 +191,7 @@ The two main figures are available in PNG, SVG and PDF. Final data licences, sou
 
 ## Figure legends
 
-The two main figures appear alongside their results. See [panel definitions and figure sources](FIGURE_CAPTIONS_V03.md).
+The three main figures appear alongside their results. See [panel definitions and figure sources](FIGURE_CAPTIONS_V03.md).
 
 ## References (DOI identities verified; dataset-specific attribution gates remain)
 
