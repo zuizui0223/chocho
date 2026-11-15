@@ -34,7 +34,10 @@ jobs:
           assert j["source_observed_positive_butterfly_region_cells"]==159
           assert j["opportunity_by_category"]["introduced_only"]["indexed_butterfly_cells"]==13
           assert j["opportunity_by_category"]["introduced_only"]["opportunity_cells"]==920
-          assert sum(v["opportunity_cells"] for v in j["opportunity_by_category"].values())==4032
+          assert sum(v["opportunity_cells"] for v in j["opportunity_by_category"].values())==3906
+          assert sum(v["all_32_original_resource_cells"] for v in j["opportunity_by_category"].values())==4032
+          assert j["GBIF_DOI_recordable_31_species_region_cells"]==3906
+          assert j["GBIF_DOI_source_unrecorded_butterfly_species"]==["Apodemia mormo"]
           assert sum(v["indexed_butterfly_cells"] for v in j["opportunity_by_category"].values())==159
           for label in ["null_preserving_butterfly_and_island_GBIF_DOI_margins",
                         "null_also_preserving_species_by_biogeographic_level1"]:
