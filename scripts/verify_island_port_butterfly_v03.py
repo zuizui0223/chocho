@@ -56,7 +56,7 @@ def run():
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
         raise AssertionError("Predictive loss direction or historical scope boundary not clearly reported")
     assert t.count("## 3. Results")==1 and t.count("## 4. Discussion")==1
-    assert captions.count("## Figure ")==2
+    assert captions.count("## Figure ")==3
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
     # Separate original GBIF recording target: source-verified butterfly
@@ -285,7 +285,17 @@ def run():
     assert "uniform" in receipt["sources"]
     close(receipt["values"]["host_given_marine"],float(jc["C_to_HC"]["relative_MSE_reduction_percent"]))
     close(receipt["values"]["marine_given_host"],float(jc["H_to_HC"]["relative_MSE_reduction_percent"]))
-    assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 2" in captions
+    # Original 155-butterfly forecast plot is an independently archived
+    # source figure, now promoted to the main paper without re-estimation.
+    f3 = ROOT/"provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png"
+    manifest = data("provenance/reviewer_defenses/results/host_forecast_validation_20261029/snapshot_manifest.json")
+    occurrences = [x for x in manifest["files"] if x["file"]=="forecast_validation_transfer.png"]
+    assert len(occurrences)==1 and f3.is_file()
+    assert sha(f3)==occurrences[0]["sha256"]=="0c627a8ffc2c0e92ca3536eb7d141f130c17131fd8e3babde039cab5cf89f2f4"
+    assert f3.read_bytes().startswith(b"\\x89PNG".replace(b"\\x89", b"\x89")) if False else f3.read_bytes().startswith(bytes.fromhex("89504e470d0a1a0a"))
+    assert "![Figure 3." in t and "../../provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png" in t
+    assert "## Figure 3 |" in captions and "2,000" in captions
+    assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 2" in captions and "Figure 3" in captions
     report={"status":"V03_SINGLE_PAPER_SCIENTIFIC_SOURCE_VERIFICATION_PASS",
             "abstract_word_count":wc,"body_word_count_approx":body_words,
             "independently_verified_model_improvements_pct":{"geometry_only_ocean_beyond_geo_and_history":5.0818868452225594,
@@ -293,7 +303,7 @@ def run():
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
-            "main_figures_verified":2,"new_Figure5_input_and_output_hashes_verified":True,
+            "main_figures_verified":3,"new_Figure5_input_and_output_hashes_verified":True,
             "warnings":["The 51-island host+marine positive increments are retrospective and not causal",
                "Historic host list may contain 2001–2024 records after target butterflies",
                "The strict 990-pair geographic holdout is a different population/estimand",
