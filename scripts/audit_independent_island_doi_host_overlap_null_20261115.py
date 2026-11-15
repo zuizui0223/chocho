@@ -299,7 +299,7 @@ def main():
             "acceptance": [globalscope["acceptance_rate"],within_realm["acceptance_rate"]]
         },
         "output":str(a.out_dir),
-    },ensure_ascii=False,flush=True)
+    }, ensure_ascii=False), flush=True)
 
 
 if __name__ == "__main__":
