@@ -1,0 +1,97 @@
+{
+  "schema": "chocho_observed_island_host_degree_null_verified_20261115_v1",
+  "reproduced_by": "scripts/audit_independent_island_doi_host_overlap_null_20261115.py",
+  "workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/43672529430",
+  "workflow_artifact_url": "https://github.com/zuizui0223/chocho/actions/runs/43672529430/artifacts/14145275581",
+  "source_sha256": {
+    "resources": "12981d00971b05f10177e900d494b0d41ca481a07933eb7330deca6cdf1e5b6d",
+    "regions": "00f8352ec2c6424a7c2a91ebe0031c4b7b7ee52b341ff3bfb6d7c04abf75de42",
+    "butterflies": "1c2408c237e8193506146dab9389d796a59e909305a055fedc88c203f3162b8f",
+    "observed": "0819e126848b8271dcf5ac27641cd886a898f48a961eacb3a9c48f973ac0bb87",
+    "summary": "c97939933867971267707401e20e2dfdae023906a9e06480f0ff35c16abe1af2"
+  },
+  "doi": "10.15468/dl.pp5nc9",
+  "panel": {
+    "original_resource_species": 32,
+    "recordable_GBIF_DOI_species": 31,
+    "island_WGSRPD3_regions": 126,
+    "original_resource_cells": 4032,
+    "recordable_GBIF_DOI_candidate_cells": 3906,
+    "index_positive_species_region_cells": 159,
+    "original32_introduced_only_source_resource_cells": 933,
+    "recordable31_introduced_only_source_resource_cells": 920,
+    "globally_unrecorded_source_species": "Apodemia mormo"
+  },
+  "categories": {
+    "native_known": {
+      "opportunity_cells": 785,
+      "observed_index_cells": 138,
+      "source_index_fraction": 0.17579617834394903
+    },
+    "introduced_only": {
+      "opportunity_cells": 920,
+      "observed_index_cells": 13,
+      "source_index_fraction": 0.014130434782608696
+    },
+    "no_known_host": {
+      "opportunity_cells": 2201,
+      "observed_index_cells": 8,
+      "source_index_fraction": 0.003634711494775102
+    }
+  },
+  "nulls": {
+    "species_island_fixed_margin": {
+      "draws": 2999,
+      "introduced_only_null_mean": 46.82460820273425,
+      "introduced_only_null_q025": 39,
+      "introduced_only_null_q975": 55,
+      "introduced_only_excess_one_sided_p": 1,
+      "native_known_null_mean": 67.48616205401801,
+      "native_known_excess_one_sided_p": 0.0003333333333333333,
+      "accepted_swaps": 2813111
+    },
+    "species_island_and_species_by_level1_fixed_margin": {
+      "draws": 2999,
+      "introduced_only_null_mean": 12.867955985328443,
+      "introduced_only_null_q025": 10,
+      "introduced_only_null_q975": 15,
+      "introduced_only_excess_one_sided_p": 0.632,
+      "native_known_null_mean": 132.15838612870957,
+      "native_known_null_q025": 129,
+      "native_known_null_q975": 136,
+      "native_known_excess_one_sided_p": 0.0023333333333333335,
+      "no_known_host_null_mean": 13.973657885961988,
+      "no_known_host_null_q025": 11,
+      "no_known_host_null_q975": 17,
+      "no_known_host_depletion_one_sided_p": 0.0016666666666666668,
+      "accepted_swaps": 130154,
+      "acceptance_rate": 0.0266796490652673
+    },
+    "longer_thinning_independent_seeds": [
+      {
+        "seed_offset": 101,
+        "draws": 999,
+        "introduced_only_null_mean": 12.814814814814815,
+        "one_sided_excess_p": 0.602,
+        "native_null_mean": 132.15515515515514,
+        "accepted_swaps": 88307
+      },
+      {
+        "seed_offset": 503,
+        "draws": 999,
+        "introduced_only_null_mean": 12.83883883883884,
+        "one_sided_excess_p": 0.605,
+        "native_null_mean": 132.1811811811812,
+        "accepted_swaps": 88467
+      }
+    ]
+  },
+  "interpretation": [
+    "Selected independent GBIF DOI index records, not established butterfly occupancy or larval feeding",
+    "Introduced-only host region has 13 source index cells, consistent with realm-conditioned fixed-species/island record margins",
+    "Native-known host regions display additional index concentration beyond this exploratory null",
+    "No absence implied by a zero DOI record and no causal introduction effects inferred",
+    "Global 239-butterfly resource gains and 155-butterfly known-species record forecasts are different estimands and remain supported",
+    "Original host and WCVP data are contemporary and may postdate the butterfly record"
+  ]
+}
