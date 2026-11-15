@@ -168,7 +168,7 @@ def main():
         t=traits[sp];g=paired[sp]
         if set(g)!={"island","mainland"}:raise ValueError("Missing original geography for "+sp)
         i,m=g["island"],g["mainland"]
-        if (+i["empty"]<=0 or +m["empty"]<=0):
+        if (float(i["empty"]) <= 0 or float(m["empty"]) <= 0):
             raise ValueError("No native-host-gaps denominator for "+sp)
         inframe=sp in eligibility
         eligible=inframe and eligibility[sp]["final_disposition"]==MODELED
