@@ -1,0 +1,48 @@
+name: Test island resource amplification without low-native and small-region artifacts
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_island_resource_extreme_regions_20261115.py
+      - .github/workflows/chocho-island-resource-extreme-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce-original-239x369-geography-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute all original region and butterfly-unit denominators
+        run: |
+          python -m py_compile scripts/audit_island_resource_extreme_regions_20261115.py
+          python scripts/audit_island_resource_extreme_regions_20261115.py \
+            --out-dir results/island_resource_extreme_sensitivity_20261115
+      - name: Check published native resource base and robust geography
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("results/island_resource_extreme_sensitivity_20261115/summary.json").read_text())
+          p=j["geography_filters_are_nested_descriptive_sensitivities_not_independent_tests"]
+          assert j["original_strict_islands"]["n_regions"]==126
+          assert j["original_strict_mainland"]["n_regions"]==237
+          assert (j["original_strict_islands"]["native_covered"],j["original_strict_islands"]["introduced_added"])==(4829,5741)
+          assert (j["original_strict_mainland"]["native_covered"],j["original_strict_mainland"]["introduced_added"])==(21215,8686)
+          assert len(j["original_zero_native_regions"])==13
+          assert j["zero_native_island_added_total"]==432
+          assert p["native_resource_regions_ge_10"]["n_regions"]==90
+          assert p["whole_WGSRPD3_region_area_ge_1000_km2"]["n_regions"]==67
+          print("FROZEN ORIGINAL 239-RESOURCE GEOGRAPHY AUDIT PASSED")
+          PY
+      - name: Store area- and native-host-threshold diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261115-island-resource-extreme-sensitivity
+          path: results/island_resource_extreme_sensitivity_20261115/
+          if-no-files-found: error
+          retention-days: 90
