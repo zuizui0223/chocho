@@ -199,7 +199,7 @@ def run():
         d=[v-w for v,w in zip(mse5,mse1)]
         close(pearson(ranks(x),ranks(d)),rho_expected)
     assert "### S.C. Host assemblages and marine geography" in t
-    assert "ρ=−0.053" in t and "0.499" in t and "−0.595%" in t
+    assert "ρ=−0.053" in t and "0.499" in t and "0.595%" in t
     assert (ROOT/"results/port_resource_predgain_species_20261115/README.md").exists()
 
     joint=rows("results/island51_host_circuit_joint_20261106/comparison_summary.csv")
