@@ -106,7 +106,7 @@ def run(root: Path, out_dir: Path):
     validator = json.loads(inp["validator"].read_text())
     if model_lock["status"] != "LOCKED_BEFORE_MODEL_FIT" or validator["status"] != "PASS":
         raise ValueError("Frozen forecast evaluation lock or original validator missing")
-    if "static contemporary" not in model_lock["historical_knowledge_limit"]:
+    if "static host catalogue" not in model_lock["historical_knowledge_limit"]:
         raise ValueError("Historical plant map provenance changed")
     result = {mode: losses(metrics, pairs, mode) for mode in MODE_NAMES}
     assert {mode: result[mode]["test_records"] for mode in MODE_NAMES} == {
