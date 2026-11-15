@@ -211,8 +211,20 @@ def main():
     if original["introduced_only"] != 13:
         raise ValueError("Original observed 13 introduced resource-overlap cells changed")
     population = Counter(flattened)
-    if population[1] != x["summary"]["validation_panel"]["sampled_species_added_island_opportunity_cells"]:
-        raise ValueError("Original 32-species added resource opportunity denominator changed")
+    # Frozen resource panel has 32 butterflies. GBIF DOI records exist for 31;
+    # unrecorded Apodemia mormo contributes 13 potential introduced host cells.
+    recordable_species = {row["species"] for row in x["butterflies"]
+                          if int(row["occurrence_records"]) > 0}
+    if len(recordable_species) != 31:
+        raise ValueError("Original 31 recordable DOI species changed")
+    recordable_indices = {sp_i[z] for z in recordable_species}
+    eligible_population = Counter(flattened[idx*n_region + ridx]
+                                  for idx in recordable_indices
+                                  for ridx in range(n_region))
+    if population[1] != 933 or eligible_population[1] != x["summary"]["validation_panel"]["sampled_species_added_island_opportunity_cells"]:
+        raise ValueError(f"Original added resource denominator changed: full32={population[1]}, eligible31={eligible_population[1]}")
+    if sum(eligible_population.values()) != 31 * 126:
+        raise ValueError("31-species DOI recordable cell denominator changed")
 
     globalscope = conditional_chain(
         original_observations, flattened, realms, n_region, restricted=False, seed=SEED
@@ -227,9 +239,10 @@ def main():
     }
     marginal = {
         k: {
-            "opportunity_cells": population[code],
+            "opportunity_cells": eligible_population[code],
+            "all_32_original_resource_cells": population[code],
             "indexed_butterfly_cells": original[k],
-            "GBIF_DOI_cell_index_fraction_not_occupancy_rate": original[k] / population[code],
+            "GBIF_DOI_cell_index_fraction_not_occupancy_rate": original[k] / eligible_population[code],
             "semantic": categorical[k],
         }
         for k, code in (("no_known_host",0),("introduced_only",1),("native_known",2))
@@ -259,6 +272,10 @@ def main():
         "species_with_any_GBIF_DOI_island_records": sum(original_observed_by_species[s]>0 for s in species),
         "strict_island_botanical_regions": n_region,
         "all_species_region_cells": len(flattened),
+        "GBIF_DOI_recordable_31_species_region_cells": sum(eligible_population.values()),
+        "GBIF_DOI_source_unrecorded_butterfly_species": [
+            z for z in species if z not in recordable_species
+        ],
         "source_observed_positive_butterfly_region_cells": len(original_observations),
         "opportunity_by_category": marginal,
         "null_preserving_butterfly_and_island_GBIF_DOI_margins": globalscope,
