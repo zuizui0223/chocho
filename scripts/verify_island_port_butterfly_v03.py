@@ -59,6 +59,50 @@ def run():
     assert captions.count("## Figure ")==2
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
+    # Separate original GBIF recording target: source-verified butterfly
+    # predictive information, not observed plant arrivals or colonization.
+    prediction = rows("provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_all_metrics.csv")
+    pairs = rows("provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_paired_comparisons.csv")
+    def fixed_predictive_row(mode, model):
+        q = [r for r in prediction if r["mode"] == mode and r["model"] == model]
+        if len(q) != 1 or int(q[0]["species"]) != 155:
+            raise AssertionError("155-species locked predictor missing: "+mode+" "+model)
+        return q[0]
+    for mode, expected_pct, expected_n in (
+        ("temporal", 4.120172, 208482),
+        ("spatial", 2.995, 208482),
+        ("spatial_buffer100", 2.736, 102728),
+        ("species", -0.2085, 208482),
+    ):
+        m3 = fixed_predictive_row(mode, "M3_both")
+        m5 = fixed_predictive_row(mode, "M5_host_composition")
+        assert int(m3["rows"]) == int(m5["rows"]) == expected_n
+        pct = 100*(float(m3["species_equal_mse"]) - float(m5["species_equal_mse"]))/float(m3["species_equal_mse"])
+        if abs(pct - expected_pct) > .008:
+            raise AssertionError("Forecast performance source drift: "+mode+" "+str(pct))
+        diff = [r for r in pairs if r["mode"] == mode and r["added"] == "M5_host_composition"
+                and r["reference"] == "M3_both" and r["metric"] == "mse"]
+        assert len(diff) == 1 and int(diff[0]["species"]) == 155
+        close(float(diff[0]["difference"]),
+              float(m5["species_equal_mse"]) - float(m3["species_equal_mse"]))
+        if mode in ("temporal", "spatial", "spatial_buffer100"):
+            assert float(diff[0]["ci_high"]) < 0
+        else:
+            assert float(diff[0]["ci_low"]) <= 0 <= float(diff[0]["ci_high"])
+    initial = rows("provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_initially_unrecorded_comparison.csv")
+    for mode, expected_pct in (("temporal", 5.231694), ("spatial", 5.284209), ("species", -.761421)):
+        q = [r for r in initial if r["mode"] == mode and r["metric"] == "mse"]
+        assert len(q) == 1 and (int(q[0]["species"]), int(q[0]["rows"])) == (154, 133557)
+        close(float(q[0]["relative_improvement_percent"]), expected_pct, tol=.0001)
+    m4_spatial = fixed_predictive_row("spatial", "M4_host_resources")
+    m5_spatial = fixed_predictive_row("spatial", "M5_host_composition")
+    delta_family = 100 * (float(m4_spatial["species_equal_mse"]) -
+                           float(m5_spatial["species_equal_mse"])) / float(m4_spatial["species_equal_mse"])
+    close(delta_family, 1.4357, tol=.001)
+    assert "### 3.3. Independent butterfly-record prediction" in t
+    for value in ("4.12%", "3.00%", "2.74%", "5.23%", "5.28%", "−0.21%", "1.44%"):
+        assert value in t, "Missing critical original-155 validation or transfer boundary: "+value
+
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
     assert (im["island"]["native_butterfly_region_units"],im["island"]["contemporary_butterfly_region_units"])==(4829,10570)
     assert (im["mainland"]["native_butterfly_region_units"],im["mainland"]["contemporary_butterfly_region_units"])==(21215,29901)
