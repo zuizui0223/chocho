@@ -103,6 +103,30 @@ def run():
     for value in ("4.12%", "3.00%", "2.74%", "5.23%", "5.28%", "−0.21%", "1.44%"):
         assert value in t, "Missing critical original-155 validation or transfer boundary: "+value
 
+    # Source-complete 239-resource vs 155-forecast selection boundary, NOT
+    # unarchived per-species M3/M5 loss estimates.
+    original_traits=rows("data/frozen/figure_sources/anthropogenic_species_metrics.csv")
+    forecast_eligibility=rows("provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_all_225_final_coverage.csv")
+    gap_by_species=rows("results/island_resource_gap_filling/by_species.csv")
+    elig={x["species"]:x for x in forecast_eligibility}
+    family={x["species"]:x for x in original_traits}
+    gaps={}
+    for x in gap_by_species:
+        gaps.setdefault(x["species"],{})[x["group"]]=x
+    assert (len(family),len(elig),len(gaps))==(239,225,239)
+    modeled={k for k,v in elig.items() if v["final_disposition"]=="MODELED_ALL_PLANNED_VALIDATIONS"}
+    assert len(modeled)==155 and len(set(elig)-modeled)==70 and len(set(family)-set(elig))==14
+    delta=lambda name:100*(float(gaps[name]["island"]["fill"])-float(gaps[name]["mainland"]["fill"]))
+    modeled_d=sum(delta(z) for z in modeled)/155
+    notmodeled_d=sum(delta(z) for z in set(elig)-modeled)/70
+    close(modeled_d,-7.910170358059511)
+    close(notmodeled_d,.3370650437506869)
+    close(sum(float(family[z]["resolved_host_species"]) for z in modeled)/155,13.038709677419355)
+    close(sum(float(family[z]["resolved_host_species"]) for z in set(elig)-modeled)/70,7.1)
+    assert "13.04" in t and "7.10" in t and "−8.25" in t
+    assert "155" in t and "70" in t and "239" in t
+    assert (ROOT/"results/resource_forecast_cohort_selection_20261115/README.md").exists()
+
     # Independent source-limited GEB archival DOI test: geographic host overlap
     # cannot be interpreted as actual butterfly absence or colonization.
     q3=data("results/q3-observed-butterfly-island-opportunity-v02/q3_archival_gbif_overlap_audit.json")
