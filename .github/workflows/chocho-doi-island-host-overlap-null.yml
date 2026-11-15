@@ -45,6 +45,13 @@ jobs:
               assert d["n_samples"]==2999 and d["accepted_burnin_swaps"]>0
               assert d["acceptance_rate"]>0.005,d
               assert d["original"]["indexed_cells"]==159
+          primary=j["null_also_preserving_species_by_biogeographic_level1"]["counts"]["introduced_only"]["null_mean"]
+          longer=j["realm_null_independent_seed_longer_thinning_sensitivities"]
+          assert len(longer)==2
+          for z in longer:
+              assert z["n_samples"]==999 and z["accepted_total_swaps"]>10000,z
+              assert abs(z["intro_null_mean"]-primary)<2.0,z
+              assert z["intro_one_sided_enrichment"]>0.1,z
           with (path/"per_species_source_crosswalk.csv").open() as f:
               assert len(list(csv.DictReader(f)))==32
           print("DOI ORIGINAL CELLS AND SPECIES/BOTANICAL REGION DEGREE-PRESERVING AUDIT PASS")
