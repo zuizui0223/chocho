@@ -1,0 +1,54 @@
+name: DOI butterfly record x introduced-only island host opportunity fixed-margin null
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_independent_island_doi_host_overlap_null_20261115.py
+      - .github/workflows/chocho-doi-island-host-overlap-null.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  island-butterfly-doi-original32-native-introduced-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute source-frozen 32 butterfly × 126 island botanical region degree null
+        run: |
+          python -m py_compile scripts/audit_independent_island_doi_host_overlap_null_20261115.py
+          python scripts/audit_independent_island_doi_host_overlap_null_20261115.py \
+            --out-dir results/island_observed_host_degree_null_20261115
+      - name: Verify DOI original denominators and completed fixed-margin shuffles
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          path=Path("results/island_observed_host_degree_null_20261115")
+          j=json.loads((path/"summary.json").read_text())
+          assert j["butterfly_panel"]==32 and j["strict_island_botanical_regions"]==126
+          assert j["all_species_region_cells"]==4032
+          assert j["source_observed_positive_butterfly_region_cells"]==159
+          assert j["opportunity_by_category"]["introduced_only"]["indexed_butterfly_cells"]==13
+          assert j["opportunity_by_category"]["introduced_only"]["opportunity_cells"]==920
+          assert sum(v["opportunity_cells"] for v in j["opportunity_by_category"].values())==4032
+          assert sum(v["indexed_butterfly_cells"] for v in j["opportunity_by_category"].values())==159
+          for label in ["null_preserving_butterfly_and_island_GBIF_DOI_margins",
+                        "null_also_preserving_species_by_biogeographic_level1"]:
+              d=j[label]
+              assert d["n_samples"]==2999 and d["accepted_burnin_swaps"]>0
+              assert d["acceptance_rate"]>0.005,d
+              assert d["original"]["indexed_cells"]==159
+          with (path/"per_species_source_crosswalk.csv").open() as f:
+              assert len(list(csv.DictReader(f)))==32
+          print("DOI ORIGINAL CELLS AND SPECIES/BOTANICAL REGION DEGREE-PRESERVING AUDIT PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261115-independent32-island-introduced-host-doi-degree-null
+          path: results/island_observed_host_degree_null_20261115/
+          if-no-files-found: error
+          retention-days: 90
