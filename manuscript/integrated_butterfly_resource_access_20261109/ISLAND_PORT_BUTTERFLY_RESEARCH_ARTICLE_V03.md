@@ -145,6 +145,8 @@ At the assemblage level, island pairs sharing more port-associated candidate int
 
 A complementary **51-landmass paired-community** analysis assessed geographic access independently of the global 239-butterfly resource calculation. Adding **uniform-ocean Circuitscape resistance** to a geography-, port- and earlier-community-controlled model reduced retrospective held-island butterfly-community MSE by **5.08%** (**33/51** held islands improved). In a separate joint model allowing contemporary host inventories, host assemblage data added **1.73%** relative MSE improvement beyond AIS/wind proxies, and those marine proxies added **6.49%** beyond hosts. These are **retrospective held-island** comparisons, not time-ordered predictions of actual immigration; marine flow and undirected Circuitscape resistance are not measured dispersal routes. In a geographically stricter subset of **990 pairs with both endpoints unseen**, adding AIS plus wind beyond host-adjusted controls **worsened MSE by 4.70%**. The marine results thus document geographically structured information in recorded butterfly assemblages, while leaving long-distance flight, plant propagule vectors and island stepping stones unresolved (Supplementary Results S.C).
 
+![Figure 4. Marine geography improves retrospective recorded-butterfly assemblage predictions in 51 held-island comparisons, but its extension is not robust when both island endpoints are geographically unseen. Panel A contrasts ocean resistance and conditional host/AIS/wind predictors (different reference models); Panel B shows 990 stricter held pairs, where AIS alone weakly improves MSE but adding wind worsens it. These are predictive associations, not mapped movement or host-mediated establishment.](../../figures/integrated_island_port_butterfly_v03/Fig4_marine_predictability_vs_transfer_v03.svg)
+
 ### 3.5. Exploratory comparison with later island records
 
 Among ten named species–island events with a prior introduced port host and a known regional native alternative, that butterfly's native hosts were also documented near the focal ports during 2001–2010 in all ten cases (Figure S7). Outside Denmark and Germany, the broader 74-island comparison estimated a +0.335-percentage-point adjusted annual first-record difference between mixed and native-only port inventories (95% interval −0.049 to +0.719). Where both inventory types occurred within each retained island and butterfly species, the difference was +0.545 points across 26 islands (+0.094 to +0.997). Rebuilding that comparison within the additional destinations retained 18 of those islands and gave +0.223 points (−0.348 to +0.795). Supplementary results detail the recording histories, sensitivity to individual taxa and exploratory predictive and maritime comparisons (Figures S1–S12 and the archived community and marine comparisons).
@@ -191,7 +193,7 @@ The two main figures are available in PNG, SVG and PDF. Final data licences, sou
 
 ## Figure legends
 
-The three main figures appear alongside their results. See [panel definitions and figure sources](FIGURE_CAPTIONS_V03.md).
+The four main figures appear alongside their results. See [panel definitions and figure sources](FIGURE_CAPTIONS_V03.md).
 
 ## References (DOI identities verified; dataset-specific attribution gates remain)
 
