@@ -103,6 +103,22 @@ def run():
     for value in ("4.12%", "3.00%", "2.74%", "5.23%", "5.28%", "−0.21%", "1.44%"):
         assert value in t, "Missing critical original-155 validation or transfer boundary: "+value
 
+    # Independent source-limited GEB archival DOI test: geographic host overlap
+    # cannot be interpreted as actual butterfly absence or colonization.
+    q3=data("results/q3-observed-butterfly-island-opportunity-v02/q3_archival_gbif_overlap_audit.json")
+    qp=q3["validation_panel"]
+    assert qp["gbif_validation_species"]==32 and qp["gbif_species_with_original_records"]==31
+    assert qp["sampled_species_added_island_opportunity_cells"]==920
+    assert qp["island_butterfly_species_cells_with_any_gbif_record"]==159
+    assert qp["recorded_butterfly_in_new_opportunity_cells"]==13
+    obs=rows("results/q3-observed-butterfly-island-opportunity-v02/observed_species_island_cells.csv")
+    assert len(obs)==159 and len({(r["species"],r["area_code_l3"]) for r in obs})==159
+    assert all(r["observed_butterfly"]=="1" for r in obs)
+    assert sum(int(r["introduced_host_resource_added"]) for r in obs)==13
+    assert "13" in t and "12.87" in t and "p=0.632" in t
+    audit_path=ROOT/"results/island_observed_host_degree_null_20261115/README.md"
+    assert audit_path.exists() and "13" in audit_path.read_text(encoding="utf8")
+
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
     assert (im["island"]["native_butterfly_region_units"],im["island"]["contemporary_butterfly_region_units"])==(4829,10570)
     assert (im["mainland"]["native_butterfly_region_units"],im["mainland"]["contemporary_butterfly_region_units"])==(21215,29901)
