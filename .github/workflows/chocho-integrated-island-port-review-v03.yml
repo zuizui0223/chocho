@@ -142,7 +142,7 @@ jobs:
           import subprocess,re
           pdf=root/'pdf/ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.pdf'
           page_info=subprocess.check_output(['pdfinfo',str(pdf)],text=True)
-          page_count=int(re.search(r'^Pages:\\s+(\\d+)',page_info,re.M).group(1))
+          page_count=int(re.search(r'^Pages:\s+(\d+)',page_info,re.M).group(1))
           caption_pages=[]
           for page in range(1,page_count+1):
               page_text=subprocess.check_output(
