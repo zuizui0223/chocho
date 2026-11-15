@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify v0.3 ONE integrated GEB manuscript, sign conventions and five figures.
+"""Verify v0.3 ONE integrated GEB manuscript, four main figures and retained source diagrams.
 
 This source-claim audit reads original committed observations and source hashes.
 It does not verify causality, refit models, license restricted inputs or claim
@@ -56,7 +56,7 @@ def run():
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
         raise AssertionError("Predictive loss direction or historical scope boundary not clearly reported")
     assert t.count("## 3. Results")==1 and t.count("## 4. Discussion")==1
-    assert captions.count("## Figure ")==3
+    assert captions.count("## Figure ")==4
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
     # Separate original GBIF recording target: source-verified butterfly
@@ -296,6 +296,16 @@ def run():
     assert "![Figure 3." in t and "../../provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png" in t
     assert "## Figure 3 |" in captions and "2,000" in captions
     assert "FIGURE_CAPTIONS_V03.md" in t and "Figure 2" in captions and "Figure 3" in captions
+    # Figure 4 uses a readable SVG vector built from existing frozen
+    # 51-island and strict geographically unseen 990-pair source results.
+    # The archived old Fig5 is preserved above as independent provenance.
+    from verify_fig4_marine_source_20261115 import main as verify_fig4_source
+    verify_fig4_source()
+    assert "![Figure 4." in t
+    assert "../../figures/integrated_island_port_butterfly_v03/Fig4_marine_predictability_vs_transfer_v03.svg" in t
+    assert "## Figure 4 |" in captions
+    assert "The four main figures" in t
+
     report={"status":"V03_SINGLE_PAPER_SCIENTIFIC_SOURCE_VERIFICATION_PASS",
             "abstract_word_count":wc,"body_word_count_approx":body_words,
             "independently_verified_model_improvements_pct":{"geometry_only_ocean_beyond_geo_and_history":5.0818868452225594,
@@ -303,7 +313,7 @@ def run():
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
-            "main_figures_verified":3,"new_Figure5_input_and_output_hashes_verified":True,
+            "main_figures_verified":4,"new_Figure5_input_and_output_hashes_verified":True,
             "warnings":["The 51-island host+marine positive increments are retrospective and not causal",
                "Historic host list may contain 2001–2024 records after target butterflies",
                "The strict 990-pair geographic holdout is a different population/estimand",
