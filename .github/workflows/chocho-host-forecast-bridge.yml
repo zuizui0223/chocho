@@ -1,0 +1,56 @@
+name: Reconcile frozen 155 butterfly host-informed prediction across temporal and spatial transfer
+on:
+  push:
+    branches: [analysis/port-host-ocean-interaction-20261114]
+    paths:
+      - scripts/audit_host_prediction_transfer_20261115.py
+      - .github/workflows/chocho-host-forecast-bridge.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-frozen-prediction-differences:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconcile forecast model lock, 155 species, time-space loss and initial nonrecords
+        run: |
+          python -m py_compile scripts/audit_host_prediction_transfer_20261115.py
+          python scripts/audit_host_prediction_transfer_20261115.py \
+            --out-dir results/host_prediction_transfer_bridge_20261115
+      - name: Validate exact scientific claims without deriving true butterfly occupancy
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          root=Path("results/host_prediction_transfer_bridge_20261115")
+          report=json.loads((root/"summary.json").read_text())
+          modes=report["four_main_transfer_modes"]
+          assert report["n_eligible_butterflies"]==155
+          assert set(modes)=={"temporal","spatial","spatial_buffer100","species"}
+          assert [modes[k]["test_records"] for k in ["temporal","spatial","spatial_buffer100","species"]]==[208482,208482,102728,208482]
+          assert modes["temporal"]["host_information_positive_95pct_fixed_prediction"]
+          assert modes["spatial"]["host_information_positive_95pct_fixed_prediction"]
+          assert modes["spatial_buffer100"]["host_information_positive_95pct_fixed_prediction"]
+          assert not modes["species"]["host_information_positive_95pct_fixed_prediction"]
+          assert modes["spatial"]["host_composition_beyond_total_positive_95pct_fixed_prediction"]
+          first=report["earlier_unrecorded_cell_test"]["subsets"]
+          assert {k:first[k]["rows"] for k in first}=={"temporal":133557,"spatial":133557,"species":133557}
+          assert first["temporal"]["n_species"]==154
+          assert all(first[k]["MSE_relative_reduction_pct"]>5 for k in ("temporal","spatial"))
+          with (root/"transfer_contrasts.csv").open() as f:
+            assert len(list(csv.DictReader(f)))==4
+          assert report["summary"]["observed_recordings_not_breeding_or_occupancy"]
+          print("155 BUTTERFLY HOST FORECAST TRANSFER AUDIT VERIFIED")
+          PY
+      - name: Archive model-lock SHA checks, four transfer contrasts and 133,557 first-nonindex assessment
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-20261115-155-butterfly-host-prediction-transfer
+          path: results/host_prediction_transfer_bridge_20261115/
+          if-no-files-found: error
+          retention-days: 90
