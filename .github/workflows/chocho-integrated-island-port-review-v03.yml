@@ -1,7 +1,7 @@
-name: GEB v0.3 one-paper two-figure verification and coauthor DOCX
+name: GEB v0.3 one-paper three-figure verification and coauthor DOCX
 on:
   push:
-    branches: [analysis/butterfly-trait-public51-20261109]
+    branches: [analysis/butterfly-trait-public51-20261109, analysis/port-host-ocean-interaction-20261114]
     paths:
       - scripts/render_island_port_butterfly_fig1_v03.py
       - figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.*
@@ -9,6 +9,7 @@ on:
       - scripts/build_island_port_butterfly_review_docx_v03.py
       - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
+      - provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png
       - manuscript/integrated_butterfly_resource_access_20261109/TABLE_S1_six_island_cases.md
       - scripts/*island_breeding_relay.py
       - results/island_breeding_relay/**
@@ -55,7 +56,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify original-source model improvements, abstract limit and two main figures
+      - name: Verify original-source model improvements, abstract limit and three main figures
         run: |
           python -m py_compile scripts/verify_island_port_butterfly_v03.py scripts/build_island_port_butterfly_review_docx_v03.py
           python scripts/verify_island_port_butterfly_v03.py | tee /tmp/v03-verification-log.json
@@ -75,7 +76,7 @@ jobs:
             sudo apt-get install -y poppler-utils
           fi
           command -v pdfinfo
-      - name: Generate actual source-matched v0.3 two-figure manuscript DOCX
+      - name: Generate actual source-matched v0.3 three-figure manuscript DOCX
         run: |
           mkdir -p _scratch_v03
           python scripts/build_island_port_butterfly_review_docx_v03.py \
@@ -96,11 +97,13 @@ jobs:
           p=root/'ISLAND_PORT_BUTTERFLIES_ONE_GEB_MANUSCRIPT_V03_REVIEW.docx'
           doc=Document(p)
           paras=[x.text for x in doc.paragraphs]
-          assert all(any('Figure '+str(i)+'.' in x for x in paras) for i in (1,2))
+          assert all(any('Figure '+str(i)+'.' in x for x in paras) for i in (1,2,3))
           assert any('6.488%' in x for x in paras)
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
-            assert len(imgs)>=15
+            assert len(imgs)>=16
+            forecast=Path('provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_transfer.png').read_bytes()
+            assert any(z.read(name) == forecast for name in imgs)
             ports = Path('figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.png').read_bytes()
             assert any(z.read(name) == ports for name in imgs)
             relay = Path('figures/integrated_island_port_butterfly_v03/FigS12_island_breeding_relay.png').read_bytes()
@@ -121,7 +124,7 @@ jobs:
             assert any(z.read(name) == summary for name in imgs)
             assert any("Table S1." in x for x in paras)
             assert any("Box 1" in x for x in paras)
-          print('V03_DOCX_TWO_MAIN_FIGURES_AND_SUPPLEMENT_PASS',len(paras),len(imgs))
+          print('V03_DOCX_THREE_MAIN_FIGURES_AND_SUPPLEMENT_PASS',len(paras),len(imgs))
           PY
       - name: Archive version-specific DOCX, visual-review PDF, and provenance report
         if: always()
