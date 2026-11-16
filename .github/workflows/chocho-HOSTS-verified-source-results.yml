@@ -1,0 +1,21 @@
+name: chocho HOSTS 24-scope durable source/result gate
+on:
+  push:
+    branches: [analysis/hosts-real-use-island-origin-ports-20261116]
+    paths:
+      - scripts/verify_HOSTS_reported_use_summary_20261116.py
+      - results/hosts_island_local_use_20261116/VERIFIED_SUMMARY_ALL24_20261116.json
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - .github/workflows/chocho-HOSTS-verified-source-results.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify full-source results against durable 24-scope summary and manuscript
+        run: |
+          python3 -m py_compile scripts/verify_HOSTS_reported_use_summary_20261116.py
+          python3 scripts/verify_HOSTS_reported_use_summary_20261116.py
