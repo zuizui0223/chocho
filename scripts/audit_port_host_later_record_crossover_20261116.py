@@ -64,13 +64,13 @@ def two_way_demean(v: np.ndarray, group1: np.ndarray, group2: np.ndarray) -> np.
     return out
 
 
-def cluster_diagonal(influence: np.ndarray, groups: np.ndarray) -> np.ndarray:
+def cluster_covariance(influence: np.ndarray, groups: np.ndarray) -> np.ndarray:
     n_group = int(np.max(groups)) + 1
     totals = np.column_stack([
         np.bincount(groups, weights=influence[:, k], minlength=n_group)
         for k in range(influence.shape[1])
     ])
-    return (totals**2).sum(axis=0)
+    return totals.T @ totals
 
 
 def fit(rows: list[dict], label: str, adjust_early: bool, later_risk_only: bool) -> dict:
@@ -100,12 +100,28 @@ def fit(rows: list[dict], label: str, adjust_early: bool, later_risk_only: bool)
     beta = bread @ (xd.T @ yd)
     residual = yd - xd @ beta
     influence = residual[:, None] * (xd @ bread.T)
-    var = (cluster_diagonal(influence, il) + cluster_diagonal(influence, sp)
-           - cluster_diagonal(influence, joint))
+    covariance = (cluster_covariance(influence, il) + cluster_covariance(influence, sp)
+                  - cluster_covariance(influence, joint))
     n_islands = len(set(islands.tolist()))
     n_species = len(set(species.tolist()))
-    var *= n_islands / (n_islands - 1)
-    se = np.sqrt(np.maximum(var, 0))
+    covariance *= n_islands / (n_islands - 1)
+    se = np.sqrt(np.maximum(np.diag(covariance), 0))
+    direct_contrasts = {}
+    for left, right in (("native_only", "introduced_only"),
+                        ("both", "native_only"), ("both", "introduced_only")):
+        ia, ib = labels.index(left), labels.index(right)
+        contrast = float(beta[ia] - beta[ib])
+        var_diff = float(covariance[ia, ia] + covariance[ib, ib]
+                         - 2 * covariance[ia, ib])
+        se_diff = float(np.sqrt(max(var_diff, 0)))
+        direct_contrasts[left + "_minus_" + right] = {
+            "difference_pp": 100 * contrast,
+            "approx_two_way_cluster_se_pp": 100 * se_diff,
+            "approx_interval_95_pp": [
+                100 * (contrast - CRIT * se_diff),
+                100 * (contrast + CRIT * se_diff),
+            ],
+        }
     categories = {}
     for category in ALL_CATEGORIES:
         sub = [r for r in rows if r["host_category"] == category]
@@ -128,6 +144,7 @@ def fit(rows: list[dict], label: str, adjust_early: bool, later_risk_only: bool)
         "early_record_control": adjust_early,
         "later_risk_only": later_risk_only,
         "category_counts": categories,
+        "direct_category_contrasts": direct_contrasts,
         "estimates": {
             name: {
                 "beta_pp": float(100 * beta[i]),
@@ -257,7 +274,13 @@ def main() -> None:
                      "beta_pp": {k: round(v["beta_pp"], 4)
                                  for k, v in panel["estimates"].items()},
                      "interval_pp": {k: [round(x, 4) for x in v["approx_interval_95_pp"]]
-                                     for k, v in panel["estimates"].items()}}
+                                     for k, v in panel["estimates"].items()},
+                     "native_minus_introduced_pp": [
+                         round(panel["direct_category_contrasts"]
+                               ["native_only_minus_introduced_only"]["difference_pp"], 4),
+                         *[round(x, 4) for x in panel["direct_category_contrasts"]
+                           ["native_only_minus_introduced_only"]["approx_interval_95_pp"]]
+                     ]}
               for name, panel in panels.items()}
     print(json.dumps({"status": "SOURCE_LOCKED", "models": simple, "output": str(target)},
                      ensure_ascii=False), flush=True)
