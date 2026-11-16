@@ -12,8 +12,8 @@ normalize_binomial <- function(s) {
   x <- regmatches(s,m)
   vapply(x,function(z) if(length(z)>2L) tolower(paste(z[2],z[3])) else NA_character_,character(1))
 }
-eu <- read.csv(a[[2]], stringsAsFactors=FALSE,check.names=FALSE,fileEncoding="UTF-8-BOM")
-names(eu) <- trimws(names(eu))
+eu <- read.csv(a[[2]], stringsAsFactors=FALSE,check.names=FALSE,sep=";",fileEncoding="UTF-8-BOM")
+names(eu) <- gsub("[[:space:]]+", "_", trimws(names(eu)))
 required <- c("Species_POWO","Thalassochorous","Further_clarification_needed")
 if(!all(required %in% names(eu))) stop("Required EuDiS published fields absent")
 if(nrow(eu)<9000L || nrow(eu)>15000L) stop("Unexpected EuDiS source size")
