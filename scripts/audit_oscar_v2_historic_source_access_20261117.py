@@ -97,9 +97,10 @@ def main():
     first_data_url=None
     for ent in entries:
         for x in ent.get("links", []):
-            if not x.get("inherited") and "data#" in str(x.get("rel","")).lower() and
-               "s3#" not in str(x.get("rel","")).lower() and
-               str(x.get("href","")).startswith("https://"):
+            if (not x.get("inherited")
+                and "data#" in str(x.get("rel","")).lower()
+                and "s3#" not in str(x.get("rel","")).lower()
+                and str(x.get("href","")).startswith("https://")):
                first_data_url=x["href"]
                break
         if first_data_url:break
