@@ -1,0 +1,83 @@
+name: chocho HOSTS 24-scope crop and locality evidence audit
+
+on:
+  push:
+    branches: [analysis/hosts-real-use-island-origin-ports-20261116]
+    paths:
+      - scripts/summarize_HOSTS_24_scopes_20261116.py
+      - scripts/audit_HOSTS_crop_dependency_20261116.py
+      - .github/workflows/chocho-HOSTS-source-derivative-validation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-derivative-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Restore source verified 24-scope model and WCVP-FAO derivatives
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43879042130
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          name: chocho-HOSTS-locality-island-FAO-port-results-20261116
+          path: _recovered
+      - name: Reconfirm artifact sources and generate reviewer-ready tables
+        run: |
+          set -euo pipefail
+          find _recovered -type f | sort | head -30
+          SOURCE_JSON=$(find _recovered -type f -name host_reported_use_island_oceanic_fao_ports.json)
+          RESOLUTION=$(find _recovered -type f -name host_name_resolution.csv)
+          ORIGIN=$(find _recovered -type f -name region_native_introduced.csv)
+          FAO=$(find _recovered -type f -name fao_crop_taxa_v0.1.json)
+          for value in "$SOURCE_JSON" "$RESOLUTION" "$ORIGIN" "$FAO"; do
+            if [[ ! -f "$value" ]]; then echo "Missing or multiple source matches: $value" >&2; exit 1; fi
+          done
+          python3 scripts/summarize_HOSTS_24_scopes_20261116.py \
+            --input-json "$SOURCE_JSON" \
+            --out-dir results/hosts_island_local_use_20261116/review
+          python3 scripts/audit_HOSTS_crop_dependency_20261116.py \
+            --hosts _hosts/resource.csv \
+            --host-resolution "$RESOLUTION" \
+            --wcvp "$ORIGIN" \
+            --locations data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            --fao "$FAO" \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --areas results/island_resource_gap_filling/areas.csv \
+            --butterflies239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out-dir results/hosts_island_local_use_20261116/review
+      - name: Verify report and crop contributions are on same pinned sources
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+          root=pathlib.Path("results/hosts_island_local_use_20261116/review")
+          assert (root/"HOSTS_all_24_scopes_review_table.csv").exists()
+          assert (root/"HOSTS_all_24_scopes_review_table.md").exists()
+          result=json.loads((root/"HOSTS_crops_contribution_by_origin.json").read_text())
+          assert result["status"]=="LITERATURE_HOST_ASSOCIATIONS_NOT_DIRECT_FIELD_FEEDING"
+          assert len(result["cohorts"])==6
+          p=result["cohorts"]["HOSTS_Papilionoidea__strict_exact_or_composite"]
+          assert p["island"]["introduced"]["n"]>0 and p["mainland"]["introduced"]["n"]>0
+          assert p["island"]["introduced"]["FAO_exact_crop_n"]<=p["island"]["introduced"]["n"]
+          print("ALL_24_SCOPES_AND_NAMED_CROP_EVIDENCE_SOURCE_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-HOSTS-24-scope-and-crops-evidence-20261116
+          path: results/hosts_island_local_use_20261116/review/
+          if-no-files-found: error
+          retention-days: 90
