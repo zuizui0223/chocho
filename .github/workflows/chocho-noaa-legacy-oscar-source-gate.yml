@@ -1,0 +1,47 @@
+name: chocho public NOAA historical OSCAR legacy u-v source gate
+
+on:
+  push:
+    branches: [analysis/oscar-v2-1993-2010-source-access-gate-20261117]
+    paths:
+      - scripts/audit_noaa_legacy_oscar_2005_source_access_20261117.py
+      - .github/workflows/chocho-noaa-legacy-oscar-source-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-official-mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify legacy OSCAR identity and retrieve limited historic u/v samples
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_noaa_legacy_oscar_2005_source_access_20261117.py
+          python3 scripts/audit_noaa_legacy_oscar_2005_source_access_20261117.py \
+            --out results/oscar_v2_historic_access_20261117/noaa_legacy_2005_uv_access_receipt.json
+      - name: Distinguish actual velocity cells from transport/biology
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("results/oscar_v2_historic_access_20261117/noaa_legacy_2005_uv_access_receipt.json").read_text())
+          assert d["not_nasa_v2"] is True and d["is_physical_seed_drift_prediction"] is False
+          if d["status"]=="ACTUAL_HISTORICAL_UV_FROM_NOAA_MIRROR":
+              assert len(d["samples"])==2
+              assert all(2004<=int(z["time"][:4])<=2007 for z in d["samples"])
+          print("NOAA_HISTORICAL_UV_SOURCE_GATE",d["status"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-NOAA-legacy-OSCAR-u-v-2005-source-receipt
+          path: results/oscar_v2_historic_access_20261117/noaa_legacy_2005_uv_access_receipt.json
+          retention-days: 90
+          if-no-files-found: warn
