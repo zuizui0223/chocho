@@ -1,0 +1,52 @@
+name: chocho OSCAR v2 historical ocean current source access gate
+
+on:
+  push:
+    branches: [analysis/oscar-v2-1993-2010-source-access-gate-20261117]
+    paths:
+      - scripts/audit_oscar_v2_historic_source_access_20261117.py
+      - .github/workflows/chocho-oscar-v2-historical-source-access-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oscar-source-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Query official 2005 CMR sample and probe anonymous OSCAR NetCDF access
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_oscar_v2_historic_source_access_20261117.py
+          python3 scripts/audit_oscar_v2_historic_source_access_20261117.py \
+            --out results/oscar_v2_historic_access_20261117/official_cmr_access_receipt.json
+      - name: Keep metadata availability separate from true velocity access
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("results/oscar_v2_historic_access_20261117/official_cmr_access_receipt.json")
+          d=json.loads(f.read_text())
+          assert d["collection"]=="OSCAR_L4_OC_FINAL_V2.0"
+          assert d["collection_concept_id"]=="C2098858642-POCLOUD"
+          assert d["interval_of_interest"]=="1993-01-01 through 2010-12-31"
+          assert d["status"]=="PUBLIC_SOURCE_ACCESS_PREFLIGHT_NOT_VELOCITY_ANALYSIS"
+          assert d["is_directional_current_model"] is False
+          print("OSCAR_PRELIMINARY_ACCESS_GATE",json.dumps({
+            "granules_returned":d["granules_returned"],
+            "anonymous_data":d["can_read_netcdf_anonymously"],
+            "probe":d["anonymous_direct_data_probe"]},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-OSCAR-v2-historical-access-preflight-20261117
+          path: results/oscar_v2_historic_access_20261117/
+          retention-days: 90
+          if-no-files-found: warn
