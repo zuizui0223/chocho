@@ -189,8 +189,8 @@ def load_source_ports(path):
     selected={}
     for x in read_csv(path):
         k=x["WGSRPD3"]
-        if k in SOURCES and x["WPI_source_OBJECTID"]==ANCHORED_WPI_ID[k] and
-           x["original_WPI_2019_coordinate_inside_exact_TDWG3_polygon"]=="1":
+        if (k in SOURCES and x["WPI_source_OBJECTID"]==ANCHORED_WPI_ID[k] and
+            x["original_WPI_2019_coordinate_inside_exact_TDWG3_polygon"]=="1"):
             if k in selected:raise RuntimeError("Duplicate pinned WPI port ID")
             selected[k]={"WGSRPD3":k,"WPI_id":x["WPI_source_OBJECTID"],
                          "name":x["port_name"],"country":x["country"],
@@ -209,16 +209,16 @@ def main(a):
     if u.shape!=(53,126,201) or v.shape!=u.shape or len(T)!=53:
         raise RuntimeError(f"NOAA original 2005 source cube unexpectedly shaped {u.shape}")
     receipt=json.loads(a.source_receipt.read_text())
-    if hashlib.sha256(a.noaa_cube.read_bytes()).hexdigest()!=receipt["npz_sha256"] or
-       receipt["status"]!="AUTHENTIC_NOAA_LEGACY_2005_UV_SOURCE_CUBE_NO_TRANSPORT_INFERENCE":
+    if (hashlib.sha256(a.noaa_cube.read_bytes()).hexdigest()!=receipt["npz_sha256"] or
+        receipt["status"]!="AUTHENTIC_NOAA_LEGACY_2005_UV_SOURCE_CUBE_NO_TRANSPORT_INFERENCE"):
        raise RuntimeError("NOAA source data checksum or stage changed")
     if hashlib.sha256(a.coast_npz.read_bytes()).hexdigest()!=MASK_SHA:
         raise RuntimeError("Prior frozen GSHHG 0.0625 degree graph identity mismatch")
     with np.load(a.coast_npz) as g:
         mask=g["fine_cell_to_node"]
         fine_lat=g["fine_latitude"];fine_lon=g["fine_longitude"]
-        if mask.shape!=(2720,5760) or not np.isclose(fine_lat[0],84.96875) or
-           not np.isclose(fine_lon[0],-179.96875):
+        if (mask.shape!=(2720,5760) or not np.isclose(fine_lat[0],84.96875) or
+            not np.isclose(fine_lon[0],-179.96875)):
             raise RuntimeError("Original GSHHG fine-grid definition mismatch")
     source_ports=load_source_ports(a.strict_source_ports)
     tracks=[]
