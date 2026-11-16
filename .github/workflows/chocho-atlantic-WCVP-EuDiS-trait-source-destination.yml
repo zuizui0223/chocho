@@ -1,0 +1,69 @@
+name: chocho Atlantic accepted WCVP native-source EuDiS trait species crosswalk
+
+on:
+  push:
+    branches: [analysis/atlantic-legacy-oscar-directed-2005-pilot-20261117]
+    paths:
+      - scripts/audit_atlantic_source_native_wcvp_eudis_trait_20261117.R
+      - .github/workflows/chocho-atlantic-WCVP-EuDiS-trait-source-destination.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  three-fixed-source-pairs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Verify pinned EuDiS original source and exact WCVP v13
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/WCVP rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          python3 scripts/fetch_eudis_v5_thalassochory_20261116.py --out-dir _src/EuDiS
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("_src/EuDiS/eudis_v5_source_receipt.json").read_text())
+          assert x["sha256"]=="ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5"
+          assert x["file_id"]==41269785 and x["version"]==5
+          PY
+      - name: Measure source-native plant distributions at the fixed three current corridors
+        run: |
+          set -euo pipefail
+          Rscript scripts/audit_atlantic_source_native_wcvp_eudis_trait_20261117.R \
+            _src/WCVP _src/EuDiS/EuDiS.csv \
+            results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_eudis_source_pairs
+      - name: Validate full denominators and no ecological inference
+        run: |
+          python3 - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path("results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_eudis_source_pairs/wcvp_eudis_atlantic_source_native_destination_origin_counts.csv")
+          with p.open() as f:rows=list(csv.DictReader(f))
+          assert len(rows)==6
+          assert {(r["source"],r["destination"]) for r in rows}=={("AZO","CNY"),("CNY","CVI"),("AZO","CVI")}
+          for x in rows:
+              assert sum(int(x[k]) for k in ("destination_native_reported","destination_introduced_reported","destination_unreported_in_WCVP"))==int(x["source_native_EuDiS_species"])
+          assert {int(x["trait"]) for x in rows}=={0,1}
+          print("ATLANTIC_WCVP_EUDIS_EXACT_SOURCE_TAXON_PAIRS_PASS",rows)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-atlantic-WCVP-native-source-EuDiS-trait-destination-20261117
+          path: results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_eudis_source_pairs/
+          retention-days: 90
+          if-no-files-found: warn
