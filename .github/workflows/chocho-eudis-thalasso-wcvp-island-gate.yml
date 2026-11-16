@@ -6,6 +6,7 @@ on:
     paths:
       - scripts/fetch_eudis_v5_thalassochory_20261116.py
       - scripts/audit_eudis_wcvp_island_origin_20261116.R
+      - scripts/audit_eudis_source_matched_region_20261116.py
       - .github/workflows/chocho-eudis-thalasso-wcvp-island-gate.yml
   workflow_dispatch:
 
@@ -42,6 +43,11 @@ jobs:
             results/island-mainland-resource-q1/region_metrics.csv \
             results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
             results/eudis_thalasso_wcvp_gate_20261116
+      - name: Compute equal-region paired native and introduced trait diagnostics
+        run: |
+          python3 scripts/audit_eudis_source_matched_region_20261116.py \
+            --csv results/eudis_thalasso_wcvp_gate_20261116/wcvp_region_origin_eudis_thalasso_coverage.csv \
+            --out-dir results/eudis_thalasso_wcvp_gate_20261116
       - name: Verify that findings are source-coverage only
         run: |
           python3 - <<'PY'
@@ -60,6 +66,9 @@ jobs:
           assert source["status"]=="PINNED_SOURCE_TRAITS_NOT_OBSERVED_DISPERSAL"
           summary=list(csv.DictReader((p/"thalasso_origin_cohort_coverage_summary.csv").open()))
           assert len(summary)==4
+          paired=json.loads((p/"paired_source_trait_composition.json").read_text())
+          assert paired["status"]=="PAIRED_EUDIS_TRAIT_COMPOSITION_NOT_OCEAN_TRANSPORT"
+          assert paired["islands_all"]["same_regions"]>=3
           print("EUDIS_WCVP_ISLAND_SOURCE_ONLY_GATE_PASS",json.dumps(summary))
           PY
       - uses: actions/upload-artifact@v4
