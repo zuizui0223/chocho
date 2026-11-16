@@ -1,0 +1,66 @@
+name: chocho pinned HOSTS field-location and crop source inventory
+
+on:
+  push:
+    branches: [analysis/hosts-real-use-island-origin-ports-20261116]
+    paths:
+      - scripts/audit_HOSTS_location_source_20261116.py
+      - .github/workflows/chocho-HOSTS-location-source-20261116.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch exact original NHM HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _source_HOSTS
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source commit and FAO crop taxonomy
+        run: |
+          set -euo pipefail
+          test "$(git -C _source_HOSTS rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          mkdir -p _source_fao
+          curl --location --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "https://www.fao.org/4/a0135e/A0135E10.htm" -o _source_fao/fao_icc_appendix4.html
+          python3 scripts/extract_fao_crop_taxa.py \
+            --html _source_fao/fao_icc_appendix4.html \
+            --output-json _source_fao/fao_crop_taxa_v0.1.json
+      - name: Audit original HOSTS raw locality, lab rearing and FAO
+        run: |
+          python3 scripts/audit_HOSTS_location_source_20261116.py \
+            --hosts _source_HOSTS/resource.csv \
+            --crop _source_fao/fao_crop_taxa_v0.1.json \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --out-dir results/hosts_island_local_use_20261116
+      - name: Verify fail-closed source count and interpretation
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path("results/hosts_island_local_use_20261116/HOSTS_location_source_audit.json").read_text())
+          assert s["hosts_commit"]=="808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          assert s["hosts_source_rows"]==140485
+          assert s["rows_with_location"]>0
+          assert s["FAO_exact_binomials"]>=80
+          assert s["WGSRPD3_port_regions"]>=350
+          assert s["status"].endswith("NOT_LOCAL_USE_VERIFICATION")
+          print("SOURCE_LOCATION_AND_FAO_PROVENANCE_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-HOSTS-location-source-20261116
+          path: results/hosts_island_local_use_20261116/
+          retention-days: 90
+          if-no-files-found: warn
