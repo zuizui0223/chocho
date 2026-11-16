@@ -52,4 +52,4 @@
 - ワークフロー：.github/workflows/chocho-host-record-crossover.yml
 - 入力CSVの原Git blob 3点を固定し、過去の完全な11,475歴史索引を原Actionsアーティファクトから取得。モデルとカテゴリーの直接差を二方向クラスタ共分散で計算。
 - [全6モデル・元データ検査・直接差検査が成功したCI](https://github.com/zuizui0223/chocho/actions/runs/43852930628)。
-- 原GEB原稿と239/155/51島の肯定結果は改変していない。
+- 239/155/51島の肯定結果は変更していない。統合GEB v0.3原稿の補足S.Aに、この限定的な記録連関と非因果的な解釈を追記した。
