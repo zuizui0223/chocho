@@ -1,0 +1,62 @@
+name: chocho host record source-crossover audit
+
+on:
+  push:
+    branches: [analysis/host-marine-bridge-audit-20261116]
+    paths:
+      - scripts/audit_port_host_later_record_crossover_20261116.py
+      - .github/workflows/chocho-host-record-crossover.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-source-recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numeric dependency
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Retrieve previous complete historical GBIF 11,475 source (not requery)
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43586278558
+          github-token: ${{ github.token }}
+          name: chocho-20261114-full11475-pre2001-index-risk-panel
+          path: _scratch_historical_full11475
+      - name: Refit six source-stable sensitivity cohorts
+        run: |
+          python -m py_compile scripts/audit_port_host_later_record_crossover_20261116.py
+          python scripts/audit_port_host_later_record_crossover_20261116.py \
+            --history-csv _scratch_historical_full11475/full_11475_same_source_pre2001_risk_cells.csv \
+            --history-summary _scratch_historical_full11475/full_risk_source_summary.json \
+            --output results/host_marine_bridge_audit_20261116/port_host_record_crossover.json
+      - name: Validate complete original population and no colonization interpretation
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("results/host_marine_bridge_audit_20261116/port_host_record_crossover.json"))
+          assert d["history"]["screen_complete_cells"]==11475
+          assert d["history"]["sum_pre2001_indexed"]==894
+          p=d["panels"]["primary_ge10_history_adjusted"]
+          assert p["n_species_island_cells"]==8100
+          assert p["islands"]==36 and p["species"]==225
+          assert p["category_counts"]["introduced_only"]["cells"]==435
+          assert p["category_counts"]["native_only"]["cells"]==579
+          assert p["category_counts"]["both"]["cells"]==314
+          assert p["category_counts"]["unresolved"]["cells"]==122
+          assert p["category_counts"]["no_indexed_catalog_host"]["cells"]==6650
+          assert "island colonization" in d["scientific_interpretation"]["excluded_claims"]
+          print("COMPLETE_SAME_SOURCE_LATE_GBIF_INDEX_AUDIT_PASSED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-host-later-butterfly-crossover-20261116
+          path: results/host_marine_bridge_audit_20261116/port_host_record_crossover.json
+          if-no-files-found: error
