@@ -23,6 +23,11 @@ SOURCE_HOSTS_GIT_BLOB = "06749c04bd5b7a754d6f7717a31c01c51357cae8"
 SOURCE_HOSTS_COMMIT = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
 SOURCE_WCVP_COMMIT = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
 SEED = 20261116
+# Papilionoidea including Hedylidae as a source taxonomy-aware sensitivity;
+# the traditional six diurnal butterfly families are identified separately.
+PAPILIONOIDEA = {"papilionidae","pieridae","nymphalidae",
+                 "lycaenidae","riodinidae","hesperiidae","hedylidae"}
+BUTTERFLY_SIX = PAPILIONOIDEA - {"hedylidae"}
 
 
 def read(path: Path):
@@ -122,6 +127,7 @@ def build_rows(args):
         wcvp[key].add(x["introduced"])
     exact=set(crop["exact_binomials"])
     genus_wc=set(crop["genus_wildcards"])
+    all_crop_genera={name.split()[0] for name in exact}|genus_wc
     dedup_keys=set()
     output=[]
     stat=Counter()
@@ -134,6 +140,7 @@ def build_rows(args):
                 continue
             L=loc[raw_location]
             insect=simple(x.get("Insect Genus"))+" "+simple(x.get("Insect Species"))
+            insect_family=simple(x.get("Insect Family")).casefold()
             input_name=simple(x.get("Hostplant Genus"))+" "+simple(x.get("Hostplant Species"))
             r=resolution.get(input_name)
             if not r or r["match_status"]!="matched":
@@ -152,6 +159,7 @@ def build_rows(args):
             lab=simple(x.get("Lab Rearing"))
             crop_exact=(plant in exact or rawbin in exact)
             crop_genus=any(z.split(" ")[0] in genus_wc for z in (plant,rawbin) if z)
+            crop_any_genus=any(z.split(" ")[0] in all_crop_genera for z in (plant,rawbin) if z)
             row={
                 "HOSTS_row_id":x.get("_id",""),
                 "location":raw_location,
@@ -161,8 +169,12 @@ def build_rows(args):
                 "origin":origin,
                 "rearing":lab,
                 "focal_butterfly239":insect in species239,
+                "papilionoidea":insect_family in PAPILIONOIDEA,
+                "butterfly_six":insect_family in BUTTERFLY_SIX,
+                "insect_family":insect_family,
                 "crop_exact":crop_exact,
                 "crop_genus_wildcard":crop_genus,
+                "crop_any_FAO_genus":crop_any_genus,
                 "mapping_tier":L["mapping_tier"],
                 "comparison_group":L["comparison_group"],
                 "origin_class":L["island_origin_class"],
@@ -195,6 +207,8 @@ def build_rows(args):
         "mapped_raw_locality_labels":len(loc),
         "mapped_WGSRPD3_codes":len(used_regions),
         "fixed_focal_butterflies":len(species239),
+        "papilionoidea_family_labels":sorted(PAPILIONOIDEA),
+        "all_FAO_crop_genera":len(all_crop_genera),
     }
 
 
@@ -340,17 +354,22 @@ def main():
     a.out_dir.mkdir(exist_ok=True,parents=True)
     runs={}
     details=[]
-    for cohort in ("fixed239_butterflies","all_HOSTS_lepidoptera"):
+    for cohort in ("HOSTS_Papilionoidea","fixed239_butterflies","all_HOSTS_lepidoptera"):
         for geography in ("strict_exact_or_composite","expanded_approximate"):
-            for cropmode in ("all_hosts","exclude_FAO_exact","exclude_FAO_exact_plus_genus_wildcards"):
+            for cropmode in ("all_hosts","exclude_FAO_exact","exclude_FAO_exact_plus_genus_wildcards",
+                             "exclude_FAO_all_crop_genera"):
                 sel=[
                     x for x in rows
-                    if (cohort=="all_HOSTS_lepidoptera" or x["focal_butterfly239"])
+                    if (cohort=="all_HOSTS_lepidoptera" or
+                        (cohort=="fixed239_butterflies" and x["focal_butterfly239"]) or
+                        (cohort=="HOSTS_Papilionoidea" and x["papilionoidea"]))
                     and (geography=="expanded_approximate" or x["mapping_tier"] in ("exact","composite"))
                     and x["mapping_tier"]!="provisional"
                     and x["rearing"]!="Y"
                     and (cropmode=="all_hosts" or not x["crop_exact"])
-                    and (cropmode!="exclude_FAO_exact_plus_genus_wildcards" or not x["crop_genus_wildcard"])
+                    and (cropmode not in ("exclude_FAO_exact_plus_genus_wildcards",
+                                          "exclude_FAO_all_crop_genera") or not x["crop_genus_wildcard"])
+                    and (cropmode!="exclude_FAO_all_crop_genera" or not x["crop_any_FAO_genus"])
                 ]
                 key="__".join((cohort,geography,cropmode))
                 main=compute(sel,localities,10)
@@ -358,31 +377,35 @@ def main():
                 runs[key]={
                     "eligible_original_HOSTS_rows":len(sel),
                     "source_localities_present":len(set(x["location"] for x in sel)),
+                    "distinct_insects":len(set(x["insect_species"] for x in sel)),
+                    "distinct_accepted_hosts":len(set(x["accepted_plant_id"] for x in sel)),
                     "min10":{k:v for k,v in main.items() if k!="details"},
                     "min20":{k:v for k,v in sensitivity.items() if k!="details"},
                 }
                 details.extend({**r,"analysis_key":key,"threshold":10}
                                for r in main["details"])
-    primary="fixed239_butterflies__strict_exact_or_composite__all_hosts"
+    primary="HOSTS_Papilionoidea__strict_exact_or_composite__all_hosts"
     focal=runs[primary]
     extra=[r for r in rows if r["rearing"]=="Y"]
     audit={
-        "schema":"chocho_HOSTS_regionally_introduced_record_use_20261116_v1",
+        "schema":"chocho_HOSTS_regionally_introduced_record_use_20261116_v2",
         "status":"SOURCE_ANALYSIS_NOT_FIELD_CONFIRMED_LARVAL_USE",
         "source":source,
         "source_coverage":coverage,
         "total_exact_origin_linked_rows":len(rows),
         "rows_definitely_laboratory_reared_flag_Y":len(extra),
+        "source_papilionoidea_rows_in_origin_matched":sum(x["papilionoidea"] for x in rows),
+        "source_fixed239_rows_in_origin_matched":sum(x["focal_butterfly239"] for x in rows),
         "primary_key":primary,
         "results":runs,
         "interpretation_limitations":[
             "The HOSTS Location field represents literature-reported geographic attribution, not a mapped larval feeding event, and historical publication/rearing effort is highly biased.",
-            "The primary butterfly panel is the 239 original chocho species; all Lepidoptera are an explicit separate contextual sensitivity, not butterfly-only data.",
+            "Butterfly-only primary uses seven Papilionoidea family labels including Hedylidae; original fixed239 are a strict comparable subset, and all Lepidoptera are separate background, never butterfly-only data.",
             "Lab Rearing Y is omitted, but blank Lab Rearing means UNKNOWN, not field-verified feeding. Do not claim observed wild larval consumption.",
             "WCVP v13 introduced/native is current regional status and may not reflect historic introduction at the recording site or at the date of the HOSTS observation.",
             "Exact locality to one or more WGSRPD3 codes is curated; multi-region origin disagreement/missingness excluded rather than imputed.",
             "The oceanic/continental classification is operational, manually curated and geographically heterogeneous, with unresolved arcs and compound islands classified as mixed rather than force-split.",
-            "FAO crop species exclusion and explicit FAO spp genus wildcard are different sensitivity scopes, not proof of plant cultivation at the locality.",
+            "FAO exact crop species, explicit FAO spp genus wildcard, and deliberately over-conservative exclusion of every genus appearing on FAO's list are separate definitions, not proof of cultivation.",
             "Raw literature rows share taxa, authors and sources. The independent unit of the descriptive comparison and bootstrap is the location, NOT the HOSTS row.",
             "Current WPI ports do not date introductions or demonstrate transport. Port-adjusted models are locality-level descriptive regressions with unmeasured geography and observation effort.",
             "Country-wide HOSTS locations are not fine enough to prove local host and butterfly co-occurrence; broad/ambiguous names are excluded from main scope.",
@@ -397,10 +420,12 @@ def main():
             w.writeheader()
             for x in details:w.writerow(x)
     print("HOSTS_LOCATION_USE_MODEL",json.dumps({
-        "primary":focal,
-        "expanded":runs["fixed239_butterflies__expanded_approximate__all_hosts"],
+        "primary_papilionoidea":focal,
+        "papilionoidea_crop_exact":runs["HOSTS_Papilionoidea__strict_exact_or_composite__exclude_FAO_exact"],
+        "fixed239":runs["fixed239_butterflies__strict_exact_or_composite__all_hosts"],
+        "fixed239_crop":runs["fixed239_butterflies__strict_exact_or_composite__exclude_FAO_exact"],
         "all_lepidoptera":runs["all_HOSTS_lepidoptera__strict_exact_or_composite__all_hosts"],
-        "crop_primary":runs["fixed239_butterflies__strict_exact_or_composite__exclude_FAO_exact"],
+        "expanded_papilionoidea":runs["HOSTS_Papilionoidea__expanded_approximate__all_hosts"],
         "model_scope_count":len(runs),
         "source_coverage":coverage,
     },ensure_ascii=False),flush=True)
