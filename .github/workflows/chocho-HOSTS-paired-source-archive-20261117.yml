@@ -1,0 +1,55 @@
+name: chocho paired HOSTS source-verified noncrop case archive
+on:
+  push:
+    branches: [analysis/hosts-use-vs-background-flora-20261116]
+    paths:
+      - .github/workflows/chocho-HOSTS-paired-source-archive-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43892696960
+          github-token: ${{ github.token }}
+          name: chocho-HOSTS-family-matched-WCVP-flora-20261116
+          path: _fixed_source
+      - name: Validate original paired butterfly results and expose named cases
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          paths=list(Path("_fixed_source").rglob("same_butterfly_island_mainland_host_paired.json"))
+          assert len(paths)==1,paths
+          raw=paths[0].read_text(encoding="utf8")
+          data=json.loads(raw)
+          assert data["schema"]=="chocho_same_butterfly_in_island_mainland_reported_host_20261117_v1"
+          assert len(data["cohorts"])==8
+          assert data["source_original"]["fixed_focal_butterflies"]==239
+          for key,expected in [
+              ("HOSTS_Papilionoidea__all_hosts",(67,29,13)),
+              ("HOSTS_Papilionoidea__exclude_FAO_exact",(57,19,11)),
+              ("fixed239_butterflies__all_hosts",(23,15,7)),
+              ("fixed239_butterflies__exclude_FAO_exact",(20,9,6)),
+          ]:
+              x=data["cohorts"][key]
+              actual=(x["shared_species_island_and_mainland"],
+                      x["same_insect_accepted_host_indexed_both"],
+                      x["shared_host_pairs_pattern_counts"].get("island_introduced_mainland_native",0))
+              assert actual==expected,(key,actual)
+              named=[r for r in x["source_shared_host_pairs"] if r["source_pattern"]=="island_introduced_mainland_native"]
+              print("HOSTS_NAMED_REPORTED_SAME_HOST_PAIRS",json.dumps({
+                  "cohort":key,"total_candidate_pairs":len(named),"examples":named
+              },ensure_ascii=False),flush=True)
+          print("SOURCE_PAIRED_SHA256",hashlib.sha256(raw.encode()).hexdigest(),len(raw),flush=True)
+          chunk=6000
+          parts=[raw[i:i+chunk] for i in range(0,len(raw),chunk)]
+          for i,p in enumerate(parts):
+              print("SOURCE_PAIRED_JSON_CHUNK",i,len(parts),json.dumps(p,ensure_ascii=True),flush=True)
+          print("SOURCE_PAIRED_CASES_AND_ARCHIVE_READY",flush=True)
+          PY
