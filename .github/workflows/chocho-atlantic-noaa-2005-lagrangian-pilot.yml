@@ -1,0 +1,73 @@
+name: chocho Atlantic actual NOAA 2005 Lagrangian coast-mask source pilot
+on:
+  push:
+    branches: [analysis/atlantic-2005-oscar-lagrangian-pilot-20261117]
+    paths:
+      - scripts/fetch_noaa_atlantic_2005_uv_cube_20261117.py
+      - scripts/run_atlantic_noaa_2005_midpoint_particles_20261117.py
+      - .github/workflows/chocho-atlantic-noaa-2005-lagrangian-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  actually-advect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install authentic NetCDF decoder
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2'
+      - name: Restore original WPI points strictly verified within TDWG3 island regions
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43895414730
+          github-token: ${{ github.token }}
+          name: chocho-original22-TDWG3-geomatched-WPI-coast-points
+          path: _src/strict_geo
+      - name: Check source scripts syntax and acquire actual bounded 2005 NOAA legacy NetCDF u/v
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/fetch_noaa_atlantic_2005_uv_cube_20261117.py scripts/run_atlantic_noaa_2005_midpoint_particles_20261117.py
+          python scripts/fetch_noaa_atlantic_2005_uv_cube_20261117.py \
+            --out-npz _src/atlantic_2005_noaa_old_oscar.nc_source.npz \
+            --receipt results/atlantic_lagrangian_2005_20261117/source_uv_cube_receipt.json
+      - name: Advect real source currents and censor GSHHG fine-mask coast and source missing
+        run: |
+          set -euo pipefail
+          python scripts/run_atlantic_noaa_2005_midpoint_particles_20261117.py \
+            --noaa-cube _src/atlantic_2005_noaa_old_oscar.nc_source.npz \
+            --source-receipt results/atlantic_lagrangian_2005_20261117/source_uv_cube_receipt.json \
+            --coast-npz data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz \
+            --strict-source-ports _src/strict_geo/source22_pinned_WPI_exact_polygon_port_points.csv \
+            --out-dir results/atlantic_lagrangian_2005_20261117
+      - name: Reject unsupported seed-arrival or butterfly claim in machine-readable report
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117")
+          a=json.loads((p/"lagrangian_source_quality.json").read_text())
+          source=json.loads((p/"source_uv_cube_receipt.json").read_text())
+          assert a["status"]=="ACTUAL_2005_LEGACY_OSCAR_MIDPOINT_LAGRANGIAN_SOURCE_PILOT_NOT_SEED_ARRIVAL"
+          assert a["source_only_not_butterfly_outcomes"] and a["NOAA_not_NASA_OSCAR_v2"]
+          assert a["source_NetCDF_file_sha256"]==source["npz_sha256"]
+          assert a["source_GSHHG_fine_ocean_mask_SHA256"]=="79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906"
+          assert len(a["fixed_origins"])==3
+          observed=a["scenario_counts"]["OBSERVED_NOAA_FLOW"]
+          assert sum(observed.values())>=3
+          print("NOAA_2005_ACTUAL_ADVECTION_SOURCE_ONLY_GATE",json.dumps({
+            "count_observed":sum(observed.values()),"outcomes":observed,
+            "source_finite":source["finite_uv_cell_time"],
+            "source_missing":source["missing_uv_cell_time"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Atlantic-2005-NOAA-real-Lagrangian-GSHHG-diagnostic
+          path: results/atlantic_lagrangian_2005_20261117/
+          retention-days: 90
+          if-no-files-found: warn
