@@ -1,0 +1,45 @@
+name: chocho source-gate NOAA legacy OSCAR native NetCDF grid
+on:
+  push:
+    branches: [analysis/atlantic-2005-oscar-lagrangian-pilot-20261117]
+    paths:
+      - scripts/audit_noaa_oscar_netcdf_grid_access_20261117.py
+      - .github/workflows/chocho-noaa-oscar-native-netcdf-grid-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install NetCDF arrays
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2'
+      - name: Verify official 2005 legacy NOAA gridded source data and coordinates
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_noaa_oscar_netcdf_grid_access_20261117.py
+          python scripts/audit_noaa_oscar_netcdf_grid_access_20261117.py \
+            --out results/atlantic_lagrangian_2005_20261117/noaa_legacy_grid_io_receipt.json
+      - name: Fail closed if NetCDF source authenticity gate does not pass
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("results/atlantic_lagrangian_2005_20261117/noaa_legacy_grid_io_receipt.json").read_text())
+          assert j["status"]=="NOAA_LEGACY_OSCAR_NETCDF_GRID_READ_SUCCESS_NOT_PARTICLE_TRACKING"
+          assert j["matched_finite_uv_cells"]>0 and len(j["time"])==2
+          assert j["dataset_id"]=="yearly_336c_0b32_9cd3"
+          print("NOAA_NETCDF_SOURCE_IO_VERIFIED",j["matched_finite_uv_cells"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-locked-NOAA-old-OSCAR-2005-NetCDF-IO
+          path: results/atlantic_lagrangian_2005_20261117/
+          retention-days: 90
+          if-no-files-found: warn
