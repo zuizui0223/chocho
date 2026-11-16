@@ -1,0 +1,52 @@
+{
+  "schema": "chocho_2005_noaa_particle_land_recontact_original_source_verified_20261117_v1",
+  "status": "ACTUAL_OSCAR_PARTICLE_SOURCE_RECONTACT_CLASSIFICATION_NOT_ISLAND_ARRIVAL",
+  "workflow": "https://github.com/zuizui0223/chocho/actions/runs/43903614189",
+  "source_workflow": "https://github.com/zuizui0223/chocho/actions/runs/43902616033",
+  "source_original_tracks": 81,
+  "observed_source_tracks": 27,
+  "scenario_duration_censor_and_contact": {
+    "OBSERVED_NOAA_FLOW": {
+      "survived_to_30days": 11,
+      "survived_to_60days": 9,
+      "survived_to_90days": 7,
+      "coast_contacts_in_first_7days": 12,
+      "coast_contacts_in_first_30days": 16,
+      "coast_contacts_within_50km_of_source_WPI": 15,
+      "median_coast_contact_day": 5,
+      "median_land_contact_distance_from_source_WPI_km": 22.768,
+      "proxy_50km_other_WPI_count": 0
+    },
+    "MATHEMATICAL_REVERSED_FLOW": {
+      "survived_to_30days": 19,
+      "survived_to_60days": 18,
+      "survived_to_90days": 17,
+      "coast_contacts_in_first_7days": 3,
+      "coast_contacts_in_first_30days": 8,
+      "coast_contacts_within_50km_of_source_WPI": 7,
+      "median_coast_contact_day": 13,
+      "median_land_contact_distance_from_source_WPI_km": 40.977,
+      "proxy_50km_other_WPI_count": 0
+    },
+    "STATIONARY_NO_CURRENT": {
+      "survived_to_30days": 27,
+      "survived_to_60days": 27,
+      "survived_to_90days": 27,
+      "coast_contacts_in_first_7days": 0,
+      "coast_contacts_in_first_30days": 0,
+      "coast_contacts_within_50km_of_source_WPI": 0,
+      "median_coast_contact_day": null,
+      "median_land_contact_distance_from_source_WPI_km": null,
+      "proxy_50km_other_WPI_count": 0
+    }
+  },
+  "limits": [
+    "19 physical GSHHG raster coast contacts are not 19 destination landfalls",
+    "12 observed contacts occur within the first 7 days and 15 occur within 50km of the original WPI source port; these are likely local recontacts but shoreline identity was not separately verified",
+    "GSHHG sea-land mask resolution 0.0625degree and legacy OSCAR 1/3degree currents cannot resolve immediate harbor or shallow coast processes",
+    "Source trajectories are repeated model launches from three island-port proxies, not independent species observations",
+    "0 contacts within 50km of other two fixed WPI port proxies do not imply zero arrivals on other coastlines",
+    "Pure reversed-flow runs are mathematical comparison only, not an independently measured environmental control",
+    "Original physical-source run validated full numerical QA; source mask contacts/early contacts from immutable original 81-track artifact"
+  ]
+}
