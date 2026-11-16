@@ -5,6 +5,7 @@ on:
     branches: [analysis/atlantic-eudis-wcvp-source-dest-20261117]
     paths:
       - scripts/atlas_atlantic_eudis_wcvp_native_source_destination_20261117.R
+      - scripts/audit_atlantic_eudis_thalasso_within_family_null_20261117.py
       - .github/workflows/chocho-atlantic-eudis-wcvp-source-dest.yml
   workflow_dispatch:
 
@@ -40,6 +41,13 @@ jobs:
             _src/WCVP _src/eudis/EuDiS.csv \
             results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
             results/atlantic_eudis_wcvp_source_dest_20261117
+      - name: Within-source WCVP-family-matched thalassochory null versus recipient listing
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_atlantic_eudis_thalasso_within_family_null_20261117.py
+          python3 scripts/audit_atlantic_eudis_thalasso_within_family_null_20261117.py \
+            --input results/atlantic_eudis_wcvp_source_dest_20261117/all_trait_known_source_native_plant_destination_families.csv \
+            --out results/atlantic_eudis_wcvp_source_dest_20261117/within_family_thalassochory_label_null.json
       - name: Fail closed on unexpected genus/region scope or origin-count drift
         run: |
           python3 - <<'PY'
@@ -57,6 +65,10 @@ jobs:
               z=list(csv.DictReader(f))
           assert len(z)==6
           assert all(int(x["trait1_source_n"])>=10 for x in z)
+          matched=json.loads((p/"within_family_thalassochory_label_null.json").read_text())
+          assert matched["status"]=="PRESENT_DAY_WCVP_REGION_LISTING_FAMILY_MATCHED_EXPLORATORY_SOURCE_ONLY"
+          assert len(matched["paired_regions"])==6
+          assert matched["replications"]==9999
           print("PLANT_SOURCE_DESTINATION_REGION_WCVP_ID_GATES_PASS")
           PY
       - uses: actions/upload-artifact@v4
