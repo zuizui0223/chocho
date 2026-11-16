@@ -41,7 +41,7 @@ if(!all(needed_names %in% names(n)) || !all(needed_dist %in% names(d)))stop("Pin
 valid_names <- !is.na(n$taxon_rank) & !is.na(n$taxon_status) &
  tolower(trimws(as.character(n$taxon_rank)))=="species" &
  tolower(trimws(as.character(n$taxon_status)))=="accepted"
-nam<-unique(n[valid_names,c("plant_name_id","taxon_name")])
+nam<-unique(n[valid_names,c("plant_name_id","taxon_name","family")])
 nam$plant_name_id<-as.character(nam$plant_name_id)
 nam<-nam[!duplicated(nam$plant_name_id),]
 if(nrow(nam)!=360064L)stop("Pinned WCVP accepted count changed")
@@ -62,6 +62,8 @@ if(anyDuplicated(key))stop("Multiple WCVP origin assignments for same accepted s
 index<-match(q$plant_name_id,nam$plant_name_id)
 if(anyNA(index))stop("WCVP region accepted ID lacks name row")
 q$accepted_name<-nam$taxon_name[index]
+q$family<-trimws(as.character(nam$family[index]))
+q$family[is.na(q$family) | !nzchar(q$family)]<-"__UNKNOWN_FAMILY__"
 q$bin<-nam$key[index]
 q$thalassochorous<-unname(tl[match(q$bin,names(tl))])
 q$thalassochorous[q$bin %in% ambiguous]<-NA_integer_
@@ -110,10 +112,10 @@ for(k in seq_len(nrow(edges))){
       destination_listed_share=(cts["WCVP_NATIVE"]+cts["WCVP_INTRODUCED"])/N,
       stringsAsFactors=FALSE)
   }
-  # Only the outcome-neutral original-source trait1 species IDs and
-  # destination flags, to allow independent verification of overlap.
-  a<-source[source$thalassochorous==1L,
-            c("plant_name_id","accepted_name","thalassochorous","dst_status")]
+  # All trait-known source-native WCVP species and their accepted families,
+  # including thalassochory=0, for a source-family-conditioned label null.
+  a<-source[,c("plant_name_id","accepted_name","family","thalassochorous","dst_status")]
+  if(anyDuplicated(a$plant_name_id)) stop("Duplicated source accepted plant ID")
   a$source<-src; a$destination<-dst
   species_rows[[k]]<-a
 }
@@ -124,7 +126,7 @@ if(nrow(tab)!=12L || any(tab$destination_WCVP_native+tab$destination_WCVP_introd
 write.csv(tab,file.path(out,"source_native_to_other_region_WCVP_by_EuDiS.csv"),
           row.names=FALSE,na="")
 write.csv(do.call(rbind,species_rows),
-   file.path(out,"thalasso1_source_native_plant_species_and_destination_flags.csv"),
+   file.path(out,"all_trait_known_source_native_plant_destination_families.csv"),
    row.names=FALSE,na="")
 # Comparator diff within each ordered source/destination pair, not a
 # year, dispersal probability, or causal regression.
