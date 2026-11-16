@@ -1,0 +1,64 @@
+name: chocho HOSTS reported-use sensitivity summary from frozen artifact
+on:
+  push:
+    branches: [analysis/hosts-real-use-island-origin-ports-20261116]
+    paths:
+      - .github/workflows/chocho-HOSTS-use-sensitivity-summary.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  summarize-authenticated-output:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43881198606
+          github-token: ${{ github.token }}
+          name: chocho-HOSTS-locality-origin-FAO-ports-20261116
+          path: _source_output
+      - name: Recheck and print all frozen sensitivity populations
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          files=list(Path("_source_output").rglob("host_reported_use_island_oceanic_fao_ports.json"))
+          assert len(files)==1, files
+          d=json.loads(files[0].read_text(encoding="utf8"))
+          assert d["status"]=="SOURCE_ANALYSIS_NOT_FIELD_CONFIRMED_LARVAL_USE"
+          assert d["source"]["fixed_focal_butterflies"]==239
+          assert len(d["results"])==24
+          compact={}
+          for key,v in d["results"].items():
+              x=v["min10"]
+              cv=x["adjusted_model_island_vs_mainland"]
+              gm=x["adjusted_model_with_oceanic_continental"]
+              compact[key]={
+                  "host_rows":v["eligible_original_HOSTS_rows"],
+                  "distinct_insects":v["distinct_insects"],
+                  "island":x["island"],
+                  "mainland":x["mainland"],
+                  "oceanic":x["oceanic"],
+                  "continental":x["continental"],
+                  "island_mainland_p":x["tests"]["island_vs_mainland"].get("descriptive_Mann_Whitney_p"),
+                  "port_beta_logodds":cv.get("coef_log_odds",{}).get("log2_1plus_WPI_ports"),
+                  "port_bootstrap_95":cv.get("source_locality_bootstrap_95pct_descriptive",{}).get("log2_1plus_WPI_ports"),
+                  "geo_beta":gm.get("coef_log_odds",{}).get("is_oceanic_island_vs_continental"),
+                  "geo_bootstrap_95":gm.get("source_locality_bootstrap_95pct_descriptive",{}).get("is_oceanic_island_vs_continental"),
+                  "threshold20_island":v["min20"]["island"],
+                  "threshold20_mainland":v["min20"]["mainland"],
+              }
+              print("SOURCE_SENSITIVITY_SUMMARY",json.dumps({"scope":key, **compact[key]},ensure_ascii=False))
+          Path("HOSTS_sensitivity_summary_all24.json").write_text(json.dumps({
+              "original_workflow":43881198606,
+              "original_data_provenance":d["source"],
+              "scope_count":len(compact),
+              "scopes":compact},indent=2,ensure_ascii=False)+"\n",encoding="utf8")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-HOSTS-sensitivity-all24-summary-20261116
+          path: HOSTS_sensitivity_summary_all24.json
+          if-no-files-found: error
