@@ -1,0 +1,58 @@
+name: chocho source-verified 2001-2010 historic Atlantic ocean flow seasonal robustness
+
+on:
+  push:
+    branches: [analysis/atlantic-oscar-decadal-robustness-20261117]
+    paths:
+      - scripts/analyze_atlantic_oscar_2001_2010_seasonal_source_20261117.py
+      - .github/workflows/chocho-atlantic-oscar-2001-2010-seasons.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  decade-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43895414730
+          github-token: ${{ github.token }}
+          name: chocho-original22-TDWG3-geomatched-WPI-coast-points
+          path: _src/original22_ports
+      - name: Query historic official NOAA time axis and predeclared Feb/Aug 2001–2010 u-v
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/analyze_atlantic_oscar_2001_2010_seasonal_source_20261117.py
+          python3 scripts/analyze_atlantic_oscar_2001_2010_seasonal_source_20261117.py \
+            --strict-source-ports _src/original22_ports/source22_pinned_WPI_exact_polygon_port_points.csv \
+            --out-dir results/oscar_atlantic_2001_2010_decadal_20261117
+      - name: Preserve source-only inference and all source date/effort denominators
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("results/oscar_atlantic_2001_2010_decadal_20261117/noaa_2001_2010_two_season_alignment.json").read_text())
+          assert d["status"]=="NOAA_LEGACY_2001_2010_FIXED_SEASON_PHYSICAL_CORRIDOR_ONLY"
+          assert d["source_geometry_run"]==43895414730
+          assert d["2005_original_source_run"]==43896071940
+          assert len(d["study_time_indices"])==20
+          assert d["nominal_queries"]==180 and len(d["routes"])==3
+          assert all(x["estimand"]=="20_FIXED_FEB_AUG_SOURCE_CURRENT_SNAPSHOTS_NOT_ANNUAL_ADVECTION_OR_SEED_TRANSPORT" for x in d["routes"])
+          print("DECADAL_SOURCE_ONLY_GATES_PASS", json.dumps({"finite":d["finite_queries"],
+            "total":d["nominal_queries"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Atlantic-original-2001-2010-NOAA-velocity-decadal-audit
+          path: results/oscar_atlantic_2001_2010_decadal_20261117/
+          retention-days: 90
+          if-no-files-found: warn
