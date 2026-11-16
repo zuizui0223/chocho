@@ -1,0 +1,69 @@
+name: chocho original 29 NOAA contacts × global TDWG3 region source gate
+
+on:
+  push:
+    branches: [analysis/atlantic-gshhg-exact-landmass-contact-20261117]
+    paths:
+      - scripts/audit_noaa2005_global_tdwg3_land_contact_20261117.py
+      - .github/workflows/chocho-noaa2005-global-TDWG3-contact.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independent-all-global-plant-regions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg_original
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source geography dependencies
+        run: python -m pip install --disable-pip-version-check 'shapely>=2.0,<3' 'pyproj>=3.6,<4'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43906815380
+          github-token: ${{ github.token }}
+          name: chocho-original-NOAA2005-GSHHG-vector-landmass-contact-audit
+          path: _src/original_gshhg_vector
+      - name: Check full original TDWG3 geography and classify all original NOAA land contacts
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg_original rev-parse HEAD)" = "52da7828aba9d461dd133c27b3bd7a4407161f54"
+          python -m py_compile scripts/audit_noaa2005_global_tdwg3_land_contact_20261117.py
+          python scripts/audit_noaa2005_global_tdwg3_land_contact_20261117.py \
+            --original-source-dir _src/original_gshhg_vector \
+            --official-tdwg3-geojson _src/tdwg_original/geojson/level3.geojson \
+            --out-dir results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/global_tdwg
+      - name: Protect no-inference category and original 19 + 10 sample
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/global_tdwg")
+          x=json.loads((p/"global_TDWG3_contact_source_gate.json").read_text())
+          assert x["status"]=="GLOBAL_TDWG3_SOURCE_ONLY_GEOGRAPHIC_RESOLUTION_NOT_SEED_TRANSPORT"
+          assert x["source_GSHHG_ID_CI"]==43906815380 and x["original_land_contacts"]==29
+          assert x["original_ambiguous_actual_flow_contacts"]==3
+          assert x["TDWG3_git_commit"]=="52da7828aba9d461dd133c27b3bd7a4407161f54"
+          assert x["scenarios"]["OBSERVED_NOAA_FLOW"]["contacts"]==19
+          assert x["scenarios"]["MATHEMATICAL_REVERSED_FLOW"]["contacts"]==10
+          rows=list(csv.DictReader((p/"original_29_GSHHG_contacts_global_TDWG3_areas.csv").open()))
+          assert len(rows)==29 and all(y["is_biological_colonisation_record"]=="False" for y in rows)
+          print("GSHHG_GLOBAL_TDWG3_ORIGINAL_SOURCE_ONLY_GATE_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-NOAA2005-GSHHG-global-TDWG3-ambiguity-resolution
+          path: results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/global_tdwg/
+          retention-days: 90
+          if-no-files-found: warn
