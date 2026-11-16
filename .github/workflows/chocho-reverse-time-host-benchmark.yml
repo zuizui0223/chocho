@@ -1,0 +1,68 @@
+name: chocho reverse-time host-index benchmark
+
+on:
+  push:
+    branches:
+      - analysis/native-introduced-temporal-bridge-20261116
+    paths:
+      - scripts/audit_pre2001_reverse_time_host_control_20261116.py
+      - .github/workflows/chocho-reverse-time-host-benchmark.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  historical-reverse-time-source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Download original source-verified complete historical GBIF index
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43586278558
+          github-token: ${{ github.token }}
+          name: chocho-20261114-full11475-pre2001-index-risk-panel
+          path: _source_11475
+      - name: Reproduce before-versus-after record-index class associations
+        run: |
+          python3 -m py_compile scripts/audit_pre2001_reverse_time_host_control_20261116.py
+          python3 scripts/audit_pre2001_reverse_time_host_control_20261116.py \
+            --history-csv _source_11475/full_11475_same_source_pre2001_risk_cells.csv \
+            --history-summary _source_11475/full_risk_source_summary.json \
+            --output results/native_introduced_bridge_20261116/pre2001_reverse_time_host_control.json
+      - name: Check complete source, same cohorts and correct uncertainty boundaries
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          j=json.loads(Path("results/native_introduced_bridge_20261116/pre2001_reverse_time_host_control.json").read_text())
+          assert j["status"] == "SOURCE_INDEX_BENCHMARK_NOT_CAUSAL_NEGATIVE_CONTROL"
+          assert j["same_original_source"]["history_cells"] == 11475
+          assert j["same_original_source"]["history_pre2001_positive"] == 894
+          for m,expected in ((10,8100),(30,5850)):
+              group=j["results"][f"historical_plant_records_ge_{m}"]
+              assert len(group)==3
+              for period, d in group.items():
+                  assert d["eligible_rows"]==expected
+                  assert sum(z["risk"] for z in d["host_classes"].values())==expected
+                  assert sum(z["observed_index"] for z in d["host_classes"].values())==d["index_count"]
+                  assert d["model"]["status"]=="EXPLORATORY_TWOWAY_FE_ASSOCIATION"
+                  assert d["model"]["n"]==expected
+                  assert d["model"]["events"]==d["index_count"]
+              pre=group["reverse_time_1700_2000"]["index_count"]
+              assert 0<pre<=894
+          print("HISTORICAL_REVERSE_TIME_BENCHMARK_SOURCE_INTEGRITY_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-pre2001-reverse-time-host-benchmark-20261116
+          path: results/native_introduced_bridge_20261116/pre2001_reverse_time_host_control.json
+          if-no-files-found: error
+          retention-days: 90
