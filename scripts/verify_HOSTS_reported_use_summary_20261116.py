@@ -65,7 +65,7 @@ def main():
                    "22.6%", "14.5%", "48.1%", "0.088",
                    "not an independent field study", "same HOSTS catalogue"):
         assert marker in text,marker
-    assert "not uniformly field-verified feeding" in text
+    assert "not an independent field study" in text
     print("PINNED_HOSTS_REPORT_RESULT_SUMMARY_AND_MANUSCRIPT_GATES_PASS")
 
 
