@@ -153,8 +153,11 @@ def run(a):
                            "mean_aligned_m_s":statistics.mean(x) if x else "",
                            "positive_sample_fraction":sum(v>0 for v in x)/len(x) if x else ""})
         valid_years={yr:vs for yr,vs in by_year.items() if len(vs)>=MIN_3PT_SLICES_PER_YEAR}
-        if len(valid_years)<MIN_YEARS:
-            raise RuntimeError(f"{src}->{dst} has insufficient distinct years {len(valid_years)}")
+        # Do not lower the predeclared 15-year adequacy gate after seeing results.
+        # Retain incomplete corridors as coverage diagnostics, not confirmed tests.
+        if len(valid_years)<3:
+            raise RuntimeError(f"{src}->{dst} has fewer than 3 genuinely covered years")
+        source_coverage_adequate = len(valid_years)>=MIN_YEARS
         year_means=[statistics.mean(vs) for yr,vs in sorted(valid_years.items())]
         all_slices=[v for vs in valid_years.values() for v in vs]
         matching=[x for x in annual if x["source"]==src and x["destination"]==dst and
@@ -165,6 +168,11 @@ def run(a):
            "destination_WPI_port_id":chosen[dst]["WPI_id"],
            "distance_km":round(next(p["ocean_distance_km"] for p in positions if p["source"]==src and p["destination"]==dst),2),
            "eligible_year_count":len(valid_years),"complete_3point_time_slices":len(all_slices),
+           "source_coverage_adequate_for_predeclared_15yr_gate":source_coverage_adequate,
+           "year_coverage_status":"ADEQUATE_DESCRIPTIVE_ANNUAL_WINDOW" if source_coverage_adequate
+                         else "INADEQUATE_15YR_WINDOW_NO_FULL_TEMPORAL_VALIDATION",
+           "included_years":sorted(valid_years),
+           "below_25_complete_slices_years":[yr for yr in YEARS if yr not in valid_years],
            "mean_of_annual_signed_m_s":statistics.mean(year_means),
            "annual_mean_median_m_s":statistics.median(year_means),
            "annual_year_block_bootstrap_descriptive95_m_s":yearly_bootstrap(year_means),
@@ -184,7 +192,7 @@ def run(a):
             writer=csv.DictWriter(handle,fieldnames=list(records[0]))
             writer.writeheader();writer.writerows(records)
     audit={
-       "status":"HISTORICAL_SIGNED_CURRENT_ALIGNMENT_NOT_SEED_TRANSPORT",
+       "status":"HISTORICAL_SIGNED_CURRENT_ALIGNMENT_COVERAGE_AUDIT_NOT_SEED_TRANSPORT",
        "experiment_stage":"post-2005-pilot temporal descriptive sensitivity",
        "source_dataset":"NOAA ERDDAP yearly_336c_0b32_9cd3 LEGACY OSCAR",
        "not_NASA_OSCAR_v2":True,"original_2005_run":43896071940,
@@ -195,7 +203,9 @@ def run(a):
        "all_source_cell_time_rows":len(cells),
        "missing_source_cell_time_rows":sum(x["status"]=="NOAA_SOURCE_MISSING" for x in cells),
        "routes":routes,
+       "all_routes_meet_fixed_15yr_coverage":all(r["source_coverage_adequate_for_predeclared_15yr_gate"] for r in routes),
        "limitations":[
+        "The fixed >=15-years-with-25-complete-3pt-slices criterion was not retroactively loosened. Any route below it is a source-coverage diagnostic, not a confirmed 18-year alignment result.",
         "This is a fixed 3-point great-circle directional current diagnostic, NOT an integrated Lagrangian trajectory.",
         "ERA/year block bootstrap intervals describe source current variability, NOT plant-arrival effects or independent replicated islands.",
         "Missing/coastal source flow remains missing rather than zero.",
