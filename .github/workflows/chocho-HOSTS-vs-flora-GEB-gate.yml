@@ -1,0 +1,21 @@
+name: chocho source-frozen HOSTS flora null and GEB claim gate
+on:
+  push:
+    branches: [analysis/hosts-use-vs-background-flora-20261116]
+    paths:
+      - scripts/verify_HOSTS_vs_WCVP_flora_GEB_20261116.py
+      - results/hosts_use_vs_flora_20261116/VERIFIED_FLORISTIC_AND_FAMILY_BASELINE_20261116.json
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - .github/workflows/chocho-HOSTS-vs-flora-GEB-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-frozen-result:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare source-locked original WCVP flora and HOSTS family excess to GEB
+        run: |
+          python3 -m py_compile scripts/verify_HOSTS_vs_WCVP_flora_GEB_20261116.py
+          python3 scripts/verify_HOSTS_vs_WCVP_flora_GEB_20261116.py
