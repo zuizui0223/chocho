@@ -51,7 +51,7 @@ jobs:
       - name: Fail closed on unexpected genus/region scope or origin-count drift
         run: |
           python3 - <<'PY'
-          import csv
+          import csv, json
           from pathlib import Path
           p=Path("results/atlantic_eudis_wcvp_source_dest_20261117")
           with (p/"source_native_to_other_region_WCVP_by_EuDiS.csv").open() as f:
