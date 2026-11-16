@@ -1,0 +1,65 @@
+name: chocho original22 WPI coastline source point geometry gate
+
+on:
+  push:
+    branches: [analysis/oscar-v2-1993-2010-source-access-gate-20261117]
+    paths:
+      - scripts/source22_wpi_tdgw3_port_geometry_20261117.py
+      - .github/workflows/chocho-source22-WPI-TDWG3-geometry.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  strict-port-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg_wgsrpd
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install geometry-only dependency
+        run: python3 -m pip install --disable-pip-version-check 'shapely>=2.0,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43892007427
+          github-token: ${{ github.token }}
+          name: chocho-eudis-wcvp-original-island-source-gate-20261116
+          path: _src/eudis_original
+      - name: Check original WPI points within pinned TDWG level3 island polygons
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg_wgsrpd rev-parse HEAD)" = "52da7828aba9d461dd133c27b3bd7a4407161f54"
+          python3 -m py_compile scripts/source22_wpi_tdgw3_port_geometry_20261117.py
+          python3 scripts/source22_wpi_tdgw3_port_geometry_20261117.py \
+            --source-root _src/eudis_original \
+            --level3-geojson _src/tdwg_wgsrpd/geojson/level3.geojson \
+            --wpi-geojson data/exploratory/island51_observed_ocean_20261106/wpi/ports_2019_source.geojson \
+            --out-dir results/oscar_v2_historic_access_20261117/source22
+      - name: Enforce strict source-only interpretation
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("results/oscar_v2_historic_access_20261117/source22/source22_exact_WPI_TDWG3_port_geometry_audit.json").read_text())
+          assert d["status"]=="EXACT_TDWG3_POLYGON_WPI_SOURCE_POINTS_NO_TRANSPORT"
+          assert d["original_eligible_regions"]==22
+          assert d["WPI_GeoJSON_original_point_features"]>=3000
+          assert 0<=d["regions_with_accepted_WPI_points"]<=22
+          print("SOURCE22_STRICT_TDWG3_WPI_POINTS_GATE_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original22-TDWG3-geomatched-WPI-coast-points
+          path: results/oscar_v2_historic_access_20261117/source22/
+          retention-days: 90
+          if-no-files-found: warn
