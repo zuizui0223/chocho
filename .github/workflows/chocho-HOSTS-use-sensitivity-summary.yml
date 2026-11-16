@@ -51,6 +51,25 @@ jobs:
                   "threshold20_mainland":v["min20"]["mainland"],
               }
               print("SOURCE_SENSITIVITY_SUMMARY",json.dumps({"scope":key, **compact[key]},ensure_ascii=False))
+          import csv
+          locality_files=list(Path("_source_output").rglob("per_locality_all_scopes.csv"))
+          assert len(locality_files)==1,locality_files
+          localities=list(csv.DictReader(locality_files[0].open(encoding="utf8",newline="")))
+          for scope in (
+              "HOSTS_Papilionoidea__strict_exact_or_composite__all_hosts",
+              "HOSTS_Papilionoidea__strict_exact_or_composite__exclude_FAO_exact",
+              "fixed239_butterflies__strict_exact_or_composite__all_hosts",
+              "all_HOSTS_lepidoptera__strict_exact_or_composite__all_hosts",
+              "HOSTS_Papilionoidea__expanded_approximate__all_hosts"
+          ):
+              selected=[
+                  {"location":x["location"],"n":int(x["n"]),"introduced":int(x["introduced"]),
+                   "share":float(x["introduced_share"]),"ports":int(x["WPI_ports"]),
+                   "geology":x["origin_class"],"mapping_tier":x["mapping_tier"]}
+                  for x in localities if x["analysis_key"]==scope and x["threshold"]=="10"
+                  and x["location"] in ("Hawaii","Fiji","Cuba","Puerto Rico","Taiwan","British Isles","Japan","New Guinea","Madagascar","Solomon Islands","India","Finland")
+              ]
+              print("SOURCE_LOCALITY_CASES",json.dumps({"scope":scope,"localities":selected},ensure_ascii=False))
           Path("HOSTS_sensitivity_summary_all24.json").write_text(json.dumps({
               "original_workflow":43881198606,
               "original_data_provenance":d["source"],
