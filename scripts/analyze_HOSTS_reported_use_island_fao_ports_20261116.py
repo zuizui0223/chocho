@@ -217,8 +217,7 @@ def unweighted_lm(rows, response="empirical_logit", include_geology=False, boots
               for r in arr]
         if include_geology:
             for v,r in zip(base,arr):
-                v.extend([float(r["origin_class"]=="oceanic"),
-                          float(r["origin_class"]=="mixed_unresolved")])
+                v.append(float(r["origin_class"]=="oceanic"))
         return np.asarray(base,float)
     X=design(rows)
     y=np.array([r[response] for r in rows])
@@ -228,7 +227,7 @@ def unweighted_lm(rows, response="empirical_logit", include_geology=False, boots
     b=np.linalg.lstsq(X,y,rcond=None)[0]
     labels=["intercept","is_island","log2_1plus_WPI_ports","log_region_area_km2",
             "log1plus_HOSTS_record_count"]
-    if include_geology:labels+=["is_oceanic_island","is_mixed_origin_island"]
+    if include_geology:labels+=["is_oceanic_island_vs_continental"]
     rng=np.random.default_rng(SEED+int(include_geology))
     bs=[]
     for _ in range(bootstrap):
