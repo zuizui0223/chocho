@@ -6,6 +6,7 @@ on:
     paths:
       - scripts/extract_WCVP_hostreport_family_flora_20261116.R
       - scripts/analyze_HOSTS_vs_WCVP_family_flora_baseline_20261116.py
+      - scripts/audit_same_butterfly_island_mainland_HOSTS_20261117.py
       - .github/workflows/chocho-HOSTS-vs-WCVP-flora.yml
   workflow_dispatch:
 
@@ -91,6 +92,20 @@ jobs:
             --flora-family _src/flora/wcvp_flora_region_family_origin_FAO.csv \
             --original-island-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
             --out-dir results/hosts_use_vs_flora_20261116
+      - name: Compare identical butterfly taxa in both island and mainland host reports
+        run: |
+          python3 -m py_compile scripts/audit_same_butterfly_island_mainland_HOSTS_20261117.py
+          python3 scripts/audit_same_butterfly_island_mainland_HOSTS_20261117.py \
+            --hosts _src/HOSTS/resource.csv \
+            --host-resolution _src/host_sidecar/host_name_resolution.csv \
+            --wcvp-host-origin _src/wcvp_origin.csv \
+            --locations data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            --fao _src/FAO/crop.json \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --areas results/island_resource_gap_filling/areas.csv \
+            --butterflies239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --flora-family _src/flora/wcvp_flora_region_family_origin_FAO.csv \
+            --out-dir results/hosts_use_vs_flora_20261116
       - name: Verify original WCVP all-island flora and source outcomes
         run: |
           python3 - <<'PY'
@@ -103,6 +118,15 @@ jobs:
           assert d["source_base"]["fixed_focal_butterflies"]==239
           assert len(d["scopes"])==24
           assert d["scopes"]["HOSTS_Papilionoidea__all_hosts__min10"]["source_localities"]>=14
+          pair=Path("results/hosts_use_vs_flora_20261116/same_butterfly_island_mainland_host_paired.json")
+          q=json.loads(pair.read_text(encoding="utf8"))
+          assert q["status"]=="SOURCE_PAIRED_LITERATURE_REPORTS_NOT_CONFIRMED_WILD_HOST_SWITCHING"
+          assert q["source_original"]["fixed_focal_butterflies"]==239
+          assert len(q["cohorts"])==8
+          for key,scope in q["cohorts"].items():
+              assert scope["same_insect_accepted_host_indexed_both"]<=scope["unique_insect_host_original_location_records"]
+              assert scope["shared_species_island_and_mainland"]<=scope["species_in_source_localities"]
+              assert scope["unique_insect_host_original_location_records"]<=scope["source_usable_raw_rows"]
           print("SOURCE_FLORA_FAMILY_MATCH_AND_NONCAUSAL_GATES_PASS")
           PY
       - uses: actions/upload-artifact@v4
