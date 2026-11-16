@@ -258,7 +258,7 @@ def main() -> None:
                                  for k, v in panel["estimates"].items()}}
               for name, panel in panels.items()}
     print(json.dumps({"status": "SOURCE_LOCKED", "models": simple, "output": str(target)},
-                     ensure_ascii=False, flush=True))
+                     ensure_ascii=False), flush=True)
 
 
 if __name__ == "__main__":
