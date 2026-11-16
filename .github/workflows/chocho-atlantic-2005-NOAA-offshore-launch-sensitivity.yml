@@ -1,0 +1,71 @@
+name: chocho NOAA 2005 offshore launch distance posthoc sensitivity
+on:
+  push:
+    branches: [analysis/atlantic-2005-oscar-lagrangian-pilot-20261117]
+    paths:
+      - scripts/audit_atlantic_noaa_2005_offshore_launch_sensitivity_20261117.py
+      - .github/workflows/chocho-atlantic-2005-NOAA-offshore-launch-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  offshore-only-assumptions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bounded source format dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43895414730
+          github-token: ${{ github.token }}
+          name: chocho-original22-TDWG3-geomatched-WPI-coast-points
+          path: _src/strict_ports
+      - name: Reacquire same checksum-verified original NOAA 2005 and early 2006 cube
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_atlantic_noaa_2005_offshore_launch_sensitivity_20261117.py
+          python scripts/fetch_noaa_atlantic_2005_uv_cube_20261117.py \
+            --out-npz _src/old_noaa_2005_cube.npz \
+            --receipt results/atlantic_lagrangian_2005_20261117/offshore_noaa_source_receipt.json
+      - name: Compare source distance bands without changing original actual flow, GSHHG mask or ports
+        run: |
+          set -euo pipefail
+          python scripts/audit_atlantic_noaa_2005_offshore_launch_sensitivity_20261117.py \
+            --noaa-cube _src/old_noaa_2005_cube.npz \
+            --source-receipt results/atlantic_lagrangian_2005_20261117/offshore_noaa_source_receipt.json \
+            --coast-npz data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz \
+            --strict-source-ports _src/strict_ports/source22_pinned_WPI_exact_polygon_port_points.csv \
+            --out results/atlantic_lagrangian_2005_20261117/OFFSHORE_POSTHOC_SENSITIVITY_SOURCE_RESULT.json
+      - name: Fail closed on inference scope and source-band missingness
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117/OFFSHORE_POSTHOC_SENSITIVITY_SOURCE_RESULT.json")
+          z=json.loads(p.read_text())
+          assert z["status"]=="POSTHOC_OFFSHORE_LAUNCH_ASSUMPTION_SOURCE_SENSITIVITY_NO_BIOLOGICAL_ARRIVAL"
+          assert z["original_real_source_run"]==43902616033
+          assert len(z["bands"])==3
+          assert set(z["bands"])=={"0_40km","40_80km","80_160km"}
+          assert z["all_source_cases"]==sum(x["source_records"] for x in z["bands"].values())
+          assert all(x["source_records"]+x["source_grid_shortfall"]==27 for x in z["bands"].values())
+          print("OFFSHORE_POSTHOC_NOAA_SOURCE_GATE_PASS",json.dumps({
+            k:{"n":v["source_records"],"completed":v["90d_completed"],
+               "contacts":v["status_counts"].get("GSHHG_FINE_MASK_LAND_CONTACT",0)}
+            for k,v in z["bands"].items()}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-NOAA-2005-source-distance-coastmask-posthoc-sensitivity
+          path: |
+            results/atlantic_lagrangian_2005_20261117/OFFSHORE_POSTHOC_SENSITIVITY_SOURCE_RESULT.json
+            results/atlantic_lagrangian_2005_20261117/offshore_noaa_source_receipt.json
+          retention-days: 90
+          if-no-files-found: warn
