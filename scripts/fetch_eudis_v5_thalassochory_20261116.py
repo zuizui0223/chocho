@@ -51,8 +51,11 @@ def main() -> None:
     dest = a.out_dir / "EuDiS.csv"
     dest.write_bytes(payload)
     with dest.open("r", encoding="utf-8-sig", newline="") as inp:
-        cols = next(csv.reader(inp))
-    if not {"Species_POWO", "Thalassochorous", "Further_clarification_needed"}.issubset(set(cols)):
+        head = inp.readline()
+        delimiter = ";" if head.count(";") > head.count(",") else ","
+        cols = next(csv.reader([head], delimiter=delimiter))
+    normalized_cols = {x.strip().replace(" ", "_") for x in cols}
+    if not {"Species_POWO", "Thalassochorous", "Further_clarification_needed"}.issubset(normalized_cols):
         raise RuntimeError(f"Published EuDiS columns differ: {cols}")
     receipt = {
         "article_id": ARTICLE, "version": VERSION,
@@ -61,7 +64,8 @@ def main() -> None:
         "source_download_url": f["download_url"],
         "bytes": len(payload), "source_md5": md5,
         "sha256": hashlib.sha256(payload).hexdigest(),
-        "columns": cols, "status": "PINNED_SOURCE_TRAITS_NOT_OBSERVED_DISPERSAL"
+        "columns": cols, "delimiter": delimiter,
+        "status": "PINNED_SOURCE_TRAITS_NOT_OBSERVED_DISPERSAL"
     }
     (a.out_dir / "eudis_v5_source_receipt.json").write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
