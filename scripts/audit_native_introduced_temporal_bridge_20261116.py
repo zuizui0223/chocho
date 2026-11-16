@@ -267,6 +267,35 @@ def main():
                 reports[name]["model_prior_intensity_adjusted"] = model(
                     subset, response, adjust_prior_intensity=True
                 )
+                # Explicitly diagnostic restrictions: same frozen cohort, not
+                # independent external replications or new island sampling.
+                restrictions = {
+                    "exclude_great_britain_15_and_ireland_26": [
+                        x for x in subset if x["island"] not in ("15", "26")
+                    ],
+                    "prior_2001_2010_index_positive": [
+                        x for x in subset if x["prior_2001_2010_count"] > 0
+                    ],
+                    "prior_pre2001_index_positive": [
+                        x for x in subset if x["prior_1700_2000_count"] > 0
+                    ],
+                }
+                reports[name]["diagnostic_reindex_scopes"] = {}
+                for scope_name, subscope in restrictions.items():
+                    reports[name]["diagnostic_reindex_scopes"][scope_name] = {
+                        "risk": len(subscope),
+                        "events": sum(x[response] for x in subscope),
+                        "categories": {
+                            c: [sum(x["category"] == c for x in subscope),
+                                sum(x["category"] == c and x[response] for x in subscope)]
+                            for c in CATEGORIES
+                        },
+                        "adjusted": model(
+                            subscope, response, adjust_prior_intensity=True
+                        ) if len(subscope) > 50 else {
+                            "status": "TOO_FEW_CELLS", "n": len(subscope)
+                        },
+                    }
     result = {
         "schema": "chocho_source_temporal_index_host_class_20261116_v2",
         "status": "SOURCE_DESCRIPTIVE_NOT_COLONIZATION",
@@ -282,6 +311,7 @@ def main():
             "The previously indexed reindexing endpoint is GBIF record recurrence, not confirmed residence, population persistence, reproduction or a new colonization.",
             "First-index host-positive events may be too sparse for reliable conditional effects, regardless of a positive or negative model coefficient.",
             "No plant abundance, climate suitability, crossing route, ship transport or independent population establishment was measured.",
+            "Geographic and historical subscope sensitivities were chosen after examining the main result; they are descriptive diagnostics, not confirmatory replications.",
         ],
         "preserved_results": ["239-butterfly global candidate-resource expansion +54.9%",
                               "Island relative resource expansion +118.9%; mainland +40.9%",
@@ -302,6 +332,15 @@ def main():
             "historical_record_count_adjusted": (
                 v["model_prior_intensity_adjusted"].get("coefficients")
                 if "model_prior_intensity_adjusted" in v else None
+            ),
+            "geography_and_prior_period_sensitivities": (
+                {scope: {
+                    "risk": val["risk"], "events": val["events"],
+                    "categories": val["categories"],
+                    "model_status": val["adjusted"]["status"],
+                    "adjusted_coefficients": val["adjusted"].get("coefficients", {})
+                } for scope, val in v["diagnostic_reindex_scopes"].items()}
+                if "diagnostic_reindex_scopes" in v else None
             )
         }
         for k, v in reports.items()
