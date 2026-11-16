@@ -129,10 +129,10 @@ def main(a):
     if original.get("status")!="SOURCE_UV_FINITE":raise RuntimeError("Old 2005 source replay failed")
     pts=[]
     for start,end in LEG_PAIRS:
-        one=anchors[start];two=anchors[end]
+        src_anchor=anchors[start];dst_anchor=anchors[end]
         for f in FRACTIONS:
-            p=arc_and_tangent((one["longitude"],one["latitude"]),
-                  (two["longitude"],two["latitude"]),f)
+            p=arc_and_tangent((src_anchor["longitude"],src_anchor["latitude"]),
+                  (dst_anchor["longitude"],dst_anchor["latitude"]),f)
             ilat,ilon=noaa_indices(p)
             pts.append({"source":start,"destination":end,"fraction":f,**p,"ilat":ilat,"ilon":ilon})
     jobs=[(p,t) for p in pts for t in samples]
