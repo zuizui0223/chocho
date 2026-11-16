@@ -84,8 +84,11 @@ def main():
     ts=np.concatenate(tt);u=np.concatenate(uall).astype(np.float32);v=np.concatenate(vall).astype(np.float32)
     if len(ts)!=53 or u.shape!=(53,126,201) or v.shape!=u.shape:raise RuntimeError("Final source cube size changed")
     if np.any(np.diff(ts)<=0):raise RuntimeError("Source timestamp discontinuity or reversal")
-    if not all(datetime.fromtimestamp(float(x),tz=timezone.utc).year==2005 for x in ts):
-        raise RuntimeError("Source subset extended outside 2005, revise scope")
+    first_date=datetime.fromtimestamp(float(ts[0]),tz=timezone.utc)
+    final_date=datetime.fromtimestamp(float(ts[-1]),tz=timezone.utc)
+    if not (first_date.year==2005 and final_date.year in (2005,2006)
+            and final_date<datetime(2006,2,1,tzinfo=timezone.utc)):
+        raise RuntimeError(f"Source window outside bounded 2005/early 2006 release-advection scope: {first_date} -> {final_date}")
     # Old independent observed NOAA point: 2005-09-21, 30N, 150E is outside the
     # Atlantic grid, so validate 930 38.333N, 332E from the separate NetCDF IO.
     t930=930-TIME_CHUNKS[0][0];la124=124-LAT_INDICES[0];lo936=936-LON_INDICES[0]
@@ -99,6 +102,7 @@ def main():
       "status":"AUTHENTIC_NOAA_LEGACY_2005_UV_SOURCE_CUBE_NO_TRANSPORT_INFERENCE",
       "dataset":EXPECTED,"noaa_erddap_griddap":"https://oceanwatch.pifsc.noaa.gov/erddap/griddap/"+EXPECTED,
       "product":"NOAA mirrored old OSCAR 1/3degree, ~5-day, 15m (not NASA daily 0.25degree v2)",
+      "time_scope_note":"Original fixed 2005 release dates; bounded source-advection window may extend into early 2006",
       "source_indices":{"time_chunks":TIME_CHUNKS,"lat":LAT_INDICES,"lon":LON_INDICES},
       "time_start_utc":datetime.fromtimestamp(ts[0],tz=timezone.utc).isoformat(),
       "time_end_utc":datetime.fromtimestamp(ts[-1],tz=timezone.utc).isoformat(),
