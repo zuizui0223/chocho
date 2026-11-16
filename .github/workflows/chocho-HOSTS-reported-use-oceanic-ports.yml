@@ -1,0 +1,102 @@
+name: chocho NHM HOSTS locality use × island geology × FAO × ports
+
+on:
+  push:
+    branches: [analysis/hosts-real-use-island-origin-ports-20261116]
+    paths:
+      - scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py
+      - scripts/extract_HOSTS_location_origin_20261116.R
+      - data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv
+      - .github/workflows/chocho-HOSTS-reported-use-oceanic-ports.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-pinned-locality-use:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin original NHM HOSTS location records
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+      - name: Pin WCVP version 13 from original source
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Install model/statistic libraries
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Freeze exact original source commits
+        run: |
+          set -euo pipefail
+          test "$(git -C _hosts rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          test "$(git -C _wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+      - name: Retrieve and parse official FAO ICC Appendix 4
+        run: |
+          set -euo pipefail
+          mkdir -p _source_fao
+          curl --location --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "https://www.fao.org/4/a0135e/A0135E10.htm" \
+            -o _source_fao/fao_icc_appendix4.html
+          python3 scripts/extract_fao_crop_taxa.py \
+            --html _source_fao/fao_icc_appendix4.html \
+            --output-json _source_fao/fao_crop_taxa_v0.1.json
+      - name: Resolve raw NHM HOSTS plant binomials to source-locked WCVP v13
+        run: |
+          Rscript scripts/build_wcvp_hosts_sidecar.R \
+            _wcvp _hosts _host_WCVP_resolution
+          Rscript scripts/extract_HOSTS_location_origin_20261116.R \
+            _wcvp _host_WCVP_resolution/host_name_resolution.csv \
+            data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            _host_WCVP_resolution/region_native_introduced.csv
+      - name: Analyze actual reported HOSTS locality usage with island type FAO and port adjustment
+        run: |
+          python3 -m py_compile scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py
+          python3 scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py \
+            --hosts _hosts/resource.csv \
+            --host-resolution _host_WCVP_resolution/host_name_resolution.csv \
+            --wcvp _host_WCVP_resolution/region_native_introduced.csv \
+            --locations data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            --fao _source_fao/fao_crop_taxa_v0.1.json \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --areas results/island_resource_gap_filling/areas.csv \
+            --butterflies239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out-dir results/hosts_island_local_use_20261116
+      - name: Fail-closed numeric/identification and negative-claim checks
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("results/hosts_island_local_use_20261116")
+          o=json.loads((root/"host_reported_use_island_oceanic_fao_ports.json").read_text(encoding="utf8"))
+          assert o["status"]=="SOURCE_ANALYSIS_NOT_FIELD_CONFIRMED_LARVAL_USE"
+          assert o["source"]["fixed_focal_butterflies"]==239
+          assert o["source"]["mapped_raw_locality_labels"]>=100
+          assert o["source"]["faocrop_rows"]>=179
+          assert o["total_exact_origin_linked_rows"]>0
+          assert len(o["results"])==12
+          assert all(x["n_localities"]>=0 for x in (v["min10"] for v in o["results"].values()))
+          assert (root/"per_locality_all_scopes.csv").is_file()
+          print("HOSTS_REPORTED_LOCALITY_USE_SOURCE_AND_SCOPE_VERIFIED")
+          PY
+      - name: Publish numerical results and source-reproducible geography audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-HOSTS-locality-island-FAO-port-results-20261116
+          path: results/hosts_island_local_use_20261116/
+          retention-days: 90
+          if-no-files-found: warn
