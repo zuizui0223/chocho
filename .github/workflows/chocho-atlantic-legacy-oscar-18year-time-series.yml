@@ -1,0 +1,61 @@
+name: chocho 1993–2010 Atlantic real OSCAR currents temporal diagnostic
+
+on:
+  push:
+    branches: [analysis/atlantic-legacy-oscar-directed-2005-pilot-20261117]
+    paths:
+      - scripts/audit_atlantic_legacy_oscar_1993_2010_temporal_20261117.py
+      - .github/workflows/chocho-atlantic-legacy-oscar-18year-time-series.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  historical-offshore-current:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43895414730
+          github-token: ${{ github.token }}
+          name: chocho-original22-TDWG3-geomatched-WPI-coast-points
+          path: _src/original22_geom
+      - name: Check signed 1993-2010 historical NOAA current series at fixed 3 x 3 grid
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_atlantic_legacy_oscar_1993_2010_temporal_20261117.py
+          python3 scripts/audit_atlantic_legacy_oscar_1993_2010_temporal_20261117.py \
+            --strict-source-ports _src/original22_geom/source22_pinned_WPI_exact_polygon_port_points.csv \
+            --out-dir results/oscar_atlantic_1993_2010_temporal_20261117
+      - name: Verify no substitution of currents for seed or butterfly records
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/oscar_atlantic_1993_2010_temporal_20261117/legacy_1993_2010_temporal_alignment_audit.json")
+          x=json.loads(p.read_text())
+          assert x["status"]=="HISTORICAL_SIGNED_CURRENT_ALIGNMENT_NOT_SEED_TRANSPORT"
+          assert x["calendar_years"]==[1993,2010]
+          assert x["not_NASA_OSCAR_v2"] is True
+          assert len(x["routes"])==3
+          assert all(r["eligible_year_count"]>=15 and r["complete_3point_time_slices"]>=25*15 for r in x["routes"])
+          assert x["EuDiS_source_run"]==43892007427
+          assert x["geometry_source_run"]==43895414730
+          print("OSCAR_1993_TO_2010_PHYSICAL_SOURCE_ONLY_PASS",json.dumps([
+            {k:r[k] for k in ("source","destination","mean_of_annual_signed_m_s","eligible_year_count")}
+            for r in x["routes"]]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-atlantic-legacy-1993-2010-offshore-current-annual-source
+          path: results/oscar_atlantic_1993_2010_temporal_20261117/
+          if-no-files-found: warn
+          retention-days: 90
