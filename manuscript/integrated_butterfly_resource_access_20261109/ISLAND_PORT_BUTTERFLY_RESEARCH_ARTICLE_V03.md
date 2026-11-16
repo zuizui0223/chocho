@@ -12,13 +12,13 @@
 
 **Aim.** To determine how redistribution of known larval hosts changes butterfly resource geography, why proportional gains are large on islands, and whether island host reports show a surplus beyond contemporary plant-flora composition.
 
-**Location.** Global botanical regions, island ports and geographically attributed HOSTS literature records.
+**Location.** Global regions, ports and HOSTS literature records.
 
 **Time period.** Native and contemporary plant ranges; butterfly recording indices during 2001–2024.
 
 **Major taxa studied.** Butterflies and larval-host plants.
 
-**Methods.** We held host identities fixed for 239 butterflies and reconstructed native and contemporary resources across 126 island and 237 mainland botanical regions. We linked location-attributed Papilionoidea HOSTS reports to WCVP regional origin, compared their introduced-host shares against all accepted plant taxa and host-family-matched flora, applied FAO crop exclusions, and assessed port counts. Separate panels evaluated known-butterfly GBIF recording predictions and marine geography.
+**Methods.** We reconstructed resources for 239 butterflies across 126 island and 237 mainland botanical regions, with host identities fixed. We compared geographically attributed Papilionoidea HOSTS reports with WCVP plant origins and host-family flora, applied FAO crop exclusions, and assessed ports. Separate panels evaluated known-butterfly GBIF recording predictions and marine geography.
 
 **Results.** Introduced ranges added potential resources for 206/239 butterflies (+54.9%). Relative expansion was greater on islands (+118.9% versus +40.9%), mainly because native host coverage was lower (16.0% versus 37.5%), not because a larger fraction of resource gaps was filled (22.7% versus 24.5%). The island median of regionally introduced hosts among location-attributed Papilionoidea reports was 42.4% (13 localities) versus 9.1% (15 mainland localities), retaining 20.9% versus 8.1% after removing FAO crop species. However, in strict single-region comparisons, the FAO-excluded island–mainland difference in report excess over host-family-matched flora was −2.1 percentage points (descriptive 95% interval −10.0 to +12.7). Port counts showed no robust additional positive association. Host geography improved later GBIF recording prediction by 4.12% in known butterflies.
 
