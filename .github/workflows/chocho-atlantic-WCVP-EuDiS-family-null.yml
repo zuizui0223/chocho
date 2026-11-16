@@ -1,0 +1,57 @@
+name: chocho Atlantic EuDiS WCVP plant-family-matched sensitivity
+
+on:
+  push:
+    branches: [analysis/atlantic-legacy-oscar-directed-2005-pilot-20261117]
+    paths:
+      - scripts/audit_atlantic_wcvp_eudis_family_matched_20261117.py
+      - .github/workflows/chocho-atlantic-WCVP-EuDiS-family-null.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  family-matched-source-biology:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve original accepted-source plant identity with pinned EuDiS traits
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43898725162
+          github-token: ${{ github.token }}
+          name: chocho-atlantic-WCVP-native-source-EuDiS-trait-destination-20261117
+          path: _src/WCVP_EuDiS_original
+      - name: Compute family-matched descriptive native plant co-reporting
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_atlantic_wcvp_eudis_family_matched_20261117.py
+          python3 scripts/audit_atlantic_wcvp_eudis_family_matched_20261117.py \
+            --source-csv _src/WCVP_EuDiS_original/source_native_eudis_named_species_three_routes.csv \
+            --out results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_family_match_exploratory.json
+      - name: Enforce original source population and noncausal scope
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_family_match_exploratory.json").read_text())
+          assert d["status"]=="EXPLORATORY_FAMILY_MATCHED_NATIVE_PLANT_RECORDING_NOT_SEED_TRANSPORT"
+          assert d["source_CI"]==43898725162
+          assert len(d["results"])==3
+          assert all(z["not_independent_transport_test"] for z in d["results"])
+          print("EUDIS_WCVP_FAMILY_MATCHED_SOURCE_AUDIT_PASS",json.dumps([
+            {k:x[k] for k in ("source","destination","both_trait_state_family_count","family_match_positive_species","family_matched_native_fraction_difference_pp","statistical_gate")} for x in d["results"]]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Atlantic-WCVP-EuDiS-family-conditional-source-diagnostics
+          path: results/oscar_atlantic_1993_2010_temporal_20261117/wcvp_family_match_exploratory.json
+          retention-days: 90
+          if-no-files-found: warn
