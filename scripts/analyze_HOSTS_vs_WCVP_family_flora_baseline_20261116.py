@@ -194,10 +194,22 @@ def report(rows,mode,cohort,threshold):
             "family_flora_adjusted_excess":compare(o,c,"host_minus_flora_family",rng),
          },
         }
+    fitted=unweighted_lm(
+        [{**r,"family_residual":r["host_minus_flora_family"]} for r in rows],
+        response="family_residual",include_geology=False,bootstrap=1499)
+    fitted["model_description"]=(
+        "Equal-location ordinary least squares on HOSTS alien-host report fraction "
+        "minus within-reported-family WCVP alien share, adjusted for island, "
+        "log2(1+WPI ports), log region area and log(1+HOSTS report count)"
+    )
+    fitted["response"]="host_minus_flora_family"
+    fitted["response_unit"]="absolute fraction; multiply by 100 for percentage points"
+    fitted["coefficient_field_unit_correction"]=(
+        "The imported unweighted_lm helper calls the coefficient dictionary "
+        "coef_log_odds, but these values are FRACTIONAL DIFFERENCES, NOT LOG ODDS"
+    )
     res["condition_on_ports_area_reporting_effort"]={
-        "family_flora_adjusted":unweighted_lm(
-            [{**r,"family_residual":r["host_minus_flora_family"]} for r in rows],
-            response="family_residual",include_geology=False,bootstrap=1499)
+        "family_flora_adjusted":fitted
     }
     return res
 
