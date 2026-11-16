@@ -1,0 +1,60 @@
+name: chocho original 22-island EuDiS port/host source-cohort lock
+
+on:
+  push:
+    branches: [analysis/oscar-v2-1993-2010-source-access-gate-20261117]
+    paths:
+      - scripts/build_22_thalasso_island_port_candidate_frame_20261117.py
+      - .github/workflows/chocho-original22-eudis-island-port-candidate-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-cohort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore original frozen EuDiS v5×WCVP v13 22-island source artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43892007427
+          github-token: ${{ github.token }}
+          name: chocho-eudis-wcvp-original-island-source-gate-20261116
+          path: _src/eudis_original
+      - name: Join exact same 22 island codes to port and butterfly-host region inputs
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/build_22_thalasso_island_port_candidate_frame_20261117.py
+          python3 scripts/build_22_thalasso_island_port_candidate_frame_20261117.py \
+            --source-root _src/eudis_original \
+            --regions results/island-mainland-resource-q1/region_metrics.csv \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir results/oscar_v2_historic_access_20261117/source22
+      - name: Reject accidental butterfly or current inference
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/oscar_v2_historic_access_20261117/source22/source22_candidate_join_audit.json")
+          d=json.loads(p.read_text())
+          assert d["status"]=="ORIGINAL_22_SOURCE_ELIGIBLE_REGION_JOIN_NOT_CURRENT_DISPERSAL_RESULT"
+          assert d["same_WGSRPD3_id_joined"]==22
+          assert d["paired_signs"]=={"native_higher":17,"introduced_higher":4,"tie":1}
+          assert d["source_run"]==43892007427
+          print("SOURCE22_ORIGINAL_COHORT_GATES_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-22-original-islands-ports-hosts-source-frame-20261117
+          path: results/oscar_v2_historic_access_20261117/source22/
+          retention-days: 90
+          if-no-files-found: warn
