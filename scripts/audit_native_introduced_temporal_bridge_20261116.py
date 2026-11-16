@@ -94,6 +94,8 @@ def make_panel(root: Path, history_csv: Path, summary_json: Path):
             "effort": bot,
             "prior": int(prior),
             "post": int(post),
+            "prior_1700_2000_count": int(h["pre2001_indexed_records"]),
+            "prior_2001_2010_count": int(p["pre2001_2010_indexed_records"]),
             "eligible_early": int(h["eligible_2011_2017_longer_history"]),
             "event_early": int(h["indexed_first_2011_2017_longer_history"]),
             "eligible_late": int(h["eligible_2018_2022_longer_history"]),
@@ -167,19 +169,25 @@ def fe_residualize(values: np.ndarray, a: np.ndarray, b: np.ndarray):
     return z
 
 
-def model(subset: list[dict], response: str):
+def model(subset: list[dict], response: str, adjust_prior_intensity: bool = False):
     y = np.array([x[response] for x in subset], dtype=float)
     island = np.array([x["island"] for x in subset])
     species = np.array([x["species"] for x in subset])
     X = np.array([[int(x["category"] == key) for key in EXPOSURES]
                   for x in subset], dtype=float)
+    if adjust_prior_intensity:
+        previous = np.array([
+            [np.log1p(x["prior_1700_2000_count"]),
+             np.log1p(x["prior_2001_2010_count"])] for x in subset
+        ], dtype=float)
+        X = np.column_stack((X, previous))
     Xw = np.column_stack([fe_residualize(X[:, j], island, species)
-                          for j in range(len(EXPOSURES))])
+                          for j in range(X.shape[1])])
     yw = fe_residualize(y, island, species)
     rank = np.linalg.matrix_rank(Xw)
-    if rank != len(EXPOSURES):
+    if rank != X.shape[1]:
         return {"status": "NO_FULL_FE_RANK", "rank": int(rank), "n": len(subset),
-                "events": int(y.sum())}
+                "events": int(y.sum()), "covariates": int(X.shape[1])}
     beta = np.linalg.lstsq(Xw, yw, rcond=None)[0]
     resid = yw - Xw @ beta
     bread = np.linalg.pinv(Xw.T @ Xw)
@@ -210,18 +218,26 @@ def model(subset: list[dict], response: str):
                 100 * se if se is not None else None,
                 "approximate_95pct_pp": [100*(b-1.96*se), 100*(b+1.96*se)]
                 if se is not None else None}
-    results = {key: contrast(np.eye(len(EXPOSURES))[i])
+    def host_contrast(four):
+        return contrast(list(four) + ([0., 0.] if adjust_prior_intensity else []))
+
+    results = {key: host_contrast(np.eye(len(EXPOSURES))[i])
                for i, key in enumerate(EXPOSURES)}
-    results["both_minus_native_only"] = contrast([-0, -1, 1, 0])
-    results["both_minus_introduced_only"] = contrast([-1, 0, 1, 0])
-    results["native_minus_introduced_only"] = contrast([-1, 1, 0, 0])
+    results["both_minus_native_only"] = host_contrast([0, -1, 1, 0])
+    results["both_minus_introduced_only"] = host_contrast([-1, 0, 1, 0])
+    results["native_minus_introduced_only"] = host_contrast([-1, 1, 0, 0])
+    if adjust_prior_intensity:
+        results["ln1p_prior_1700_2000_record_count"] = contrast([0, 0, 0, 0, 1, 0])
+        results["ln1p_prior_2001_2010_record_count"] = contrast([0, 0, 0, 0, 0, 1])
     return {
         "status": "EXPLORATORY_TWOWAY_FE_ASSOCIATION",
         "n": len(subset), "events": int(y.sum()), "islands": islands,
         "species": len(set(species)), "rank": int(rank),
-        "baseline": "no prior indexed compatible host in source port inventory; not real host absence",
+        "baseline": "no indexed compatible host in source port inventory; not real host absence",
+        "adjust_previous_butterfly_index_counts": adjust_prior_intensity,
         "coefficients": results,
-        "model": "LPM butterfly species and destination-island FE, four exclusive source host classes",
+        "model": "LPM with butterfly species/destination island FE, four exclusive host classes"
+                 + (", plus two separate log prior source-count controls" if adjust_prior_intensity else ""),
         "uncertainty": "approximate two-way cluster sandwich; no test of ecological arrival or breeding",
     }
 
@@ -247,8 +263,12 @@ def main():
                 "category_counts": categories,
                 "model": model(subset, response),
             }
+            if window == "previously_indexed_reindex_2011_2022":
+                reports[name]["model_prior_intensity_adjusted"] = model(
+                    subset, response, adjust_prior_intensity=True
+                )
     result = {
-        "schema": "chocho_source_temporal_index_host_class_20261116_v1",
+        "schema": "chocho_source_temporal_index_host_class_20261116_v2",
         "status": "SOURCE_DESCRIPTIVE_NOT_COLONIZATION",
         "inputs": receipts,
         "results": reports,
@@ -257,6 +277,7 @@ def main():
             "2001–2010 port botanical host record and contemporary regional WCVP origin do not establish a local introduction date or larval host utilization.",
             "No-indexed-host is an unrecorded/unknown exposure; this is not a known biological zero.",
             "Butterfly recording effort is not fully measured; species and island fixed effects cannot remove species×island collection heterogeneity.",
+            "For previously recorded butterflies we additionally adjust for the two historical record counts, but these are only imperfect observation-effort/intensity proxies.",
             "The 2018–2022 first-index risk population excludes recorded butterflies in all earlier windows; the two first-index periods are different risk sets.",
             "The previously indexed reindexing endpoint is GBIF record recurrence, not confirmed residence, population persistence, reproduction or a new colonization.",
             "First-index host-positive events may be too sparse for reliable conditional effects, regardless of a positive or negative model coefficient.",
@@ -277,7 +298,11 @@ def main():
             "indexed": {c: [z["risk"], z["record_index"]]
                         for c, z in v["category_counts"].items()},
             "model": {"status": v["model"]["status"],
-                      "coefficients": v["model"].get("coefficients", {})}
+                      "coefficients": v["model"].get("coefficients", {})},
+            "historical_record_count_adjusted": (
+                v["model_prior_intensity_adjusted"].get("coefficients")
+                if "model_prior_intensity_adjusted" in v else None
+            )
         }
         for k, v in reports.items()
     }, ensure_ascii=False), flush=True)
