@@ -1,0 +1,32 @@
+name: chocho source-only HOSTS vs whole introduced island flora pilot
+on:
+  push:
+    branches: [analysis/hosts-use-vs-background-flora-20261116]
+    paths:
+      - scripts/audit_HOSTS_island_vs_WCVP_all_flora_20261116.py
+      - .github/workflows/chocho-HOSTS-vs-whole-flora-pilot.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-source-artifact-flora:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43881198606
+          github-token: ${{ github.token }}
+          name: chocho-HOSTS-locality-origin-FAO-ports-20261116
+          path: _frozen_Hosts
+      - name: Verify original source report versus WCVP full flora
+        run: |
+          python3 scripts/audit_HOSTS_island_vs_WCVP_all_flora_20261116.py \
+            _frozen_Hosts/per_locality_all_scopes.csv . \
+            results/hosts_use_vs_flora_20261116/whole_flora_island_only.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-HOSTS-versus-whole-flora-island-pilot
+          path: results/hosts_use_vs_flora_20261116/whole_flora_island_only.json
+          if-no-files-found: error
