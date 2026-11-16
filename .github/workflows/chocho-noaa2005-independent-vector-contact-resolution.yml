@@ -1,0 +1,63 @@
+name: chocho independent original GSHHG vector-contact uncertainty audit
+
+on:
+  push:
+    branches: [analysis/atlantic-gshhg-exact-landmass-contact-20261117]
+    paths:
+      - scripts/recheck_noaa2005_gshhg_contact_resolution_20261117.py
+      - .github/workflows/chocho-noaa2005-independent-vector-contact-resolution.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  independent-source-artifact-recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore immutable source vector-coast audit
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43906815380
+          github-token: ${{ github.token }}
+          name: chocho-original-NOAA2005-GSHHG-vector-landmass-contact-audit
+          path: _src/original_gshhg_contact
+      - name: Recompute native GSHHG polygon IDs, near-vector mask uncertainty and source locality
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/recheck_noaa2005_gshhg_contact_resolution_20261117.py
+          python scripts/recheck_noaa2005_gshhg_contact_resolution_20261117.py \
+            --original-root _src/original_gshhg_contact \
+            --out results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/INDEPENDENT_VECTOR_CONTACT_SOURCE_QA.json
+      - name: Require source-limited physical interpretation, not island arrival
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/INDEPENDENT_VECTOR_CONTACT_SOURCE_QA.json")
+          a=json.loads(p.read_text())
+          assert a["status"]=="VERIFIED_SOURCE_LAND_CONTACT_IDENTIFIABILITY_NOT_LARVAL_OR_SEED_LANDFALL"
+          assert a["parent_geometric_CI"]==43906815380
+          assert a["parent_trajectory_CI"]==43902616033
+          x=a["source_groups"]["OBSERVED_NOAA_FLOW"]
+          assert x["original_contacts"]==19
+          assert x["class_counts"]["SAME_ORIGIN_GSHHG_POLYGON"]==13
+          assert x["class_counts"]["OTHER_GSHHG_POLYGON_IN_ORIGIN_TDWG3_REGION"]==3
+          assert x["class_counts"]["OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION"]==3
+          assert x["contact_point_vector_within_km"]["8.0"]==19
+          assert len(a["stratified_contact_rows"])==29
+          print("GSHHG_ORIGINAL_CONTACT_INDEPENDENT_QA_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-independent-original-NOAA-GSHHG-vector-contact-uncertainty
+          path: results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/INDEPENDENT_VECTOR_CONTACT_SOURCE_QA.json
+          retention-days: 90
+          if-no-files-found: warn
