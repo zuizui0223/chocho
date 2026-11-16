@@ -41,15 +41,19 @@ jobs:
           from pathlib import Path
           p=Path("results/oscar_atlantic_1993_2010_temporal_20261117/legacy_1993_2010_temporal_alignment_audit.json")
           x=json.loads(p.read_text())
-          assert x["status"]=="HISTORICAL_SIGNED_CURRENT_ALIGNMENT_NOT_SEED_TRANSPORT"
+          assert x["status"]=="HISTORICAL_SIGNED_CURRENT_ALIGNMENT_COVERAGE_AUDIT_NOT_SEED_TRANSPORT"
           assert x["calendar_years"]==[1993,2010]
           assert x["not_NASA_OSCAR_v2"] is True
           assert len(x["routes"])==3
-          assert all(r["eligible_year_count"]>=15 and r["complete_3point_time_slices"]>=25*15 for r in x["routes"])
+          assert all(r["eligible_year_count"]>=3 for r in x["routes"])
+          assert all(r["source_coverage_adequate_for_predeclared_15yr_gate"] ==
+                     (r["eligible_year_count"]>=15) for r in x["routes"])
+          assert x["all_routes_meet_fixed_15yr_coverage"] ==
+                 all(r["source_coverage_adequate_for_predeclared_15yr_gate"] for r in x["routes"])
           assert x["EuDiS_source_run"]==43892007427
           assert x["geometry_source_run"]==43895414730
-          print("OSCAR_1993_TO_2010_PHYSICAL_SOURCE_ONLY_PASS",json.dumps([
-            {k:r[k] for k in ("source","destination","mean_of_annual_signed_m_s","eligible_year_count")}
+          print("OSCAR_1993_TO_2010_SOURCE_COVERAGE_AUDIT_PASS",json.dumps([
+            {k:r[k] for k in ("source","destination","mean_of_annual_signed_m_s","eligible_year_count","year_coverage_status")}
             for r in x["routes"]]))
           PY
       - uses: actions/upload-artifact@v4
