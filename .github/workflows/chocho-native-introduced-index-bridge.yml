@@ -1,0 +1,68 @@
+name: chocho historical native/introduced host-class index bridge
+
+on:
+  push:
+    branches:
+      - analysis/native-introduced-temporal-bridge-20261116
+    paths:
+      - scripts/audit_native_introduced_temporal_bridge_20261116.py
+      - .github/workflows/chocho-native-introduced-index-bridge.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  historical-source-class-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Retrieve fixed all-11,475 historical GBIF source artifact
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43586278558
+          github-token: ${{ github.token }}
+          name: chocho-20261114-full11475-pre2001-index-risk-panel
+          path: _scratch_full_11475_history
+      - name: Execute exact history-consistent host-class crosswalk and FE
+        run: |
+          python3 -m py_compile scripts/audit_native_introduced_temporal_bridge_20261116.py
+          python3 scripts/audit_native_introduced_temporal_bridge_20261116.py \
+            --history-csv _scratch_full_11475_history/full_11475_same_source_pre2001_risk_cells.csv \
+            --history-summary _scratch_full_11475_history/full_risk_source_summary.json \
+            --out results/native_introduced_bridge_20261116/source_index_bridge.json
+      - name: Independent output gates including populations and disclosure
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path("results/native_introduced_bridge_20261116/source_index_bridge.json").read_text())
+          assert r["status"]=="SOURCE_DESCRIPTIVE_NOT_COLONIZATION"
+          assert r["inputs"]["history_cells"]==11475
+          assert r["inputs"]["history_pre2001_positive"]==894
+          assert r["inputs"]["history_early_first_index"]==99
+          assert r["inputs"]["history_late_first_index"]==73
+          assert r["inputs"]["indexed_botanical_covered_cells"]==9225
+          assert len(r["results"])==6
+          for key,p in r["results"].items():
+              assert sum(x["risk"] for x in p["category_counts"].values())==p["eligible_source_cells"], key
+              assert sum(x["record_index"] for x in p["category_counts"].values())==p["source_index_events"],key
+              assert p["source_index_events"]<=p["eligible_source_cells"]
+              assert p["model"]["n"]==p["eligible_source_cells"]
+              assert p["model"]["events"]==p["source_index_events"]
+          for window in ("new_index_2011_2017", "new_index_2018_2022"):
+              assert r["results"]["plants_ge10__"+window]["source_index_events"]<= (99 if window.endswith("2017") else 73)
+          print("SOURCE_HISTORY_AND_NATIVE_INTRODUCED_INDEX_BRIDGE_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-native-introduced-index-bridge-20261116
+          path: results/native_introduced_bridge_20261116/source_index_bridge.json
+          if-no-files-found: error
+          retention-days: 90
