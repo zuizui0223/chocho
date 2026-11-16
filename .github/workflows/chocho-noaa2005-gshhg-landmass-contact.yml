@@ -1,0 +1,78 @@
+name: chocho NOAA 2005 exact GSHHG landmass contact identity gate
+
+on:
+  push:
+    branches: [analysis/atlantic-gshhg-exact-landmass-contact-20261117]
+    paths:
+      - scripts/audit_noaa2005_gshhg_vector_landmass_contact_20261117.py
+      - .github/workflows/chocho-noaa2005-gshhg-landmass-contact.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original-vector-coast-contact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install geopolygon source QA requirements
+        run: python -m pip install --disable-pip-version-check 'geopandas>=1.0,<2' 'shapely>=2.0,<3' 'pyproj>=3.6,<4'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 43902616033
+          github-token: ${{ github.token }}
+          name: chocho-Atlantic-2005-NOAA-real-Lagrangian-GSHHG-diagnostic
+          path: _src/original81
+      - name: Retrieve verified original GSHHG 2.3.7 source ZIP
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg rev-parse HEAD)" = "52da7828aba9d461dd133c27b3bd7a4407161f54"
+          curl --location --fail --silent --show-error --retry 3 --retry-delay 3 --connect-timeout 30 --max-time 300 \
+            https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip \
+            -o _src/gshhg-shp-2.3.7.zip
+          echo '8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41  _src/gshhg-shp-2.3.7.zip' | sha256sum -c -
+      - name: Compare all original 19 plus 10 GSHHG raster collisions to exact source vector polygons
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_noaa2005_gshhg_vector_landmass_contact_20261117.py
+          python scripts/audit_noaa2005_gshhg_vector_landmass_contact_20261117.py \
+            --original-tracks _src/original81 \
+            --gshhg-zip _src/gshhg-shp-2.3.7.zip \
+            --tdwg-level3-geojson _src/tdwg/geojson/level3.geojson \
+            --out-dir results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact
+      - name: Ensure source identity and no inference from a coarse raster collision
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact")
+          z=json.loads((p/"original_noaa2005_gshhg_land_contact_identity_audit.json").read_text())
+          assert z["status"]=="ORIGINAL_GSHHG_POLYGON_SOURCE_RECONTACT_CLASSIFICATION_NOT_BIOLOGICAL_ISLAND_ARRIVAL"
+          assert z["GSHHG_original_archive_sha256"]=="8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41"
+          assert z["source_particle_CI"]==43902616033 and z["source_recontact_CI"]==43903614189
+          assert z["source_original_tracks"]==81
+          assert z["diagnostics"]["OBSERVED_NOAA_FLOW"]["original_contacts"]==19
+          assert z["diagnostics"]["MATHEMATICAL_REVERSED_FLOW"]["original_contacts"]==10
+          rows=list(csv.DictReader((p/"original_noaa2005_gshhg_land_contact_identity.csv").open()))
+          assert len(rows)==29 and all(x["is_external_destination_verified"]=="False" for x in rows)
+          print("ORIGINAL_GSHHG_VECTOR_SOURCE_CONTACT_RECLASSIFICATION_PASS",
+            json.dumps(z["diagnostics"]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-NOAA2005-GSHHG-vector-landmass-contact-audit
+          path: results/atlantic_lagrangian_2005_20261117/exact_GSHHG_landmass_contact/
+          retention-days: 90
+          if-no-files-found: warn
