@@ -1,0 +1,99 @@
+name: chocho location-reported HOSTS use, island geology, FAO, ports
+
+on:
+  push:
+    branches:
+      - analysis/hosts-real-use-island-origin-ports-20261116
+    paths:
+      - scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py
+      - scripts/extract_HOSTS_location_origin_20261116.R
+      - data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv
+      - .github/workflows/chocho-HOSTS-reported-use-20261116.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-source-crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _src/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Install scientific test dependencies
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Confirm original data commits
+        run: |
+          test "$(git -C _src/HOSTS rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          test "$(git -C _src/WCVP rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          mkdir -p _src/FAO
+          curl -L --fail --retry 3 --retry-delay 2 --silent --show-error \
+            https://www.fao.org/4/a0135e/A0135E10.htm -o _src/FAO/FAO_Appendix4.html
+          python3 scripts/extract_fao_crop_taxa.py \
+            --html _src/FAO/FAO_Appendix4.html \
+            --output-json _src/FAO/crop.json
+      - name: Build original source taxon matching, then locally resolved WCVP status
+        run: |
+          Rscript scripts/build_wcvp_hosts_sidecar.R \
+            _src/WCVP _src/HOSTS _src/host_sidecar
+          Rscript scripts/extract_HOSTS_location_origin_20261116.R \
+            _src/WCVP _src/host_sidecar/host_name_resolution.csv \
+            data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            _src/wcvp_origin.csv
+      - name: Estimate record-origin shares at geographic locality grain
+        run: |
+          python3 -m py_compile scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py
+          python3 scripts/analyze_HOSTS_reported_use_island_fao_ports_20261116.py \
+            --hosts _src/HOSTS/resource.csv \
+            --host-resolution _src/host_sidecar/host_name_resolution.csv \
+            --wcvp _src/wcvp_origin.csv \
+            --locations data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            --fao _src/FAO/crop.json \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --areas results/island_resource_gap_filling/areas.csv \
+            --butterflies239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out-dir results/hosts_island_local_use_20261116
+      - name: Validate denominator and no inferred field feeding
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("results/hosts_island_local_use_20261116/host_reported_use_island_oceanic_fao_ports.json")
+          o=json.loads(f.read_text(encoding="utf8"))
+          assert o["status"]=="SOURCE_ANALYSIS_NOT_FIELD_CONFIRMED_LARVAL_USE"
+          assert o["source"]["fixed_focal_butterflies"]==239
+          assert o["source"]["HOSTS_Git_commit"]=="808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          assert o["source"]["WCVP_Git_commit"]=="65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          assert len(o["results"])>=12
+          assert o["total_exact_origin_linked_rows"]>0
+          for name,x in o["results"].items():
+              assert x["eligible_original_HOSTS_rows"]>=0
+              for threshold in ("min10","min20"):
+                  y=x[threshold]
+                  assert y["island"]["localities"]+y["mainland"]["localities"]==y["n_localities"]
+                  assert y["island"]["localities"]==sum(y[k]["localities"] for k in ("oceanic","continental","mixed_geology"))
+          print("SOURCE_DENOMINATORS_AND_NONFIELD_INFERENCE_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-HOSTS-locality-origin-FAO-ports-20261116
+          path: results/hosts_island_local_use_20261116/
+          if-no-files-found: warn
+          retention-days: 90
