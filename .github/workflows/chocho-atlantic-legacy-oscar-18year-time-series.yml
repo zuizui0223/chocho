@@ -48,8 +48,8 @@ jobs:
           assert all(r["eligible_year_count"]>=3 for r in x["routes"])
           assert all(r["source_coverage_adequate_for_predeclared_15yr_gate"] ==
                      (r["eligible_year_count"]>=15) for r in x["routes"])
-          assert x["all_routes_meet_fixed_15yr_coverage"] ==
-                 all(r["source_coverage_adequate_for_predeclared_15yr_gate"] for r in x["routes"])
+          assert (x["all_routes_meet_fixed_15yr_coverage"] ==
+                  all(r["source_coverage_adequate_for_predeclared_15yr_gate"] for r in x["routes"]))
           assert x["EuDiS_source_run"]==43892007427
           assert x["geometry_source_run"]==43895414730
           print("OSCAR_1993_TO_2010_SOURCE_COVERAGE_AUDIT_PASS",json.dumps([
