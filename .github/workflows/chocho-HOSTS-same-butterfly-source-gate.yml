@@ -1,0 +1,21 @@
+name: chocho same butterfly host cross-region source lock
+on:
+  push:
+    branches: [analysis/hosts-use-vs-background-flora-20261116]
+    paths:
+      - scripts/verify_same_butterfly_HOSTS_paired_20261117.py
+      - results/hosts_use_vs_flora_20261116/PAIRED_SAME_BUTTERFLY_FULL_SOURCE_20261117.json
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - .github/workflows/chocho-HOSTS-same-butterfly-source-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original source pairs, 10:1 Thai case concentration, and GEB wording
+        run: |
+          python3 -m py_compile scripts/verify_same_butterfly_HOSTS_paired_20261117.py
+          python3 scripts/verify_same_butterfly_HOSTS_paired_20261117.py
