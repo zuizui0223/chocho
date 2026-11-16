@@ -1,0 +1,70 @@
+name: chocho Atlantic native-source EuDiS to recipient WCVP species geography
+
+on:
+  push:
+    branches: [analysis/atlantic-eudis-wcvp-source-dest-20261117]
+    paths:
+      - scripts/atlas_atlantic_eudis_wcvp_native_source_destination_20261117.R
+      - .github/workflows/chocho-atlantic-eudis-wcvp-source-dest.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-destination-botany:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Source-check EuDiS v5 and fixed accepted WCVP v13
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/WCVP rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          python3 scripts/fetch_eudis_v5_thalassochory_20261116.py --out-dir _src/eudis
+      - name: Source-native plants in AZO/CNY/CVI, with trait and destination region origin flags
+        run: |
+          set -euo pipefail
+          Rscript scripts/atlas_atlantic_eudis_wcvp_native_source_destination_20261117.R \
+            _src/WCVP _src/eudis/EuDiS.csv \
+            results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            results/atlantic_eudis_wcvp_source_dest_20261117
+      - name: Fail closed on unexpected genus/region scope or origin-count drift
+        run: |
+          python3 - <<'PY'
+          import csv
+          from pathlib import Path
+          p=Path("results/atlantic_eudis_wcvp_source_dest_20261117")
+          with (p/"source_native_to_other_region_WCVP_by_EuDiS.csv").open() as f:
+              r=list(csv.DictReader(f))
+          assert len(r)==12
+          assert {x["source"] for x in r}=={"AZO","CNY","CVI"}
+          assert all(int(x["source_native_trait_species"]) ==
+              int(x["destination_WCVP_native"])+int(x["destination_WCVP_introduced"])+
+              int(x["destination_WCVP_not_listed"]) for x in r)
+          with (p/"source_native_trait1_vs_trait0_destination_overlap.csv").open() as f:
+              z=list(csv.DictReader(f))
+          assert len(z)==6
+          assert all(int(x["trait1_source_n"])>=10 for x in z)
+          print("PLANT_SOURCE_DESTINATION_REGION_WCVP_ID_GATES_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-Atlantic-native-source-thalassochorous-destination-WCVP
+          path: |
+            results/atlantic_eudis_wcvp_source_dest_20261117/
+            _src/eudis/eudis_v5_source_receipt.json
+          if-no-files-found: warn
+          retention-days: 90
