@@ -255,7 +255,9 @@ def main() -> None:
     target.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
     simple = {name: {"n": panel["n_species_island_cells"], "events": panel["later_indexed_cells"],
                      "beta_pp": {k: round(v["beta_pp"], 4)
-                                 for k, v in panel["estimates"].items()}}
+                                 for k, v in panel["estimates"].items()},
+                     "interval_pp": {k: [round(x, 4) for x in v["approx_interval_95_pp"]]
+                                     for k, v in panel["estimates"].items()}}
               for name, panel in panels.items()}
     print(json.dumps({"status": "SOURCE_LOCKED", "models": simple, "output": str(target)},
                      ensure_ascii=False), flush=True)
