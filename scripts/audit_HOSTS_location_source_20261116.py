@@ -106,6 +106,8 @@ def main() -> None:
         ],
     }
     (x.out_dir/"HOSTS_location_source_audit.json").write_text(json.dumps(audit,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+    print("HOSTS_ALL_RAW_LOCALITY_COUNTS",json.dumps(
+        [{"location": a, "n": n} for a,n in top],ensure_ascii=False),flush=True)
     print("HOSTS_ORIGINAL_SOURCE_LOCATION_AUDIT",json.dumps({
         k:audit[k] for k in ("hosts_source_rows","rows_with_location","distinct_exact_nonempty_location_strings",
                              "lab_rearing_values","FAO_exact_binomials","FAO_genus_wildcards","WGSRPD3_port_regions",
