@@ -1,0 +1,73 @@
+{
+  "schema": "chocho_atlantic_noaa_2005_offshore_distance_sensitivity_v1",
+  "status": "POSTHOC_OFFSHORE_LAUNCH_ASSUMPTION_SOURCE_SENSITIVITY_NO_BIOLOGICAL_ARRIVAL",
+  "source_run": 43904676636,
+  "source_job_id": 133430206551,
+  "original_2005_particle_run": 43902616033,
+  "original_source_recontact_run": 43903614189,
+  "source_pilot_upstream_sha": "21b56c379fda570e3884286980c359b224795a13",
+  "condition": "post-hoc physical source-only alternative launch distances, 3 sources × 3 dates × 3 valid NOAA ocean cells per band",
+  "source_data": "NOAA old OSCAR 2005 and early 2006 15m ~5day 1/3degree gridded u/v, GSHHG fine ocean mask unchanged",
+  "total_cases": 81,
+  "bands": {
+    "0_40km": {
+      "potential_source_origins_times": 9,
+      "source_records": 27,
+      "source_grid_shortfall": 0,
+      "status_counts": {
+        "GSHHG_FINE_MASK_LAND_CONTACT": 19,
+        "COMPLETED_90_DAYS": 7,
+        "SOURCE_VELOCITY_MISSING": 1
+      },
+      "90d_completed": 7,
+      "30d_completed": 11,
+      "60d_completed": 9,
+      "within_50km_other_WPI_port_proxy": 0,
+      "median_start_distance_from_source_port_km": 24.402
+    },
+    "40_80km": {
+      "potential_source_origins_times": 9,
+      "source_records": 27,
+      "source_grid_shortfall": 0,
+      "status_counts": {
+        "COMPLETED_90_DAYS": 17,
+        "GSHHG_FINE_MASK_LAND_CONTACT": 8,
+        "SOURCE_MIDPOINT_MISSING": 2
+      },
+      "90d_completed": 17,
+      "30d_completed": 20,
+      "60d_completed": 17,
+      "within_50km_other_WPI_port_proxy": 0,
+      "median_start_distance_from_source_port_km": 50.212
+    },
+    "80_160km": {
+      "potential_source_origins_times": 9,
+      "source_records": 27,
+      "source_grid_shortfall": 0,
+      "status_counts": {
+        "COMPLETED_90_DAYS": 17,
+        "SOURCE_MIDPOINT_MISSING": 2,
+        "GSHHG_FINE_MASK_LAND_CONTACT": 8
+      },
+      "90d_completed": 17,
+      "30d_completed": 21,
+      "60d_completed": 18,
+      "within_50km_other_WPI_port_proxy": 0,
+      "median_start_distance_from_source_port_km": 84.63
+    }
+  },
+  "source_availability_summary": {
+    "attempted_region_date_band_cells": 81,
+    "failed_selections": [],
+    "status": "Original 3 validated NOAA offshore source cells found in all nine source×date checks per band"
+  },
+  "interpretation": "Completion rate responds to initial distance from an indexed WPI coastal proxy; not evidence of naturally released floating seeds reaching destination islands.",
+  "critical_limits": [
+    "The upper bound of 80-160 km band was not explored evenly (median actual 84.63 km), so no quantitative inference for 160km starting points.",
+    "This comparison was conducted after observing 19/27 near-coastal mask contacts; no pre-registration or independent species replication.",
+    "Only representative port-to-port 50km proximity was assessed, not all destination coastlines.",
+    "Start points are artificial gridded ocean locations, not historically observed viable propagules.",
+    "Real seed flotation time, survival, windage, Stokes drift and nearshore currents not included.",
+    "Do not equate current model particles with botanical colonizations, shipping routes or butterfly landings."
+  ]
+}
