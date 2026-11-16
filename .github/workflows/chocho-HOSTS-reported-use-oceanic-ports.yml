@@ -87,7 +87,10 @@ jobs:
           assert o["source"]["mapped_raw_locality_labels"]>=100
           assert o["source"]["faocrop_rows"]>=179
           assert o["total_exact_origin_linked_rows"]>0
-          assert len(o["results"])==12
+          assert len(o["results"])==24
+          assert o["primary_key"]=="HOSTS_Papilionoidea__strict_exact_or_composite__all_hosts"
+          assert o["source"]["papilionoidea_family_labels"]
+          assert o["source_papilionoidea_rows_in_origin_matched"]>0
           assert all(x["n_localities"]>=0 for x in (v["min10"] for v in o["results"].values()))
           assert (root/"per_locality_all_scopes.csv").is_file()
           print("HOSTS_REPORTED_LOCALITY_USE_SOURCE_AND_SCOPE_VERIFIED")
@@ -97,6 +100,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chocho-HOSTS-locality-island-FAO-port-results-20261116
-          path: results/hosts_island_local_use_20261116/
+          path: |
+            results/hosts_island_local_use_20261116/
+            _host_WCVP_resolution/host_name_resolution.csv
+            _host_WCVP_resolution/region_native_introduced.csv
+            _source_fao/fao_crop_taxa_v0.1.json
           retention-days: 90
           if-no-files-found: warn
