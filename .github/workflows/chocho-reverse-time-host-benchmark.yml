@@ -48,8 +48,10 @@ jobs:
           assert j["same_original_source"]["history_pre2001_positive"] == 894
           for m,expected in ((10,8100),(30,5850)):
               group=j["results"][f"historical_plant_records_ge_{m}"]
-              assert len(group)==3
+              assert len(group)==4
               for period, d in group.items():
+                  if period=="paired_within_cell_index_differences":
+                      continue
                   assert d["eligible_rows"]==expected
                   assert sum(z["risk"] for z in d["host_classes"].values())==expected
                   assert sum(z["observed_index"] for z in d["host_classes"].values())==d["index_count"]
@@ -58,6 +60,14 @@ jobs:
                   assert d["model"]["events"]==d["index_count"]
               pre=group["reverse_time_1700_2000"]["index_count"]
               assert 0<pre<=894
+              for comparison, data in group["paired_within_cell_index_differences"].items():
+                  assert data["n"]==expected
+                  assert data["later_yes_earlier_no"]+data["earlier_yes_later_no"]+data["same_index_status"]==expected
+                  assert data["model"]["n"]==expected
+                  assert data["model"]["status"]=="EXPLORATORY_TWOWAY_FE_ASSOCIATION"
+                  assert data["model"]["net_index_count"]==(
+                      data["later_yes_earlier_no"]-data["earlier_yes_later_no"]
+                  )
           print("HISTORICAL_REVERSE_TIME_BENCHMARK_SOURCE_INTEGRITY_PASS")
           PY
       - uses: actions/upload-artifact@v4
