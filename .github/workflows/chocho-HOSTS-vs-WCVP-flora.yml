@@ -1,0 +1,116 @@
+name: chocho HOSTS reports vs vascular flora baseline and family controls
+
+on:
+  push:
+    branches: [analysis/hosts-use-vs-background-flora-20261116]
+    paths:
+      - scripts/extract_WCVP_hostreport_family_flora_20261116.R
+      - scripts/analyze_HOSTS_vs_WCVP_family_flora_baseline_20261116.py
+      - .github/workflows/chocho-HOSTS-vs-WCVP-flora.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-source-flora-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _src/HOSTS
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Install deterministic scientific dependencies
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.11,<2'
+      - name: Verify frozen biological input commits and official FAO crop taxonomy
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/HOSTS rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          test "$(git -C _src/WCVP rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          mkdir -p _src/FAO
+          curl --location --fail --silent --show-error --retry 3 --retry-delay 2 \
+            "https://www.fao.org/4/a0135e/A0135E10.htm" -o _src/FAO/FAO_Appendix4.html
+          python3 scripts/extract_fao_crop_taxa.py \
+            --html _src/FAO/FAO_Appendix4.html --output-json _src/FAO/crop.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path("_src/FAO/crop.json").read_text())
+          assert len(a["exact_binomials"])==179
+          assert len(a["genus_wildcards"])==40
+          for filename, vals in [
+              ("exact.txt",a["exact_binomials"]),
+              ("wildcard.txt",a["genus_wildcards"]),
+              ("all_fao_genera.txt",
+                 sorted(set(a["genus_wildcards"])|
+                        {n.split()[0] for n in a["exact_binomials"]})),
+          ]:
+              Path("_src/FAO",filename).write_text("\n".join(vals)+"\n")
+          PY
+      - name: Rebuild source-locked accepted larval host and regional origin
+        run: |
+          Rscript scripts/build_wcvp_hosts_sidecar.R \
+            _src/WCVP _src/HOSTS _src/host_sidecar
+          Rscript scripts/extract_HOSTS_location_origin_20261116.R \
+            _src/WCVP _src/host_sidecar/host_name_resolution.csv \
+            data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            _src/wcvp_origin.csv
+      - name: Build whole and taxonomic-family-matched expected flora by original region
+        run: |
+          Rscript scripts/extract_WCVP_hostreport_family_flora_20261116.R \
+            _src/WCVP \
+            data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            _src/FAO/exact.txt _src/FAO/wildcard.txt _src/FAO/all_fao_genera.txt \
+            _src/flora
+      - name: Measure HOSTS reported-use excess beyond WCVP floristic availability
+        run: |
+          python3 -m py_compile scripts/analyze_HOSTS_vs_WCVP_family_flora_baseline_20261116.py
+          python3 scripts/analyze_HOSTS_vs_WCVP_family_flora_baseline_20261116.py \
+            --hosts _src/HOSTS/resource.csv \
+            --host-resolution _src/host_sidecar/host_name_resolution.csv \
+            --wcvp-host-origin _src/wcvp_origin.csv \
+            --locations data/frozen/HOSTS_locality_WGSRPD3_strict_crosswalk_20261116.csv \
+            --fao _src/FAO/crop.json \
+            --ports results/three-gate-wpi-port-v02/wgsrpd3_port_counts_corrected_v02.csv \
+            --areas results/island_resource_gap_filling/areas.csv \
+            --butterflies239 data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --flora-family _src/flora/wcvp_flora_region_family_origin_FAO.csv \
+            --original-island-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir results/hosts_use_vs_flora_20261116
+      - name: Verify original WCVP all-island flora and source outcomes
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("results/hosts_use_vs_flora_20261116/host_report_minus_family_flora_baseline.json")
+          d=json.loads(f.read_text(encoding="utf8"))
+          assert d["status"]=="CONTEMPORARY_FLORISTIC_BASELINE_NOT_SELECTIVE_FEEDING"
+          assert d["accepted_WCVP_all_species_source_controls"]["mismatches"]==0
+          assert d["source_base"]["fixed_focal_butterflies"]==239
+          assert len(d["scopes"])==24
+          assert d["scopes"]["HOSTS_Papilionoidea__all_hosts__min10"]["source_localities"]>=14
+          print("SOURCE_FLORA_FAMILY_MATCH_AND_NONCAUSAL_GATES_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-HOSTS-family-matched-WCVP-flora-20261116
+          path: |
+            results/hosts_use_vs_flora_20261116/
+            _src/flora/floral_source_dput.txt
+          if-no-files-found: warn
+          retention-days: 90
