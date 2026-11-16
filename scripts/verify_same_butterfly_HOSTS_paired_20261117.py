@@ -57,6 +57,21 @@ def main():
     assert len({z["accepted_host_id"] for z in subset})==7
     assert sum(z["mainlands"]==["Thailand"] for z in subset)==10
     assert sum(z["mainlands"]==["Finland"] for z in subset)==1
+    all_genus=s["cohorts"]["HOSTS_Papilionoidea__exclude_FAO_all_crop_genera"]
+    strict=[z for z in all_genus["source_shared_host_pairs"]
+            if z["source_pattern"]=="island_introduced_mainland_native"]
+    assert all_genus["shared_species_island_and_mainland"]==47
+    assert all_genus["same_insect_accepted_host_indexed_both"]==15
+    assert len(strict)==7
+    assert {(z["butterfly"],z["accepted_host_id"]) for z in strict} <= {
+        (z["butterfly"],z["accepted_host_id"]) for z in subset
+    }
+    assert sum(z["mainlands"]==["Thailand"] for z in strict)==6
+    assert sum(z["mainlands"]==["Finland"] for z in strict)==1
+    table=(ROOT/"results/hosts_use_vs_flora_20261116/SHARED_BUTTERFLY_HOST_PAIRS_TABLE_20261117.md")
+    t=table.read_text(encoding="utf8")
+    assert t.count(" | Yes |")==7 and t.count(" | No |")==4
+
     assert any(z["butterfly"]=="Vanessa cardui" and z["host_name"]=="Cirsium vulgare"
                and z["islands"]==["Hawaii"] for z in subset)
     assert any(z["butterfly"]=="Danaus plexippus" and
@@ -64,6 +79,7 @@ def main():
     p=PAPER.read_text(encoding="utf8")
     for marker in ("67 species","57","−6.01","−18.49","+6.15",
                    "Ten of those eleven pairs","Thailand","Cirsium vulgare",
+                   "seven","six of the seven",
                    "NOT","not independent","same HOSTS catalogue"):
         if marker=="NOT":continue
         assert marker in p,marker
