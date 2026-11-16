@@ -1,0 +1,51 @@
+name: chocho host-marine bridge audit
+
+on:
+  push:
+    branches:
+      - analysis/host-marine-bridge-audit-20261116
+    paths:
+      - scripts/audit_host_marine_bridge_20261116.py
+      - results/host_marine_bridge_audit_20261116/README.md
+      - .github/workflows/chocho-host-marine-bridge-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-locked-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce island-level paired bootstrap from original CSV
+        run: |
+          python3 scripts/audit_host_marine_bridge_20261116.py \
+            --output results/host_marine_bridge_audit_20261116/bridge_bootstrap.json
+      - name: Check frozen joint model and interval results
+        run: |
+          python3 - <<'PY'
+          import json
+          p="results/host_marine_bridge_audit_20261116/bridge_bootstrap.json"
+          r=json.load(open(p,encoding="utf8"))
+          assert r["source_git_blob"]=="d2df6457895091a3652c6cdad3fd081238dfdcf4"
+          later=r["results"]["new_butterfly_jaccard"]
+          earlier=r["results"]["earlier_butterfly_jaccard"]
+          for key, expected in {"C->HC":1.731162479353141,"H->HC":6.488025054419857,
+                                "HC->I":0.34271317074430319}.items():
+              assert abs(later["contrasts"][key]["point"]-expected)<1e-10, key
+          for key, expected in {"C->HC":(-1.305,4.440),
+                                "H->HC":(3.338,9.609),
+                                "HC->I":(-2.798,3.219)}.items():
+              bounds=later["contrasts"][key]["island_fold_bootstrap_95pct_descriptive"]
+              assert max(abs(a-b) for a,b in zip(bounds,expected))<0.02,(key,bounds)
+          assert later["islands_with_lower_fold_mse"]["H->HC"]==39
+          assert later["islands_with_lower_fold_mse"]["HC->I"]==28
+          assert earlier["contrasts"]["H->HC"]["point"]<0
+          print("FROZEN_SOURCE_PAIRED_BOOTSTRAP_VERIFIED")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chocho-host-marine-bridge-bootstrap-20261116
+          path: results/host_marine_bridge_audit_20261116/bridge_bootstrap.json
+          if-no-files-found: error
