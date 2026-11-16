@@ -1,0 +1,59 @@
+name: chocho classify original NOAA 2005 particle coastal recontacts
+on:
+  push:
+    branches: [analysis/atlantic-2005-oscar-lagrangian-pilot-20261117]
+    paths:
+      - scripts/audit_atlantic_2005_particle_recontact_20261117.py
+      - .github/workflows/chocho-atlantic-noaa-2005-recontact-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-source-recontact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original local computational dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Restore original 81 NOAA 2005 ocean trajectories without reselecting sources
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43902616033
+          github-token: ${{ github.token }}
+          name: chocho-Atlantic-2005-NOAA-real-Lagrangian-GSHHG-diagnostic
+          path: _src/original_noaa_2005_lagrangian
+      - name: Verify early shore recontact, duration censoring, and proxy non-arrival
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_atlantic_2005_particle_recontact_20261117.py
+          python scripts/audit_atlantic_2005_particle_recontact_20261117.py \
+            --source-root _src/original_noaa_2005_lagrangian \
+            --out results/atlantic_lagrangian_2005_20261117/VERIFIED_SOURCE_RECONTACT_AUDIT.json
+      - name: Retain original censoring and prohibit causal outcome promotion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/atlantic_lagrangian_2005_20261117/VERIFIED_SOURCE_RECONTACT_AUDIT.json")
+          z=json.loads(p.read_text())
+          assert z["status"]=="ACTUAL_OSCAR_PARTICLE_SOURCE_RECONTACT_CLASSIFICATION_NOT_ISLAND_ARRIVAL"
+          assert z["parent_source_CI_run"]==43902616033
+          assert z["source_replay_checks"]["tracks"]==81
+          o=z["scenario_diagnostics"]["OBSERVED_NOAA_FLOW"]
+          assert o["coast_contacts"]==19 and o["total_tracks"]==27
+          assert o["survived_to_90days"]==7
+          assert o["proxy_50km_other_WPI_count"]==0
+          print("AT_LAGRANGIAN_ORIGINAL_RECONTACT_SOURCE_ONLY_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-atlantic-2005-Lagrangian-source-recontact-diagnostics
+          path: results/atlantic_lagrangian_2005_20261117/VERIFIED_SOURCE_RECONTACT_AUDIT.json
+          retention-days: 90
+          if-no-files-found: warn
