@@ -136,6 +136,51 @@ def run(source_csv, annotation_json, output_dir):
         sum(r["host_genus_documented_uniform"] for r in endemic)
     )
     fam=family_conditional_one_sided(by_family)
+    # A related Canary Hipparchia endemic radiation accounts for five of the
+    # seven missing endemic account pages. Do not claim five independent
+    # evolutionary replications or an origin effect after removing the clade.
+    endemic_without_hipparchia=[
+        r for r in endemic if not r["independent_checklist_species"].startswith("Hipparchia ")
+    ]
+    if len(endemic_without_hipparchia)!=8:
+        raise ValueError("Canary endemic Hipparchia species-complex sensitivity count changed")
+    page_endo_without=sum(x["host_genus_documented_uniform"] for x in endemic_without_hipparchia)
+    if page_endo_without!=6:
+        raise ValueError("Unexpected non-Hipparchia endemic page coverage")
+    excluding_clade=hypergeom_tail_low(
+        len(endemic_without_hipparchia),len(native),
+        sum(x["host_genus_documented_uniform"] for x in endemic_without_hipparchia+native),
+        page_endo_without
+    )
+    # Separate potentially disputed regional-native classifications from a
+    # source-asserted origin association. This uses the same response status.
+    discordant={"Cacyreus marshalli","Pieris rapae"}
+    native_conservative=[x for x in native if x["independent_checklist_species"] not in discordant]
+    if len(native_conservative)!=17:
+        raise ValueError("Regional-origin sensitivity cohort changed")
+    excluding_discordant=hypergeom_tail_low(
+        len(endemic),len(native_conservative),
+        sum(x["host_genus_documented_uniform"] for x in endemic+native_conservative),
+        sum(x["host_genus_documented_uniform"] for x in endemic)
+    )
+    strict_native=by_origin["native_nonendemic_secure"]
+    if len(strict_native)!=5:
+        raise ValueError("Native-secure control category changed")
+    strict_comparison=hypergeom_tail_low(
+        len(endemic),len(strict_native),
+        sum(x["host_genus_documented_uniform"] for x in endemic+strict_native),
+        sum(x["host_genus_documented_uniform"] for x in endemic)
+    )
+    family_two_sided={}
+    for family,part in by_family.items():
+        if not part["endemic"] or not part["native"]:
+            continue
+        x=part["endemic"];y=part["native"]
+        family_two_sided[family]=hypergeom_tail_low(
+            len(x),len(y),
+            sum(z["host_genus_documented_uniform"] for z in x+y),
+            sum(z["host_genus_documented_uniform"] for z in x)
+        )
     result={
         "schema":"chocho_source_balanced_canary33_larval_host_genus_audit_v1",
         "selected_denominator":"All 33 original INBO-present Canarian butterflies, regardless of HOSTS or origin",
@@ -153,6 +198,28 @@ def run(source_csv, annotation_json, output_dir):
         "endemic_combined":report(endemic),
         "source_availability_fisher_fixed_margin":fixed,
         "source_availability_family_conditional":fam,
+        "source_availability_sensitivities":{
+            "exclude_five_related_endemic_Hipparchia":{
+                "endemic_n":len(endemic_without_hipparchia),
+                "endemic_larval_documented":page_endo_without,
+                "native_nonendemic_n":len(native),
+                "native_documented":sum(x["host_genus_documented_uniform"] for x in native),
+                "conditional_fisher":excluding_clade,
+            },
+            "exclude_native_origin_discordant_two":{
+                "excluded_species":sorted(discordant),
+                "endemic_n":len(endemic),
+                "native_nonendemic_n":len(native_conservative),
+                "native_documented":sum(x["host_genus_documented_uniform"] for x in native_conservative),
+                "conditional_fisher":excluding_discordant,
+            },
+            "native_secure_only":{
+                "native_nonendemic_n":len(strict_native),
+                "native_documented":sum(x["host_genus_documented_uniform"] for x in strict_native),
+                "conditional_fisher":strict_comparison
+            },
+            "within_family_two_sided":family_two_sided
+        },
         "strict_interpretation":[
             "A source-visible butterfly entry is not a direct observation of larval feeding in the wild.",
             "All 33 were tested for presence of a source species account with a larval foodplant genus.",
@@ -176,7 +243,9 @@ def run(source_csv, annotation_json, output_dir):
         "union_exactHOSTS_plus_source":result["combined_original_exact_HOSTS_plus_uniform"],
         "cohorts":strata,
         "fisher":fixed,
-        "family_conditional":fam["one_sided_conditional_fixed_family_origin_page_totals"]
+        "family_conditional":fam["one_sided_conditional_fixed_family_origin_page_totals"],
+        "without_Hipparchia_fisher_two_sided":excluding_clade["two_sided_fisher_probability_ordered"],
+        "without_native_discordant_fisher_two_sided":excluding_discordant["two_sided_fisher_probability_ordered"]
     },ensure_ascii=False))
     return result
 
