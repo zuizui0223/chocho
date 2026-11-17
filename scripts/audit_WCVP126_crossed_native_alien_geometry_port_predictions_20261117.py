@@ -58,6 +58,7 @@ def input_pair(a):
         if key in geo:raise RuntimeError("Duplicate sea geometry pair")
         geo[key]=r
     join=[]
+    unresolved=[]
     for r in plants:
         key=r["source_region"],r["destination_region"]
         if key not in geo:raise RuntimeError("Native/alien WCVP geographic island pair missing from GSHHG source")
@@ -66,7 +67,11 @@ def input_pair(a):
             raise RuntimeError("WCVP and GSHHG have different original representative-point distances")
         if z["source_sea_geometry_coverage_status"]!="BOTH_ANCHORED":
             continue
-        if not r["alien_Jaccard"] or not r["native_Jaccard"]:continue
+        if not r["alien_Jaccard"] or not r["native_Jaccard"]:
+            unresolved.append({"region_A":key[0],"region_B":key[1],
+                "native_Jaccard_defined":bool(r["native_Jaccard"]),
+                "alien_Jaccard_defined":bool(r["alien_Jaccard"])})
+            continue
         sea=positivefloat(z["GSHHG_original_0p0625_sea_shortest_graph_km"])
         d=positivefloat(r["centroid_geodesic_km"])
         # Original GSHHG approximate distance is not a lower bound on
@@ -95,7 +100,7 @@ def input_pair(a):
           "share_alien_species_count":int(r["alien_shared_accepted_taxa"]),
         })
     if not join:raise RuntimeError("No common-source WCVP marine pair cohort")
-    return join
+    return join,unresolved
 
 def make_X(entries,flora,area_by):
     # All feature slots are predeclared; no outcome-based feature selection.
@@ -217,11 +222,12 @@ def main():
     area_by={r["code"]:float(r["area_km2"]) for r in ar}
     if len(area_by)!=126 or len(ar)!=126 or min(area_by.values())<=0:
         raise RuntimeError("Original area and 126 WCVP island codes changed")
-    entries=input_pair(args)
+    entries,unresolved=input_pair(args)
     islands=set(e["island1"] for e in entries)|set(e["island2"] for e in entries)
-    if (len(islands)!=104 or len(entries)!=5356 or
+    if (len(islands)!=104 or len(entries)+len(unresolved)!=5356 or
+        len(unresolved)>2 or
         any(e["island1"] not in area_by or e["island2"] not in area_by for e in entries)):
-        raise RuntimeError("Original source 104 anchored island 5356 pair cohort not preserved")
+        raise RuntimeError(f"Original source geometry eligible=5356 common={len(entries)} unresolved_WCVP={unresolved} islands={len(islands)}")
     native=evaluate(entries,"native",area_by)
     alien=evaluate(entries,"alien",area_by)
     if native["n_unique_island_pairs"]!=alien["n_unique_island_pairs"]:
@@ -240,6 +246,8 @@ def main():
        "original_WPI_AIS2020_126island_coverage_source_CI":ORIGINAL_SHIPPING_CI,
        "n_original_WCVP_islands":126,"n_common_anchored_source_islands":len(islands),
        "n_common_valid_island_pairs":len(entries),
+       "n_original_common_GSHHG_eligible_pairs_before_WCVP_response_missingness":5356,
+       "original_WCVP_Jaccard_not_defined_in_one_or_both_origins":unresolved,
        "n_source_confirmed_real_ship_2020_OD_pairs_across_all126":7,
        "n_possible_2020_AIS_verified_endpoints_both_regions_pairs":45,
        "model":"same frozen source pairs, no island leakage, ridge alpha20, Level1 equality and source geography/botanical richness",
