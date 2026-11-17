@@ -1,0 +1,82 @@
+name: chocho global NOAA real 2005 particle origin distance censoring × WCVP126
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_NOAA2005_WCVP126_global_real_particle_coast_distance_20261117.py
+      - .github/workflows/chocho-NOAA2005-126-current-coast-distance-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  coastal-source-distance-original-real-particles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44012093616
+          github-token: ${{ github.token }}
+          name: chocho-126-original-islands-NOAA2005-real-directional-1deg-source-particle-pilot
+          path: _src/original_real_280_particle_paths
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44011612861
+          github-token: ${{ github.token }}
+          name: chocho-original-NOAA2005-global126-source-coast-validity
+          path: _src/original_NOAA_source_coast_126
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/original_GSHHG126
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/original_WCVP126_pairs
+      - name: Source-verify 280 actual NOAA model paths by initial offshore departure quality
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_NOAA2005_WCVP126_global_real_particle_coast_distance_20261117.py
+          python scripts/audit_NOAA2005_WCVP126_global_real_particle_coast_distance_20261117.py \
+            --particle-root _src/original_real_280_particle_paths \
+            --source-preflight-root _src/original_NOAA_source_coast_126 \
+            --coast-root _src/original_GSHHG126 \
+            --flora-root _src/original_WCVP126_pairs \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/distance_censor
+      - name: Assert no invented source endpoints, zero-filled shipping or binary seed arrivals
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/distance_censor")
+          r=json.loads((p/"NOAA126_global_current_2005_source50km_restriction_audit.json").read_text())
+          assert r["status"]=="SOURCE_VERIFIED_NOAA_GLOBAL_CURRENT_LAGRANGIAN_OFFSHORE_DISTANCE_CENSITIVITY_NOT_REAL_SEED_ARRIVAL"
+          assert r["source_126_island_full_directed_matrix"]==15750
+          assert r["source_200km_280_particle_source_pilot_verified"]
+          assert r["source_200km_12_nearshore_pair_source_pilot_verified"]
+          assert set(r["results"])=={"25","50","80","100","150","200"}
+          assert r["results"]["200"]["source_accepted_paths"]==280
+          assert r["results"]["200"]["evaluable_directed_pairs_with_other_recipient_within50km"]==12
+          assert r["results"]["50"]["source_accepted_paths"]<=280
+          with (p/"NOAA126_global_current_source_distance_quality_counts.csv").open() as f:
+            assert len(list(csv.DictReader(f)))==6
+          print("GLOBAL_REAL_NOAA126_SOURCE_50KM_CENSOR_NOT_BIOLOGICAL_ARRIVAL_PASS",json.dumps({
+            k:{q:v[q] for q in ("source_accepted_paths","evaluable_directed_pairs_with_other_recipient_within50km","evaluable_other_region_exact_contact_source_pairs")}
+            for k,v in r["results"].items()}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP126-real-NOAA2005-source-coast-distance-plant-pair-audit
+          path: results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/distance_censor/
+          retention-days: 90
+          if-no-files-found: warn
