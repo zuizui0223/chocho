@@ -44,7 +44,7 @@ def polygons(g):
     if g.geom_type=="MultiPolygon":return sorted(list(g.geoms),key=lambda x:-x.area)
     return []
 
-def nearest_wet_node(lon,lat,mask,fine_lats,fine_lons,component,size=16):
+def nearest_wet_node(lon,lat,mask,fine_lats,fine_lons,component,component_id,size=16):
     if not (-85<lat<85 and math.isfinite(lon+lat)):return None
     nlat,nlon=mask.shape
     lo=((lon+180)%360)-180
@@ -57,7 +57,7 @@ def nearest_wet_node(lon,lat,mask,fine_lats,fine_lons,component,size=16):
     if len(rpos)==0:return None
     rractual=rr[rpos];ccactual=cc[cpos]
     nodes=grid[rpos,cpos].astype(int)
-    keep=(component[nodes]==0)
+    keep=(component[nodes]==component_id)
     # Source graph giant marine component is not assumed to be ID 0; take
     # the actual largest source node-component ID via code calling us.
     if not keep.any():return None
@@ -84,7 +84,7 @@ def assign_sources(code,polygon,mask,lat,lon,component,component_id):
             sample=boundary.interpolate(k,normalized=True)
             if sample.is_empty:continue
             node=nearest_wet_node(sample.x,sample.y,mask,lat,lon,
-                    np.where(component==component_id,0,1),size=16)
+                    component,component_id,size=16)
             if node is None:continue
             # Strong source identity gate: at least one GSHHG raster LAND
             # cell must be an exact point inside the TDWG source polygon
@@ -170,8 +170,8 @@ def main(a):
             ca,cb=r["source_region"],r["destination_region"]
             d1=grouped.get(ca,{}).get(cb)
             d2=grouped.get(cb,{}).get(ca)
-            if d1 is not None and d2 is not None and
-                 abs(d1-d2)>max(1.,1e-5*min(d1,d2)):
+            if (d1 is not None and d2 is not None and
+                abs(d1-d2)>max(1.,1e-5*min(d1,d2))):
                 raise RuntimeError("Unweighted marine graph is not symmetric")
             dsrc=d1 if d1 is not None else d2
             gdist=float(r["centroid_geodesic_km"])
