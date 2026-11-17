@@ -27,7 +27,11 @@
     "butterfly_record_index_225_51_cumulative_2001_2022": 44050020101,
     "butterfly_record_index_geography_fixed_margin_fourchain": 44050612089,
     "butterfly_record_index_aggregates_permanent_archive": 44050928866,
-    "butterfly_beneficiaries_potential_and_record_index_Fig3_v2": 44051152468
+    "butterfly_beneficiaries_potential_and_record_index_Fig3_v2": 44051152468,
+    "global_butterfly_country_breadth_pre2011_GBIF_225": 44056003554,
+    "global_butterfly_country_breadth_rarefaction_resource_audit": 44056562651,
+    "global_butterfly_country_breadth_vs_island_GBIF_OOF": 44057283685,
+    "global_butterfly_country_breadth_S15_source_figure": 44057599363
   },
   "floras": {
     "regions": 104,
@@ -367,6 +371,85 @@
         "The butterfly's native-host resource footprint is not its own native geographic range or island-endemic identity",
         "No actual butterfly population homogenization or competitive replacement inferred"
       ]
+    },
+    "global_pre2011_observed_country_breadth_vs_island_host_resource": {
+      "status": "INDEPENDENT_BUTTERFLY_PRE2011_GBIF_RECORD_GEOGRAPHY_NOT_NATIVE_RANGE_OR_HOST_MEDIATED_COLONIZATION",
+      "input_snap": "results/butterfly_global_GBIF_country_breadth_20261117/SOURCE_GBIF2001_2010_225COUNTRY_FACETS_20261117.json",
+      "scientific_report": "results/butterfly_global_GBIF_country_breadth_20261117/README_JA.md",
+      "correlation_source": "results/butterfly_global_GBIF_country_breadth_20261117/BUTTERFLY_GBIF_COUNTRY_BREADTH_VS_ISLAND_HOST_GAIN_20261117.json",
+      "record_index_OOF": "results/butterfly_global_GBIF_country_breadth_20261117/GLOBAL_COUNTRY_BREADTH_AND_HOST_RESOURCE_FIRSTINDEX_OOF_20261117.json",
+      "original_225_butterflies_country_API_queries_complete": 225,
+      "original_2001_2010_GBIF_georeferenced_country_record_facet_counts_total": 9648232,
+      "pre2011_30_record_rarefaction_species": 222,
+      "pre2011_100_record_rarefaction_species": 211,
+      "country_breadth_vs_added_126island_host_resource_Spearman": {
+        "any_country_all225": 0.08651293314116869,
+        "five_plus_occurrence_country_all225": 0.033483956337988424,
+        "rarefied30_222": 0.05274359456434605,
+        "rarefied100_211": 0.05279254282241703,
+        "partial_rank_rarefied30_adjust_native_HOSTS_footprint_HOSTS_species_early51_and_global_GBIF_record_volume": -0.002028284989791733,
+        "bootstrap2999_raw95": [
+          -0.0728277925549486,
+          0.18023043461479551
+        ],
+        "bootstrap2999_partial95": [
+          -0.12668968296439762,
+          0.12765856246096635
+        ]
+      },
+      "country_breadth_quartiles_222": {
+        "n": [
+          56,
+          55,
+          56,
+          55
+        ],
+        "island_added_host_resources": [
+          1421,
+          1372,
+          1347,
+          1477
+        ],
+        "share_5617_new_resources_pct": [
+          25.29820188712836,
+          24.42585009791704,
+          23.98077265444187,
+          26.29517536051273
+        ],
+        "later_GBIF_first_index_island_events": [
+          26,
+          56,
+          82,
+          153
+        ],
+        "share_317_later_indices_pct": [
+          8.201892744479496,
+          17.665615141955836,
+          25.86750788643533,
+          48.26498422712934
+        ]
+      },
+      "later_island_index_retrospective_OOF": {
+        "risk_cells": 10586,
+        "species": 222,
+        "islands": 51,
+        "events": 317,
+        "added_pre2011_global_country_extent_Brier_reduction_pct": {
+          "leave_one_island_out": -0.24194820292791647,
+          "five_source_frozen_geographic_groups": -0.5964500594852413,
+          "heldout_genus_groups": -0.22176331839524546
+        },
+        "added_contemporary_HOSTS_island_resource_gain_Brier_reduction_pct": {
+          "leave_one_island_out": -0.044569289125624086,
+          "five_source_frozen_geographic_groups": -0.09309709358078286,
+          "heldout_genus_groups": -0.35686968512806755
+        }
+      },
+      "independent_observed_butterfly_country_range_classification": "country counts index geographic observation breadth, not native butterfly geographic range",
+      "geographic_nonidentity": "239 butterflies×126 WCVP botanical island regions for known-host resource potential versus 222 matched butterfly taxa×51 WPI landmass indexed records for later first indexing",
+      "figure": "figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index.png",
+      "source_rights_caution": "GBIF original occurrence downloads/derived data DOI and datasetKey source attribution for new country facet snapshot remain open; no novel HOSTS taxon-host edges redistributed",
+      "interpretation_boundary": "Broad native HOSTS plant geography beneficiaries are NOT verified globally widespread butterflies. Raw future index concentration in widely indexed butterflies may represent better historical detection; adding observed country breadth after index/geography/effort controls does not improve out-of-fold prediction. This does NOT negate resource availability +118.9% island or native resource potential 239 species."
     }
   },
   "model_choice_warning": "Uniform circuit selectively predicts introduced-flora Jaccard on LOIO (+4.24%), and its strict two-unseen transfer remains positive (+2.74%) but 5-fold interval includes zero; both are exploratory same-source tests, not confirmatory historical transport evidence. Native circuit adds no predictive improvement in either design. Shortest-water improves both floras in the original LOIO.",
