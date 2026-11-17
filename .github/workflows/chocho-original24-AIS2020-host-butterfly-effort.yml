@@ -31,6 +31,7 @@ jobs:
             --direct-voyages results/island51_zenodo2020_portvoyage_audit_20261107/observed2020_verified_WPI_port_links.csv \
             --voyage-source results/island51_zenodo2020_portvoyage_audit_20261107/source_matched_voyage_receipt.json \
             --original-site-audit provenance/reviewer_defenses/results/paired_island_port_nonport_coast_20261109/audit.json \
+            --historical-port-candidates results/island51_maritime_raw_recovery_20261108/GLSN2018_UNCTAD2006_2010_Zenodo2020_originalWPI194_candidate_join.csv \
             --out-dir results/port_host_butterfly_2020_AIS_overlap_20261117
       - name: Verify original 24 sites and stop unsupported causal inference
         run: |
@@ -46,6 +47,10 @@ jobs:
           assert r["all_original_port_nonport"]["independent_original_landmass_groups"]==17
           assert r["2020_original_port_verified"]["matched_port_nonport_pairs"]==6
           assert r["2020_cross_island_voyage_source_confirmed"]["matched_port_nonport_pairs"]==2
+          assert r["historical_UNCTAD_name_only_16plus_quarters"]["matched_port_nonport_pairs"]==2
+          assert r["historical_GLSN2018_name_country_candidate_not_geo_verified"]["matched_port_nonport_pairs"]==1
+          assert z["UNCTAD_2006_2010_name_country_candidate_has_original_geographic_verification"] is False
+          assert z["GLSN_2018_copresence_is_direct_vessel_OD"] is False
           assert r["plant_and_prior_and_later_effort"]["matched_port_nonport_pairs"]==3
           assert all(not x["gate_minimum_15pairs_and_10islands_satisfied"]
                    for name,x in r.items()
