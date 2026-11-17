@@ -68,3 +68,39 @@ def test_no_auto_synonym_or_unobserved_absence():
     assert s["duplicates_present_and_irregular"] == [
         {"island": "Madeira, Madeira", "taxon": "Issoria lathonia"}
     ]
+
+
+def test_independent_species_vs_original_frozen239_selection():
+    from importlib.util import module_from_spec, spec_from_file_location
+    script = BASE / "audit_frozen239_representativeness.py"
+    compile(script.read_text(encoding="utf-8"), str(script), "exec")
+    data = json.loads((BASE / "frozen239_selection_summary.json").read_text(encoding="utf-8"))
+    with (BASE / "independent_42_species_vs_frozen239.csv").open(
+        encoding="utf-8", newline=""
+    ) as f:
+        species = list(csv.DictReader(f))
+    assert len(species) == 42
+    assert len({r["scientific_name"] for r in species}) == 42
+    assert sum(int(r["hosts_named_genus"]) for r in species) == 19
+    assert sum(int(r["in_frozen239"]) for r in species) == 12
+    assert sum(int(r["hosts_named_genus"]) and not int(r["in_frozen239"])
+               for r in species) == 7
+    assert data["source_denominator"] == 42
+    assert data["in_frozen239"] == 12
+    assert data["nonselected_named_host"] == 7
+    assert data["nonselected_no_named_host"] == 23
+    madeiran_endemics = [
+        r for r in species if r["madeira_origin"] == "island_endemic_species"
+    ]
+    assert len(madeiran_endemics) == 3
+    assert all(r["in_frozen239"] == "0" for r in madeiran_endemics)
+    native = [r for r in species if r["madeira_origin"] == "native_nonendemic"]
+    assert len(native) == 7
+    assert sum(int(r["in_frozen239"]) for r in native) == 6
+    # Executes second gate entirely from the already archived, frozen CSVs.
+    # No web or extra packages are needed.
+    import runpy
+    result = runpy.run_path(str(script), run_name="audit_test_import")
+    recomputed = result["audit"]()
+    assert recomputed["in_frozen239"] == 12
+    assert recomputed["nonselected_named_host"] == 7
