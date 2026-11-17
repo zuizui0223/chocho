@@ -6,6 +6,7 @@ on:
       - scripts/audit_uniform_canary_source_20261118.py
       - scripts/summarize_uniform_canary_hosts_20261118.py
       - scripts/audit_independent42_original239_taxonomic_selection_20261118.py
+      - scripts/audit_independent42_multisource_host_union_20261118.py
       - .github/workflows/chocho-uniform-canary-larval-source.yml
       - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/**
   workflow_dispatch:
@@ -38,6 +39,13 @@ jobs:
           python3 -m py_compile scripts/audit_independent42_original239_taxonomic_selection_20261118.py
           python3 scripts/audit_independent42_original239_taxonomic_selection_20261118.py \
             --out-dir results/uniform_canary_source_20261118
+      - name: Reconcile all 42 independent butterfly taxa across three host evidence streams without duplicate counting
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_independent42_multisource_host_union_20261118.py
+          python3 scripts/audit_independent42_multisource_host_union_20261118.py \
+            --uniform-validated-csv results/uniform_canary_source_20261118/uniform_canary33_host_genus_verified.csv \
+            --out-dir results/uniform_canary_source_20261118
       - name: Verify all independent butterfly queries and source semantics
         run: |
           python3 - <<'PY'
@@ -63,6 +71,13 @@ jobs:
           assert identity['source_confirmed_homotypic_original239_min']==13
           assert identity['cohorts']['Canary_native_nonendemic19']['source_verified_homotypic_239']==10
           assert identity['cohorts']['Madeira_native_nonendemic7']['source_verified_homotypic_239']==7
+          union=json.loads((p.parent/'independent42_multisource_larval_genus_union.json').read_text())
+          assert union['independent_species_n']==42
+          assert union['combined_documented_host_genus_lower_bound_n']==35
+          assert union['uniform_source_new_larval_hosts_additional_n']==4
+          assert union['cohorts']['Canary_native_nonendemic19']['source_documented_genus_n']==19
+          assert union['cohorts']['Canary_endemic13']['source_documented_genus_n']==7
+          assert union['cohorts']['Madeira_extant_endemic3']['source_documented_genus_n']==3
           print('COMPLETE_33_UNIFORM_LARVAL_SOURCE_QUERIES_VALID')
           for origin,record in obj['cohorts'].items():
             print(origin,json.dumps(record,sort_keys=True))
