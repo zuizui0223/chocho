@@ -14,6 +14,6 @@ Each contrast compares the same butterfly across geographic classes. Points show
 
 ## Figure 4 | Sea geometry and assemblage similarity
 
-Relative reduction in island-held-out mean squared error from adding uniform ocean resistance. Native and introduced floras share 104 regions and 5,355 pairs; butterflies use a separate 51-landmass, 1,275-pair panel.
+Relative reduction in island-held-out mean squared error from adding uniform ocean resistance. Whiskers give descriptive island-bootstrap 95% intervals. Native and introduced floras share 104 regions and 5,355 pairs; butterflies use a separate 51-landmass, 1,275-pair panel.
 
 [Figure 2 source and rendering](https://github.com/zuizui0223/chocho/actions/runs/44013032891) · [Figure 3 and 4 estimates and provenance](../../results/island_resource_layers/figure_inputs.json).

@@ -32,16 +32,20 @@ ax.set_title("Introduced plants in the diets reported for the same butterflies",
 ax.spines[["top","right"]].set_visible(False)
 finish(fig,"Fig3_host_reports")
 
-c = data["circuit"]
-source = json.loads((FIG/"FIGURE5_V03_SOURCE_RECEIPT.json").read_text())
+
+ledger = json.loads((ROOT / "results/port_weed_current_review_20261117/ONE_PAPER_CIRCUIT_RESULTS_LEDGER_20261117.json").read_text())
 fig, ax = plt.subplots(figsize=(8, 3))
-vals = [c["native_B_to_G_circuit_improvement_pct"],c["alien_B_to_G_circuit_improvement_pct"],source["values"]["geometry_only_beyond_distance"]]
-for y,v in enumerate(vals):
-    ax.barh(y,v,color=[blue,green,"#a6602d"][y],height=.48)
-    ax.text(max(v,0)+.1,y,f"{v:+.2f}%",va="center")
+for y, (entry, interval, color) in enumerate([
+    (ledger["floras"]["native"], "circuit_bootstrap95_descriptive", blue),
+    (ledger["floras"]["introduced"], "circuit_bootstrap95_descriptive", green),
+    (ledger["butterflies"], "bootstrap20k_descriptive95", "#a6602d"),
+]):
+    value = entry["circuit_pct"]
+    lo, hi = entry[interval]
+    ax.errorbar(value, y, xerr=[[value-lo],[hi-value]], fmt="o", color=color, capsize=4)
+    ax.text(hi+.18,y,f"{value:+.2f}%",va="center")
 ax.axvline(0,color=".45",lw=.8)
-ax.set(yticks=range(3),yticklabels=["Native flora · 104 regions","Introduced flora · 104 regions","Butterfly records · 51 landmasses"],xlim=(-.75,6.25),xlabel="Change in held-island prediction error (% reduction)")
-ax.invert_yaxis()
+ax.set(yticks=range(3),yticklabels=["Native flora · 104 regions","Introduced flora · 104 regions","Butterfly records · 51 landmasses"],xlim=(-1,10.3),ylim=(2.5,-.5),xlabel="Change in held-island prediction error (% reduction)")
 ax.spines[["top","right"]].set_visible(False)
 ax.set_title("Information added by undirected sea resistance",loc="left")
 finish(fig,"Fig4_sea_connectivity")
