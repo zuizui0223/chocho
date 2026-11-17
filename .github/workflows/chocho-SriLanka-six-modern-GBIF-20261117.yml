@@ -1,0 +1,62 @@
+name: chocho 2026 Sri Lankan six historical endemic-name reconciliation via GBIF exact and search
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/reconcile_srilanka_six_regional_modern_to_GBIF_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/SRI_LANKA_2006_SIX_UNRESOLVED_NAME_CURRENT_SOURCES_AND_HOSTS_20261117.csv
+      - .github/workflows/chocho-SriLanka-six-modern-GBIF-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  six-historical-E-modern-source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Query strict GBIF backbone and exact canonical search for six regionally verified names
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/reconcile_srilanka_six_regional_modern_to_GBIF_20261117.py
+          python scripts/reconcile_srilanka_six_regional_modern_to_GBIF_20261117.py --out _srilanka_six_modern_GBIF
+      - name: Validate historic and regional source scope without inferring true endemicity or missingness
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          p=Path('_srilanka_six_modern_GBIF')
+          a=json.loads((p/'SRI_LANKA_SIX_MODERN_GBIF_BACKBONE_AUDIT.json').read_text())
+          rr=json.loads((p/'SRI_LANKA_SIX_GBIF_RAW_QUERY_RECEIPTS.json').read_text())
+          rows=list(csv.DictReader((p/'SRI_LANKA_SIX_MODERN_GBIF_SOURCE_CLASSIFICATION.csv').open()))
+          assert (a['historical_unresolved_six'],a['original_panel']['butterflies'])==(6,225)
+          assert a['original_panel']['species_island_cells']==11475
+          assert len(rows)==len(rr)==6
+          assert sum(a['resolution_categories'].values())==6
+          assert set(z['historical_2006_binomial'] for z in rows)=={
+             'Lethe dynaste','Elymnias singala','Spindasis nubilus',
+             'Jamides coruscans','Udara lanka','Halpe egena'}
+          for r in rows:
+              assert r['native_range_global_review']=='NOT_PERFORMED'
+              assert r['same_island_breeding_establishment']=='NOT_INFERRED_FROM_REGIONAL_CATALOGUE'
+              assert r['regional_endemic_source_url'].startswith('https://')
+              assert len(r['match_response_sha256'])==len(r['search_response_sha256'])==64
+              assert r['overlap_to_original225_speciesKey'] in ('same_accepted_key_as_original225',
+                         'no_accepted_key_overlap_with_original225','unresolved')
+          print('SIX_REGIONAL_MODERN_BUTTERFLY_SPECIES_TAXON_MATCH_NO_NATIVE_LEAKAGE_PASS')
+          print(json.dumps({'categories':a['resolution_categories'],
+                           'species':[(z['historical_2006_binomial'],z['regional_modern_species_name'],
+                                    z['GBIF_accepted_key_if_usable'],z['GBIF_resolution_status'],
+                                    z['overlap_to_original225_speciesKey']) for z in rows]},indent=2))
+          PY
+      - name: Archive small complete original GBIF query receipts and six-case review table
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-SriLanka-six-regional-endemic-modern-name-GBIF-check-20261117
+          path: _srilanka_six_modern_GBIF/
+          retention-days: 90
+          if-no-files-found: warn
