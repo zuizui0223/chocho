@@ -91,15 +91,15 @@ def first_index_null(E0,B,group,rng,regional,draws=N_DRAWS):
      raise AssertionError("Butterfly by longitude-block new-index margin drift")
  mix(65*n_edges)
  validate()
- draws=[]
+ configurations=[]
  for k in range(draws):
   mix(9*n_edges)
   if k%99==0 or k==draws-1:
    validate()
   z,_=jaccard(B|E)
-  draws.append(z)
+  configurations.append(z)
   if (k+1)%100==0:print("NULL_SOURCE_COMPOSITION_PROGRESS",("within_longitude" if regional else "global"),k+1,draws,flush=True)
- D=np.asarray(draws,dtype=np.float64)
+ D=np.asarray(configurations,dtype=np.float64)
  return D,{"draws":len(D),"proposals":proposals,"accepted":accepted,"swap_acceptance_fraction":accepted/proposals,
            "burn_proposals":65*n_edges,"per_draw_proposals":9*n_edges,
            "source_margin_checks":"PASS",
