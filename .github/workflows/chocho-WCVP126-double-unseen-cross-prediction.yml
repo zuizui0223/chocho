@@ -1,0 +1,79 @@
+name: chocho native alien WCVP flora double-unseen island sea/port cross-prediction
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py
+      - .github/workflows/chocho-WCVP126-double-unseen-cross-prediction.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  strict-double-unseen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-numerical library only
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/WCVP_pairs
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/GSHHG126_baseline
+      - name: Hold both island endpoints unseen with same model/inputs for native and alien plant composition
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py \
+            scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py
+          python scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py \
+            --plants _src/WCVP_pairs/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/GSHHG126_baseline/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --sea-audit _src/GSHHG126_baseline/GSHHG126_sea_geometry_source_coverage_audit.json \
+            --shipping-audit _src/WCVP_pairs/WCVP126_geodesic_port_shipment_source_coverage_audit.json \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/strict_double_unseen
+      - name: Audit no island leakage, same pair denominators and no physical current inference
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/strict_double_unseen/original_WCVP126_native_alien_double_unseen_5fold.json")
+          a=json.loads(p.read_text())
+          assert a["status"]=="STRICT_DOUBLE_UNSEEN_ISLAND_GEOMETRY_PORT_PAIR_CV_NOT_CURRENTS_OR_ACTUAL_SEED_IMPORT"
+          assert a["source_common_islands"]==104 and a["source_common_pairs"]==5355
+          assert len(a["excluded_original_one_Jaccard_undefined_pair"])==1
+          n=a["native_flora"];v=a["alien_flora"]
+          assert n["n_double_unseen_test_pairs"]==v["n_double_unseen_test_pairs"]
+          assert n["n_double_unseen_test_pairs"]>=600
+          for f in (n,v):
+            assert f["test_islands_absent_from_train_endpoints"] and f["no_crossfold_pairs_in_test"]
+            assert len(f["folds"])==5
+            assert f["n_source_islands"]==104
+            assert sum(z["n_test_double_unseen_pairs"] for z in f["folds"])==f["n_double_unseen_test_pairs"]
+            assert set(f["macro_equal_fold_mse"])=={"B","G","P","GP"}
+            assert all(math.isfinite(x) for x in f["macro_equal_fold_relative_mse_improvement_percent"].values())
+          print("CHOCHO_WCVP126_STRICT_DOUBLE_UNSEEN_CROSS_VALIDATED",json.dumps({
+              "source_pairs":a["source_common_pairs"],
+              "strict_test_pairs":n["n_double_unseen_test_pairs"],
+              "native":n["macro_equal_fold_relative_mse_improvement_percent"],
+              "alien":v["macro_equal_fold_relative_mse_improvement_percent"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP126-native-alien-STRICT-double-unseen-cross-test
+          path: results/WCVP126_crossed_native_alien_20261117/strict_double_unseen/
+          retention-days: 90
+          if-no-files-found: warn
