@@ -20,7 +20,7 @@ def read_rows(path):
     with path.open(encoding="utf-8-sig",newline="") as f:
         return list(csv.DictReader(f))
 
-def hypergeom_tail_low(endo,other,present,total_present,observed_endo_present):
+def hypergeom_tail_low(endo,other,total_present,observed_endo_present):
     low=max(0,total_present-other)
     high=min(endo,total_present)
     denom=math.comb(endo+other,total_present)
@@ -133,11 +133,7 @@ def run(source_csv, annotation_json, output_dir):
     fixed=hypergeom_tail_low(
         len(endemic),len(native),
         sum(r["host_genus_documented_uniform"] for r in endemic+native),
-        sum(r["host_genus_documented_uniform"] for r in endemic),
-    ) if False else hypergeom_tail_low(
-        len(endemic),len(native),
-        sum(r["host_genus_documented_uniform"] for r in endemic+native),
-        sum(r["host_genus_documented_uniform"] for r in endemic),
+        sum(r["host_genus_documented_uniform"] for r in endemic)
     )
     fam=family_conditional_one_sided(by_family)
     result={
