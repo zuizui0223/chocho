@@ -22,6 +22,7 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument("--text",type=Path,required=True)
     parser.add_argument("--pdf-sha256",type=str,required=True)
+    parser.add_argument("--pdf-source-url",type=str,required=True)
     parser.add_argument("--out",type=Path,required=True)
     args=parser.parse_args()
     p=ROOT/COHORT
@@ -54,7 +55,7 @@ def main():
     result={
       "schema":"chocho_government_of_Canada_1987_cape_breton_17_candidate_taxon_search_v1",
       "status":"RAW_PUBLICATION_PDF_TEXT_SEARCH_NOT_TAXONOMIC_RECONCILIATION",
-      "official_source_URL":SOURCE,
+      "official_source_URL":args.pdf_source_url,
       "original_PDF_SHA256":args.pdf_sha256,
       "pages_extracted":len(pages),
       "total_text_characters":len(document),
