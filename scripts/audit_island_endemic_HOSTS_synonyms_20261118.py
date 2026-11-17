@@ -414,6 +414,48 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
             "in_original239": sum(r["in_original239"] for r in subset),
             "taxa": cohort["names"],
         }
+    # Explicitly cross family with government origin status: all 33
+    # are classified, so the contrasts are not driven only by the
+    # overrepresentation of one butterfly family in chosen controls.
+    family_origin_rows = []
+    family_origins = sorted({
+        r["canary_origin_stratum"] for r in full_biota
+    })
+    for family in sorted({by_name[name]["family"] for name in complete_by_name}):
+        for origin in family_origins:
+            members = [
+                by_name[name] for name, info in complete_by_name.items()
+                if info["canary_origin_stratum"] == origin
+                and by_name[name]["family"] == family
+            ]
+            if not members:
+                continue
+            family_origin_rows.append({
+                "family": family,
+                "canary_origin_stratum": origin,
+                "independent_n": len(members),
+                "original_exact_named_genus": sum(
+                    m["hosts_exact_genus"] for m in members
+                ),
+                "guarded_synonym_named_genus": sum(
+                    m["hosts_genus_after_guarded_synonyms"] for m in members
+                ),
+                "in_original239": sum(m["in_original239"] for m in members),
+                "taxonomic_unresolved_n": sum(
+                    m["gbif_status"] != "resolved" for m in members
+                ),
+            })
+    if sum(r["independent_n"] for r in family_origin_rows) != 33:
+        raise ValueError("Family-conditioned Canary origin table lost species")
+    if any(r["guarded_synonym_named_genus"] > r["independent_n"]
+           for r in family_origin_rows):
+        raise ValueError("Family-origin HOSTS coverage exceeds denominator")
+    with (output / "canary_full33_family_origin_host_coverage.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as f:
+        writer = csv.DictWriter(f, fieldnames=list(family_origin_rows[0]))
+        writer.writeheader()
+        writer.writerows(family_origin_rows)
     extras = [r["scientific_name"] for r in records if r["additional_match"]]
     pending = [r["scientific_name"] for r in records if r["unresolved_potential_additional"]]
     summary = {
@@ -426,6 +468,7 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
         "canary_remaining_13_origin_crosswalk": str(CANARY_BIOTA_REMAINING),
         "canary_full_present_butterflies_n": len(complete_by_name),
         "canary_complete_origin_strata_n": counts,
+        "canary_family_origin_host_coverage": family_origin_rows,
         "meaning": "reported HOSTS larval plant genus coverage after guarded accepted-name/synonym matching; not biological host completeness",
         "independent_unique_butterflies": len(records),
         "original_exact_binomial_named_host": sum(r["hosts_exact_genus"] for r in records),
