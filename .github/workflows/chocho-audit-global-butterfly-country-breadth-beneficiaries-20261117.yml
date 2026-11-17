@@ -1,0 +1,72 @@
+name: chocho independent butterfly country breadth versus island HOSTS opportunities and future GBIF indices
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_global_butterfly_country_breadth_vs_island_host_benefit_20261117.py
+      - .github/workflows/chocho-audit-global-butterfly-country-breadth-beneficiaries-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-locked-butterfly-country-breadth-beneficiaries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical scientific baseline
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2'
+      - name: Analyse independently indexed butterfly global country breadth and 126-island resource beneficiaries
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_global_butterfly_country_breadth_vs_island_host_benefit_20261117.py
+          python scripts/audit_global_butterfly_country_breadth_vs_island_host_benefit_20261117.py \
+            --out-dir _global_butterfly_country_breadth_audit
+      - name: Verify source panels, 30/100 historical record rarefaction, original 317 future index cases
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path('_global_butterfly_country_breadth_audit/BUTTERFLY_GBIF_COUNTRY_BREADTH_VS_ISLAND_HOST_GAIN_20261117.json')
+          r=json.loads(p.read_text())
+          c=r['cohort']
+          assert c['butterfly_species']==225 and c['source_239_unique_species']==239
+          assert c['GBIF_earlier_51_landmass_indexed_cells']==736
+          assert c['later_51_landmass_first_index_cells']==317
+          assert c['eligible_30_record_rarefaction_species']>=80
+          assert c['eligible_100_record_rarefaction_species']>=50
+          assert r['status']=='SOURCE_VERIFIED_INDEPENDENT_BUTTERFLY_OBSERVED_BREADTH_NOT_TRUE_NATIVE_RANGES'
+          assert len(r['independent_country_breadth_quartiles'])==4
+          for key,x in r['primary_correlations'].items():
+              assert math.isfinite(x['Spearman_countrybreadth_vs_island_host_resource_gains'])
+          assert len(r['cross_validated_increment_beyond_native_HOSTS_and_record_effort'])==2
+          print('SOURCE_VERIFIED_225_BUTTERFLIES_INDEPENDENT_GBIF_COUNTRY_BREADTH_AND_ISLAND_HOST_BENEFIT_PASS')
+          PY
+      - name: Permanently archive original source-verified aggregate results with explicit GBIF sampling boundaries
+        run: |
+          set -euo pipefail
+          mkdir -p results/butterfly_global_GBIF_country_breadth_20261117
+          cp _global_butterfly_country_breadth_audit/* results/butterfly_global_GBIF_country_breadth_20261117/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/butterfly_global_GBIF_country_breadth_20261117/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Source-audit global observed butterfly GBIF country breadth and resource beneficiaries with rarefied historical country extent [skip ci]'
+          git pull --rebase origin analysis/butterfly-trait-public51-20261109
+          git push origin HEAD:refs/heads/analysis/butterfly-trait-public51-20261109
+      - name: Save source diagnostic and correlation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-225butterfly-global-GFIF-country-breadth-vs-island-resource-beneficiaries
+          path: _global_butterfly_country_breadth_audit/
+          retention-days: 90
+          if-no-files-found: warn
