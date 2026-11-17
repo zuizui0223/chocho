@@ -1,0 +1,70 @@
+name: Archive source-verified cumulative butterfly GBIF similarity and four-chain null to one GEB branch
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-archive-cumulative-butterfly-index-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  permanent-source-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Recover original 225 species and 51 landmass source-verified cumulative GBIF comparisons
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44050020101
+          github-token: ${{ github.token }}
+          name: chocho-225species-51islands-cumulative-GBIF-index-and-null-20261117
+          path: _src/one
+      - name: Recover source-fixed independent four-chain null mixing sensitivity
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44050612089
+          github-token: ${{ github.token }}
+          name: chocho-butterfly-index-similarity-fourchain-margin-audit-20261117
+          path: _src/four
+      - name: Reconstruct source-defined receipt and record chronology
+        run: |
+          set -euo pipefail
+          mkdir -p results/butterfly_record_index_similarity_20261117/
+          cp _src/one/CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json results/butterfly_record_index_similarity_20261117/
+          cp _src/one/butterfly_early_index_and_later_index_by_native_host_resource_quartile.csv results/butterfly_record_index_similarity_20261117/
+          cp _src/one/cumulative_recorded_butterfly_Jaccard_by_geographic_group.csv results/butterfly_record_index_similarity_20261117/
+          cp _src/four/MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json results/butterfly_record_index_similarity_20261117/
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('results/butterfly_record_index_similarity_20261117')
+          x=json.loads((root/'CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json').read_text())
+          y=json.loads((root/'MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json').read_text())
+          assert (x['cohort']['earlier_indexed_cells'],x['cohort']['new_first_indexed_2011_2022'])==(736,317)
+          assert x['cumulative_recording_Jaccard']['all_51_original_landmass_pairs']['pairs']==1275
+          assert y['original_indexed_2001_2010']==736 and y['post2010_new_first_indexed']==317
+          v=y['nulls']['geography_preserving']['diagnostic']['all_pairs']
+          assert v['chain_means_stable'] and 0.006<v['observed_excess']<0.009
+          print('SOURCE_PINNED_BUTTERFLY_GBIF_INDEX_JACCARD_FOURCHAIN_RECEIPTS_PASS')
+          PY
+      - name: Permanently archive only original public GBIF-derived aggregate sources
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/butterfly_record_index_similarity_20261117/
+          git diff --cached --quiet && exit 0
+          git commit -m "Source-archive observed butterfly record-index similarity and four-chain geographic null, preserving biological detection boundaries [skip ci]"
+          git pull --rebase origin analysis/butterfly-trait-public51-20261109
+          git push origin HEAD:refs/heads/analysis/butterfly-trait-public51-20261109
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-butterfly-observed-index-225x51-fourchains-permanent-src-review
+          path: results/butterfly_record_index_similarity_20261117/
+          retention-days: 90
+          if-no-files-found: warn
