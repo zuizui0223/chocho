@@ -188,8 +188,4 @@ def main():
     },ensure_ascii=False),flush=True)
 
 if __name__=="__main__":
-    p=argparse.ArgumentParser()
-    for key in ("current-audit","current-matrix","current-trajectories",
-                "wcvp-pair-geography","sea-geometry","out-dir"):
-        p.add_argument("--"+key,type=Path,required=True)
-    main(p.parse_args())
+    main()
