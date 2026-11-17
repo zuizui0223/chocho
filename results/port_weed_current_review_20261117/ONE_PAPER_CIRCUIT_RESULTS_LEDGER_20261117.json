@@ -19,7 +19,8 @@
     "butterflies_uniform": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
     "botanicals_WCVP_acceptedspecies": 44010011288,
     "botanicals_true_circuit_both_endpoints_unseen": 44023148246,
-    "butterflies_host_conditional_uniform_ocean_reexecution": 44025831765
+    "butterflies_host_conditional_uniform_ocean_reexecution": 44025831765,
+    "butterflies_host_conditional_uniform_ocean_early_botanical_effort_sensitivity": 44026547052
   },
   "floras": {
     "regions": 104,
@@ -135,7 +136,34 @@
         "host_given_uniform": -1.3348125127738575
       },
       "early_butterfly_double_unseen_uniform_pct": -10.68039655459629,
-      "critical_limit": "Same original 51 butterfly landmass groups and candidate host source; retrospective 2001-24 host exposure can postdate later 2011-22 butterfly observation. Does not identify plant mediation or same 104 botanical region response; strict four-model comparison lacks historical plant observation-effort and marginal host richness covariates."
+      "critical_limit": "Same original 51 butterfly landmass groups and candidate host source; retrospective 2001-24 host exposure can postdate later 2011-22 butterfly observation. Does not identify plant mediation or same 104 botanical region response; strict four-model comparison lacks historical plant observation-effort and marginal host richness covariates.",
+      "early_botanical_effort_and_host_richness_sensitivity": {
+        "model_base_added_source_covariates": [
+          "original 2001–2010 port-buffer general-plant occurrence count sum / abs log differences",
+          "original contemporary candidate introduced host species richness sum / abs log differences"
+        ],
+        "original_source_CI": 42323799520,
+        "reexecution_CI": 44026547052,
+        "artifact_id": 14303855608,
+        "source_receipt": "results/island51_host_uniform_bridge_20261117/VERIFIED_RICHNESS_EFFORT_SENSITIVITY_20261117.json",
+        "posthoc_LOIO_MSE_gain_pct": {
+          "uniform_B_to_BU": 1.501679897068296,
+          "candidate_hosts_B_to_BH": 3.227312847037923,
+          "uniform_after_hosts_BH_to_BUH": 0.7115161610139026,
+          "hosts_after_uniform_BU_to_BUH": 2.4509923174197574
+        },
+        "posthoc_LOIO_descriptive95_uniform_after_hosts_pct": [
+          -0.6645730479492827,
+          2.009065003030881
+        ],
+        "posthoc_double_unseen_MSE_gain_pct": {
+          "uniform_B_to_BU": 0.7635727127138323,
+          "candidate_hosts_B_to_BH": 1.5004932049214805,
+          "uniform_after_hosts_BH_to_BUH": -0.5219475448315041,
+          "hosts_after_uniform_BU_to_BUH": 0.2245191014128139
+        },
+        "important_falsification": "Original 51-island butterfly uniform marine circuit's independent incremental prediction attenuates near zero or turns adverse after source-verified host richness and general-plant historical recording effort; original source-positive 51-island and 104-region estimates remain valid under their own distinct models."
+      }
     }
   },
   "model_choice_warning": "Uniform circuit selectively predicts introduced-flora Jaccard on LOIO (+4.24%), and its strict two-unseen transfer remains positive (+2.74%) but 5-fold interval includes zero; both are exploratory same-source tests, not confirmatory historical transport evidence. Native circuit adds no predictive improvement in either design. Shortest-water improves both floras in the original LOIO.",
