@@ -68,6 +68,17 @@ jobs:
           assert x['cohorts']['Canary_BIOTA_verified_native_nonendemic_7']['exact_hosts_genus']==4
           assert x['cohorts']['Canary_BIOTA_native_secure_2']['n']==2
           assert x['cohorts']['Canary_BIOTA_native_probable_5']['n']==5
+          assert x['canary_full_present_butterflies_n']==33
+          assert x['canary_complete_origin_strata_n']=={
+              'endemic_confirmed':13,'native_nonendemic_secure':5,
+              'native_nonendemic_probable':14,'introduced_probable':1}
+          assert x['cohorts']['Canary_BIOTA_all_INBO_present_33']['n']==33
+          assert x['cohorts']['Canary_BIOTA_complete_endemic_13']['n']==13
+          assert x['cohorts']['Canary_BIOTA_complete_endemic_13']['confirmed_name_reconciled_hosts_genus']==0
+          assert x['cohorts']['Canary_BIOTA_complete_native_nonendemic_19']['n']==19
+          assert x['cohorts']['Canary_BIOTA_complete_native_secure_5']['n']==5
+          assert x['cohorts']['Canary_BIOTA_complete_native_probable_14']['n']==14
+          assert x['cohorts']['Canary_BIOTA_complete_introduced_probable_1']['n']==1
           rescued=json.loads((p.parent/'literature_host_rescue_summary.json').read_text())
           assert rescued['independent_unique_butterflies']==42
           assert rescued['guarded_synonym_NHM_HOSTS_named_genus']==21
