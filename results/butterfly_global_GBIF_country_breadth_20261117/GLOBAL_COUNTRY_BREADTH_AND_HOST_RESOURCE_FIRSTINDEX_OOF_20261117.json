@@ -1,0 +1,261 @@
+{
+  "schema": "chocho_butterfly_global_GBIF_pre2011_country_breadth_vs_late51_island_first_index_record_OOF_v1",
+  "status": "SOURCE_VERIFIED_RETROSPECTIVE_FIRST_GBIF_INDEX_PREDICTION_NOT_ESTABLISHMENT",
+  "source_git_blobs": {
+    "species_index": {
+      "path": "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv",
+      "sha": "b6a3c98eb76864052d45d520a55b7d830816126c"
+    },
+    "global_breadth": {
+      "path": "results/butterfly_global_GBIF_country_breadth_20261117/225_butterflies_observed_global_GBIF_country_breadth_and_HOSTS_benefit.csv",
+      "sha": "f263d30655a698a361afe0f1c7fd4c6bc6c3ed49"
+    },
+    "historical_effort": {
+      "path": "results/island51_pre2011_effort_control_20261107/historical_botanical_coverage_by_island.csv",
+      "sha": "84f4818bd83eb8f7c3ff745ef7aa4234310397aa"
+    },
+    "island_geography": {
+      "path": "results/island51_host_circuit_atlas_20261106/island_geography.csv",
+      "sha": "f0c5b1139e54b4872d28682f0991f89f2368ab43"
+    },
+    "marine_pairs": {
+      "path": "results/island51_observed_ocean_circuit_20261106/island51_observed_circuit_pairs.csv",
+      "sha": "7832b1d9d8b1047027fd5197d7bc0d31c22cad3f"
+    },
+    "longitude_groups": {
+      "path": "results/island51_double_unseen_blocks_20261107/longitude_island_blocks.csv",
+      "sha": "ef2cfcd0b3133d308c18b517001b33a9b46e9630"
+    }
+  },
+  "n_risk_cells": 10586,
+  "n_islands": 51,
+  "n_butterflies": 222,
+  "n_future_first_index_events": 317,
+  "n_excluded_butterflies_fewer_than30_country_records": 3,
+  "heldout_scores": {
+    "LOIO_51_islands": {
+      "n_folds": 51,
+      "test_total": 10586,
+      "events": 317,
+      "source_time": "GBIF global country and island early source 2001–2010; fixed present day HOSTS catalogue and WPI geography",
+      "scores": {
+        "B": {
+          "OOF_Brier": 0.02092488603134594,
+          "OOF_logloss": 0.08413430744479604,
+          "OOF_AUC": 0.894891457644259
+        },
+        "B_plus_global_pre2011_country_breadth": {
+          "OOF_Brier": 0.020975513417063496,
+          "OOF_logloss": 0.08420856740944628,
+          "OOF_AUC": 0.8951885141430533
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "OOF_Brier": 0.020934212104300458,
+          "OOF_logloss": 0.08422835868683358,
+          "OOF_AUC": 0.8941674016280663
+        },
+        "B_plus_both_geographies_retrospective": {
+          "OOF_Brier": 0.02098332197820246,
+          "OOF_logloss": 0.08430143452606831,
+          "OOF_AUC": 0.8944838113423974
+        }
+      },
+      "incremental_over_base": {
+        "B_plus_global_pre2011_country_breadth": {
+          "Brier_error_reduction_pct": -0.24194820292791647,
+          "logloss_error_reduction_pct": -0.08826359532223732,
+          "AUC_delta": 0.0002970564987943014
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "Brier_error_reduction_pct": -0.044569289125624086,
+          "logloss_error_reduction_pct": -0.11178702825746968,
+          "AUC_delta": -0.0007240560161927423
+        },
+        "B_plus_both_geographies_retrospective": {
+          "Brier_error_reduction_pct": -0.27926530528759386,
+          "logloss_error_reduction_pct": -0.1986432007916968,
+          "AUC_delta": -0.00040764630186163053
+        }
+      }
+    },
+    "source_frozen_5_geographic_groups": {
+      "n_folds": 5,
+      "test_total": 10586,
+      "events": 317,
+      "source_time": "GBIF global country and island early source 2001–2010; fixed present day HOSTS catalogue and WPI geography",
+      "scores": {
+        "B": {
+          "OOF_Brier": 0.02335362432928379,
+          "OOF_logloss": 0.09491596790057037,
+          "OOF_AUC": 0.8673948390810847
+        },
+        "B_plus_global_pre2011_country_breadth": {
+          "OOF_Brier": 0.023492917035487764,
+          "OOF_logloss": 0.0956806821128095,
+          "OOF_AUC": 0.8674753238822057
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "OOF_Brier": 0.02337536587478013,
+          "OOF_logloss": 0.09500629979830111,
+          "OOF_AUC": 0.867028356761476
+        },
+        "B_plus_both_geographies_retrospective": {
+          "OOF_Brier": 0.023520186480248936,
+          "OOF_logloss": 0.09581570091816709,
+          "OOF_AUC": 0.8671420185035172
+        }
+      },
+      "incremental_over_base": {
+        "B_plus_global_pre2011_country_breadth": {
+          "Brier_error_reduction_pct": -0.5964500594852413,
+          "logloss_error_reduction_pct": -0.8056749872057443,
+          "AUC_delta": 8.048480112099465e-05
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "Brier_error_reduction_pct": -0.09309709358078286,
+          "logloss_error_reduction_pct": -0.09517039095609664,
+          "AUC_delta": -0.00036648231960867417
+        },
+        "B_plus_both_geographies_retrospective": {
+          "Brier_error_reduction_pct": -0.7132175657903689,
+          "logloss_error_reduction_pct": -0.9479258732726982,
+          "AUC_delta": -0.0002528205775674808
+        }
+      }
+    },
+    "heldout_butterfly_genus_5_hashes": {
+      "n_folds": 5,
+      "test_total": 10586,
+      "events": 317,
+      "source_time": "GBIF global country and island early source 2001–2010; fixed present day HOSTS catalogue and WPI geography",
+      "scores": {
+        "B": {
+          "OOF_Brier": 0.02068471679764024,
+          "OOF_logloss": 0.08350194081262828,
+          "OOF_AUC": 0.8956219647322975
+        },
+        "B_plus_global_pre2011_country_breadth": {
+          "OOF_Brier": 0.020730587912011347,
+          "OOF_logloss": 0.08366807391072587,
+          "OOF_AUC": 0.8956308733553221
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "OOF_Brier": 0.020758534281345612,
+          "OOF_logloss": 0.08383071243286772,
+          "OOF_AUC": 0.894540642213418
+        },
+        "B_plus_both_geographies_retrospective": {
+          "OOF_Brier": 0.020797635366714414,
+          "OOF_logloss": 0.08395708794342947,
+          "OOF_AUC": 0.8945590738472626
+        }
+      },
+      "incremental_over_base": {
+        "B_plus_global_pre2011_country_breadth": {
+          "Brier_error_reduction_pct": -0.22176331839524546,
+          "logloss_error_reduction_pct": -0.1989571697146225,
+          "AUC_delta": 8.908623024606044e-06
+        },
+        "B_plus_CONCURRENT_host_resource_gain_retrospective": {
+          "Brier_error_reduction_pct": -0.35686968512806755,
+          "logloss_error_reduction_pct": -0.3937293157977874,
+          "AUC_delta": -0.0010813225188794906
+        },
+        "B_plus_both_geographies_retrospective": {
+          "Brier_error_reduction_pct": -0.5459033845078084,
+          "logloss_error_reduction_pct": -0.5450737149002396,
+          "AUC_delta": -0.0010628908850348617
+        }
+      }
+    }
+  },
+  "models": {
+    "B": [
+      "log_global_country_record_count",
+      "log_source_species_early_51islands",
+      "known_native_HOSTS_geography_log",
+      "known_NATIVE_island_HOSTS_geography_log",
+      "known_HOSTS_species_count_log",
+      "known_HOSTS_families_log",
+      "source_lacking_early_conspecific_index",
+      "log_n_prior_conspecific_islands",
+      "log_geodesic_km_nearest_early_conspecific_index",
+      "log_undirected_marine_resistance_nearest_early_conspecific_index",
+      "log_pre2011_botanical_record_effort_194_original_ports",
+      "log_original_WPI_port_count",
+      "log_early_butterflies_recorded_on_island",
+      "latitude",
+      "sin_longitude",
+      "cos_longitude"
+    ],
+    "B_plus_global_pre2011_country_breadth": [
+      "log_global_country_record_count",
+      "log_source_species_early_51islands",
+      "known_native_HOSTS_geography_log",
+      "known_NATIVE_island_HOSTS_geography_log",
+      "known_HOSTS_species_count_log",
+      "known_HOSTS_families_log",
+      "source_lacking_early_conspecific_index",
+      "log_n_prior_conspecific_islands",
+      "log_geodesic_km_nearest_early_conspecific_index",
+      "log_undirected_marine_resistance_nearest_early_conspecific_index",
+      "log_pre2011_botanical_record_effort_194_original_ports",
+      "log_original_WPI_port_count",
+      "log_early_butterflies_recorded_on_island",
+      "latitude",
+      "sin_longitude",
+      "cos_longitude",
+      "rarefied_30_global_country_breadth"
+    ],
+    "B_plus_CONCURRENT_host_resource_gain_retrospective": [
+      "log_global_country_record_count",
+      "log_source_species_early_51islands",
+      "known_native_HOSTS_geography_log",
+      "known_NATIVE_island_HOSTS_geography_log",
+      "known_HOSTS_species_count_log",
+      "known_HOSTS_families_log",
+      "source_lacking_early_conspecific_index",
+      "log_n_prior_conspecific_islands",
+      "log_geodesic_km_nearest_early_conspecific_index",
+      "log_undirected_marine_resistance_nearest_early_conspecific_index",
+      "log_pre2011_botanical_record_effort_194_original_ports",
+      "log_original_WPI_port_count",
+      "log_early_butterflies_recorded_on_island",
+      "latitude",
+      "sin_longitude",
+      "cos_longitude",
+      "EXPLORATORY_CURRENT_HOST_island_resource_gain_log"
+    ],
+    "B_plus_both_geographies_retrospective": [
+      "log_global_country_record_count",
+      "log_source_species_early_51islands",
+      "known_native_HOSTS_geography_log",
+      "known_NATIVE_island_HOSTS_geography_log",
+      "known_HOSTS_species_count_log",
+      "known_HOSTS_families_log",
+      "source_lacking_early_conspecific_index",
+      "log_n_prior_conspecific_islands",
+      "log_geodesic_km_nearest_early_conspecific_index",
+      "log_undirected_marine_resistance_nearest_early_conspecific_index",
+      "log_pre2011_botanical_record_effort_194_original_ports",
+      "log_original_WPI_port_count",
+      "log_early_butterflies_recorded_on_island",
+      "latitude",
+      "sin_longitude",
+      "cos_longitude",
+      "rarefied_30_global_country_breadth",
+      "EXPLORATORY_CURRENT_HOST_island_resource_gain_log"
+    ]
+  },
+  "limits": [
+    "Global 2001–2010 country facets estimate observed breadth, not native butterfly range/endemicity/dispersal ability",
+    "Current HOSTS native plant geography and catalogued host counts are not source dated before the first butterfly record; models are retrospective even though independent country-index covariates are restricted to early dates",
+    "The HOST gain predictor is CONTEMPORARY WCVP 2024 and cannot be interpreted as historical pre-2011 local food; only auxiliary retrospective model",
+    "Independent global GBIF country facet and island first-index response share GBIF record-provider and effort biases",
+    "The original 51 selected landmasses are not the 126 botanical WGSRPD3 islands",
+    "First GBIF indexing is not biological arrival, successful butterfly population growth or true community homogenization",
+    "Historic conspecific source distances use only the original 51 sampled landmasses, excluding external potential sources",
+    "Geographic/group/generalization folds share species and islands; these are out-of-fold predictive comparisons not causal exposure experiments",
+    "No tested term establishes shipborne carriage, ocean-current movement, or plant-introduction-mediated colonization"
+  ]
+}
