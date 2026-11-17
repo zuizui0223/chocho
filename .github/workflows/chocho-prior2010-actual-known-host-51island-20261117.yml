@@ -1,0 +1,110 @@
+name: GEB source-verified pre-2011 host plants and subsequent island butterfly records
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_prior_2001_2010_species_hosts_vs_butterfly_2011_2022_20261117.py
+      - .github/workflows/chocho-prior2010-actual-known-host-51island-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-species-island-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2' 'scikit-learn>=1.5,<2'
+      - name: Recover author HOSTS edges privately for analysis only
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 40979986160
+          github-token: ${{ github.token }}
+          name: chocho-original230-derived-host-roster-20261030
+          path: _src/host
+      - name: Recover accepted plant species GBIF key taxonomy
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 41177682289
+          github-token: ${{ github.token }}
+          name: original230-frozen-plant-name-gbifkey-20261031
+          path: _src/taxonomy
+      - name: Recover 194-port 2001-2010 Plantae taxon facet snapshot
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42361257543
+          github-token: ${{ github.token }}
+          name: island51-public-194-port-2001-2010-Plantae-and-predictions
+          path: _src/plants
+      - name: Recover independently queried 225 butterfly species by 51 islands and periods
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42556346640
+          github-token: ${{ github.token }}
+          name: butterfly-original51-public-index-consolidated-20261109
+          path: _src/butterflies
+      - name: Recover frozen uniform ocean circuit and 194-port original island metadata
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42193019385
+          github-token: ${{ github.token }}
+          name: island51-observed-marine-circuits-and-heldout-losses
+          path: _src/marine
+      - name: Recover old outcome-independent island longitude geographic groups
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42325176725
+          github-token: ${{ github.token }}
+          name: island51-double-unseen-longitude-block-predictions
+          path: _src/geography
+      - name: Rebuild 2001-2010 species-specific known-host preceding 2011-2022 butterfly indexing
+        env:
+          OPENBLAS_NUM_THREADS: 1
+          OMP_NUM_THREADS: 1
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_prior_2001_2010_species_hosts_vs_butterfly_2011_2022_20261117.py
+          python scripts/audit_prior_2001_2010_species_hosts_vs_butterfly_2011_2022_20261117.py \
+            --hosts _src/host/original230_host_edges.csv \
+            --taxonomy _src/taxonomy/original230_plant_name_to_gbifkey_v1.json.gz \
+            --plants _src/plants/_ci_early_flora_source/GBIF_original194_port_2001_2010_speciesKey.csv.gz \
+            --port-coverage _src/plants/_ci_early_flora_source/GBIF_original194_port_2001_2010_coverage.csv \
+            --butterfly _src/butterflies/full51_225butterfly_period_index.csv \
+            --marine _src/marine/_ci_ocean_results/island51_observed_circuit_pairs.csv \
+            --prep _src/marine/_ci_ocean_results/source_preparation.json \
+            --longitude _src/geography/longitude_island_blocks.csv \
+            --output _audited_prior_plant_join_aggregate
+      - name: Guard sample counts, geographic folds, and only aggregate public outputs
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path('_audited_prior_plant_join_aggregate')
+          f=p/'SOURCE_VERIFIED_PRIOR_2010_HOSTS_FIRSTINDEX_20261117.json'
+          x=json.loads(f.read_text())
+          s=x['sample']
+          assert x['status']=='SOURCE_PINNED_PRIOR_HOST_SPECIES_ISLAND_DIAGNOSTIC_NOT_COLONISATION'
+          assert (s['matched_butterflies'],s['original_ports'],s['at_risk_species_island_cells'],
+                  s['future_first_record_cells'],s['new_first_indices_with_prior_host'])==(218,194,10431,306,53)
+          assert not list(p.glob('*species_island*'))
+          for k,num in (('LOIO',51),('geography_5_groups',5)):
+              q=x['out_of_island_prediction'][k]
+              assert q['n_folds']==num and q['n_indexed_events']==306
+              assert all(math.isfinite(v['relative_error_reduction_pct']) for v in q['scores'].values())
+          print('PRE2011_KNOWN_HOSTS_SOURCE_LOCKED_LATER_BUTTERFLY_PASS')
+          PY
+      - name: Archive only numerical reports and fold losses (never private host edges)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-pre2011-specific-HOSTS-vs-later51-butterfly-aggregate-20261117
+          path: |
+            _audited_prior_plant_join_aggregate/SOURCE_VERIFIED_PRIOR_2010_HOSTS_FIRSTINDEX_20261117.json
+            _audited_prior_plant_join_aggregate/heldout_LOIO_fold_scores.csv
+            _audited_prior_plant_join_aggregate/heldout_geography_5_groups_fold_scores.csv
+          retention-days: 90
+          if-no-files-found: warn
