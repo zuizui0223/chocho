@@ -1,0 +1,66 @@
+name: chocho source-frozen island port alien flora nonlinear and pre1900 diagnostic
+
+on:
+  push:
+    branches: [analysis/port-alien-flora-nonlinear-historical-source-20261117]
+    paths:
+      - scripts/audit_port_alien_flora_nonlinear_historic_effort_20261117.py
+      - .github/workflows/chocho-port-flora-nonlinear-historical-effort.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-nonlinear-and-source-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install only numerical dependency
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Reproduce 123-island joint original source effect then test nonlinear and historical botanical indexing sensitivities
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_island_port_alien_flora_native_area_moderators_20261117.py scripts/audit_port_alien_flora_nonlinear_historic_effort_20261117.py
+          python scripts/audit_port_alien_flora_nonlinear_historic_effort_20261117.py \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --hosts results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --out-dir results/port_alien_flora_nonlinear_history_20261117
+      - name: Verify no missing source regions and keep causal status explicit
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path("results/port_alien_flora_nonlinear_history_20261117/nonlinear_port_native_flora_historic_indexing_audit.json")
+          z=json.loads(p.read_text())
+          assert z["status"]=="EXPLORATORY_CURVATURE_AND_HISTORIC_BOTANICAL_EFFORT_GATE_NOT_SEED_TRANSPORT"
+          assert z["n_original_island_cohorts"]==[126,123,98]
+          assert len(z["cases"])==11
+          assert abs(z["reproduced_linear_joint123_area_native"][0]+.04254168022063994)<1e-9
+          assert abs(z["reproduced_linear_joint123_area_native"][1]+.13899715182792102)<1e-9
+          for row in z["cases"]:
+              if row["status"]=="FIT_DESCRIPTIVE_CROSS_SECTIONAL_NOT_CAUSAL":
+                  assert row["n"]>=65
+                  for key in ("area","native"):
+                      coeff=row["moderation"][key]
+                      assert math.isfinite(coeff["beta_port_by_standardized_moderator"])
+                      assert 0<=coeff["conditional_permutation_descriptive_p"]<=1
+                      assert 0<=coeff["exploratory_Holm2_p"]<=1
+              else:
+                  assert row["status"]=="MODEL_UNIDENTIFIABLE"
+          assert z["source_observational_GBIF_pre1900_not_true_pre_port_control"]
+          print("CHOCHO_PORT_ISLAND_NONLINEAR_PRE1900_SOURCE_GATES_PASS",{
+              row["case"]:row["status"] for row in z["cases"]})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-locked-island-port-flora-nonlinear-pre1900-20261117
+          path: results/port_alien_flora_nonlinear_history_20261117/
+          retention-days: 90
+          if-no-files-found: warn
