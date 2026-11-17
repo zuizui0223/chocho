@@ -54,7 +54,7 @@ jobs:
           assert set(x['historical_geographic_resolution'] for x in rows if x['historical_status']=='source_confirmed_before_GBIF')=={'named_island_field_report','national_island_checklist_not_exact_point'}
           print('ORIGINAL_317_ISLAND_NATIVE_ENDENISM_FAIL_CLOSED_AND_26_HISTORICAL_SOURCES_PASS')
           PY
-      - name: Negative tests: mismatched source must not become historic presence or endemicity
+      - name: "Negative tests - mismatched source must not become historic presence or endemicity"
         run: |
           python - <<'PY'
           import importlib.util
