@@ -162,7 +162,7 @@ def run_path(code,idx,original_source,source,mask,region_codes,geoms,tree):
 def main():
     ap=argparse.ArgumentParser()
     for a in ("noaa-cube","noaa-source-receipt","noaa-preflight","original-GSHHG-graph",
-              "126-coast-audit","tdwg3","original-WCVP-islands","out-dir"):
+              "coast-audit","tdwg3","original-WCVP-islands","out-dir"):
         ap.add_argument("--"+a,type=Path,required=True)
     a=ap.parse_args()
     if SHA(a.original_GSHHG_graph)!=GRAPH_SHA:
