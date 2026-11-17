@@ -66,7 +66,7 @@ def main():
     fig.text(.045,.157,"¹ One compatible host per sequence. * Introduced in the botanical region. Feeding on the named plant was not observed in this analysis.",fontsize=10)
     parts = [f"≤{r.km} km: {r.middle_islands} / {r.species} / {r.links}" for r in counts.itertuples()]
     fig.text(.045,.087,"Relay islands / species / sequences     "+"     •     ".join(parts),fontsize=10,weight="bold")
-    fig.text(.045,.042,"Distances join representative island port locations. A shared year on B can appear twice when two islands qualify as A.",fontsize=10)
+    fig.text(.045,.042,"Molokaʻi was already within the published monarch range by 2007. Its 2021 index marks a later observation.",fontsize=10)
     fig.savefig(FIG.with_suffix(".png"),dpi=185)
     fig.savefig(FIG.with_suffix(".pdf"))
     plt.close(fig)
