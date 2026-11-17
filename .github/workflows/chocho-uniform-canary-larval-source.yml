@@ -1,0 +1,50 @@
+name: chocho uniform independent Canary larval-source ascertainment
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_uniform_canary_source_20261118.py
+      - scripts/summarize_uniform_canary_hosts_20261118.py
+      - .github/workflows/chocho-uniform-canary-larval-source.yml
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  uniform-source-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: HTML parser and source-independent 33-species source fetch
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check beautifulsoup4==4.12.3
+          python3 scripts/audit_uniform_canary_source_20261118.py --out-dir results/uniform_canary_source_20261118
+      - name: Verify all independent butterfly queries and source semantics
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('results/uniform_canary_source_20261118/uniform_source_summary.json')
+          obj=json.loads(p.read_text(encoding='utf8'))
+          assert obj['universe_n']==33 and obj['queried_n']==33
+          assert len(obj['all_statuses'])==33
+          assert obj['cohorts']['endemic_confirmed']['original_independent_n']==13
+          assert obj['cohorts']['native_nonendemic_secure']['original_independent_n']==5
+          assert obj['cohorts']['native_nonendemic_probable']['original_independent_n']==14
+          assert obj['cohorts']['introduced_probable']['original_independent_n']==1
+          print('COMPLETE_33_UNIFORM_LARVAL_SOURCE_QUERIES_VALID')
+          for origin,record in obj['cohorts'].items():
+            print(origin,json.dumps(record,sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-uniform-canary-larval-source-33-20261118
+          path: results/uniform_canary_source_20261118/
+          retention-days: 90
+          if-no-files-found: warn
