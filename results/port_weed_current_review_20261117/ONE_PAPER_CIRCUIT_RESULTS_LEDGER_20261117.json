@@ -1,0 +1,90 @@
+{
+  "schema": "chocho_one_GEB_paper_3_layer_uniform_marine_circuit_results_20261117_v1",
+  "status": "SOURCE_VERIFIED_CONDITIONAL_PREDICTION_NOT_DIRECTIONAL_TRANSPORT_OR_CAUSAL_MEDIATION",
+  "single_coauthor_branch": "analysis/butterfly-trait-public51-20261109",
+  "manuscript": "manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md",
+  "original_source_prs": [
+    157,
+    175
+  ],
+  "graph": {
+    "source_GSHHG_graph_sha256": "79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906",
+    "graph_component_marine_nodes": 189550,
+    "topology": "0.0625deg raster/0.5deg finite-volume, uniform undirected electrical resistance"
+  },
+  "source_actions": {
+    "botanicals_circuit_solver": 44013658955,
+    "botanicals_uniform_holdout": 44013825017,
+    "botanicals_shortest_water": 44011154673,
+    "butterflies_uniform": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
+    "botanicals_WCVP_acceptedspecies": 44010011288
+  },
+  "floras": {
+    "regions": 104,
+    "unique_pairs": 5355,
+    "holdout": "one island held out and all incident pairs excluded from training",
+    "baseline": "geodesic distance and square, broad botanical region, latitude difference, known outcome-specific flora richness of both regions, area minimum and maximum",
+    "estimator": "ridge fixed alpha 20; training-only scaling",
+    "source_zip_artifact_id": 14298086879,
+    "source_zip_sha256": "16a64ea83d4c0ad9fe6f9961cdc303afc6fce79c65ef3c3efb02f1db44224252",
+    "native": {
+      "circuit_pct": -0.10961036875490482,
+      "circuit_bootstrap95_descriptive": [
+        -0.39058775173307453,
+        0.1651946120795267
+      ],
+      "shortest_water_pct": 2.234321123027717,
+      "port_count_proxy_pct": -0.07709548570989533
+    },
+    "introduced": {
+      "circuit_pct": 4.239013650845648,
+      "circuit_bootstrap95_descriptive": [
+        2.511430753668662,
+        6.029409136675148
+      ],
+      "shortest_water_pct": 1.7750986997451879,
+      "port_count_proxy_pct": 0.04286982645042892
+    },
+    "paired_difference": {
+      "introduced_minus_native_pct_points": 4.348624019600759,
+      "same_104_island_paired_bootstrap20k_descriptive95": [
+        2.710684336966834,
+        6.087292669704325
+      ],
+      "bootstrap_seed": 20261117,
+      "confirmatory_test": false,
+      "source_script": "paired_circuit_bootstrap.py in coauthor result package"
+    }
+  },
+  "butterflies": {
+    "islands": 51,
+    "unique_pairs": 1275,
+    "target": "GBIF first-indexed 2011–2022 butterfly assemblage Jaccard",
+    "source_CSV_Git_blob": "98177bf46a2274bea68015b87a1ccb7b6fc7f32c",
+    "source_CSV": "results/island51_observed_ocean_circuit_20261106/all_island_holdout_losses.csv",
+    "baseline": "geography, original island port counts, earlier butterfly assemblage Jaccard",
+    "terminals": "WPI distributed port weights, distinct from WCVP TDWG shoreline terminal weights",
+    "estimator": "OLS training-only standardization",
+    "circuit_pct": 5.081886845222559,
+    "mse_base": 0.006797760771290343,
+    "mse_augmented": 0.00645230626088444,
+    "island_folds_improved": 33,
+    "bootstrap20k_descriptive95": [
+      1.3598482076161877,
+      8.301723537922722
+    ],
+    "note": "Different 51-island risk set, baseline, estimator, and terminal weights from 104-region flora."
+  },
+  "model_choice_warning": "Uniform circuit versus shortest and port proxy compared post hoc; model-specific inference only; strict both-endpoints-unseen circuit transfer has not yet been verified.",
+  "artifacts": [
+    "figures/integrated_island_port_butterfly_v03/Fig3_circuit_three_layers_v01.svg",
+    "manuscript/integrated_butterfly_resource_access_20261109/MARINE_CIRCUIT_THREE_LAYERS_LOCK_20261117.md"
+  ],
+  "protected_original_positives": {
+    "global_added_host_opportunity_pct": 54.9,
+    "island_relative_gain_pct": 118.9,
+    "known_butterflies_host_record_predictor_mse_gain_pct": 4.12,
+    "host_to_later_butterfly_island_pair_rank_rho": 0.299806
+  },
+  "interpretation_boundary": "Marine circuits are directionless network access fields, not measured ocean velocity. Contemporary flora co-records and GBIF first indexed species do not prove transport, invasion time, larval use, or establishment."
+}
