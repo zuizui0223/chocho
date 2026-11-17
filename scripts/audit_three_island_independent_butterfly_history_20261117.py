@@ -66,7 +66,7 @@ def analyze():
             raise ValueError("Mismatch original later GBIF record")
         yr=int(e["observation_year_upper_bound"])
         pub=int(e["publication_year_upper_bound"])
-        if yr>1983 or pub>1950 or pub<yr:
+        if yr>1983 or pub>1984 or pub<yr:
             raise ValueError("Historical year is not source-backed prior to 2011")
         if e["source_url"] not in (
           "https://images.peabody.yale.edu/lepsoc/nls/1980s/1984/1984_v26_n2.pdf",
