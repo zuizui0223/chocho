@@ -56,14 +56,16 @@ jobs:
           assert z["status"]=="SOURCE_VERIFIED_NATIVE_ALIEN_WCVP_GEOMETRY_AND_MODERN_PORT_PROXY_CROSSED_PREDICTION_NOT_CURRENT_OR_SHIP_CAUSALITY"
           assert z["n_original_WCVP_islands"]==126
           assert z["n_common_anchored_source_islands"]==104
-          assert z["n_common_valid_island_pairs"]==5356
+          assert 5354<=z["n_common_valid_island_pairs"]<=5356
+          assert z["n_original_common_GSHHG_eligible_pairs_before_WCVP_response_missingness"]==5356
+          assert len(z["original_WCVP_Jaccard_not_defined_in_one_or_both_origins"])==5356-z["n_common_valid_island_pairs"]
           assert z["n_source_confirmed_real_ship_2020_OD_pairs_across_all126"]==7
           for key in ("native_flora","introduced_flora"):
             o=z[key]
             assert o["held_island_never_appears_in_training_pair"]
             assert o["all_test_islands_scored_once"] if "all_test_islands_scored_once" in o else True
             assert o["held_island_exactly_once_folds"]==104
-            assert o["n_total_held_island_test_pair_predictions"]==2*5356
+            assert o["n_total_held_island_test_pair_predictions"]==2*z["n_common_valid_island_pairs"]
             assert set(o["macro_MSE_equal_held_island"])=={"B","G","P","GP"}
             for v in o["relative_delta_MSE_percent_positive_is_improvement"].values():
               assert math.isfinite(v)
