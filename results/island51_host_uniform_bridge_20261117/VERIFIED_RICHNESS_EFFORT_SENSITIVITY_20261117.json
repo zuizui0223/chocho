@@ -1,0 +1,115 @@
+{
+  "schema": "chocho_51island_original_uniform_circuit_and_candidate_hosts_with_early_botanical_effort_control_v1",
+  "status": "SOURCE_VERIFIED_GITHUB_ACTIONS_SUCCESS_EXPLORATORY_NOT_CAUSAL_MEDIATION",
+  "source_cis": {
+    "original_uniform_marine": 42193019385,
+    "original_early_generalplant_recording": 42323799520,
+    "original_longitude_geographic_folds": 42325176725,
+    "executed_adjusted_sensitivity": 44026547052,
+    "artifact_id": 14303855608,
+    "conclusion": "success"
+  },
+  "source_SHA256": {
+    "original_51_pair_response": "133dc6d6a91203d09385a4ffd4db0b712dc3309130d1bf2a09bcee6bafa36bf0",
+    "original_port_prep": "5641711fc7ab2bdcd4626e1f483faf46c945a5d11466f0deada092db456a0363",
+    "longitude_blocks": "2e4b8b1d4bda18f7193f843378da124b597ead0f6c49751a547cab10f65e2ef3",
+    "historical_generalplant_count": "be1e14536574dd99ebf70b9bd026a0624cf5aac103bea182b68181a3c8264bdb",
+    "host_count_and_early_botanical_receipt": "4cdfd41b85d3a17c07f0e85b13c3b5d8e24ccb8999880b22df1e9aca2e4d1ccb"
+  },
+  "sample": {
+    "islands": 51,
+    "unique_pairs": 1275,
+    "original_ports": 194,
+    "earlier_plant_buffer_record_count_sum": 155002,
+    "earlier_plant_positive_buffer_count": 141,
+    "earlier_plant_zero_buffer_count": 53,
+    "earlier_plant_positive_islands": 44
+  },
+  "model": {
+    "base": "original distance and square; original WPI ports sum/difference; earlier butterfly Jaccard for later response; PLUS original 2001-2010 all-plant record count sum/difference and pooled candidate introduced-host richness sum/difference",
+    "U": "GSHHG uniform undirected circuit normalized resistance",
+    "H": "port-indexed candidate introduced larval-host composition Jaccard pooled 2001–2024",
+    "estimator": "original train-only standardized OLS with intercept and clip [0,1]",
+    "LOIO": "51 held-island folds, 50 test pairs per island, 2550 pair-endpoint predictions per model",
+    "double_unseen": "15 source-frozen longitude-block pair folds, every 1275 unique pair tested once with both island endpoints withheld"
+  },
+  "later_butterfly": {
+    "LOIO": {
+      "MSE": {
+        "B": 0.006087597870055109,
+        "BU": 0.0059961816366261335,
+        "BH": 0.005891132041918813,
+        "BUH": 0.005849215685373893
+      },
+      "relative_MSE_gain_pct": {
+        "B_to_BU": 1.501679897068296,
+        "B_to_BH": 3.227312847037923,
+        "B_to_BUH": 3.915866155578673,
+        "BH_to_BUH": 0.7115161610139026,
+        "BU_to_BUH": 2.4509923174197574
+      },
+      "descriptive_cluster4999_bootstrap95_pct": {
+        "B_to_BU": [
+          -0.5358505802481552,
+          3.3741869340225374
+        ],
+        "BH_to_BUH": [
+          -0.6645730479492827,
+          2.009065003030881
+        ],
+        "BU_to_BUH": [
+          -1.1572544473623905,
+          5.65815178135542
+        ]
+      },
+      "improved_folds": {
+        "B_to_BU": 32,
+        "BH_to_BUH": 32,
+        "BU_to_BUH": 30
+      }
+    },
+    "double_unseen": {
+      "MSE": {
+        "B": 0.007515058688060476,
+        "BU": 0.007457675750574016,
+        "BH": 0.007402295743100267,
+        "BUH": 0.007440931843992546
+      },
+      "relative_MSE_gain_pct": {
+        "B_to_BU": 0.7635727127138323,
+        "B_to_BH": 1.5004932049214805,
+        "B_to_BUH": 0.9863774475334276,
+        "BH_to_BUH": -0.5219475448315041,
+        "BU_to_BUH": 0.2245191014128139
+      },
+      "improved_folds": {
+        "B_to_BU": 8,
+        "BH_to_BUH": 6,
+        "BU_to_BUH": 9
+      }
+    }
+  },
+  "earlier_butterfly": {
+    "LOIO": {
+      "B_to_BU_pct": -0.4757145346467423,
+      "BH_to_BUH_pct": -0.17041651667583033,
+      "BU_to_BUH_pct": 5.439884540396264
+    },
+    "double_unseen": {
+      "B_to_BU_pct": -7.733258950604548,
+      "BH_to_BUH_pct": -5.97825055521911,
+      "BU_to_BUH_pct": 2.5770474753015744
+    }
+  },
+  "source_matches_locally_computed_numeric_within_1e_minus_12": true,
+  "interpretation": "Under the exact 51-island later butterfly Jaccard target, uniform marine circuit predictive increment conditional on candidate introduced hosts attenuates markedly after adjusting source-verified host richness and early indexed all-plant recording effort; strict double-unseen increment turns slightly adverse. This does not negate distinct 104-botanical-region alien flora association or original 51-island unadjusted predictive result.",
+  "limitations": [
+    "Original botanical record counts are historical sampling-effort proxies, not native or introduced host identity dated to prior butterfly events",
+    "2001–2024 pooled host Jaccard can postdate 2011–2022 butterfly indexing",
+    "Same 51 originally selected islands not independent temporal cohort or randomized causal test",
+    "LOIO and longitude folds are overlapping ecological clusters; intervals descriptive",
+    "Other climate/geographic residual and record-provider confounding remain",
+    "Uniform GSHHG electrical resistance is undirected marine topology, NOT actual 2005 ocean currents or vessel voyages",
+    "No evidence of verified butterfly colonization or plant-mediated causality"
+  ]
+}
