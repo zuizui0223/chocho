@@ -106,6 +106,26 @@ stopifnot(nrow(out_butterfly)==24L)
 write.csv(out_genus,file.path(output,"canary_CNY_WCVPv13_host_genus_native_introduced_inventory.csv"),row.names=FALSE,na="")
 write.csv(out_pairs,file.path(output,"canary_CNY_WCVPv13_butterfly_genus_context_pairs.csv"),row.names=FALSE,na="")
 write.csv(out_butterfly,file.path(output,"canary_CNY_WCVPv13_butterfly_genus_context_summary.csv"),row.names=FALSE,na="")
+origin_profiles <- lapply(split(out_butterfly,out_butterfly$butterfly_origin),function(sub){
+  data.frame(
+    butterfly_origin=sub$butterfly_origin[[1L]],
+    larval_genus_documented_butterflies=nrow(sub),
+    has_any_CNY_accepted_native_congener=sum(sub$host_genera_with_any_native_CNY_species>0L),
+    has_any_CNY_accepted_introduced_congener=sum(sub$host_genera_with_any_introduced_CNY_species>0L),
+    has_any_CNY_mixed_native_introduced_host_genus=sum(sub$host_genera_mixed_native_introduced_CNY>0L),
+    all_larval_host_genera_no_CNY_species=sum(
+      sub$host_genera_with_no_extant_nondoubtful_accepted_CNY_species==sub$known_larval_host_genera
+    ),
+    stringsAsFactors=FALSE)
+})
+origin_profiles <- do.call(rbind,origin_profiles)
+write.csv(origin_profiles,file.path(output,"canary_CNY_WCVPv13_origin_profile_nonbiological.csv"),row.names=FALSE,na="")
+for (i in seq_len(nrow(origin_profiles))) {
+  x<-origin_profiles[i,,drop=FALSE]
+  cat(sprintf("WCVP_ORIGIN_PROFILE=%s,documented_butterflies=%d,native_genus_congener=%d,introduced_genus_congener=%d,mixed_genus=%d\\n",
+  x$butterfly_origin, x$larval_genus_documented_butterflies, x$has_any_CNY_accepted_native_congener,
+  x$has_any_CNY_accepted_introduced_congener,x$has_any_CNY_mixed_native_introduced_host_genus))
+}
 cat("PINNED_WCVP_CANARY_GENUS_CONTEXT_PASSED\n")
 cat(sprintf("ORIGINAL_CNY_WCVP_ACCEPTED_SPECIES=%d\n",nrow(species_status)))
 cat(sprintf("HOST_GENERA_WITH_CNY_NATIVE=%d\n",sum(out_genus$accepted_wcvp_native_species_on_CNY>0L)))
