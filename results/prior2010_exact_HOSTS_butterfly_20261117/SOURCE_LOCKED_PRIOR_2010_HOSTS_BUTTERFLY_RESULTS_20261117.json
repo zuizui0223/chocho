@@ -1,0 +1,141 @@
+{
+  "schema": "chocho_prior2010_known_HOSTS_species_by_194port_later_butterfly_225by51_aggregate_v1",
+  "status": "SOURCE_VERIFIED_TEMPORALLY_PRIOR_KNOWN_LARVAL_HOST_RECORDS_NOT_COLONISATION_OR_ISLAND_ALIEN_STATUS",
+  "canonical_branch": "analysis/butterfly-trait-public51-20261109",
+  "github_source_CI": 44029498482,
+  "source_artifact_id": 14304278533,
+  "sources": {
+    "original230_HOSTS_edges_run": 40979986160,
+    "accepted_plant_GBIF_taxon_crosswalk_run": 41177682289,
+    "GBIF_original194_ports_2001_2010_Plant_facet_run": 42361257543,
+    "GBIF_public225_butterfly_51islands_2001_2022_run": 42556346640,
+    "original_uniform_marine_circuit_run": 42193019385,
+    "original_frozen_longitude_groups_run": 42325176725
+  },
+  "original_SHA256": {
+    "HOSTS_edges": "e55012d6b0eefd2b3e9e4b8f13fc4786ddc1e66c21f73e705bb20df92d0b5e22",
+    "plant_taxonomy": "d8d21e6686e3f069d4374d4be1c4e47744788f9244c46a1bbbbb9015e5cd7fb9",
+    "GBIF_2001_2010_port_species": "42bca05d45e97dd38f1b879fc0934828fc9b7451a2b7848a29eac11c12e23061",
+    "GBIF_original194_port_coverage": "ec172084494d73284fdbaeaacd59d23c030d390884ca8d409f2f23e96d8559fb",
+    "public225_51_butterfly_index": "d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887",
+    "original_GSHHG_51pair": "133dc6d6a91203d09385a4ffd4db0b712dc3309130d1bf2a09bcee6bafa36bf0"
+  },
+  "population": {
+    "butterfly_source_edges_read_transiently": 2524,
+    "HOSTS_plant_name_candidates": 1642,
+    "strict_accepted_species_taxa": 1581,
+    "pre2011_indexed_HOSTS_accepted_plant_taxa": 413,
+    "original_ports": 194,
+    "port_plant_speciesKey_rows": 27598,
+    "source_plant_2001_2010_record_sum_may_overlap": 173113,
+    "recorded_general_flora_islands": 45,
+    "recorded_known_HOSTS_islands": 41,
+    "public_butterflies_original": 225,
+    "matched_butterflies": 218,
+    "source_butterfly_direct_accepted": 203,
+    "source_synonym_exact_names": 15,
+    "at_risk_butterfly_island_cells": 10431,
+    "later_first_indexed_cells_2011_2022": 306
+  },
+  "crude_recording": {
+    "prior2010_compatible_known_HOSTS_yes": {
+      "n": 1075,
+      "later_first_index_events": 53,
+      "record_rate": 0.04930232558139535
+    },
+    "prior2010_HOSTS_not_indexed": {
+      "n": 9356,
+      "later_first_index_events": 253,
+      "record_rate": 0.027041470713980335
+    }
+  },
+  "two_way_FE_percentage_point_associations": {
+    "species_and_island_fixed_effects": {
+      "beta": 2.8411367322736045,
+      "descriptive_cluster95": [
+        0.08424269126495325,
+        5.598030773282256
+      ]
+    },
+    "plus_geodesic_distance_to_earlier_conspecies_only": {
+      "beta": -1.102977665,
+      "descriptive_cluster95": [
+        -3.72047,
+        1.51451
+      ]
+    },
+    "plus_uniform_GSHHG_prior_conspecific_marine_only": {
+      "beta": 2.74065,
+      "descriptive_cluster95": [
+        0.07035,
+        5.41094
+      ]
+    },
+    "plus_geodesic_and_uniform_marine": {
+      "beta": -0.8904892986766128,
+      "descriptive_cluster95": [
+        -3.452162311241774,
+        1.6711837138885484
+      ]
+    },
+    "plus_geodesic_and_marine_general_flora_recorded_45_islands": {
+      "beta": -0.6303445535445731,
+      "descriptive_cluster95": [
+        -3.172173674457844,
+        1.911484567368698
+      ]
+    },
+    "plus_geodesic_and_marine_strict_203_direct_name_species": {
+      "beta": -1.0140909549249635,
+      "descriptive_cluster95": [
+        -3.620121298032821,
+        1.5919393881828952
+      ]
+    },
+    "early2011_2017_only": {
+      "beta": -1.3813134832959353,
+      "descriptive_cluster95": [
+        -3.292431165576913,
+        0.5298041989850425
+      ]
+    },
+    "later2018_2022_only": {
+      "beta": 0.26652744729200384,
+      "descriptive_cluster95": [
+        -0.9256750731057601,
+        1.4587299676897678
+      ]
+    }
+  },
+  "butterfly_out_of_geography_prediction": {
+    "baseline": "Prior conspecific min geodesic and marine access plus early plant species richness/record counts, earlier butterfly observation, island ports, latitude/longitude, documented HOSTS breadth, butterfly species onehot; logistic fixed L2 C1, train-only scaling",
+    "only_added_variable": "whether an exact known HOSTS host was indexed in original 194-port 2001–2010 source",
+    "leave_one_island_out_51": {
+      "cells": 10431,
+      "events": 306,
+      "reference_Brier": 0.020535443400947474,
+      "with_prior_host_Brier": 0.020591087826658132,
+      "Brier_relative_gain_pct": -0.2709677342934357,
+      "reference_logloss": 0.08238228633070169,
+      "with_prior_host_logloss": 0.08257842407988246,
+      "logloss_relative_gain_pct": -0.23808242999402732,
+      "island_folds_improved": 26
+    },
+    "geography5_unseen_regions": {
+      "cells": 10431,
+      "events": 306,
+      "reference_Brier": 0.0238182050488076,
+      "with_prior_host_Brier": 0.023909100724503626,
+      "Brier_relative_gain_pct": -0.38162269369067314,
+      "reference_logloss": 0.09658530857629934,
+      "with_prior_host_logloss": 0.09694668871882182,
+      "logloss_relative_gain_pct": -0.37415643005065247,
+      "geographic_folds_improved": 2
+    }
+  },
+  "inference": {
+    "supported": "Crude pre-2011 indexed known-host site association with later butterfly first GBIF indexing is positive; no independent positive association survives the earlier conspecific geographic distance adjustment; host indicator does not improve geographically heldout first-index prediction under the fixed source-aware controls.",
+    "not_supported": "historical actual plant introduction, locally confirmed larval feeding, successful butterfly establishment, causal host-mediated dispersal, all 51 exact native/introduced host status, documented ocean-current/ship routes"
+  },
+  "publication_boundary": "Author-derived individual butterfly–HOSTS edges are consumed temporarily from original GitHub artifact, not included in repository or output. Source artifacts expire and independent public access is not guaranteed; DOI/licenses/coauthor approval outstanding."
+}
