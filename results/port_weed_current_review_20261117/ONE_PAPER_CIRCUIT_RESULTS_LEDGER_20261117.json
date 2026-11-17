@@ -21,7 +21,9 @@
     "botanicals_true_circuit_both_endpoints_unseen": 44023148246,
     "butterflies_host_conditional_uniform_ocean_reexecution": 44025831765,
     "butterflies_host_conditional_uniform_ocean_early_botanical_effort_sensitivity": 44026547052,
-    "prior2010_exact_butterfly_HOSTS_taxa_later_first_indexes": 44029498482
+    "prior2010_exact_butterfly_HOSTS_taxa_later_first_indexes": 44029498482,
+    "butterfly_beneficiary_239_potential_island_consumer_similarity": 44035468935,
+    "butterfly_beneficiary_main_Fig3_archive": 44036091765
   },
   "floras": {
     "regions": 104,
@@ -229,6 +231,78 @@
         "Temporal GBIF first indexing is not true butterfly colonization",
         "This distinct source population does not invalidate positive WCVP full introduced flora/marine graph and 239-butterfly potential resource results",
         "Original individual butterfly-host edge roster is read temporarily, not redistributed"
+      ]
+    },
+    "beneficiaries_resource_potential_assembly": {
+      "status": "SOURCE_VERIFIED_POTENTIAL_BUTTERFLY_CONSUMERS_NOT_OBSERVED_BUTTERFLY_HOMOGENIZATION",
+      "original_source_239_species_369_regions": {
+        "butterflies": 239,
+        "regions": 369,
+        "insular_regions": 126,
+        "added_island_resource_pairs": 5741
+      },
+      "source_reanalysis_run": 44035468935,
+      "source_artifact_id": 14307506454,
+      "figure_and_archive_run": 44036091765,
+      "results": "results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json",
+      "report": "results/butterfly_resource_beneficiaries_20261117/README_JA.md",
+      "figure3": "figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.png",
+      "measurement": "native host resource breadth across WGSRPD3 = distribution of each butterfly's known native host plants, not butterfly native range",
+      "quartiles": [
+        {
+          "q": 1,
+          "species": 60,
+          "native_HOSTS_regions": "2-48",
+          "island_added": 644,
+          "percent_of_total": 11.2176
+        },
+        {
+          "q": 2,
+          "species": 60,
+          "native_HOSTS_regions": "49-95",
+          "island_added": 1077,
+          "percent_of_total": 18.7598
+        },
+        {
+          "q": 3,
+          "species": 60,
+          "native_HOSTS_regions": "96-169",
+          "island_added": 1749,
+          "percent_of_total": 30.4651
+        },
+        {
+          "q": 4,
+          "species": 59,
+          "native_HOSTS_regions": "169-305",
+          "island_added": 2271,
+          "percent_of_total": 39.5576
+        }
+      ],
+      "spearman_native_HOSTS_breadth_vs_added_island_resource_count": 0.5788964068803357,
+      "pre2011_GBIF_real_butterfly_sampled51_island_breadth_vs_added_rho": 0.19811737557958542,
+      "potential_community_Jaccard": {
+        "n_all_island_pairs": 7875,
+        "n_comparable_pairs": 7797,
+        "n_original_native_union_zero_pairs_excluded": 78,
+        "native_known_hosts": 0.1401370010070764,
+        "native_plus_introduced_hosts": 0.3675355469925412,
+        "observed_increase": 0.2273985459854648,
+        "fraction_island_pairs_increased": 0.9226625625240477,
+        "between_broad_bioregions_native": 0.11330911586893881,
+        "between_broad_bioregions_contemporary": 0.35017261986867276
+      },
+      "fixed_margin_199_chain_observed_vs_expected": {
+        "global_species_and_island_additions_preserved_expected_delta": 0.21573529865355626,
+        "also_species_by_Level1_margins_preserved_expected_delta": 0.22361126850532123,
+        "observed_minus_geographically_constrained_mean": 0.0037872774801435694,
+        "warning": "Null samples depend on a constrained Markov chain; no independent confirmatory p-value. Most observed Jaccard change follows from structural additions."
+      },
+      "protected_historical_source_fig3": "figures/integrated_island_port_butterfly_v03/Fig3_host_reports.png now Supplementary Figure S14",
+      "limits": [
+        "Native HOSTS plant resource geographic breadth is not a native/endemic butterfly status",
+        "Observed 51-island GBIF butterfly geographic breadth is sampling-biased and weakly associated",
+        "Jaccard is resource-defined consumer potential only, not observed butterfly community homogenization",
+        "Extra gain over geographically constrained fixed-margin null is small and exploratory"
       ]
     }
   },
