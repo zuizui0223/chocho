@@ -1,0 +1,83 @@
+name: chocho WCVP native and alien crossed prediction with exact GSHHG UNIFORM CIRCUIT null
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_WCVP126_original_uniform_circuit_crossed_prediction_20261117.py
+      - .github/workflows/chocho-WCVP126-native-alien-uniform-circuit-crossed.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  circuit-versus-ported-and-unported-whole-flora:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original fixed prediction numerical source dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44013658955
+          github-token: ${{ github.token }}
+          name: chocho-original104-WCVP-GSHHG-finite-volume-uniform-circuit-null
+          path: _src/uniformGSHHG
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/WCVP126_original
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/source_shortest_sea_comparator
+      - name: Reuse identical original 104-island 5355 common native/alien Jaccard pair cohort and compare actual original uniform electrical circuit against current WPI port index
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_original_uniform_circuit_crossed_prediction_20261117.py
+          python scripts/audit_WCVP126_original_uniform_circuit_crossed_prediction_20261117.py \
+            --plants _src/WCVP126_original/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --shortest-water _src/source_shortest_sea_comparator/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --uniform-circuit _src/uniformGSHHG/WCVP126_original104_uniform_finvol_electrical_resistance.csv \
+            --uniform-circuit-receipt _src/uniformGSHHG/uniform104_WCVP_GSHHG_source_circuit_numerical_audit.json \
+            --original-sea-audit _src/source_shortest_sea_comparator/GSHHG126_sea_geometry_source_coverage_audit.json \
+            --original-shipping-audit _src/WCVP126_original/WCVP126_geodesic_port_shipment_source_coverage_audit.json \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/uniform_circuit_crossed
+      - name: Require original full sea circuit null and honest observational response
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          q=json.loads(Path("results/WCVP126_crossed_native_alien_20261117/uniform_circuit_crossed/WCVP126_native_alien_true_uniform_circuit_vs_port_held_island_validation.json").read_text())
+          assert q["status"]=="SOURCE_LOCKED_BIOTIC_PREDICTION_WITH_TRUE_UNIFORM_GSHHG_CIRCUIT_CONTROL_NOT_OCEAN_CURRENTS"
+          assert q["source_original_uniform_finvol_104_island_circuit_solver_receipt"]["source_component_marine_nodes"]==189550
+          assert q["contrasts"]["source_common_native_alien_valid_pairs"]==5355
+          assert q["contrasts"]["source_count_104_islands"]==104
+          for outcome in ("native_flora","introduced_flora"):
+              r=q[outcome]
+              assert r["n_unique_island_pairs"]==5355
+              assert r["held_island_exactly_once_folds"]==104
+              assert r["held_island_never_appears_in_training_pair"]
+              assert set(r["macro_MSE_equal_held_island"])=={"B","G","P","GP"}
+              for x in r["relative_delta_MSE_percent_positive_is_improvement"].values():
+                  assert math.isfinite(x)
+          print("WCVP126_TRUE_SOURCE_UNIFORM_CIRCUIT_VS_PORT_CROSS_PREDICTION_PASS",q["contrasts"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-104island-WCVP-native-alien-true-uniform-GSHHG-circuit-crossed
+          path: results/WCVP126_crossed_native_alien_20261117/uniform_circuit_crossed/
+          retention-days: 90
+          if-no-files-found: warn
