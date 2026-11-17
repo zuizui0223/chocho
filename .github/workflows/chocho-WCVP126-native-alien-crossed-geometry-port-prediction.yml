@@ -1,0 +1,78 @@
+name: chocho WCVP native versus alien crossed-distance/sea-geometry/port prediction on island holdouts
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py
+      - .github/workflows/chocho-WCVP126-native-alien-crossed-geometry-port-prediction.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  island-held-out-crossed-geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install minimal matrix numerical package
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/WCVP_pairs
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/GSHHG126_baseline
+      - name: Cross test native and introduced full WCVP flora on identical GSHHG-source eligible island pairs
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py
+          python3 scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py \
+            --plants _src/WCVP_pairs/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/GSHHG126_baseline/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --sea-audit _src/GSHHG126_baseline/GSHHG126_sea_geometry_source_coverage_audit.json \
+            --shipping-audit _src/WCVP_pairs/WCVP126_geodesic_port_shipment_source_coverage_audit.json \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/crossed_geometry_port
+      - name: Verify all island-fold-held-out source and forbid made-up current/ship causality
+        run: |
+          python3 - <<'PY'
+          import json,math
+          from pathlib import Path
+          f=Path("results/WCVP126_crossed_native_alien_20261117/crossed_geometry_port/WCVP126_native_alien_crossed_held_island_prediction_audit.json")
+          z=json.loads(f.read_text())
+          assert z["status"]=="SOURCE_VERIFIED_NATIVE_ALIEN_WCVP_GEOMETRY_AND_MODERN_PORT_PROXY_CROSSED_PREDICTION_NOT_CURRENT_OR_SHIP_CAUSALITY"
+          assert z["n_original_WCVP_islands"]==126
+          assert z["n_common_anchored_source_islands"]==104
+          assert z["n_common_valid_island_pairs"]==5356
+          assert z["n_source_confirmed_real_ship_2020_OD_pairs_across_all126"]==7
+          for key in ("native_flora","introduced_flora"):
+            o=z[key]
+            assert o["held_island_never_appears_in_training_pair"]
+            assert o["all_test_islands_scored_once"] if "all_test_islands_scored_once" in o else True
+            assert o["held_island_exactly_once_folds"]==104
+            assert o["n_total_held_island_test_pair_predictions"]==2*5356
+            assert set(o["macro_MSE_equal_held_island"])=={"B","G","P","GP"}
+            for v in o["relative_delta_MSE_percent_positive_is_improvement"].values():
+              assert math.isfinite(v)
+          print("WCVP126_CROSSED_GEOMETRY_AND_PORT_PROXY_ISLAND_CV_PASS",z["crossed_contrasts"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP126-native-alien-port-geometry-island-holdout-20261117
+          path: results/WCVP126_crossed_native_alien_20261117/crossed_geometry_port/
+          retention-days: 90
+          if-no-files-found: warn
