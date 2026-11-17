@@ -1,0 +1,76 @@
+name: chocho 2006 Sri Lanka 18 explicit-endemic butterfly binomials versus original 225
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_srilanka_2006_endemic_selectivity_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/SRILANKA_2006_IUCN_18_EXPLICIT_E_ENDEMICS_20261117.csv
+      - .github/workflows/chocho-sri-lanka-endemic-source-selection-audit-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historic-source-versus-selected-species:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check pinned source list, 225 names, and the difference between 20 reported and 18 explicit E labels
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_srilanka_2006_endemic_selectivity_20261117.py
+          python scripts/audit_srilanka_2006_endemic_selectivity_20261117.py --out _srilanka_historical_endemic_selection/E_MARKED_2006_VS_225_20261117.json
+      - name: Strict numerical and no current taxonomy promotion
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+          x=json.loads(Path('_srilanka_historical_endemic_selection/E_MARKED_2006_VS_225_20261117.json').read_text())
+          a=x['evidence'];b=x['original_selected_consumer_panel'];c=x['exact_historical_name_overlap']
+          assert (a['2006_source_reported_fauna_species'],a['2006_source_prose_reported_endemics'],
+                  a['appendix_explicit_E_marks_transcribed'],a['reported_total_vs_explicit_E_marks_difference'])==(243,20,18,2)
+          assert a['explicit_E_family_distribution']=={'Hesperiidae':2,'Lycaenidae':8,'Nymphalidae':6,'Papilionidae':2}
+          assert (b['species'],b['species_island_cells'])==(225,11475)
+          assert (c['2006_explicitly_E_marked_names'],c['original225_exact_binomial_matches'],
+                  c['not_exactly_named_in_original225'])==(18,0,18)
+          assert all(not r['match_original_225_exact_binomial'] and
+                     not r['modern_synonymy_reconciled'] and
+                     r['current_native_endemic_classification']=='UNASSESSED'
+                     for r in x['historical_endemic_name_table'])
+          assert {r['printed_page'] for r in x['historical_endemic_name_table']}=={59,60,61,62,63,64}
+          print('HISTORICAL_ENDEMIC_ENDENISM_18_EXPLICIT_E_NAMES_NOT_IN_SELECTED225_PASS')
+          PY
+      - name: Reject false modern endemicity assignment and fabricated appendix label
+        run: |
+          python - <<'PY'
+          import importlib.util
+          spec=importlib.util.spec_from_file_location('check','scripts/audit_srilanka_2006_endemic_selectivity_20261117.py')
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          original=m.source
+          for col,val in [('current_taxonomic_status','CURRENTLY_ACCEPTED_ENDEMIC'),('endemic_code_as_extracted','not-E'),
+                          ('source_year','2018'),('historical_binomial_2006','Zizula hylax')]:
+              def altered(path,expected):
+                  r=original(path,expected)
+                  if path==m.ROOT/m.E_LIST:
+                      r=[dict(x) for x in r]
+                      r[0][col]=val
+                  return r
+              m.source=altered
+              try:m.analyze()
+              except ValueError:pass
+              else:raise AssertionError('Invalid historical-endemic label accepted '+col)
+          m.source=original
+          print('HISTORICAL_SOURCE_FAIL_CLOSED_NEGATIVE_TESTS_PASS')
+          PY
+      - name: Save exact selected-source diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-2006-SriLanka-18-explicit-historical-endemics-vs-225-butterflies
+          path: _srilanka_historical_endemic_selection/
+          retention-days: 90
+          if-no-files-found: warn
