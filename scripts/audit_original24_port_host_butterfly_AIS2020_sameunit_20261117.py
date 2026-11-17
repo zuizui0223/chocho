@@ -17,6 +17,7 @@ ORIGINAL_GIT_BLOBS={
  "direct_voyages":"b165c00d70c8ca3c1897745513c850247e44bec3",
  "voyage_source":"ed0b74df50ed6fe3ec02735fd43508e625691c83",
  "original_site_audit":"cb349f6359603def39db18b36a7208cadac530bc",
+ "historical_port_candidates":"0de495be542f38c2da3faaca995e8c4ba6291bf4",
 }
 ORIGINAL_SITE_PAIRS=24
 ORIGINAL_ISLANDS=17
@@ -51,11 +52,11 @@ def effort_ratio_match(port,nonport,field,at_least=5):
 
 def main():
     p=argparse.ArgumentParser()
-    for k in ("sites","observations","coverage","direct-voyages","voyage-source","original-site-audit","out-dir"):
+    for k in ("sites","observations","coverage","direct-voyages","voyage-source","original-site-audit","historical-port-candidates","out-dir"):
         p.add_argument("--"+k,required=True,type=Path)
     a=p.parse_args()
     paths={k.replace("-","_"):getattr(a,k.replace("-","_")) for k in
-           ("sites","observations","coverage","direct-voyages","voyage-source","original-site-audit")}
+           ("sites","observations","coverage","direct-voyages","voyage-source","original-site-audit","historical-port-candidates")}
     for k,path in paths.items():
         want=ORIGINAL_GIT_BLOBS[k]
         if blob_sha(path)!=want:
@@ -64,6 +65,10 @@ def main():
     obs=read_csv(a.observations)
     covered=read_csv(a.coverage)
     edges=read_csv(a.direct_voyages)
+    historical=read_csv(a.historical_port_candidates)
+    if len(historical)!=ORIGINAL_WPI_PORTS:
+        raise RuntimeError("Original UNCTAD/GLSN historical-port candidate panel changed")
+    hist_idx=unique_index(historical,("original_WPI_port_id",))
     site_audit=json.loads(a.original_site_audit.read_text())
     ship=json.loads(a.voyage_source.read_text())
     if len(sites)!=ORIGINAL_SITE_PAIRS or len(obs)!=ORIGINAL_SITE_ROWS:
@@ -101,8 +106,21 @@ def main():
         if pkey not in obs_i or nkey not in obs_i or (port,) not in coverage_i:
             raise RuntimeError(f"Original port/nonport/2020 source key no longer aligns: {pkey}")
         wp=coverage_i[(port,)]
+        if (port,) not in hist_idx:
+            raise RuntimeError("Historical WPI port candidate ID missing")
+        hp=hist_idx[(port,)]
+        if hp["island_id"]!=island:
+            raise RuntimeError("Historical port candidate and source island ID disagree")
         if wp["island_id"]!=island:
             raise RuntimeError(f"Original coastal site and verified WPI source have different landmass IDs for {port}")
+        j=by_port[port]
+        unctad_quarters=int(hp["UNCTAD_2006_2010_available_quarters"] or 0)
+        historical_name_candidate=(hp["UNCTAD_PLSCIQ_match_status"]==
+            "UNIQUE_COUNTRY_AND_CANONICAL_NAME_CANDIDATE_NOT_GEO_VERIFIED")
+        historical_candidate_ok=historical_name_candidate and unctad_quarters>=16
+        if (historical_name_candidate and
+            hp["UNCTAD_2006_2010_port_index_mean"]=="" and unctad_quarters>=16):
+            raise RuntimeError("Historical source has quarters but missing candidate index")
         j=by_port[port]
         verified=wp["verified_external_2020_endpoint"]=="True"
         if not verified and j["cross_voyage_rows"]>0:
@@ -126,6 +144,12 @@ def main():
            "early_butterfly_records_nonport":num(y,"gbif_butterfly_early_total_records"),
            "early_225_new_species_port":num(x,"gbif_butterfly_new_2011_2017_225_species"),
            "early_225_new_species_nonport":num(y,"gbif_butterfly_new_2011_2017_225_species"),
+           "UNCTAD_2006_2010_name_country_candidate_NOT_geo_verified":historical_name_candidate,
+           "UNCTAD_2006_2010_quarters":unctad_quarters,
+           "UNCTAD_2006_2010_name_only_16plus_quarters":historical_candidate_ok,
+           "UNCTAD_2006_2010_candidate_index":hp["UNCTAD_2006_2010_port_index_mean"],
+           "UNCTAD_original_coord_independently_verified":False,
+           "GLSN2018_modelled_service_copresence_name_only_not_geo_verified":hp["GLSN2018_status"].startswith("UNIQUE_"),
            "WPI_2020_exact_port_name_plus_distance_verified":verified,
            "WPI_2020_verified_direct_cross_island_source_episode":j["cross_voyage_rows"]>0,
            "WPI_2020_indexed_cross_island_voyage_rows":j["cross_voyage_rows"],
@@ -143,6 +167,8 @@ def main():
       "plant_and_prior_effort":lambda r:r["GBIF_both_plant_sources_at_least_10"] and r["GBIF_prior_butterfly_effort_at_least_5_within_fourfold"],
       "plant_and_later_effort":lambda r:r["GBIF_both_plant_sources_at_least_10"] and r["GBIF_2011_2017_butterfly_effort_at_least_10_within_fourfold"],
       "plant_and_prior_and_later_effort":lambda r:r["combined_potentially_evaluable_effort"],
+      "historical_UNCTAD_name_only_16plus_quarters":lambda r:r["UNCTAD_2006_2010_name_only_16plus_quarters"],
+      "historical_GLSN2018_name_country_candidate_not_geo_verified":lambda r:r["GLSN2018_modelled_service_copresence_name_only_not_geo_verified"],
       "2020_original_port_verified":lambda r:r["WPI_2020_exact_port_name_plus_distance_verified"],
       "2020_cross_island_voyage_source_confirmed":lambda r:r["WPI_2020_verified_direct_cross_island_source_episode"]
     }
@@ -158,7 +184,9 @@ def main():
         }
     if (stats["2020_original_port_verified"]["matched_port_nonport_pairs"]!=6 or
         stats["2020_cross_island_voyage_source_confirmed"]["matched_port_nonport_pairs"]!=2 or
-        stats["plant_and_prior_and_later_effort"]["matched_port_nonport_pairs"]!=3):
+        stats["plant_and_prior_and_later_effort"]["matched_port_nonport_pairs"]!=3 or
+        stats["historical_UNCTAD_name_only_16plus_quarters"]["matched_port_nonport_pairs"]!=2 or
+        stats["historical_GLSN2018_name_country_candidate_not_geo_verified"]["matched_port_nonport_pairs"]!=1):
         raise RuntimeError("Observed source-cohort overlap changed: inspect upstream data before proceeding")
     if stats["2020_cross_island_voyage_source_confirmed"]["gate_minimum_15pairs_and_10islands_satisfied"]:
         raise RuntimeError("Guard failed: biological OD model threshold unexpectedly attained")
@@ -175,16 +203,21 @@ def main():
      "AIS_source":"Duvallet et al. 2024 Zenodo 10.5281/zenodo.10783698; source departures 2020-01-01 through 2020-10-07 only",
      "source_WPI_matching":"2020 external port exact normalized name AND <=25km original WPI position, no inferred geographic alias",
      "ship_2020_later_than_early_butterfly_response_2011_2017":True,
+     "UNCTAD_2006_2010_name_country_candidate_has_original_geographic_verification":False,
+     "GLSN_2018_copresence_is_direct_vessel_OD":False,
      "original_source_island_port_cohort":stats,
      "minimum_model_support":{"min_distinct_islands":GATE_MIN_ISLANDS,"min_matched_ports":GATE_MIN_PAIRS,
          "port_host_butterfly_and_2020_cross_island_route_model":"NOT_IDENTIFIABLE",
-         "effort_adjusted_host_to_butterfly_lag_model":"NOT_IDENTIFIABLE"},
+         "effort_adjusted_host_to_butterfly_lag_model":"NOT_IDENTIFIABLE",
+        "historical_UNCTAD_transport_to_butterfly_model":"NOT_IDENTIFIABLE_NO_COORDS_OR_ROUTED_OD"},
      "recorded_voyage_source_is_not_historical_absence":True,
      "no_model_was_fitted":True,
      "important_limits":[
         "No link from 2020 ship OD to a biological event indexed before 2020 can be given a causal time order.",
         "Only 6 original ports are conservatively identified in AIS2020 and only 2 have original-island-crossing WPI-matched episodes.",
         "Missing WPI-2020 link is unknown coverage, never zero real ship traffic.",
+        "Only two of the 24 ports have at least 16 quarters in 2006-2010 UNCTAD name-country candidate matching; provider offers no independent coordinates and is a port connectivity index, NOT observed OD.",
+        "Only one 2018 GLSN network port has unverified country/name matching; 2018 is a modeled liner co-service network, not observed 2001-2017 directed voyages.",
         "Pre-2011 plant and butterfly recording effort does not have a target-group recording-day denominator at each local site.",
         "Conditioning on 2011-17 butterfly record counts is a diagnostic of future observation coverage, not a valid prospective predictor or causal adjustment.",
         "A coarse host candidate list is not proof of locally available host or larval feeding.",
