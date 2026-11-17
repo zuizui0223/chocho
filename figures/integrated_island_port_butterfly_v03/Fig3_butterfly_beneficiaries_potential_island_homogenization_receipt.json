@@ -1,35 +1,45 @@
 {
-  "schema": "chocho_butterfly_resource_beneficiary_potential_Jaccard_main_figure_v1",
-  "status": "SOURCE_VERIFIED_MAIN_FIGURE_ONLY_POTENTIAL_BUTTERFLY_COMMUNITIES",
+  "schema": "chocho_fig3_butterfly_beneficiary_potential_and_independent_indexed_communities_v2",
+  "status": "SOURCE_VERIFIED_THREE_PANEL_POTENTIAL_VS_GBIF_RECORD_INDEX_NOT_REAL_BUTTERFLY_HOMOGENIZATION",
   "source_file": "results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json",
   "source_sha256": "256f150e8ea8d3d358a0d1700e63e6bd7759bfd4f8f9ed02eef8bde6d8304be3",
+  "record_index_source_file": "results/butterfly_record_index_similarity_20261117/CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json",
+  "record_index_source_sha256": "0a2d4218a8d7cba8d376dde02c7dfd52ba6cca6edd107f73f41354b0b1b34e30",
+  "fourchain_null_source_file": "results/butterfly_record_index_similarity_20261117/MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json",
+  "fourchain_null_source_sha256": "524fb6266c4498e3e823fbf1a98d5ac80c4841fe0dd868a4d881e8d7084939f3",
   "values": {
-    "quartile_percents": [
+    "resource_quartile_shares_pct": [
       11.21755791673924,
       18.75979794460895,
       30.465075770771637,
       39.55756836788016
     ],
-    "native_potential_Jaccard": 0.1401370010070764,
-    "contemporary_potential_Jaccard": 0.3675355469925412,
-    "pair_count": 7797
+    "potential_consumer_native_Jaccard": 0.1401370010070764,
+    "potential_consumer_contemporary_Jaccard": 0.3675355469925412,
+    "potential_pairs": 7797,
+    "cumulative_GBIF_index_native_Jaccard": 0.1209632547327149,
+    "cumulative_GBIF_index_2022_Jaccard": 0.17777287436807837,
+    "cumulative_GBIF_index_expected_2022_under_group_null": 0.17057223815754707,
+    "cumulative_index_pairs": 1275,
+    "geographic_null_extra_Jaccard": 0.007200636210531304,
+    "fourchain_source_stability_pass": true
   },
-  "null_warning": "Two degree-preserving nulls in source JSON; Jaccard increase is mostly explained by potential resource expansion and marginals, not independently observed butterfly communities.",
+  "null_warning": "Panels A and B are reconstructed potential host-supported consumer resources on 126 botanical regions. C is actually indexed GBIF record membership on a DIFFERENT 51-landmass sample; expected indexed similarity preserves per butterfly/island/year pooled new indexing counts and butterfly-by-group margins, not all observer bias. Neither is observed ecological butterfly-community homogenization.",
   "output_files": {
     "png": {
       "path": "figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.png",
-      "sha256": "5186b4942cb3f48d66164c80d091061e860b7f09c359a41b3ce2d4a257d8c51b",
-      "bytes": 283624
+      "sha256": "f0d22aea173923f7e34729ce5c40dcf293f4afdc7c1f103819df26e8362be8ca",
+      "bytes": 375846
     },
     "pdf": {
       "path": "figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.pdf",
-      "sha256": "ce2a917e01a370ed27ed31e5da3d751a503dfbeccd5eed576f308ea8eae6cea1",
-      "bytes": 38618
+      "sha256": "9f949cd743876bfe78ec2ca27ef85f46d3aca7e6d816f17bb8f7798b7d20083c",
+      "bytes": 42808
     },
     "svg": {
       "path": "figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.svg",
-      "sha256": "a0db5d845f9c06aa97ae45abe1662d956100c2f1e22aade3252912f9bece8d64",
-      "bytes": 105629
+      "sha256": "42954eb94f8c5b49e2bb0d2f6f269d2a6e31e47c9c218798f1e9bb0953c21e76",
+      "bytes": 136035
     }
   }
 }
