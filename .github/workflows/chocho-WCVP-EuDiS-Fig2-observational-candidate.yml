@@ -1,0 +1,64 @@
+name: chocho source-locked GEB Fig2 observed plant supply-signatures candidate
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/render_WCVP126_eudis22_fig2_observational_candidate_20261117.py
+      - .github/workflows/chocho-WCVP-EuDiS-Fig2-observational-candidate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  figure-source-evidence-not-historical-causal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical figure tools
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'matplotlib>=3.8,<4'
+      - name: Restore original independently verified 22 EuDiS paired SOURCE observations not derived from WCVP port counts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 43892007427
+          github-token: ${{ github.token }}
+          name: chocho-eudis-wcvp-original-island-source-gate-20261116
+          path: _src/EUdiS_original22
+      - name: Create source-led evidence-only 2-panel candidate rather than silently replacing Fig2
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/render_WCVP126_eudis22_fig2_observational_candidate_20261117.py
+          python scripts/render_WCVP126_eudis22_fig2_observational_candidate_20261117.py \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --floristic-audit results/three-gate-port-all-flora/all_flora_port_association_audit.json \
+            --original-EuDiS-artifact _src/EUdiS_original22 \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/fig2_candidate
+      - name: Require original source denominators and honest visual inferential scope
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/fig2_candidate")
+          z=json.loads((p/"fig2_candidate_source_and_inference_receipt.json").read_text())
+          assert z["status"]=="SOURCE_VERIFIED_FIG2_CANDIDATE_OBSERVATIONAL_ANNOTATION_NOT_MARINE_SHIPPING_MECHANISM"
+          assert z["panel_A_regions"]==126
+          assert z["panel_B_original_EuDiS_v5_paired_regions"]==22
+          assert abs(z["panel_A_original_registered_port_vs_all_introduced_WCVP_flora_adjusted_beta"]-.22140536684115839)<1e-11
+          assert abs(z["panel_B_native_minus_introduced_median_pp"]-2.9515)<1e-4
+          assert z["panel_B_positive_negative_tie"]==[17,4,1]
+          assert all((p/f).stat().st_size>10000 for f in z["output_files"])
+          print("FIG2_PORT_WCVP126_EUDIS22_ORIGINAL_PAIR_SOURCE_ONLY_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-locked-GEB-Fig2-observational-two-panel-candidate
+          path: results/WCVP126_crossed_native_alien_20261117/fig2_candidate/
+          retention-days: 90
+          if-no-files-found: warn
