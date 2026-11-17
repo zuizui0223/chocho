@@ -48,3 +48,14 @@ GBIF後期1,053累積種×陸塊セル、後期317初索引セルと原51陸塊�
 - [ソースSHA固定コード](../../scripts/audit_two_island_independent_butterfly_history_20261117.py)で原225×51、過去2島の独立文献表、各学名、元GBIF索引年を突合。
 - [GitHub Actions #44076800265 成功](https://github.com/zuizui0223/chocho/actions/runs/44076800265)：317件の注釈、数値整合、分類概念を勝手に同一化する入力、根拠なしの在来・固有ラベルへの変換を拒否。
 - 一本化GEB原稿のFigure 3CはGBIFの記録種リストを意味し、真の在来種群集均質化ではない。Supplementary Results S.Fの歴史資料監査として使用。既存HOSTS×WCVP潜在資源の全球+54.9%、島+118.9%と港・海洋抵抗の結果は維持する。
+
+
+## 6. 公式GBIFで未判定2件の分類・データセット来歴を照合
+
+[2026-11-17公式GBIF 7 endpoint小規模照会（成功）](https://github.com/zuizui0223/chocho/actions/runs/44077684191)、[監査JSON](MAURITIUS_OFFICIAL_GBIF_TAXON_OCCURRENCE_SOURCE_AUDIT_20261117.json)。元の225×51分析表・317初索引・確証15組は変更しない。
+
+**Zizinaの分類体系**：GBIF現行バックボーンは *Z. antanossa* を**ACCEPTED speciesKey 8177775**、*Z. otis* を**別のACCEPTED speciesKey 7346444**と返した。Yago et al. (2008) が提案した亜種扱いを、公式GBIFバックボーンは一律には採用していない。したがって歴史的な*Z. antanossa*の島内記録を、元の*Z. otis*の前期記録へ付け替えることはまだできない。
+
+**Zerynthiaの唯一の2022年モーリシャス記録**：GBIF occurrence ID **5023737393**、2022-10-11、緯度−20.038742、経度57.545460、座標不確実性25m、HUMAN_OBSERVATION。出版データセットは**NABU|naturgucker**（DOI [10.15468/uc1apo](https://doi.org/10.15468/uc1apo)）、原参照URLは [enjoynature.netの掲載元](https://enjoynature.net/?gebiet=-509720845&datum=11.10.22&art=1999567171)。GBIFのメディア配列は0、identifiedByは空。座標の丸め・WGS84仮定・座標由来の大陸判定という付随フラグがあるが、これだけでは誤同定を証明しない。**確認できたのは1件の市民科学の掲載記録と来歴であり、ヨーロッパ分布が基本の蝶がモーリシャスへ自然分散・人為移入・定着したことではない。** 画像・標本・原報告者の同定根拠を照合できるまで、要原同定検証のまま保持する。
+
+監査ZIP artifact ID **14324344278**、SHA256 **4d1cb09306533df1e28d9212db9699d7cfec3964dd828f13944798658d7678ec**（保存期限2027-02-15）。[実行コード](../../scripts/audit_mauritius_GBIF_taxonomy_and_firstindex_20261117.py)は公開GBIF APIの小規模7照会の記録であり、真の繁殖・在来性・固有性を推定しない。
