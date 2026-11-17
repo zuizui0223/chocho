@@ -55,4 +55,4 @@
 - [真正原本からのGitHub Actions再実行 #44029498482](https://github.com/zuizui0223/chocho/actions/runs/44029498482)
 - [この解析の結果台帳JSON](SOURCE_LOCKED_PRIOR_2010_HOSTS_BUTTERFLY_RESULTS_20261117.json)
 
-*元著者側の個別蝶–寄主エッジは再配布禁止、共著者の権利とGBIF DOIの最終監査を要する。*
+*元著者側の個別蝶–寄主エッジは本解析では再配布していない。共同研究者の権利とGBIF DOI、長期再現性の最終監査を要する。*
