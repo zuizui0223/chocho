@@ -1,0 +1,82 @@
+name: chocho exact 126 WCVP flora-pair geography and 2020 observed shipping coverage
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_WCVP126_flora_pair_geography_WPI_AIS2020_20261117.py
+      - .github/workflows/chocho-WCVP126-shipping-geography-source-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-geography-and-observed-od:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source geometry without changing WCVP native/alien flora
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'shapely>=2.0,<3' 'pyproj>=3.6,<4'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010011288
+          github-token: ${{ github.token }}
+          name: chocho-pinned-WCVP126-native-alien-7875-pair-similarities-20261117
+          path: _src/original_WCVP_126
+      - name: Verify true original 7875 flora pair identity, strict original WPI, AIS2020 and worldwide TDWG
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg rev-parse HEAD)" = 52da7828aba9d461dd133c27b3bd7a4407161f54
+          python3 -m py_compile scripts/audit_WCVP126_flora_pair_geography_WPI_AIS2020_20261117.py
+          python3 scripts/audit_WCVP126_flora_pair_geography_WPI_AIS2020_20261117.py \
+            --original-island-counts _src/original_WCVP_126/original126_WCVP_native_alien_region_counts.csv \
+            --pair-wcvp _src/original_WCVP_126/WCVP_126island_7875_native_alien_flora_similarity.csv \
+            --original-flora-port results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --wpi2019 data/exploratory/island51_observed_ocean_20261106/wpi/ports_2019_source.geojson \
+            --ais-direct results/island51_zenodo2020_portvoyage_audit_20261107/observed2020_verified_WPI_port_links.csv \
+            --ais-verified results/island51_zenodo2020_portvoyage_audit_20261107/original194_source_matched_port_coverage.csv \
+            --ais-receipt results/island51_zenodo2020_portvoyage_audit_20261107/source_matched_voyage_receipt.json \
+            --tdwg3 _src/tdwg/geojson/level3.geojson \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/geography
+      - name: Preserve unknown shipping, no invented 126×126 directed physical current transport
+        run: |
+          python3 - <<'PY'
+          import csv,json,math
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/geography")
+          x=json.loads((p/"WCVP126_geodesic_port_shipment_source_coverage_audit.json").read_text())
+          assert x["status"]=="SOURCE_7875_WCVP_PAIR_GEOGRAPHY_AND_VERIFIED_2020_AIS_COVERAGE_NOT_CAUSAL_TRANSPORT"
+          assert x["N_WCVP_native_alien_pairs"]==7875
+          assert x["original_WPI2019_port_records"]==3630
+          assert x["source_verified_2020_WPI194_port_IDs"]==46
+          assert x["source_verified_2020_WPI_link_rows"]==94
+          assert x["source_verified_2020_port_pair_triplet_rows"]==442
+          assert x["not_2005_OSCAR_particle_access_matrix"]
+          rows=list(csv.DictReader((p/"WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv").open()))
+          assert len(rows)==7875
+          assert all(0<=float(r["centroid_geodesic_km"])<=20100 for r in rows)
+          assert len(set((r["source_region"],r["destination_region"]) for r in rows))==7875
+          print("WCVP126_PAIR_GEOGRAPHY_REAL_AIS_SOURCE_PASS",json.dumps({
+              k:x[k] for k in ("strict_WPI_inside_126_regions",
+                  "126_regions_with_one_or_more_source_verified_AIS2020_ports",
+                  "strict126_unordered_plant_pairs_with_both_verified_2020_AIS_port_endpoints",
+                  "strict126_unordered_plant_pairs_with_one_or_more_actual_source_2020_port_OD")}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: results/WCVP126_crossed_native_alien_20261117/geography/
+          retention-days: 90
+          if-no-files-found: warn
