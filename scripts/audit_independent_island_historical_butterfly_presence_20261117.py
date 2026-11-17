@@ -75,6 +75,21 @@ def pre2011_first_indices(rows):
     return out, all_species
 
 
+def mean_pair_jaccard(ids, species_by_island):
+    total=0.
+    n=0
+    for k,a in enumerate(ids):
+        for b in ids[k+1:]:
+            x=species_by_island[a]
+            y=species_by_island[b]
+            union=len(x|y)
+            if not union:
+                raise ValueError("undefined early pairwise Jaccard for sampled 51")
+            total+=len(x&y)/union
+            n+=1
+    return total/n, n
+
+
 def audit(rows, islands, history):
     if len(rows) != 11475:
         raise ValueError("original 225x51 source extent changed")
@@ -146,8 +161,41 @@ def audit(rows, islands, history):
         raise ValueError("Christmas island independent vagrant/GBIF zero example no longer holds")
     if any(x in sp for x in ("Polyura andrewsii","Polyura andrewsi","Charaxes andrewsi","Charaxes andrewsii")):
         raise ValueError("the documented Christmas-Island endemic appears in 225 cohort; update bias statement")
+    old_sets={i:set() for i in ii}
+    late_sets={i:set() for i in ii}
+    for r in rows:
+        ident=int(r["landmass_id"])
+        sk=int(r["speciesKey"])
+        early=int(r["pre2001_2010_indexed_records"])
+        late=early+int(r["future2011_2017_indexed_records"])+int(r["future2018_2022_indexed_records"])
+        if early:
+            old_sets[ident].add(sk)
+        if late:
+            late_sets[ident].add(sk)
+    historical_sets={i:set(z) for i,z in old_sets.items()}
+    for sk,ident in evidence_keys:
+        historical_sets[ident].add(sk)
+    ids=sorted(ii)
+    j0,npairs=mean_pair_jaccard(ids,old_sets)
+    jh,ph=mean_pair_jaccard(ids,historical_sets)
+    jl,pl=mean_pair_jaccard(ids,late_sets)
+    if (npairs,ph,pl)!=(1275,1275,1275):
+        raise ValueError("Original held source-pair set changed")
     return {
         "schema":"chocho_independent_historic_butterfly_checklist_vs_GBIF_225x51_20261117_v1",
+        "cumulative_record_list_with_12_independent_prior_presence":{
+            "original_pre2011_indexed_cells":sum(len(z) for z in old_sets.values()),
+            "independent_2006_2007_PhuQuoc_records_added_to_pre2011":len(evidence_keys),
+            "early_source_augmented_species_island_cells":sum(len(z) for z in historical_sets.values()),
+            "late_total_indexed_cells":sum(len(z) for z in late_sets.values()),
+            "island_pairs":npairs,
+            "original_early_GBIF_only_mean_Jaccard":j0,
+            "2006_2007_independent_source_augmented_early_mean_Jaccard":jh,
+            "late_GBIF_cumulative_mean_Jaccard":jl,
+            "original_GBIF_only_gain":jl-j0,
+            "gain_with_12_historical_sources_in_early_inventory":jl-jh,
+            "interpretation":"Descriptive source-enriched baseline only; unlike equal-protocol ecological community observations, independent checklist additions do not create matched sampling effort or estimate historical true occupancy"
+        },
         "status":"SOURCE_PINNED_HISTORICAL_PRESENCE_DIAGNOSTIC_NOT_BIOLOGICAL_COLONISATION",
         "source_git_blob_shas":{x:sha for x,(path,sha) in PINS.items()},
         "full_cohort":{"butterflies":len(sp),"landmasses":len(ii),"species_landmass_cells":len(rows),
@@ -179,7 +227,7 @@ def audit(rows, islands, history):
                   "Earlier field presence is not proof of butterfly native range, breeding or endemicity",
                   "Source-missing butterfly is not assumed absent",
                   "Historical Christmas Island vagrant status should not be projected as current status without revalidation",
-                  "195? no: the original denominators are 225 butterflies, 51 landmasses, 317 first-index records; preserve exact source populations"],
+                  "The original denominators are 225 butterflies, 51 landmasses and 317 first-index records; preserve exact source populations"],
     }, list(risks.values())
 
 
