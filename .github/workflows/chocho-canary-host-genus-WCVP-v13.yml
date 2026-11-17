@@ -1,0 +1,77 @@
+name: chocho WCVP v13 Canary larval-host genus origin-identifiability
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_canary_host_genus_WCVP_v13_20261118.R
+      - .github/workflows/chocho-canary-host-genus-WCVP-v13.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  fixed-WCVP-genus-origin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin original WCVP v13 (same as the original GEB reconstruction)
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp_v13
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Restore 24 source-verified host-genus butterflies from successful 33-species census
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44200903066
+          repository: zuizui0223/chocho
+          name: chocho-uniform-canary-larval-source-33-20261118
+          github-token: ${{ github.token }}
+          path: _uniform_source_receipt
+      - name: Verify exact WCVP commit and original source-data keys
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp_v13 rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          test -s _wcvp_v13/data/wcvp_names.rda
+          test -s _wcvp_v13/data/wcvp_distributions.rda
+          test -s _uniform_source_receipt/uniform_canary33_host_genus_verified.csv
+      - name: Cross host GENERA to accepted native versus introduced SPECIES in the source Canary WCVP region
+        run: |
+          set -euo pipefail
+          Rscript scripts/audit_canary_host_genus_WCVP_v13_20261118.R \
+            _wcvp_v13 _uniform_source_receipt/uniform_canary33_host_genus_verified.csv \
+            results/canary_CNY_WCVP_host_genus_20261118
+      - name: Validate that ecological interpretation cannot imply host-specific island arrival
+        run: |
+          python3 - <<'PY'
+          import csv, pathlib
+          root=pathlib.Path('results/canary_CNY_WCVP_host_genus_20261118')
+          def rows(file):
+            with (root/file).open(newline='',encoding='utf8') as f:
+              return list(csv.DictReader(f))
+          genera=rows('canary_CNY_WCVPv13_host_genus_native_introduced_inventory.csv')
+          edges=rows('canary_CNY_WCVPv13_butterfly_genus_context_pairs.csv')
+          butterflies=rows('canary_CNY_WCVPv13_butterfly_genus_context_summary.csv')
+          assert (len(genera),len(edges),len(butterflies)) == (52,86,24)
+          assert len({x['host_genus'] for x in genera})==52
+          assert len({x['butterfly'] for x in butterflies})==24
+          assert all(x['region_status'] in {
+             'both_native_and_introduced','native_only','introduced_only',
+             'conflicted_only','no_species_recorded'
+          } for x in genera)
+          assert sum(int(x['known_larval_host_genera']) for x in butterflies)==86
+          print('PINNED_CNY_LEVEL3_WCVP_GENUS_CONTEXT_VALIDATED_NOT_ACTUAL_HOST_SPECIES')
+          for k in ('native_only','introduced_only','both_native_and_introduced','no_species_recorded'):
+            print(k,sum(x['region_status']==k for x in genera))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-pinned-WCVPv13-CNY-genus-native-alien-context-20261118
+          path: results/canary_CNY_WCVP_host_genus_20261118/
+          retention-days: 90
+          if-no-files-found: warn
