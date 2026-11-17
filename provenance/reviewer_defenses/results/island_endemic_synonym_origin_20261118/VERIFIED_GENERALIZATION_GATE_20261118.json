@@ -1,0 +1,150 @@
+{
+  "schema": "chocho_independent42_butterfly_host_generalization_gate_20261118_v2",
+  "date_local": "2026-11-18",
+  "source_scope": {
+    "butterfly_denominator": "INBO present 42 unique butterflies on 18 named Macaronesian islands",
+    "canary_origin_census": "All 33 INBO Canary butterflies independently classified using Canary BIOTA source species pages",
+    "original_HOSTS": "GloBI mirror NHM HOSTS fixed commit 808e0b869f9ec1adf8efff87cf6a395adda103e0, n=140485 raw rows",
+    "original_GEB239": "data/frozen/figure_sources/anthropogenic_species_metrics.csv at blob 9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+    "wcvp": "matildabrown/rWCVPdata commit 65bed76bae9d644ccb6ad200c05f9f5071d89e05, native/introduced exact species in Level3 CNY"
+  },
+  "butterfly_taxon_ascertainment": {
+    "independent42": 42,
+    "HOSTS_exact_named_larval_host_genus": 19,
+    "guarded_GBIF_synonym_HOSTS_named_genus_confirmed_min": 21,
+    "external_prior_targeted_hosts_additional": 10,
+    "uniform_Canary_floral_source_new_names": [
+      "Aricia cramera",
+      "Euchloe charlonia",
+      "Polyommatus celina",
+      "Vanessa vulcania"
+    ],
+    "documentation_union_confirmed_min": 35,
+    "documentation_union_percent": 83.3333,
+    "extant_only_documentation_union": 35,
+    "extant_only_independent_denominator": 41,
+    "literature_undocumented": {
+      "contemporary_Canary_endemic": [
+        "Euchloe grancanariensis",
+        "Hipparchia bacchus",
+        "Hipparchia gomera",
+        "Hipparchia tamadabae",
+        "Hipparchia tilosi",
+        "Hipparchia wyssii"
+      ],
+      "historic_extinct": [
+        "Pieris wollastoni"
+      ]
+    },
+    "inference": "Confirmed minimum of named larval-host genera in selected sources, not statistically unbiased biological true known-host coverage"
+  },
+  "original_GEB_selection": {
+    "independent42_exact_butterflies_in_original239": 12,
+    "minimum_after_independent_homotypic_name_adjudication": 13,
+    "newly_confirmed_relation": "INBO Colias crocea = GEB Colias croceus, homotypic via NCBI Taxonomy 72248",
+    "independent_source": "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=72248",
+    "Canary_endemics0_of13": 0,
+    "Canary_natives_confirmed_in_original239": 10,
+    "Canary_natives_total": 19,
+    "Madeira_native_nonendemic_confirmed7_of7": 7,
+    "note": "Confirmed minimum; potential unverified taxonomic synonym identity or selection failures remain"
+  },
+  "single_uniform_source": {
+    "source": "https://polinizadoresdecanarias.org/repositorio/",
+    "method": "Same source, deterministic species page URL for all 33; only CICLO VITAL explicit larval foodplant genera, no adult PLANTAS VISITADAS",
+    "all33_requested": 33,
+    "valid_species_pages_with_larval_host_text": 24,
+    "genus_association_rows": 86,
+    "unique_larval_host_genera": 52,
+    "Canary_endemic_pages_with_larval_hosts": {
+      "n": 6,
+      "total": 13
+    },
+    "Canary_native_nonendemic_pages_with_larval_hosts": {
+      "n": 18,
+      "total": 19
+    },
+    "introduced_probable_source_pages": {
+      "n": 0,
+      "total": 1
+    },
+    "page_availability_fisher_exact_two_sided": 0.003222098628105302,
+    "family_conditional_fixed_origin_and_page_counts_one_sided": 0.0041008374341707675,
+    "exclude_related_Canary_endemic_Hipparchia5": {
+      "endemic_documented": 6,
+      "endemic_total": 8,
+      "native_documented": 18,
+      "native_total": 19,
+      "fisher_two_sided": 0.20102564102564102
+    },
+    "exclude_disputed_region_native_two": {
+      "endemic_documented": 6,
+      "endemic_total": 13,
+      "native_documented": 16,
+      "native_total": 17,
+      "fisher_two_sided": 0.009357543450496972
+    },
+    "conceptual_boundary": "These p-values describe a documentation mechanism; evolutionary independence, historical availability, and species-concept alignment are not assumed."
+  },
+  "independent_Canary_origin_full33": {
+    "endemic": {
+      "n": 13,
+      "HOSTS_guarded": 0,
+      "combined_host_documented_min": 7,
+      "in_original239_confirmed": 0
+    },
+    "native_nonendemic": {
+      "n": 19,
+      "HOSTS_guarded": 15,
+      "combined_host_documented_min": 19,
+      "in_original239_confirmed": 10
+    },
+    "introduced_probable": {
+      "n": 1,
+      "HOSTS_guarded": 1,
+      "combined_host_documented_min": 1,
+      "in_original239_confirmed": 0
+    },
+    "caveat": "Canary BIOTA region-specific native probable/secure labels; Cacyreus marshalli/Pieris rapae uncertainty explicitly kept."
+  },
+  "WCVP_CNY_host_genus_inventory": {
+    "pinned_source_run": "https://github.com/zuizui0223/chocho/actions/runs/44201926869",
+    "artifact_id": 14381457628,
+    "artifact_zip_sha256": "a7b3b4086fb5a4be91ed6b2117cb86a17e81ce5ceacff3b23bcc44ced9eae622",
+    "accepted_species_records_across_52_host_genera": 348,
+    "host_genera_n": 52,
+    "contains_native_species_n": 43,
+    "contains_introduced_species_n": 24,
+    "contains_both_native_and_introduced_species_n": 18,
+    "contains_native_only_species_n": 25,
+    "contains_introduced_only_species_n": 6,
+    "no_CNY_accepted_species_n": 3,
+    "butterflies_larval_genus_documented_n": 24,
+    "butterflies_with_at_least_one_host_genus_having_CNY_introduced_congener_n": 19,
+    "endemic_larval_genus_documented_n": 6,
+    "endemic_with_CNY_introduced_congener_genus_n": 6,
+    "endemic_with_CNY_mixed_origin_genus_n": 6,
+    "native_nonendemic_larval_genus_documented_n": 18,
+    "native_nonendemic_with_CNY_introduced_congener_genus_n": 13,
+    "native_nonendemic_with_CNY_mixed_origin_genus_n": 10,
+    "strict_limitations": [
+      "Accepted WCVP introduced species in the same genus are not demonstrated larval hosts, even when the butterfly has been documented feeding on some species of that genus.",
+      "Level3 CNY is the Canary archipelago, not individual butterfly island distributions or dated wild plant presence.",
+      "Kew WCVP introduced means wild introduced, not merely cultivated in gardens, so garden host records can be missed.",
+      "Native and alien in same genus cannot be used to reconstruct the original GEB species-level native-to-contemporary resource opportunity for endemic butterflies.",
+      "No larval survival, colonization, shipping or ocean-transport mechanism was measured."
+    ]
+  },
+  "verified_actions": [
+    "https://github.com/zuizui0223/chocho/actions/runs/44200903066",
+    "https://github.com/zuizui0223/chocho/actions/runs/44201042984",
+    "https://github.com/zuizui0223/chocho/actions/runs/44201479559",
+    "https://github.com/zuizui0223/chocho/actions/runs/44201926869"
+  ],
+  "final_scientific_decision": {
+    "retain_old_GEB_result": "+54.9% global and +118.9% selected island butterflies' potential known-host resource geography; original estimand unchanged",
+    "supported_new_result": "Independent island species HOSTS selection/ascertainment bias varies by archipelago and clade, recoverable in other sources and remains conditional on taxonomic identity.",
+    "newly_identified_necessary_gate": "Larval host PLANT SPECIES identity and original island-level native/alien plant range plus performance to infer actual endemic resource expansion.",
+    "not_supported": "Generalizing the numerical +54.9%/+118.9% host-opportunity response to all indigenous endemic island butterflies."
+  }
+}
