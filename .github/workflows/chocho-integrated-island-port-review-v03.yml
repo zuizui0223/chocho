@@ -108,7 +108,7 @@ jobs:
           with ZipFile(p) as z:
             imgs=[x for x in z.namelist() if x.startswith('word/media/')]
             assert len(imgs)>=18
-            for stem in ["Fig2_port_and_dispersal_traits", "Fig3_host_reports", "Fig4_sea_connectivity"]:
+            for stem in ["Fig2_port_and_dispersal_traits", "Fig3_butterfly_beneficiaries_potential_island_homogenization", "Fig3_host_reports", "Fig4_sea_connectivity"]:
                 figure = Path("figures/integrated_island_port_butterfly_v03", stem + ".png").read_bytes()
                 assert any(z.read(name) == figure for name in imgs)
             ports = Path('figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.png').read_bytes()
@@ -129,7 +129,12 @@ jobs:
             assert any(z.read(name) == named for name in imgs)
             summary = Path('figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.png').read_bytes()
             assert any(z.read(name) == summary for name in imgs)
-            assert any("Table S1." in x for x in paras)
+            fig3_index=next(i for i,p in enumerate(doc.paragraphs) if p.text.startswith("Figure 3. Beneficiaries of island host redistribution"))
+          fig3_image=doc.paragraphs[fig3_index-1]
+          assert fig3_image._p.xpath(".//w:drawing")
+          assert fig3_image.paragraph_format.keep_with_next is True
+          assert doc.paragraphs[fig3_index].paragraph_format.keep_together is True
+          assert any("Table S1." in x for x in paras)
             assert any("Box 1" in x for x in paras)
           print('V03_DOCX_FOUR_MAIN_FIGURES_AND_SUPPLEMENT_PASS',len(paras),len(imgs))
           PY
