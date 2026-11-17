@@ -299,8 +299,15 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
             raise ValueError("Nonstandard BIOTA origin classification: " + name)
         if origin["canary_origin_stratum"] == "endemic_confirmed" and name not in endemic_set:
             raise ValueError("Unexpected newly introduced endemic species in Canary status")
-        if origin["origin_certainty"] not in ("NS", "NP", "IP", ""):
-            raise ValueError("Invalid BIOTA origin certainty: " + name)
+        expected_code = {
+            "native_nonendemic_secure": "NS",
+            "native_nonendemic_probable": "NP",
+            "introduced_probable": "IP",
+        }.get(origin["canary_origin_stratum"])
+        if expected_code is not None and origin["origin_certainty"] != expected_code:
+            raise ValueError("Invalid BIOTA nonendemic origin certainty: " + name)
+        if expected_code is None and origin["origin_certainty"] not in ("NS", "NP", "unknown", ""):
+            raise ValueError("Unexpected endemic BIOTA native-certainty metadata: " + name)
         if not origin["source_url"].startswith("https://www.biodiversidadcanarias.es/biota/especie/"):
             raise ValueError("Non-source species status URL: " + name)
     counts = {origin: sum(
