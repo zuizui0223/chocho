@@ -1,0 +1,92 @@
+name: chocho 225x51 butterfly GBIF effort / independent native-endemicity gate
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_butterfly_effort_native_endemism_20261117.py
+      - .github/workflows/chocho-butterfly-GBIF-effort-origin-gate-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-pinned-butterfly-observation-bias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Execute exact original source, offline (no GBIF API)
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_butterfly_effort_native_endemism_20261117.py
+          python scripts/audit_butterfly_effort_native_endemism_20261117.py --out-dir _butterfly_effort_origin_gate
+      - name: Independent original-panel numeric and conservative origin-claim validation
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          p=Path('_butterfly_effort_origin_gate/BUTTERFLY_EFFORT_ORIGIN_GATE_20261117.json')
+          a=json.loads(p.read_text())
+          s=a['cohort']
+          assert (s['species'],s['landmass_groups'],s['species_island_cells'])==(225,51,11475)
+          assert (s['early_indexed_cells'],s['cumulative_indexed_cells'],s['later_first_indexed_cells'])==(736,1053,317)
+          assert (s['early_total_indexed_records'],s['dominant_landmass_id'],s['dominant_landmass_early_indexed_records'])==(5814636,15,5699068)
+          assert (s['n_early_lt20_landmasses'],s['n_first_indices_on_early_lt20_landmasses'])==(15,94)
+          assert a['unthinned_all51']['pairs']==1275
+          assert abs(a['unthinned_all51']['delta']-0.05680961963536349)<1e-9
+          assert abs(a['unthinned_without_dominant']['delta']-0.05722922970525024)<1e-9
+          for row,expected in zip(a['effort_standardized_sensitivity'],
+                                  [(.04760924099919287,.014103697366584744,36),
+                                   (.029031279393014635,.013036898446547018,26),
+                                   (.020007744074953773,.0055961694132281685,20),
+                                   (.023312973682986664,.0035804349135110814,13)]):
+              assert row['equal_record_depth']['islands']==expected[2]
+              assert math.isclose(row['unthinned']['delta'],expected[0],abs_tol=1e-8)
+              assert math.isclose(row['equal_record_depth']['delta'],expected[1],abs_tol=1e-8)
+          b=a['native_endemism']
+          assert b['exact_island_curated_evidence_rows']==0
+          assert b['cells_with_no_independently_sourced_native_label']==11475
+          assert b['first_indices_without_origin_label']==317
+          assert b['verified_single_island_endemic_first_indices']==0
+          z=Path('_butterfly_effort_origin_gate/LATER_FIRST_INDICES_TO_REVIEW.csv').read_text().splitlines()
+          assert len(z)==318
+          print('SOURCE_LOCKED_GBIF_EFFORT_AND_NATIVE_ENDEMISM_GATE_PASS')
+          PY
+      - name: Test evidence cannot auto-promote endemicity from country-level or unknown native status
+        run: |
+          python - <<'PY'
+          import importlib.util, tempfile, csv
+          from pathlib import Path
+          path=Path('scripts/audit_butterfly_effort_native_endemism_20261117.py')
+          spec=importlib.util.spec_from_file_location('butterfly_origin_gate',path)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          assert abs(m.include_probability(1,10,2)-.2)<1e-12
+          with tempfile.TemporaryDirectory() as d:
+              f=Path(d)/'evidence.csv'
+              def check(origin,geography,review,accept):
+                  with f.open('w',newline='') as w:
+                      z=csv.DictWriter(w,fieldnames=m.EVIDENCE_FIELDS)
+                      z.writeheader()
+                      z.writerow(dict(speciesKey=1,landmass_id=2,origin_status=origin,
+                          establishment_status='established',endemicity_status='single_island_endemic',
+                          geographic_resolution=geography,source_url='https://example.org/checklist',
+                          global_native_range_reviewed=review))
+                  try: m.evidence_rows(f,{(1,2)}); passed=True
+                  except ValueError:passed=False
+                  assert passed==accept
+              check('native','exact_island_landmass','0',False)
+              check('native','country','1',False)
+              check('introduced','exact_island_landmass','1',False)
+              check('native','exact_island_landmass','1',True)
+          print('ORIGIN_ENDEMISM_FAIL_CLOSED_PASS')
+          PY
+      - name: Archive reproducible summary and taxon-island review candidates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-butterfly-GBIF-effort-origin-gate-20261117
+          path: _butterfly_effort_origin_gate/
+          retention-days: 90
+          if-no-files-found: warn
