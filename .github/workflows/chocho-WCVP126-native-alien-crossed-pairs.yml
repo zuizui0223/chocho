@@ -1,0 +1,66 @@
+name: chocho exact WCVP 126-island native-versus-alien floristic similarity source
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/build_WCVP126_native_alien_species_pair_similarity_20261117.R
+      - .github/workflows/chocho-WCVP126-native-alien-crossed-pairs.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reconstruct-whole-native-alien-flora:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Reconstruct accepted species identities from PINNED original WCVP v13
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/WCVP rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          Rscript -e 'stopifnot(requireNamespace("Matrix",quietly=TRUE))'
+          Rscript scripts/build_WCVP126_native_alien_species_pair_similarity_20261117.R \
+            _src/WCVP \
+            results/island-mainland-resource-q1/region_metrics.csv \
+            results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            results/WCVP126_crossed_native_alien_20261117
+      - name: Validate exactly 126 islands 7875 pairs and separately frozen native/alien species distributions
+        run: |
+          python3 - <<'PY'
+          import csv,math
+          from pathlib import Path
+          o=Path("results/WCVP126_crossed_native_alien_20261117")
+          with (o/"WCVP_126island_similarity_source_receipt.csv").open() as f:
+              receipt={r["metric"]:int(r["value"]) for r in csv.DictReader(f)}
+          assert receipt["source_WCVP_accepted_species_global"]==360064
+          assert receipt["source_WCVP_island_regions"]==126
+          assert receipt["source_WCVP_native_species_region_records"]==184997
+          assert receipt["source_WCVP_alien_species_region_records"]==39024
+          assert receipt["source_distinct_undirected_island_pairs"]==7875
+          p=list(csv.DictReader((o/"WCVP_126island_7875_native_alien_flora_similarity.csv").open()))
+          assert len(p)==7875
+          assert len(set((r["source_region"],r["destination_region"]) for r in p))==7875
+          assert all(0<=float(r["native_Jaccard"])<=1 for r in p if r["native_Jaccard"])
+          assert all(0<=float(r["alien_Jaccard"])<=1 for r in p if r["alien_Jaccard"])
+          print("WCVP126_7875_TRUE_ACCEPTED_SPECIES_IDENTITIES_PASS",
+                receipt,"native_jac_positive",sum(float(r["native_Jaccard"] or 0)>0 for r in p),
+                "alien_jac_positive",sum(float(r["alien_Jaccard"] or 0)>0 for r in p))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-pinned-WCVP126-native-alien-7875-pair-similarities-20261117
+          path: results/WCVP126_crossed_native_alien_20261117/
+          retention-days: 90
+          if-no-files-found: warn
