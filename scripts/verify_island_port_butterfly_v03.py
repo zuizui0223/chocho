@@ -56,7 +56,7 @@ def run():
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
         raise AssertionError("Predictive loss direction or historical scope boundary not clearly reported")
     assert t.count("## 3. Results")==1 and t.count("## 4. Discussion")==1
-    assert captions.count("## Figure ")==2
+    assert captions.count("## Figure ")==3
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
@@ -130,6 +130,22 @@ def run():
         assert plant["plant_name"] in port_labels
         assert str(plant["n_port_buffers_with_pre2011_record"]) in port_labels
         assert f"{100*plant['GEB_fraction_of_added_species_region_opportunity_attributed_to_this_plant']:.2f}" in port_labels
+    fig3 = F3 / "Fig3_circuit_three_layers_v01.svg"
+    circuit_ledger=data("results/port_weed_current_review_20261117/ONE_PAPER_CIRCUIT_RESULTS_LEDGER_20261117.json")
+    assert circuit_ledger["floras"]["regions"]==104
+    assert circuit_ledger["floras"]["unique_pairs"]==5355
+    close(circuit_ledger["floras"]["native"]["circuit_pct"],-.10961036875490482)
+    close(circuit_ledger["floras"]["introduced"]["circuit_pct"],4.239013650845648)
+    close(circuit_ledger["butterflies"]["circuit_pct"],5.0818868452225594)
+    close(circuit_ledger["floras"]["paired_difference"]["introduced_minus_native_pct_points"],4.348624019600759)
+    assert "MARINE_CIRCUIT_THREE_LAYERS_LOCK_20261117.md" in t
+    assert "Fig3_circuit_three_layers_v01.svg" in t
+    assert fig3.exists()
+    fig3text=" ".join(ET.parse(fig3).getroot().itertext())
+    for label in ("Native flora", "Introduced flora", "Later butterfly records",
+                  "+4.24%", "+5.08%"):
+        assert label in fig3text, "Figure 3 SVG scientific label missing: "+label
+    assert "## Figure 3 |" in captions
     for figure in (fig1, fig2):
         assert figure.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
         assert figure.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
@@ -162,7 +178,7 @@ def run():
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
-            "main_figures_verified":2,"new_Figure5_input_and_output_hashes_verified":True,
+            "main_figures_verified":3,"new_Figure5_input_and_output_hashes_verified":True,
             "warnings":["The 51-island host+marine positive increments are retrospective and not causal",
                "Historic host list may contain 2001–2024 records after target butterflies",
                "The strict 990-pair geographic holdout is a different population/estimand",
