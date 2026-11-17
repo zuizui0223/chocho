@@ -1,0 +1,56 @@
+name: chocho 225-butterfly 51-island cumulative GBIF recording similarity with fixed-margin source nulls
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py
+      - .github/workflows/chocho-cumulative-butterfly-recording-homogenization-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audited-butterfly-indexing-composition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original quantitative dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2'
+      - name: Exact original 225 by 51 GBIF record-index, original geography, native host resource quartiles
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py
+          python scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py --out-dir _butterfly_cumulative_source_audit
+      - name: Validate 736 original early index cells, 317 truly new GBIF indices and fixed-margin nulls
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          x=json.loads(Path('_butterfly_cumulative_source_audit/CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json').read_text())
+          p=x['cohort']
+          assert (p['butterflies'],p['fixed_landmass_groups'],p['species_island_cells'])==(225,51,11475)
+          assert (p['earlier_indexed_cells'],p['new_first_indexed_2011_2017'],p['new_first_indexed_2018_2022'])==(736,221,96)
+          first=x['cumulative_recording_Jaccard']['time_series']
+          assert first['indexed_2001_2010']['mean_Jaccard']<first['through_2017']['mean_Jaccard']<first['through_2022']['mean_Jaccard']
+          assert x['cumulative_recording_Jaccard']['all_51_original_landmass_pairs']['pairs']==1275
+          assert sum(z['new_2011_2022_species_island_indices'] for z in x['resource_beneficiary_correspondence']['quartiles'])==317
+          for vals in x['constrained_recording_nulls'].values():
+              assert vals['mixing']['source_margin_checks']=='PASS'
+              assert vals['evaluations']['all_51_original_landmass_pairs']['draws']==399
+              assert math.isfinite(vals['evaluations']['all_51_original_landmass_pairs']['null_mean'])
+          print('CUMULATIVE_REAL_BUTTERFLY_GBIF_RECORDING_AND_SOURCE_MARGIN_NULLS_PASS')
+          PY
+      - name: Archive only publishable aggregate scores and source-locked reproduction receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-225species-51islands-cumulative-GBIF-index-and-null-20261117
+          path: _butterfly_cumulative_source_audit/
+          retention-days: 90
+          if-no-files-found: warn
