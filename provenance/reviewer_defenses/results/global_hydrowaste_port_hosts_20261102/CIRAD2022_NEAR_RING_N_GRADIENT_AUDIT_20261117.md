@@ -35,3 +35,21 @@ Responses are (A) candidate-host indexed log((alien+0.5)/(native+0.5)) with inde
 **Retain the exploratory observational positive `ΔcropN`/indexed relative candidate-host association**, which was previously untested at this geographic scale. **Do not upgrade it to local sewage nutrient enrichment, agriculture-induced alien-host proliferation, or butterfly establishment**. The signal fails strict land-coverage, nonzero raster-cell composition and held-country transfer reliability gates. The nonzero N-cell share may be an agrarian land-cover/recording opportunity proxy. Unmatched dates (WPI2019, wastewater2015, WorldCover2021, crop/human N2022, pooled GBIF2001–2024) and unmatched plant 5 km vs N 0–10 and 10–25 km windows preclude physical causal interpretation. Repeated exploratory tests make p-values descriptive only.
 
 **Provenance:** Scripts `chocho_n_gradient_pilot.py`, `chocho_n_gradient_transfer.py`, `chocho_n_gradient_cell_control.py` and corresponding full JSON receipts were run from original Actions CSVs, without public API re-queries; the standalone source-locked code and JSON can be attached to coauthor-review / supplemental exploratory materials. **No third-party source CSV redistributed in Git.** Keep PR Draft; do not merge this into the canonical GEB manuscript or claim a new independent N mechanism.
+
+## Source-locked executable replay — 2026-11-17 (CI SUCCESS)
+
+The earlier preliminary gradient estimates above have now been **recomputed from the three SHA256-pinned original 1,596-port CSV artifacts** by a repository script, with no public source re-query, no GPKG redistribution, and no edits to the GEB manuscript. [Successful Actions run #44062213618](https://github.com/zuizui0223/chocho/actions/runs/44062213618), including offline arithmetic/mask tests and full regression model receipt. The code is [`scripts/exploratory_cirad_n_near_ring_replay.py`](../../../..//scripts/exploratory_cirad_n_near_ring_replay.py) and tests are in `tests/test_exploratory_cirad_n_near_ring_replay.py`; immutable compact numerical evidence is `CIRAD2022_NEAR_RING_REPLAY_VERIFIED_20261117.json`.
+
+| Same source, replay model | β crop-N delta | Country-cluster 95% interval | Port/country support |
+|---|---:|---:|---:|
+| 0–10 vs 10–25 km; smoothed alien/native indexed ratio | **+0.086169** | **[+0.023751,+0.148587]** | 1,013 / 40 |
+| 0–10 vs 10–25 km; one-port alien share fractional logit | **+0.101444** | **[+0.037699,+0.165190]** | 843 / 36 |
+| ≥50% valid pixels near **and** ring for both CIRAD sources; ratio | +0.081431 | [−0.001631,+0.164492] | 654 / 31 |
+| Same ≥50% coverage; fractional share | +0.046375 | [−0.032014,+0.124764] | 561 / 27 |
+| ≥5 nonzero N-input cells in each near/ring source; fractional share with both nonzero-area controls | +0.096444 | [−0.040522,+0.233409] | 607 / 29 |
+
+The strict fraction sample differs from the previously described 579/28 result: this independently replayed specification **reapplies the minimum five-port / within-country variation eligibility after excluding undefined 0/0 host fractions**, leaving 561 ports/27 countries. Both are post-hoc sensitivity estimands; they must not be represented as identical cohorts. The measured biological quantity is still *indexed taxon composition*, not plant growth or insect establishment.
+
+Additional source-confirmed positive diagnostic, not to hide: within the 607-port nonzero-cell sensitivity, **modeled human excreted N intensity delta** is +0.054034 [0.006447,0.101622] for recorded alien fraction. This is not effluent N, soil N, or selective host production; model population/land-use covariance and multiple exploratory comparisons remain plausible. In the full 1,013-port log-richness negative controls, modeled crop-N gradient is −0.015826 [−0.094649,+0.062996] for alien and −0.089689 [−0.184949,+0.005572] for native taxa; neither independently supports an alien-host abundance increase.
+
+**Conclusion:** the originally observed positive relative resource *catalogue* geography is retained and independently reproducible. It does not pass the stricter land-mask/land-occupancy tests as a general selective N-intensity response, so nutrient enrichment is an exploratory supply-context hypothesis, not a proven causal link in the island–port–host–butterfly chain.
