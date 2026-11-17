@@ -10,7 +10,7 @@
 
 ## Structured abstract
 
-**Aim.** When people redistribute plants, a butterfly may acquire its first known larval host in an island region without changing its diet. We asked why this potential resource gain differs between islands and mainlands and whether the new resource geography intersects ports and marine connectivity.
+**Aim.** Introduced plants may supply a butterfly's first known regional larval host without changing its diet. We asked why the gain differs between islands and mainlands and how it relates to ports and marine geography.
 
 **Location.** Global botanical regions, selected island ports and coastal marine networks.
 
@@ -18,7 +18,7 @@
 
 **Major taxa studied.** Butterflies and their larval host plants.
 
-**Methods.** We held known host identities fixed for 239 butterflies and compared native-only and contemporary plant ranges across 126 island and 237 mainland regions. We examined historical port vegetation, sea-dispersal morphology, and separate held-island predictions of plant and butterfly assemblages using an undirected marine network. We also evaluated whether host geography improved subsequent butterfly-record predictions.
+**Methods.** We held known host identities fixed for 239 butterflies and compared native-only and contemporary plant ranges across 126 island and 237 mainland regions. We examined historical port vegetation, sea-dispersal morphology, and separate held-island predictions of plant and butterfly assemblages using an undirected marine network. We evaluated host-informed butterfly-record prediction.
 
 **Results.** Native hosts covered 16.0% of island but 37.5% of mainland butterfly–region combinations. Introduced hosts filled comparable fractions of unoccupied combinations (22.7% vs 24.5%), yet proportional resource gains were much larger on islands (+118.9% vs +40.9%). Across 239 butterflies, contemporary host distributions added 14,553 potential butterfly–region combinations (+54.9%). Port-rich islands had richer introduced floras, and eight of ten leading global host contributors were indexed at surveyed ports before 2011. Native floras more frequently bore sea-dispersal morphologies in a 22-island subset. Marine-network resistance improved prediction of introduced-flora similarity (+4.24%), but not native-flora similarity (−0.11%); a separate butterfly-community comparison improved by +5.08%. Host geography reduced subsequent butterfly-record prediction error by 4.12% across 155 species.
 
