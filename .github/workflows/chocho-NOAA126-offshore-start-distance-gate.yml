@@ -1,0 +1,56 @@
+name: chocho independent NOAA 126 island original 2005 offshore release distance quality
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_NOAA2005_original126_offshore_source_distance_quality_20261117.py
+      - .github/workflows/chocho-NOAA126-offshore-start-distance-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-source-eligible-by-distance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44011612861
+          github-token: ${{ github.token }}
+          name: chocho-original-NOAA2005-global126-source-coast-validity
+          path: _src/noaa126_global_original
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify original NOAA source coverage at defensible coastal offsets
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_NOAA2005_original126_offshore_source_distance_quality_20261117.py
+          python scripts/audit_NOAA2005_original126_offshore_source_distance_quality_20261117.py \
+            --source _src/noaa126_global_original/NOAA2005_global126_coastal_current_source_eligibility.json \
+            --out results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/VERIFIED_SOURCE_OFFSHORE_DISTANCE_QUALITY.json
+      - name: Fail closed on original 126 source IDs and no landfall inference
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/VERIFIED_SOURCE_OFFSHORE_DISTANCE_QUALITY.json")
+          d=json.loads(p.read_text())
+          assert d["status"]=="ORIGINAL_REAL_NOAA_UV_COVERAGE_ONLY_WITH_OFFSHORE_DISTANCE_SENSITIVITY_NOT_OCEAN_DISPERSAL"
+          assert d["original_source_verified_total_126_islands"]==126
+          assert d["original_GSHHG_source_resolvable_104_islands"]==104
+          assert d["original_NOAA2005_200km_three_date_complete_islands"]==93
+          assert len(d["per_original_region"])==126
+          assert set(d["distance_threshold_source_quality"])=={"25","50","80","100","150","200"}
+          assert all(x["actual_real_particle_trajectories_calculated"] is False for x in d["distance_threshold_source_quality"].values())
+          print("GLOBAL_NOAA126_SOURCE_DISTANCE_QUALITY_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-NOAA126-source-offshore-offset-20261117
+          path: results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_source/VERIFIED_SOURCE_OFFSHORE_DISTANCE_QUALITY.json
+          retention-days: 90
+          if-no-files-found: warn
