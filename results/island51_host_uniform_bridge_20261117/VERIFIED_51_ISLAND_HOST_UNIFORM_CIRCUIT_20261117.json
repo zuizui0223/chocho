@@ -1,0 +1,119 @@
+{
+  "schema": "chocho_island51_uniform_circuit_candidate_host_predictive_overlap_source_reproduction_20261117_v1",
+  "status": "VERIFIED_GITHUB_ACTIONS_COMPLETED_SOURCE_REPRODUCTION_NO_CAUSAL_MEDIATION",
+  "canonical_source_PR": 157,
+  "canonical_branch": "analysis/butterfly-trait-public51-20261109",
+  "source_actions": {
+    "original_uniform_circuit_run": 42193019385,
+    "original_uniform_circuit_artifact": 13490383689,
+    "original_geographic_source_run": 42325176725,
+    "original_geographic_source_artifact": 13554313981,
+    "new_reexecution_run": 44025831765,
+    "new_artifact_id": 14302653423,
+    "github_conclusion": "success"
+  },
+  "fixed_source_SHA256": {
+    "original_51_pairs": "133dc6d6a91203d09385a4ffd4db0b712dc3309130d1bf2a09bcee6bafa36bf0",
+    "source_port_island_prep": "5641711fc7ab2bdcd4626e1f483faf46c945a5d11466f0deada092db456a0363",
+    "original_51_longitude_block_assignment": "2e4b8b1d4bda18f7193f843378da124b597ead0f6c49751a547cab10f65e2ef3"
+  },
+  "n_island_groups": 51,
+  "n_unique_unordered_pairs": 1275,
+  "models": {
+    "B": "log geodesic and square; sum and absolute difference of log1p original WPI ports; earlier butterfly Jaccard only for later response",
+    "BU": "B + original GSHHG uniform undirected circuit",
+    "BH": "B + introduced candidate-host composition Jaccard pooled across 2001–2024",
+    "BUH": "B + uniform circuit + candidate-host Jaccard"
+  },
+  "later_butterfly_2011_2022": {
+    "single_island_LOIO": {
+      "n_folds": 51,
+      "n_endpoint_predictions_per_model": 2550,
+      "MSE": {
+        "B": 0.006797760771290346,
+        "BU": 0.0064523062608844405,
+        "BH": 0.006515128325751188,
+        "BUH": 0.00630545224744171
+      },
+      "extra_relative_MSE_gain_percent": {
+        "B_to_BU": 5.081886845222583,
+        "B_to_BH": 4.157728626356297,
+        "B_to_BUH": 7.242216082799662,
+        "BH_to_BUH": 3.2182954475467374,
+        "BU_to_BUH": 2.275992606442099
+      },
+      "descriptive_LOIO_bootstrap4999_95percent": {
+        "BH_to_BUH": [
+          0.5132075396871106,
+          5.763326970453601
+        ],
+        "BU_to_BUH": [
+          -1.3708396376824223,
+          5.489980174142998
+        ]
+      },
+      "LOIO_folds_improved": {
+        "BH_to_BUH": 35,
+        "BU_to_BUH": 33
+      },
+      "UNIFORM_absolute_MSE_gain_without_host": 0.0003454545104059053,
+      "UNIFORM_absolute_MSE_gain_with_host": 0.00020967607830947848,
+      "fraction_of_increment_remaining_after_host": 0.6069571303703963
+    },
+    "both_endpoints_unseen": {
+      "n_unique_pairs": 1275,
+      "n_longitude_block_pair_folds": 15,
+      "group_sizes": [
+        11,
+        10,
+        10,
+        10,
+        10
+      ],
+      "MSE": {
+        "B": 0.008406420182415317,
+        "BU": 0.0073686323815855435,
+        "BH": 0.008314993692174302,
+        "BUH": 0.007466989808635254
+      },
+      "extra_relative_MSE_gain_percent": {
+        "B_to_BU": 12.34518116285258,
+        "B_to_BH": 1.0875793531265805,
+        "B_to_BUH": 11.17515367296508,
+        "BH_to_BUH": 10.198491002310096,
+        "BU_to_BUH": -1.3348125127738575
+      },
+      "within_block_BU_to_BUH_pct": 2.26812966833734,
+      "between_block_BU_to_BUH_pct": -4.062069448537853,
+      "within_block_pairs": 235,
+      "between_block_pairs": 1040
+    }
+  },
+  "earlier_butterfly_2001_2010": {
+    "single_island_LOIO": {
+      "B_to_BU_pct": -0.03186407551214089,
+      "BU_to_BUH_pct": 5.370026201699359
+    },
+    "both_endpoints_unseen": {
+      "B_to_BU_pct": -10.68039655459629,
+      "B_to_BH_pct": 0.4344867059009326,
+      "B_to_BUH_pct": -4.270621749857765,
+      "BH_to_BUH_pct": -4.725640736527549,
+      "BU_to_BUH_pct": 5.79124669252221
+    }
+  },
+  "source_verification": {
+    "original_later_LOIO_B_to_BU_reproduced": true,
+    "original_later_LOIO_BU_to_BUH_reproduced": true,
+    "local_vs_actions_max_delta_below_1e_minus_12": true
+  },
+  "limits": [
+    "Same original source islands and observations in both analyses, not independent external datasets",
+    "HOSTS candidates near ports can postdate later GBIF butterfly indices and do not document same-port larvae",
+    "Introduced candidate HOSTS network not same as full WCVP introduced plant flora or full historical local plant resource",
+    "The post-hoc four-model double-unseen analysis does not add previously used marginal host richness/early botanical recording effort controls",
+    "No causal mediation, climate adjustment, detection-corrected establishment, verified ship transfer, directional ocean flow, or larval performance is identified",
+    "51 landmass butterfly groups not directly identical to 104 WCVP botanical island regions",
+    "All numerical intervals are descriptive cluster resampling with dependent folds"
+  ]
+}
