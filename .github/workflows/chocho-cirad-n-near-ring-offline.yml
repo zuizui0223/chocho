@@ -1,0 +1,78 @@
+name: chocho CIRAD N near/ring offline source-locked replay
+
+on:
+  pull_request:
+    paths:
+      - "scripts/exploratory_cirad_n_near_ring_replay.py"
+      - "tests/test_exploratory_cirad_n_near_ring_replay.py"
+      - ".github/workflows/chocho-cirad-n-near-ring-offline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  replay-original-three-port-source-artifacts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate water masks, annulus pixel arithmetic and absent fractions
+        run: |
+          python -m pip install --quiet pytest numpy pandas scipy statsmodels
+          python -m pytest -q tests/test_exploratory_cirad_n_near_ring_replay.py
+      - name: Reuse original source-verified Jones, WorldCover, CIRAD 1596-port artifacts only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/near_ring_N/jones /tmp/near_ring_N/urban /tmp/near_ring_N/cirad
+          gh run download 41563940689 --name pangaea-jones2015-5arc-wpi1596-wastewater-wwtp --dir /tmp/near_ring_N/jones --repo zuizui0223/chocho
+          gh run download 41562997326 --name hydroWASTE-WPI1596-WorldCover2021-urban --dir /tmp/near_ring_N/urban --repo zuizui0223/chocho
+          gh run download 41923811745 --name cirad-2022-human-vs-cropland-N-WPI1596-source-checked --dir /tmp/near_ring_N/cirad --repo zuizui0223/chocho
+          test -s /tmp/near_ring_N/jones/Jones2015_WPI1596_port_grid_census.csv
+          test -s /tmp/near_ring_N/urban/WPI1596_worldcover2021_port_measurements.csv
+          test -s /tmp/near_ring_N/cirad/WPI1596_human_crop_N_source_features.csv
+      - name: Fit within-port N spatial gradient, coverage and nonzero-pixel controls
+        run: |
+          python -u scripts/exploratory_cirad_n_near_ring_replay.py \
+            --jones /tmp/near_ring_N/jones/Jones2015_WPI1596_port_grid_census.csv \
+            --worldcover /tmp/near_ring_N/urban/WPI1596_worldcover2021_port_measurements.csv \
+            --cirad /tmp/near_ring_N/cirad/WPI1596_human_crop_N_source_features.csv \
+            --out /tmp/near_ring_N/verified_N_ring_model_results.json
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          d=json.loads(Path('/tmp/near_ring_N/verified_N_ring_model_results.json').read_text())
+          assert d['source_port_rows']==1596
+          assert set(d['cohorts'])=={'main','coverage50','nonzero5'}
+          assert d['cohorts']['main']['n_eligible']>=500
+          assert d['cohorts']['main']['n_countries']>=25
+          assert d['cohorts']['coverage50']['n_eligible'] < d['cohorts']['main']['n_eligible']
+          for cohort in d['cohorts'].values():
+              for model in cohort['models'].values():
+                  if model['status']!='OBSERVATIONAL_NOT_CAUSAL':
+                      continue
+                  for term in [k for k in model if k.endswith('delta')]:
+                      z=model[term]
+                      assert math.isfinite(z['beta'])
+                      assert len(z['CI95_country_cluster']) == 2
+          print('CIRAD2022_WPI1596_NEAR_RING_SOURCE_REPLAY_VERIFIED',
+                json.dumps({k:{a:b for a,b in v.items() if a!='models'}
+                  for k,v in d['cohorts'].items()},sort_keys=True))
+          PY
+      - name: Archive numerical model receipt only, no third-party CSV redistribution
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-cirad-n-near-ring-replay-offline-results
+          path: /tmp/near_ring_N/verified_N_ring_model_results.json
+          if-no-files-found: warn
+          retention-days: 30
