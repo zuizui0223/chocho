@@ -108,9 +108,9 @@ def main():
         "verified_weight_nodes":uniq
     }),flush=True)
     resistance,qa=circuit.distributed_effective_resistance(lap,weights)
-    if resistance.shape!=(104,104) or not np.isfinite(resistance).all() or
-       not np.allclose(resistance,resistance.T,atol=1e-8,rtol=1e-8) or
-       not np.allclose(np.diag(resistance),0,atol=1e-10):
+    if (resistance.shape!=(104,104) or not np.isfinite(resistance).all() or
+        not np.allclose(resistance,resistance.T,atol=1e-8,rtol=1e-8) or
+        not np.allclose(np.diag(resistance),0,atol=1e-10)):
         raise RuntimeError("Original exact 104-terminal uniform circuit resistance invalid")
     upper=resistance[np.triu_indices(104,k=1)]
     med=float(np.median(upper[upper>0]))
