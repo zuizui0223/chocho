@@ -23,7 +23,11 @@
     "butterflies_host_conditional_uniform_ocean_early_botanical_effort_sensitivity": 44026547052,
     "prior2010_exact_butterfly_HOSTS_taxa_later_first_indexes": 44029498482,
     "butterfly_beneficiary_239_potential_island_consumer_similarity": 44035468935,
-    "butterfly_beneficiary_main_Fig3_archive": 44036091765
+    "butterfly_beneficiary_main_Fig3_archive": 44036091765,
+    "butterfly_record_index_225_51_cumulative_2001_2022": 44050020101,
+    "butterfly_record_index_geography_fixed_margin_fourchain": 44050612089,
+    "butterfly_record_index_aggregates_permanent_archive": 44050928866,
+    "butterfly_beneficiaries_potential_and_record_index_Fig3_v2": 44051152468
   },
   "floras": {
     "regions": 104,
@@ -303,6 +307,65 @@
         "Observed 51-island GBIF butterfly geographic breadth is sampling-biased and weakly associated",
         "Jaccard is resource-defined consumer potential only, not observed butterfly community homogenization",
         "Extra gain over geographically constrained fixed-margin null is small and exploratory"
+      ]
+    },
+    "cumulative_observed_GBIF_indexed_community_similarity": {
+      "status": "SOURCE_VERIFIED_RECORD_INDEX_SPATIAL_CONVERGENCE_NOT_TRUE_COMMUNITY_HOMOGENIZATION_OR_PLANT_CAUSALITY",
+      "source_panel": "225 butterflies × 51 selected port-linked landmasses, 11,475 species-island cells, independent public GBIF re-index 2026-11-09",
+      "source_program": "scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py",
+      "source_numerical": "results/butterfly_record_index_similarity_20261117/CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json",
+      "source_multichain": "results/butterfly_record_index_similarity_20261117/MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json",
+      "historical_index_cells_2001_2010": 736,
+      "new_2011_2017": 221,
+      "new_2018_2022": 96,
+      "new_total_2011_2022": 317,
+      "cumulative_by_2022": 1053,
+      "original_island_pairs": 1275,
+      "mean_Jaccard_early_2010": 0.1209632547327149,
+      "mean_Jaccard_cumulative_2017": 0.1622530164236291,
+      "mean_Jaccard_cumulative_2022": 0.17777287436807837,
+      "observed_Jaccard_gain": 0.05680961963536349,
+      "pairs_improved": 945,
+      "pairs_worse": 193,
+      "pairs_equal": 137,
+      "original_fixed_margin_399_null_mean_gain": 0.03814517345181031,
+      "original_five_geo_group_399_null_mean_gain": 0.04963378910357568,
+      "four_independent_chains_each_199_geographical": {
+        "indexed_Jaccard_gain_expected_mean": 0.049608983574832,
+        "observed_minus_expected_indexed_gain": 0.007200636210531304,
+        "across_chain_mean_range": 0.00023691,
+        "predeclared_stability_threshold": 0.004,
+        "stable": true,
+        "inferred_p_value": false,
+        "group_swaps_acceptance_approx": 0.0416,
+        "run_id": 44050612089,
+        "artifact_id": 14312374759
+      },
+      "fourchain_global": {
+        "indexed_Jaccard_gain_expected_mean": 0.038204636,
+        "observed_minus_expected_indexed_gain": 0.01860498,
+        "run_id": 44050612089,
+        "limitations": "record number margins maintained but not historical true presence"
+      },
+      "beneficiary_by_native_HOSTS_resource_footprint": {
+        "quartile4_species": 59,
+        "quartile4_later_first_index_cells": 163,
+        "quartile4_share_all_new": 0.5141955835962145,
+        "quartile4_later_first_index_at_risk": 0.0609118086696562,
+        "quartile1_species": 52,
+        "quartile1_later_first_index_cells": 23,
+        "quartile1_share_all_new": 0.07255520504731862,
+        "quartile1_later_first_index_at_risk": 0.008859784283513097,
+        "per_species_added_host_resource_vs_future_new_index_spearman": 0.19195240294206153,
+        "partial_rank_adjusted_native_HOSTS_footprint_host_catalog_size_and_early_index_breadth": -0.06799514961443238
+      },
+      "inference_bounds": [
+        "Observed GBIF records indexed to date are a record list, not a complete surveyed butterfly community",
+        "New index in 2011–2022 can reflect historical overlooked species, not true butterfly arrival or colonization",
+        "The butterfly 51 landmasses do not coincide with the 126 botanical resource regions; independent directions do not prove mediation",
+        "Fixed-species/island and five-group geographic Markov nulls do not condition every source publisher and observer bias",
+        "The butterfly's native-host resource footprint is not its own native geographic range or island-endemic identity",
+        "No actual butterfly population homogenization or competitive replacement inferred"
       ]
     }
   },
