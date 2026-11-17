@@ -1,0 +1,60 @@
+name: chocho Cape Breton 1987 official butterfly history versus 17 GBIF first indices
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_capebreton_original_1987_butterfly_names.py
+      - .github/workflows/chocho-cape-breton-1987-government-butterflies.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historic-original-butterfly-fauna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download 1987 Government of Canada original PDF and extract text, never OCR
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cape_breton
+          curl -fLsS --retry 2 --connect-timeout 20 --max-time 180 \
+            "https://publications.gc.ca/collections/collection_2016/aac-aafc/agrhist/A42-121-1987-eng.pdf" \
+            -o /tmp/cape_breton/report_1987.pdf
+          test "$(wc -c </tmp/cape_breton/report_1987.pdf)" -gt 100000
+          command -v pdftotext
+          pdftotext -layout /tmp/cape_breton/report_1987.pdf /tmp/cape_breton/report_1987.txt
+          sha256sum /tmp/cape_breton/report_1987.pdf | tee /tmp/cape_breton/sha256.txt
+          echo "PDF text size: $(wc -c </tmp/cape_breton/report_1987.txt)"
+      - name: Search original Cape Breton late first-index butterfly names with source page context
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_capebreton_original_1987_butterfly_names.py
+          python scripts/audit_capebreton_original_1987_butterfly_names.py \
+            --text /tmp/cape_breton/report_1987.txt \
+            --pdf-sha256 "$(cut -d' ' -f1 /tmp/cape_breton/sha256.txt)" \
+            --out _cape_breton_original_1987/CAPE_BRETON_1987_CHECKLIST_NAME_SOURCE_AUDIT.json
+      - name: Verify source-locked cohort and archive non-proprietary derived audit only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('_cape_breton_original_1987/CAPE_BRETON_1987_CHECKLIST_NAME_SOURCE_AUDIT.json').read_text())
+          assert d['indexed_candidate_species']==17
+          assert len(d['taxa'])==17
+          assert d['original_PDF_SHA256'] and len(d['original_PDF_SHA256'])==64
+          assert d['pages_extracted']>220
+          assert d['exact_binomial_present']>=1
+          assert d['status']=='RAW_PUBLICATION_PDF_TEXT_SEARCH_NOT_TAXONOMIC_RECONCILIATION'
+          print('OFFICIAL_1987_ORIGINAL_SOURCE_AND_17_CANDIDATE_TAXON_SEARCH_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-cape-breton-1987-official-original-checklist-audit
+          path: _cape_breton_original_1987/
+          retention-days: 90
+          if-no-files-found: warn
