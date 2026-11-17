@@ -21,11 +21,31 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/cape_breton
-          curl -fLsS --retry 2 --connect-timeout 20 --max-time 180 \
+          src=""
+          for url in \
             "https://publications.gc.ca/collections/collection_2016/aac-aafc/agrhist/A42-121-1987-eng.pdf" \
-            -o /tmp/cape_breton/report_1987.pdf
-          test "$(wc -c </tmp/cape_breton/report_1987.pdf)" -gt 100000
-          command -v pdftotext
+            "https://esc-sec.ca/wp/wp-content/uploads/2017/03/AAFC_insects_spiders_and_mites_of_cape_breton.pdf"; do
+            echo "Trying original public scientific report: $url"
+            curl -fLsS --retry 1 --connect-timeout 20 --max-time 180 \
+              -w 'HTTP=%{http_code};content_type=%{content_type};downloaded_bytes=%{size_download}\n' \
+              "$url" -o /tmp/cape_breton/report_1987.pdf || true
+            bytes=$(wc -c </tmp/cape_breton/report_1987.pdf || echo 0)
+            magic=$(head -c 4 /tmp/cape_breton/report_1987.pdf || true)
+            echo "Candidate original source bytes=$bytes, PDFmagic=$magic"
+            if [ "$bytes" -gt 100000 ] && [ "$magic" = '%PDF' ]; then
+              src="$url"
+              break
+            fi
+          done
+          if [ -z "$src" ]; then
+            echo "::error::Neither government original nor society-hosted original is accessible as full PDF; no 1987 taxa promoted"
+            exit 2
+          fi
+          printf '%s\n' "$src" >/tmp/cape_breton/source_url.txt
+          if ! command -v pdftotext; then
+            echo "::error::pdftotext not installed"
+            exit 3
+          fi
           pdftotext -layout /tmp/cape_breton/report_1987.pdf /tmp/cape_breton/report_1987.txt
           sha256sum /tmp/cape_breton/report_1987.pdf | tee /tmp/cape_breton/sha256.txt
           echo "PDF text size: $(wc -c </tmp/cape_breton/report_1987.txt)"
@@ -35,6 +55,7 @@ jobs:
           python -m py_compile scripts/audit_capebreton_original_1987_butterfly_names.py
           python scripts/audit_capebreton_original_1987_butterfly_names.py \
             --text /tmp/cape_breton/report_1987.txt \
+            --pdf-source-url "$(cat /tmp/cape_breton/source_url.txt)" \
             --pdf-sha256 "$(cut -d' ' -f1 /tmp/cape_breton/sha256.txt)" \
             --out _cape_breton_original_1987/CAPE_BRETON_1987_CHECKLIST_NAME_SOURCE_AUDIT.json
       - name: Verify source-locked cohort and archive non-proprietary derived audit only
