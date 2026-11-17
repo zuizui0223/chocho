@@ -1,0 +1,49 @@
+{
+  "schema": "chocho_original_WCVP126_real_NOAA_2005_velocity_source_distance_quality_verified_20261117_v1",
+  "source_CI": 44011879080,
+  "source_job": 133800566607,
+  "prior_global_NOAA_three_dates_CI": 44011612861,
+  "source_original_GSHHG_104_island_marine_geometry_CI": 44010673580,
+  "original_all_islands": 126,
+  "original_broad_200km_3dates_valid": 93,
+  "original_NOAA1degree_subsample_from_old_1by3degree_15m_historical_velocity": true,
+  "result": {
+    "status": "ORIGINAL_REAL_NOAA_UV_COVERAGE_ONLY_WITH_OFFSHORE_DISTANCE_SENSITIVITY_NOT_OCEAN_DISPERSAL",
+    "median_best_start_km": 38.2005,
+    "median_worst_start_km": 38.5483,
+    "thresholds": {
+      "25": {
+        "source_regions_all_three_dates_valid": 18,
+        "source_regions_any_one_date_valid": 18,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 153
+      },
+      "50": {
+        "source_regions_all_three_dates_valid": 59,
+        "source_regions_any_one_date_valid": 61,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 1711
+      },
+      "80": {
+        "source_regions_all_three_dates_valid": 76,
+        "source_regions_any_one_date_valid": 80,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 2850
+      },
+      "100": {
+        "source_regions_all_three_dates_valid": 84,
+        "source_regions_any_one_date_valid": 87,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 3486
+      },
+      "150": {
+        "source_regions_all_three_dates_valid": 87,
+        "source_regions_any_one_date_valid": 90,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 3741
+      },
+      "200": {
+        "source_regions_all_three_dates_valid": 93,
+        "source_regions_any_one_date_valid": 94,
+        "potential_unordered_island_pairs_both_3date_source_eligible": 4278
+      }
+    }
+  },
+  "limitation": "Strictly ocean velocity acquisition at bounded offshore grid offsets, NOT particle trajectories or source-destination transport, with possible up-to-200km artificial releases",
+  "preferred_next_source_gate": "Use <=50km offshore starts on 59 regions and full native NOAA 1/3degree velocity history to integrate dated trajectories for fixed drift periods, GSHHG landmask and taxon-independent recipient coast polygons; do not claim current matrix until actual run."
+}
