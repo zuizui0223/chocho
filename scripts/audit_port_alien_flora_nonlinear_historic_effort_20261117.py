@@ -154,8 +154,13 @@ def run(items,label,outcome,*,flexible=False,effort_controls=(),host_conditioned
             "frozen_same_parameter_inclusion":True
         }
     ps=np.array([z[k]["conditional_permutation_descriptive_p"] for k in ("area","native")])
-    z["area"]["exploratory_Holm2_p"]=float(min(1.,2*ps[0]) if ps[0]<ps[1] else max(ps[0],ps[1]))
-    z["native"]["exploratory_Holm2_p"]=float(min(1.,2*ps[1]) if ps[1]<ps[0] else max(ps[0],ps[1]))
+    small=int(np.argmin(ps))
+    large=1-small
+    holm=np.zeros(2)
+    holm[small]=min(1.,2*ps[small])
+    holm[large]=max(holm[small],ps[large])
+    z["area"]["exploratory_Holm2_p"]=float(holm[0])
+    z["native"]["exploratory_Holm2_p"]=float(holm[1])
     l1={}
     for lev in sorted({x["level1"] for x in items},key=int):
         sub=[r for r in items if r["level1"]!=lev]
