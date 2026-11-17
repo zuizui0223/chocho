@@ -55,7 +55,7 @@ def jaccard(A):
  out[valid]=overlap[idx][valid]/union[idx][valid]
  return out,valid
 
-def first_index_null(E0,B,group,rng,regional):
+def first_index_null(E0,B,group,rng,regional,draws=N_DRAWS):
  E=E0.copy()
  positions=np.argwhere(E).astype(np.int32)
  n_edges=len(positions)
@@ -92,13 +92,13 @@ def first_index_null(E0,B,group,rng,regional):
  mix(65*n_edges)
  validate()
  draws=[]
- for k in range(N_DRAWS):
+ for k in range(draws):
   mix(9*n_edges)
-  if k%99==0 or k==N_DRAWS-1:
+  if k%99==0 or k==draws-1:
    validate()
   z,_=jaccard(B|E)
   draws.append(z)
-  if (k+1)%100==0:print("NULL_SOURCE_COMPOSITION_PROGRESS",("within_longitude" if regional else "global"),k+1,N_DRAWS,flush=True)
+  if (k+1)%100==0:print("NULL_SOURCE_COMPOSITION_PROGRESS",("within_longitude" if regional else "global"),k+1,draws,flush=True)
  D=np.asarray(draws,dtype=np.float64)
  return D,{"draws":len(D),"proposals":proposals,"accepted":accepted,"swap_acceptance_fraction":accepted/proposals,
            "burn_proposals":65*n_edges,"per_draw_proposals":9*n_edges,
