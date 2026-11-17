@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify v0.3 ONE integrated GEB manuscript, sign conventions and five figures.
+"""Verify v0.3 ONE integrated GEB manuscript, sign conventions and four main figures.
 
 This source-claim audit reads original committed observations and source hashes.
 It does not verify causality, refit models, license restricted inputs or claim
@@ -21,10 +21,17 @@ def rows(path):
 def close(observed,expected,tol=1e-7):
     if not math.isclose(float(observed),float(expected),rel_tol=tol,abs_tol=tol):
         raise ValueError(f"Wrong original research number: observed {observed}, expected {expected}")
-def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def canonical_bytes(p):
+    content = p.read_bytes()
+    if p.suffix.lower() in {".csv", ".json", ".tsv", ".svg"}:
+        content = content.replace(b"\r\n", b"\n")
+    return content
+
+def sha(p):
+    return hashlib.sha256(canonical_bytes(p)).hexdigest()
 def run():
     t=M.read_text(encoding="utf8");captions=CAP.read_text(encoding="utf8")
-    assert t.startswith("# Human-redistributed host plants")
+    assert t.startswith("# Ports, sea currents and the human-assembled layer of island butterfly resources")
     assert "## Structured abstract" in t and "## 1. Introduction" in t
     abstract=t.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     wc=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",abstract))
@@ -56,7 +63,7 @@ def run():
     if "MSE" not in t or "not" not in t.lower() or "unseen" not in t.lower():
         raise AssertionError("Predictive loss direction or historical scope boundary not clearly reported")
     assert t.count("## 3. Results")==1 and t.count("## 4. Discussion")==1
-    assert captions.count("## Figure ")==2
+    assert captions.count("## Figure ")==4
     rsrc=data("benchmarks/exploratory/butterfly_anthropogenic_resource_expansion_result_v0.1.json")["full_resource_eligible_panel"]
     assert rsrc["species"]==239 and rsrc["total_introduced_added_species_units"]==14553
     im=data("results/island-mainland-resource-q1/island_mainland_summary.json")["groups"]
@@ -133,7 +140,13 @@ def run():
     for figure in (fig1, fig2):
         assert figure.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
         assert figure.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
-        assert figure.with_suffix(".png").name in body
+        assert figure.with_suffix(".png").name in t
+    for stem in ("Fig2_port_and_dispersal_traits", "Fig3_host_reports", "Fig4_sea_connectivity"):
+        assert (F3 / (stem + ".png")).read_bytes().startswith(b"\x89PNG")
+        assert stem + ".png" in body
+    figdata = data("results/island_resource_layers/figure_inputs.json")
+    close(figdata["circuit"]["alien_B_to_G_circuit_improvement_pct"], 4.239013650845648)
+    assert figdata["hosts"]["HOSTS_Papilionoidea__all_hosts"]["shared_species_island_and_mainland"] == 67
     # Retain the legacy v0.2 source-file checks.
     for i in range(1,5):
         fs=list(F2.glob(f"Fig{i}_*.png"))
@@ -147,7 +160,7 @@ def run():
         assert sha(path)==digests["sha256"],"changed scientific figure source "+src
     for name,desc in receipt["figures"].items():
         p=F3/name
-        if sha(p)!=desc["sha256"] or p.stat().st_size!=desc["bytes"]:
+        if sha(p)!=desc["sha256"] or len(canonical_bytes(p))!=desc["bytes"]:
             raise ValueError("Figure 5 hash mismatch "+name)
         if p.suffix==".svg":ET.parse(p)
     close(receipt["values"]["geometry_only_beyond_distance"],5.0818868452225594)
@@ -162,7 +175,7 @@ def run():
               "marine_beyond_host":6.4880250544198574,
               "geo_baseline_to_joint":total,
               "double_unseen_AIS_and_wind_beyond_host":-4.6985954047498986},
-            "main_figures_verified":2,"new_Figure5_input_and_output_hashes_verified":True,
+            "main_figures_verified":4,"new_Figure5_input_and_output_hashes_verified":True,
             "warnings":["The 51-island host+marine positive increments are retrospective and not causal",
                "Historic host list may contain 2001–2024 records after target butterflies",
                "The strict 990-pair geographic holdout is a different population/estimand",

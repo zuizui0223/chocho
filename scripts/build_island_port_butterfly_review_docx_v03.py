@@ -2,7 +2,7 @@
 """Build the ONE island-and-port butterfly Research Article as coauthor review DOCX.
 
 This builds the ONE integrated manuscript v0.3, not the frozen global-only GEB
-source. The two main figures appear in Results with their
+source. The four main figures appear in Results with their
 source-audited, noncausal captions. Document is DRAFT; not submitted, journal
 typeset, bibliographically verified or coauthor approved.
 """
@@ -26,19 +26,19 @@ def build(output:Path):
     if not shutil.which("pandoc"):
         raise RuntimeError("pandoc is needed to build the formatted review manuscript")
     original=SOURCE.read_text(encoding="utf8")
-    if not original.startswith("# Human-redistributed host plants"):raise ValueError("Wrong canonical manuscript")
+    if not original.startswith("# Ports, sea currents and the human-assembled layer of island butterfly resources"):raise ValueError("Wrong canonical manuscript")
     # The DOCX title comes from Pandoc metadata; avoid duplicating the same
     # heading immediately below it in the manuscript body.
     original=original.partition("\n")[2].lstrip("\n")
     if original.count("## Structured abstract")!=1 or original.count("## 3. Results")!=1:
         raise ValueError("Not one canonical manuscript")
     draft=["---",
-           "title: 'Human-redistributed host plants disproportionately expand potential larval resources in island regions'",
+           "title: 'Ports, sea currents and the human-assembled layer of island butterfly resources'",
            "subtitle: 'Single integrated Research Article v0.3 - coauthor review draft, not for submission'",
            "lang: en",
            "---",
            "",
-           "> **REVIEW COPY (2026-11-09):** One combined study. No coauthor approval, publisher style or transport/colonisation mechanism is claimed.",
+           "> **REVIEW COPY (2026-11-17):** One combined study. No coauthor approval, publisher style or transport/colonisation mechanism is claimed.",
            "",
            original.replace("../../figures/", "figures/").strip(), ""]
     supplement = (M / "TABLE_S1_six_island_cases.md").read_text(encoding="utf8")
@@ -57,9 +57,9 @@ def build(output:Path):
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
         media=[n for n in z.namelist() if n.startswith("word/media/")]
-        if len(media)<15:raise ValueError(f"Only {len(media)} embedded butterfly figures")
+        if len(media)<18:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
-        for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2",
+        for term in ("Ports, sea currents and the human-assembled layer of island butterfly resources","Structured abstract","Figure 1","Figure 2",
                      "butterfly"):
             if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={
@@ -67,9 +67,9 @@ def build(output:Path):
       "status":STATUS,
       "source_manuscript":SOURCE.relative_to(ROOT).as_posix(),
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
-      "figure_count":2,
+      "figure_count":4,
       "in_text_case_maps":1,
-      "supplementary_figures":12,
+      "supplementary_figures":13,
       "supplementary_tables":1,
       "embedded_media_files":len(media),
       "not_yet_checked":["Word/PDF full-page visual rendering by LibreOffice",

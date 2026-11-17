@@ -30,8 +30,11 @@ def regional():
     matched = json.loads((GAPS / "summary.json").read_text())
     fig, axes = plt.subplots(1, 3, figsize=(10, 3.95))
     fig.subplots_adjust(left=.058, right=.98, top=.68, bottom=.23, wspace=.34)
-    fig.text(.04,.92,"Why did potential larval-host coverage grow more on islands?",size=17,weight="bold")
-    fig.text(.04,.81,"239 butterfly species   ·   126 island and 237 mainland botanical regions",size=11)
+    fig.text(.04,.92,"Introduced hosts narrowed the island–mainland coverage gap",size=17,weight="bold")
+    native_gap = 100*(float(data["mainland"]["coverage"]) - float(data["island"]["coverage"]))
+    totals = {k: (float(r["native"])+float(r["added"]))/float(r["cells"]) for k,r in data.items()}
+    current_gap = 100*(totals["mainland"]-totals["island"])
+    fig.text(.04,.81,f"239 butterflies   ·   126 island / 237 mainland regions   ·   Coverage gap: {native_gap:.1f} → {current_gap:.1f} percentage points",size=10.5)
     for ax, key, title, divisor, limit in zip(axes, ["coverage","fill","gain"],
             ["A   Native host coverage","B   Empty regions filled","C   Gain over native coverage"],
             ["All species–region pairs","Pairs without a native host","Pairs with a native host"],[50,50,145]):
