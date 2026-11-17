@@ -21,7 +21,9 @@ URLS={
  "zizina_otis_name_match":"species/match?"+urllib.parse.urlencode({"name":"Zizina otis"}),
  "zerynthia_polyxena_name_match":"species/match?"+urllib.parse.urlencode({"name":"Zerynthia polyxena"}),
  "zerynthia_MU_2018_2022":"occurrence/search?"+urllib.parse.urlencode({
-        "taxon_key":5141262,"country":"MU","year":"2018,2022","limit":10})
+        "taxon_key":5141262,"country":"MU","year":"2018,2022","limit":10}),
+ "zerynthia_occurrence_5023737393":"occurrence/5023737393",
+ "zerynthia_dataset_source":"dataset/6ac3f774-d9fb-4796-b3e9-92bf6c81c084"
 }
 def get(url):
     req=urllib.request.Request(url,headers={"User-Agent":"chocho-GBIF-historical-island-record-audit/1.0 (research source validation)","Accept":"application/json"})
@@ -51,6 +53,19 @@ def main():
                    "identifiedBy","recordedBy","issue","issues","coordinateUncertaintyInMeters"]
             data={"count":x.get("count"),"endOfRecords":x.get("endOfRecords"),
                   "records":[{k:z.get(k) for k in attrs} for z in x.get("results",[])[:10]]}
+        elif id=="zerynthia_occurrence_5023737393":
+            fields=["key","gbifID","taxonKey","speciesKey","scientificName","acceptedScientificName",
+                    "decimalLatitude","decimalLongitude","countryCode","year","eventDate","basisOfRecord",
+                    "occurrenceStatus","datasetKey","datasetName","identifiedBy","recordedBy",
+                    "identificationRemarks","occurrenceRemarks","locality","verbatimLocality",
+                    "references","occurrenceID","coordinateUncertaintyInMeters","issues"]
+            data={k:x.get(k) for k in fields}
+            data["media"]=[{k:v.get(k) for k in ("type","format","identifier","references","license","rightsHolder")} for v in x.get("media",[])[:3]]
+        elif id=="zerynthia_dataset_source":
+            fields=["key","title","type","license","doi","homepage","publishingCountry",
+                    "publishingOrganizationKey","created","modified"]
+            data={k:x.get(k) for k in fields}
+            data["description_excerpt"]=str(x.get("description") or "")[:300]
         else:
             fields=["usageKey","scientificName","canonicalName","rank","status","matchType","confidence",
                     "note","synonym","acceptedUsageKey","speciesKey","kingdom","family"]
