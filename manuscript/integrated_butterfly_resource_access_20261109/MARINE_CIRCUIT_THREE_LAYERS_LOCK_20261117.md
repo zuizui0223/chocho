@@ -43,4 +43,17 @@ Uniform-ocean circuit MSE gains **+5.081886845%** over the separately specified 
 
 **Canonical source choice:** this file plus the [single manuscript](ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md), [figure captions](FIGURE_CAPTIONS_V03.md), the [machine results ledger](../../results/port_weed_current_review_20261117/ONE_PAPER_CIRCUIT_RESULTS_LEDGER_20261117.json) and the copied scripts on this SAME branch. Keep original exploratory PRs (including #175) as source archives, not as independent papers or replaceable latest numbers.
 
-**Remaining blocking claim check:** 104-island matched circuit contrasts and 51-island butterfly source have separate populations. A stricter botanical **both-island-endpoints-unseen** 5-fold test exists for *shortest-water geometry* but has not been verified for the source-equivalent uniform circuit; DO NOT mislabel the original +4.239% as a strict both-unseen circuit result. Likewise, future true current/cargo historical tests require better directed data and independently dated floras. Do not claim PR merge, submission, coauthor approval, or independent three-community causal mechanism.
+## Additional stronger geographic transfer — executed on original uniform circuit (2026-11-17)
+
+**The previously unresolved both-endpoints-unseen uniform-circuit test is now completed**, preserving the same **104 botanical regions / 5,355 source pairs** and outcome-blind fixed 5 island-group assignments. Training excludes **both endpoints** of each held test pair; only the **1,089 within-held-fold unique pairs** are evaluated. The physical sea circuit, base model, contemporary WCVP accepted taxa, and fixed alpha20 are unchanged. New exact-source [GitHub CI #44023148246 SUCCESS](https://github.com/zuizui0223/chocho/actions/runs/44023148246), [reproducible strict script](../../scripts/audit_WCVP126_uniform_circuit_double_unseen_20261117.py), result artifact `14302021336`.
+
+| Uniform circuit beyond the same model baseline | Native flora | Introduced flora |
+|---|---:|---:|
+| Source LOIO, one botanical island withheld | −0.110% | **+4.239%** |
+| **Strict double-unseen, same 5 held-island groups** | **−0.044%** | **+2.735%** |
+| Strict 5-fold descriptive bootstrap 95% | [−0.898,+0.433]% | **[−1.649,+5.738]%** |
+| Strict geographic groups improved | 3/5 | 3/5 |
+
+**Interpretation:** introduced-flora effect remains positive in the more difficult transfer, whereas native-flora effect remains near zero. But with only five non-independent held groups, the descriptive transfer interval crosses zero: **not a confirmed geographically universal law**. Group/bootstrap intervals do not establish causal transport or independent replication; held islands' contemporary marginal floristic richness is still a predictor.
+
+**Remaining blocking claim check:** 104-island matched circuit contrasts and 51-island butterfly analysis use separate regions, outcome definitions and terminals. Strict uniform-circuit transfer supports the **direction** only, not precision. Genuine current/cargo mechanisms would require historical directed flows and source/recipient plant introductions; no PR merge, coauthor approval or manuscript submission is claimed.
