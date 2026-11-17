@@ -20,6 +20,7 @@ from pathlib import Path
 BASE = Path("provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117")
 FROZEN = BASE / "independent_42_species_vs_frozen239.csv"
 CANARY_BIOTA = Path("provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/canary_BIOTA_source_status_20.csv")
+CANARY_BIOTA_REMAINING = Path("provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/canary_BIOTA_remaining_13.csv")
 HOSTS_SHA = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
 ORIGINAL_CSV_BLOB = "3c56054fa21e667eed422a67010059c8e198b1bc"
 API = "https://api.gbif.org/v1/species"
@@ -274,7 +275,68 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
             raise ValueError("Wrong native-certainty classification for " + name)
         if not source["source_url"].startswith("https://www.biodiversidadcanarias.es/"):
             raise ValueError("Unverified source URL for " + name)
-    for cohort_name, cohort in COHORTS.items():
+    # Complete, source-first origin classification for EVERY originally
+    # INBO-present Canarian butterfly (not an endemic-enriched convenience sample).
+    remaining = rows(CANARY_BIOTA_REMAINING)
+    if len(remaining) != 13:
+        raise ValueError("Incomplete remaining Canary 13 official BIOTA classifications")
+    remaining_names = [r["independent_checklist_name"] for r in remaining]
+    if len(set(remaining_names)) != 13 or set(remaining_names) & set(biota_by_name):
+        raise ValueError("Canary added categories overlap original statuses")
+    known_canary_names = {
+        r["scientific_name"] for r in frozen
+        if "Canary Islands" in r["archipelagos"].split("; ")
+    }
+    if len(known_canary_names) != 33 or set(biota_by_name) | set(remaining_names) != known_canary_names:
+        raise ValueError("Canary independent BIOTA origin status not exhaustive for all INBO 33")
+    full_biota = biota + remaining
+    complete_by_name = {r["independent_checklist_name"]: r for r in full_biota}
+    for name, origin in complete_by_name.items():
+        if origin["canary_origin_stratum"] not in {
+            "endemic_confirmed", "native_nonendemic_secure",
+            "native_nonendemic_probable", "introduced_probable"
+        }:
+            raise ValueError("Nonstandard BIOTA origin classification: " + name)
+        if origin["canary_origin_stratum"] == "endemic_confirmed" and name not in endemic_set:
+            raise ValueError("Unexpected newly introduced endemic species in Canary status")
+        if origin["origin_certainty"] not in ("NS", "NP", "IP", ""):
+            raise ValueError("Invalid BIOTA origin certainty: " + name)
+        if not origin["source_url"].startswith("https://www.biodiversidadcanarias.es/biota/especie/"):
+            raise ValueError("Non-source species status URL: " + name)
+    counts = {origin: sum(
+        r["canary_origin_stratum"] == origin for r in full_biota
+    ) for origin in (
+        "endemic_confirmed", "native_nonendemic_secure",
+        "native_nonendemic_probable", "introduced_probable"
+    )}
+    if counts != {
+        "endemic_confirmed": 13, "native_nonendemic_secure": 5,
+        "native_nonendemic_probable": 14, "introduced_probable": 1
+    }:
+        raise ValueError("Canary exhaustive native/endemic/introduced count drift")
+    cohorts = dict(COHORTS)
+    for new_name, classes in {
+        "Canary_BIOTA_all_INBO_present_33": {
+            "endemic_confirmed", "native_nonendemic_secure",
+            "native_nonendemic_probable", "introduced_probable"
+        },
+        "Canary_BIOTA_complete_endemic_13": {"endemic_confirmed"},
+        "Canary_BIOTA_complete_native_nonendemic_19": {
+            "native_nonendemic_secure", "native_nonendemic_probable"
+        },
+        "Canary_BIOTA_complete_native_secure_5": {"native_nonendemic_secure"},
+        "Canary_BIOTA_complete_native_probable_14": {"native_nonendemic_probable"},
+        "Canary_BIOTA_complete_introduced_probable_1": {"introduced_probable"},
+    }.items():
+        cohorts[new_name] = {
+            "source": "Canary BIOTA official species status for all 33 individual INBO present Canarian butterfly names",
+            "origin_class": "+".join(sorted(classes)),
+            "names": sorted(
+                name for name, origin in complete_by_name.items()
+                if origin["canary_origin_stratum"] in classes
+            )
+        }
+    for cohort_name, cohort in cohorts.items():
         if len(set(cohort["names"])) != len(cohort["names"]):
             raise ValueError("Duplicate source taxon in " + cohort_name)
         if any(x not in by_name for x in cohort["names"]):
@@ -333,7 +395,7 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
             member["unresolved_potential_additional"] = not bool(member["hosts_exact_genus"])
     by_name = {r["scientific_name"]: r for r in records}
     cohort_results = {}
-    for cohort_name, cohort in COHORTS.items():
+    for cohort_name, cohort in cohorts.items():
         subset = [by_name[n] for n in cohort["names"]]
         cohort_results[cohort_name] = {
             "source": cohort["source"],
@@ -354,6 +416,9 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
         "host_source_commit": HOSTS_SHA,
         "original_42_csv_git_blob": ORIGINAL_CSV_BLOB,
         "canary_independent_origin_crosswalk": str(CANARY_BIOTA),
+        "canary_remaining_13_origin_crosswalk": str(CANARY_BIOTA_REMAINING),
+        "canary_full_present_butterflies_n": len(complete_by_name),
+        "canary_complete_origin_strata_n": counts,
         "meaning": "reported HOSTS larval plant genus coverage after guarded accepted-name/synonym matching; not biological host completeness",
         "independent_unique_butterflies": len(records),
         "original_exact_binomial_named_host": sum(r["hosts_exact_genus"] for r in records),
