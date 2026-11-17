@@ -17,7 +17,8 @@
     "botanicals_uniform_holdout": 44013825017,
     "botanicals_shortest_water": 44011154673,
     "butterflies_uniform": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
-    "botanicals_WCVP_acceptedspecies": 44010011288
+    "botanicals_WCVP_acceptedspecies": 44010011288,
+    "botanicals_true_circuit_both_endpoints_unseen": 44023148246
   },
   "floras": {
     "regions": 104,
@@ -54,6 +55,33 @@
       "bootstrap_seed": 20261117,
       "confirmatory_test": false,
       "source_script": "paired_circuit_bootstrap.py in coauthor result package"
+    },
+    "strict_both_endpoints_unseen": {
+      "status": "SOURCE_VERIFIED_5_FOLD_GEOGRAPHIC_TRANSFER_WITH_BOTH_ISLANDS_ABSENT_FROM_TRAIN",
+      "n_source_islands": 104,
+      "n_unique_pairs_tested": 1089,
+      "provenance_run": 44023148246,
+      "artifact_id": 14302021336,
+      "same_source_population_as_one_island_holdout": true,
+      "uniform_circuit_added_MSE_pct": {
+        "native": -0.04430509181110028,
+        "introduced": 2.735040680490125
+      },
+      "descriptive5fold_bootstrap95": {
+        "native": [
+          -0.8977839909243964,
+          0.4328819322416693
+        ],
+        "introduced": [
+          -1.648755406808355,
+          5.737696870109388
+        ]
+      },
+      "n_5_folds_improved": {
+        "native": 3,
+        "introduced": 3
+      },
+      "warning": "Only 5 geographic groups; uncertainty spans 0 for both outcomes. This is retrospective with held-out island contemporary richness given; not a temporally independent marine colonization test."
     }
   },
   "butterflies": {
@@ -75,7 +103,7 @@
     ],
     "note": "Different 51-island risk set, baseline, estimator, and terminal weights from 104-region flora."
   },
-  "model_choice_warning": "Uniform circuit versus shortest and port proxy compared post hoc; model-specific inference only; strict both-endpoints-unseen circuit transfer has not yet been verified.",
+  "model_choice_warning": "Uniform circuit selectively predicts introduced-flora Jaccard on LOIO (+4.24%), and its strict two-unseen transfer remains positive (+2.74%) but 5-fold interval includes zero; both are exploratory same-source tests, not confirmatory historical transport evidence. Native circuit adds no predictive improvement in either design. Shortest-water improves both floras in the original LOIO.",
   "artifacts": [
     "figures/integrated_island_port_butterfly_v03/Fig3_circuit_three_layers_v01.svg",
     "manuscript/integrated_butterfly_resource_access_20261109/MARINE_CIRCUIT_THREE_LAYERS_LOCK_20261117.md"
