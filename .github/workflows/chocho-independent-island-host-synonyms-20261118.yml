@@ -55,6 +55,12 @@ jobs:
           assert x['cohorts']['Madeira_extant_endemic']['exact_hosts_genus']==0
           assert x['cohorts']['Canary_single_island_endemic_Hipparchia']['exact_hosts_genus']==0
           assert x['cohorts']['Azores_endemic_Hipparchia']['exact_hosts_genus']==2
+          assert x['cohorts']['Canary_BIOTA_all_verified_endemics_13']['n']==13
+          assert x['cohorts']['Canary_BIOTA_all_verified_endemics_13']['exact_hosts_genus']==0
+          assert x['cohorts']['Canary_BIOTA_verified_native_nonendemic_7']['n']==7
+          assert x['cohorts']['Canary_BIOTA_verified_native_nonendemic_7']['exact_hosts_genus']==4
+          assert x['cohorts']['Canary_BIOTA_native_secure_2']['n']==2
+          assert x['cohorts']['Canary_BIOTA_native_probable_5']['n']==5
           print('RECONCILIATION_SOURCE_AUDIT_PASSED')
           print('Confirmed lower bound:',x['guarded_synonym_named_host_confirmed_min'],'/',x['independent_unique_butterflies'])
           print('Unresolved mismatches:',len(x['unresolved_no_exact_host']))
