@@ -65,10 +65,10 @@ stopifnot(sum(native_counts)==184997L,sum(alien_counts)==39024L)
 
 NN<-as.matrix(Matrix::tcrossprod(N))
 AA<-as.matrix(Matrix::tcrossprod(A))
-NA<-as.matrix(N %*% Matrix::t(A))
-AN<-as.matrix(A %*% Matrix::t(N))
+N_to_A<-as.matrix(N %*% Matrix::t(A))
+A_to_N<-as.matrix(A %*% Matrix::t(N))
 stopifnot(all(diag(NN)==native_counts),all(diag(AA)==alien_counts))
-stopifnot(all(NN==t(NN)),all(AA==t(AA)),all(NA==t(AN)))
+stopifnot(all(NN==t(NN)),all(AA==t(AA)),all(N_to_A==t(A_to_N)))
 pair_indices<-which(upper.tri(NN),arr.ind=TRUE)
 stopifnot(nrow(pair_indices)==choose(126L,2L))
 ii<-pair_indices[,1];jj<-pair_indices[,2]
@@ -97,8 +97,8 @@ p<-data.frame(
  alien_Simpson_overlap=overlap(sharedA,alien_counts[ii],alien_counts[jj]),
  # Species taxon native in SOURCE and introduced in DESTINATION. This is
  # an origin contrast, NOT observed dated natural/man-made dispersal.
- native_in_source_and_alien_in_dest=as.integer(NA[pair_indices]),
- alien_in_source_and_native_in_dest=as.integer(AN[pair_indices]),
+ native_in_source_and_alien_in_dest=as.integer(N_to_A[pair_indices]),
+ alien_in_source_and_native_in_dest=as.integer(A_to_N[pair_indices]),
  same_TDWG_Level1=as.integer(as.character(original$level1[ix[ii]])==
                               as.character(original$level1[ix[jj]])),
  stringsAsFactors=FALSE)
