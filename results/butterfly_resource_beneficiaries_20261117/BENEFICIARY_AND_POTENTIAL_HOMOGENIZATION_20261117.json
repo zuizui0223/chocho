@@ -1,0 +1,196 @@
+{
+  "schema": "chocho_butterfly_resource_beneficiary_native_footprint_and_potential_homogenization_v1",
+  "status": "ORIGINAL_239x369_SOURCE_VERIFIED_EXPLORATORY_NOT_BUTTERFLY_ENDISM_OR_ESTABLISHMENT",
+  "cohort": {
+    "butterflies": 239,
+    "original_botanical_regions": 369,
+    "strict_islands": 126,
+    "original_native_resource_cells": 26530,
+    "original_global_added_cells": 14553,
+    "original_island_added_cells": 5741,
+    "gbif_early_51island_subset_species": 225
+  },
+  "source_git_blobs": {
+    "cells": {
+      "path": "results/island_resource_gap_filling/resource_cells.csv.gz",
+      "git_blob_sha": "1ba2c5b5377248237235074b15d6950cc8655447",
+      "size_bytes": 292016
+    },
+    "species": {
+      "path": "results/island_resource_gap_filling/by_species.csv",
+      "git_blob_sha": "a230f6d214c96f874a3ab184ee9823cc9023c1bb",
+      "size_bytes": 52550
+    },
+    "metrics": {
+      "path": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+      "git_blob_sha": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+      "size_bytes": 29083
+    },
+    "regions": {
+      "path": "results/island-mainland-resource-q1/region_metrics.csv",
+      "git_blob_sha": "4aba89565354edc6c44d566523864cec66a30cbe",
+      "size_bytes": 25560
+    },
+    "gbif51": {
+      "path": "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv",
+      "git_blob_sha": "b6a3c98eb76864052d45d520a55b7d830816126c",
+      "size_bytes": 614883
+    }
+  },
+  "who_benefits": {
+    "breadth_type": "number of WGSRPD3 regions with at least one native documented HOSTS host; NOT butterfly geographic range",
+    "native_host_footprint_quartiles": [
+      {
+        "quartile": 1,
+        "butterflies": 60,
+        "min_native_HOSTS_resource_regions": 2,
+        "max_native_HOSTS_resource_regions": 48,
+        "new_island_resource_cells": 644,
+        "fraction_all_island_resource_additions": 0.11217557916739244,
+        "mean_added_island_regions_per_butterfly": 10.733333333333333,
+        "proportion_species_with_added_island_resources": 0.5666666666666667,
+        "fraction_all_original_native_host_gaps_filled": 0.08918432350090015,
+        "mean_known_HOSTS_plant_species": 4.533333333333333
+      },
+      {
+        "quartile": 2,
+        "butterflies": 60,
+        "min_native_HOSTS_resource_regions": 49,
+        "max_native_HOSTS_resource_regions": 95,
+        "new_island_resource_cells": 1077,
+        "fraction_all_island_resource_additions": 0.18759797944608952,
+        "mean_added_island_regions_per_butterfly": 17.95,
+        "proportion_species_with_added_island_resources": 0.7666666666666667,
+        "fraction_all_original_native_host_gaps_filled": 0.15722627737226277,
+        "mean_known_HOSTS_plant_species": 6.316666666666666
+      },
+      {
+        "quartile": 3,
+        "butterflies": 60,
+        "min_native_HOSTS_resource_regions": 96,
+        "max_native_HOSTS_resource_regions": 169,
+        "new_island_resource_cells": 1749,
+        "fraction_all_island_resource_additions": 0.30465075770771644,
+        "mean_added_island_regions_per_butterfly": 29.15,
+        "proportion_species_with_added_island_resources": 0.9833333333333333,
+        "fraction_all_original_native_host_gaps_filled": 0.27665295792470734,
+        "mean_known_HOSTS_plant_species": 8.383333333333333
+      },
+      {
+        "quartile": 4,
+        "butterflies": 59,
+        "min_native_HOSTS_resource_regions": 169,
+        "max_native_HOSTS_resource_regions": 305,
+        "new_island_resource_cells": 2271,
+        "fraction_all_island_resource_additions": 0.3955756836788016,
+        "mean_added_island_regions_per_butterfly": 38.49152542372882,
+        "proportion_species_with_added_island_resources": 1.0,
+        "fraction_all_original_native_host_gaps_filled": 0.46422730989370403,
+        "mean_known_HOSTS_plant_species": 24.440677966101696
+      }
+    ],
+    "spearman_native_HOSTS_breadth_vs_island_added": 0.5788964068803357,
+    "spearman_native_HOSTS_breadth_vs_gap_fill_fraction": 0.6676427077805046,
+    "upper_vs_lower_quartile_mean_added_islands_difference": 27.758192090395482,
+    "upper_vs_lower_95pct_species_resampling_descriptive": [
+      21.69161016949153,
+      33.48453389830509
+    ],
+    "early_GBIF_51island_breadth_sensitivity": {
+      "matched_species": 225,
+      "earlier_indexed_in_at_least_one_of_51_islands": 115,
+      "spearman_indexed_2001_2010_islands_vs_added_resource_islands": 0.19811737557958542,
+      "spearman_indexed_2001_2010_islands_vs_native_HOSTS_breadth": 0.29307891470456765,
+      "warning": "GBIF observed presence in 51 selected port-linked landmasses is recording effort affected, NOT validated native geographic range"
+    }
+  },
+  "potential_island_consumer_composition": {
+    "presence_definition": "At least one accepted known larval host in each island region, regardless of butterfly occurrence",
+    "observed": {
+      "island_pairs_all": 7875,
+      "pairs_comparable_both_native_and_contemporary_nonempty": 7797,
+      "pairs_with_native_union_zero_and_excluded": 78,
+      "mean_potential_butterfly_Jaccard_native": 0.1401370010070764,
+      "mean_potential_butterfly_Jaccard_contemporary": 0.3675355469925412,
+      "absolute_mean_Jaccard_change": 0.2273985459854648,
+      "mean_Jaccard_change_percentage_points": 22.73985459854648,
+      "fraction_pairs_with_increased_potential_Jaccard": 0.9226625625240477,
+      "fraction_pairs_with_decreased_potential_Jaccard": 0.026420418109529307,
+      "fraction_pairs_unchanged": 0.05091701936642298
+    },
+    "within_vs_between_Level1": {
+      "within_Level1": {
+        "pairs": 989,
+        "native_mean_Jaccard": 0.32481267544634906,
+        "contemporary_mean_Jaccard": 0.48705709184521656,
+        "mean_Jaccard_change": 0.16224441639886755
+      },
+      "between_Level1": {
+        "pairs": 6808,
+        "native_mean_Jaccard": 0.11330911586893881,
+        "contemporary_mean_Jaccard": 0.35017261986867276,
+        "mean_Jaccard_change": 0.23686350399973397
+      }
+    },
+    "degree_constrained_nulls": {
+      "species_island_addition_margins_global": {
+        "comparison": "raw added-resource Jaccard gain against constrained assignment preserving column and row gain totals",
+        "null": {
+          "observed": 0.2273985459854648,
+          "null_mean": 0.21573529865355626,
+          "null_sd": 0.00023065606532857885,
+          "null_2p5_97p5": [
+            0.21534417266179523,
+            0.2162098664406874
+          ],
+          "observed_minus_null_mean": 0.011663247331908544,
+          "upper_tail_descriptive_mc": 0.005,
+          "lower_tail_descriptive_mc": 1.0
+        },
+        "swaps": {
+          "seed": 20261117,
+          "regional_preserves_species_by_level1": false,
+          "draws": 199,
+          "proposals": 9426722,
+          "accepted": 1034876,
+          "acceptance_fraction": 0.10978110948853695,
+          "source_margin_preservation_checks": "PASS"
+        }
+      },
+      "species_island_addition_margins_and_within_Level1_species_margins": {
+        "comparison": "raw added-resource Jaccard gain against constrained assignment preserving column and row gain totals",
+        "null": {
+          "observed": 0.2273985459854648,
+          "null_mean": 0.22361126850532123,
+          "null_sd": 0.00014427647345492561,
+          "null_2p5_97p5": [
+            0.22332423802015097,
+            0.22386277023852577
+          ],
+          "observed_minus_null_mean": 0.0037872774801435694,
+          "upper_tail_descriptive_mc": 0.005,
+          "lower_tail_descriptive_mc": 1.0
+        },
+        "swaps": {
+          "seed": 20261118,
+          "regional_preserves_species_by_level1": true,
+          "draws": 199,
+          "proposals": 9426722,
+          "accepted": 59571,
+          "acceptance_fraction": 0.006319375918797648,
+          "source_margin_preservation_checks": "PASS"
+        }
+      }
+    },
+    "warning": "Potential community Jaccard may rise arithmetically as resource opportunities increase; two structural nulls preserve per-island added richness and per-butterfly added-island count; fixed-width CIs and null tails descriptive."
+  },
+  "limits": [
+    "Butterfly species outside the frozen 239 HOSTS panel are not assessed; no verified island-endemic/narrow-range butterfly classification",
+    "Native host-resource breadth (plant distribution) is NOT observed butterfly geographic distribution",
+    "Early butterfly GBIF footprint restricted to 51 WPI-selected landmass groups and uneven opportunistic detection",
+    "Potential consumer assemblages are not observed butterfly communities or population abundances",
+    "Contemporary WCVP introduced host ranges do not establish plant arrival years, local host quality, reproduction, or biological invasions",
+    "A constrained reshuffling null tests allocation structure, not randomized causal plant movement; repeated swap configurations are Markov dependent",
+    "Different sample and geometry from 104-region actual botanical and 51-landmass indexed butterfly marine-circuit similarity"
+  ]
+}
