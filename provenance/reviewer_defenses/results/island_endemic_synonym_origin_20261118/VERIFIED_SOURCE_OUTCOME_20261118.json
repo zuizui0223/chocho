@@ -124,5 +124,71 @@
     "A missing named HOSTS genus record is not evidence that the butterfly has no larval host in nature.",
     "The 2 Azorean endemics are source-recognized but Hipparchia azorina/azorinus name/rank is unresolved in GBIF.",
     "The unaltered positive GEB 239 model applies to its original known-HOSTS population, not necessarily the full indigenous island fauna."
-  ]
+  ],
+  "full_Canary_INBO_present_universe": {
+    "source": "Independent INBO present 33 Canarian butterfly species; exhaustive species-specific regional government BIOTA origin joins",
+    "crosswalks": [
+      "canary_BIOTA_source_status_20.csv",
+      "canary_BIOTA_remaining_13.csv"
+    ],
+    "species": 33,
+    "endemics": {
+      "n": 13,
+      "exact_HOSTS": 0,
+      "guarded_synonym_HOSTS": 0,
+      "in_original239": 0
+    },
+    "native_nonendemics": {
+      "n": 19,
+      "exact_HOSTS": 13,
+      "guarded_synonym_HOSTS": 15,
+      "in_original239": 9,
+      "secure": {
+        "n": 5,
+        "exact": 1,
+        "guarded_synonym": 3,
+        "in_original239": 0
+      },
+      "probable": {
+        "n": 14,
+        "exact": 12,
+        "guarded_synonym": 12,
+        "in_original239": 9
+      }
+    },
+    "introduced_probable": {
+      "n": 1,
+      "exact_HOSTS": 1,
+      "guarded_synonym_HOSTS": 1,
+      "in_original239": 0
+    },
+    "total_exact_HOSTS": 14,
+    "total_guarded_synonym_HOSTS": 16,
+    "total_GEB239_selection": 9,
+    "source_verified_workflow": "https://github.com/zuizui0223/chocho/actions/runs/44197938200",
+    "caveats": [
+      "Regional government labels are sometimes uncertain, especially native probable (NP).",
+      "Cacyreus marshalli labeled BIOTA native probable (NP) despite range introduction literature; preserve source-specific classification, sensitivity exclude.",
+      "Pieris rapae classified NP in Canary BIOTA but introduced i in historical Madeira checklist; do not transfer origin across islands.",
+      "Argynnis pandora and Maniola jurtina mapped to BIOTA subspecies pages; species-rank metadata kept separate."
+    ]
+  },
+  "targeted_external_larval_host_rescue": {
+    "original_independent_checklist_n": 42,
+    "guarded_synonym_NHM_HOSTS_named_genus": 21,
+    "new_source_confirmed_names_outside_HOSTS": 10,
+    "combined_ever_documented_larval_host_genus_minimum": 31,
+    "combined_minimum_percent": 73.8095,
+    "Madeira_endemic_literature_rescue": 3,
+    "Canary_endemic_literature_rescue": 7,
+    "independent_source_csv": "independent_larval_host_rescue_10.csv",
+    "audit_script": "scripts/audit_literature_host_rescue_20261118.py",
+    "source_verified_workflow": "https://github.com/zuizui0223/chocho/actions/runs/44197227988",
+    "caveats": [
+      "Purposively searched the HOSTS-unmatched endemic taxa; comparison to other origins is NOT at equal search effort.",
+      "Published evidence grades not uniform: first-hand larva, published review, curated natural-history resource.",
+      "31/42 is a minimum union of found host-genus reports, not a biological true coverage percentage.",
+      "Do not infer resources locally present, effective caterpillar development, colonization, or original GEB generalizability."
+    ]
+  }
 }
