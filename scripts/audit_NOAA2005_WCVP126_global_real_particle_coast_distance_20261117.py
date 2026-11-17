@@ -165,6 +165,11 @@ def main():
       json.dumps(r,indent=2,ensure_ascii=False,allow_nan=False)+"\n")
     with (a.out_dir/"NOAA126_global_current_source_distance_quality_counts.csv").open("w",newline="",encoding="utf8") as f:
         writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
+    print("NOAA2005_GLOBAL126_50KM_DIRECTIONAL_COAST_PAIR_IDENTITIES",json.dumps({
+        "max_source_offshore_km":50,
+        "positive_directed_pairs_WCVP_flora_overlap":
+            report_by_threshold["50"]["source_real_current_nearshore_positive_pairs_evaluable"]
+    },ensure_ascii=False),flush=True)
     print("NOAA2005_GLOBAL126_TRUE_CURRENTS_OFFSHORE_RESTRICTION",json.dumps({
        "status":r["status"],
        "by_distance":{k:{
