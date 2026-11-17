@@ -1,0 +1,79 @@
+name: chocho butterfly beneficiary main figure and source-verified quantitative archive
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/render_butterfly_beneficiary_potential_island_story_20261117.py
+      - .github/workflows/chocho-butterfly-beneficiary-figure-and-source-archive-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install quantitative figure dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2' 'matplotlib>=3.8,<4'
+      - name: Recover already-computed original-source 239-butterfly and fixed-margin results
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44035468935
+          github-token: ${{ github.token }}
+          name: chocho-butterfly-239-beneficiaries-island-potential-homogenization-20261117
+          path: results/butterfly_resource_beneficiaries_20261117
+      - name: Render main figure without using the actual butterfly occurrence index as native range
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/render_butterfly_beneficiary_potential_island_story_20261117.py
+          python scripts/render_butterfly_beneficiary_potential_island_story_20261117.py \
+            --source-dir results/butterfly_resource_beneficiaries_20261117 \
+            --out-prefix figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization
+      - name: Independently verify source counts and generated PNG PDF SVG
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json')
+          x=json.loads(p.read_text());z=x['potential_island_consumer_composition']
+          assert x['cohort']['original_island_added_cells']==5741
+          assert z['observed']['pairs_comparable_both_native_and_contemporary_nonempty']==7797
+          assert z['observed']['fraction_pairs_with_increased_potential_Jaccard']>.90
+          v=Path('figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization')
+          assert v.with_suffix('.png').read_bytes().startswith(b'\x89PNG')
+          assert v.with_suffix('.pdf').read_bytes().startswith(b'%PDF')
+          assert v.with_suffix('.svg').read_text().startswith('<?xml')
+          print('BENEFICIARIES_FIGURE_SOURCE_COUNTS_AND_FORMATS_PASS')
+          PY
+      - name: Permanently save audited source evidence and main-figure derivatives on draft branch only
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/butterfly_resource_beneficiaries_20261117/ \
+            figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.png \
+            figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.svg \
+            figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.pdf \
+            figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization_receipt.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Source-archive 239-butterfly beneficiaries and island potential homogenization with new GEB main figure [skip ci]"
+          git pull --rebase origin analysis/butterfly-trait-public51-20261109
+          git push origin HEAD:refs/heads/analysis/butterfly-trait-public51-20261109
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-beneficiary-potential-consumer-figure-review-20261117
+          path: |
+            figures/integrated_island_port_butterfly_v03/Fig3_butterfly_beneficiaries_potential_island_homogenization.*
+            results/butterfly_resource_beneficiaries_20261117/
+          retention-days: 90
+          if-no-files-found: warn
