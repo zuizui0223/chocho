@@ -26,14 +26,14 @@ def build(output:Path):
     if not shutil.which("pandoc"):
         raise RuntimeError("pandoc is needed to build the formatted review manuscript")
     original=SOURCE.read_text(encoding="utf8")
-    if not original.startswith("# Ports, sea currents and the human-assembled layer of island butterfly resources"):raise ValueError("Wrong canonical manuscript")
+    if not original.startswith("# Introduced host plants at ports and the potential for islands to serve as stepping stones for butterflies"):raise ValueError("Wrong canonical manuscript")
     # The DOCX title comes from Pandoc metadata; avoid duplicating the same
     # heading immediately below it in the manuscript body.
     original=original.partition("\n")[2].lstrip("\n")
     if original.count("## Structured abstract")!=1 or original.count("## 3. Results")!=1:
         raise ValueError("Not one canonical manuscript")
     draft=["---",
-           "title: 'Ports, sea currents and the human-assembled layer of island butterfly resources'",
+           "title: 'Introduced host plants at ports and the potential for islands to serve as stepping stones for butterflies'",
            "subtitle: 'Single integrated Research Article v0.3 - coauthor review draft, not for submission'",
            "lang: en",
            "---",
@@ -59,7 +59,7 @@ def build(output:Path):
         media=[n for n in z.namelist() if n.startswith("word/media/")]
         if len(media)<18:raise ValueError(f"Only {len(media)} embedded butterfly figures")
         xml=z.read("word/document.xml").decode("utf-8")
-        for term in ("Ports, sea currents and the human-assembled layer of island butterfly resources","Structured abstract","Figure 1","Figure 2",
+        for term in ("Introduced host plants at ports and the potential for islands to serve as stepping stones for butterflies","Structured abstract","Figure 1","Figure 2",
                      "butterfly"):
             if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={

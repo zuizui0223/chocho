@@ -1,28 +1,28 @@
-# Ports, sea currents and the human-assembled layer of island butterfly resources
+# Introduced host plants at ports and the potential for islands to serve as stepping stones for butterflies
 
 **ONE integrated Research Article | Butterfly island–port–marine synthesis v0.3 | Global Ecology and Biogeography | 17 November 2026**
 
 **Status:** Coauthor review draft; unsubmitted.
 
-**Running title:** Island butterfly host resources
+**Running title:** Introduced host plants at island ports
 
 **Keywords:** alien plants, butterflies, Circuitscape, island biogeography, larval host plants, marine resistance, ports, resource geography
 
 ## Structured abstract
 
-**Aim.** How does the redistribution of plants change the geography of island butterfly resources, and what do ports and sea connectivity reveal about the native and introduced components of that resource base?
+**Aim.** A weed arriving at an island port may provide food for the offspring of a butterfly that later reaches the island. We asked how often introduced plants fill geographic gaps in known larval hosts and whether the plants responsible for those gains occur at ports.
 
-**Location.** Global botanical regions, with separate samples of port floras, regional host reports and island butterfly assemblages.
+**Location.** Global botanical regions and island ports.
 
-**Time period.** Native and contemporary plant ranges, butterfly and port records during 2001–2024, and modelled surface-water trajectories in 2005.
+**Time period.** Native and contemporary plant ranges, occurrence records from 2001–2024 and modelled surface currents in 2005.
 
 **Major taxa studied.** Vascular plants and butterflies.
 
-**Methods.** We mapped known hosts of 239 butterflies under native-only and contemporary plant distributions. We compared port abundance with introduced richness, scored sea-dispersal traits, contrasted reported host use with regional plant-family composition, and evaluated marine resistance in held-island predictions.
+**Methods.** For 239 butterfly species, we mapped regions containing a known larval host under native-only and contemporary plant distributions. We matched globally important host species to port records, compared port numbers with introduced plant richness, and examined host-use reports, marine connectivity and the timing of breeding-stage records on neighbouring islands.
 
-**Results.** Introduced hosts narrowed the mainland–island difference in resource coverage from 21.4 to 17.7 percentage points. Ports were positively associated with introduced richness across 126 island regions. Among 22 trait-covered regions, native plants more often had sea-dispersal morphology. For 67 butterflies reported on islands and the mainland, the island excess in introduced-host reports after accounting for family composition was −3.9 points (95% interval −15.9 to +8.1). Sea resistance improved predictions of introduced-flora similarity by 4.24% across 104 regions and butterfly similarity by 5.08% in a separate 51-landmass panel.
+**Results.** Among 126 island regions, those with more ports had richer introduced floras. Eight of the ten plants contributing most to global host-coverage gains were recorded within surveyed port areas. Introduced hosts narrowed the mainland–island gap in host coverage from 21.4 to 17.7 percentage points. Marine connectivity improved predictions of both introduced-flora and butterfly assemblage similarity in separate island samples. In a dated subset, nine sequences across five potential stepping-stone islands and three butterfly species included a larval record followed by a first indexed record on a neighbouring island. Eight included an earlier record of a regionally introduced host on the first island.
 
-**Main conclusions.** Plant introductions added a substantial layer of potential larval resources where native coverage was low. Port-rich island regions contain a larger pool of introduced plants that includes larval hosts, and sea geography carries information about its spatial organization. Dispersal traits, current trajectories and host reports resolve different parts of the process; the historical routes of individual plants and butterflies remain open.
+**Main conclusions.** Port floras contain introduced plants, including weeds, that butterflies can already use as larval hosts. We hypothesise that shipping can move these plants ahead of butterflies, allowing later arrivals to breed and their offspring to reach another island. Testing this stepping-stone mechanism requires tracing plant arrivals and connecting locally produced offspring to subsequent arrivals elsewhere.
 
 ## 1. Introduction
 
