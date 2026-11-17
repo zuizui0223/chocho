@@ -54,7 +54,7 @@ def main():
  left.set_title("A   Which butterflies gain resources?",loc="left",fontsize=12,weight="bold",pad=13)
  left.text(.02,.96,"Quartiles of native HOSTS resource-region breadth",
           transform=left.transAxes,ha="left",va="top",fontsize=8.7,color=gray)
- left.text(2.96,25.7,"Equal 25% reference",ha="right",fontsize=8,color=gray)
+ left.text(-.32,27.0,"25% equal-share reference",ha="left",fontsize=8,color=gray)
 
  p=right.bar([0,1],[native,now],width=.52,color=[blue,orange])
  right.set_ylim(0,.43)
