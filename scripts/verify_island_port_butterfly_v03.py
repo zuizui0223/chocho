@@ -185,6 +185,38 @@ def run():
         assert sha(fig)==fig3receipt["output_files"][ext]["sha256"]
         if ext=="svg": ET.parse(fig)
     assert "native host" in captions.lower() and "Figure 3 | Who gains potential host resources" in captions
+    # Original 225 butterflies' OWN globally observed pre-2011 GBIF country
+    # breadth is distinct from known larval-HOSTS plant distribution width.
+    allcountry=data("results/butterfly_global_GBIF_country_breadth_20261117/SOURCE_GBIF2001_2010_225COUNTRY_FACETS_20261117.json")
+    assert (allcountry["requested"],allcountry["completed"],allcountry["failed"])==(225,225,0)
+    assert allcountry["fixed_parameters"]["year"]=="2001,2010"
+    country=data("results/butterfly_global_GBIF_country_breadth_20261117/BUTTERFLY_GBIF_COUNTRY_BREADTH_VS_ISLAND_HOST_GAIN_20261117.json")
+    assert (country["cohort"]["butterfly_species"],country["cohort"]["eligible_30_record_rarefaction_species"],
+            country["cohort"]["eligible_100_record_rarefaction_species"])==(225,222,211)
+    assert country["cohort"]["pre2011_country_facet_georeferenced_records_total"]==9648232
+    rawwidth=country["primary_correlations"]["rarefied_30_indexed_records"]
+    close(rawwidth["Spearman_countrybreadth_vs_island_host_resource_gains"],.05274359456434605)
+    close(rawwidth["partial_rank_with_native_host_footprint_catalogued_HOSTS_count_early_51_index_and_country_observation_effort"],-.002028284989791733)
+    q=country["independent_country_breadth_quartiles"]
+    assert len(q)==4 and sum(x["new_island_host_resource_opportunities"] for x in q)==5617
+    assert sum(x["new_later_51_indexed_species_island_cells"] for x in q)==317
+    assert (q[0]["new_later_51_indexed_species_island_cells"],q[3]["new_later_51_indexed_species_island_cells"])==(26,153)
+    firstindex=data("results/butterfly_global_GBIF_country_breadth_20261117/GLOBAL_COUNTRY_BREADTH_AND_HOST_RESOURCE_FIRSTINDEX_OOF_20261117.json")
+    assert (firstindex["n_risk_cells"],firstindex["n_butterflies"],firstindex["n_future_first_index_events"])==(10586,222,317)
+    for design in ("LOIO_51_islands","source_frozen_5_geographic_groups","heldout_butterfly_genus_5_hashes"):
+        z=firstindex["heldout_scores"][design]["incremental_over_base"]
+        assert z["B_plus_global_pre2011_country_breadth"]["Brier_error_reduction_pct"]<0
+    close(firstindex["heldout_scores"]["source_frozen_5_geographic_groups"]["incremental_over_base"]["B_plus_global_pre2011_country_breadth"]["Brier_error_reduction_pct"],-.5964500594852413)
+    s15stem="FigS15_independent_butterfly_country_breadth_resources_vs_index"
+    figS15=data("figures/integrated_island_port_butterfly_v03/"+s15stem+"_receipt.json")
+    assert (figS15["butterflies"],figS15["resource_panel_total_new_island_opportunities"],
+            figS15["record_index_panel_total_later_first_index"])==(222,5617,317)
+    for ext in ("png","pdf","svg"):
+        art=F3/(s15stem+"."+ext)
+        assert sha(art)==figS15["files"][ext]["sha256"]
+        if ext=="svg": ET.parse(art)
+    assert "### S.G. Butterfly country breadth" in t and "![Figure S15." in t
+    assert "observed-country" in t and "native-host" in t
     figdata = data("results/island_resource_layers/figure_inputs.json")
     close(figdata["circuit"]["alien_B_to_G_circuit_improvement_pct"], 4.239013650845648)
     assert figdata["hosts"]["HOSTS_Papilionoidea__all_hosts"]["shared_species_island_and_mainland"] == 67
