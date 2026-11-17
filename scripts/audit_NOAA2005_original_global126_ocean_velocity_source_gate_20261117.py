@@ -126,7 +126,7 @@ def candidates(source,anchor,season_index,mask):
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--GSHHG-graph",type=Path,required=True)
-    p.add_argument("--126-anchors-receipt",type=Path,required=True)
+    p.add_argument("--anchors-receipt",type=Path,required=True)
     p.add_argument("--out-dir",type=Path,required=True)
     args=p.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
