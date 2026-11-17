@@ -10,19 +10,19 @@
 
 ## Structured abstract
 
-**Aim.** We asked how plant introductions change the regions in which a butterfly has at least one known larval host, and why the proportional gain in coverage is greater on islands.
+**Aim.** We tested how introduced plants change butterfly larval-resource geography on islands, and whether marine network structure predicts plant and butterfly assemblages.
 
-**Location.** Global botanical regions, with a complementary inventory of port vegetation.
+**Location.** Global botanical regions and selected islands and ports.
 
-**Time period.** Native and contemporary plant ranges, with exploratory occurrence histories during 2001–2024.
+**Time period.** Contemporary floras and butterfly records from 2001–2024.
 
-**Major taxa studied.** Butterflies and their larval host plants.
+**Major taxa studied.** Butterflies and their host plants.
 
-**Methods.** For 239 butterflies, we held documented host identities fixed and counted regions containing at least one host under native-only and contemporary plant distributions. We compared 126 insular and 237 mainland regions, matched regions by area and broad biogeography, and examined whether the same host taxa were recorded near ports. Independently, we evaluated undirected, uniform-ocean circuit resistance against native and introduced plant-assemblage similarities on 104 botanical regions and butterfly-record similarity on 51 sampled island groups.
+**Methods.** We held known hosts fixed for 239 butterflies and compared native-only with contemporary plant ranges across 126 island and 237 mainland regions. We tested port inventories and compared an undirected, uniform-ocean resistance network with native and introduced plant similarity across 104 botanical regions and later butterfly-record similarity across 51 landmass groups, using leave-one-island-out prediction.
 
-**Results.** Introduced ranges of known hosts added regional resources for 206 of 239 butterflies. Native hosts initially covered 16.0% of island butterfly–region combinations and 37.5% of mainland combinations. Introduced hosts filled similar fractions of the remaining gaps (22.7% and 24.5%, respectively). Relative to native coverage, the gains were therefore much larger on islands (118.9%) than on the mainland (40.9%). Eight of the ten plants contributing most to global gains were also recorded in an inventory of 38 ports on 17 landmasses during 2001–2010. Across 98 island regions, port number was positively associated with introduced host richness, but the association disappeared after accounting for richness of the whole introduced flora. Uniform marine circuit resistance improved held-island predictions of introduced flora similarity by 4.24%, but not native flora similarity (−0.11%); separately, it improved later butterfly-record similarity predictions by 5.08%.
+**Results.** Introduced host ranges created additional regional resources for 206/239 butterflies. Native hosts covered 16.0% of island versus 37.5% of mainland butterfly–region combinations; introduced hosts filled 22.7% versus 24.5% of remaining gaps. Relative resource gains were 118.9% on islands and 40.9% on the mainland. Eight of ten globally influential hosts occurred in pre-2011 island-port inventories, although host-specific port enrichment was not robust to whole-flora controls. Adding uniform marine circuit resistance reduced introduced-flora similarity prediction error by 4.24%, but did not improve native-flora prediction (−0.11%). A separate butterfly-record analysis improved by 5.08%.
 
-**Main conclusions.** Plant introductions extended the mapped distribution of larval resources across much of the butterfly assemblage without requiring a change in diet. Islands showed the largest proportional gain because a smaller fraction of island regions initially contained a native host for a given butterfly. Port floras locate some of the plants responsible for this global pattern in coastal habitats where butterflies could encounter them. Introduced floras and later butterfly records also carry additional predictive structure associated with marine network connectivity, without establishing biological transport.
+**Main conclusions.** Redistributed known hosts expand potential butterfly resources most strongly where native host coverage was initially sparse. Introduced floras and later butterfly records share additional marine-network-associated predictive structure, but this does not demonstrate ocean-current dispersal, ship-borne introductions or butterfly establishment.
 
 ## 1. Introduction
 
