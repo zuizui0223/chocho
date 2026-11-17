@@ -1,0 +1,239 @@
+{
+  "schema": "chocho_225_butterfly_independent_observed_country_GBIF_breadth_vs_126_island_HOSTS_resource_benefit_20261117_v1",
+  "status": "SOURCE_VERIFIED_INDEPENDENT_BUTTERFLY_OBSERVED_BREADTH_NOT_TRUE_NATIVE_RANGES",
+  "source_git_blob_checks": {
+    "results/butterfly_resource_beneficiaries_20261117/beneficiary_species_native_resource_breadth.csv": "c9e409441dcd2bb7f9edc5a813fc13490bf60d8f",
+    "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv": "b6a3c98eb76864052d45d520a55b7d830816126c",
+    "results/butterfly_global_GBIF_country_breadth_20261117/SOURCE_GBIF2001_2010_225COUNTRY_FACETS_20261117.json": "8d978524cf8567d9a8e8e4715396c68b7f39867f"
+  },
+  "GBIF_country_snap_acquired_UTC": "2026-11-17T09:30:16.905395+00:00",
+  "cohort": {
+    "butterfly_species": 225,
+    "pre2011_country_facet_georeferenced_records_total": 9648232,
+    "countries_with_2001_2010_any_observation_species": 225,
+    "eligible_30_record_rarefaction_species": 222,
+    "eligible_100_record_rarefaction_species": 211,
+    "GBIF_earlier_51_landmass_indexed_cells": 736,
+    "later_51_landmass_first_index_cells": 317,
+    "source_239_unique_species": 239
+  },
+  "methods": {
+    "country_breadth": "Global GBIF occurrence/search, speciesKey and year 2001–2010, coordinates only, country facet, not true native butterflies or island endemicity",
+    "sample_effort_correction": "Exact expected unique observed countries in 30 (main) or 100 (sensitivity) records sampled without replacement from each butterfly's original 2001–2010 country occurrence-count vector",
+    "rarefied_under_30": "EXCLUDED from rarefied comparison not treated as narrow butterfly",
+    "country_observation_5plus": "Separate sensitivity to taxon country reporting count",
+    "quartiles": "Equal-species rank groups of sample-size standardized 30-record country breadth. Ties broken lexicographically without using outcomes; small ties may cross groups",
+    "partial_rank_controls": [
+      "native HOSTS plant-range region count",
+      "documented larval host catalogue size",
+      "previous 51-landmass indexed butterfly breadth",
+      "log1p(global historical GBIF country facet indexed record count)"
+    ],
+    "sensitivity_prediction": "Fixed-alpha ridge, OOF 5 butterfly groups by stable SHA256 species-name hashes and independently by genus-group hashes, train-only scaling",
+    "bootstrap": "2,999 butterfly-species resamples, descriptive intervals, not phylogenetically independent butterfly species"
+  },
+  "primary_correlations": {
+    "all_225_country_count": {
+      "n": 225,
+      "range_proxy": "observed_countries_any",
+      "Spearman_countrybreadth_vs_island_host_resource_gains": 0.08651293314116869,
+      "Spearman_countrybreadth_vs_fraction_of_initial_native_host_gaps_filled": 0.11832079791745492,
+      "partial_rank_with_native_host_footprint_catalogued_HOSTS_count_early_51_index_and_country_observation_effort": 0.07769247430432676,
+      "Spearman_countrybreadth_vs_later_51_landmass_first_GBIF_indices": 0.4781135820713408,
+      "partial_rank_later_index_count_adjusted_host_footprint_HOSTS_count_early_51_index_country_observation_effort": 0.12490476916513472
+    },
+    "all_225_country_5plus": {
+      "n": 225,
+      "range_proxy": "observed_countries_5plus",
+      "Spearman_countrybreadth_vs_island_host_resource_gains": 0.033483956337988424,
+      "Spearman_countrybreadth_vs_fraction_of_initial_native_host_gaps_filled": 0.05954898977044829,
+      "partial_rank_with_native_host_footprint_catalogued_HOSTS_count_early_51_index_and_country_observation_effort": 0.03187958495242569,
+      "Spearman_countrybreadth_vs_later_51_landmass_first_GBIF_indices": 0.45982801676103285,
+      "partial_rank_later_index_count_adjusted_host_footprint_HOSTS_count_early_51_index_country_observation_effort": 0.1199871333713657
+    },
+    "rarefied_30_indexed_records": {
+      "n": 222,
+      "range_proxy": "rarefied_30_countries",
+      "Spearman_countrybreadth_vs_island_host_resource_gains": 0.05274359456434605,
+      "Spearman_countrybreadth_vs_fraction_of_initial_native_host_gaps_filled": 0.09729634053380239,
+      "partial_rank_with_native_host_footprint_catalogued_HOSTS_count_early_51_index_and_country_observation_effort": -0.002028284989791733,
+      "Spearman_countrybreadth_vs_later_51_landmass_first_GBIF_indices": 0.40348157545499663,
+      "partial_rank_later_index_count_adjusted_host_footprint_HOSTS_count_early_51_index_country_observation_effort": 0.13815247800966343
+    },
+    "rarefied_100_indexed_records": {
+      "n": 211,
+      "range_proxy": "rarefied_100_countries",
+      "Spearman_countrybreadth_vs_island_host_resource_gains": 0.05279254282241703,
+      "Spearman_countrybreadth_vs_fraction_of_initial_native_host_gaps_filled": 0.1041862491849891,
+      "partial_rank_with_native_host_footprint_catalogued_HOSTS_count_early_51_index_and_country_observation_effort": 0.017414431720210715,
+      "Spearman_countrybreadth_vs_later_51_landmass_first_GBIF_indices": 0.44339185544319243,
+      "partial_rank_later_index_count_adjusted_host_footprint_HOSTS_count_early_51_index_country_observation_effort": 0.18504070563983552
+    }
+  },
+  "independent_country_breadth_quartiles": [
+    {
+      "record_country_breadth_quartile": 1,
+      "species": 56,
+      "rarefied_30_country_breadth_min": 1.0,
+      "rarefied_30_country_breadth_max": 2.86608890076309,
+      "mean_country_breadth_rarefied30": 2.071363531575113,
+      "mean_known_HOSTS_resource_breadth": 130.39285714285714,
+      "mean_known_host_catalog_size": 10.964285714285714,
+      "new_island_host_resource_opportunities": 1421,
+      "share_island_added_covered_by_rarefaction_eligible_species": 0.2529820188712836,
+      "new_later_51_indexed_species_island_cells": 26,
+      "fraction_new_51_index_events_in_rarefied_sample": 0.08201892744479496,
+      "new_index_rate_within_early_unindexed_cells": 0.009210060219624512
+    },
+    {
+      "record_country_breadth_quartile": 2,
+      "species": 55,
+      "rarefied_30_country_breadth_min": 2.8721254807920187,
+      "rarefied_30_country_breadth_max": 5.407851017511011,
+      "mean_country_breadth_rarefied30": 4.147121538704732,
+      "mean_known_HOSTS_resource_breadth": 101.01818181818182,
+      "mean_known_host_catalog_size": 8.49090909090909,
+      "new_island_host_resource_opportunities": 1372,
+      "share_island_added_covered_by_rarefaction_eligible_species": 0.24425850097917037,
+      "new_later_51_indexed_species_island_cells": 56,
+      "fraction_new_51_index_events_in_rarefied_sample": 0.17665615141955837,
+      "new_index_rate_within_early_unindexed_cells": 0.020771513353115726
+    },
+    {
+      "record_country_breadth_quartile": 3,
+      "species": 56,
+      "rarefied_30_country_breadth_min": 5.430027562688781,
+      "rarefied_30_country_breadth_max": 7.220195648306212,
+      "mean_country_breadth_rarefied30": 6.385337901753881,
+      "mean_known_HOSTS_resource_breadth": 105.23214285714286,
+      "mean_known_host_catalog_size": 8.714285714285714,
+      "new_island_host_resource_opportunities": 1347,
+      "share_island_added_covered_by_rarefaction_eligible_species": 0.23980772654441873,
+      "new_later_51_indexed_species_island_cells": 82,
+      "fraction_new_51_index_events_in_rarefied_sample": 0.2586750788643533,
+      "new_index_rate_within_early_unindexed_cells": 0.031981279251170044
+    },
+    {
+      "record_country_breadth_quartile": 4,
+      "species": 55,
+      "rarefied_30_country_breadth_min": 7.231638522891894,
+      "rarefied_30_country_breadth_max": 11.597197815729237,
+      "mean_country_breadth_rarefied30": 9.11344311425357,
+      "mean_known_HOSTS_resource_breadth": 125.67272727272727,
+      "mean_known_host_catalog_size": 16.927272727272726,
+      "new_island_host_resource_opportunities": 1477,
+      "share_island_added_covered_by_rarefaction_eligible_species": 0.2629517536051273,
+      "new_later_51_indexed_species_island_cells": 153,
+      "fraction_new_51_index_events_in_rarefied_sample": 0.48264984227129337,
+      "new_index_rate_within_early_unindexed_cells": 0.06112664802237315
+    }
+  ],
+  "descriptive_species_bootstraps": {
+    "rarefied30_raw_Spearman_2999_descriptive95": [
+      -0.0728277925549486,
+      0.18023043461479551
+    ],
+    "rarefied30_effort_and_host_footprint_adjusted_partial_rank_2999_descriptive95": [
+      -0.12668968296439762,
+      0.12765856246096635
+    ]
+  },
+  "cross_validated_increment_beyond_native_HOSTS_and_record_effort": {
+    "species_stable_hash_5fold": {
+      "folds": [
+        {
+          "fold": 0,
+          "held_species": 36,
+          "train_species": 186
+        },
+        {
+          "fold": 1,
+          "held_species": 55,
+          "train_species": 167
+        },
+        {
+          "fold": 2,
+          "held_species": 45,
+          "train_species": 177
+        },
+        {
+          "fold": 3,
+          "held_species": 44,
+          "train_species": 178
+        },
+        {
+          "fold": 4,
+          "held_species": 42,
+          "train_species": 180
+        }
+      ],
+      "baseline_MSE_log1p_added_island_resources": 1.209014577650568,
+      "add_rarefied_30_countries_MSE": 1.2072387149045132,
+      "relative_MSE_reduction_pct": 0.14688513925993082,
+      "response": "log1p(number of new potential butterfly host-covered botanical islands)",
+      "baseline_controls": [
+        "log1p(native HOSTS resource regions)",
+        "log1p(native HOSTS island regions)",
+        "log1p(HOSTS known plant species)",
+        "log1p(host family count)",
+        "log1p(GBIF 2001-2010 georeferenced country facet records)",
+        "log1p(earlier indexed butterflies on the original 51 sample islands)"
+      ],
+      "added_predictor": "Expected distinct country categories in 30 independent-country-facet observation records, exact finite-sample without replacement",
+      "ridge_alpha_fixed": 10.0
+    },
+    "genus_block_5fold": {
+      "folds": [
+        {
+          "fold": 0,
+          "held_species": 60,
+          "train_species": 162
+        },
+        {
+          "fold": 1,
+          "held_species": 46,
+          "train_species": 176
+        },
+        {
+          "fold": 2,
+          "held_species": 41,
+          "train_species": 181
+        },
+        {
+          "fold": 3,
+          "held_species": 43,
+          "train_species": 179
+        },
+        {
+          "fold": 4,
+          "held_species": 32,
+          "train_species": 190
+        }
+      ],
+      "baseline_MSE_log1p_added_island_resources": 1.2278819960455911,
+      "add_rarefied_30_countries_MSE": 1.2275003465972174,
+      "relative_MSE_reduction_pct": 0.031081932107712113,
+      "response": "log1p(number of new potential butterfly host-covered botanical islands)",
+      "baseline_controls": [
+        "log1p(native HOSTS resource regions)",
+        "log1p(native HOSTS island regions)",
+        "log1p(HOSTS known plant species)",
+        "log1p(host family count)",
+        "log1p(GBIF 2001-2010 georeferenced country facet records)",
+        "log1p(earlier indexed butterflies on the original 51 sample islands)"
+      ],
+      "added_predictor": "Expected distinct country categories in 30 independent-country-facet observation records, exact finite-sample without replacement",
+      "ridge_alpha_fixed": 10.0
+    }
+  },
+  "interpretation_limits": [
+    "GBIF observed-country breadth is INDEPENDENT butterfly recording geography but not verified true native range, endemism, dispersal ability, population abundance or actual island occupancy",
+    "GBIF 2001-2010 is a new 2026 retrieval; time-filtering records is not independent source-archival temporal reconstruction, reindex drift can change snapshots",
+    "Some zero/low pre-2011 GBIF species have no country coverage: do NOT call them range-restricted; exclude those with <30 records from standardized main",
+    "Country sizes and within-country sampling differ; rarefaction adjusts number of records, not recorder locations/habitat/taxonomic coverage or global country border size",
+    "The butterfly GBIF country facet and original 51-island butterfly panel share opportunistic GBIF observation processes, despite a distinct global geographic query",
+    "The 239 HOSTS-WCVP botanical resource panel and 225 GBIF butterfly panel represent different sampling, no species-level independent plant introduction date or local larval feeding verified",
+    "Correlations or predictive improvements do not establish shipborne dispersal, native butterfly community homogenization, or causal butterfly colonization by introduced plants",
+    "Source datasetKey/GBIF DOI citation for new country facet queries still needs separate archive protocol before journal submission"
+  ]
+}
