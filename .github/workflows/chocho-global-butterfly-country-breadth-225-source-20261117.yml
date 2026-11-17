@@ -1,0 +1,64 @@
+name: chocho original 225 butterflies global observed GBIF country breadth 2001-2010
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - .github/workflows/chocho-global-butterfly-country-breadth-225-source-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  independent-global-butterfly-record-range:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Retrieve date-correct pre-2011 country facets for the EXACT 225 original butterflies
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/acquire_global_pre2011_butterfly_country_breadth_20261117.py
+          python scripts/acquire_global_pre2011_butterfly_country_breadth_20261117.py \
+            --out-dir results/butterfly_global_GBIF_country_breadth_20261117 \
+            --workers 4
+      - name: Independent no-absence-substitution check on all 225 taxon-specific GBIF query receipts
+        run: |
+          python - <<'PY'
+          import json,collections
+          from pathlib import Path
+          p=Path('results/butterfly_global_GBIF_country_breadth_20261117/SOURCE_GBIF2001_2010_225COUNTRY_FACETS_20261117.json')
+          x=json.loads(p.read_text())
+          assert (x['requested'],x['completed'],x['failed'])==(225,225,0)
+          assert x['fixed_parameters']['year']=='2001,2010'
+          assert x['fixed_parameters']['hasCoordinate']=='true'
+          assert x['status']=='ALL_REQUESTS_COMPLETE'
+          z=x['countries_per_butterfly']
+          assert len({y['species'] for y in z})==225
+          assert len({y['speciesKey'] for y in z})==225
+          assert all(y['status']=='COMPLETE_GBIF_COUNTRY_FACETS' for y in z)
+          assert sum(y['n_countries_any_country_facet']>0 for y in z)>=140
+          assert sum(y['country_records_in_facets']>=30 for y in z)>=80
+          assert all(y['country_records_in_facets']<=y['GBIF_count_indexed_2001_2010'] for y in z)
+          print('GLOBAL_225_BUTTERFLY_GBIF_PRE2011_COUNTRY_FACETS_COMPLETE_SUCCESS')
+          PY
+      - name: Commit *aggregated* country-level butterfly breadth snapshot (no occurrence coordinates)
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/butterfly_global_GBIF_country_breadth_20261117/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Source-snapshot original225 global 2001-2010 butterfly GBIF country facets and complete API receipts [skip ci]'
+          git pull --rebase origin analysis/butterfly-trait-public51-20261109
+          git push origin HEAD:refs/heads/analysis/butterfly-trait-public51-20261109
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-225-butterfly-GBIF-2001-2010-global-country-facet-receipts
+          path: results/butterfly_global_GBIF_country_breadth_20261117/
+          retention-days: 90
+          if-no-files-found: warn
