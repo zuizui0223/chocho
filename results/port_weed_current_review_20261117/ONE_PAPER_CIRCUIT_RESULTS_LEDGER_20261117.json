@@ -20,7 +20,8 @@
     "botanicals_WCVP_acceptedspecies": 44010011288,
     "botanicals_true_circuit_both_endpoints_unseen": 44023148246,
     "butterflies_host_conditional_uniform_ocean_reexecution": 44025831765,
-    "butterflies_host_conditional_uniform_ocean_early_botanical_effort_sensitivity": 44026547052
+    "butterflies_host_conditional_uniform_ocean_early_botanical_effort_sensitivity": 44026547052,
+    "prior2010_exact_butterfly_HOSTS_taxa_later_first_indexes": 44029498482
   },
   "floras": {
     "regions": 104,
@@ -164,6 +165,71 @@
         },
         "important_falsification": "Original 51-island butterfly uniform marine circuit's independent incremental prediction attenuates near zero or turns adverse after source-verified host richness and general-plant historical recording effort; original source-positive 51-island and 104-region estimates remain valid under their own distinct models."
       }
+    },
+    "prior2010_exact_species_hosts_later_first_index": {
+      "status": "SOURCE_VERIFIED_TEMPORALLY_PRIOR_KNOWN_LARVAL_HOST_RECORD_NOT_CAUSAL_ESTABLISHMENT",
+      "source_run": 44029498482,
+      "aggregate_artifact": 14304278533,
+      "report_path": "results/prior2010_exact_HOSTS_butterfly_20261117/README_JA.md",
+      "numeric_source": "results/prior2010_exact_HOSTS_butterfly_20261117/SOURCE_LOCKED_PRIOR_2010_HOSTS_BUTTERFLY_RESULTS_20261117.json",
+      "input_sources": {
+        "butterfly_HOSTS_edges": 40979986160,
+        "GBIF_species_taxonomy": 41177682289,
+        "historical_194_ports": 42361257543,
+        "independent_public225_51_butterfly_periods": 42556346640
+      },
+      "population": {
+        "matched_butterfly_species": 218,
+        "n_original_WPI_ports": 194,
+        "at_risk_species_island_cells": 10431,
+        "later_2011_2022_first_index_records": 306,
+        "earlier_known_compatible_host_indexed_n": 1075,
+        "earlier_known_compatible_host_and_later_butterfly_n": 53
+      },
+      "crude_record_rates": {
+        "prior_known_HOSTS_present_indexed": 0.04930232558139535,
+        "no_prior_known_HOSTS_index": 0.027041470713980335
+      },
+      "species_and_island_FE": {
+        "prior_host_beta_pp": 2.8411367322736045,
+        "descriptive95_pp": [
+          0.08424269126495325,
+          5.598030773282256
+        ]
+      },
+      "plus_prior_conspecific_geodesic_only": {
+        "prior_host_beta_pp": -1.102977665,
+        "descriptive95_pp": [
+          -3.72047,
+          1.51451
+        ]
+      },
+      "plus_geodesic_and_uniform_GSHHG": {
+        "prior_host_beta_pp": -0.8904892986766128,
+        "descriptive95_pp": [
+          -3.452162311241774,
+          1.6711837138885484
+        ]
+      },
+      "source_aware_LOIO": {
+        "folds": 51,
+        "base_Brier": 0.020535443400947474,
+        "augmented_prior_host_Brier": 0.020591087826658132,
+        "incremental_Brier_reduction_pct": -0.2709677342934357
+      },
+      "geographic5_holdout": {
+        "folds": 5,
+        "base_Brier": 0.0238182050488076,
+        "augmented_prior_host_Brier": 0.023909100724503626,
+        "incremental_Brier_reduction_pct": -0.38162269369067314
+      },
+      "limits": [
+        "Prior HOSTS compatible plant indexed in GBIF original194 port buffers before 2011 is not verified plant introduction or larval use",
+        "Prior regional source distance among sampled51 islands is not complete biological population geography",
+        "Temporal GBIF first indexing is not true butterfly colonization",
+        "This distinct source population does not invalidate positive WCVP full introduced flora/marine graph and 239-butterfly potential resource results",
+        "Original individual butterfly-host edge roster is read temporarily, not redistributed"
+      ]
     }
   },
   "model_choice_warning": "Uniform circuit selectively predicts introduced-flora Jaccard on LOIO (+4.24%), and its strict two-unseen transfer remains positive (+2.74%) but 5-fold interval includes zero; both are exploratory same-source tests, not confirmatory historical transport evidence. Native circuit adds no predictive improvement in either design. Shortest-water improves both floras in the original LOIO.",
