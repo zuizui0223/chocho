@@ -1,0 +1,99 @@
+name: chocho global NOAA old OSCAR 2005 126-island Lagrangian true-current source pilot
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/fetch_original_global_NOAA2005_oldOSCAR_53grids_20261117.py
+      - scripts/run_original_global_NOAA2005_126_island_coarse_lagrangian_20261117.py
+      - .github/workflows/chocho-NOAA-original2005-global126-particles.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  real-global-noaa-directional-source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source historical ocean and GSHHG geometry dependencies
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2' 'shapely>=2.0,<3' 'pyproj>=3.6,<4'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44011612861
+          github-token: ${{ github.token }}
+          name: chocho-original-NOAA2005-global126-source-coast-validity
+          path: _src/NOAA_126_original_source_gate
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/original126_TDWG_GSHHG_anchors
+      - name: Acquire genuine original NOAA 2005 and early 2006 global u/v, 53 5day steps
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg rev-parse HEAD)" = 52da7828aba9d461dd133c27b3bd7a4407161f54
+          python3 -m py_compile scripts/fetch_original_global_NOAA2005_oldOSCAR_53grids_20261117.py
+          python3 -m py_compile scripts/run_original_global_NOAA2005_126_island_coarse_lagrangian_20261117.py
+          python3 scripts/fetch_original_global_NOAA2005_oldOSCAR_53grids_20261117.py \
+            --out-npz _src/noaa_global2005_source_grid.npz \
+            --out-receipt results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_particles/noaa_original_global53_source_receipt.json \
+            --previous-three-date-gate _src/NOAA_126_original_source_gate/NOAA2005_global126_coastal_current_source_eligibility.json
+      - name: Physically integrate original 2005 NOAA surface flow in 90-day fixed scenarios with missingness and GSHHG actual coast mask
+        run: |
+          set -euo pipefail
+          python3 scripts/run_original_global_NOAA2005_126_island_coarse_lagrangian_20261117.py \
+            --noaa-cube _src/noaa_global2005_source_grid.npz \
+            --noaa-source-receipt results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_particles/noaa_original_global53_source_receipt.json \
+            --noaa-preflight _src/NOAA_126_original_source_gate/NOAA2005_global126_coastal_current_source_eligibility.json \
+            --original-GSHHG-graph data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz \
+            --coast-audit _src/original126_TDWG_GSHHG_anchors/GSHHG126_sea_geometry_source_coverage_audit.json \
+            --tdwg3 _src/tdwg/geojson/level3.geojson \
+            --original-WCVP-islands results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_particles
+      - name: No forward biological colonisation rate or fictitious full 126 source coverage
+        run: |
+          python3 - <<'PY'
+          import csv,json
+          from pathlib import Path
+          root=Path("results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_particles")
+          rec=json.loads((root/"noaa_original_global53_source_receipt.json").read_text())
+          q=json.loads((root/"NOAA2005_WCVP126_directed_source_coverage_and_interpretation.json").read_text())
+          assert rec["status"]=="NOAA_OLD_OSCAR_GLOBAL_2005_53_TIME_STEPS_AUTHENTIC_NOT_FULL_1_3_NATIVE_OR_BIOLOGICAL_TRANSPORT"
+          assert rec["true_source_shape"]==[53,161,401]
+          assert len(rec["source_chunk_checksums"])==4
+          assert q["status"]=="REAL_2005_GLOBAL_NOAA_LAGRANGIAN_1DEG_FEASIBILITY_SOURCE_ONLY_NOT_HISTORIC_PLANT_SEED_DELIVERY"
+          assert q["source_original_126_WCVP_regions"]==126
+          assert q["source_original_GSHHG_coastal_polygon_anchorable_regions"]==104
+          assert q["source_with_at_least_one_original_NOAA_2005_fixed_release"]==94
+          assert q["original_directed_126_minus_self_matrix_rows"]==15750
+          assert q["NOAA_not_NASA_daily_OSCAR_v2"]
+          m=list(csv.DictReader((root/"original126_NOAA2005_directed_source_nearshore_matrix.csv").open()))
+          assert len(m)==15750
+          assert sum(v for v in q["directed_pair_source_coverage_status"].values())==15750
+          assert all(r["no_observed_biological_arrival_or_shipping"]=="True" for r in m)
+          print("NOAA_GLOBAL_126_MODEL_SOURCE_ONLY_NOT_CAUSAL_PASS",
+            {"n_model_paths":q["actual_source_particle_tracks"],
+             "valid_pair_scope":q["source_pairs_evaluable_at_least_one_30day_current_track"],
+             "other_TDWG_nearshore_pairs":q["evaluable_source_dest_pairs_with_any_50km_offshore_nearshore_pass"],
+             "model_exact_target_mask_hits":q["evaluable_source_dest_pairs_with_any_GSHHG_land_contact_inside_other_exact_TDWG3"]})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-126-original-islands-NOAA2005-real-directional-1deg-source-particle-pilot
+          path: results/WCVP126_crossed_native_alien_20261117/global_NOAA2005_particles/
+          retention-days: 90
+          if-no-files-found: warn
