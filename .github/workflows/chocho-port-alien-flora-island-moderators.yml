@@ -1,0 +1,62 @@
+name: chocho 126-island port versus alien flora area/native moderation source test
+
+on:
+  push:
+    branches: [analysis/port-alien-flora-island-moderators-20261117]
+    paths:
+      - scripts/audit_island_port_alien_flora_native_area_moderators_20261117.py
+      - .github/workflows/chocho-port-alien-flora-island-moderators.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  flora-and-host-specific-moderation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install explicit numerical source-only analysis library
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Run original accepted WCVP island and butterfly-host candidates against fixed WPI ports
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_island_port_alien_flora_native_area_moderators_20261117.py
+          python3 scripts/audit_island_port_alien_flora_native_area_moderators_20261117.py \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --hosts results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --out-dir results/port_alien_flora_moderators_20261117
+      - name: Verify frozen cohorts and original 123-area port coefficient
+        run: |
+          python3 - <<'PY'
+          import json,math
+          from pathlib import Path
+          q=json.loads(Path("results/port_alien_flora_moderators_20261117/source_verified_port_alien_flora_island_moderators.json").read_text())
+          assert q["status"]=="SOURCE_VERIFIED_OBSERVATIONAL_MODERATOR_SCREEN_NOT_SHIPPING_OR_BUTTERFLY_COLONISATION"
+          assert (q["n_original_all_WCVP_islands"],q["n_original_HOSTS_active_islands"],
+                  q["n_original_GBIF_botanical_effort_matched_islands"])==(126,123,98)
+          assert abs(q["original_source_123_island_M0_port_alien_flora_beta_reproduced"]-.23347121981392502)<1e-8
+          assert len(q["tests"])==10
+          matched=[z for z in q["tests"] if z["source_cohort"]=="matched_host_source_panel"]
+          assert len(matched)==4
+          assert all(math.isfinite(t["port_times_moderator_standardized_beta"]) for t in q["tests"])
+          assert all(0<=t["Holm_adjusted_exploratory_p_across_four_matched_cohort_tests"]<=1 for t in matched)
+          assert all(t["n_islands"] in (126,123,98) and t["level1_groups"]>=7 for t in q["tests"])
+          print("ISLAND_PORT_ALIEN_FLORA_MODERATION_ALL_GATES_PASS",json.dumps([
+              {"model":x["model"],"moderator":x["moderator"],
+               "beta":x["port_times_moderator_standardized_beta"],
+               "p":x["Holm_adjusted_exploratory_p_across_four_matched_cohort_tests"]}
+              for x in matched]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-WCVP-HOSTS-126island-port-moderators-20261117
+          path: results/port_alien_flora_moderators_20261117/
+          retention-days: 90
+          if-no-files-found: warn
