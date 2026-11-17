@@ -162,8 +162,24 @@ def run():
     assert len(nulls)==2 and all(z["swaps"]["source_margin_preservation_checks"]=="PASS" for z in nulls.values())
     fig3stem="Fig3_butterfly_beneficiaries_potential_island_homogenization"
     fig3receipt=data("figures/integrated_island_port_butterfly_v03/"+fig3stem+"_receipt.json")
-    assert fig3receipt["status"]=="SOURCE_VERIFIED_MAIN_FIGURE_ONLY_POTENTIAL_BUTTERFLY_COMMUNITIES"
+    assert fig3receipt["status"]=="SOURCE_VERIFIED_THREE_PANEL_POTENTIAL_VS_GBIF_RECORD_INDEX_NOT_REAL_BUTTERFLY_HOMOGENIZATION"
     assert fig3receipt["source_sha256"]==sha(ROOT/"results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json")
+    index_source="results/butterfly_record_index_similarity_20261117/CUMULATIVE_GBIF_BUTTERFLY_ISLAND_INDEX_SIMILARITY_20261117.json"
+    chain_source="results/butterfly_record_index_similarity_20261117/MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json"
+    assert fig3receipt["record_index_source_sha256"]==sha(ROOT/index_source)
+    assert fig3receipt["fourchain_null_source_sha256"]==sha(ROOT/chain_source)
+    index_result=data(index_source)
+    assert (index_result["cohort"]["butterflies"],index_result["cohort"]["fixed_landmass_groups"])==(225,51)
+    assert (index_result["cohort"]["earlier_indexed_cells"],index_result["cohort"]["new_first_indexed_2011_2022"])==(736,317)
+    observed_index=index_result["cumulative_recording_Jaccard"]["all_51_original_landmass_pairs"]
+    close(observed_index["mean_Jaccard_2001_2010"],.1209632547327149)
+    close(observed_index["mean_Jaccard_by_2022"],.17777287436807837)
+    assert observed_index["improved_pairs"]==945 and observed_index["pairs"]==1275
+    chain_result=data(chain_source)
+    chain=chain_result["nulls"]["geography_preserving"]["diagnostic"]["all_pairs"]
+    assert chain["chain_means_stable"] and chain["n_chain_draws_total"]==796
+    close(chain["observed_excess"],.007200640531)
+    close(fig3receipt["values"]["geographic_null_extra_Jaccard"],chain["observed_excess"])
     for ext in ("png","pdf","svg"):
         fig=F3/(fig3stem+"."+ext)
         assert sha(fig)==fig3receipt["output_files"][ext]["sha256"]
