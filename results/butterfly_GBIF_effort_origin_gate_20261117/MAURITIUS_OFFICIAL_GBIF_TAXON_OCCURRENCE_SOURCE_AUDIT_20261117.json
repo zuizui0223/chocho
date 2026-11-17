@@ -1,0 +1,64 @@
+{
+  "schema": "chocho_mauritius_2026-11-17_official_GBIF_7_endpoints_source_audit_v1",
+  "status": "SOURCE_VERIFIED_TAXON_AND_RECORD_PROVENANCE_NO_NATIVE_STATUS_OR_ERROR_ASSERTION",
+  "run_url": "https://github.com/zuizui0223/chocho/actions/runs/44077684191",
+  "run_id": 44077684191,
+  "source_artifact": {
+    "id": 14324344278,
+    "sha256_zip": "4d1cb09306533df1e28d9212db9699d7cfec3964dd828f13944798658d7678ec",
+    "expires": "2027-02-15T11:50:55Z"
+  },
+  "source_context": {
+    "historical_checklist": "Davis and Barnes 1993, The Butterflies of Mauritius; doi:10.5962/p.332210",
+    "taxonomic_alternative": "Yago et al. 2008, doi:10.11646/zootaxa.1746.1.2"
+  },
+  "official_GBIF_backbone": {
+    "Zizina_antis": [
+      "Zizina antanossa",
+      "ACCEPTED",
+      8177775
+    ],
+    "Zizina_otis": [
+      "Zizina otis",
+      "ACCEPTED",
+      7346444
+    ],
+    "same_speciesKey_in_2026_GBIF_backbone": false,
+    "decision": "Do not treat 1993 Z. antanossa records as an exact historic match to the accepted GBIF Z. otis 7346444 without a documented taxonomy-concept crosswalk"
+  },
+  "unusual_occurrence": {
+    "species": "Zerynthia polyxena",
+    "speciesKey": 5141262,
+    "GBIF_occurrence_key": 5023737393,
+    "date": "2022-10-11",
+    "basisOfRecord": "HUMAN_OBSERVATION",
+    "lat": -20.038742,
+    "long": 57.54546,
+    "coordinateUncertaintyInMeters": 25,
+    "GBIF_flags": [
+      "COORDINATE_ROUNDED",
+      "GEODETIC_DATUM_ASSUMED_WGS84",
+      "CONTINENT_DERIVED_FROM_COORDINATES"
+    ],
+    "identifiedBy": null,
+    "GBIF_media_count": 0,
+    "source_dataset": "NABU|naturgucker",
+    "datasetKey": "6ac3f774-d9fb-4796-b3e9-92bf6c81c084",
+    "dataset_doi": "10.15468/uc1apo",
+    "original_reference": "https://enjoynature.net/?gebiet=-509720845&datum=11.10.22&art=1999567171",
+    "record_url": "https://www.gbif.org/occurrence/5023737393",
+    "dataset_url": "https://www.gbif.org/dataset/6ac3f774-d9fb-4796-b3e9-92bf6c81c084",
+    "source_data_status": "real_published_GBIF_record_with_unverified_taxonomic_identification",
+    "decision": "Flag for image/voucher/local expert review. The recorded location is Mauritian, and a range anomaly is not sufficient proof of error or human transport."
+  },
+  "inference_gates": [
+    "Do not automatically pool Z. antanossa and Z. otis across conflicting accepted-taxonomy concepts.",
+    "Do not discard a single geographically unusual occurrence without raw source quality verification.",
+    "GBIF occurrence and country records do not establish native origin, breeding, establishment, or endemicity.",
+    "The historical source confirmed exactly three Mauritius binomials, with two cases unresolved."
+  ],
+  "status_of_317": {
+    "historical_confirmed_same_species_and_island": 15,
+    "other_cases_not_confirmed_by_these_sources": 302
+  }
+}
