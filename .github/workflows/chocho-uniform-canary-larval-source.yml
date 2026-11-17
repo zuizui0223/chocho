@@ -5,6 +5,7 @@ on:
     paths:
       - scripts/audit_uniform_canary_source_20261118.py
       - scripts/summarize_uniform_canary_hosts_20261118.py
+      - scripts/audit_independent42_original239_taxonomic_selection_20261118.py
       - .github/workflows/chocho-uniform-canary-larval-source.yml
       - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/**
   workflow_dispatch:
@@ -31,6 +32,12 @@ jobs:
           python3 scripts/summarize_uniform_canary_hosts_20261118.py \
             --uniform-csv results/uniform_canary_source_20261118/uniform_polinizadores_ciclo_vital_canary33.csv \
             --out-dir results/uniform_canary_source_20261118
+      - name: Reconcile independent 42 butterfly identity with original GEB239 homotypic names
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_independent42_original239_taxonomic_selection_20261118.py
+          python3 scripts/audit_independent42_original239_taxonomic_selection_20261118.py \
+            --out-dir results/uniform_canary_source_20261118
       - name: Verify all independent butterfly queries and source semantics
         run: |
           python3 - <<'PY'
@@ -51,6 +58,11 @@ jobs:
           assert q['origin_strata']['endemic_confirmed']['uniform_source_larval_genus']==6
           assert q['native_nonendemic_combined']['uniform_source_larval_genus']==18
           assert q['source_availability_family_conditional']['one_sided_conditional_fixed_family_origin_page_totals']>0
+          identity=json.loads((p.parent/'original239_homotypic_selection_summary.json').read_text())
+          assert identity['source_exact_original239_n']==12
+          assert identity['source_confirmed_homotypic_original239_min']==13
+          assert identity['cohorts']['Canary_native_nonendemic19']['source_verified_homotypic_239']==10
+          assert identity['cohorts']['Madeira_native_nonendemic7']['source_verified_homotypic_239']==7
           print('COMPLETE_33_UNIFORM_LARVAL_SOURCE_QUERIES_VALID')
           for origin,record in obj['cohorts'].items():
             print(origin,json.dumps(record,sort_keys=True))
