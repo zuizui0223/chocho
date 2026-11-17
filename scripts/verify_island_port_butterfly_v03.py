@@ -31,7 +31,7 @@ def sha(p):
     return hashlib.sha256(canonical_bytes(p)).hexdigest()
 def run():
     t=M.read_text(encoding="utf8");captions=CAP.read_text(encoding="utf8")
-    assert t.startswith("# Introduced host plants at ports and the potential for islands to serve as stepping stones for butterflies")
+    assert t.startswith("# Human-assembled floras expand the potential resource geography of island butterflies")
     assert "## Structured abstract" in t and "## 1. Introduction" in t
     abstract=t.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     wc=len(re.findall(r"\b[\w]+(?:[-–][\w]+)*\b",abstract))
