@@ -1,0 +1,262 @@
+{
+  "schema": "chocho_cumulative_GBIF_butterfly_225x51_2001_2010_2017_2022_source_locked_margin_control_v1",
+  "status": "COMPUTATION_SOURCE_VERIFIED_BUTTERFLY_INDEXING_NOT_TRUE_HOMOGENIZATION",
+  "source_git_blobs": {
+    "butterflies": {
+      "path": "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv",
+      "git_blob_sha": "b6a3c98eb76864052d45d520a55b7d830816126c"
+    },
+    "longitude": {
+      "path": "results/island51_double_unseen_blocks_20261107/longitude_island_blocks.csv",
+      "git_blob_sha": "ef2cfcd0b3133d308c18b517001b33a9b46e9630"
+    },
+    "beneficiary": {
+      "path": "results/butterfly_resource_beneficiaries_20261117/beneficiary_species_native_resource_breadth.csv",
+      "git_blob_sha": "c9e409441dcd2bb7f9edc5a813fc13490bf60d8f"
+    }
+  },
+  "source_periods": {
+    "early": "2001-2010",
+    "mid": "2011-2017",
+    "late": "2018-2022"
+  },
+  "cohort": {
+    "butterflies": 225,
+    "fixed_landmass_groups": 51,
+    "species_island_cells": 11475,
+    "original_pairwise_dyads": 1275,
+    "earlier_indexed_cells": 736,
+    "new_first_indexed_2011_2017": 221,
+    "new_first_indexed_2018_2022": 96,
+    "new_first_indexed_2011_2022": 317
+  },
+  "cumulative_recording_Jaccard": {
+    "all_51_original_landmass_pairs": {
+      "pairs": 1275,
+      "mean_Jaccard_2001_2010": 0.1209632547327149,
+      "mean_Jaccard_by_2022": 0.17777287436807837,
+      "mean_increment": 0.05680961963536349,
+      "median_increment": 0.034999999999999996,
+      "improved_pairs": 945,
+      "worsened_pairs": 193,
+      "unchanged_pairs": 137,
+      "share_pairs_increasing": 0.7411764705882353
+    },
+    "within_original_longitude_groups": {
+      "pairs": 235,
+      "mean_Jaccard_2001_2010": 0.23881932241219803,
+      "mean_Jaccard_by_2022": 0.34515598912481166,
+      "mean_increment": 0.1063366667126136,
+      "median_increment": 0.0761904761904762,
+      "improved_pairs": 187,
+      "worsened_pairs": 39,
+      "unchanged_pairs": 9,
+      "share_pairs_increasing": 0.7957446808510639
+    },
+    "between_original_longitude_groups": {
+      "pairs": 1040,
+      "mean_Jaccard_2001_2010": 0.09433231636283167,
+      "mean_Jaccard_by_2022": 0.1399507282451627,
+      "mean_increment": 0.04561841188233101,
+      "median_increment": 0.030326816041101767,
+      "improved_pairs": 758,
+      "worsened_pairs": 154,
+      "unchanged_pairs": 128,
+      "share_pairs_increasing": 0.7288461538461538
+    },
+    "time_series": {
+      "indexed_2001_2010": {
+        "species_island_cells": 736,
+        "mean_Jaccard": 0.1209632547327149
+      },
+      "through_2017": {
+        "species_island_cells": 957,
+        "mean_Jaccard": 0.1622530164236291
+      },
+      "through_2022": {
+        "species_island_cells": 1053,
+        "mean_Jaccard": 0.17777287436807837
+      },
+      "new_2011_2017": 221,
+      "new_2018_2022": 96,
+      "original_unique_species_island_cells": 11475
+    }
+  },
+  "constrained_recording_nulls": {
+    "source_fixed_butterfly_island_new_index_margins": {
+      "mixing": {
+        "draws": 399,
+        "proposals": 1158952,
+        "accepted": 626913,
+        "swap_acceptance_fraction": 0.540930944508487,
+        "burn_proposals": 20605,
+        "per_draw_proposals": 2853,
+        "source_margin_checks": "PASS",
+        "fixed_butterfly_new_island_counts": true,
+        "fixed_island_new_butterfly_species": true,
+        "butterfly_by_original_longitude_group_counts_fixed": false,
+        "source_period": "2001-2010 pre-indexed; 2011-2022 new record-index events"
+      },
+      "evaluations": {
+        "all_51_original_landmass_pairs": {
+          "observed_mean_Jaccard_increment": 0.05680961963536349,
+          "null_mean": 0.03814517345181031,
+          "null_descriptive_interval95": [
+            0.03623363557788955,
+            0.04002592892193353
+          ],
+          "extra_beyond_null": 0.01866444618355318,
+          "descriptive_upper_tail": 0.0025,
+          "descriptive_lower_tail": 1.0,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        },
+        "within_original_longitude_groups": {
+          "observed_mean_Jaccard_increment": 0.1063366667126136,
+          "null_mean": -0.012015022768186376,
+          "null_descriptive_interval95": [
+            -0.019201869611378108,
+            -0.004826852396747928
+          ],
+          "extra_beyond_null": 0.11835168948079998,
+          "descriptive_upper_tail": 0.0025,
+          "descriptive_lower_tail": 1.0,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        },
+        "between_original_longitude_groups": {
+          "observed_mean_Jaccard_increment": 0.04561841188233101,
+          "null_mean": 0.049479448559213414,
+          "null_descriptive_interval95": [
+            0.046935590860786816,
+            0.051810693310887494
+          ],
+          "extra_beyond_null": -0.0038610366768824025,
+          "descriptive_upper_tail": 1.0,
+          "descriptive_lower_tail": 0.0025,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        }
+      }
+    },
+    "source_fixed_butterfly_island_new_index_margins_plus_each_butterfly_longitude_group": {
+      "mixing": {
+        "draws": 399,
+        "proposals": 1158952,
+        "accepted": 48098,
+        "swap_acceptance_fraction": 0.04150128736996873,
+        "burn_proposals": 20605,
+        "per_draw_proposals": 2853,
+        "source_margin_checks": "PASS",
+        "fixed_butterfly_new_island_counts": true,
+        "fixed_island_new_butterfly_species": true,
+        "butterfly_by_original_longitude_group_counts_fixed": true,
+        "source_period": "2001-2010 pre-indexed; 2011-2022 new record-index events"
+      },
+      "evaluations": {
+        "all_51_original_landmass_pairs": {
+          "observed_mean_Jaccard_increment": 0.05680961963536349,
+          "null_mean": 0.04963378910357568,
+          "null_descriptive_interval95": [
+            0.04833044016629861,
+            0.0510302464367924
+          ],
+          "extra_beyond_null": 0.007175830531787809,
+          "descriptive_upper_tail": 0.0025,
+          "descriptive_lower_tail": 1.0,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        },
+        "within_original_longitude_groups": {
+          "observed_mean_Jaccard_increment": 0.1063366667126136,
+          "null_mean": 0.09076034353286427,
+          "null_descriptive_interval95": [
+            0.08885285684102096,
+            0.09298870579392805
+          ],
+          "extra_beyond_null": 0.01557632317974933,
+          "descriptive_upper_tail": 0.0025,
+          "descriptive_lower_tail": 1.0,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        },
+        "between_original_longitude_groups": {
+          "observed_mean_Jaccard_increment": 0.04561841188233101,
+          "null_mean": 0.04034076959311141,
+          "null_descriptive_interval95": [
+            0.03907582192853336,
+            0.04181899039678287
+          ],
+          "extra_beyond_null": 0.005277642289219599,
+          "descriptive_upper_tail": 0.0025,
+          "descriptive_lower_tail": 1.0,
+          "draws": 399,
+          "null_CV_warning": "MCMC swaps are dependent, observation process is uneven and sample is selected; not an inferential p-value for true island butterfly homogenization"
+        }
+      }
+    }
+  },
+  "resource_beneficiary_correspondence": {
+    "breadth_type": "Native distribution of known larval host plants, NOT native butterfly range or endemicity",
+    "quartiles": [
+      {
+        "native_host_plant_resource_footprint_quartile": 1,
+        "matched_butterfly_species": 52,
+        "sampled_prior_2001_2010_species_island_indices": 56,
+        "at_risk_unindexed_species_island_pairs": 2596,
+        "new_2011_2022_species_island_indices": 23,
+        "share_all_317_new_butterfly_island_indices": 0.07255520504731862,
+        "recorded_new_index_rate_among_at_risk_cells": 0.008859784283513097,
+        "island_host_resource_opportunities_added_in_DIFFERENT_126_biogeographic_regions": 629
+      },
+      {
+        "native_host_plant_resource_footprint_quartile": 2,
+        "matched_butterfly_species": 57,
+        "sampled_prior_2001_2010_species_island_indices": 146,
+        "at_risk_unindexed_species_island_pairs": 2761,
+        "new_2011_2022_species_island_indices": 72,
+        "share_all_317_new_butterfly_island_indices": 0.22712933753943218,
+        "recorded_new_index_rate_among_at_risk_cells": 0.026077508149221298,
+        "island_host_resource_opportunities_added_in_DIFFERENT_126_biogeographic_regions": 1027
+      },
+      {
+        "native_host_plant_resource_footprint_quartile": 3,
+        "matched_butterfly_species": 57,
+        "sampled_prior_2001_2010_species_island_indices": 201,
+        "at_risk_unindexed_species_island_pairs": 2706,
+        "new_2011_2022_species_island_indices": 59,
+        "share_all_317_new_butterfly_island_indices": 0.1861198738170347,
+        "recorded_new_index_rate_among_at_risk_cells": 0.02180339985218034,
+        "island_host_resource_opportunities_added_in_DIFFERENT_126_biogeographic_regions": 1690
+      },
+      {
+        "native_host_plant_resource_footprint_quartile": 4,
+        "matched_butterfly_species": 59,
+        "sampled_prior_2001_2010_species_island_indices": 333,
+        "at_risk_unindexed_species_island_pairs": 2676,
+        "new_2011_2022_species_island_indices": 163,
+        "share_all_317_new_butterfly_island_indices": 0.5141955835962145,
+        "recorded_new_index_rate_among_at_risk_cells": 0.0609118086696562,
+        "island_host_resource_opportunities_added_in_DIFFERENT_126_biogeographic_regions": 2271
+      }
+    ],
+    "earlier_butterfly_index_breadth_vs_native_HOSTS_breadth_spearman": 0.2930789147045676,
+    "observed_new_index_count_vs_126_island_resource_additions_spearman": 0.19195240294206153,
+    "partial_rank_new_index_vs_added_host_resource_after_native_host_breadth_HOSTS_size_early_butterfly_index": -0.06799514961443238,
+    "Q4_minus_Q1_at_risk_first_index_rate_pp": 5.205202438614311,
+    "Q4_minus_Q1_species_bootstrap4999_descriptive95_pp": [
+      3.315779531059683,
+      7.383279215359573
+    ]
+  },
+  "critical_boundaries": [
+    "Cumulative GBIF index is observed detection, not true historical butterfly occurrence, colonization or abundance; zero indexing not absence",
+    "225 butterfly species and 51 nonrandom WPI-linked landmass groups differ from 239 butterflies and 126 WGSRPD3 floristic regions",
+    "All 317 post-2010 first GBIF indexed butterfly-island cells are fixed in null species and island margins; uneven observer effort not fully reconstructed",
+    "Longitude-5 geographic group null is a sensitivity not actual biogeographic historic butterfly source range",
+    "Dependent Markov-chain null configurations do not provide independent biological replicates or confirmatory p values",
+    "Resource quartiles reflect native HOSTS plant geographic range, not native or endemic butterfly distributions, and HOSTS host count confounds breadth",
+    "No dated local introduction or verified local larval survival; the resource layer and observed GBIF index not a causal matched-pair panel",
+    "Never promote an increase in indexed species overlap alone to actual butterfly biotic homogenization, ecological competitive replacement, ship transfer or realized establishment"
+  ]
+}

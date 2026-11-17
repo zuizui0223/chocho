@@ -1,0 +1,223 @@
+{
+  "schema": "chocho_225x51_early_to_late_record_jaccard_fixed_margins_four_chain_stability_v1",
+  "status": "FOUR_CHAIN_DESCRIPTIVE_SOURCE_LOCKED_OBSERVATION_NOT_COLONISATION",
+  "source_pins": {
+    "butterflies": {
+      "path": "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv",
+      "git_blob_sha": "b6a3c98eb76864052d45d520a55b7d830816126c"
+    },
+    "longitude": {
+      "path": "results/island51_double_unseen_blocks_20261107/longitude_island_blocks.csv",
+      "git_blob_sha": "ef2cfcd0b3133d308c18b517001b33a9b46e9630"
+    },
+    "beneficiary": {
+      "path": "results/butterfly_resource_beneficiaries_20261117/beneficiary_species_native_resource_breadth.csv",
+      "git_blob_sha": "c9e409441dcd2bb7f9edc5a813fc13490bf60d8f"
+    }
+  },
+  "source_island_group": "five original 2026-11-07 outcome-blind longitude bins",
+  "seed_base": 20261117,
+  "chains_per_null": 4,
+  "draws_per_chain": 199,
+  "original_indexed_2001_2010": 736,
+  "post2010_new_first_indexed": 317,
+  "same_original_51_islands_pairwise_Jaccard_change": {
+    "all_pairs": 0.05680961963536349,
+    "within_longitude": 0.1063366667126136,
+    "between_longitude": 0.04561841188233101
+  },
+  "nulls": {
+    "species_and_island_margins": {
+      "chains": [
+        {
+          "chain": 1,
+          "seed": 20271117,
+          "acceptance_fraction": 0.5418541961274883,
+          "all_pairs_mean": 0.03827231237367077,
+          "within_longitude_mean": -0.011834014428202767,
+          "between_longitude_mean": 0.04959441506447874,
+          "all_pairs_sd": 0.0010052255214074452,
+          "within_longitude_sd": 0.0035960870566834526,
+          "between_longitude_sd": 0.001246421869069301
+        },
+        {
+          "chain": 2,
+          "seed": 20281117,
+          "acceptance_fraction": 0.540193625584684,
+          "all_pairs_mean": 0.03806398261838212,
+          "within_longitude_mean": -0.01206464007721029,
+          "between_longitude_mean": 0.04939112332363619,
+          "all_pairs_sd": 0.0009237092648835438,
+          "within_longitude_sd": 0.004108769707991843,
+          "between_longitude_sd": 0.0011438925979968997
+        },
+        {
+          "chain": 3,
+          "seed": 20291117,
+          "acceptance_fraction": 0.5404009844446862,
+          "all_pairs_mean": 0.038325034077630306,
+          "within_longitude_mean": -0.012075094505049205,
+          "between_longitude_mean": 0.049713524670831934,
+          "all_pairs_sd": 0.0009599218675010369,
+          "within_longitude_sd": 0.004124575828128199,
+          "between_longitude_sd": 0.0011687814656173752
+        },
+        {
+          "chain": 4,
+          "seed": 20301117,
+          "acceptance_fraction": 0.541454775372566,
+          "all_pairs_mean": 0.03815721898463251,
+          "within_longitude_mean": -0.01167001426765428,
+          "between_longitude_mean": 0.04941625726760116,
+          "all_pairs_sd": 0.0008844334614739787,
+          "within_longitude_sd": 0.004047600459884132,
+          "between_longitude_sd": 0.001225933837039101
+        }
+      ],
+      "diagnostic": {
+        "all_pairs": {
+          "observed_increment": 0.05680961963536349,
+          "null_mean": 0.03820463701357893,
+          "null_descriptive_2p5_97p5": [
+            0.0364763501637975,
+            0.04011258559025732
+          ],
+          "observed_excess": 0.01860498262178456,
+          "chain_mean_spread": 0.00026105145924818635,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        },
+        "within_longitude": {
+          "observed_increment": 0.1063366667126136,
+          "null_mean": -0.011910940819529134,
+          "null_descriptive_2p5_97p5": [
+            -0.01969939731257885,
+            -0.0042105633981016095
+          ],
+          "observed_excess": 0.11824760753214274,
+          "chain_mean_spread": 0.00040508023739492527,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        },
+        "between_longitude": {
+          "observed_increment": 0.04561841188233101,
+          "null_mean": 0.049528830081637006,
+          "null_descriptive_2p5_97p5": [
+            0.047187200203023645,
+            0.0518117583941962
+          ],
+          "observed_excess": -0.003910418199305994,
+          "chain_mean_spread": 0.0003224013471957443,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        }
+      }
+    },
+    "geography_preserving": {
+      "chains": [
+        {
+          "chain": 1,
+          "seed": 20271118,
+          "acceptance_fraction": 0.0415771510932231,
+          "all_pairs_mean": 0.04951333378144901,
+          "within_longitude_mean": 0.09058196980216422,
+          "between_longitude_mean": 0.04023340160369123,
+          "all_pairs_sd": 0.0006178167757169812,
+          "within_longitude_sd": 0.0009917364346351681,
+          "between_longitude_sd": 0.0006754379871970487
+        },
+        {
+          "chain": 2,
+          "seed": 20281118,
+          "acceptance_fraction": 0.04167063254650277,
+          "all_pairs_mean": 0.04954172728177335,
+          "within_longitude_mean": 0.09083049474436666,
+          "between_longitude_mean": 0.04021205386474504,
+          "all_pairs_sd": 0.0007218594626079649,
+          "within_longitude_sd": 0.0011215564187607213,
+          "between_longitude_sd": 0.000744342171813802
+        },
+        {
+          "chain": 3,
+          "seed": 20291118,
+          "acceptance_fraction": 0.041507464918960076,
+          "all_pairs_mean": 0.04963062602221095,
+          "within_longitude_mean": 0.0906646786771193,
+          "between_longitude_mean": 0.04035850835499606,
+          "all_pairs_sd": 0.0007245288961276068,
+          "within_longitude_sd": 0.001089814944862016,
+          "between_longitude_sd": 0.0007852482533451834
+        },
+        {
+          "chain": 4,
+          "seed": 20301118,
+          "acceptance_fraction": 0.04175731534863483,
+          "all_pairs_mean": 0.04975024661389544,
+          "within_longitude_mean": 0.09090063866667918,
+          "between_longitude_mean": 0.04045184071735292,
+          "all_pairs_sd": 0.0007054073688518399,
+          "within_longitude_sd": 0.0010039149948062205,
+          "between_longitude_sd": 0.0007614865430315712
+        }
+      ],
+      "diagnostic": {
+        "all_pairs": {
+          "observed_increment": 0.05680961963536349,
+          "null_mean": 0.049608983424832186,
+          "null_descriptive_2p5_97p5": [
+            0.04834444132859958,
+            0.05103211348020345
+          ],
+          "observed_excess": 0.007200636210531304,
+          "chain_mean_spread": 0.00023691283244643008,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        },
+        "within_longitude": {
+          "observed_increment": 0.1063366667126136,
+          "null_mean": 0.09074444547258233,
+          "null_descriptive_2p5_97p5": [
+            0.08875354758614398,
+            0.09304632888065906
+          ],
+          "observed_excess": 0.015592221240031276,
+          "chain_mean_spread": 0.0003186688645149538,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        },
+        "between_longitude": {
+          "observed_increment": 0.04561841188233101,
+          "null_mean": 0.04031395113519633,
+          "null_descriptive_2p5_97p5": [
+            0.038951246158113295,
+            0.041775058952382864
+          ],
+          "observed_excess": 0.005304460747134684,
+          "chain_mean_spread": 0.00023978685260788585,
+          "predeclared_mixing_stability_threshold": 0.004,
+          "chain_means_stable": true,
+          "n_chain_draws_total": 796,
+          "status": "EXPLORATORY_NOT_INDEPENDENT_P_VALUES"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "A separate 4-chain mixing diagnostic, not four independent ecological cohorts or source tests",
+    "Scored on the same originally selected 51 WPI port-linked island groups",
+    "Preserves butterfly and island recorded new-species richness, not complete observer effort or source-list bias",
+    "Within-longitude-group constraint preserves taxon-year region allocation but latitude, island area, historical observation effort can still confound",
+    "Cumulative GBIF first indexing is NOT true butterfly biotic homogenization, colony formation, abundance change or evidence of plant-mediated range shift",
+    "Fixed source first-record indexing is vulnerable to historical re-identification; modern biodiversity data not assumed complete"
+  ]
+}
