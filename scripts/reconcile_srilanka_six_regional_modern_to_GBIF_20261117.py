@@ -64,7 +64,11 @@ def accepted_match_key(obj):
     else:key=obj.get("usageKey")
     return int(key) if isinstance(key,int) else None
 
+NUB_DATASET_UUID="d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"
+
 def search_candidate_keys(obj,name):
+    # The species/search endpoint includes usage keys FROM MANY CHECKLISTS.
+    # Only a verified backbone nubKey may be compared with frozen GBIF speciesKey.
     records=obj.get("results",[])
     if not isinstance(records,list):raise ValueError("GBIF search results are not a list")
     same=[]
@@ -78,11 +82,33 @@ def search_candidate_keys(obj,name):
             continue
         key=record.get("acceptedKey") if status=="SYNONYM" else record.get("key")
         if isinstance(key,int):
-            same.append({"acceptedKey":key,"status":status,
+            same.append({"checklist_acceptedKey":key,"status":status,
                          "scientificName":record.get("scientificName"),
                          "canonicalName":record.get("canonicalName"),
-                         "key":record.get("key")})
+                         "key":record.get("key"),
+                         "datasetKey":record.get("datasetKey"),
+                         "nubKey":record.get("nubKey"),
+                         "taxonKey":record.get("taxonKey")})
     return same
+
+def independently_verify_nub_key(nub):
+    u=BASE+"/"+str(nub)
+    record,sha=get(u)
+    status=record.get("taxonomicStatus",record.get("status"))
+    valid=(record.get("datasetKey")==NUB_DATASET_UUID and
+            record.get("rank")=="SPECIES" and
+            status in ("ACCEPTED","SYNONYM") and
+            record.get("key")==nub)
+    if valid and status=="SYNONYM":
+        accepted=record.get("acceptedKey")
+    elif valid:
+        accepted=nub
+    else:
+        accepted=None
+    if not isinstance(accepted,int):
+        accepted=None
+    return accepted,{"url":u,"response_sha256":sha,"data":record,
+                     "verified_GBIF_backbone":valid}
 
 def main():
     ap=argparse.ArgumentParser()
@@ -110,20 +136,20 @@ def main():
         se,sesha=get(searchurl)
         direct=accepted_match_key(ma)
         alternatives=search_candidate_keys(se,m)
-        unique_search_keys=sorted({r["acceptedKey"] for r in alternatives})
+        unique_search_keys=sorted({r["checklist_acceptedKey"] for r in alternatives})
+        nubs=sorted({r["nubKey"] for r in alternatives if isinstance(r.get("nubKey"),int)})
+        backbone_receipt=None
         if direct is not None:
-            # Flag conflicting search index keys but never choose a different candidate.
             key=direct
-            provenance="strict_GBIF_exact_accepted_or_synonym_match"
-            if unique_search_keys and direct not in unique_search_keys:
-                provenance="strict_GBIF_match_conflicts_with_search_review"
-                key=None
-        elif len(unique_search_keys)==1:
-            key=unique_search_keys[0]
-            provenance="GBIF_search_exact_canonical_name_provisional"
+            provenance="strict_GBIF_backbone_exact_accepted_or_synonym"
+        elif len(nubs)==1:
+            key,backbone_receipt=independently_verify_nub_key(nubs[0])
+            provenance=("verified_GBIF_backbone_nubKey_from_checklist_search"
+                        if key is not None else
+                        "checklist_search_nubKey_not_verified_as_species")
         else:
             key=None
-            provenance="needs_independent_taxonomic_revision"
+            provenance="search_name_only_no_verified_backbone_key"
         relation="unresolved"
         if isinstance(key,int):
             relation="same_accepted_key_as_original225" if key in original_keys else "no_accepted_key_overlap_with_original225"
@@ -137,7 +163,9 @@ def main():
             "GBIF_status":ma.get("status"),
             "GBIF_confidence":ma.get("confidence"),
             "GBIF_strict_candidate_key":direct,
-            "GBIF_exact_search_candidate_keys":unique_search_keys,
+            "GBIF_exact_search_checklist_usage_keys_NOT_BACKBONE":unique_search_keys,
+            "GBIF_search_nubKeys":nubs,
+            "GBIF_backbone_lookup_verified":bool(key is not None),
             "GBIF_accepted_key_if_usable":key,
             "GBIF_resolution_status":provenance,
             "overlap_to_original225_speciesKey":relation,
@@ -152,7 +180,8 @@ def main():
         }
         output.append(out)
         raw_receipts[h]={"modern_name":m,"match":{"url":matchurl,"sha256":masha,"data":ma},
-                         "search":{"url":searchurl,"sha256":sesha,"data":se}}
+                         "search":{"url":searchurl,"sha256":sesha,"data":se},
+                         "verified_backbone_usage":backbone_receipt}
         print("SIX_NAME",h,"=>",m,provenance,"key",key,relation,flush=True)
     categories={}
     for row in output:
@@ -173,7 +202,8 @@ def main():
           "Six species cover only a preselected historic local endemic shortlist, not the complete modern island fauna.",
           "Host plant records from literature cannot by themselves quantify feeding survival, effective host breadth or colonisation.",
           "Do not infer true absence, butterfly native range or population establishment from original225 selected species names.",
-          "GBIF taxon names can reflect snapshot variation and nomenclatural differences."
+          "GBIF taxon names can reflect snapshot variation and nomenclatural differences.",
+      "GBIF species/search checklist usage keys are NOT the original GBIF Backbone speciesKeys: compare only strict species/match or verified NUB dataset IDs."
         ]
     }
     args.out.mkdir(parents=True,exist_ok=True)
@@ -186,7 +216,8 @@ def main():
         w.writeheader()
         for record in output:
             record=record.copy()
-            record["GBIF_exact_search_candidate_keys"]=";".join(map(str,record["GBIF_exact_search_candidate_keys"]))
+            record["GBIF_exact_search_checklist_usage_keys_NOT_BACKBONE"]=";".join(map(str,record["GBIF_exact_search_checklist_usage_keys_NOT_BACKBONE"]))
+            record["GBIF_search_nubKeys"]=";".join(map(str,record["GBIF_search_nubKeys"]))
             w.writerow(record)
     print("BEGIN_SIX_GBIF_REGIONAL_TAXONOMY_COUNTS",json.dumps(categories,sort_keys=True),flush=True)
     print("END_SIX_GBIF_REGIONAL_TAXONOMY_COUNTS",flush=True)
