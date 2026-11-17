@@ -18,7 +18,8 @@
     "botanicals_shortest_water": 44011154673,
     "butterflies_uniform": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
     "botanicals_WCVP_acceptedspecies": 44010011288,
-    "botanicals_true_circuit_both_endpoints_unseen": 44023148246
+    "botanicals_true_circuit_both_endpoints_unseen": 44023148246,
+    "butterflies_host_conditional_uniform_ocean_reexecution": 44025831765
   },
   "floras": {
     "regions": 104,
@@ -101,7 +102,41 @@
       1.3598482076161877,
       8.301723537922722
     ],
-    "note": "Different 51-island risk set, baseline, estimator, and terminal weights from 104-region flora."
+    "note": "Different 51-island risk set, baseline, estimator, and terminal weights from 104-region flora.",
+    "original_51_landmass_same_pair_host_conditional": {
+      "source_report": "results/island51_host_uniform_bridge_20261117/README_JA.md",
+      "source_machine_summary": "results/island51_host_uniform_bridge_20261117/VERIFIED_51_ISLAND_HOST_UNIFORM_CIRCUIT_20261117.json",
+      "source_code": "scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py",
+      "source_executed_CI_run": 44025831765,
+      "source_artifact_id": 14302653423,
+      "candidate_host_source_time": "2001–2024 pooled indexed candidate introduced host Jaccard, not full WCVP alien flora",
+      "LOIO_51islands_MSE_pct": {
+        "uniform_given_baseline": 5.081886845222583,
+        "host_given_baseline": 4.157728626356297,
+        "both_given_baseline": 7.242216082799662,
+        "uniform_given_host": 3.2182954475467374,
+        "host_given_uniform": 2.275992606442099
+      },
+      "LOIO_descriptive_bootstrap95_pct": {
+        "uniform_given_host": [
+          0.5132075396871106,
+          5.763326970453601
+        ],
+        "host_given_uniform": [
+          -1.3708396376824223,
+          5.489980174142998
+        ]
+      },
+      "double_unseen_1275pair_15fold_MSE_pct": {
+        "uniform_given_baseline": 12.34518116285258,
+        "host_given_baseline": 1.0875793531265805,
+        "both_given_baseline": 11.17515367296508,
+        "uniform_given_host": 10.198491002310096,
+        "host_given_uniform": -1.3348125127738575
+      },
+      "early_butterfly_double_unseen_uniform_pct": -10.68039655459629,
+      "critical_limit": "Same original 51 butterfly landmass groups and candidate host source; retrospective 2001-24 host exposure can postdate later 2011-22 butterfly observation. Does not identify plant mediation or same 104 botanical region response; strict four-model comparison lacks historical plant observation-effort and marginal host richness covariates."
+    }
   },
   "model_choice_warning": "Uniform circuit selectively predicts introduced-flora Jaccard on LOIO (+4.24%), and its strict two-unseen transfer remains positive (+2.74%) but 5-fold interval includes zero; both are exploratory same-source tests, not confirmatory historical transport evidence. Native circuit adds no predictive improvement in either design. Shortest-water improves both floras in the original LOIO.",
   "artifacts": [
