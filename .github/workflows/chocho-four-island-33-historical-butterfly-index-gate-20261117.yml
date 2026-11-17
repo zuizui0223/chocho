@@ -1,0 +1,73 @@
+name: chocho source-locked four-island 33 historical butterfly presences vs 317 GBIF indices
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_four_island_prior_butterfly_records_20261117.py
+      - .github/workflows/chocho-four-island-33-historical-butterfly-index-gate-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  four-island-independent-published-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-locked 225 butterflies, 51 landmasses, 317 first-index cells and published 33 matches
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_four_island_prior_butterfly_records_20261117.py
+          python scripts/audit_four_island_prior_butterfly_records_20261117.py --output-dir _four_island_history_index
+      - name: Reject native or island-endemic inference and check all fixed pair means
+        run: |
+          python - <<'PY'
+          import json,csv,math
+          from pathlib import Path
+          p=Path('_four_island_history_index')
+          x=json.loads((p/'FOUR_ISLAND_HISTORY_VS_GBIF_317_SOURCE_AUDIT_20261117.json').read_text())
+          rows=list(csv.DictReader((p/'FOUR_ISLAND_317_FIRST_INDICES_SOURCE_STATUS_20261117.csv').open()))
+          a=x['cohort']
+          assert (a['species'],a['landmasses'],a['species_island_cells'],a['later_first_index_cells'])==(225,51,11475,317)
+          assert (a['independent_sources_before_GBIF'],a['geographically_named_island_source_matches'],a['national_island_2006_checklist_matches'],a['as_yet_unverified_first_indices'])==(33,19,14,284)
+          assert x['source_coverage']=={'Phu_Quoc':12,'Mauritius':3,'Cape_Breton':4,'Sri_Lanka_national':14}
+          z=x['recorded_community_Jaccard']
+          assert (z['original_early_GBIF_only_cells'],z['cumulative_through_2022_indexed_cells'])==(736,1053)
+          assert [v['early_indexed_or_prior_source_cells'] for v in z['historical_source_additions']]==[748,751,755,769]
+          assert math.isclose(z['original_early_mean_Jaccard'],0.12096325473271494,abs_tol=1e-9)
+          assert math.isclose(z['cumulative_through_2022_mean_Jaccard'],0.17777287436807873,abs_tol=1e-9)
+          assert math.isclose(z['all_33_source_augmented_delta'],0.04970596808329647,abs_tol=1e-9)
+          assert math.isclose(z['historical_source_additions'][2]['mean_early_Jaccard'],0.1270751832600804,abs_tol=1e-9)
+          assert len(rows)==317
+          assert sum(r['historical_source_status'].startswith('prior_publication_') for r in rows)==33
+          assert sum(r['historical_source_status']=='not_reviewed' for r in rows)==283
+          assert sum(r['historical_source_status']=='searched_2006_checklist_no_exact_binomial_unresolved' for r in rows)==1
+          assert all(r['native_status']=='unknown' and r['reproductive_establishment_status']=='unknown' and r['island_endemic_status']=='unassessed' for r in rows)
+          print('FOUR_ISLAND_33_SOURCED_317_COHORT_JACCARD_NATIVE-ENDENISM_NO_LEAKAGE_PASS')
+          PY
+      - name: Negative evidence-label and source-date tests
+        run: |
+          python - <<'PY'
+          import importlib.util
+          s=importlib.util.spec_from_file_location('audit','scripts/audit_four_island_prior_butterfly_records_20261117.py')
+          m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+          a=[m.source(k) for k in m.PINS]
+          for loc,column,value in [(3,'origin_status','native'),(4,'publication_year_upper_bound','2018'),(5,'butterfly_endemicity_status','single_island_endemic'),(5,'checklist_publication_year','2018')]:
+              tables=[list(x) for x in a];tables[loc]=[dict(x) for x in a[loc]]
+              tables[loc][0][column]=value
+              try:m.run(*tables)
+              except ValueError:pass
+              else:raise AssertionError('Unsafe source promoted '+column)
+          print('UNSUPPORTED_NATIVE_ENDEMIC_AND_MISDATED_SOURCE_REJECTED')
+          PY
+      - name: Archive evidence-status records and source-locked diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-4island-33-historical-butterfly-records-source-gate
+          path: _four_island_history_index/
+          retention-days: 90
+          if-no-files-found: warn
