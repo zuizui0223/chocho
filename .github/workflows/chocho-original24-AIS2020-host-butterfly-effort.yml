@@ -1,0 +1,63 @@
+name: chocho original24 port-host-butterfly and 2020 voyage effort identifiability
+
+on:
+  push:
+    branches: [analysis/port-nonport-voyage-effort-identifiability-20261117]
+    paths:
+      - scripts/audit_original24_port_host_butterfly_AIS2020_sameunit_20261117.py
+      - .github/workflows/chocho-original24-AIS2020-host-butterfly-effort.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-same-unit-source-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check frozen GIT blob source identity before joining 2001-10 host and 2011-17 butterfly to 2020 voyages
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_original24_port_host_butterfly_AIS2020_sameunit_20261117.py
+          python scripts/audit_original24_port_host_butterfly_AIS2020_sameunit_20261117.py \
+            --sites provenance/reviewer_defenses/results/paired_island_port_nonport_coast_20261109/fixed_same_island_port_nonport_sites.csv \
+            --observations provenance/reviewer_defenses/results/paired_island_port_nonport_coast_20261109/port_nonport_plant_butterfly_site_indices.csv \
+            --coverage results/island51_zenodo2020_portvoyage_audit_20261107/original194_source_matched_port_coverage.csv \
+            --direct-voyages results/island51_zenodo2020_portvoyage_audit_20261107/observed2020_verified_WPI_port_links.csv \
+            --voyage-source results/island51_zenodo2020_portvoyage_audit_20261107/source_matched_voyage_receipt.json \
+            --original-site-audit provenance/reviewer_defenses/results/paired_island_port_nonport_coast_20261109/audit.json \
+            --out-dir results/port_host_butterfly_2020_AIS_overlap_20261117
+      - name: Verify original 24 sites and stop unsupported causal inference
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path("results/port_host_butterfly_2020_AIS_overlap_20261117")
+          z=json.loads((p/"source_matched_route_effort_identifiability_audit.json").read_text())
+          r=z["original_source_island_port_cohort"]
+          assert z["no_model_was_fitted"]
+          assert z["status"]=="SAME_PORT_ID_SOURCE_FEASIBILITY_GATES_FAILED_NO_SHIPPING_OR_ESTABLISHMENT_MODEL"
+          assert r["all_original_port_nonport"]["matched_port_nonport_pairs"]==24
+          assert r["all_original_port_nonport"]["independent_original_landmass_groups"]==17
+          assert r["2020_original_port_verified"]["matched_port_nonport_pairs"]==6
+          assert r["2020_cross_island_voyage_source_confirmed"]["matched_port_nonport_pairs"]==2
+          assert r["plant_and_prior_and_later_effort"]["matched_port_nonport_pairs"]==3
+          assert all(not x["gate_minimum_15pairs_and_10islands_satisfied"]
+                   for name,x in r.items()
+                   if name in {"2020_cross_island_voyage_source_confirmed","plant_and_prior_and_later_effort"})
+          with (p/"original24_ports_WPI_AIS2020_GBIF_detection_join.csv").open() as f:
+              assert len(list(csv.DictReader(f)))==24
+          print("CHOCHO_ORIGINAL24_SOURCE_GATES_PASS_WITH_MODEL_UNIDENTIFIABILITY",json.dumps(r))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-20261117-original24-AIS-voyage-host-butterfly-effort-overlap
+          path: results/port_host_butterfly_2020_AIS_overlap_20261117/
+          retention-days: 90
+          if-no-files-found: warn
