@@ -1,0 +1,78 @@
+name: GEB true uniform ocean circuit source-locked both-endpoints-unseen botanical test
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_WCVP126_uniform_circuit_double_unseen_20261117.py
+      - scripts/audit_WCVP126_original_uniform_circuit_crossed_prediction_20261117.py
+      - scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py
+      - .github/workflows/chocho-WCVP126-uniform-circuit-double-unseen.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  strict-source-cohort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install frozen numerical dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44013658955
+          github-token: ${{ github.token }}
+          name: chocho-original104-WCVP-GSHHG-finite-volume-uniform-circuit-null
+          path: _src/circuit
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/sea
+      - name: Test source-pinned circuit with both island endpoints truly unseen
+        run: |
+          python -m py_compile scripts/audit_WCVP126_uniform_circuit_double_unseen_20261117.py
+          python scripts/audit_WCVP126_uniform_circuit_double_unseen_20261117.py \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --shortest-water _src/sea/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --uniform-circuit _src/circuit/WCVP126_original104_uniform_finvol_electrical_resistance.csv \
+            --uniform-circuit-receipt _src/circuit/uniform104_WCVP_GSHHG_source_circuit_numerical_audit.json \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir _source_verified_circuit_double_unseen
+      - name: Require 104 island source identity, same two responses and no fold leakage
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path('_source_verified_circuit_double_unseen/WCVP126_native_alien_uniform_circuit_BOTH_islands_unseen_5fold_20261117.json')
+          z=json.loads(p.read_text())
+          assert z['common_104_islands']==104 and z['common_5355_flora_pairs']==5355
+          assert z['strict_test_unique_double_unseen_pairs']==1089
+          for name in ('native','introduced'):
+              d=z[name]
+              assert d['test_islands_absent_from_train_endpoints']
+              assert d['no_crossfold_pairs_in_test']
+              assert d['n_double_unseen_test_pairs']==1089
+              assert all(math.isfinite(float(x)) for x in d['macro_equal_fold_relative_mse_improvement_percent'].values())
+          print('SOURCE_VERIFIED_CIRCUIT_BOTH_UNSEEN_PASS',z['uniform_circuit_added_vs_base_pct'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-104island-WCVP-true-uniform-circuit-both-endpoints-unseen
+          path: _source_verified_circuit_double_unseen/
+          retention-days: 90
+          if-no-files-found: warn
