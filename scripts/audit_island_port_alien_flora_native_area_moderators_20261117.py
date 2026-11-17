@@ -151,7 +151,10 @@ def describe(items,axis,*,specific=False,effort=False,permutations=True,bootstra
     if bootstrap:
         # Preserve number of botanical biogeographic Level1 groups and their
         # original sizes; resample ISLANDS, never species records.
-        groups=blocks(items)
+        bylevel=defaultdict(list)
+        for i,record in enumerate(items):
+            bylevel[record["level1"]].append(i)
+        groups=[np.array(z,dtype=int) for z in bylevel.values()]
         for _ in range(N_BOOT):
             idx=np.concatenate([rng.choice(g,len(g),replace=True) for g in groups])
             yb,_,xb,_,_=build_design([items[int(i)] for i in idx],axis,specific=specific,effort=effort)
