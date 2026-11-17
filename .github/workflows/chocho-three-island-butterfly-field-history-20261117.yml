@@ -1,0 +1,80 @@
+name: chocho independent 3-island historical butterfly source plus field larval observation audit
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_three_island_independent_butterfly_history_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/CAPE_BRETON_1948_1984_INDEPENDENT_FIELD_MATCHES_20261117.csv
+      - .github/workflows/chocho-three-island-butterfly-field-history-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  three-island-exact-species-historical-corroboration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run source-pinned 225x51 historical presence and life-stage audit
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_three_island_independent_butterfly_history_20261117.py
+          python scripts/audit_three_island_independent_butterfly_history_20261117.py --out-dir _butterfly_three_island_histories
+      - name: Verify 19 historical matches, selected source consistency and strict status labels
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,csv
+          d=Path('_butterfly_three_island_histories')
+          x=json.loads((d/'THREE_ISLAND_SOURCE_AUDIT_20261117.json').read_text())
+          r=list(csv.DictReader((d/'ALL317_INDEXED_CELLS_HISTORICAL_GATES_3ISLAND.csv').open()))
+          n=x['cohort'];s=x['same_1275_pairs_heterogeneous_source_augmented_known_presence']
+          assert (n['butterflies'],n['landmass_groups'],n['species_island_cells'])==(225,51,11475)
+          assert (n['later_GBIF_first_index_cells'],n['historically_confirmed_on_three_selected_islands'],
+                  n['not_confirmed_by_these_historical_sources'])==(317,19,298)
+          assert n['historical_field_larvae_pre2011_species_island_cells']==1
+          assert (s['original_early_GBIF_cells'],s['after_prior_two_historical_islands_cells'],
+                  s['after_three_historical_islands_cells'],s['late_cumulative_GBIF_cells'])==(736,751,755,1053)
+          assert len(r)==317
+          assert sum(a['historical_field_presence'].startswith('source_verified_by_') for a in r)==19
+          assert all(a['butterfly_origin']=='unknown' and a['butterfly_establishment']=='unknown'
+                     and a['butterfly_endemicity']=='unassessed' for a in r)
+          checked=[a for a in r if a['landmass_id']=='79'
+                   and a['historical_field_presence'].startswith('source_verified_by_')]
+          assert {a['species'] for a in checked}=={
+               'Erynnis icelus','Glaucopsyche lygdamus','Lycaena phlaeas','Colias philodice'}
+          assert sum(a.get('independent_life_stage_evidence')=='local_wild_larvae_observed_in_1983' for a in r)==1
+          assert s['delta_three_islands']<s['delta_GBIF_only']
+          print('THREE_ISLAND_19_DOCUMENTARY_SOURCE_MATCHES_ONE_WILD_LARVAL_OBSERVATION_PASS')
+          PY
+      - name: Invalid island label, provenance and larval-host evidence fail closed
+        run: |
+          python - <<'PY'
+          import importlib.util
+          p='scripts/audit_three_island_independent_butterfly_history_20261117.py'
+          z=importlib.util.spec_from_file_location('hist',p)
+          m=importlib.util.module_from_spec(z);z.loader.exec_module(m)
+          original=m.caperows
+          rows=original()
+          for key,bad in [('species','Zerynthia polyxena'),('landmass_id','471'),
+                          ('origin_status','native'),('endemicity_status','single_island_endemic'),
+                          ('publication_year_upper_bound','2026'),('named_larval_host','Fake host')]:
+              new=[dict(x) for x in rows]
+              new[0][key]=bad
+              m.caperows=lambda data=new:data
+              try:m.analyze()
+              except ValueError:pass
+              else:raise AssertionError('accepted invalid historical evidence '+key)
+          m.caperows=original
+          print('INVALID_HISTORIC_STATUS_AND_LARVAL_STAGE_REJECTED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-225x51-three-island-19-history-wild-larvae-20261117
+          path: _butterfly_three_island_histories/
+          retention-days: 90
+          if-no-files-found: warn
