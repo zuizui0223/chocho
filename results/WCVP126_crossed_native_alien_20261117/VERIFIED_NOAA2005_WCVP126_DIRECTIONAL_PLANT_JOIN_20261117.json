@@ -1,0 +1,35 @@
+{
+  "schema": "chocho_original_global_NOAA2005_94source_region_WCVP_126_pair_species_origin_matched_v1",
+  "status": "SOURCE_VERIFIED_REAL_2005_DIRECTIONAL_CURRENT_MODELLED_12_NEARSHORE_EVENTS_WCVP_JOIN_NO_SHIP_CAUSALITY",
+  "original_source_NOAA_CI": 44012093616,
+  "original_crosswalk_CI": 44012684281,
+  "original_WCVP_CI": 44010011288,
+  "original_actualAIS2020_CI": 44010307551,
+  "original_GSHHG126_CI": 44010673580,
+  "original_source_accepted_WCVP_126regions_7875pairs": true,
+  "results": {
+    "status": "DIRECTED_2005_CURRENT_AND_WCVP_WHOLE_FLORA_CROSSWALK_COMPLETED_EFFECT_MODEL_UNIDENTIFIABLE",
+    "current_source_positive_directions": 12,
+    "exact_terrestrial_raster_contacts": 4,
+    "late_nontrivial_first_nearshore_direction_pairs": 10,
+    "positive_directions_with_source_native_recipient_alien_WCVP_taxa": 10,
+    "positive_directions_with_matched_actual_2020_AIS_source_OD": 0,
+    "native_Jaccard_median": 0.17519900521989,
+    "alien_Jaccard_median": 0.19360852694186048,
+    "effect_model_fitted": false
+  },
+  "inference": {
+    "origin_contemporary": "10 of 12 model-proximity source->destination directions have some WCVP species registered native at source, alien at destination, not evidence species drifted",
+    "model_nearshore": "Only 12 of 7313 source-evaluable directional TDWG3 pairs have a coarse 2005 NOAA 90d current trajectory passing within 50km of another botanical region, 4 modelled raster land contacts, not biological arrival",
+    "artificial_offshore_release": "Actual NOAA source coarse 1 degree subsampled, 1-3 dated starts up to 200km from a representative coastline; 10 of 12 passes after day7 and displacement50km, not independent dispersal samples",
+    "ship": "No overlap of the 12 current-model-positive direction with exact original 2020 verified WPI AIS port-to-port directed episodes; do not interpret the other 7313 as zero shipping",
+    "verdict": "Source support for real directional-current × botanical sharing vs 2020 AIS shipping predictive comparison FAILS; no regression fitted, original GEB positive results unchanged"
+  },
+  "limits": [
+    "Contemporary source-native destination-alien WCVP taxon identity is not plant species seed-transport history.",
+    "12 model coastal proximities are not 12 true seed dispersal events; 4 coast pixel hits not 4 botanical colonizations.",
+    "2005 old NOAA OSCAR 1degree-decimated 15m 3-release/90-day snapshots differ from global historical current networks and 2020 AIS actual transit records.",
+    "The source model itself predeclared analysis-eligibility gate only after source feasibility; not an independently pre-registered power test.",
+    "No valid independent global shipping network or true plant colonization chronology or independent butterfly occurrence responses joined here."
+  ]
+}
