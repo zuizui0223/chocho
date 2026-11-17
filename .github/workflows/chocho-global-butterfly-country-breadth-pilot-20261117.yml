@@ -1,0 +1,47 @@
+name: chocho global pre2011 butterfly observed-country breadth GBIF API 12-source pilot
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/acquire_global_pre2011_butterfly_country_breadth_20261117.py
+      - .github/workflows/chocho-global-butterfly-country-breadth-pilot-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gbif-original225-country-facet-pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original 225 species, actual 2001–2010 GBIF API semantics and 12 fixed original species
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/acquire_global_pre2011_butterfly_country_breadth_20261117.py
+          python scripts/acquire_global_pre2011_butterfly_country_breadth_20261117.py \
+            --out-dir _gbif_country_pilot --pilot --workers 3
+      - name: Independent country-year no missing-source-as-absence checks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('_gbif_country_pilot/PILOT_GBIF2001_2010_225COUNTRY_FACETS_20261117.json').read_text())
+          assert r['pilot'] and r['requested']==r['completed']==12 and r['failed']==0
+          assert r['fixed_parameters']['year']=='2001,2010'
+          assert len(set(z['speciesKey'] for z in r['countries_per_butterfly']))==12
+          assert sum(z['n_countries_any_country_facet']>0 for z in r['countries_per_butterfly'])>=5
+          for z in r['countries_per_butterfly']:
+              assert z['status']=='COMPLETE_GBIF_COUNTRY_FACETS'
+              assert 0<=z['country_records_in_facets']<=z['GBIF_count_indexed_2001_2010']
+          print('SOURCE_PINNED_GBIF_ORIGINAL225_HISTORICAL_COUNTRY_FACET_PILOT_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-GBIF-butterfly-12-country2001-2010-pilot-20261117
+          path: _gbif_country_pilot/
+          retention-days: 90
+          if-no-files-found: warn
