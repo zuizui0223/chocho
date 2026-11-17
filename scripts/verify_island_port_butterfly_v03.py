@@ -141,9 +141,34 @@ def run():
         assert figure.with_suffix(".pdf").read_bytes().startswith(b"%PDF")
         assert figure.with_suffix(".png").read_bytes().startswith(b"\x89PNG")
         assert figure.with_suffix(".png").name in t
-    for stem in ("Fig2_port_and_dispersal_traits", "Fig3_host_reports", "Fig4_sea_connectivity"):
+    for stem in ("Fig2_port_and_dispersal_traits",
+                 "Fig3_butterfly_beneficiaries_potential_island_homogenization",
+                 "Fig4_sea_connectivity"):
         assert (F3 / (stem + ".png")).read_bytes().startswith(b"\x89PNG")
         assert stem + ".png" in body
+    assert "![Figure S14." in t and "Fig3_host_reports.png" in t
+    beneficiary=data("results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json")
+    cohort=beneficiary["cohort"]
+    assert (cohort["butterflies"],cohort["strict_islands"],cohort["original_island_added_cells"])==(239,126,5741)
+    qs=beneficiary["who_benefits"]["native_host_footprint_quartiles"]
+    assert [q["butterflies"] for q in qs]==[60,60,60,59]
+    assert sum(q["new_island_resource_cells"] for q in qs)==5741
+    assert qs[0]["new_island_resource_cells"]==644 and qs[3]["new_island_resource_cells"]==2271
+    j=beneficiary["potential_island_consumer_composition"]["observed"]
+    assert j["pairs_comparable_both_native_and_contemporary_nonempty"]==7797
+    close(j["mean_potential_butterfly_Jaccard_native"],.1401370010070764)
+    close(j["mean_potential_butterfly_Jaccard_contemporary"],.3675355469925412)
+    nulls=beneficiary["potential_island_consumer_composition"]["degree_constrained_nulls"]
+    assert len(nulls)==2 and all(z["swaps"]["source_margin_preservation_checks"]=="PASS" for z in nulls.values())
+    fig3stem="Fig3_butterfly_beneficiaries_potential_island_homogenization"
+    fig3receipt=data("figures/integrated_island_port_butterfly_v03/"+fig3stem+"_receipt.json")
+    assert fig3receipt["status"]=="SOURCE_VERIFIED_MAIN_FIGURE_ONLY_POTENTIAL_BUTTERFLY_COMMUNITIES"
+    assert fig3receipt["source_sha256"]==sha(ROOT/"results/butterfly_resource_beneficiaries_20261117/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json")
+    for ext in ("png","pdf","svg"):
+        fig=F3/(fig3stem+"."+ext)
+        assert sha(fig)==fig3receipt["output_files"][ext]["sha256"]
+        if ext=="svg": ET.parse(fig)
+    assert "native host" in captions.lower() and "Figure 3 | Who gains potential host resources" in captions
     figdata = data("results/island_resource_layers/figure_inputs.json")
     close(figdata["circuit"]["alien_B_to_G_circuit_improvement_pct"], 4.239013650845648)
     assert figdata["hosts"]["HOSTS_Papilionoidea__all_hosts"]["shared_species_island_and_mainland"] == 67
