@@ -1,0 +1,77 @@
+name: chocho real 2005 directed NOAA × 126 WCVP plant-source crosswalk and sparse-event gate
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_NOAA2005_126_WCVP_pair_current_species_crosswalk_20261117.py
+      - .github/workflows/chocho-NOAA2005-126-WCVP-directional-plant-crosswalk.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-frozen-plants-and-real-ocean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44012093616
+          github-token: ${{ github.token }}
+          name: chocho-126-original-islands-NOAA2005-real-directional-1deg-source-particle-pilot
+          path: _src/original2005_noaa_global
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/original_WCVP_flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/original_marine_geography
+      - name: Check directional NOAA current source vs same-region accepted WCVP native/alien origin categories and verified vessel source
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_NOAA2005_126_WCVP_pair_current_species_crosswalk_20261117.py
+          python3 scripts/audit_NOAA2005_126_WCVP_pair_current_species_crosswalk_20261117.py \
+            --current-audit _src/original2005_noaa_global/NOAA2005_WCVP126_directed_source_coverage_and_interpretation.json \
+            --current-matrix _src/original2005_noaa_global/original126_NOAA2005_directed_source_nearshore_matrix.csv \
+            --current-trajectories _src/original2005_noaa_global/original126_NOAA2005_first90day_fixed_particle_tracks.json \
+            --wcvp-pair-geography _src/original_WCVP_flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --sea-geometry _src/original_marine_geography/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/current_WCVP_source_species_gate
+      - name: Independently reject conflating 12 modelled proximity pairs with actual seed or ship movement
+        run: |
+          python3 - <<'PY'
+          import json,csv
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/current_WCVP_source_species_gate")
+          a=json.loads((p/"NOAA2005_126_WCVP_species_source_crosswalk_feasibility.json").read_text())
+          assert a["status"]=="DIRECTED_2005_CURRENT_AND_WCVP_WHOLE_FLORA_CROSSWALK_COMPLETED_EFFECT_MODEL_UNIDENTIFIABLE"
+          assert a["original_WCVP_islands"]==126 and a["original_undirected_botanical_region_pairs"]==7875
+          assert a["original_modelled_evaluable_source_destination_direction_pairs"]==7313
+          assert a["original_directed_nearshore_source_positive_pairs"]==12
+          assert a["original_exact_GSHHG_other_TDWG_raster_contact_positive_pairs"]==4
+          assert a["no_native_vs_alien_current_ship_regression_fitted"]
+          assert a["original_source_precondition_before_adding_global_directional_current_to_flora_prediction"]["this_cohort_meets_gate"] is False
+          z=list(csv.DictReader((p/"NOAA2005_source_positive12_WCVP_flora_species_geographic_index.csv").open()))
+          assert len(z)==12 and all(x["is_confirmed_real_biological_seed_dispersal"]=="False" for x in z)
+          print("NOAA2005_12_PHYSICAL_SOURCE_POSITIVE_DIRECTIONS_WCVP_CROSSWALK_PASS",
+           {"species_native_to_alien_matched_positive_directions":a["source_positive_dir_pairs_with_WCVP_source_native_recipient_alien_named_taxa"],
+            "source_ship_2020_OD_overlap":a["source_positive_dir_pairs_also_with_2020_actual_WPI_vessel_OD"],
+            "nontrivial_nearshore_early_day_gate":a["NOAA_source_positive_dir_pairs_with_first_nearshore_day7_or_later_and_50km_source_displacement"]})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-2005-globalNOAA-12direction-WCVP-native-alien-actual-source-gate
+          path: results/WCVP126_crossed_native_alien_20261117/current_WCVP_source_species_gate/
+          retention-days: 90
+          if-no-files-found: warn
