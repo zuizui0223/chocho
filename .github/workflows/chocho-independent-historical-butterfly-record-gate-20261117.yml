@@ -1,0 +1,73 @@
+name: chocho pre-2011 independent butterfly island checklists versus later GBIF index
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_independent_island_historical_butterfly_presence_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/PHUQUOC_PRE2011_INDEPENDENT_CHECKLIST_MATCHES_20261117.csv
+      - .github/workflows/chocho-independent-historical-butterfly-record-gate-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-island-historical-source-provenance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reproduce 2006-2007 independent field record test on exact GBIF original 225x51
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_independent_island_historical_butterfly_presence_20261117.py
+          python scripts/audit_independent_island_historical_butterfly_presence_20261117.py --out-dir _butterfly_historical_record_screen
+      - name: Independent expected results and no native/endemic-origin leakage
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('_butterfly_historical_record_screen')
+          a=json.loads((p/'PHUQUOC_PRE2011_PRESENCE_VS_GBIF_20261117.json').read_text())
+          b=list(csv.DictReader((p/'ALL317_FIRSTINDEX_HISTORICAL_CROSSCHECK.csv').open()))
+          assert (a['full_cohort']['butterflies'],a['full_cohort']['landmasses'],a['full_cohort']['species_landmass_cells'])==(225,51,11475)
+          assert (a['full_cohort']['GBIF_later_first_index_cells'],a['full_cohort']['crosschecked_historical_independent_presence_cells'])==(317,12)
+          q=a['Phu_Quoc']
+          assert (q['GBIF_first_indices_2018_2022'],q['documented_2006_or_2007_butterflies'],q['2006_field_checklist_matches'],q['additional_2007_field_specimen_matches'])==(12,12,9,3)
+          assert q['all_12_early2001_2010_GBIF_counts']==0
+          assert q['minimum_evidence_to_GBIF_index_lag_years']==11
+          assert len(b)==317
+          assert sum(x['historical_field_presence']=='source_verified_by_2007' for x in b)==12
+          assert sum(x['historical_field_presence']=='unknown_not_in_source_scope' for x in b)==305
+          assert all(x['butterfly_origin']=='unknown' and x['butterfly_establishment']=='unknown' and x['butterfly_endemicity']=='unassessed' for x in b)
+          assert a['Christmas_Island_context']['GBIF_counts_for_Melanitis_leda_2001_2022']==0
+          assert a['Christmas_Island_context']['island_endemic_present_in_225'] is False
+          print('INDEPENDENT_HISTORICAL_PRESENCE_SOURCE_AND_NO_NATIVE_LEAKAGE_PASS')
+          PY
+      - name: Negative-source tests reject false native or post-hoc first arrivals
+        run: |
+          python - <<'PY'
+          import csv,importlib.util
+          from pathlib import Path
+          s=importlib.util.spec_from_file_location('history', 'scripts/audit_independent_island_historical_butterfly_presence_20261117.py')
+          m=importlib.util.module_from_spec(s)
+          s.loader.exec_module(m)
+          rows=m.read_pinned('gbif'); geo=m.read_pinned('islands')
+          h=m.read_pinned('history')
+          for key,val in [('butterfly_origin_status','native'),('butterfly_endemicity_status','single_island_endemic'),
+                           ('earliest_independent_record_year_upper_bound','2019'),('species','Papilio machaon'),('landmass_id','1210')]:
+              c=[dict(x) for x in h];c[0][key]=val
+              try:m.audit(rows,geo,c)
+              except ValueError:pass
+              else:raise AssertionError('invalid evidence promoted: '+key)
+          print('HISTORICAL_SOURCE_FAIL_CLOSED_NEGATIVE_CASES_PASS')
+          PY
+      - name: Archive provenance and all 317 candidate outcome flags
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-pre2011-PhuQuoc-12-historical-butterflies-and-GBIF-firstindex
+          path: _butterfly_historical_record_screen/
+          retention-days: 90
+          if-no-files-found: warn
