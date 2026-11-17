@@ -175,8 +175,15 @@ def main(a):
                 raise RuntimeError("Unweighted marine graph is not symmetric")
             dsrc=d1 if d1 is not None else d2
             gdist=float(r["centroid_geodesic_km"])
-            if dsrc is not None and (dsrc<=0 or not math.isfinite(dsrc)):
-                raise RuntimeError("Unexpected zero or negative sea distance")
+            status="BOTH_ANCHORED"
+            if dsrc is None or not math.isfinite(dsrc):
+                status="NO_COMMON_VERIFIED_SEA_ANCHOR"
+                dsrc=None
+            elif dsrc<=0:
+                # Different TDWG island polygons within one 0.5deg graph
+                # block can map to the same marine node; NOT zero sea distance.
+                status="SAME_COARSE_MARINE_NODE_UNRESOLVED"
+                dsrc=None
             rowpair={
               "source_region":ca,"destination_region":cb,
               "centroid_geodesic_km":gdist,
@@ -184,7 +191,7 @@ def main(a):
               "sea_shortest_over_centroid_geodesic_ratio":round(dsrc/gdist,5) if dsrc is not None and gdist>0 else "",
               "source_fixed_verified_offshore_anchors":len(attachments[ca]),
               "dest_fixed_verified_offshore_anchors":len(attachments[cb]),
-              "source_sea_geometry_coverage_status":"BOTH_ANCHORED" if dsrc is not None else "NO_COMMON_VERIFIED_SEA_ANCHOR",
+              "source_sea_geometry_coverage_status":status,
               "is_drift_or_lagrangian_particle_transport":False,
               "source_graph_GSHHG_sha256":ORIGINAL_GRAPH_SHA,
             }
