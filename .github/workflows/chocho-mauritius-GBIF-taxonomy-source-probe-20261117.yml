@@ -17,7 +17,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Fetch exactly five small official GBIF source API endpoints
+      - name: Fetch seven small official GBIF source API endpoints (plus exact occurrence provenance)
         run: |
           set -euo pipefail
           python -m py_compile scripts/audit_mauritius_GBIF_taxonomy_and_firstindex_20261117.py
@@ -31,7 +31,8 @@ jobs:
           a=json.loads(path.read_text())
           expected={'current_taxon_7346444','zizina_antanossa_name_match',
                     'zizina_otis_name_match','zerynthia_polyxena_name_match',
-                    'zerynthia_MU_2018_2022'}
+                    'zerynthia_MU_2018_2022',
+                    'zerynthia_occurrence_5023737393','zerynthia_dataset_source'}
           assert set(a['endpoints'])==expected
           assert all(x['sha256_source_bytes'] and x['source_bytes'] for x in a['endpoints'].values())
           assert a['status']=='OFFICIAL_GBIF_TAXON_OBSERVATION_ONLY_NOT_COLONIZATION_OR_NATIVE_ORIGIN'
