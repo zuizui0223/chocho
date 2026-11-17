@@ -19,6 +19,7 @@ from pathlib import Path
 
 BASE = Path("provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117")
 FROZEN = BASE / "independent_42_species_vs_frozen239.csv"
+CANARY_BIOTA = Path("provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/canary_BIOTA_source_status_20.csv")
 HOSTS_SHA = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
 ORIGINAL_CSV_BLOB = "3c56054fa21e667eed422a67010059c8e198b1bc"
 API = "https://api.gbif.org/v1/species"
@@ -55,6 +56,39 @@ COHORTS = {
         "source": "Azores regional authority SIARAM arthropod conservation inventory (Hipparchia azorina, H. miguelensis)",
         "origin_class": "island_endemic_species",
         "names": ["Hipparchia azorina", "Hipparchia miguelensis"],
+    },
+    "Canary_BIOTA_all_verified_endemics_13": {
+        "source": "Canary government BIOTA species-specific endemicity fields; frozen 20-name source/URL crosswalk",
+        "origin_class": "island_endemic_species",
+        "names": [
+            "Cyclyrius webbianus", "Euchloe eversi", "Euchloe grancanariensis",
+            "Euchloe hesperidum", "Gonepteryx cleobule", "Hipparchia bacchus",
+            "Hipparchia gomera", "Hipparchia tamadabae", "Hipparchia tilosi",
+            "Hipparchia wyssii", "Pararge xiphioides", "Pieris cheiranthi",
+            "Thymelicus christi"
+        ],
+    },
+    "Canary_BIOTA_verified_native_nonendemic_7": {
+        "source": "Canary government BIOTA species-specific origin fields; native secure or probable separately retained",
+        "origin_class": "native_nonendemic_NS_plus_NP",
+        "names": [
+            "Aricia cramera", "Polyommatus celina", "Vanessa vulcania",
+            "Colias crocea", "Lampides boeticus", "Leptotes pirithous",
+            "Danaus chrysippus"
+        ],
+    },
+    "Canary_BIOTA_native_secure_2": {
+        "source": "Canary BIOTA origin Nativo Seguro and endemicity No",
+        "origin_class": "native_nonendemic_NS",
+        "names": ["Vanessa vulcania", "Colias crocea"],
+    },
+    "Canary_BIOTA_native_probable_5": {
+        "source": "Canary BIOTA origin Nativo Probable and endemicity No",
+        "origin_class": "native_nonendemic_NP",
+        "names": [
+            "Aricia cramera", "Polyommatus celina", "Lampides boeticus",
+            "Leptotes pirithous", "Danaus chrysippus"
+        ],
     },
 }
 
@@ -214,6 +248,32 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
         raise ValueError("Frozen original GEB selected cohort changed")
     index = make_hosts_index(hosts_csv)
     by_name = {r["scientific_name"]: r for r in frozen}
+    # Never silently transfer independent origin statuses from the papers to
+    # new species. Source provenance and native-certainty are locked row by row.
+    biota = rows(CANARY_BIOTA)
+    if len(biota) != 20 or len({r["independent_checklist_name"] for r in biota}) != 20:
+        raise ValueError("Independent Canary BIOTA 20-source status crosswalk changed")
+    biota_by_name = {r["independent_checklist_name"]: r for r in biota}
+    endemic_set = set(COHORTS["Canary_BIOTA_all_verified_endemics_13"]["names"])
+    native_set = set(COHORTS["Canary_BIOTA_verified_native_nonendemic_7"]["names"])
+    secure_set = set(COHORTS["Canary_BIOTA_native_secure_2"]["names"])
+    probable_set = set(COHORTS["Canary_BIOTA_native_probable_5"]["names"])
+    if endemic_set | native_set != set(biota_by_name) or endemic_set & native_set:
+        raise ValueError("Canary cohort names do not match independent BIOTA source file")
+    if secure_set | probable_set != native_set or secure_set & probable_set:
+        raise ValueError("Canary secure/probable native source classes overlap")
+    for name, source in biota_by_name.items():
+        expected = ("endemic_confirmed" if name in endemic_set else
+                    "native_nonendemic_secure" if name in secure_set else
+                    "native_nonendemic_probable")
+        expected_certainty = ("NS" if name in secure_set else
+                              "NP" if name in probable_set else None)
+        if source["canary_origin_stratum"] != expected:
+            raise ValueError("Wrong independent status for " + name)
+        if expected_certainty and source["origin_certainty"] != expected_certainty:
+            raise ValueError("Wrong native-certainty classification for " + name)
+        if not source["source_url"].startswith("https://www.biodiversidadcanarias.es/"):
+            raise ValueError("Unverified source URL for " + name)
     for cohort_name, cohort in COHORTS.items():
         if len(set(cohort["names"])) != len(cohort["names"]):
             raise ValueError("Duplicate source taxon in " + cohort_name)
@@ -286,6 +346,7 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
         "taxonomic_source": "GBIF v1 backbone API, response snapshots stored",
         "host_source_commit": HOSTS_SHA,
         "original_42_csv_git_blob": ORIGINAL_CSV_BLOB,
+        "canary_independent_origin_crosswalk": str(CANARY_BIOTA),
         "meaning": "reported HOSTS larval plant genus coverage after guarded accepted-name/synonym matching; not biological host completeness",
         "independent_unique_butterflies": len(records),
         "original_exact_binomial_named_host": sum(r["hosts_exact_genus"] for r in records),
@@ -320,6 +381,20 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
     (output / "synonym_origin_generalization_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
+    print("HOSTS_ALIAS_AUDIT_DIAGNOSTICS=" + json.dumps({
+        "nonresolved": [
+            {"name": r["scientific_name"], "status": r["gbif_status"],
+             "match_guard": r["gbif_match_guard"],
+             "accepted_key": r["gbif_accepted_species_key"]}
+            for r in records if r["gbif_status"] != "resolved"
+        ],
+        "accepted_key_collisions": collisions,
+        "added_aliases": [
+            {"name": r["scientific_name"],
+             "host_matched_alternative_names": r["candidate_alias_host_binomials"]}
+            for r in records if r["additional_match"]
+        ]
+    }, ensure_ascii=False))
     print("HOSTS_ALIAS_AUDIT_SUMMARY=" + json.dumps({
         "exact_42": summary["original_exact_binomial_named_host"],
         "guarded_reconciled_min_42": summary["guarded_synonym_named_host_confirmed_min"],
