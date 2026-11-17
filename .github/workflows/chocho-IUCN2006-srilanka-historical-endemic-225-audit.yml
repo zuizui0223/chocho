@@ -1,0 +1,61 @@
+name: chocho historical Sri Lanka butterfly endemic name selection-bias screen
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_srilanka_2006_historical_endemics_in_original225_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/SRILANKA_2006_HISTORICAL_ENDEMIC_E_18_NAME_MATCH_20261117.csv
+      - .github/workflows/chocho-IUCN2006-srilanka-historical-endemic-225-audit.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-butterfly-exact-name-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recalculate source-pinned 2006 historical E name intersection with original 225 butterflies
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_srilanka_2006_historical_endemics_in_original225_20261117.py
+          python scripts/audit_srilanka_2006_historical_endemics_in_original225_20261117.py --out _historical_srilanka_endemics
+      - name: Verify 18 source-marked historical endemic binomials without contemporary endemic status inference
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('_historical_srilanka_endemics/IUCN2006_SRI_LANKA_HISTORICAL_ENDEMIC_NAME_SELECTION_AUDIT.json')
+          a=json.loads(p.read_text())
+          assert (a['original_butterflies'],a['original_species_island_cells'])==(225,11475)
+          assert a['historical_2006_E_labeled_names_explicitly_checked']==18
+          assert a['names_matching_original_225_by_unreconciled_exact_binomial']==0
+          assert len(a['names_checked'])==18
+          assert a['status']=='HISTORICAL_SOURCE_SELECTION_BIAS_SCREEN_NOT_CURRENT_NATIVE_ENDEMISM'
+          print('HISTORICAL_IUCN2006_18_E_NAMES_ORIGINAL_225_SELECTION_BIAS_SCREEN_PASS')
+          PY
+      - name: Negative source-taxonomy drift test
+        run: |
+          python - <<'PY'
+          import importlib.util
+          s=importlib.util.spec_from_file_location('hi','scripts/audit_srilanka_2006_historical_endemics_in_original225_20261117.py')
+          m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+          a=m.source('gbif');b=m.source('historical_E')
+          for col,value in [('current_endemicity_reviewed','yes'),('historical_2006_binomial','Papilio machaon'),('2006_checklist_annotated_endemic_E','no')]:
+              v=[dict(x) for x in b];v[0][col]=value
+              try:m.audit(a,v)
+              except ValueError:pass
+              else:raise AssertionError('Failed to reject unsupported endemic claim '+col)
+          print('HISTORICAL_ENDENISM_TAXONOMIC_NONPROMOTION_PASS')
+          PY
+      - name: Archive original-source scoped comparison only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-2006-IUCN-18-historical-endemic-original225-exact-binomial-screen
+          path: _historical_srilanka_endemics/
+          retention-days: 90
+          if-no-files-found: warn
