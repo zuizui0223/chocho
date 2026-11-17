@@ -1,0 +1,85 @@
+name: chocho 225x51 independently published island butterfly checklists (2006/2007) vs GBIF first indexing
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_two_island_independent_historical_butterfly_checklists_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/SRILANKA_2006_IUCN_CHECKLIST_15_CANDIDATE_CROSSWALK_20261117.csv
+      - results/butterfly_GBIF_effort_origin_gate_20261117/PHUQUOC_PRE2011_INDEPENDENT_CHECKLIST_MATCHES_20261117.csv
+      - .github/workflows/chocho-two-island-historical-butterfly-checklists-gate-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-225-by-51-and-independent-checklists:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Strict source SHA and original 317 outcomes, 2006 country-island versus named-island scope
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_two_island_independent_historical_butterfly_checklists_20261117.py
+          python scripts/audit_two_island_independent_historical_butterfly_checklists_20261117.py --out-dir _butterfly_two_island_historical_audit
+      - name: Independent cohort, first-index period and recorded-community Jaccard checks
+        run: |
+          python - <<'PY'
+          import csv,json,math
+          from pathlib import Path
+          p=Path('_butterfly_two_island_historical_audit')
+          a=json.loads((p/'TWO_ISLAND_HISTORICAL_GBIF_INDEX_SOURCE_AUDIT_20261117.json').read_text())
+          rows=list(csv.DictReader((p/'ALL317_TWO_ISLAND_EARLIER_PUBLISHED_SOURCE_FLAGS_20261117.csv').open()))
+          assert (a['original']['butterflies'],a['original']['landmasses'],a['original']['species_island_cells'],a['original']['later_first_GBIF_index_cells'])==(225,51,11475,317)
+          assert (a['original']['first_index_2011_2017'],a['original']['first_index_2018_2022'])==(221,96)
+          h=a['historical_checklist_matches'];s=a['source_augmented_recorded_similarity']
+          assert (h['Phu_Quoc_landmass471']['island_specific_earlier_matches'],h['Sri_Lanka_landmass31']['national_island_checklist_2006_exact_binomials'])==(12,14)
+          assert h['Sri_Lanka_landmass31']['later_GBIF_first_index_2011_2017']==12
+          assert h['Sri_Lanka_landmass31']['later_GBIF_first_index_2018_2022']==2
+          assert h['Sri_Lanka_landmass31']['unmatched_not_absent']==['Ypthima huebneri']
+          assert (h['total_source_confirmed_before_later_GBIF_index'],h['first_indices_not_audited_or_without_exact_2006_source_name'])==(26,291)
+          assert (s['original_early_GBIF_indexed_cells'],s['Phu_Quoc_augmented_early_cells'],s['Phu_Quoc_and_Sri_Lanka_augmented_early_cells'],s['cumulative_2022_GBIF_indexed_cells'])==(736,748,762,1053)
+          assert s['pairs']==1275
+          assert math.isclose(s['original_GBIF_only_early_Jaccard'],0.12096325473271494,abs_tol=1e-9)
+          assert math.isclose(s['Phu_Quoc_Sri_Lanka_early_Jaccard'],0.12530899503574813,abs_tol=1e-9)
+          assert math.isclose(s['GBIF_late_cumulative_Jaccard'],0.17777287436807873,abs_tol=1e-9)
+          assert math.isclose(s['two_sources_augmentation_delta'],0.0524638793323306,abs_tol=1e-9)
+          assert len(rows)==317
+          assert sum(x['historical_status']=='source_confirmed_before_GBIF' for x in rows)==26
+          assert sum(x['historical_status']=='searched_2006_source_not_found_unknown' for x in rows)==1
+          assert sum(x['historical_status']=='not_audited' for x in rows)==290
+          assert all(x['native_status']=='unknown' and x['establishment_status']=='unknown' and x['island_endemicity']=='unassessed' for x in rows)
+          assert set(x['historical_geographic_resolution'] for x in rows if x['historical_status']=='source_confirmed_before_GBIF')=={'named_island_field_report','national_island_checklist_not_exact_point'}
+          print('ORIGINAL_317_ISLAND_NATIVE_ENDENISM_FAIL_CLOSED_AND_26_HISTORICAL_SOURCES_PASS')
+          PY
+      - name: Negative tests: mismatched source must not become historic presence or endemicity
+        run: |
+          python - <<'PY'
+          import importlib.util
+          s=importlib.util.spec_from_file_location('two_island_historical','scripts/audit_two_island_independent_historical_butterfly_checklists_20261117.py')
+          m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+          a=[m.pinned_table(key) for key in ('gbif','islands','phuquoc','srilanka')]
+          for col,value in [('species','Melanitis leda'),('checklist_publication_year','2018'),('butterfly_origin_status','native'),('landmass_id','471')]:
+              t=[dict(x) for x in a[3]];t[0][col]=value
+              try:m.audit(a[0],a[1],a[2],t)
+              except ValueError:pass
+              else:raise AssertionError('Invalid Sri Lanka source accepted: '+col)
+          t=[dict(x) for x in a[3]]
+          for x in t:
+              if x['species']=='Ypthima huebneri':
+                  x['checklist_exact_species_match']='yes'
+          try:m.audit(a[0],a[1],a[2],t)
+          except ValueError:pass
+          else:raise AssertionError('Unmatched 2006 binomial falsely upgraded')
+          print('NO_UNSOURCED_NATIVE_OR_ENDENISM_AND_NO_FALSE_SRI_LANKA_BINOMIAL_PASS')
+          PY
+      - name: Archive source-pinned numeric results and 317 exact-matched candidate dispositions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-two-island-2006-IUCN-2007-PhuQuoc-vs-317-GBIF-firstindex
+          path: _butterfly_two_island_historical_audit/
+          retention-days: 90
+          if-no-files-found: warn
