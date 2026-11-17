@@ -76,7 +76,6 @@ def input_pair(a):
         if not math.isfinite(port_proxy):raise RuntimeError("Missing modern port count proxy")
         n1,n2=float(r["source_native_WCVP_accepted"]),float(r["dest_native_WCVP_accepted"])
         a1,a2=float(r["source_alien_WCVP_accepted"]),float(r["dest_alien_WCVP_accepted"])
-        area_a=float(next(x for x in [r.get("source_area_km2"),""] if x)[0:]) if r.get("source_area_km2") else None
         # Source accepted richness is provided for all eligible regions;
         # physical area is not in original R pair CSV, so use regional
         # geography metadata separately. No missing values imputed.
@@ -220,8 +219,8 @@ def main():
         raise RuntimeError("Original area and 126 WCVP island codes changed")
     entries=input_pair(args)
     islands=set(e["island1"] for e in entries)|set(e["island2"] for e in entries)
-    if len(islands)!=104 or len(entries)!=5356 or
-        any(e["island1"] not in area_by or e["island2"] not in area_by for e in entries):
+    if (len(islands)!=104 or len(entries)!=5356 or
+        any(e["island1"] not in area_by or e["island2"] not in area_by for e in entries)):
         raise RuntimeError("Original source 104 anchored island 5356 pair cohort not preserved")
     native=evaluate(entries,"native",area_by)
     alien=evaluate(entries,"alien",area_by)
