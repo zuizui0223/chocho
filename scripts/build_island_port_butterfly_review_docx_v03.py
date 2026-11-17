@@ -2,11 +2,12 @@
 """Build the ONE island-and-port butterfly Research Article as coauthor review DOCX.
 
 This builds the ONE integrated manuscript v0.3, not the frozen global-only GEB
-source. The two main figures appear in Results with their
+source. The three main figures appear in Results with their
 source-audited, noncausal captions. Document is DRAFT; not submitted, journal
 typeset, bibliographically verified or coauthor approved.
 """
 from __future__ import annotations
+import hashlib
 import argparse
 import json
 import re
@@ -30,6 +31,18 @@ def build(output:Path):
     # The DOCX title comes from Pandoc metadata; avoid duplicating the same
     # heading immediately below it in the manuscript body.
     original=original.partition("\n")[2].lstrip("\n")
+    fig3_svg=ROOT/"figures/integrated_island_port_butterfly_v03/Fig3_circuit_three_layers_v01.svg"
+    fig3_png=fig3_svg.with_suffix(".png")
+    if not fig3_svg.is_file() or "Fig3_circuit_three_layers_v01.svg" not in original:
+        raise ValueError("Figure 3 source SVG missing from canonical Results")
+    try:
+        import cairosvg
+    except ImportError as exc:
+        raise RuntimeError("cairosvg needed to embed exact source SVG in DOCX") from exc
+    cairosvg.svg2png(bytestring=fig3_svg.read_bytes(),write_to=str(fig3_png),output_width=1800)
+    if not fig3_png.is_file() or fig3_png.read_bytes()[:4]!=bytes([137,80,78,71]):
+        raise ValueError("Figure 3 PNG render failed")
+    original=original.replace("Fig3_circuit_three_layers_v01.svg","Fig3_circuit_three_layers_v01.png")
     if original.count("## Structured abstract")!=1 or original.count("## 3. Results")!=1:
         raise ValueError("Not one canonical manuscript")
     draft=["---",
@@ -57,17 +70,22 @@ def build(output:Path):
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
         media=[n for n in z.namelist() if n.startswith("word/media/")]
-        if len(media)<15:raise ValueError(f"Only {len(media)} embedded butterfly figures")
+        if len(media)<16:raise ValueError(f"Only {len(media)} embedded butterfly figures")
+        embedded={hashlib.sha256(z.read(n)).hexdigest() for n in media}
+        if hashlib.sha256(fig3_png.read_bytes()).hexdigest() not in embedded:
+            raise ValueError("Figure 3 raster not embedded in DOCX media")
         xml=z.read("word/document.xml").decode("utf-8")
         for term in ("Human-redistributed host plants","Structured abstract","Figure 1","Figure 2",
-                     "butterfly"):
+                     "Figure 3","butterfly"):
             if term not in xml:raise ValueError("Missing canonical integrated review manuscript/figure text: "+term)
     receipt={
       "schema":"chocho_single_island_port_butterfly_coauthor_review_DOCX_v03",
       "status":STATUS,
       "source_manuscript":SOURCE.relative_to(ROOT).as_posix(),
       "source_figure_captions":CAPTIONS.relative_to(ROOT).as_posix(),
-      "figure_count":2,
+      "figure_count":3,
+      "figure3_source_svg_sha256":hashlib.sha256(fig3_svg.read_bytes()).hexdigest(),
+      "figure3_embedded_png_sha256":hashlib.sha256(fig3_png.read_bytes()).hexdigest(),
       "in_text_case_maps":1,
       "supplementary_figures":12,
       "supplementary_tables":1,
