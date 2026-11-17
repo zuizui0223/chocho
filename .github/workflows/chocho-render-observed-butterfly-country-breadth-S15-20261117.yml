@@ -1,0 +1,67 @@
+name: chocho butterfly independently observed country breadth vs resource-index contrast Supplement S15
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/render_butterfly_observed_country_breadth_dissociation_S15_20261117.py
+      - .github/workflows/chocho-render-observed-butterfly-country-breadth-S15-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  render_source_locked_s15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install matplotlib scientific evidence rendering
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'matplotlib>=3.8,<4'
+      - name: Render independent butterfly country-breadth contrast and source receipt
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/render_butterfly_observed_country_breadth_dissociation_S15_20261117.py
+          python scripts/render_butterfly_observed_country_breadth_dissociation_S15_20261117.py \
+            --out-prefix figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index
+      - name: Verify exact cohort and exported figure assets
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('figures/integrated_island_port_butterfly_v03')
+          f=root/'FigS15_independent_butterfly_country_breadth_resources_vs_index_receipt.json'
+          j=json.loads(f.read_text())
+          assert j['butterflies']==222 and j['resource_panel_total_new_island_opportunities']==5617
+          assert j['record_index_panel_total_later_first_index']==317
+          assert abs(sum(j['panel_A_resource_pct'])-100)<1e-8
+          assert abs(sum(j['panel_B_index_pct'])-100)<1e-8
+          assert j['geographic_OOF_country_only_brier_gain_pct']<0
+          for ext in ('png','pdf','svg'):
+              p=root/('FigS15_independent_butterfly_country_breadth_resources_vs_index.'+ext)
+              assert p.is_file() and p.stat().st_size>1000
+          print('SOURCE_VERIFIED_GEB_BUTTERFLY_COUNTRY_BREADTH_S15_FIGURE_PASS')
+          PY
+      - name: Preserve figure and numeric provenance only on original one GEB draft
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index.*
+          git add figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index_receipt.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Archive global butterfly own-country breadth versus island HOSTS potential and later index contrast as Supplement S15 [skip ci]'
+          git pull --rebase origin analysis/butterfly-trait-public51-20261109
+          git push origin HEAD:refs/heads/analysis/butterfly-trait-public51-20261109
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-butterfly-global-country-breadth-vs-HOSTS-and-index-FigS15-review
+          path: |
+            figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index.*
+            figures/integrated_island_port_butterfly_v03/FigS15_independent_butterfly_country_breadth_resources_vs_index_receipt.json
+          retention-days: 90
+          if-no-files-found: warn
