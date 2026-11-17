@@ -1,0 +1,54 @@
+name: chocho source-verified butterfly beneficiaries and potential island consumer homogenization
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_butterfly_beneficiaries_and_potential_island_homogenization_20261117.py
+      - .github/workflows/chocho-butterfly-beneficiaries-potential-island-homogenization-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit-native-footprint-and-potential-homogenization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical analysis dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2'
+      - name: Verify frozen 239-by-369 original potential butterfly resources and fixed-margin null
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_butterfly_beneficiaries_and_potential_island_homogenization_20261117.py
+          python scripts/audit_butterfly_beneficiaries_and_potential_island_homogenization_20261117.py --out-dir _new_beneficiaries_source_locked
+      - name: Assert sample identity and avoid translating host resource breadth to native butterfly range
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          x=json.loads(Path('_new_beneficiaries_source_locked/BENEFICIARY_AND_POTENTIAL_HOMOGENIZATION_20261117.json').read_text())
+          c=x['cohort']
+          assert c['butterflies']==239 and c['strict_islands']==126 and c['original_botanical_regions']==369
+          assert c['original_island_added_cells']==5741
+          q=x['who_benefits']['native_host_footprint_quartiles']
+          assert sum(r['butterflies'] for r in q)==239
+          assert sum(r['new_island_resource_cells'] for r in q)==5741
+          assert x['potential_island_consumer_composition']['observed']['island_pairs_all']==7875
+          assert len(x['potential_island_consumer_composition']['degree_constrained_nulls'])==2
+          assert 'NOT butterfly geographic range' in x['who_benefits']['breadth_type']
+          print('RESOURCE_BENEFICIARIES_AND_POTENTIAL_CONSUMER_HOMOGENIZATION_VERIFIED')
+          PY
+      - name: Archive original-source pinned aggregate outcomes, each butterfly and geographic strata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-butterfly-239-beneficiaries-island-potential-homogenization-20261117
+          path: _new_beneficiaries_source_locked/
+          retention-days: 90
+          if-no-files-found: warn
