@@ -58,6 +58,22 @@ HOSTSから事前選抜した既存239種の全世界潜在的寄主機会（+54
 
 HOSTSには *Leptotes webbianus* と *Pieris daplidice* の文字列があるのに対し、INBOは *Cyclyrius webbianus* と *Pontia daplidice* を採用している。これは**分類名の同物異名候補**として記録し、受理名・原記載と分類群同一性が確認されるまでHOSTSカバーに自動加算しない。これ以外にも類似の問題があり、45.2%は**受理名を統合した最終収録率ではない**。
 
+## 既存GEB固定239種への選抜過程を別途照合
+
+同じ独立チェックリストの**ユニーク42種**を、既存GEB復元の生データ入力 *data/frozen/figure_sources/anthropogenic_species_metrics.csv* に保存された**元の固定239種**と、蝶の二名法完全一致で交差確認した。
+
+| 逐次ゲート | 独立42種に残る数 | 分母42種比率 |
+|---|---:|---:|
+| 独立在島チェックリストの蝶 | **42** | 100% |
+| 固定HOSTSに当該蝶の寄主属報告あり | **19** | **45.2%** |
+| 実際のGEB固定239種に採用 | **12** | **28.6%** |
+
+**30/42種**は既存239種の解析に入っていない。内訳は**23種がHOSTSの当該二名法で寄主属未一致**、**7種は寄主属に完全一致の記録があっても、元239種には未収載**。後者は *Azanus ubaldus*、*Cacyreus marshalli*、*Catopsilia florella*、*Colias crocea*、*Hipparchia azorina*、*Hipparchia miguelensis*、*Zizeeria knysna*。未収載理由は今回未識別であり、原解析の種選抜・植物名の受理条件・形質欠測などと断定しない。
+
+マデイラ本島の在来・非固有7種は**6/7種が元239種に含まれる**一方、現生固有3種は**0/3種**。収録率の偏りが「既知のHOSTS蝶だけ」という元の母集団選択に伝わりうることが、独立の在島目録から**実際の元239種との交差**で示された。これは「世界の島固有蝶は100%未収録」という主張ではない。
+
+新規の *independent_42_species_vs_frozen239.csv*（全42種）、*frozen239_selection_summary.json*、*audit_frozen239_representativeness.py* を保存した。根拠の元239種入力ファイルのGit blobは **9f83d2d9ac8e46f1cfd4ded572c7a023273503dd**。
+
 ## 科学的帰結・保留条件
 
 - HOSTS掲載種のみで復元した島の+118.9%という大きな相対資源増は、**観測された寄主の分母に条件づけられた計算**である。この肯定結果を壊すわけではないが、固有蝶類を含む全島蝶相が同じだけ資源拡大した証拠ではない。
@@ -70,6 +86,8 @@ HOSTSには *Leptotes webbianus* と *Pieris daplidice* の文字列があるの
 - audit_independent_checklist_hosts.py：Python標準ライブラリだけを使用、**HOSTSに存在しない蝶も分母に残す**。入力は上述の固定Git blobと一致するCSV。個別島の種×島表と集計JSONを再生成する。
 - species_island_coverage.csv：227の全種×島ペア。学名、チェックリストの状態、HOSTS完全一致、植物の属/種、未検証別名、Madeiraの独立原産地・固有区分。
 - summary.json：出典Git blob、明示的な分母、諸島別・原産地別の結果、および注意事項。
+- independent_42_species_vs_frozen239.csv と frozen239_selection_summary.json：独立42種が元239種に入るかを1種ずつ示す第二ゲート。
+- audit_frozen239_representativeness.py：既存の元239種ソース入力だけを追加して交差を再計算する独立監査コード。
 
 実行例（原資料CSVを上記固定版に揃えた場合）：
 
