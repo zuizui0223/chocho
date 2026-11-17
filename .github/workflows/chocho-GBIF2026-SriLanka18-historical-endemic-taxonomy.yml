@@ -1,0 +1,61 @@
+name: chocho GBIF 2026 taxonomy of 18 historical Sri Lanka endemic names versus frozen butterfly 225
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/reconcile_SriLanka2006_historic_endemics_to_GBIF2026_20261117.py
+      - .github/workflows/chocho-GBIF2026-SriLanka18-historical-endemic-taxonomy.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  GBIF-v1-backbone-source-query:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Query only 18 original source-verified historical E species names against the independent GBIF backbone
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/reconcile_SriLanka2006_historic_endemics_to_GBIF2026_20261117.py
+          python scripts/reconcile_SriLanka2006_historic_endemics_to_GBIF2026_20261117.py --output-dir _historical_SriLanka_GBIF_taxonomic_reconciliation
+      - name: Verify exact source matches and absence of inferred current native or endemic status
+        run: |
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          p=Path('_historical_SriLanka_GBIF_taxonomic_reconciliation')
+          d=json.loads((p/'GBIF_BACKBONE_HISTORICAL_18_ENDENIC_SOURCE_AUDIT_20261117.json').read_text())
+          receipts=json.loads((p/'GBIF_MATCH_RAW18_QUERY_RECEIPTS_20261117.json').read_text())
+          rows=list(csv.DictReader((p/'HISTORIC_ENDENIC_GBIF_TAXON_RECONCILIATION_18.csv').open()))
+          assert d['historical_individually_E_marked_names']==18
+          assert d['original_225_species_keys']==225
+          assert len(rows)==len(receipts)==18
+          assert sum(d['name_resolution_counts'].values())==18
+          assert all(x['current_Sri_Lanka_endemicity']=='UNRESOLVED_NOT_FROM_GBIF_NAME_MATCH' for x in rows)
+          assert all(x['current_Sri_Lanka_native_origin']=='UNRESOLVED_NOT_FROM_GBIF_NAME_MATCH' for x in rows)
+          assert len(set(x['historical_2006_binomial'] for x in rows))==18
+          assert all(len(x['api_response_sha256'])==64 and x['api_url'].startswith('https://api.gbif.org/v1/species/match?') for x in rows)
+          assert all(x['taxon_key_comparison_to_original225'] in (
+            'included_in_original225_by_current_GBIF_accepted_key',
+            'not_in_original225_by_current_GBIF_accepted_key',
+            'needs_taxonomic_review') for x in rows)
+          print('STRICT_GBIF_BACKBONE_18_HISTORICAL_SRI_LANKA_NAMES_SOURCE_PASS')
+          print(json.dumps({'counts':d['name_resolution_counts'],
+                            'taxa':[{'historical_2006_binomial':z['historical_2006_binomial'],
+                                     'GBIF_scientificName':z['GBIF_scientificName'],
+                                     'GBIF_usageKey':z['GBIF_usageKey'],
+                                     'GBIF_acceptedUsageKey':z['GBIF_acceptedUsageKey'],
+                                     'category':z['taxon_key_comparison_to_original225']} for z in rows]},indent=2))
+          PY
+      - name: Archive GBIF response receipts and reproducible accepted-key screen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-GBIF2026-SriLanka18-original225-historical-endemic-taxonomic-names
+          path: _historical_SriLanka_GBIF_taxonomic_reconciliation/
+          retention-days: 90
+          if-no-files-found: warn
