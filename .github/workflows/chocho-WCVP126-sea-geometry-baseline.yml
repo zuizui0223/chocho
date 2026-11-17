@@ -1,0 +1,76 @@
+name: chocho original GSHHG marine geometry shortest-water 126 island pair baseline
+
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_GSHHG126_geometry_only_marine_shortest_paths_20261117.py
+      - .github/workflows/chocho-WCVP126-sea-geometry-baseline.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-marine-coast-anchors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: _src/tdwg
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install sparse network and original coastline geometry libraries
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.11,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/original126_pairs
+      - name: Verify same source GSHHG coastline graph and attach exact native TDWG regions to original marine topology
+        run: |
+          set -euo pipefail
+          test "$(git -C _src/tdwg rev-parse HEAD)" = 52da7828aba9d461dd133c27b3bd7a4407161f54
+          python3 -m py_compile scripts/audit_GSHHG126_geometry_only_marine_shortest_paths_20261117.py
+          python3 scripts/audit_GSHHG126_geometry_only_marine_shortest_paths_20261117.py \
+            --graph data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz \
+            --pair-input _src/original126_pairs/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --tdwg3 _src/tdwg/geojson/level3.geojson \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/sea_geometry
+      - name: Fail closed on missing source island anchors and nonsea biological inference
+        run: |
+          python3 - <<'PY'
+          import json,csv
+          from pathlib import Path
+          path=Path("results/WCVP126_crossed_native_alien_20261117/sea_geometry")
+          z=json.loads((path/"GSHHG126_sea_geometry_source_coverage_audit.json").read_text())
+          assert z["status"]=="SOURCE_LOCKED_MARINE_SHORTEST_PATH_GEOMETRY_NOT_CIRCUIT_RESISTANCE_OR_OCEAN_CURRENTS"
+          assert z["source_original_126_regions"]==126
+          assert z["source_original_island_pairs_total"]==7875
+          assert z["graph_node_count"]==193516
+          assert z["graph_undirected_edge_count"]==372096
+          assert 0<=z["source_valid_original_island_pair_geometric_shortest_sea"]<=7875
+          assert z["source_original_WPI_ports_not_used_as_natural_geographic_terminals"]
+          with (path/"WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv").open() as f:
+              r=list(csv.DictReader(f))
+          assert len(r)==7875
+          assert sum(x["source_sea_geometry_coverage_status"]=="BOTH_ANCHORED" for x in r)==z["source_valid_original_island_pair_geometric_shortest_sea"]
+          print("GSHHG126_GEO_BASELINE_7875_BOTANICAL_PAIRS_PASS",json.dumps({
+              "regions_with_coastal_anchors":z["source_126_regions_with_at_least_one_verified_coastal_water_anchor"],
+              "pairs_with_defined_shortest_water_path":z["source_valid_original_island_pair_geometric_shortest_sea"],
+              "original_total_plant_pairs":z["source_original_island_pairs_total"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: results/WCVP126_crossed_native_alien_20261117/sea_geometry/
+          retention-days: 90
+          if-no-files-found: warn
