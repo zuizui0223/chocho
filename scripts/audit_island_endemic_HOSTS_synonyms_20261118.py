@@ -285,6 +285,13 @@ def analyze(frozen_csv, hosts_csv, output, offline=False):
         family = source["checklist_family"]
         original = canonical_name(name)
         exact = int(source["hosts_named_genus"])
+        # Independently re-read source HOSTS genus rows rather than trusting
+        # a pre-aggregated match flag, with explicit insect-family guard.
+        original_in_pinned_hosts = int(index.get(
+            (original, family.lower()), {}
+        ).get("named_genus", 0) > 0)
+        if original_in_pinned_hosts != exact:
+            raise ValueError("Original exact HOSTS count/family differs from frozen audit: " + name)
         try:
             key, names, guard, status = gbif_name_set(name, family, receipts, offline)
         except Exception as exc:
