@@ -230,6 +230,10 @@ def main():
    ("original_current_accepted_name_only",S[S.species.isin(direct)])]:
   primary[name]={
    "species_and_island_FE":two_way_lpm(population,ms,ni,[]),
+   "species_island_FE_plus_geodesic_prior_conspecific_distance_only":
+     two_way_lpm(population,ms,ni,["log_source_km"]),
+   "species_island_FE_plus_uniform_marine_prior_conspecific_only":
+     two_way_lpm(population,ms,ni,["log_uniform"]),
    "species_island_FE_plus_geographic_and_marine_prior_conspecific_access":
      two_way_lpm(population,ms,ni,["log_source_km","log_uniform"])}
  later=S[S.y2011.eq(0)].copy()
