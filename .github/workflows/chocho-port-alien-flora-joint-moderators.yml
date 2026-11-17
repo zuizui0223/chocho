@@ -1,0 +1,56 @@
+name: chocho island port × native flora and area joint moderation sensitivity
+on:
+  push:
+    branches: [analysis/port-alien-flora-island-moderators-20261117]
+    paths:
+      - scripts/audit_port_alien_flora_joint_moderators_20261117.py
+      - .github/workflows/chocho-port-alien-flora-joint-moderators.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  joint-source-conditional-mods:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical library only
+        run: python3 -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Distinguish area moderation from native flora moderation conditional on both WPI interactions
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_island_port_alien_flora_native_area_moderators_20261117.py scripts/audit_port_alien_flora_joint_moderators_20261117.py
+          python3 scripts/audit_port_alien_flora_joint_moderators_20261117.py \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --hosts results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --out-dir results/port_alien_flora_moderators_20261117
+      - name: Validate original source denominators and noncausal independent-interaction decision
+        run: |
+          python3 - <<'PY'
+          import json,math
+          from pathlib import Path
+          q=json.loads(Path("results/port_alien_flora_moderators_20261117/source_verified_joint_port_island_moderator_sensitivity.json").read_text())
+          assert q["status"]=="JOINT_AREA_NATIVE_FLORA_PORT_MODERATION_IS_OBSERVATIONAL_POSTHOC"
+          assert q["source_island_sample"]==[126,123,98]
+          assert [r["n"] for r in q["results"]]==[126,123,123,98,98]
+          for r in q["results"]:
+              assert r["source_controlled_outcome_noncausal"]
+              for x in ("port_x_log_area","port_x_log_native_flora"):
+                  assert math.isfinite(r["moderator_coefficients_standardized"][x])
+                  assert 0<=r["interaction_conditional_Freedman_Lane_p_with_other_interaction_in_null"][x]<=1
+              assert r["bootstrap_valid_draws"]>=400
+          print("PORT_FLORA_JOINT_SOURCE_COEFFICIENTS_VERIFIED",json.dumps([{
+            "n":r["n"],"model":r["cohort"],"beta":r["moderator_coefficients_standardized"]}
+            for r in q["results"]]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP-island-port-area-native-joint-interaction-20261117
+          path: results/port_alien_flora_moderators_20261117/source_verified_joint_port_island_moderator_sensitivity.json
+          retention-days: 90
+          if-no-files-found: warn
