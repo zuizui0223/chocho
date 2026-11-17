@@ -1,0 +1,60 @@
+name: chocho port alien flora modifiers held out TDWG Level1 prediction
+
+on:
+  push:
+    branches: [analysis/port-alien-flora-nonlinear-historical-source-20261117]
+    paths:
+      - scripts/audit_port_alien_flora_bioregion_transfer_20261117.py
+      - .github/workflows/chocho-port-flora-held-biogeography-transfer.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  historical-botanical-geographic-transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-numeric dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Fit full-source-exclusion Level1 botanical geography transfer with and without WPI moderation
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_port_alien_flora_bioregion_transfer_20261117.py
+          python scripts/audit_port_alien_flora_bioregion_transfer_20261117.py \
+            --flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --hosts results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv \
+            --effort results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv \
+            --out-dir results/port_alien_flora_nonlinear_history_20261117
+      - name: Source-frozen unbiased-score gate
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          f=Path("results/port_alien_flora_nonlinear_history_20261117/held_biogeographic_level1_moderation_prediction.json")
+          v=json.loads(f.read_text())
+          assert v["status"]=="SOURCE_VERIFIED_OUT_OF_BIOREGION_MODERATOR_PREDICTION_DIAGNOSTIC_NOT_CAUSAL"
+          assert v["source_samples"]==[126,123,98]
+          assert v["no_fold_uses_heldout_TDWG_Level1_as_training"]
+          assert v["n_test_variants"]==6 and len(v["results"])==6
+          for r in v["results"]:
+              assert r["all_test_islands_scored_once"]==r["n_islands"]
+              assert r["n_held_out_TDWG_Level1"]==9 and len(r["level1_results"])==9
+              assert math.isfinite(r["macro_equal_level1_relative_MSE_improvement_pct"])
+              assert math.isfinite(r["pooled_test_relative_MSE_improvement_pct"])
+              assert r["held_out_region_fixed_effects_intentionally_not_in_model"]
+              assert all(n["n_islands"]>0 for n in r["level1_results"].values())
+          print("ISLAND_PORT_MODERATION_OUT_OF_REGION_SOURCE_AUDIT_PASS",json.dumps({
+              r["cohort"]:r["macro_equal_level1_relative_MSE_improvement_pct"] for r in v["results"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-port-alien-WCVP-TDWG-Level1-leave-region-out-check
+          path: results/port_alien_flora_nonlinear_history_20261117/held_biogeographic_level1_moderation_prediction.json
+          retention-days: 90
+          if-no-files-found: warn
