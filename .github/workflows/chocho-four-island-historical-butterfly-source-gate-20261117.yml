@@ -65,7 +65,7 @@ jobs:
           for index,key,value in [(5,'landmass_id','471'),(5,'checklist_publication_year','2018'),
                                   (5,'butterfly_origin_status','native'),(5,'source_url','https://example.org/missing'),
                                   (4,'endemicity_status','single_island_endemic'),(2,'earliest_independent_record_year_upper_bound','2022'),
-                                  (3,'butterfly_endemicity_status','single_island_endemic')]:
+                                  (3,'endemicity_status','single_island_endemic')]:
               a=[[dict(y) for y in x] for x in tables]
               a[index][0][key]=value
               try:m.run(*a)
