@@ -147,6 +147,11 @@ def run():
     figdata = data("results/island_resource_layers/figure_inputs.json")
     close(figdata["circuit"]["alien_B_to_G_circuit_improvement_pct"], 4.239013650845648)
     assert figdata["hosts"]["HOSTS_Papilionoidea__all_hosts"]["shared_species_island_and_mainland"] == 67
+    circuit = data("results/port_weed_current_review_20261117/ONE_PAPER_CIRCUIT_RESULTS_LEDGER_20261117.json")
+    close(circuit["floras"]["introduced"]["circuit_pct"], figdata["circuit"]["alien_B_to_G_circuit_improvement_pct"])
+    close(circuit["floras"]["paired_difference"]["introduced_minus_native_pct_points"], 4.348624019600759)
+    close(circuit["butterflies"]["circuit_pct"], 5.081886845222559)
+    ET.parse(F3 / "Fig3_circuit_three_layers_v01.svg")
     # Retain the legacy v0.2 source-file checks.
     for i in range(1,5):
         fs=list(F2.glob(f"Fig{i}_*.png"))
