@@ -1,0 +1,71 @@
+name: chocho NOAA2005 12 WCVP directed candidate same-source distance-matched false-positive audit
+on:
+  push:
+    branches: [analysis/126-island-native-alien-flora-crossed-marine-20261117]
+    paths:
+      - scripts/audit_WCVP126_NOAA2005_12direction_same_source_flora_controls_20261117.py
+      - .github/workflows/chocho-NOAA-WCVP12-same-source-match-controls.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-unmatched-co-listing-control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44012684281
+          github-token: ${{ github.token }}
+          name: chocho-global-noaa2005-original-WCVP126-plants-source-directional-gate
+          path: _src/original_12_noaa_wcvp
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/original_7875_wcvp
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44012093616
+          github-token: ${{ github.token }}
+          name: chocho-126-original-islands-NOAA2005-real-directional-1deg-source-particle-pilot
+          path: _src/original_15750_noaa
+      - name: Compare WCVP current-positive directional source-native to alien recipient co-listing with same-source distance, richness and Level1 matched model nonapproach
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_NOAA2005_12direction_same_source_flora_controls_20261117.py
+          python scripts/audit_WCVP126_NOAA2005_12direction_same_source_flora_controls_20261117.py \
+            --current-positive-root _src/original_12_noaa_wcvp \
+            --full-WCVP-root _src/original_7875_wcvp \
+            --current-matrix-root _src/original_15750_noaa \
+            --out-dir results/WCVP126_crossed_native_alien_20261117/current_source_matched_controls
+      - name: Validate exact 12 current-positive cases, 10 co-listed botanical species and avoid causal inference
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/WCVP126_crossed_native_alien_20261117/current_source_matched_controls/NOAA2005_native_to_alien_12_model_nearshore_source_matched_controls.json")
+          d=json.loads(p.read_text())
+          assert d["status"]=="SOURCE_MATCHED_NOAA_MODEL_NONAPPROACH_CONTROLS_DESCRIPTIVE_NOT_CAUSAL_PLANT_TRANSPORT"
+          assert d["original_2005_source_positive_directed_pairs"]==12
+          assert d["original_2005_source_native_to_recipient_alien_taxon_positive_pairs"]==10
+          assert len(d["case_details"])==12
+          assert d["no_formal_effect_model_or_hypothesis_test_fitted"]
+          assert 0<=d["n_current_model_positive_directions_with_3plus_matched_controls"]<=12
+          print("NOAA2005_POSITIVE_WCVP_CROSSWALK_SAME_SOURCE_CONTROLS_PASS",
+              {"eligible_cases":d["n_current_model_positive_directions_with_3plus_matched_controls"],
+               "expected_from_control":d["expected_co_listing_positive_count_from_matched_control_frequencies_sum"]})
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-WCVP126-real-NOAA2005-taxa-source-matched-control
+          path: results/WCVP126_crossed_native_alien_20261117/current_source_matched_controls/
+          retention-days: 90
+          if-no-files-found: warn
