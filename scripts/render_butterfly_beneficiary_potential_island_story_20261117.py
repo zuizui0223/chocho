@@ -76,8 +76,6 @@ def main():
  axa.text(.02,.94,"Native host-resource geography quartiles\n239 butterflies × 126 island plant regions",va="top",
           ha="left",transform=axa.transAxes,fontsize=9,color=gray)
  axa.text(-.31,26.0,"Equal-share 25%",ha="left",va="bottom",fontsize=8,color=gray)
- axa.text(.02,.08,"Not butterfly native range or endemism",fontsize=8.9,
-          transform=axa.transAxes,color=gray)
 
  axb.bar([0,1],[potential0,potential1],color=[blue,orange],width=.46)
  axb.set_ylim(0,.43)
@@ -87,8 +85,8 @@ def main():
  for i,v in enumerate((potential0,potential1)):
   axb.text(i,v+.017,f"{v:.3f}",ha="center",va="bottom",fontsize=11.6,weight="bold")
  axb.set_title("B  Potential butterfly consumer sets",loc="left",fontsize=12,weight="bold",pad=13)
- axb.text(.98,.93,"239 species · 7,797 island pairs",transform=axb.transAxes,
-          ha="right",fontsize=8.8,color=gray)
+ axb.text(.98,1.035,"239 butterflies · 7,797 island pairs",transform=axb.transAxes,
+          ha="right",va="bottom",fontsize=8.6,color=gray)
 
  axc.bar([0,1,2],[obs0,expected_end,obs1],
          color=[blue,"#aeb3b4",orange],width=.52)
@@ -101,8 +99,8 @@ def main():
  for i,v in enumerate((obs0,expected_end,obs1)):
   axc.text(i,v+.006,f"{v:.3f}",ha="center",va="bottom",fontsize=11,weight="bold")
  axc.set_title("C  Independently indexed butterfly records",loc="left",fontsize=12,weight="bold",pad=13)
- axc.text(.98,.91,"225 species · 51 landmasses · 1,275 pairs",transform=axc.transAxes,
-          ha="right",fontsize=8.7,color=gray)
+ axc.text(.98,1.035,"225 butterflies · 51 landmasses · 1,275 pairs",transform=axc.transAxes,
+          ha="right",va="bottom",fontsize=8.5,color=gray)
 
  fig.text(.085,.958,"Introduced plants assemble shared potential resources for butterflies",
           fontsize=17,weight="bold",ha="left")
@@ -110,7 +108,7 @@ def main():
           "Two independently measured layers: potential resources (A–B) and cumulative GBIF species indexing (C)",
           fontsize=10.3,ha="left",color=gray)
  fig.text(.085,.098,
-          "A–B: HOSTS×WCVP regional food opportunity, not butterflies observed there. C: new GBIF indexing, not true arrival or abundance.",
+          "A: plant-derived host breadth, not butterfly native range. B: potential resources. C: GBIF indexing, not arrival or abundance.",
           fontsize=9.2,ha="left",color="#344148")
  fig.text(.085,.060,
           "C null holds each butterfly's and island's new index counts and butterfly×5-geographic-group counts (4 chains).",
