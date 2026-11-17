@@ -1,0 +1,76 @@
+name: GEB 51-island source-locked uniform marine circuit and candidate-host conditional decomposition
+
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py
+      - .github/workflows/chocho-island51-host-uniform-ocean-conditional-20261117.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  conditional-host-and-marine-ocean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original numeric requirements
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3'
+      - name: Recover original 51-island NOAA/GSHHG circuit source CI
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42193019385
+          github-token: ${{ github.token }}
+          name: island51-observed-marine-circuits-and-heldout-losses
+          path: _original_circuit_source
+      - name: Recover original 15 geographic folds from source-only longitude bins
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 42325176725
+          github-token: ${{ github.token }}
+          name: island51-double-unseen-longitude-block-predictions
+          path: _original_geography
+      - name: Compute B / B+uniform / B+host / B+uniform+host under both geographic evaluations
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py
+          python scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py \
+            --pairs _original_circuit_source/_ci_ocean_results/island51_observed_circuit_pairs.csv \
+            --prep _original_circuit_source/_ci_ocean_results/source_preparation.json \
+            --longitude-blocks _original_geography/longitude_island_blocks.csv \
+            --output _source_verified_host_uniform_nested
+      - name: Require same-source 51/1275, exact prior results, honest paired predictions
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          f=Path('_source_verified_host_uniform_nested/verified_nested_uniform_host_51island.json')
+          r=json.loads(f.read_text())
+          assert (r["n_islands"],r["n_source_pairs"])==(51,1275)
+          for target in ("new_butterfly_jaccard","earlier_butterfly_jaccard"):
+              for design,folds in (("LOIO",51),("double_unseen",15)):
+                  y=r["results"][target][design]
+                  assert y["n_fold_records"]==folds
+                  assert set(y["MSE"])=={"B","BU","BH","BUH"}
+                  assert all(math.isfinite(v) and v>0 for v in y["MSE"].values())
+          late=r["results"]["new_butterfly_jaccard"]
+          assert late["LOIO"]["relative_MSE_reduction_pct"]["B_to_BU"]>5
+          assert late["LOIO"]["relative_MSE_reduction_pct"]["BH_to_BUH"]>3
+          assert late["double_unseen"]["relative_MSE_reduction_pct"]["BH_to_BUH"]>10
+          print("GEB_51_ISLAND_SOURCE_PINNED_HOST_UNIFORM_CONDITIONAL_PASS")
+          PY
+      - name: Archive inspectable conditional gains, each fold and complete predictions
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-51island-host-uniform-circuit-LOIO-and-double-unseen-20261117
+          path: _source_verified_host_uniform_nested/
+          retention-days: 90
+          if-no-files-found: warn
