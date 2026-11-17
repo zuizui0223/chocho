@@ -42,11 +42,18 @@ jobs:
             exit 2
           fi
           printf '%s\n' "$src" >/tmp/cape_breton/source_url.txt
-          if ! command -v pdftotext; then
-            echo "::error::pdftotext not installed"
-            exit 3
-          fi
-          pdftotext -layout /tmp/cape_breton/report_1987.pdf /tmp/cape_breton/report_1987.txt
+          python -m pip install --disable-pip-version-check 'pymupdf>=1.25,<2'
+          python - <<'PY'
+          from pathlib import Path
+          import fitz
+          p=Path('/tmp/cape_breton/report_1987.pdf')
+          doc=fitz.open(p)
+          text='\f'.join(page.get_text('text',sort=True) for page in doc)
+          print("SOURCE_FULL_ORIGINAL_PDF_PAGES",len(doc),"chars",len(text))
+          if len(doc)<290 or len(text)<70000:
+              raise ValueError('Original 302-page government report not fully extractable')
+          Path('/tmp/cape_breton/report_1987.txt').write_text(text,encoding='utf-8')
+          PY
           sha256sum /tmp/cape_breton/report_1987.pdf | tee /tmp/cape_breton/sha256.txt
           echo "PDF text size: $(wc -c </tmp/cape_breton/report_1987.txt)"
       - name: Search original Cape Breton late first-index butterfly names with source page context
