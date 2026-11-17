@@ -1,0 +1,75 @@
+name: GEB 51-island uniform marine host with source-verified historical botanical effort sensitivity
+
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_island51_host_uniform_marine_effort_sensitivity_20261117.py
+      - scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py
+      - .github/workflows/chocho-island51-host-uniform-source-effort-sensitivity-20261117.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  same-islands-recording-bias-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 42193019385
+          github-token: ${{ github.token }}
+          name: island51-observed-marine-circuits-and-heldout-losses
+          path: _src/original
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 42325176725
+          github-token: ${{ github.token }}
+          name: island51-double-unseen-longitude-block-predictions
+          path: _src/longitude
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 42323799520
+          github-token: ${{ github.token }}
+          name: island51-historical-botanical-effort
+          path: _src/effort
+      - name: Source-locked sensitivity on same biological sample with original effort and host richness
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py scripts/audit_island51_host_uniform_marine_effort_sensitivity_20261117.py
+          python scripts/audit_island51_host_uniform_marine_effort_sensitivity_20261117.py \
+            --pairs _src/original/_ci_ocean_results/island51_observed_circuit_pairs.csv \
+            --prep _src/original/_ci_ocean_results/source_preparation.json \
+            --longitude-blocks _src/longitude/longitude_island_blocks.csv \
+            --early-coverage _src/effort/historical_botanical_coverage_by_island.csv \
+            --early-receipt _src/effort/result_receipt.json \
+            --output _source_verified_effort_adjusted
+      - name: Independent result receipt checks and keep negative geographic transfer
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('_source_verified_effort_adjusted/adjusted_51island_host_uniform_marine_source_verified.json').read_text())
+          assert r['n_islands']==51 and r['n_original_pairs']==1275
+          assert r['total_2001_2010_plant_buffer_records']==155002
+          q=r['results']['new_butterfly_jaccard']
+          assert 0.5<q['LOIO']['relative_MSE_reduction_pct']['BH_to_BUH']<1.0
+          assert q['double_unseen']['relative_MSE_reduction_pct']['BH_to_BUH']<0
+          assert len(q['LOIO']['descriptive_island_bootstrap95'])==5
+          print('SOURCE_LOCKED_EFFORT_ADJUSTED_MARINE_HOST_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-51island-host-uniform-pre2011-plant-effort-adjusted-20261117
+          path: _source_verified_effort_adjusted/
+          retention-days: 90
+          if-no-files-found: warn
