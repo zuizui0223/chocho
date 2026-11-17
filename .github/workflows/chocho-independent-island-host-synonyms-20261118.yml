@@ -1,0 +1,70 @@
+name: chocho island endemic butterflies independent HOSTS synonym audit
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_island_endemic_HOSTS_synonyms_20261118.py
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/**
+      - .github/workflows/chocho-independent-island-host-synonyms-20261118.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-locked-name-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout exact NHM HOSTS input
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check source identity and frozen independent denominator
+        run: |
+          set -euo pipefail
+          test "$(git -C _hosts rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          test "$(git hash-object provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117/independent_42_species_vs_frozen239.csv)" = "3c56054fa21e667eed422a67010059c8e198b1bc"
+          python3 -m py_compile scripts/audit_island_endemic_HOSTS_synonyms_20261118.py
+      - name: Resolve original 42 taxa through source-receipted GBIF accepted names and synonyms
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_island_endemic_HOSTS_synonyms_20261118.py \
+            --hosts _hosts/resource.csv \
+            --out-dir results/independent_island_endemic_alias_20261118
+      - name: Fail closed on frozen denominator; print scientifically bounded outcome
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('results/independent_island_endemic_alias_20261118/synonym_origin_generalization_summary.json')
+          x=json.loads(p.read_text(encoding='utf8'))
+          assert x['independent_unique_butterflies']==42
+          assert x['original_exact_binomial_named_host']==19
+          assert 19<=x['guarded_synonym_named_host_confirmed_min']<=42
+          assert x['cohorts']['Madeira_extant_endemic']['n']==3
+          assert x['cohorts']['Canary_single_island_endemic_Hipparchia']['n']==5
+          assert x['cohorts']['Azores_endemic_Hipparchia']['n']==2
+          assert x['cohorts']['Madeira_native_nonendemic']['n']==7
+          assert x['cohorts']['Madeira_extant_endemic']['exact_hosts_genus']==0
+          assert x['cohorts']['Canary_single_island_endemic_Hipparchia']['exact_hosts_genus']==0
+          assert x['cohorts']['Azores_endemic_Hipparchia']['exact_hosts_genus']==2
+          print('RECONCILIATION_SOURCE_AUDIT_PASSED')
+          print('Confirmed lower bound:',x['guarded_synonym_named_host_confirmed_min'],'/',x['independent_unique_butterflies'])
+          print('Unresolved mismatches:',len(x['unresolved_no_exact_host']))
+          print('Full GBIF source resolution:',x['all_42_gbif_fully_resolved'])
+          print('Accepted-key collisions quarantined:',len(x['gbif_taxon_collisions']))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-42-independent-endemic-GBIF-HOSTS-alias-audit-20261118
+          path: results/independent_island_endemic_alias_20261118/
+          retention-days: 90
+          if-no-files-found: warn
