@@ -1,0 +1,46 @@
+name: chocho Mauritius official GBIF taxon-name and anomalous first-index source audit
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_mauritius_GBIF_taxonomy_and_firstindex_20261117.py
+      - .github/workflows/chocho-mauritius-GBIF-taxonomy-source-probe-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  GBIF-targeted-taxon-backbone-and-one-country-occurrence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch exactly five small official GBIF source API endpoints
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_mauritius_GBIF_taxonomy_and_firstindex_20261117.py
+          python scripts/audit_mauritius_GBIF_taxonomy_and_firstindex_20261117.py --out-dir _mauritius_GBIF_taxon_source
+      - name: Fail closed on incomplete sources and ensure native/endemic labels not implied
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path=Path('_mauritius_GBIF_taxon_source/GBIF_MAURITIUS_TAXON_AND_OCCURRENCE_SOURCE_AUDIT_20261117.json')
+          a=json.loads(path.read_text())
+          expected={'current_taxon_7346444','zizina_antanossa_name_match',
+                    'zizina_otis_name_match','zerynthia_polyxena_name_match',
+                    'zerynthia_MU_2018_2022'}
+          assert set(a['endpoints'])==expected
+          assert all(x['sha256_source_bytes'] and x['source_bytes'] for x in a['endpoints'].values())
+          assert a['status']=='OFFICIAL_GBIF_TAXON_OBSERVATION_ONLY_NOT_COLONIZATION_OR_NATIVE_ORIGIN'
+          print('TARGETED_GBIF_SOURCE_RECEIPTS_AND_NO_STATUS_PROMOTION_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Mauritius-GBIF-name-concept-and-one-record-20261117
+          path: _mauritius_GBIF_taxon_source/
+          retention-days: 90
+          if-no-files-found: warn
