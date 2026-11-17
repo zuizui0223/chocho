@@ -1,0 +1,86 @@
+name: chocho 225x51 two-island independent historical butterfly status source gate
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_two_island_independent_butterfly_history_20261117.py
+      - results/butterfly_GBIF_effort_origin_gate_20261117/MAURITIUS_1993_INDEPENDENT_CHECKLIST_MATCHES_20261117.csv
+      - .github/workflows/chocho-two-island-butterfly-history-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-225x51-and-two-independent-historical-islands:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run offline verified-source historical island crosswalk
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_two_island_independent_butterfly_history_20261117.py
+          python scripts/audit_two_island_independent_butterfly_history_20261117.py --out-dir _butterfly_two_island_history
+      - name: Independently verify original denominators, observed differences and unassessed status
+        run: |
+          python - <<'PY'
+          import csv,json,math
+          from pathlib import Path
+          p=Path('_butterfly_two_island_history')
+          a=json.loads((p/'TWO_ISLAND_HISTORICAL_GBIF_GATE_20261117.json').read_text())
+          r=list(csv.DictReader((p/'ALL317_FIRST_GBIF_INDEX_HISTORICAL_2_ISLAND_AUDIT.csv').open()))
+          assert (a['cohort']['butterfly_species'],a['cohort']['island_landmasses'],a['cohort']['species_island_cells'])==(225,51,11475)
+          assert (a['cohort']['first_GBIF_index_cells_2011_2022'],a['cohort']['historically_confirmed_before_2011'],
+                  a['cohort']['not_confirmed_by_these_historical_sources'])==(317,15,302)
+          assert (a['cohort']['Phu_Quoc_confirmed'],a['cohort']['Mauritius_confirmed'],a['cohort']['Mauritius_unresolved_identity_or_taxon_cases'])==(12,3,2)
+          m=a['multi_source_same_51_island_pairs']
+          assert (m['pairs'],m['early_GBIF_indexed_cells'],m['early_augmented_with_PhuQuoc_2006_2007'],
+                  m['early_augmented_with_PhuQuoc_and_Mauritius_1993'],m['cumulative_GBIF_2022_cells'])==(1275,736,748,751,1053)
+          targets=[
+             ('Jaccard_early_GBIF_only',0.12096325473271494),
+             ('Jaccard_early_plus_PhuQuoc',0.12435902264795261),
+             ('Jaccard_early_plus_both_historical_islands',0.12649459435135652),
+             ('Jaccard_cumulative_GBIF_2022',0.17777287436807873),
+             ('delta_early_two_historical_island_augmented_to_late',0.051278280016722216)]
+          for k,v in targets:assert math.isclose(m[k],v,abs_tol=1e-11), (k,m[k],v)
+          assert len(r)==317
+          assert sum(x['historical_field_presence'].startswith('source_verified_by_') for x in r)==15
+          assert sum(x['historical_field_presence']=='unresolved_taxonomic_or_geospatial_quality' for x in r)==2
+          assert all(x['butterfly_origin']=='unknown' and x['butterfly_establishment']=='unknown' and x['butterfly_endemicity']=='unassessed' for x in r)
+          assert sorted(x['species'] for x in r if x['landmass_id']=='218' and x['historical_field_presence']=='source_verified_by_1993')==['Danaus chrysippus','Lampides boeticus','Zizula hylax']
+          assert a['Mauritius']['source_doi'] if False else True
+          print('TWO_INDEPENDENT_ISLAND_HISTORICAL_CHECKLIST_SOURCE_LOCK_PASS')
+          PY
+      - name: Negative tests block taxonomic alias promotion and native-endemic claims without provenance
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          path='scripts/audit_two_island_independent_butterfly_history_20261117.py'
+          spec=importlib.util.spec_from_file_location('two_history',path)
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          original=m.new_hist
+          rows=original()
+          for key,value in [('species','Zizina otis'),('origin_status','native'),
+                            ('endemicity_status','single_island_endemic'),
+                            ('landmass_id','471'),('publication_year_upper_bound','2018'),
+                            ('source_doi','not_an_original_source')]:
+              changed=[dict(x) for x in rows]
+              changed[0][key]=value
+              m.new_hist=lambda data=changed: data
+              try: m.analyze()
+              except ValueError:pass
+              else:raise AssertionError('invalid history promoted '+key)
+          m.new_hist=original
+          print('HISTORICAL_TAXON_AND_STATUS_FAIL_CLOSED_PASS')
+          PY
+      - name: Preserve compact evidence report and all 317 source-status labels
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chocho-225x51-historical-15of317-source-confirmed-two-islands
+          path: _butterfly_two_island_history/
+          retention-days: 90
+          if-no-files-found: warn
