@@ -1,0 +1,52 @@
+name: chocho butterfly 51-landmass first-index four-chain fixed-margin geographic sensitivity
+on:
+  push:
+    branches: [analysis/butterfly-trait-public51-20261109]
+    paths:
+      - scripts/audit_observed_butterfly_cumulative_null_multichain_20261117.py
+      - scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py
+      - .github/workflows/chocho-butterfly-record-index-fixedmargin-fourchains-20261117.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  repeated-source-margins:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install exact original numeric dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2,<3' 'scipy>=1.11,<2'
+      - name: Predeclared four-chain source-preserving sensitivity
+        env:
+          OPENBLAS_NUM_THREADS: '1'
+          OMP_NUM_THREADS: '1'
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_observed_butterfly_cumulative_null_multichain_20261117.py scripts/audit_observed_butterfly_cumulative_index_homogenization_20261117.py
+          python scripts/audit_observed_butterfly_cumulative_null_multichain_20261117.py --out-dir _four_chains
+      - name: Validate actual source indices, geography and four-chain null receipts
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          j=json.loads(Path('_four_chains/MULTICHAIN_225_51_RECORD_SIMILARITY_SOURCE_NULL_20261117.json').read_text())
+          assert j['original_indexed_2001_2010']==736 and j['post2010_new_first_indexed']==317
+          assert j['chains_per_null']==4 and j['draws_per_chain']==199
+          assert len(j['nulls'])==2
+          for m in j['nulls'].values():
+              assert len(m['chains'])==4
+              assert m['diagnostic']['all_pairs']['n_chain_draws_total']==796
+              assert all(math.isfinite(v['all_pairs_mean']) for v in m['chains'])
+          print('BUTTERFLY_INDEX_FIXEDMARGIN_GEOGRAPHY_FOURCHAIN_SOURCE_CHECKS_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-butterfly-index-similarity-fourchain-margin-audit-20261117
+          path: _four_chains/
+          retention-days: 90
+          if-no-files-found: warn
