@@ -57,3 +57,22 @@ Uniform-ocean circuit MSE gains **+5.081886845%** over the separately specified 
 **Interpretation:** introduced-flora effect remains positive in the more difficult transfer, whereas native-flora effect remains near zero. But with only five non-independent held groups, the descriptive transfer interval crosses zero: **not a confirmed geographically universal law**. Group/bootstrap intervals do not establish causal transport or independent replication; held islands' contemporary marginal floristic richness is still a predictor.
 
 **Remaining blocking claim check:** 104-island matched circuit contrasts and 51-island butterfly analysis use separate regions, outcome definitions and terminals. Strict uniform-circuit transfer supports the **direction** only, not precision. Genuine current/cargo mechanisms would require historical directed flows and source/recipient plant introductions; no PR merge, coauthor approval or manuscript submission is claimed.
+
+## Source-locked 51-island candidate-host conditional bridge (2026-11-17)
+
+This follows the original **51 GBIF butterfly landmasses, 1,275 pairs**, not the **104 WCVP botanical regions**. It is the first direct **same-sample** model subtraction among B, B+uniform circuit (U), B+candidate introduced-host port similarity (H), B+U+H. Sources are independently recovered original [#42193019385](https://github.com/zuizui0223/chocho/actions/runs/42193019385) and original blind geography [#42325176725](https://github.com/zuizui0223/chocho/actions/runs/42325176725), **SHA256-locked**. Fresh GitHub [#44025831765 SUCCESS](https://github.com/zuizui0223/chocho/actions/runs/44025831765) reconstructs the old B→U **+5.0819%** and U→U+H **+2.2760%** exactly before proceeding. Original 194 port-count controls and 182 GSHHG sea-qualified terminals are unchanged.
+
+| Retrospective later (2011–2022) butterfly community Jaccard | LOIO 51 islands: MSE gain vs B | Double-unseen 15 geographic fold pairs: MSE gain vs B |
+|---|---:|---:|
+| B+U: uniform GSHHG circuit | **+5.082%** | **+12.345%** |
+| B+H: introduced candidate host Jaccard | +4.158% | +1.088% |
+| B+U+H: both | **+7.242%** | +11.175% |
+| **U added *after* H** (different BH denominator) | **+3.218%** | **+10.198%** |
+| **H added *after* U** (different BU denominator) | +2.276% | **−1.335%** |
+
+The LOIO U-after-H descriptive 51-island bootstrap 95% is **[+0.513,+5.763]%**, and H-after-U is **[−1.371,+5.490]%**. The latter is not clearly positive. Of the original uniform-circuit absolute MSE improvement **0.000345455**, **0.000209676** remains after conditioning H (~60.7%); the ~39.3% reduction is **NOT a causal mediation fraction**. The double-unseen test is a much harder task on the **same 51 original islands**, not an independent cohort. For inter-longitude-block pairs, adding H after U actually worsens MSE by **4.062%**. On the historical **2001–2010** butterfly community target, strict double-unseen U alone worsens MSE **10.680%**. This is a recording-composition contrast, not demonstrated time-varying dispersal.
+
+The candidate H is the original **2001–2024 port-indexed introduced larval-host candidates**. It is not the full introduced WCVP flora, independently observed local feeding, historically prior host availability or a temporally valid mediator for the **2011–2022** butterflies. The four-model strict test does **not** include the historical early-general-plant recording-effort / host richness terms of the distinct earlier three-model AIS+wind test. Missing controls and uneven indexing remain serious. Do not collapse the separately sampled 104-region plant network into this 51-island predictor or claim the already source-positive 104-island alien effect is explained by plant→butterfly causal mediation.
+
+**One-paper source of truth**: [Full Japanese scientific report](../../results/island51_host_uniform_bridge_20261117/README_JA.md), [JSON source receipt](../../results/island51_host_uniform_bridge_20261117/VERIFIED_51_ISLAND_HOST_UNIFORM_CIRCUIT_20261117.json), [standalone executed source code](../../scripts/audit_island51_host_vs_uniform_marine_circuit_nested_20261117.py), [full held-island and all individual predictions (Actions)](https://github.com/zuizui0223/chocho/actions/runs/44025831765). This belongs in **Supplement / falsification**. Existing positive plant, port, host forecasting and 51-island marine figures remain unchanged.
+
