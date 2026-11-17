@@ -53,6 +53,24 @@ def build(output:Path):
         p=subprocess.run(cmd,cwd=ROOT,text=True,capture_output=True)
         if p.returncode:
             raise RuntimeError(f"Pandoc failed: {p.stderr[-2500:]}")
+    # Keep each image together with its following figure caption in Word.
+    # The original Pandoc output allowed e.g. main Figure 3 on page 11 and its
+    # caption alone at the top of page 12. This formatting change changes no
+    # scientific source, graphics or text.
+    from docx import Document
+    document=Document(output)
+    grouped_figures=0
+    for i,paragraph in enumerate(document.paragraphs[:-1]):
+        if paragraph._p.xpath(".//w:drawing"):
+            next_paragraph=document.paragraphs[i+1]
+            if next_paragraph.style.name=="Image Caption":
+                paragraph.paragraph_format.keep_with_next=True
+                paragraph.paragraph_format.keep_together=True
+                next_paragraph.paragraph_format.keep_together=True
+                grouped_figures+=1
+    if grouped_figures < 4:
+        raise ValueError("Main/supplementary figure-caption groups were not detected")
+    document.save(output)
     with zipfile.ZipFile(output) as z:
         bad=z.testzip()
         if bad:raise ValueError("DOCX media CRC failed: "+bad)
@@ -72,6 +90,7 @@ def build(output:Path):
       "supplementary_figures":13,
       "supplementary_tables":1,
       "embedded_media_files":len(media),
+      "figure_captions_kept_with_images":grouped_figures,
       "not_yet_checked":["Word/PDF full-page visual rendering by LibreOffice",
          "journal formatting compliance","bibliography and data licenses","coauthor approval",
          "historical butterfly host use, established colonisation, ship-mediated transfer"],
