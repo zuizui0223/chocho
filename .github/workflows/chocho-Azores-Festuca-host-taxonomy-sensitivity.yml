@@ -1,0 +1,66 @@
+name: chocho independent endemic Azores Festuca jubata versus petraea host taxonomy sensitivity
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Azores_Hipparchia_Festuca_host_alternative_WCVPv13_20261118.R
+      - .github/workflows/chocho-Azores-Festuca-host-taxonomy-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-WCVP-plant-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Original GEB vascular flora WCVP v13 only
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Accepted plant species source and no host imputation
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          Rscript scripts/audit_Azores_Hipparchia_Festuca_host_alternative_WCVPv13_20261118.R \
+            _wcvp results/Azores_Festuca_native_host_alternatives_20261118
+      - name: Validate original known host versus alternative scenarios without claiming wild dual host
+        run: |
+          python3 - <<'PY'
+          import csv,json,pathlib
+          r=pathlib.Path('results/Azores_Festuca_native_host_alternatives_20261118')
+          def load(name):
+            with (r/name).open(encoding='utf8',newline='') as f:
+              return list(csv.DictReader(f))
+          plants=load('Festuca_two_literature_host_candidates_WCVPv13.csv')
+          scenarios=load('Festuca_source_host_sensitivity_three_scenarios_WCVPv13.csv')
+          assert {x['plant'] for x in plants}=={'Festuca jubata','Festuca petraea'}
+          assert len(plants)==2 and len(scenarios)==3
+          assert all(x['source_native_AZO']=='1' for x in plants)
+          assert all(x['accepted_WCVP_AZO_native']=='1' for x in scenarios)
+          assert all(x['field_evidence_that_each_butterfly_uses_all_assumed_hosts']=='0' for x in scenarios)
+          result={
+            'schema':'chocho_azores_two_contrasting_festuca_host_taxa_source_sensitivity_v1',
+            'original_GEB_WCVP_version':'65bed76bae9d644ccb6ad200c05f9f5071d89e05',
+            'original_NHM_host_species':'Festuca jubata',
+            'independent_alternative_literature':'Fuchs 1993 Festuca petraea as compared in 1997 revision',
+            '1997_review':'https://www.zobodat.at/pdf/Nota-lepidopterologica_20_0150-0292.pdf',
+            'accepted_plant_scenario_results':scenarios,
+            'plant_taxa':plants,
+            'claim_boundary':'Hypothetical alternative host taxon identity, not independently observed larval performance, not a newly verified wild use of both taxa, not a measured general endemicity effect.'
+          }
+          (r/'AZORES_FESTUCA_LITERATURE_ALTERNATIVE_SOURCE_SCENARIO.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print('ORIGINAL_WCVP_ALTERNATIVE_NATIVE_PLANT_HOST_SCENARIOS_SOURCE_VERIFIED='+json.dumps(scenarios,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Azores-Festuca-jubata-petraea-original-WCVP-taxonomy-sensitivity
+          path: results/Azores_Festuca_native_host_alternatives_20261118/
+          retention-days: 90
+          if-no-files-found: warn
