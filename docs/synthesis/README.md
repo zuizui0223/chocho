@@ -6,7 +6,9 @@
 1. [Single-story positive findings and evidence boundaries](POSITIVE_EVIDENCE_AND_ONE_STORY_20261118.md) — 22 source-qualified claims with explicit original sample and outcome units, followed by an evidence-linked five-figure paper design.
 2. [11–18 November positive findings and later falsification](LAST_WEEK_POSITIVE_EVIDENCE_20261118.md) — 21 recently updated PRs, especially direct larval host use by an endemic butterfly, independently classified endemics, marine and port context.
 3. [Selective source-asset import](SELECTIVE_RESULT_MERGE_20261118.md) and [811-byte-identical Git-blob manifest](POSITIVE_RESULT_FILE_MANIFEST_20261118.tsv) — trace each archived source input back to its PR and pinned head.
-4. [Every PR scanned](ALL_PR_AUDIT_20261118.md) and [closure log](CLOSED_OUT_OF_SCOPE_PRS_20261118.md) — 176 repository PR descriptions; 56 out-of-scope/superseded closed this pass, 46 merged overall, 71 open for source/analysis/review.
+4. [Current four open PRs and remaining source/author gates](FOUR_OPEN_SOURCE_GATES_20261118.md); [all PR scan](ALL_PR_AUDIT_20261118.md); [closure source ledger](D46_CLOSURE_DECISION_20261118.md). Exact current count: 176 PRs = 46 merged, 126 closed-unmerged, 4 open.
+
+5. [Preserved 32 analysis scripts](CORE_SOURCE_CODE_BRIDGE_20261118.md), [18-result-source consistency CI](INTEGRATED_EVIDENCE_VERIFICATION.md) and [12 original source-PR closure audit](CORE12_SOURCE_RECONCILIATION_20261118.md); archived raw source/model replay still depends on external inputs.
 
 ## Paper-state boundary
 - **Frozen, original GEB v0.2:** current `manuscript/butterfly_specialization_ecology_v0.2.md` and existing submission/CI workflows preserved.

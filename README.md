@@ -13,7 +13,7 @@ The **single active scientific paper direction** joins butterfly larval-host res
 - [**Synthesis index, research scope and current PR state**](docs/synthesis/README.md).
 - [**811 source-typed result, robustness and manuscript/figure-reference assets merged into main**](docs/synthesis/SELECTIVE_RESULT_MERGE_20261118.md), with [exact Git blob and originating-PR manifest](docs/synthesis/POSITIVE_RESULT_FILE_MANIFEST_20261118.tsv); the original v0.2 submission material was not overwritten.
 - [**Integrated island–port GEB v0.3 candidate draft**](manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md) is archived **as a draft**, not as an approved/submitted replacement.
-- [**Off-scope PR cleanup and reversible branch history**](docs/synthesis/CLOSED_OUT_OF_SCOPE_PRS_20261118.md): 56 unrelated/superseded PRs closed, one separate scope-definition PR [#139](https://github.com/zuizui0223/chocho/pull/139) merged. Historic branches were not deleted.
+- [**Current 4-PR status, source-code and journal gates**](docs/synthesis/FOUR_OPEN_SOURCE_GATES_20261118.md): 176 PRs total = 46 merged, 126 closed-unmerged, 4 open. All historical branches preserved. [Previous 56 unrelated PR cleanup](docs/synthesis/CLOSED_OUT_OF_SCOPE_PRS_20261118.md) and [12 source PR closures](docs/synthesis/CORE12_SOURCE_RECONCILIATION_20261118.md) retain scientific provenance.
 
 ## Scientific synthesis and evidence freeze (18 November 2026)
 
