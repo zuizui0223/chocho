@@ -1,0 +1,136 @@
+name: chocho independent Azores 8 butterflies original source HOSTS x WCVP resource comparison
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Azores_independent8_host_only_WCVP_v13_20261118.R
+      - .github/workflows/chocho-Azores-independent8-host-only-WCVP.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  same-source-all-eight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin exact original host-pair mirror used by GEB
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+      - name: Pin exact original vascular flora source and distributions used by GEB
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - name: Restore official 2023 Azores establishment status source audit
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44219637797
+          github-token: ${{ github.token }}
+          repository: zuizui0223/chocho
+          name: chocho-original-Azores2023-independent-native-endemic-DwCA
+          path: _official2023
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Verify pinned source identities and official species-rank origin
+        run: |
+          set -euo pipefail
+          test "$(git -C _hosts rev-parse HEAD)" = 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          test "$(git -C _wcvp rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          python3 - <<'PY'
+          import json,pathlib
+          official=json.loads(pathlib.Path('_official2023/azores_official_2023_SOURCE_AUDIT.json').read_text(encoding='utf8'))
+          assert official['original_archive_sha256']=='bd043d88089f25e2ed3cac0bb09d306667a9c2c0978cbd627c7f4782f247b9ee'
+          assert official['harmonized_species_rank_origin_counts']=={'native':6,'endemic':2,'uncertain':0}
+          d={}
+          for x in official['exact_taxon_results']:
+              status=x['official_establishment_means'] or x.get('alias_official_origin_status',[])
+              assert len(status)==1
+              d[x['independent_INBO_species']]=status[0].lower()
+          assert d=={
+            'Colias crocea':'native','Danaus plexippus':'native',
+            'Hipparchia azorina':'endemic','Hipparchia miguelensis':'endemic',
+            'Lampides boeticus':'native','Pieris brassicae':'native',
+            'Vanessa atalanta':'native','Vanessa cardui':'native'}
+          print('INDEPENDENT_EIGHT_SOURCE_ORIGIN_VERIFIED')
+          PY
+      - name: Reconstruct original HOSTS species-level host-only native vs contemporary distributions for all 8 butterfly taxa
+        run: |
+          set -euo pipefail
+          Rscript scripts/audit_Azores_independent8_host_only_WCVP_v13_20261118.R \
+            _wcvp _hosts/resource.csv results/Azores_independent8_host_only_WCVP2026
+      - name: Summarize same-source native and endemic independent cohorts without claiming causal or phylogenetic replication
+        run: |
+          python3 - <<'PY'
+          import csv,json,pathlib
+          root=pathlib.Path('results/Azores_independent8_host_only_WCVP2026')
+          def load(p):
+            with (root/p).open(encoding='utf8',newline='') as f:
+              return list(csv.DictReader(f))
+          taxa=load('Azores_independent8_host_only_butterfly_WGSRPD3.csv')
+          links=load('Azores_independent8_source_HOSTS_WCVP_plant_species_pairs.csv')
+          plants=load('Azores_independent8_original_HOSTS_WCVP_name_resolution.csv')
+          assert len(taxa)==8
+          native=[x for x in taxa if x['independently_classified_Azores_origin']=='native']
+          endemic=[x for x in taxa if x['independently_classified_Azores_origin']=='endemic']
+          assert len(native)==6 and len(endemic)==2
+          assert all(x['source_GEB239_included']=='1' for x in native)
+          assert all(x['source_GEB239_included']=='0' for x in endemic)
+          assert all(x['original_NHM_raw_named_host_species']=='1' and
+                     x['accepted_unique_WCVP_host_species']=='1' and
+                     x['introduced_added_regions_n']=='0' for x in endemic)
+          def summarize(rows):
+            n=len(rows)
+            return {'n':n,
+              'species_with_all_source_HOSTS_plant_taxa_WCVP_accepted':sum(int(x['unresolved_original_host_species'])==0 for x in rows),
+              'source_HOSTS_named_plant_species_total':sum(int(x['original_NHM_raw_named_host_species']) for x in rows),
+              'accepted_named_plant_species_total':sum(int(x['accepted_unique_WCVP_host_species']) for x in rows),
+              'species_with_any_new_native_to_contemporary_units':sum(int(x['introduced_added_regions_n'])>0 for x in rows),
+              'source_native_units_sum_over_butterflies':sum(int(x['primary_native_regions_n']) for x in rows),
+              'source_contemporary_units_sum_over_butterflies':sum(int(x['contemporary_host_regions_n']) for x in rows),
+              'source_added_units_sum_over_butterflies':sum(int(x['introduced_added_regions_n']) for x in rows),
+              'source_contemporary_to_native_aggregate_ratio':(
+                  sum(int(x['contemporary_host_regions_n']) for x in rows)/
+                  sum(int(x['primary_native_regions_n']) for x in rows)
+                  if sum(int(x['primary_native_regions_n']) for x in rows)>0 else None
+              )}
+          result={
+            'schema':'chocho_independent_Azores_eight_same_original_source_host_only_v1',
+            'fixed_NHM_HOSTS':'808e0b869f9ec1adf8efff87cf6a395adda103e0',
+            'fixed_WCVP_v13':'65bed76bae9d644ccb6ad200c05f9f5071d89e05',
+            'original_2023_independent_Azores_SHA256':'bd043d88089f25e2ed3cac0bb09d306667a9c2c0978cbd627c7f4782f247b9ee',
+            'original_source_species':8,
+            'native_nonendemic':summarize(native),
+            'endemic':summarize(endemic),
+            'species':taxa,
+            'distinct_source_host_plant_names':len(plants),
+            'source_larval_plant_pairs':len(links),
+            'original_GEB_source_population_includes_endemics':False,
+            'source_comparison_not_independent':True,
+            'inference_boundaries':[
+              'The two endemic species share the same Festuca jubata host-plant network and are not independent host-range replications',
+              'Original NHM plant names can be incomplete or have missing/ambiguous WCVP accepted species and this is explicitly counted',
+              'These are global WGSRPD3 plant opportunity unions, not native/introduced availability or realized feeding on each individual Azores island',
+              'Primary butterfly-host identities in this source may differ from GEB strict 239 due to taxonomic synonyms and additional traits',
+              'The original GEB 239 butterflies +54.9% global/+118.9% island potential resource estimates remain unchanged'
+            ]}
+          (root/'AZORES_EIGHT_NATIVE_ENDEMIC_SAME_SOURCE_HOST_ONLY_SUMMARY.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print('AZORES_INDEPENDENT_EIGHT_HOST_ONLY_SOURCE_SUMMARY='+json.dumps({
+            'native':result['native_nonendemic'],'endemic':result['endemic'],
+            'named_original_source_host_pairs':len(links),
+            'sources_have_incomplete_taxonomic_resolution':sum(int(x['unresolved_original_host_species'])>0 for x in taxa)
+          },ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Azores8-original-HOSTS-WCVP-v13-native-endemic-host-only-comparison
+          path: results/Azores_independent8_host_only_WCVP2026/
+          retention-days: 90
+          if-no-files-found: warn
