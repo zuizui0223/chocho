@@ -1,0 +1,93 @@
+name: chocho independent eight endemic butterflies trait-free source host WCVP geography
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/build_independent_endemic_exact_host_panel_20261118.py
+      - scripts/analyze_independent_endemic_host_only_WCVP_v13_20261118.R
+      - .github/workflows/chocho-independent-eight-endemic-host-only-WCVP-v13.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-endemic-source-panel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout fixed NHM HOSTS
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts
+      - name: Checkout original GEB WCVP v13 accepted species and geography
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build independent source-graded exact host species panel without LepTraits filtering
+        run: |
+          set -euo pipefail
+          test "$(git -C _hosts rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          test "$(git -C _wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          python3 -m py_compile scripts/build_independent_endemic_exact_host_panel_20261118.py
+          python3 scripts/build_independent_endemic_exact_host_panel_20261118.py \
+            --hosts _hosts/resource.csv \
+            --out-dir results/independent_eight_endemic_host_WCVP_20261118
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Reconstruct native-to-contemporary source WCVP potential host geography
+        run: |
+          set -euo pipefail
+          Rscript scripts/analyze_independent_endemic_host_only_WCVP_v13_20261118.R \
+            _wcvp \
+            results/independent_eight_endemic_host_WCVP_20261118/eight_endemic_source_host_species13.csv \
+            results/independent_eight_endemic_host_WCVP_20261118
+      - name: Enforce independent butterfly selection and disallow interpreting genus-only or captive evidence as field
+        run: |
+          python3 - <<'PY'
+          import csv,json,pathlib
+          root=pathlib.Path('results/independent_eight_endemic_host_WCVP_20261118')
+          z=json.loads((root/'eight_endemic_host_source_panel_summary.json').read_text())
+          assert z['original_independent_endemic_denominator']==18
+          assert z['source_selected_exact_host_endemic_species']==8
+          assert z['source_verified_host_edges']==13
+          def read(path):
+            with (root/path).open(encoding='utf-8',newline='') as f:return list(csv.DictReader(f))
+          edges=read('source_13_butterfly_plant_species_WCVPv13_origin.csv')
+          result=read('eight_independent_endemics_host_only_resource_by_evidence.csv')
+          assert len(edges)==13 and len(result)==8*4
+          assert set(x['source_region_TDWG3'] for x in edges)=={'CNY','AZO','MDR'}
+          assert set(x['evidence_tier'] for x in edges)=={
+            'larval_reported','oviposition_only','captivity_only','nonlocal_database'}
+          assert all(x['in_original_GEB239']=='0' for x in edges)
+          for b in ('Hipparchia azorina','Hipparchia miguelensis'):
+            r=[x for x in result if x['source_butterfly']==b and x['mode']=='all_named_sources_including_NHM_nonlocal']
+            assert len(r)==1 and (int(r[0]['potential_global_native_regions']),int(r[0]['potential_global_contemporary_regions']))==(2,2)
+            assert int(r[0]['potential_global_added_regions'])==0
+          p=[x for x in result if x['source_butterfly']=='Pieris cheiranthi' and x['mode']=='all_named_sources_including_NHM_nonlocal']
+          assert len(p)==1 and int(p[0]['source_region_newly_host_present_after_intro'])==0
+          assert int(p[0]['source_resolved_hosts_introduced_n'])>=1
+          print('INDEPENDENT_8_SOURCE_TYPED_WCVP_POTENTIAL_HOST_ENVELOPES_VALIDATED')
+          for x in result:
+            if x['mode']=='all_named_sources_including_NHM_nonlocal':
+              print('ENDEMIC_RESOURCE_SOURCE',x['source_butterfly'],x['source_region_TDWG3'],
+                    'native',x['potential_global_native_regions'],
+                    'contemporary',x['potential_global_contemporary_regions'],
+                    'added',x['potential_global_added_regions'],
+                    'ratio',x['potential_global_contemporary_over_native_ratio'],
+                    'missingstatus',x['unresolved_host_species_or_local_status_n'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-independent8-source-exact-host-WCVPv13-resource-geography-20261118
+          path: results/independent_eight_endemic_host_WCVP_20261118/
+          retention-days: 90
+          if-no-files-found: warn
