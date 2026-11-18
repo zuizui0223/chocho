@@ -1,0 +1,69 @@
+name: chocho two island-endemic Euchloe conditional native host acceptance
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Euchloe_native_host_acceptance_field_lab_20261118.py
+      - scripts/audit_Euchloe_field_lab_WCVP_v13_20261118.R
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/Euchloe_two_island_host_use_field_vs_lab_2010.csv
+      - .github/workflows/chocho-Euchloe-island-host-field-vs-lab-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-verifiable-host-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate original field and captive host use without pseudo-replication
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_Euchloe_native_host_acceptance_field_lab_20261118.py
+          python3 scripts/audit_Euchloe_native_host_acceptance_field_lab_20261118.py
+      - name: Pin original fixed WCVP v13 source
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Source-verify three exact native/alien botanical statuses
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          Rscript scripts/audit_Euchloe_field_lab_WCVP_v13_20261118.R \
+            _wcvp \
+            provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/Euchloe_two_island_host_use_field_vs_lab_2010.csv \
+            results/Euchloe_island_host_comparison_20261118
+      - name: Verify correctly conditioned host choices and independent origin taxon
+        run: |
+          python3 - <<'PY'
+          import csv,json
+          from pathlib import Path
+          root=Path('results/Euchloe_island_host_comparison_20261118')
+          x=json.loads((root/'Euchloe_field_vs_lab_host_evidence.json').read_text())
+          with (root/'Euchloe_three_host_plants_WCVPv13_CNY.csv').open(encoding='utf8',newline='') as f:
+              p=list(csv.DictReader(f))
+          assert len(p)==3
+          assert all(z['WCVP_v13_CNY_origin']=='native_CNY' for z in p)
+          assert x['grand_canaria']['field_larvae_found_on_host']==15
+          assert x['grand_canaria']['reported_parasitized']==9
+          assert x['grand_canaria']['reported_pupated']==5
+          assert x['fuerteventura']['field_larvae_sample_n']==1
+          assert x['fuerteventura']['pupated_after_feeding']
+          assert x['fuerteventura']['rejected_host_in_captivity']==['Hirschfeldia incana']
+          print('INDEPENDENT_ORIGIN_EUCHLOE_DIFFERENTIAL_ACCEPTANCE_IS_NOT_REPLICATED_MECHANISM')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-two-island-Euchloe-native-host-field-vs-lab-20261118
+          path: results/Euchloe_island_host_comparison_20261118/
+          retention-days: 90
+          if-no-files-found: warn
