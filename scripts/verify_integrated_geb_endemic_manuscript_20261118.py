@@ -18,6 +18,9 @@ ENDEMIC=P/"VERIFIED_ENDEMIC18_NONIDENTIFICATION_TRANSPORT_20261118.json"
 EIGHT=P/"VERIFIED_INDEPENDENT8_HOST_GEOGRAPHY_AND_FIELD_GATES_20261118.json"
 FAMILY=ROOT/"results/hosts_use_vs_flora_20261116/VERIFIED_FLORISTIC_AND_FAMILY_BASELINE_20261116.json"
 SP=ROOT/"data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+ISLAND=ROOT/"results/island_resource_gap_filling/by_species.csv"
+CROSSED=ROOT/"results/WCVP126_crossed_native_alien_20261117/VERIFIED_SOURCE_NATIVE_ALIEN_CROSSED_20261117.json"
+MARINE=ROOT/"results/island51_cross_community_marine_20261107/comparison_scope_summary.csv"
 
 def check(condition,msg):
     if not condition: raise AssertionError(msg)
@@ -36,6 +39,39 @@ def main():
     check(sum(int(x["introduced_added_units"]) for x in species)==14553,
           "Global plant-resource additions")
     check("Coauthor review draft; unsubmitted" in doc,"Working paper status")
+    crossed=json.loads(CROSSED.read_text(encoding="utf-8"))
+    with ISLAND.open(encoding="utf-8-sig",newline="") as src:
+        island_rows=[r for r in csv.DictReader(src) if r["group"]=="island"]
+    with MARINE.open(encoding="utf-8-sig",newline="") as src:
+        marine_rows=list(csv.DictReader(src))
+    check(len(island_rows)==239 and sum(int(r["added"]) for r in island_rows)==5741,
+          "Original island-only opportunity denominator")
+    island_rows.sort(key=lambda r:(-int(r["native"]),r["species"]))
+    check(int(island_rows[58]["native"])==29 and int(island_rows[59]["native"])==28,
+          "Untied top-59 native island breadth stratum")
+    check(sum(int(r["added"]) for r in island_rows[:59])==2271,
+          "Top-59 resource geographically broad beneficiaries")
+    check(crossed["original_GSHHG126_verified_model_coastal_islands"]==104
+          and crossed["original_exact_common_WCVP_native_alien_and_GSHHG_pair_sample"]==5355,
+          "Matched plant geometry source sample")
+    assert abs(crossed["relative_MSE_positive_is_improvement"]["native"]["G_vs_B_pct"]-2.2343211230)<1e-8
+    assert abs(crossed["relative_MSE_positive_is_improvement"]["alien"]["G_vs_B_pct"]-1.7750986997)<1e-8
+    matches=[r for r in marine_rows if r["panel"]=="later_butterflies_retro_hosts"
+             and r["pair_class"]=="all_both_plants_indexed" and r["contrast"] in ("BASE_to_AIS","BASE_to_BOTH")]
+    check(len(matches)==2 and all(int(r["unique_source_pairs"])==990 for r in matches),
+          "Stricter butterfly geographic transfer cohort")
+    gains={r["contrast"]:float(r["MSE_gain_percent"]) for r in matches}
+    check(abs(gains["BASE_to_AIS"]-.677555746745)<1e-8 and
+          abs(gains["BASE_to_BOTH"]+4.69859540475)<1e-8,
+          "Stricter AIS-only positive and AIS-plus-wind adverse results")
+    for phrase in ("21.4", "17.7", "39.6%", "2.95", "+4.24%", "−0.11%",
+                   "+2.23%", "+1.78%", "+0.678%", "−4.699%", "### S.F.",
+                   "McRae, B. H.", "ESR (2009)", "Vargas, P."):
+        check(phrase in doc, "Island-port-marine conclusion missing: "+phrase)
+    check("no new butterfly colonization" not in doc.lower(),
+          "A claimed lack of *any* colonization is stronger than an unobserved effect")
+    check(doc.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0].count("0/18")==1,
+          "Endemic ascertainment must be declared in abstract")
     check(all(len(re.findall(r"^### 3\."+str(n)+r"\.",doc,re.M))==1 for n in range(1,7)),
           "All six Results sections are present and sequential")
     check("### 2.8. Independent endemic" in doc and "### S.E. Independent island-endemic" in doc,
@@ -91,7 +127,13 @@ def main():
       "source_positive_global_resource_endemics":4,"home_archipelago_new_cells":0,
       "field_alien_host_named_islands":["Tenerife","La Palma"],
       "family_adjusted_extra_preference_supported":False,
-      "abstract_word_count":wc,"proof_type":"source claim consistency, not population inference"},
+      "abstract_word_count":wc,"island_gap_start_pp":21.4,"island_gap_end_pp":17.7,
+      "top59_island_gain_fraction_pct":round(100*2271/5741,4),
+      "marine_crossed_native_shortest_pct":round(crossed["relative_MSE_positive_is_improvement"]["native"]["G_vs_B_pct"],4),
+      "marine_crossed_alien_shortest_pct":round(crossed["relative_MSE_positive_is_improvement"]["alien"]["G_vs_B_pct"],4),
+      "stricter_AIS_gain_pct":round(gains["BASE_to_AIS"],4),
+      "stricter_AIS_wind_gain_pct":round(gains["BASE_to_BOTH"],4),
+      "proof_type":"source claim consistency, not population inference"},
       sort_keys=True))
 
 if __name__=="__main__":
