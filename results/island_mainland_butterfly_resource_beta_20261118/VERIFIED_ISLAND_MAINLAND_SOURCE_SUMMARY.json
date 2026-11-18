@@ -1,0 +1,150 @@
+{
+  "schema": "chocho_source239_island_mainland_potential_butterfly_resource_beta_exact_margin_null_20261118_v1",
+  "status": "EXECUTED_AND_ORIGINAL_GLOBAL_NULL_EXACTLY_REPRODUCED_EXPLORATORY_SOURCE_DERIVED",
+  "source": {
+    "original_branch_commit": "bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2",
+    "original_resource_matrix_sha256": "ec6a5530d65ac0b04f230e0c51fd68bf543555641a17b94795996bf11ce257d0",
+    "original_resource_report_sha256": "ccda0bc669fb5ffe7326175fcc0501dbb1447790925c06add92501d1d30f255b",
+    "original_WGSRPD_level1_sha256": "85804d45b0a9ffb3620d13795015ca2a23d2ecd4c99e489f7d312906750d94d7",
+    "original_239_butterfly_bits_pr": 118
+  },
+  "execution": {
+    "run_id": 44299353236,
+    "success": true,
+    "artifact_id": 14424288243,
+    "artifact_zip_sha256": "99ab1ce1de6e03ce2ea78e2da87e95ebdbf5dc9012d601561c2208088416258a",
+    "source_files": [
+      "island_mainland_resource_beta_verified_summary.json",
+      "draws_level1.csv",
+      "draws_level1_and_origin_status.csv"
+    ]
+  },
+  "unit": "Jaccard of fixed 239 butterfly species with at least one documented larval host in native-only versus native+introduced WCVP botanical region plant assemblage; opportunity not actual butterfly occurrence",
+  "original_resource_counts": {
+    "native": 26530,
+    "added": 14553,
+    "contemporary": 41083,
+    "unique_butterflies": 239,
+    "WGSrpd3_regions": 369
+  },
+  "class_counts_source": {
+    "island": 126,
+    "mainland": 237,
+    "mixed": 6
+  },
+  "native_supported_cohort": {
+    "islands": 113,
+    "mainlands": 236,
+    "mixed": 6,
+    "total": 355,
+    "zero_native_islands_excluded": 13,
+    "zero_native_mainlands_excluded": 1,
+    "excluded_zero_native_examples": [
+      "ANT",
+      "ASP",
+      "BOU",
+      "CRZ",
+      "EAS",
+      "HBI",
+      "HMD",
+      "KEG",
+      "LIN",
+      "MAQ",
+      "MPE",
+      "PHX",
+      "SGE",
+      "SSA"
+    ],
+    "mixed_or_unclassified_not_used_in_II_MM_pairs": true
+  },
+  "observed": {
+    "global": {
+      "pairs": 62835,
+      "native_mean_jaccard": 0.2769819,
+      "contemporary_mean_jaccard": 0.4620834,
+      "delta": 0.18510150276498835
+    },
+    "island_island": {
+      "pairs": 6328,
+      "native_mean_jaccard": 0.1726688,
+      "contemporary_mean_jaccard": 0.4093362,
+      "delta": 0.2366673510631546
+    },
+    "mainland_mainland": {
+      "pairs": 27730,
+      "native_mean_jaccard": 0.3710578,
+      "contemporary_mean_jaccard": 0.5215024,
+      "delta": 0.15044462893853075
+    },
+    "island_mainland": {
+      "pairs": 26668,
+      "native_mean_jaccard": 0.2022211,
+      "contemporary_mean_jaccard": 0.4160328,
+      "delta": 0.21381171240035377
+    },
+    "island_island_within_TDWG_Level1": {
+      "pairs": 875,
+      "native_mean_jaccard": 0.3671311,
+      "contemporary_mean_jaccard": 0.5052599,
+      "delta": 0.13812875512231565
+    },
+    "mainland_mainland_within_TDWG_Level1": {
+      "pairs": 5211,
+      "native_mean_jaccard": 0.62433,
+      "contemporary_mean_jaccard": 0.6545628,
+      "delta": 0.030232780816672297
+    },
+    "raw_II_minus_MM_delta": 0.08622272212462384
+  },
+  "exact_margin_nulls": {
+    "level1": {
+      "preserves": [
+        "original native flags",
+        "exact each butterfly total additions",
+        "exact each botanical region total additions",
+        "each butterfly additions within broad Level1"
+      ],
+      "draws": 199,
+      "seed": 41131,
+      "attempts_per_draw": 72765,
+      "original_global_null_mean_reproduced": 0.18158108553894484,
+      "II_null_median": 0.22615442258015525,
+      "II_observed_excess": 0.01051292848299934,
+      "MM_null_median": 0.14656562021238226,
+      "MM_observed_excess": 0.003879008726148492,
+      "II_minus_MM_null_median": 0.07953669334390293,
+      "II_minus_MM_residual_excess": 0.006686028780720915,
+      "same_Level1_II_minus_MM_residual_excess": 0.0038656,
+      "descriptive_high_tail_for_II_minus_MM": 0.005
+    },
+    "level1_x_island_status": {
+      "preserves": [
+        "all Level1 controls",
+        "each butterfly's extra resource region counts separately within Level1×island/mainland/mixed",
+        "per-region species added",
+        "native resource presence"
+      ],
+      "draws": 199,
+      "seed": 20261118,
+      "attempts_per_draw": 72765,
+      "II_null_median": 0.23218759014570664,
+      "II_observed_excess": 0.00447976091744795,
+      "MM_null_median": 0.1471380411769152,
+      "MM_observed_excess": 0.003306587761615548,
+      "II_minus_MM_null_median": 0.08503380462283527,
+      "II_minus_MM_residual_excess": 0.0011889175017885667,
+      "same_Level1_II_minus_MM_residual_excess": -0.0001083,
+      "descriptive_high_tail_for_II_minus_MM": 0.005,
+      "descriptive_high_tail_same_Level1_II_minus_MM": 0.58
+    }
+  },
+  "limits": [
+    "Original +54.9% potential resource expansion is unchanged; these are not GBIF butterfly populations.",
+    "Native-only vs contemporary host opportunity is a static WCVP counterfactual, not a dated colonization time series.",
+    "Same pairs share botanical region endpoints; 199 sequential MCMC constrained swaps are not independent experiments.",
+    "Strong raw island-vs-mainland resource homogenization difference is largely explained by native baseline and species×geographic addition constraints; within-Level1 residual island specificity disappears under stricter null.",
+    "The stricter null preserves species-by-island-versus-mainland gains within large region and can be close to the response mechanism; small excess does not identify the cause.",
+    "No evidence of seed travel, ship voyages, actual host usage, butterfly colonization or population benefit comes from this calculation."
+  ],
+  "protocol": "results/island_mainland_butterfly_resource_beta_20261118/PROTOCOL.md"
+}
