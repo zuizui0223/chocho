@@ -1,0 +1,60 @@
+name: chocho eight endemic butterflies direct named-island larval plant evidence check
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_independent8_exact_host_island_reproduction_gap_20261118.py
+      - .github/workflows/chocho-independent8-endemic-direct-island-host-grain.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  original-archipelago-to-island-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover source-pinned exact endemic butterfly×host plant species
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44221587347
+          repository: zuizui0223/chocho
+          name: chocho-independent8-source-exact-host-WCVPv13-resource-geography-20261118
+          github-token: ${{ github.token }}
+          path: _source_original_eight
+      - name: Compare exact named-island field larvae to 22 independently listed species-island cases
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_independent8_exact_host_island_reproduction_gap_20261118.py
+          python3 scripts/audit_independent8_exact_host_island_reproduction_gap_20261118.py \
+            --source-edges _source_original_eight/source_13_butterfly_plant_species_WCVPv13_origin.csv \
+            --out-dir results/independent8_direct_island_larvae_20261118
+      - name: Do not infer local larval absence or new butterfly colonization from 22 checklist cells
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,csv
+          d=pathlib.Path('results/independent8_direct_island_larvae_20261118')
+          r=json.loads((d/'independent8_named_island_direct_larvae_summary.json').read_text())
+          with (d/'independent8_butterfly_named_island_host_presence22.csv').open(newline='',encoding='utf-8') as f:
+              pairs=list(csv.DictReader(f))
+          assert r['independent_endemic_butterflies_global_list_n']==18
+          assert r['source_selected_exact_named_host_species_butterflies_n']==8
+          assert len(pairs)==22
+          assert r['named_island_direct_larval_host_species_observation_n']==4
+          assert r['named_island_strict_wild_larval_host_species_observation_n']==3
+          assert r['named_island_garden_larval_host_species_observation_n']==1
+          assert r['named_island_direct_larval_evidence_by_origin']=={'introduced':2,'native':2}
+          assert all(p['new_butterfly_island_establishment_confirmed']=='0' for p in pairs)
+          print('ORIGINAL_INBO_22_LOCALITY_DENOMINATOR_AND_4_DIRECT_HOST_EVENTS_SOURCE_VERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-eight-endemic-22-island-cells-vs-4-direct-field-hosts-20261118
+          path: results/independent8_direct_island_larvae_20261118/
+          retention-days: 90
+          if-no-files-found: warn
