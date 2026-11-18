@@ -15,6 +15,7 @@ HC3 describes island-specific heteroskedasticity, NOT phylogenetic or spatial
 independence, historical shipping, or a zero native effect.
 """
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -22,6 +23,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REGIONS = ROOT / "results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv"
 ACTIVE = ROOT / "results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv"
+REGIONS_BLOB = "53b618fa51a1a418ccc6e4363f4c866c389c90cc"
+ACTIVE_BLOB = "cfe82bd8223ea453c015c47cd9659a935d5ba3ab"
+
+def blob_sha(path):
+    b = path.read_bytes()
+    return hashlib.sha1(b"blob " + str(len(b)).encode() + b"\0" + b).hexdigest()
+
 
 def require(ok, message):
     if not ok:
@@ -47,7 +55,7 @@ def invert(matrix):
 
 def fit(rows, response):
     levels=sorted({int(r["level1"]) for r in rows})
-    require(levels==list(range(1,10)),"TDWG Level-1 source labels changed")
+    require(len(levels)>=7 and all(1<=lv<=9 for lv in levels),"Insufficient original TDWG Level-1 strata")
     x=[[1.,float(r["log2ports"]),float(r["log_area"])]+
        [float(int(r["level1"])==lv) for lv in levels[1:]] for r in rows]
     if response=="difference":
@@ -72,6 +80,8 @@ def fit(rows, response):
             "HC3_se":se,"HC3_95":[coef[1]-1.96*se,coef[1]+1.96*se]}
 
 def main():
+    require(blob_sha(REGIONS)==REGIONS_BLOB, "Original WCVP/WPI plant-region Git blob changed")
+    require(blob_sha(ACTIVE)==ACTIVE_BLOB, "Original HOSTS region cohort Git blob changed")
     with REGIONS.open(encoding="utf-8-sig",newline="") as file:
         rows=list(csv.DictReader(file))
     with ACTIVE.open(encoding="utf-8-sig",newline="") as file:
@@ -101,13 +111,50 @@ def main():
             a["introduced"]["HC3_95"][0]>0 and
             a["difference"]["HC3_95"][0]<0<a["difference"]["HC3_95"][1],
             "Qualifying uncertainty: native and contrast HC3 intervals include zero")
+    # Exhaustive source-only geographical sensitivity, not out-of-sample predictive validation.
+    # Each deletion of an entire TDWG Level1 stratum refits all shared covariates.
+    holdouts = []
+    for lv in sorted({int(r["level1"]) for r in rows}):
+        population = [r for r in rows if int(r["level1"]) != lv]
+        models = {key:fit(population,key) for key in ("native","introduced","difference")}
+        require(abs(models["introduced"]["beta"]-models["native"]["beta"]-
+                    models["difference"]["beta"])<1e-10,"Geographic leave-Level1-out response identity")
+        holdouts.append({"excluded_TDWG_Level1":lv,"sample_n":len(population),"models":models})
+    require(len(holdouts)==9 and all(h["models"]["introduced"]["beta"]>0 for h in holdouts),
+            "An original plant-region holdout changed alien port-association sign")
+    require(all(h["models"]["difference"]["beta"]>0 for h in holdouts),
+            "A region holdout reversed the descriptive alien-minus-native sign")
+    port_present=[r for r in rows if int(r["wpi_port_count"])>0]
+    require(len(port_present)==91,"Modern WPI port-positive region scope changed")
+    port_models={key:fit(port_present,key) for key in ("native","introduced","difference")}
+    require(port_models["introduced"]["beta"]>0 and
+            port_models["difference"]["HC3_95"][0]<0<port_models["difference"]["HC3_95"][1],
+            "Port-positive observations do not justify a selective significant coefficient")
+    report["geographic_sensitivity"]={
+        "leave_one_TDWG_Level1_out":holdouts,
+        "range_by_outcome": {
+            key: [min(h["models"][key]["beta"] for h in holdouts),
+                  max(h["models"][key]["beta"] for h in holdouts)]
+            for key in ("native","introduced","difference")
+        },
+        "port_positive_only_91":port_models,
+        "interpretation": (
+            "Alien whole-flora port association retains a positive point estimate across all nine "
+            "biogeographic stratum deletions and in 91 islands with observed WPI ports. "
+            "The native–alien coefficient contrast is not decisively nonzero under "
+            "the full/port-positive descriptive HC3 intervals; neither outcome proves shipping."
+        )
+    }
+    report["source_git_blob_lock"]={"floras":REGIONS_BLOB,"hosts_active":ACTIVE_BLOB}
     report["limitations"]=[
         "No direct historical shipping movements, provenance or causal plant import",
         "Cannot infer a statistical zero effect for native flora",
         "Paired alien-minus-native coefficient difference is uncertain",
         "Island HC3 intervals do not account for full spatial correlation",
         "WCVP regional present-day floras and WPI current ports are cross-sectional",
-        "This is not the 126 native-host-resource-adjusted alien beta+0.221 nor 98 botanical-effort alien beta+0.2445"
+        "This is not the 126 native-host-resource-adjusted alien beta+0.221 nor 98 botanical-effort alien beta+0.2445",
+        "Nine leave-one-TDWG-Level1-out refits share overlapping botanical island regions; positive signs are descriptive, not nine independent replications",
+        "Removing no-port islands changes the sample/estimand and cannot establish historic port causation"
     ]
     print(json.dumps(report,ensure_ascii=False,indent=2,sort_keys=True))
 
