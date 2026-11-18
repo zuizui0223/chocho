@@ -1,0 +1,71 @@
+name: chocho 18 island endemic target transportability and missing-host nonidentification
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py
+      - .github/workflows/chocho-endemic18-transportability-nonidentification.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-population-and-identifiability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Lock the independent original butterfly denominator and the source-panel scientific inputs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117/independent_42_species_vs_frozen239.csv)" = "3c56054fa21e667eed422a67010059c8e198b1bc"
+          python3 -m py_compile scripts/audit_independent42_original339_LepTraits_selection_20261118.py
+          python3 -m py_compile scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py
+      - name: Replay actual original 339 selection directly from pinned LepTraits and 239 source metadata
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_independent42_original339_LepTraits_selection_20261118.py \
+            --out-dir results/endemic18_transportability_20261118
+      - name: Reconstruct endemic and nonendemic extant denominators and mathematically valid uncertainty
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py \
+            --selection-source-csv results/endemic18_transportability_20261118/independent42_339_239_leptraits_selection.csv \
+            --out-dir results/endemic18_transportability_20261118
+      - name: Verify the original GEB sampling non-overlap without treating unobserved hosts as zero
+        run: |
+          python3 - <<'PY'
+          import csv,json
+          from pathlib import Path
+          root=Path('results/endemic18_transportability_20261118')
+          o=json.loads((root/'nonidentification_transportability_result.json').read_text(encoding='utf8'))
+          assert (o['target_extant'],o['target_extant_endemic'],o['target_extant_nonendemic'])==(41,18,23)
+          assert o['selection']['original_GEB339']=={'endemic':0,'nonendemic':15}
+          assert o['selection']['original_GEB239']=={'endemic':0,'nonendemic':13}
+          assert not o['selection']['inverse_probability_weighting_of_endemic_effect_identifiable']
+          assert o['source_plant_taxonomic_coverage']['exact_named_larval_host_plant_species_known']==8
+          assert o['source_plant_taxonomic_coverage']['documented_source_positive_global_added_region_count']==4
+          assert o['source_plant_taxonomic_coverage']['documented_source_zero_global_added_region_count']==4
+          assert o['source_plant_taxonomic_coverage']['exact_plant_species_not_known']==10
+          assert o['counterfactual_effect_bounds_not_actual_prevalence']['assuming_the_8_host_lists_complete']['positive_counts_max']==14
+          assert o['counterfactual_effect_bounds_not_actual_prevalence']['allowing_additional_true_host_species_in_all_18']['positive_counts_min']==0
+          assert o['counterfactual_effect_bounds_not_actual_prevalence']['source_of_nonmonotonicity']['potential_added_region_difference_nonmonotone_under_new_hosts']
+          with (root/'independent18_source_plants_possibilities_not_imputed.csv').open(newline='',encoding='utf8') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==18
+          assert sum(x['exact_source_plant_status']=='exact_host_species_unresolved' for x in rows)==10
+          assert sum(x['has_genus_but_not_exact_species']=='1' for x in rows)==5
+          assert sum(x['has_no_named_host_genus_in_reviewed_sources']=='1' for x in rows)==5
+          print('TRANSPORTABILITY_TARGET18_NONOVERLAP_AND_NONMONOTONE_BOUNDS_VERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-18-endemic-transportability-nonmonotone-missing-host-v1
+          path: results/endemic18_transportability_20261118/
+          retention-days: 90
+          if-no-files-found: warn
