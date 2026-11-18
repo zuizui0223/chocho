@@ -106,7 +106,7 @@ def download(uri,output):
             if attempt==2:raise
             time.sleep(2*(attempt+1))
 
-def main(dest):
+def main(dest, metadata_only=False):
     dest.mkdir(parents=True,exist_ok=True)
     dataset,version,version_id=discover_version()
     files=fetch_files(version_id)
@@ -123,6 +123,14 @@ def main(dest):
     required={"butterfly_synonym.csv","larval_host_plant.csv","larval_host_plant_status.csv","larval_plants.csv"}
     if not required<=set(available):
         raise ValueError("Missing necessary original Dryad source files: "+str(required-set(available)))
+    if metadata_only:
+        manifest["status"]="PUBLIC_METADATA_ONLY_NO_SOURCE_ROWS_RETRIEVED"
+        manifest["download_attempt_status"]="Prior source-identity matched run 44204959410 returned HTTP 401 Unauthorized on file bytes; none may be analyzed without authorized access"
+        manifest["caution"]="No butterfly-host relationships or evidence ranks were extracted or analyzed from this DOI"
+        (dest/"SOURCE_MANIFEST.json").write_text(
+            json.dumps(manifest,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+        print("DRYAD_METADATA_ONLY_NO_FILE_BYTES_RETRIEVED",len(files),flush=True)
+        return manifest
     for filename in sorted(DESIRED & set(available)):
         record=available[filename]
         href=(record.get("_links",{}).get("stash:download") or {}).get("href")
@@ -155,5 +163,6 @@ def main(dest):
 if __name__=="__main__":
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out-dir",type=Path,required=True)
+    ap.add_argument("--metadata-only",action="store_true")
     args=ap.parse_args()
-    main(args.out_dir)
+    main(args.out_dir,args.metadata_only)
