@@ -128,7 +128,7 @@ def main(dest, metadata_only=False):
         manifest["download_attempt_status"]="Prior source-identity matched run 44204959410 returned HTTP 401 Unauthorized on file bytes; none may be analyzed without authorized access"
         manifest["caution"]="No butterfly-host relationships or evidence ranks were extracted or analyzed from this DOI"
         (dest/"SOURCE_MANIFEST.json").write_text(
-            json.dumps(manifest,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+            json.dumps(manifest,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         print("DRYAD_METADATA_ONLY_NO_FILE_BYTES_RETRIEVED",len(files),flush=True)
         return manifest
     for filename in sorted(DESIRED & set(available)):
