@@ -29,4 +29,4 @@ The externally enumerated Macaronesian population has 41 living butterflies and 
 - [PR #179 clean GEB candidate](https://github.com/zuizui0223/chocho/pull/179)
 - [Original 22-claim registered results and bounds](POSITIVE_EVIDENCE_AND_ONE_STORY_20261118.md)
 - [Main integrated ocean and original network evidence](MARINE_RAW_REPLAY_SOURCE_20261118.md)
-- [One-paper evidence bridge](../../manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md) (this main link is the archived pre-PR-179 manuscript, **not** the currently proposed updated draft).
+- [One-paper evidence bridge in the clean candidate branch](https://github.com/zuizui0223/chocho/blob/paper/geb-single-island-port-endemics-20261118/manuscript/integrated_butterfly_resource_access_20261109/ONE_PAPER_EVIDENCE_BRIDGE_20261118.md) (PR draft, not yet on main).
