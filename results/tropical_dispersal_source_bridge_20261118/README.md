@@ -29,6 +29,12 @@ Other genuinely broader options:
 - **PacIFlora** (DOI <https://doi.org/10.5061/dryad.qfttdz0hd>) provides Pacific naturalized vascular-plant origin/distribution cross-checks but **not a prevalidated seawater dispersal trait**. It can test historical origin classification, not marine seed movement.
 - **FIG 120 islands** (DOI <https://doi.org/10.5061/dryad.v6wwpzh8f>) samples fleshy fruits and frugivores; useful as an alternate **bird/vertebrate dispersal pathway**, not a database of thalassochorous species.
 
+## 18 November 2026 — Publisher ZIP source access gate (executed)
+
+The [source-gated GitHub Actions run](https://github.com/zuizui0223/chocho/actions/runs/44288944838) attempted the exact published `ecy2902-sup-0001-DataS1.zip` from three common Wiley/ESA supplemental endpoints using [a fixed acquisition script](../../scripts/acquire_tonga_2020_publisher_source_20261118.py). **All three returned HTTP 403 Forbidden**; the saved [access-status artifact](https://github.com/zuizui0223/chocho/actions/runs/44288944838/artifacts/14421060129) contains only the JSON failure receipt, not the ZIP. The GitHub workflow itself completed to preserve this negative acquisition audit; its green status **does not mean the source ZIP was obtained or its species were analysed**.
+
+**Diagnosis:** The exact supplementary filename is publicly advertised, but publisher access blocked the attempted raw download paths from this environment. Repeating the same URLs is not a scientific fix. An authorised browser-side publisher download, approved mirror or author-provided original ZIP is required before any 2020 1,020-species dispersal-matrix analysis. No 2020 sample, species taxon mapping, original seawater/freshwater split or island-level native/introduced contrast was inferred here.
+
 ## Required source-locked protocol before tropical extension enters the GEB main Results
 
 1. Download the *actual* Tonga 2020 supplementary ZIP, preserve source URL, SHA256, decompressed member list, metadata, accepted plant names and origin codes. Do not invent a 1,020-row result from an abstract.
