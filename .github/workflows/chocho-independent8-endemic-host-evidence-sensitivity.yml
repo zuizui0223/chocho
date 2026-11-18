@@ -1,0 +1,68 @@
+name: chocho independent eight endemic host evidence-tier and leave-one-plant-out sensitivity
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/analyze_independent8_endemic_host_evidence_sensitivity_20261118.py
+      - .github/workflows/chocho-independent8-endemic-host-evidence-sensitivity.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-sensitivity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore source-exact eight butterfly x thirteen host species original WCVP v13 replay
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44221587347
+          repository: zuizui0223/chocho
+          name: chocho-independent8-source-exact-host-WCVPv13-resource-geography-20261118
+          github-token: ${{ github.token }}
+          path: _original_8_endemics
+      - name: Recompute original 32 tier × butterfly cells, drop one plant at a time
+        run: |
+          set -euo pipefail
+          test -s _original_8_endemics/source_13_butterfly_plant_species_WCVPv13_origin.csv
+          test -s _original_8_endemics/eight_independent_endemics_host_only_resource_by_evidence.csv
+          python3 -m py_compile scripts/analyze_independent8_endemic_host_evidence_sensitivity_20261118.py
+          python3 scripts/analyze_independent8_endemic_host_evidence_sensitivity_20261118.py \
+            --source-edges _original_8_endemics/source_13_butterfly_plant_species_WCVPv13_origin.csv \
+            --original-WCVP-results _original_8_endemics/eight_independent_endemics_host_only_resource_by_evidence.csv \
+            --out-dir results/independent8_evidence_sensitivity_20261118
+      - name: Verify source selection and constrain biological interpretation
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,csv
+          root=pathlib.Path('results/independent8_evidence_sensitivity_20261118')
+          result=json.loads((root/'evidence_tiers_and_leave_one_host_out.json').read_text())
+          assert result['original_independent_endemics_n']==18
+          assert result['source_ascerained_exact_host_species_endemics_n']==8
+          assert result['source_plant_species_edges_n']==13
+          assert result['replay_all_32_R_combinations_success']
+          assert result['by_mode']['wild_and_documented_larval']['eligible_source_endemic_butterflies_n']==5
+          assert result['by_mode']['plus_published_oviposition_and_captivity']['eligible_source_endemic_butterflies_n']==6
+          assert result['by_mode']['all_named_sources_including_NHM_nonlocal']['eligible_source_endemic_butterflies_n']==8
+          assert result['by_mode']['NHM_original_nonlocal_only']['eligible_source_endemic_butterflies_n']==2
+          with (root/'leave_one_source_host_out.csv').open(newline='',encoding='utf8') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==13
+          p=result['most_important_validations']['Pieris_cheiranthi_one_introduced_host_is_Tropaeolum_majus']
+          assert p['removed_host_species']=='Tropaeolum majus'
+          assert p['global_added_regions_full']>=p['global_added_regions_after_removal']
+          assert result['most_important_validations']['Pieris_cheiranthi_resource_introduction_does_not_create_new_CNY_host_present_region']
+          print('EIGHT_END_EMICS_ALL_32_R_PY_SENSITIVITY_CASES_REPRODUCED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-eight-endemic-evidence-and-host-contribution-sensitivity-20261118
+          path: results/independent8_evidence_sensitivity_20261118/
+          retention-days: 90
+          if-no-files-found: warn
