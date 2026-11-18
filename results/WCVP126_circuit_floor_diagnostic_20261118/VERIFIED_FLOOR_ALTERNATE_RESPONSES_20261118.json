@@ -1,0 +1,139 @@
+{
+  "schema": "chocho_WCVP104_electrical_circuit_Jaccard_source_floor_alternate_metrics_20261118_v1",
+  "status": "SOURCE_CI_SUCCESS_CONDITIONAL_EXPLORATORY_DIAGNOSTIC_NOT_TRANSPORT_EFFECT",
+  "original_run": 44293674389,
+  "original_job": 134765045847,
+  "original_artifact_id": 14422901680,
+  "original_artifact_sha256": "c67854e43c6c3f73b1db72a4b73c240590d5e2315bfd5ba4bcc647d5655cbc5d",
+  "original_artifact_file": "source_audited_zero_floor_and_origin_predictability.json",
+  "protocol": "results/WCVP126_circuit_floor_diagnostic_20261118/PROTOCOL.md",
+  "source_design": {
+    "islands": 104,
+    "paired_native_alien_Jaccard_dyads": 5355,
+    "double_unseen_test_dyads": 1089,
+    "source_origin_hash_folds": 5,
+    "original_ridge_alpha": 20,
+    "authentic_uniform_electrical_circuit": true,
+    "known_botanical_richness_at_held_island": true
+  },
+  "overlap_support": {
+    "native_all": {
+      "zero_n": 884,
+      "zero_pct": 16.507936507936506,
+      "median_all": 0.00433881621551612,
+      "median_nonzero": 0.00679281901989326
+    },
+    "introduced_all": {
+      "zero_n": 524,
+      "zero_pct": 9.785247432306257,
+      "median_all": 0.0504885993485342,
+      "median_nonzero": 0.0583657587548638
+    },
+    "native_strict": {
+      "zero_n": 186,
+      "zero_pct": 17.079889807162534,
+      "median_all": 0.00396825396825397,
+      "median_nonzero": 0.00609175709118599
+    },
+    "introduced_strict": {
+      "zero_n": 113,
+      "zero_pct": 10.376492194674013,
+      "median_all": 0.0484622553588071,
+      "median_nonzero": 0.05698965549966785
+    },
+    "strict_both_positive_n": 881,
+    "across_TDWG_Level1": {
+      "pairs": 4721,
+      "native_Jaccard_median": 0.0033039647577092,
+      "introduced_Jaccard_median": 0.0435233160621762
+    },
+    "within_TDWG_Level1": {
+      "pairs": 634,
+      "native_Jaccard_median": 0.0847522847522848,
+      "introduced_Jaccard_median": 0.145449169988174
+    }
+  },
+  "model_results": [
+    {
+      "outcome": "Jaccard",
+      "test_pairs": 1089,
+      "native_gain_pct": -0.04430509181116742,
+      "introduced_gain_pct": 2.735040680490108,
+      "introduced_minus_native_gain_points": 2.7793457723012756,
+      "paired_5fold_descriptive95": [
+        -1.6932613640236287,
+        5.400035298923851
+      ]
+    },
+    {
+      "outcome": "any_shared_accepted_taxon_binary_Brier",
+      "test_pairs": 1089,
+      "native_gain_pct": 0.41844721194173146,
+      "introduced_gain_pct": 0.3307282936762173,
+      "introduced_minus_native_gain_points": -0.08771891826551415,
+      "paired_5fold_descriptive95": [
+        -0.9682215943988224,
+        0.7691358054540156
+      ],
+      "baseline_MSE_native": 0.09517014307426105,
+      "baseline_MSE_alien": 0.0461623725683705
+    },
+    {
+      "outcome": "Sorensen",
+      "test_pairs": 1089,
+      "native_gain_pct": 0.05718547711060304,
+      "introduced_gain_pct": 3.0168016376072,
+      "introduced_minus_native_gain_points": 2.959616160496597,
+      "paired_5fold_descriptive95": [
+        -1.7388501216558998,
+        6.256019055547745
+      ]
+    },
+    {
+      "outcome": "Jaccard_positive_only_train_and_test_by_origin",
+      "test_pairs_native": 903,
+      "test_pairs_alien": 976,
+      "native_gain_pct": -0.1347264994499431,
+      "introduced_gain_pct": 3.3606935038985823,
+      "introduced_minus_native_gain_points": 3.4954200033485257,
+      "paired_5fold_descriptive95": [
+        -2.2307347614872657,
+        7.150671260945419
+      ],
+      "selection": "Selected by the response itself; not prospective positivity prediction"
+    },
+    {
+      "outcome": "Jaccard_source_fit_scored_only_on_pairs_positive_in_both_origins",
+      "test_pairs": 881,
+      "native_gain_pct": -0.08636471381063011,
+      "introduced_gain_pct": 4.339300725180453,
+      "introduced_minus_native_gain_points": 4.425665438991083,
+      "paired_5fold_descriptive95": [
+        0.7920944963147998,
+        6.729601548818527
+      ],
+      "selection": "Post hoc target-dependent subgroup; numeric interval is descriptive only, NOT confirmatory origin effect"
+    },
+    {
+      "outcome": "Simpson_overlap_only_defined_in_both_origins",
+      "source_pairs": 5151,
+      "original_Jaccard_pairs_with_undefined_Simpson": 204,
+      "test_pairs": 1043,
+      "native_gain_pct": 1.5857159555549654,
+      "introduced_gain_pct": 0.8979963378135537,
+      "introduced_minus_native_gain_points": -0.6877196177414117,
+      "paired_5fold_descriptive95": [
+        -2.9595085439706996,
+        0.9097977512336148
+      ],
+      "selection": "Common nonmissing Simpson denominator, not the original 5355 Jaccard cohort"
+    }
+  ],
+  "inference": [
+    "Native Jaccard near-zero scale is not solely exact-zero floor: native Jaccard has nonzero overlap on 83.5% of source pairs and its positive-value median remains far below alien.",
+    "Circuit gains for binary sharing are small and similar for native/alien, while Jaccard/Sorensen introduced gain is larger. The observed origin contrast depends on how overlap magnitude is defined.",
+    "Simpson denominator changes the comparative sign, and the strict Jaccard/Sorensen paired intervals cross zero. No robust flora-specific circuit interaction has been established.",
+    "All variants share source native/alien WCVP data, original five island geographic fold allocation and model classes. Multiple alternative metrics are not independent replications.",
+    "NO directional ocean current, plant seed viability, historic shipping, butterfly occurrence or population outcome is measured."
+  ]
+}
