@@ -1,0 +1,70 @@
+name: Replay archived 239 butterfly island resource homogenization nulls on main
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/audit_island_mainland_butterfly_resource_beta_20261118.py
+      - results/island_mainland_butterfly_resource_beta_20261118/PROTOCOL.md
+      - .github/workflows/verify-island-mainland-butterfly-resource-beta-main.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original239-island-versus-mainland:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical library for original locked source only
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Replay global 239×369 exactly, then compute novel island/mainland margins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_island_mainland_butterfly_resource_beta_20261118.py
+          python current/scripts/audit_island_mainland_butterfly_resource_beta_20261118.py \
+            --archived-root frozen-pr118-source \
+            --region-class current/results/island-mainland-resource-q1/region_metrics.csv \
+            --out-dir current/_result
+      - name: Validate both nulls, source controls and retained negative comparisons
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path("current/_result/island_mainland_resource_beta_verified_summary.json").read_text())
+          assert d["status"]=="SOURCE_VERIFIED_EXPLORATORY_POTENTIAL_RESOURCE_COMPOSITION_ONLY"
+          assert d["butterflies"]==239 and d["region_codes_total"]==369
+          assert d["native_nonempty_region_count"]==355
+          assert d["original_resource_units"]=={"native":26530,"added":14553,"current":41083}
+          assert d["original_region_class_counts"]=={"island":126,"mainland":237,"mixed":6}
+          assert d["eligible_pair_denominators"]["ALL_NATIVE_SUPPORTED"]==62835
+          assert abs(d["observed"]["ALL_NATIVE_SUPPORTED"]["mean_delta_jaccard"]-.18510150276498433)<1e-10
+          assert len(d["nulls"])==2
+          assert abs(d["nulls"]["level1"]["cohorts"]["ALL_NATIVE_SUPPORTED"]["null_mean"]-.18158108553894184)<1e-8
+          for null in d["nulls"].values():
+              assert null["draws"]==199 and null["accepted_swaps_min"]>=200
+              for key,v in null["cohorts"].items():
+                  assert math.isfinite(v["observed_minus_null_median"])
+              assert math.isfinite(null["island_minus_mainland"]["observed_minus_null_median"])
+          print("PASS exact source 239 resource bits; island/mainland nulls and original global null reproduced")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original239-island-mainland-resource-beta-exact-margins
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn
