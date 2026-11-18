@@ -72,8 +72,13 @@ def main():
           "A claimed lack of *any* colonization is stronger than an unobserved effect")
     check(doc.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0].count("0/18")==1,
           "Endemic ascertainment must be declared in abstract")
-    check(all(len(re.findall(r"^### 3\."+str(n)+r"\.",doc,re.M))==1 for n in range(1,7)),
-          "All six Results sections are present and sequential")
+    # The verbatim source-history appendix legitimately repeats old headings.
+    # Check the currently proposed main Results and their order only.
+    main_results=doc.split("## 3. Results",1)[1].split("## 4. Discussion",1)[0]
+    headings=[list(re.finditer(r"^### 3\\."+str(n)+r"\\.",main_results,re.M)) for n in range(1,7)]
+    check(all(len(h)==1 for h in headings) and
+          all(headings[n][0].start()<headings[n+1][0].start() for n in range(5)),
+          "Six unique and ordered main-Results sections")
     check("### 2.8. Independent endemic" in doc and "### S.E. Independent island-endemic" in doc,
           "Independent source methods and SI")
     check("SUPPLEMENTARY_ENDEMIC_HOST_VALIDITY_20261118.md" in doc,"Complete companion SI linked")
