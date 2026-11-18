@@ -1,0 +1,107 @@
+{
+  "schema": "chocho_endemic_butterfly_exact_larval_host_species_evidence_gate_20261118_v1",
+  "state": "SOURCE_TYPED_CROSSWALK_EXECUTED_REPLAY_SUCCESS_NONCAUSAL",
+  "scientific_population_boundary": {
+    "original_independent_butterflies_42": "INBO checklist; not all are included in manually curated source events",
+    "canary_origin_census_33": "Canary BIOTA statuses maintained without changes",
+    "focal_records": "13 literature/photographic source-derived butterfly×plant-species×region events, deliberately sampled for evidence quality; not an unbiased sample",
+    "original_GEB_study": "original 239 species +54.9% global and +118.9% selected-island reconstructed potential host geography unchanged"
+  },
+  "primary_new_positive": {
+    "endemic_butterfly": "Pieris cheiranthi",
+    "introduced_named_larval_host": "Tropaeolum majus",
+    "plant_status_in_original_WCVP_v13_CNY": "accepted species; introduced in Canary Islands (CNY)",
+    "independently_observed_larvae": [
+      {
+        "island": "Tenerife",
+        "date": "2015-02-17",
+        "observation": "Larva stage L4 on Tropaeolum majus photographed outdoors",
+        "source": "https://lepiforum.org/wiki/page/Pieris_Cheiranthi",
+        "coded_evidence": "wild_larva_photo"
+      },
+      {
+        "island": "La Palma",
+        "date": "2011-05-20",
+        "observation": "Garden caterpillar photographed on nasturtium (Tropaeolum majus); caption uses vernacular plant name",
+        "source": "https://lepiforum.org/wiki/page/Pieris_Cheiranthi",
+        "coded_evidence": "garden_larva_photo"
+      }
+    ],
+    "wild_exotic_plant_distribution": "Canary government EXOS classifies T. majus introduced securely, invasive, and naturalized across seven principal Canary Islands",
+    "source": "https://www.biodiversidadcanarias.es/exos/especie/F00988",
+    "native_larval_host_species_in_WCVP_v13_CNY": [
+      {
+        "plant": "Crambe strigosa",
+        "region": "Tenerife",
+        "status": "accepted native in CNY",
+        "evidence": "literature larval host citation; not same-study field larva trace"
+      },
+      {
+        "plant": "Descurainia millefolia",
+        "region": "La Palma",
+        "status": "accepted native in CNY",
+        "evidence": "literature host report, no direct caterpillar-to-plant photo in this audit"
+      }
+    ],
+    "strongest_defensible_claim": "At least one island-endemic butterfly has field larval-use records on a named, independently confirmed introduced plant species on two islands; both native and introduced larval hosts are documented at species level in independent sources",
+    "not_proven": "Not self-sustaining butterfly establishment caused by introduction, increased fecundity, larval survival, population growth, island colonization or species-wide quantitative resource expansion"
+  },
+  "independent_native_comparator": {
+    "butterfly": "Gonepteryx cleobule",
+    "plant": "Rhamnus crenulata",
+    "island": "La Gomera",
+    "observation": "firsthand February 2013 eggs and larvae on a named native Rhamnus",
+    "WCVP_v13_CNY_status": "accepted native",
+    "source": "https://www.pyrgus.de/Gonepteryx_cleobule_en.html"
+  },
+  "quarantined": {
+    "no_accepted_exact_plant_species_under_source_WCVP_v13": [
+      {
+        "source_name": "Crambe santosii",
+        "reason": "possibly conflated with Crambe gigantea; cannot assign accepted plant identity without taxonomic review"
+      },
+      {
+        "source_name": "Brachypodium arbusculum",
+        "reason": "candidate Brachypodium arbuscula accepted name, but source spelling/identity unresolved; do not automatically transfer a native or introduced status"
+      }
+    ],
+    "historically_extinct": "Pieris wollastoni host records excluded from contemporary butterfly origin/availability inferences",
+    "Madeira_WCVP_origin": "Canary TDWG3 CNY statuses are out-of-scope for Madeira evidence; Madeira plant origin requires Madeira native-area source"
+  },
+  "site_resident_versus_breeding": {
+    "source_population": "INBO butterfly species × named island checklist; presence is not reproduction",
+    "direct_plant_larval_use_events": 2,
+    "unique_endemic_butterflies_with_direct_named_alien_host": 1,
+    "direct_alien_host_islands": [
+      "Tenerife",
+      "La Palma"
+    ],
+    "EXOS_naturalized_islands": 7,
+    "known_host_performance": "Tenerife ~12 caterpillars raised in 1984 on T. majus, reportedly died pre-pupation from parasitoid Hymenoptera; cannot infer plant toxicity, nor successful development",
+    "survival_and_recruitment_measured_in_current_audit": false
+  },
+  "replay": {
+    "github_repo": "zuizui0223/chocho",
+    "draft_pr": "https://github.com/zuizui0223/chocho/pull/177",
+    "evidence_source_csv": "provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/independent_butterfly_host_plant_species_events_v1.csv",
+    "checked_python": "scripts/audit_focal_island_larval_plant_species_20261118.py",
+    "fixed_WCVP_R": "scripts/audit_focal_island_plant_WCVP_v13_20261118.R",
+    "source_WCVP_pin": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "verified_CI": "https://github.com/zuizui0223/chocho/actions/runs/44206655030",
+    "verified_artifact_id": 14384680250,
+    "artifact_sha256": "9b789c699961405f341df46679c12e5bdac64fb5349b38e8cb8b3313b223c45e",
+    "checked_event_n": 13,
+    "distinct_butterfly_taxa_in_targeted_evidence": 6,
+    "quarantined_name_resolution_event_n": 3,
+    "historical_extinct_event_n": 2,
+    "direct_alien_larvae_WCVP_species_verified_event_n": 2
+  },
+  "public_comprehensive_dataset_status": {
+    "dataset": "Clarke 2024, doi:10.5061/dryad.1vhhmgr12",
+    "public_metadata": "18 publication source filenames and version identifier 274312 retrieved via public API",
+    "source_file_download": "HTTP 401 Unauthorized. No host records or evidence rank retrieved, and NO Canary crosswalk fitted from this Dryad DOI",
+    "metadata_source_receipt": "https://github.com/zuizui0223/chocho/actions/runs/44206778717",
+    "scientific_status": "Only bibliographic metadata confirmed; original record-level host evidence unmeasured"
+  },
+  "next_identifiability_gate": "Independent genus-to-exact-species larval foodplant identity for remaining island butterflies, verified plant presence/native status on each named island, dated support, and larval performance. Do not impute from CNY genus alien congeners."
+}
