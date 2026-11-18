@@ -8,10 +8,14 @@ on:
       - results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
       - results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv
       - .github/workflows/verify-island-port-native-alien-matched.yml
+      - scripts/verify_tonga_broad_water_origin_20261118.py
+      - results/tropical_dispersal_source_bridge_20261118/TONGA2011_PUBLISHED_TABLE1_COUNTS.json
   pull_request:
     paths:
       - scripts/verify_island_port_native_alien_matched_20261118.py
       - .github/workflows/verify-island-port-native-alien-matched.yml
+      - scripts/verify_tonga_broad_water_origin_20261118.py
+      - results/tropical_dispersal_source_bridge_20261118/TONGA2011_PUBLISHED_TABLE1_COUNTS.json
   workflow_dispatch:
 jobs:
   matched-origin-contrast:
@@ -25,10 +29,16 @@ jobs:
           python-version: "3.11"
       - name: Verify source-matched HC3 models and uncertainty
         run: python scripts/verify_island_port_native_alien_matched_20261118.py | tee matched_port_origin_results.json
+      - name: Validate published Tonga broad-water control
+        run: python scripts/verify_tonga_broad_water_origin_20261118.py | tee tonga_2011_origin_water_receipt.json
       - name: Validate structured receipt
-        run: python -m json.tool matched_port_origin_results.json > /dev/null
+        run: |
+          python -m json.tool matched_port_origin_results.json > /dev/null
+          python -m json.tool tonga_2011_origin_water_receipt.json > /dev/null
       - uses: actions/upload-artifact@v4
         with:
           name: matched-island-port-native-alien-126-123
-          path: matched_port_origin_results.json
+          path: |
+            matched_port_origin_results.json
+            tonga_2011_origin_water_receipt.json
           retention-days: 60
