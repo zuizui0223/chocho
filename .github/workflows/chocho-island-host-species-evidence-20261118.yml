@@ -24,6 +24,23 @@ jobs:
           set -euo pipefail
           python3 -m py_compile scripts/audit_focal_island_larval_plant_species_20261118.py
           python3 scripts/audit_focal_island_larval_plant_species_20261118.py
+      - name: Pin exact original WCVP v13 accepted plant taxa and distributions
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _original_wcvp
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Verify actual species-level native or introduced CNY flora on source-known butterflies
+        run: |
+          set -euo pipefail
+          test "$(git -C _original_wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          Rscript scripts/audit_focal_island_plant_WCVP_v13_20261118.R \
+            _original_wcvp \
+            results/focal_island_larval_plant_species_20261118/focal_host_plant_species_evidence_checked.csv \
+            results/focal_island_larval_plant_species_20261118
       - name: Protect biological and locality inference limits
         run: |
           python3 - <<'PY'
@@ -39,6 +56,15 @@ jobs:
           assert z['strict_direct_introduced_host_use']['host_plants']==['Tropaeolum majus']
           assert z['taxonomic_concept_unresolved']==3
           assert z['historically_extinct_records_excluded']==2
+          with (root/'focal_island_named_host_plant_species_WCVP_CNY_v13.csv').open(newline='') as f:
+              plants=list(csv.DictReader(f))
+          assert len(plants)==13
+          confirmed=[r for r in plants if r['trusted_island_specific_direct_introduced_use']=='1']
+          assert all(r['reported_host_binomial']=='Tropaeolum majus' for r in confirmed)
+          assert {r['named_island'] for r in confirmed}<= {'Tenerife','La Palma'}
+          assert all(r['admissible_species_origin']=='quarantined_plant_taxonomic_concept'
+                     for r in plants if r['source_taxonomic_grade']=='taxon_unresolved')
+          print('SPECIES_LEVEL_ORIGIN_CROSSWALK_ROWS',len(plants),'confirmed_direct_alien_field',len(confirmed))
           assert all(int(r['confirmed_larval_performance'])==0 for r in data)
           print('EXACT_PLANT_SPECIES_NATIVE_ALIEN_FIELD_AND_LITERATURE_SEPARATION_VALIDATED')
           PY
