@@ -1,0 +1,85 @@
+{
+  "schema": "chocho_20261106_worldbank_commercial_AIS2015_2021_fixed_grid_derived_v3",
+  "status": "SOURCE_VERIFIED_ORIGINAL_TIFF_COARSENED_NOT_ROUTE_OR_VESSEL_FLOW",
+  "source_original_ZIP_url": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0045405/shipdensity_commercial_.zip",
+  "source_original_SHA256": "0cfdce41d9934982bbc8f16bd92ce7545cc088839327cbaa9b0ed1469dda31e8",
+  "source_period": "2015-01 through 2021-02",
+  "original_grid": {
+    "source_member": "ShipDensity_Commercial1.tif.ovr",
+    "source_compressed_bytes": 124257699,
+    "source_uncompressed_bytes": 3290970915,
+    "verified_zip_crc32": "0x11a05bf6",
+    "original_source_world_file": "0.0050000000\n0.0000000000\n0.0000000000\n-0.0050000000\n-180.0128112750\n85.0001479370\n",
+    "original_transform": [
+      0.005,
+      0.0,
+      -180.015311275,
+      0.0,
+      -0.005,
+      85.00264793699999
+    ],
+    "overview_transform": [
+      0.01,
+      0.0,
+      -180.015311275,
+      0.0,
+      -0.01,
+      85.00264793699999
+    ],
+    "overview_width": 36003,
+    "overview_height": 16999,
+    "overview_nodata": 2147483647.0,
+    "overview_dtype": "int32",
+    "overview_additional_pyramid_factors": [
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ],
+    "source_base_raster_read": false,
+    "source_original_pyramid_resampling_method": "not supplied; average of overview values only"
+  },
+  "derived_grid": {
+    "shape": [
+      340,
+      720
+    ],
+    "transform": [
+      0.5,
+      0.0,
+      -180.0,
+      0.0,
+      -0.5,
+      85.0
+    ],
+    "crs": "EPSG:4326",
+    "cell_width_degrees": 0.5,
+    "cell_height_degrees": 0.5,
+    "resampling": "GDAL geographic area-overlap average of explicitly extracted 0.01-degree overview; source NoData excluded",
+    "fixed_alignment": "Exactly 0.5-degree cells: west=-180, north=85, east=180, south=-85",
+    "input_to_resampling": "Original extracted 0.01-degree overview, never an interpolation of a previously derived coarse grid",
+    "original_native_to_overview_resampling_known": false,
+    "count_valid_pixels": 244800,
+    "fraction_valid_pixels": 1.0,
+    "minimum_valid_fraction": 0.6535947712418301,
+    "count_missing_pixels": 0,
+    "fraction_observed_zero_within_valid": 0.41266339869281043,
+    "sample_positive_quantiles_raw_AIS_index": {
+      "0.1": 6.761896133422852,
+      "0.25": 1765.4639892578125,
+      "0.5": 28071.0,
+      "0.75": 208313.296875,
+      "0.9": 738721.25,
+      "0.95": 1609098.625,
+      "0.99": 9778446.0
+    },
+    "count_positive_valid_pixels": 143780,
+    "max_positive_observed": 33751896.0,
+    "metadata_not_actual_cargo_units": true
+  },
+  "source_nodata_excluded_not_zero": true,
+  "note": "Coarse global raster for exploratory AIS-weighted marine resistance, not a direct voyage graph or measured propagule flux."
+}
