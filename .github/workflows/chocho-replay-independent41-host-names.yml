@@ -1,0 +1,50 @@
+name: chocho living 41 independent butterfly named-host source ledger
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/rebuild_independent41_named_larval_host_20261118.py
+      - .github/workflows/chocho-replay-independent41-host-names.yml
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/E_grancanariensis_H_tamadabae_source_evidence_20261118.csv
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  complete-living-denominator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Independently rebuild 36/41 from source-level taxonomic and larval evidence flags
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/rebuild_independent41_named_larval_host_20261118.py
+          python3 scripts/rebuild_independent41_named_larval_host_20261118.py
+      - name: Validate final independent living host-documentation denominator and named plant identification scope
+        run: |
+          python3 - <<'PY'
+          import json,csv
+          from pathlib import Path
+          r=Path('results/source_merged_endemic_larval_host_20261118')
+          obj=json.loads((r/'extant41_host_documentation_summary.json').read_text(encoding='utf-8'))
+          with (r/'independent42_source_host_genus_flags_extant41.csv').open(encoding='utf-8',newline='') as f:
+              d=list(csv.DictReader(f))
+          assert len(d)==42
+          assert obj['extant_independent_butterflies_n']==41
+          assert obj['extant_butterflies_with_named_larval_host_genus_in_audited_sources_n']==36
+          assert obj['Canary_independent_endemic_documented_n']==8
+          assert obj['Hipparchia_Canary_endemic_without_named_larval_host_genus_n']==5
+          assert {x['butterfly'] for x in d if x['Euchloe_2010_primary_field_named_host_genus']=='1'}=={'Euchloe grancanariensis'}
+          assert {x['butterfly'] for x in d if x['historical_extinct_excluded_from_living_denominator']=='1'}=={'Pieris wollastoni'}
+          print('INDEPENDENT41_SOURCE_ROW_LEVEL_COVERAGE_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-merged-independent41-living-host-coverage-20261118
+          path: results/source_merged_endemic_larval_host_20261118/
+          retention-days: 90
+          if-no-files-found: warn
