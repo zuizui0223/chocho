@@ -154,9 +154,19 @@ def main(dest,offline=False):
           r.get("scientificName","").startswith("Hipparchia miguel") or
           r.get("scientificName","").startswith("Pieris brassicae")
       )]
-    # Only one homotypic species equivalence was independently verified
-    # against the original GEB239 source; never auto-collapse azorina/azorinus.
-    guarded_verified_alias={"Colias crocea":"Colias croceus"}
+    # Two source-justified nomenclatural bridges, never naive fuzzy matches.
+    # Wiemers et al. 2018 explicit checklist: H. azorina has original
+    # combination "Satyrus azorinus" (Strecker, 1899), matching source
+    # accepted Hipparchia azorinus (Strecker, 1899). Geography is audited
+    # separately so nomenclatural equivalence does NOT auto-confirm each island.
+    guarded_verified_alias={
+        "Colias crocea":"Colias croceus",
+        "Hipparchia azorina":"Hipparchia azorinus"
+    }
+    guarded_alias_independent_sources={
+        "Colias crocea":"https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=72248",
+        "Hipparchia azorina":"https://www.sciencedirect.com/org/science/article/pii/S131329891800040X"
+    }
     species_rank_by_name={}
     for r in taxa:
         if r.get("taxonRank","").strip().lower()!="species":continue
@@ -171,12 +181,47 @@ def main(dest,offline=False):
             row["independently_verified_alias"]=source_alias if len(alt)==1 else ""
             row["alias_taxon_rank_only"]=len(alt)
             row["alias_official_origin_status"]=[]
-            if len(alt)==1:
+            row["alias_independent_nomenclature_source_url"]=guarded_alias_independent_sources[name]
+            row["alias_taxon_accepted_rank"]=alt[0].get("taxonRank") if len(alt)==1 else "UNKNOWN"
+            if len(alt)==1 and alt[0].get("taxonomicStatus","").lower()=="accepted":
                 rr=[x for x in distribution if x.get("_coreid")==alt[0]["taxonID"]]
                 row["alias_official_origin_status"]=sorted({x["establishmentMeans"] for x in rr if x.get("establishmentMeans")})
                 row["alias_official_named_islands"]=sorted({x.get("locality","") for x in rr if x.get("locality")})
-        if name=="Hipparchia azorina":
-            row["taxonomy_conflict_note"]="Official 2023 source may use H. azorinus and infraspecific names; not automatically counted as synonym of H. azorina."
+            else:
+                row["independently_verified_alias"]=""
+            if name=="Hipparchia azorina":
+                row["taxonomy_concept_note"]="2018 European butterfly checklist H. azorina / Satyrus azorinus matches 2023 source accepted H. azorinus at species rank, but individual island localities are audited, not silently transferred."
+    # Compare INBO named-island claims to the official 2023 source for the
+    # same harmonized species identity, preserving every unmatched island.
+    with Path("provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117/species_island_coverage.csv").open(encoding="utf-8-sig",newline="") as f:
+        original_pairs=list(csv.DictReader(f))
+    harmonized_islands={
+        "Sao Jorge":"São Jorge",
+        "Sao Miguel":"São Miguel"
+    }
+    for row in exact_join:
+        name=row["independent_INBO_species"]
+        src_islands=row.get("source_localities",[]) or row.get("alias_official_named_islands",[])
+        inbo_islands=sorted({entry["island"].split(", ",1)[1] for entry in original_pairs
+                     if entry.get("archipelago")=="Azores" and entry["scientific_name"]==name})
+        inbo_normalized={harmonized_islands.get(x,x) for x in inbo_islands}
+        official_normalized=set(src_islands)
+        row["original_INBO_named_islands"]=inbo_islands
+        row["independent_official_2023_named_islands"]=sorted(src_islands)
+        row["INBO_only_islands_without_2023_official_same_taxon_record"]=sorted(inbo_normalized-official_normalized)
+        row["official_only_islands_not_INBO"]=sorted(official_normalized-inbo_normalized)
+        row["comparison_island_grain"]="Only source-taxon island distribution comparison, never proof of local breeding"
+    # This audit is at the species rank. Endemic subspecies must not
+    # reclassify their source parent species.
+    status_counts={"native":0,"endemic":0,"uncertain":0}
+    for row in exact_join:
+        statuses=row.get("official_establishment_means",[])
+        if not statuses:statuses=row.get("alias_official_origin_status",[])
+        if statuses==["Native"]: status_counts["native"]+=1
+        elif statuses==["Endemic"]: status_counts["endemic"]+=1
+        else:status_counts["uncertain"]+=1
+    if status_counts!={"native":6,"endemic":2,"uncertain":0}:
+        raise ValueError("Source accepted species rank origin result has changed: "+str(status_counts))
     report={
        "schema":"chocho_azores_official2023_independent_origin_initial_crosswalk_v1",
        "source":SOURCE,"source_doi":DOI,"source_description":"Borges et al 2023 Updated Checklist of Arthropods from Azores v1.7 University Azores",
@@ -186,6 +231,7 @@ def main(dest,offline=False):
        "counts":{"taxa":len(taxa),"distribution":len(distribution),"original_INBO_Azores_unique":len(source_names)},
        "source_taxon_sample":taxa[:4],
        "source_distribution_sample":distribution[:4],
+       "harmonized_species_rank_origin_counts":status_counts,
        "original_source_taxon_concept_diagnostics":taxon_concept_diagnostics,
        "exact_taxon_results":exact_join,
        "known_limits":[
