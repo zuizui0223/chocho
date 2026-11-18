@@ -1,0 +1,85 @@
+name: chocho source-selected Azores endemic Festuca-only original WCVP geography
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Azores_Hipparchia_Festuca_host_only_WCVP_v13_20261118.R
+      - .github/workflows/chocho-Azores-Hipparchia-Festuca-host-only-WCVP-v13.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-pinned-host-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pin the original GEB WCVP plant names and native/introduced ranges
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp_original
+      - name: Pin the original NHM HOSTS butterfly-plant relation rows
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _hosts_original
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Reconstruct exactly source-known Festuca jubata native vs contemporary WGSRPD3 units
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp_original rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          test "$(git -C _hosts_original rev-parse HEAD)" = 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          Rscript scripts/audit_Azores_Hipparchia_Festuca_host_only_WCVP_v13_20261118.R \
+            _wcvp_original _hosts_original/resource.csv \
+            results/Azores_Hipparchia_Festuca_host_only_WCVP2026
+      - name: Fail closed on two source identities, original geographical grain and noncausal interpretation
+        run: |
+          python3 - <<'PY'
+          import csv,pathlib,json
+          r=pathlib.Path('results/Azores_Hipparchia_Festuca_host_only_WCVP2026')
+          def read(p):
+            with (r/p).open(newline='',encoding='utf8') as f:return list(csv.DictReader(f))
+          butterfly=read('Azores_two_endemic_host_only_WCVPv13_resource_envelope.csv')
+          regions=read('Festuca_jubata_originalWCVPv13_native_introduced_regions.csv')
+          assert len(butterfly)==2
+          assert {x['independently_classified_Azores_endemic_butterfly'] for x in butterfly}=={'Hipparchia azorina','Hipparchia miguelensis'}
+          assert {x['original_NHM_HOSTS_plant'] for x in butterfly}=={'Festuca jubata'}
+          assert all(x['original_source_HOSTS_host_species_records']=='1' for x in butterfly)
+          assert all(x['original_GEB339_source_panel_included']=='0' and x['original_GEB239_final_sample_included']=='0' for x in butterfly)
+          assert all(x['environmental_trait_selection_bypassed']=='1' for x in butterfly)
+          assert all(x['host_quality_or_actual_larval_use_measured']=='0' for x in butterfly)
+          assert len({(x['native_WGSRPD3_units'],x['contemporary_WGSRPD3_units'],x['introduced_added_WGSRPD3_units']) for x in butterfly})==1
+          assert len([x for x in regions if x['area_code_l3']=='AZO' and x['has_native']=='1'])==1
+          assert all(int(x['contemporary_WGSRPD3_units'])>=int(x['native_WGSRPD3_units'])>=1 for x in butterfly)
+          summary={
+            'schema':'chocho_Azores_host_only_two_independent_butterflies_resource_v1',
+            'source_host':'NHM HOSTS mirror fixed 808e0b869f9ec1adf8efff87cf6a395adda103e0',
+            'source_plant':'rWCVPdata v13 fixed 65bed76bae9d644ccb6ad200c05f9f5071d89e05',
+            'region_grain':'WGSRPD3 botanical regions, NOT individual Azores islands',
+            'independent_endemic_butterflies':2,
+            'one_shared_known_host_plant':'Festuca jubata',
+            'unique_source_host_evolutionary_replicates':1,
+            'native_regions':[x['area_code_l3'] for x in regions if x['has_native']=='1'],
+            'introduced_regions':[x['area_code_l3'] for x in regions if x['has_introduced']=='1'],
+            'native_units':int(butterfly[0]['native_WGSRPD3_units']),
+            'contemporary_units':int(butterfly[0]['contemporary_WGSRPD3_units']),
+            'added_units':int(butterfly[0]['introduced_added_WGSRPD3_units']),
+            'ratio_contemporary_over_native':float(butterfly[0]['contemporary_over_native_ratio']),
+            'in_original339':0,'in_original239':0,
+            'claim_boundary':'Source-known one-host potential geography without LepTraits selection, butterfly field plant use, actual resources on individual islands, larval quality, or colonization. Original GEB +54.9%/+118.9% estimates unmodified.'
+          }
+          (r/'AZORES_FESTUCA_HOST_ONLY_SOURCE_VERIFIED.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+          print('AZORES_PINNED_ORIGINAL_HOST_ONLY_GEO_RESULT='+json.dumps(summary,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Azores-Hipparchia-original-Festuca-WCVP-host-only-source
+          path: results/Azores_Hipparchia_Festuca_host_only_WCVP2026/
+          retention-days: 90
+          if-no-files-found: warn
