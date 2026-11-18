@@ -62,7 +62,7 @@ jobs:
           assert d['source_original104_plant_pairs']==5355
           assert d['source_resource_defined_pairs']==5353
           assert d['source_double_unseen_pairs']==1088
-          assert d['source_resource_counts'] if False else True
+          assert d['source_resource_counts']=={'native':26530,'added':14553,'current':41083}
           assert d['source_n_butterflies']==239
           assert d['seeds']==[20261119,20261120,20261121]
           assert len(d['chains'])==3
