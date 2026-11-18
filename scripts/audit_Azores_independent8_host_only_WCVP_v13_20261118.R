@@ -104,7 +104,7 @@ out_rows<-lapply(species,function(sp){
     primary_native_regions_n=length(native),
     contemporary_host_regions_n=length(contemporary),
     introduced_added_regions_n=length(gained),
-    native_coverage_in_AZO=intToUtf8(48L+as.integer("AZO"%in%native)),
+    native_coverage_in_AZO=as.integer("AZO"%in%native),
     contemporary_over_native_ratio=if(length(native))length(contemporary)/length(native) else NA_real_,
     source_contains_real_larval_use_locality_evidence=0L,
     source_GEB339_included=as.integer(origin[sp]=="native"),
