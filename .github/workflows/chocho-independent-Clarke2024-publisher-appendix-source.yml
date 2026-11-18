@@ -1,0 +1,49 @@
+name: chocho Clarke 2024 publisher Appendix S1 independent host evidence
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/inspect_publisher_2024_european_butterfly_supplement_20261118.py
+      - .github/workflows/chocho-independent-Clarke2024-publisher-appendix-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  publisher-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe independently published host evidence Appendix S1 and inspect original source columns
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/inspect_publisher_2024_european_butterfly_supplement_20261118.py
+          python3 scripts/inspect_publisher_2024_european_butterfly_supplement_20261118.py \
+            --out-dir results/clarke2024_publisher_supplement_source_20261118
+      - name: Verify original-source provenance or explicitly absent data
+        run: |
+          python3 - <<'PY'
+          import pathlib,json,hashlib
+          root=pathlib.Path('results/clarke2024_publisher_supplement_source_20261118')
+          obj=json.loads((root/'appendixS1_source_audit.json').read_text(encoding='utf8'))
+          assert obj['independent_taxa_n']==42
+          assert obj['requested_source']['article_doi']=='10.1002/ece3.10834'
+          if obj['file_status']=='SOURCE_XLSX_BYTES_VERIFIED':
+            original=(root/'source_clarke2024_appendixS1.xlsx').read_bytes()
+            assert hashlib.sha256(original).hexdigest()==obj['original_xlsx_sha256']
+            assert obj['sheets']
+            print('ORIGINAL_2024_PUBLISHER_SUPPLEMENT_DATA_INDEPENDENTLY_ACQUIRED')
+          else:
+            assert obj['source_rows_used_for_scientific_conclusions']==0
+            print('PUBLISHER_DOWNLOAD_BLOCKED_NO_HOST_RECORDS_USED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-Clarke2024-publisher-original-AppendixS1-source-audit
+          path: results/clarke2024_publisher_supplement_source_20261118/
+          retention-days: 90
+          if-no-files-found: warn
