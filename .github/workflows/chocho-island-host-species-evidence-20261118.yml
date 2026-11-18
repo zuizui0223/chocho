@@ -1,0 +1,51 @@
+name: chocho island endemic larvae documented on exact host plant SPECIES
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_focal_island_larval_plant_species_20261118.py
+      - scripts/audit_focal_island_plant_WCVP_v13_20261118.R
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/independent_butterfly_host_plant_species_events_v1.csv
+      - .github/workflows/chocho-island-host-species-evidence-20261118.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  island-host-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate independent butterfly species island and precise larval plant species observations
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_focal_island_larval_plant_species_20261118.py
+          python3 scripts/audit_focal_island_larval_plant_species_20261118.py
+      - name: Protect biological and locality inference limits
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,csv
+          root=Path('results/focal_island_larval_plant_species_20261118')
+          z=json.loads((root/'focal_host_plant_species_evidence_summary.json').read_text())
+          with (root/'focal_host_plant_species_evidence_checked.csv').open(newline='') as f:
+              data=list(csv.DictReader(f))
+          assert len(data)==13
+          assert z['strict_direct_introduced_host_use']['events']==2
+          assert z['strict_direct_introduced_host_use']['different_islands']==['La Palma','Tenerife']
+          assert z['strict_direct_introduced_host_use']['host_plants']==['Tropaeolum majus']
+          assert z['taxonomic_concept_unresolved']==3
+          assert z['historically_extinct_records_excluded']==2
+          assert all(int(r['confirmed_larval_performance'])==0 for r in data)
+          print('EXACT_PLANT_SPECIES_NATIVE_ALIEN_FIELD_AND_LITERATURE_SEPARATION_VALIDATED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-source-typed-island-larval-plant-species-20261118
+          path: results/focal_island_larval_plant_species_20261118/
+          retention-days: 90
+          if-no-files-found: warn
