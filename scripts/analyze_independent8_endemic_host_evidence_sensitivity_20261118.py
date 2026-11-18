@@ -160,6 +160,32 @@ def main(source,original,out):
             "with_zero_added_global_potential_regions":[b for b,v in items if v["global_potential_added_region_count"]==0],
             "no_claim_as_population_prevalence":True,
         }
+    # Separate true directly observed wild named-plant caterpillar use from
+    # the broader larval-report tier, which also contains secondary literature
+    # host assertions. Exact field evidence does not establish recruitment.
+    direct_field_evidence={
+        "wild_larva_photo","wild_eggs_larvae_report",
+        "field_larvae_on_named_plant_and_laboratory_pupation"
+    }
+    direct_field={}
+    for b in sorted(bmap):
+        field_rows=[r for r in bmap[b] if r["source_evidence"] in direct_field_evidence]
+        field=summarize(field_rows)
+        if field is not None and field.get("unknown"):
+            raise ValueError("Unknown accepted plant for direct wild larval evidence")
+        direct_field[b]=field
+    direct_valid={b:v for b,v in direct_field.items() if v is not None}
+    direct_added={b:v for b,v in direct_valid.items()
+        if v["global_potential_added_region_count"]>0}
+    if set(direct_valid)!={
+        "Pieris cheiranthi","Euchloe grancanariensis","Gonepteryx cleobule"
+    }:
+        raise ValueError("Direct named-plant field larva butterfly species unexpectedly changed")
+    if set(direct_added)!={"Pieris cheiranthi","Euchloe grancanariensis"}:
+        raise ValueError("Direct named-plant field larva geography source effects unexpectedly changed")
+    # Direct-only source availability is intentionally censored: some of
+    # these same butterflies have reported native hosts in external literature.
+    # A direct-only 'first source resource' is NOT a new island colonization.
     # Source region = botanical archipelago, not a resolved same-island
     # host ecology observation. These 8 species are selected on documented
     # source-host plant identities, so percentages are never projected to 18.
@@ -210,6 +236,15 @@ def main(source,original,out):
       "unique_accepted_host_plant_species":EXACT_PLANTS,
       "replay_all_32_R_combinations_success":True,
       "by_mode":by_mode_stats,
+      "strict_wild_larvae_on_named_plant_species_tier":{
+        "direct_named_plant_field_larva_butterfly_species_n":len(direct_valid),
+        "butterflies_with_direct_named_plant_field_larva":sorted(direct_valid),
+        "direct_named_plant_field_larva_global_potential_added_n":len(direct_added),
+        "with_potential_added_global_regions":sorted(direct_added),
+        "per_butterfly_source_wcvp":direct_field,
+        "do_not_identify_new_source_island_host_presence_from_direct_only_record_subsets":True,
+        "no_larval_completion_or_population_colonization_measured":True
+      },
       "source_region_host_origin_evidence":{
           "butterflies_with_a_documented_native_host_species_in_their_archipelago":8,
           "butterflies_with_a_documented_introduced_host_species_in_their_archipelago":1,
@@ -245,6 +280,15 @@ def main(source,original,out):
         writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
     print("INDEPENDENT8_HOST_EVIDENCE_SENSITIVITY_VERIFIED="+json.dumps({
       "by_mode":by_mode_stats,
+      "strict_wild_field_larval_tier":{
+        "species_n":len(direct_valid),
+        "positive_global_potential_species":sorted(direct_added),
+        "per_species_observed_host_species":{
+          b:sorted(r["plant_species"] for r in bmap[b]
+             if r["source_evidence"] in direct_field_evidence)
+          for b in sorted(direct_valid)
+        }
+      },
       "source_region_origin_summary":{"8_native":8,"1_alien":source_intro[0]["butterfly"],
                                     "new_origin_archipelago_hosts":0},
       "host_drop_sensitivity":host_concentration,
