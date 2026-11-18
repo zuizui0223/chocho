@@ -1,0 +1,29 @@
+name: Verify integrated island-port positive evidence
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/verify_integrated_positive_evidence.py"
+      - ".github/workflows/verify-integrated-positive-evidence.yml"
+      - "data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+      - "results/**"
+      - "provenance/reviewer_defenses/results/**"
+
+permissions:
+  contents: read
+
+jobs:
+  source-receipt-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source-pinned denominators, arithmetic and inference boundaries
+        run: python3 scripts/verify_integrated_positive_evidence.py --output evidence_verification.json
+      - name: Preserve source-checksum gate output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integrated-source-receipt-verification
+          path: evidence_verification.json
+          if-no-files-found: ignore
