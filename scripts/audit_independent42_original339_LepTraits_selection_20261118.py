@@ -78,11 +78,20 @@ def main(output):
             raise ValueError("Independent accepted name maps to multiple source-panel species: "+name)
         assert len(source339)==0 or len(choices)>=1
         trait=tnames[choices[0]] if choices else None
-        traitcomplete=int(bool(trait and
-          positive_number(trait.get("NumberOfHostplantFamilies")) and
-          nz(trait.get("Voltinism")) and
-          all(nz(trait.get(x)) for x in ("CanopyAffinity","EdgeAffinity","MoistureAffinity","DisturbanceAffinity")) and
-          any(nz(trait.get(x)) for x in ("WS_L","WS_U","FW_L","FW_U","WS_L_Fem","WS_U_Fem","WS_L_Mal","WS_U_Mal","FW_L_Fem","FW_U_Fem","FW_L_Mal","FW_U_Mal"))))
+        raw_fields={
+          "NumberOfHostplantFamilies":positive_number(trait.get("NumberOfHostplantFamilies")) if trait else False,
+          "Voltinism":nz(trait.get("Voltinism")) if trait else False,
+          "CanopyAffinity":nz(trait.get("CanopyAffinity")) if trait else False,
+          "EdgeAffinity":nz(trait.get("EdgeAffinity")) if trait else False,
+          "MoistureAffinity":nz(trait.get("MoistureAffinity")) if trait else False,
+          "DisturbanceAffinity":nz(trait.get("DisturbanceAffinity")) if trait else False,
+          "WingSize":any(positive_number(trait.get(x)) for x in (
+              "WS_L","WS_U","FW_L","FW_U","WS_L_Fem","WS_U_Fem",
+              "WS_L_Mal","WS_U_Mal","FW_L_Fem","FW_U_Fem","FW_L_Mal","FW_U_Mal"
+          )) if trait else False,
+        }
+        absent_fields=sorted(k for k,v in raw_fields.items() if not v) if trait else []
+        traitcomplete=int(bool(trait and not absent_fields))
         rows.append({
           "independent_species":name,
           "family":r["checklist_family"],
@@ -93,6 +102,7 @@ def main(output):
           "in_original_LepTraits_any_name":int(bool(choices)),
           "source_LepTraits_matched_name":choices[0] if choices else "",
           "source_LepTraits_major_complete":traitcomplete,
+          "source_LepTraits_missing_major_fields":";".join(absent_fields) if trait else "species_name_absent_from_LepTraits",
           "source_LepTraits_raw_host_families":trait.get("NumberOfHostplantFamilies","") if trait else "",
           "in_original_frozen_339_S1_species_panel":int(bool(source339)),
           "in_original_frozen_239_final_resource_sample":int(bool(orig239)),
@@ -132,8 +142,31 @@ def main(output):
             "in_239":sum(r["in_original_frozen_239_final_resource_sample"] for r in group),
             "original_exact_HOSTS_genus":sum(r["has_original_HOSTS_exact_genus"] for r in group),
         }
+    missing_major_by_group={}
+    for label,group in (
+        ("all42",rows),
+        ("all18_endemics",list(all_endemics.values())),
+        ("Canary13_endemics",endemic_canary),
+        ("Madeira3_endemics",endemic_madeira),
+        ("Azores2_endemics",endemic_azores),
+    ):
+        matched=[r for r in group if r["in_original_LepTraits_any_name"]]
+        missing_major_by_group[label]={
+            "source_taxa_with_LepTraits":len(matched),
+            "missing_major_field_counts":{
+                name:sum(name in r["source_LepTraits_missing_major_fields"].split(";") for r in matched)
+                for name in ("NumberOfHostplantFamilies","Voltinism","CanopyAffinity",
+                             "EdgeAffinity","MoistureAffinity","DisturbanceAffinity","WingSize")
+            },
+            "complete_major_within_LepTraits":sum(x["source_LepTraits_major_complete"] for x in matched),
+            "taxon_level_gaps":[
+                {"name":x["independent_species"],"source_taxon":x["source_LepTraits_matched_name"],
+                 "missing_fields":x["source_LepTraits_missing_major_fields"]}
+                for x in matched if x["source_LepTraits_missing_major_fields"]
+            ]
+        }
     summary={
-      "schema":"chocho_independent42_originalGEB_339_stage_vs_LepTraits_audit_v1",
+      "schema":"chocho_independent42_originalGEB_339_stage_vs_LepTraits_audit_v2",
       "frozen_sources":{"s1_species_count":339,"s1_schema":source["schema"],
             "descriptor_SHA256":DES_SHA,"leptraits_SHA256":LEP_SHA,
             "original_final_GEB239_rows":len(mnames)},
@@ -145,6 +178,7 @@ def main(output):
       "independent_endemic_final239_overlap_n":0,
       "LepTraits_total_distinct_taxa":len(tnames),
       "sampling_stages":dict(counter),
+      "major_trait_missingness_by_group":missing_major_by_group,
       "cohorts":{
         "independent42":describe(rows),
         "all_18_independent_island_endemics":describe(list(all_endemics.values())),
@@ -174,6 +208,7 @@ def main(output):
        "overall":summary["cohorts"]["independent42"],
        "endemic":summary["cohorts"]["all_18_independent_island_endemics"],
        "stage_counts":summary["sampling_stages"],
+       "endemic_raw_trait_missingness":summary["major_trait_missingness_by_group"]["all18_endemics"],
        "missing_original339_but_LepTraits": [
           r["independent_species"] for r in rows if r["in_original_LepTraits_any_name"]
           and not r["in_original_frozen_339_S1_species_panel"]]
