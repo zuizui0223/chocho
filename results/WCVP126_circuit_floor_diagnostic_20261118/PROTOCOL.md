@@ -18,6 +18,10 @@ Reuse 126 WCVP accepted-name botanical regions, original 104 GSHHG-coast-anchore
 
 **Alternative community overlap denominators:** Exactly the source same-pair accepted-species Sørensen and Simpson overlap columns (not 2 extra independent biological datasets). Repeat the B→C strict source fold/test comparison on their unaltered original numerical values. A Sørensen transformation of Jaccard and Simpson overlap differ in denominator and zero prevalence. Report individual fold and descriptive common-fold intervals; no cherry-picking whichever transform is positive.
 
+## Schema-level eligibility amendment made before new model scoring
+
+The archived raw WCVP pair table exposes **102 missing native Simpson-overlap values and 204 missing alien Simpson-overlap values** among the 5,355 paired-Jaccard source dyads. A Simpson index is undefined when the smaller community has zero catalogued species; its missing value must **never** be coded 0. Simpson results therefore use only **5,151 dyads with both native and introduced Simpson outcomes source-defined**, on the same original fixed five island hash bins and unchanged model architecture. Its 5-fold test count is to be recorded anew and is not the original 1,089-pair Jaccard test. The main Jaccard, Sørensen and any-shared-species tests remain on the unchanged original 5,355/1,089 population. This amendment fixes treatment of source missingness, not an outcome-dependent favorable-sign selection.
+
 ## Decision rule
 
 Promote the native-vs-introduced *predictive* ocean circuit difference above the existing nonconfirmatory status only if multiple non-redundant response definitions are coherent across source five folds *and* paired fold uncertainty excludes zero, not merely point estimate sign. Even then no measured directional sea currents, cargo delivery, seed viability, historical introduction or butterfly dispersal is identifiable. The primary article remains a resource redistribution result; original positive +4.239% and strict +2.735% values must be retained even if floor tests are adverse.
