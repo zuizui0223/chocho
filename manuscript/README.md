@@ -2,6 +2,12 @@
 
 This directory contains the submission-facing paper package and its scientific-control metadata.
 
+## Island–port–butterfly integrated manuscript candidate (unsubmitted v0.3)
+
+The newer [**single-paper island/port/marine/host ecology draft**](integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md) is source-archived here with its source-qualified results and limits. It integrates the island native-host baseline (islands +118.9% vs mainland +40.9%), observed port–whole-alien-flora associations, butterfly known-host geographic prediction (+4.12% MSE reduction), independent named larval host observations, and sea-geography correlates, **without asserting shipping-caused establishment**.
+
+It has **not** replaced the independently frozen v0.2 submission assets listed below and is **not an author-approved, submitted journal manuscript**. The record contains distinct botanical islands, butterfly islands, 155-species prediction targets and independent endemic checklists that cannot be pooled. See the [scientific synthesis index](../docs/synthesis/README.md), [retained source-specific positive/negative evidence](../docs/synthesis/POSITIVE_EVIDENCE_AND_ONE_STORY_20261118.md), and [byte-exact merge provenance](../docs/synthesis/SELECTIVE_RESULT_MERGE_20261118.md). Complete experimental code for active stacked draft PRs was not automatically merged.
+
 ## Primary v0.2 submission surfaces
 
 - `butterfly_specialization_ecology_v0.2.md` — current main manuscript.
