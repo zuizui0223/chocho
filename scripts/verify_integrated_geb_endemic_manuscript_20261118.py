@@ -75,7 +75,7 @@ def main():
     # The verbatim source-history appendix legitimately repeats old headings.
     # Check the currently proposed main Results and their order only.
     main_results=doc.split("## 3. Results",1)[1].split("## 4. Discussion",1)[0]
-    headings=[list(re.finditer(r"^### 3\\."+str(n)+r"\\.",main_results,re.M)) for n in range(1,7)]
+    headings=[list(re.finditer(r"^### 3\."+str(n)+r"\.",main_results,re.M)) for n in range(1,7)]
     check(all(len(h)==1 for h in headings) and
           all(headings[n][0].start()<headings[n+1][0].start() for n in range(5)),
           "Six unique and ordered main-Results sections")
