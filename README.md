@@ -6,6 +6,16 @@ Reproducible code, frozen analysis receipts, and manuscript materials for:
 
 Target journal: *Global Ecology and Biogeography*.
 
+## Scientific synthesis and evidence freeze (18 November 2026)
+
+The integrated scientific interpretation is now source-indexed without merging unreviewed exploratory branches or modifying the frozen GEB submission manuscript:
+
+- [**Last week's positive findings, falsification checks, and one-paper logic (Japanese)**](docs/synthesis/LAST_WEEK_POSITIVE_EVIDENCE_20261118.md) — 21 PRs updated on 11–18 November, with denominators and limits.
+- [**Retained positive-evidence claim map and ecological storyline**](docs/synthesis/POSITIVE_EVIDENCE_AND_ONE_STORY_20261118.md) — 22 claims across host, island, port, sea geography and actual larval observations.
+- [**All PR audit index**](docs/synthesis/ALL_PR_AUDIT_20261118.md) — metadata and scientific cross-reference of 176 repository PRs; not a claim that each analysis was independently rerun.
+
+These records separate **potential host-resource geography** from independent larval-use evidence, GBIF recorded-butterfly observations, sea and port associations, and biological establishment. They preserve subsequent negative controls and the selection gap for island endemics.
+
 ## Scientific result
 
 The paper's butterfly-specific advance is to separate **larval host breadth** from **butterfly resource geography**. Previous work has linked butterfly diet breadth to consumer ranges, host distributions to consumer constraints, introduced plants to regional responses, and species introductions to biotic or interaction-network homogenization. This study asks the missing resource-side question: how much does moving already-known host plants change where a butterfly has access to resources?
