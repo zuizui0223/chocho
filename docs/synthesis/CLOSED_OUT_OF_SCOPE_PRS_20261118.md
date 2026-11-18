@@ -14,7 +14,7 @@
 - UKBMS/BSBI historical plant atlas work is separate survey-effort-limited prospective host-history validation; close as satellite, not evidence against existing 155-butterfly observational forecast.
 - Competing JBI and Nature Communications drafts are superseded by a **single GEB candidate** and retained as reference history, not alternative active submission targets.
 
-## Reversible close-set and reasons (49 PRs)
+## Reversible close-set and reasons (56 PRs)
 
 ### Superseded GEB/NC/JBI drafts and repo-reorganization — 9 PRs
 [#25](https://github.com/zuizui0223/chocho/pull/25), [#38](https://github.com/zuizui0223/chocho/pull/38), [#43](https://github.com/zuizui0223/chocho/pull/43), [#123](https://github.com/zuizui0223/chocho/pull/123), [#151](https://github.com/zuizui0223/chocho/pull/151), [#152](https://github.com/zuizui0223/chocho/pull/152), [#153](https://github.com/zuizui0223/chocho/pull/153), [#154](https://github.com/zuizui0223/chocho/pull/154), [#155](https://github.com/zuizui0223/chocho/pull/155)
@@ -31,8 +31,12 @@
 ### UK historical plant atlas/monitoring satellite project — 5 PRs
 [#96](https://github.com/zuizui0223/chocho/pull/96), [#97](https://github.com/zuizui0223/chocho/pull/97), [#98](https://github.com/zuizui0223/chocho/pull/98), [#99](https://github.com/zuizui0223/chocho/pull/99), [#103](https://github.com/zuizui0223/chocho/pull/103)
 
+### Independent climate-niche branch — 7 further PRs
+[#46](https://github.com/zuizui0223/chocho/pull/46), [#51](https://github.com/zuizui0223/chocho/pull/51), [#72](https://github.com/zuizui0223/chocho/pull/72), [#73](https://github.com/zuizui0223/chocho/pull/73), [#74](https://github.com/zuizui0223/chocho/pull/74), [#87](https://github.com/zuizui0223/chocho/pull/87), [#88](https://github.com/zuizui0223/chocho/pull/88).
+Separate climate-novel-country and GBIF indexing feasibility; source-level +42.42pp apparent climate contrast is largely expected from receiving-country climate availability +41.07pp (adjusted +1.35pp), not established climatic niche release.
+
 ## Remaining core decisions
 Keep active core source PRs for the 239-species potential resource result, island ecological contrast, 51-island circuit/GBIF, whole-flora port associations, 155-species forecasting, 11/16–11/18 host-use and independent endemic checklist audits. **Do not merge stacked code + old competing manuscript versions as an untested whole**. The results and caveats are available on main in the source-typed archive; working branch code remains in PRs.
 
 ## Execution ledger
-**Planned:** 49 specific off-scope/superseded PRs above; verify all are open before closing. Update with actual counts and failures afterward.
+**COMPLETED:** 56 individually specified PRs closed, zero tool failures; refreshed full repository state: 176 total = 45 merged, 59 closed-unmerged (3 prior + 56 now), 72 open. No Git branches deleted, no force pushes, original source code remains at PR heads. Remaining 72 are related to main-paper evidence, reproducibility, negative controls or submission gates, and are not yet all publication-ready.
