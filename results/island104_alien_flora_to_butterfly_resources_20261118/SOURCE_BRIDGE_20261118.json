@@ -1,0 +1,103 @@
+{
+  "schema": "chocho_frozen104_WCVP_whole_alien_flora_vs_239_potential_butterfly_resources_v1",
+  "status": "SOURCE_REPLAYED_RETROSPECTIVE_SHARED_WCVP_HOSTS_CONSTRUCTION_NOT_INDEPENDENT_CONSUMER_OBSERVATION",
+  "source_ci_run": 44302060549,
+  "source_ci_job": 134794020897,
+  "source_artifact_id": 14425603787,
+  "source_artifact_sha256": "e3ffcbcf4377188b40ce9db90e17ab967611c510844e393f93377dd2d4c7d9e9",
+  "sources": {
+    "WCVP_126_flora_pair_ci": 44010307551,
+    "GSHHG_126_coast_ci": 44010673580,
+    "original_resource_binary_commit": "bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2",
+    "native_resource_cells": 26530,
+    "added_resource_cells": 14553,
+    "contemporary_resource_cells": 41083
+  },
+  "population": {
+    "WCVP_coastal_regions": 104,
+    "WCVP_both_origin_defined_pairs": 5355,
+    "current_butterfly_resource_defined_pairs": 5353,
+    "current_resource_undefined_pairs": 2,
+    "native_resource_undefined_pairs": 54,
+    "strict_test_pairs": 1088,
+    "strict_original_source_pairs": 1089,
+    "native_supported_sensitivity_strict_pairs": 875
+  },
+  "raw_source_overlapping_spearman": {
+    "whole_alien_flora_jaccard_to_current_resource_jaccard": 0.8875697608927796,
+    "whole_native_flora_jaccard_to_current_resource_jaccard": 0.750660635847516
+  },
+  "comparison": {
+    "E_without_current_butterfly_resource_margins": {
+      "strict_pairs": 1088,
+      "folds": 5,
+      "original_ridge_alpha": 20,
+      "baseline_mse": 0.010914182039654347,
+      "plus_alien_flora_mse": 0.008036850291150217,
+      "mse_gain_percent": 26.36323764850138,
+      "descriptive_5fold95": [
+        9.983981252351098,
+        35.41634257389937
+      ],
+      "better_folds": 4,
+      "pair_weighted_gain_percent": 30.37506594662313,
+      "fold_gains_percent": [
+        33.07,
+        34.451,
+        36.815,
+        -6.09,
+        26.999
+      ]
+    },
+    "S_with_current_butterfly_resource_margins": {
+      "strict_pairs": 1088,
+      "folds": 5,
+      "original_ridge_alpha": 20,
+      "baseline_mse": 0.010988918933966444,
+      "plus_alien_flora_mse": 0.007278200513547146,
+      "mse_gain_percent": 33.76782049915366,
+      "descriptive_5fold95": [
+        19.581625917639037,
+        44.48267943204559
+      ],
+      "better_folds": 5,
+      "pair_weighted_gain_percent": 38.104372969487066,
+      "fold_gains_percent": [
+        45.043,
+        39.556,
+        45.951,
+        6.9,
+        26.883
+      ]
+    },
+    "sensitivity_nonempty_native_resource_at_both_islands": {
+      "E": {
+        "strict_pairs": 875,
+        "mse_gain_percent": 25.51575457207837,
+        "descriptive_5fold95": [
+          11.570517547574322,
+          34.824838069662974
+        ],
+        "better_folds": 4
+      },
+      "S": {
+        "strict_pairs": 875,
+        "mse_gain_percent": 27.737894184198836,
+        "descriptive_5fold95": [
+          17.560188878075458,
+          34.429708498198615
+        ],
+        "better_folds": 5
+      }
+    }
+  },
+  "inferential_boundary": [
+    "The response of 239 potential butterfly resource species derives from the same contemporary WCVP vegetation maps and a fixed HOSTS larval interaction network; it is not independent GBIF or field evidence.",
+    "A strong raw correlation or source-selected conditional predictive gain is expected to some degree when predictor and response share input WCVP data.",
+    "Both island endpoints are unseen in training, but the WCVP and HOSTS data-generation process is identical in train and test islands.",
+    "The S specification conditions on the current potential consumer resource richness of held islands, which is target-derived and cannot be available in a prospective butterfly forecast.",
+    "Exactly 2 of 5,355 source plant dyads have undefined contemporary potential resource Jaccard, and 54 undefined native candidate resource Jaccard values are explicitly coded as missing with a separate flag.",
+    "No historical year of plant arrival, seed/ship crossing, butterfly species arrival, larval fitness or population response measured.",
+    "Need a structurally constrained resource-margin null to determine if observed association exceeds mechanical expectations before promoting a trophic bridge claim."
+  ]
+}
