@@ -197,7 +197,7 @@ def main() -> dict:
               for r in d["forecast_pairs"]}
     improvements = {}
     for mode, want in (("temporal", 4.12), ("spatial", 3.00),
-                       ("spatial_buffer100", 2.74), ("species", -0.21)):
+                       ("species", -0.21)):
         key = (mode, "M5_host_composition", "M3_both", "mse")
         ref, new = vals[(mode, "M3_both", "mse")], vals[(mode, "M5_host_composition", "mse")]
         raw = paired[key]
@@ -208,6 +208,19 @@ def main() -> dict:
         improvements[mode] = {"mse_relative_reduction_pct": relative,
                               "evaluated_cells": int(raw["rows"]),
                               "species_improved": int(raw["species_improved"])}
+    # The >=100-km subset is in the paired-difference source, but not in the
+    # full M3/M5 model-score receipt. Check only facts that are directly
+    # reproducible from that source; do not invent a baseline to get 2.74%.
+    remote = paired[("spatial_buffer100", "M5_host_composition", "M3_both", "mse")]
+    ensure(int(remote["species"]) == 155 and int(remote["rows"]) == 102728
+           and int(remote["species_improved"]) == 111
+           and float(remote["difference"]) < 0,
+           "Spatial >=100km M5-M3 paired source only, no invented percent")
+    improvements["spatial_buffer100"] = {
+        "paired_mse_difference": float(remote["difference"]),
+        "evaluated_cells": int(remote["rows"]),
+        "species_improved": int(remote["species_improved"]),
+        "reported_relative_pct_requires_separate_model_score": 2.74}
     ensure(improvements["temporal"]["species_improved"] == 119
            and improvements["spatial"]["species_improved"] == 115,
            "Known-species forecast lift distribution")
