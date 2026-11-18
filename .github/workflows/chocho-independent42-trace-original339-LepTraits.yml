@@ -1,0 +1,54 @@
+name: chocho independent 42 butterfly original LepTraits 339 to GEB239 selection audit
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_independent42_original339_LepTraits_selection_20261118.py
+      - .github/workflows/chocho-independent42-trace-original339-LepTraits.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-locked-selection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recompute independent butterflies through original raw LepTraits, S1 339, and final 239
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_independent42_original339_LepTraits_selection_20261118.py
+          python3 scripts/audit_independent42_original339_LepTraits_selection_20261118.py \
+            --out-dir results/independent42_original339_selection_20261118
+      - name: Fail closed on frozen 42, source339, and original published GEB239 populations
+        run: |
+          python3 - <<'PY'
+          import pathlib,json,csv
+          root=pathlib.Path('results/independent42_original339_selection_20261118')
+          z=json.loads((root/'independent42_339_239_selection_summary.json').read_text(encoding='utf8'))
+          with (root/'independent42_339_239_leptraits_selection.csv').open(newline='',encoding='utf8') as f:
+            rows=list(csv.DictReader(f))
+          assert len(rows)==42
+          assert z['independent_checklist_n']==42
+          assert z['source339_overlap_n']==15
+          assert z['final239_overlap_n']==13
+          assert z['independent_endemic_n']==18
+          assert z['independent_endemic_source339_overlap_n']==0
+          assert z['independent_endemic_final239_overlap_n']==0
+          assert z['cohorts']['Canary_13_endemics']['in_339']==0
+          assert z['cohorts']['Madeira_3_endemics']['in_339']==0
+          assert z['cohorts']['Azores_2_endemics']['in_339']==0
+          print('ORIGINAL_339_END_EMIC_SELECTION_BOUNDARY_SOURCE_VERIFIED')
+          for k in z['cohorts']:
+            print(k,z['cohorts'][k])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-independent42-trace-original339-LepTraits-GEB239
+          path: results/independent42_original339_selection_20261118/
+          retention-days: 90
+          if-no-files-found: warn
