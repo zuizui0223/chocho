@@ -47,7 +47,10 @@ audit <- lapply(seq_len(nrow(events)),function(i){
   accepted_id <- if(nrow(matches)==1L)matches$plant_name_id[[1]] else NA_character_
   dist <- if(!is.na(accepted_id))d[d$plant_name_id==accepted_id,,drop=FALSE]else d[FALSE,,drop=FALSE]
   states <- sort(unique(dist$introduced))
-  source_status <- if(nrow(matches)==0L)"no_exact_accepted_species" else
+  # CNY is Canary, NOT Madeira. Never transfer botanical origin across regions.
+  source_status <- if(!is.na(row$named_island) && row$named_island=="Madeira")
+     "out_of_scope_Madeira_not_evaluated_using_CNY" else
+     if(nrow(matches)==0L)"no_exact_accepted_species" else
      if(nrow(matches)>1L)"multiple_accepted_species" else
      if(length(states)==0L)"accepted_species_no_CNY_distribution" else
      if(identical(states,"0"))"native_CNY" else
@@ -55,6 +58,7 @@ audit <- lapply(seq_len(nrow(events)),function(i){
   conclusion <- if(!trusted)"quarantined_plant_taxonomic_concept" else
      if(source_status=="native_CNY")"native_CNY_exact_species" else
      if(source_status=="introduced_CNY")"introduced_CNY_exact_species" else
+     if(source_status=="out_of_scope_Madeira_not_evaluated_using_CNY")"out_of_scope_CNY" else
      "species_identity_or_origin_not_confirmed"
   data.frame(
      event_id=row$event_id,
