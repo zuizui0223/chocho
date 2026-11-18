@@ -1,0 +1,103 @@
+{
+  "schema": "chocho_independent_island_butterfly_ecological_host_gate_20261118_v1",
+  "original_sources": {
+    "independent_butterfly_denominator": "INBO Eurobutt checklist present on 18 real Macaronesian islands, 42 species including 1 historical extinct Madeira taxon",
+    "source_2025_Hipparchia": "https://doi.org/10.1093/isd/ixaf043",
+    "original_Euchloe_2010_pdf": "https://www.redalyc.org/pdf/455/45514996013.pdf",
+    "other_Euchloe_oviposition": "https://lepiforum.org/wiki/page/Euchloe_grancanariensis",
+    "Hipparchia_field_grass": "https://www.pyrgus.de/Hipparchia_wyssii_en.html",
+    "original_WCVP_v13_pin": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "source_status": "Original literature manually read; source-typed transcription/identity checks executed in GitHub Actions. 2010 PDF byte digest was NOT obtained from original URL in CI."
+  },
+  "extant_independent_coverage": {
+    "unique_species_total_original": 42,
+    "historical_extinct_excluded": 1,
+    "living_denominator": 41,
+    "documented_named_larval_host_genus_n": 36,
+    "minimum_known_named_genus_fraction_extant": 0.8780487804878049,
+    "Canaria_endemic_species": 13,
+    "Canaria_endemics_documented_named_genus": 8,
+    "non_Hipparchia_Canaria_endemic_n": 8,
+    "non_Hipparchia_with_named_genus": 8,
+    "five_Hipparchia_endemics_missing_named_host_genus": [
+      "Hipparchia bacchus",
+      "Hipparchia gomera",
+      "Hipparchia tamadabae",
+      "Hipparchia tilosi",
+      "Hipparchia wyssii"
+    ],
+    "historical_excluded_note": "Pieris wollastoni has historic host reports but extinct taxa are not included in current extant-resource inference.",
+    "documented_rate_interpretation": "Literature-source confirmation lower bound, NOT an unbiased biological true known-host rate and not presence of a plant on each individual island"
+  },
+  "E_grancanariensis": {
+    "butterfly": "Euchloe grancanariensis",
+    "locality": "Gran Canaria, Canary Islands, Spain",
+    "taxonomy": "2010 primary paper Eurechloe belemia grancanariensis subspecies concept; independent Canary BIOTA accepts Euchloe grancanariensis as distinct endemic species",
+    "original_2009_wild_host": "Hirschfeldia incana",
+    "original_2009_wild_larvae_collected": 15,
+    "original_2009_parasitized": 9,
+    "original_2009_unknown_cause_death": 1,
+    "original_2009_pupated": 5,
+    "original_2009_malformed_pupae_died": 2,
+    "original_2009_diapause_pupae": 3,
+    "adult_emergence_recorded": false,
+    "independent_2014_oviposition_host": "Descurainia preauxiana",
+    "independent_2014_oviposition_date": "2014-01-21",
+    "original_WCVP_v13_CNY_origin_for_both": "native",
+    "hard_boundary": "Oviposition is not demonstrated successful larval development; 5 pupae is not five adult recruits. Neither 9/15 nor 5/15 is a representative field population parameter."
+  },
+  "H_tamadabae": {
+    "butterfly": "Hipparchia tamadabae",
+    "island": "Gran Canaria",
+    "field_larvae_record": "2016-12, Gran Canaria taxon tamadabae larvae on unidentified tussock grass",
+    "genus_identified": false,
+    "species_identified": false,
+    "source_name": "Hipparchia wyssii taxon tamadabae",
+    "exclude_candidate": "Hyparrhenia hirta was nearby but not recorded with larvae; never transfer as host",
+    "field_host_family": "Poaceae only",
+    "does_not_impute_other_four_Hipparchia": true
+  },
+  "E_hesperidum_companion": {
+    "butterfly": "Euchloe hesperidum",
+    "independent_island": "Fuerteventura",
+    "source_2010_name": "Euchloe belemia hesperidum",
+    "study_context": "Single field-collected larva fed plant materials in captivity. Do not count 3 offered plants as independent larvae.",
+    "offered_Hirschfeldia_incana": "rejected fruits",
+    "offered_Sisymbrium_erysimoides": "accepted fruits",
+    "offered_Sisymbrium_irio": "accepted fruits",
+    "larva_pupated_after_feeding": true,
+    "adult_emergence_confirmed": false,
+    "host_plant_origins_original_WCVP_v13_CNY": [
+      "native",
+      "native",
+      "native"
+    ],
+    "interpretation": "Unreplicated illustrative host-use contrast versus field E. grancanariensis larvae on H. incana; cannot identify evolutionary host specialization mechanism"
+  },
+  "original_GEB_unchanged": {
+    "global_resource_opportunity_increase": "54.9% source-selected known HOSTS butterflies",
+    "selected_island_relative_resource_gain": "118.9% source-selected known HOSTS butterflies",
+    "extrapolate_to_all_endemics": false,
+    "new_endemic_alien_host_direct_example": "Pieris cheiranthi larva on Tropaeolum majus in Tenerife and La Palma, previously separately verified",
+    "ecology_filter": "Plant species exists -> butterfly accepts and larvae feed -> larval survival/pupation -> successful reproduction/dispersal; each is a distinct evidence stage",
+    "future_gate": "Source-independent plant species resolved larval host interactions + island-specific plant status and presence + performance for each independently listed island butterfly. Host genera with introduced congeners do not suffice."
+  },
+  "validated_replay": [
+    {
+      "name": "wild native exact host and 36/41 lower bound",
+      "run": "https://github.com/zuizui0223/chocho/actions/runs/44213255146",
+      "artifact_sha256": "f260709c91ee147e3a49f05ef2675cedb9bd7abc44839d40d58a151d069a9447"
+    },
+    {
+      "name": "paired endemic Euchloe field versus one captive larva",
+      "run": "https://github.com/zuizui0223/chocho/actions/runs/44213967074",
+      "artifact_sha256": "74add8f93f0a6819dcb21ed03c6cdc00f779867fc0435f9c80a27fca9fd1ddab"
+    },
+    {
+      "name": "source-level 42 butterfly replay preserving living denominator 41",
+      "run": "https://github.com/zuizui0223/chocho/actions/runs/44214691925",
+      "artifact_sha256": "f15031e82c92bead87541a519170e37e1198c32770c712117cf48ee5376abb10"
+    }
+  ],
+  "submission_status": "Single intended GEB paper, no manuscript merge, no submission, Draft PR only"
+}
