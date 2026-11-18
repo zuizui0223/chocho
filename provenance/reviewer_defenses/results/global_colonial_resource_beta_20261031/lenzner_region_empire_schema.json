@@ -1,0 +1,204 @@
+{
+  "status": "COLONIAL_GLO_NAF_DATA_SCHEMA_VERIFIED_NOT_WGSRPD3_MAPPING",
+  "source_doi": "10.5281/zenodo.6640264",
+  "zip_md5": "16f5585d2500676951a4b664bbf0ffde",
+  "csv_profiles": {
+    "Empires.csv": {
+      "table": "Empires.csv",
+      "rows": 868,
+      "columns": [
+        "OBJIDsic",
+        "Region_new",
+        "Region_unique",
+        "MainIsl",
+        "colonizer",
+        "from",
+        "to",
+        "UN_geospat"
+      ],
+      "keylike_columns": [
+        "OBJIDsic",
+        "Region_new",
+        "Region_unique",
+        "colonizer"
+      ],
+      "candidate_key_cardinality": {
+        "OBJIDsic": 695,
+        "Region_new": 472,
+        "Region_unique": 695,
+        "colonizer": 5
+      },
+      "candidate_key_empty": {
+        "OBJIDsic": 0,
+        "Region_new": 314,
+        "Region_unique": 0,
+        "colonizer": 0
+      },
+      "uniques_truncated_at_100000": {},
+      "file_bytes_uncompressed": 66193,
+      "schema_only_no_source_rows": true
+    },
+    "Regions.csv": {
+      "table": "Regions.csv",
+      "rows": 1183,
+      "columns": [
+        "OBJIDsic",
+        "Region_new",
+        "Region_unique",
+        "island",
+        "UN_geospat"
+      ],
+      "keylike_columns": [
+        "OBJIDsic",
+        "Region_new",
+        "Region_unique"
+      ],
+      "candidate_key_cardinality": {
+        "OBJIDsic": 1183,
+        "Region_new": 796,
+        "Region_unique": 1183
+      },
+      "candidate_key_empty": {
+        "OBJIDsic": 0,
+        "Region_new": 384,
+        "Region_unique": 0
+      },
+      "uniques_truncated_at_100000": {},
+      "file_bytes_uncompressed": 77545,
+      "schema_only_no_source_rows": true
+    },
+    "Predictors.csv": {
+      "table": "Predictors.csv",
+      "rows": 1183,
+      "columns": [
+        "OBJIDsic",
+        "name",
+        "LON",
+        "LAT",
+        "island",
+        "area",
+        "dem.sd",
+        "temp.mean",
+        "aridity.mean",
+        "pop.dens.2010.mean",
+        "gdp.pc.2011.mean",
+        "crop.area.prop",
+        "time.emp.GB",
+        "time.emp.ESP",
+        "time.emp.PRT",
+        "time.emp.NL"
+      ],
+      "keylike_columns": [
+        "OBJIDsic",
+        "aridity.mean",
+        "time.emp.GB",
+        "time.emp.ESP",
+        "time.emp.PRT",
+        "time.emp.NL"
+      ],
+      "candidate_key_cardinality": {
+        "OBJIDsic": 1183,
+        "aridity.mean": 238,
+        "time.emp.GB": 141,
+        "time.emp.ESP": 96,
+        "time.emp.PRT": 58,
+        "time.emp.NL": 38
+      },
+      "candidate_key_empty": {
+        "OBJIDsic": 0,
+        "aridity.mean": 0,
+        "time.emp.GB": 0,
+        "time.emp.ESP": 0,
+        "time.emp.PRT": 0,
+        "time.emp.NL": 0
+      },
+      "uniques_truncated_at_100000": {},
+      "file_bytes_uncompressed": 119359,
+      "schema_only_no_source_rows": true
+    },
+    "GloNAF.csv": {
+      "table": "GloNAF.csv",
+      "rows": 470962,
+      "columns": [
+        "OBJIDsic",
+        "region_id",
+        "UN_geospat",
+        "code",
+        "name",
+        "genus",
+        "Species"
+      ],
+      "keylike_columns": [
+        "OBJIDsic",
+        "region_id",
+        "code"
+      ],
+      "candidate_key_cardinality": {
+        "OBJIDsic": 1395,
+        "region_id": 1395,
+        "code": 1395
+      },
+      "candidate_key_empty": {
+        "OBJIDsic": 0,
+        "region_id": 0,
+        "code": 0
+      },
+      "uniques_truncated_at_100000": {},
+      "file_bytes_uncompressed": 38835272,
+      "schema_only_no_source_rows": true
+    }
+  },
+  "region_geometry": {
+    "shapefile_uncompressed_bytes": 46264284,
+    "geometry_record_count_from_dbf": 1184,
+    "attributes": [
+      {
+        "name": "OBJIDsic",
+        "dbf_type": "N"
+      },
+      {
+        "name": "IDregion",
+        "dbf_type": "C"
+      },
+      {
+        "name": "regionF",
+        "dbf_type": "C"
+      },
+      {
+        "name": "ISOcountry",
+        "dbf_type": "C"
+      },
+      {
+        "name": "geo_entity",
+        "dbf_type": "C"
+      },
+      {
+        "name": "LAT",
+        "dbf_type": "N"
+      },
+      {
+        "name": "LON",
+        "dbf_type": "N"
+      },
+      {
+        "name": "name",
+        "dbf_type": "C"
+      },
+      {
+        "name": "GeodAREA",
+        "dbf_type": "N"
+      },
+      {
+        "name": "UN_geospat",
+        "dbf_type": "C"
+      }
+    ],
+    "geometry_not_crosswalked": true
+  },
+  "limitations": [
+    "Schema and record counts do not establish a TDWG level3 spatial crosswalk.",
+    "A region belonging to multiple colonial powers needs time-specific empire overlap, not a single empire label.",
+    "GloNAF naturalized-alien records and all WCVP introduced ranges use different definitions and geographic units.",
+    "The published study's colonial-flora association is not an independently novel insect result."
+  ]
+}

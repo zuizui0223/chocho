@@ -1,0 +1,50 @@
+{
+  "schema": "chocho_NOAA2005_WCVP126_12_positive_DYAD_DIRECTION_REVERSAL_SOURCE_ONLY_v1",
+  "source_artifacts": {
+    "NOAA_15750": {
+      "run": 44012093616,
+      "artifact_id": 14297201578,
+      "csv_sha256": "c4466f8d705e9f1ef8f07306882e39c2a5ae241b8182168146d0bd0e5dfa04f7"
+    },
+    "WCVP_7875": {
+      "run": 44010011288,
+      "artifact_id": 14296292008,
+      "csv_sha256": "f0cdefed6f6ff9a1bbd4f07df9efd1410c120abceda9c91e0fe67ff4d9d22010"
+    },
+    "NOAA_case12": {
+      "run": 44012684281,
+      "artifact_id": 14297581342,
+      "csv_sha256": "099f2617c913d89cc8097d60c484d7fe2863fb4d0b4ff5f804a76326c50e0efb"
+    }
+  },
+  "physical_positive_directions": 12,
+  "reverse_physics_evaluable": 10,
+  "reverse_current_positive_within_10_evaluable": 0,
+  "reverse_physics_missing_not_imputed_as_zero": 2,
+  "original12_plant_jaccard_diff": {
+    "n": 12,
+    "positive": 8,
+    "negative": 4,
+    "mean": 0.0017487923768121979,
+    "posthoc_exact_signflip_p": 0.13546497437149133
+  },
+  "strict_reverse_evaluable_10": {
+    "n": 10,
+    "positive": 7,
+    "negative": 3,
+    "mean": 0.001805848035749126,
+    "median": 0.0023713514403972866,
+    "forward_cotaxa_present": 9,
+    "reverse_cotaxa_present": 9,
+    "posthoc_exact_signflip_p": 0.18634146341463415
+  },
+  "equal_source_group9": {
+    "n_sources": 9,
+    "positive": 6,
+    "negative": 3,
+    "mean": 0.0013497857715674291,
+    "posthoc_exact_signflip_p": 0.3060428849902534
+  },
+  "inference": "descriptive source-locked modern taxonomy × coarsened current-model directional reversal; NOT observed seed movement/introgression/larval feeding/shipping/colonization",
+  "status": "EXPLORATORY_REVERSE_DIRECTION_FALSIFICATION_NO_DIRECTED_BIOLOGICAL_MECHANISM_IDENTIFIED"
+}

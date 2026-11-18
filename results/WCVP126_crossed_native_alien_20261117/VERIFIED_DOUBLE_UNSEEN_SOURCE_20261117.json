@@ -1,0 +1,84 @@
+{
+  "schema": "chocho_WCVP126_native_alien_strict_double_unseen_source_20261117_v1",
+  "source_verified_workflow_run": 44011411479,
+  "source_verified_job_id": 133799040032,
+  "status": "STRICT_DOUBLE_UNSEEN_ISLAND_GEOMETRY_PORT_PAIR_CV_NOT_CURRENTS_OR_ACTUAL_SEED_IMPORT",
+  "n_source_pairs": 5355,
+  "n_strict_double_unseen_test_pairs": 1089,
+  "original_geometry_source_CI": 44010673580,
+  "original_flora_CI": 44010011288,
+  "earlier_single_unseen_island_CI": 44011154673,
+  "holdout_allocation": "five deterministic SHA256-based folds of island codes; training and test have no shared island endpoints; cross-fold pairs excluded from each fold",
+  "relative_MSE_reduction_positive_improves": {
+    "native": {
+      "G_vs_B_pct": 1.73510722916521,
+      "P_vs_B_pct": -0.391403429361596,
+      "GP_vs_B_pct": 1.4714827529871315,
+      "G_added_after_P_pct": 1.855623209470829,
+      "P_added_after_G_pct": -0.2682794116438732
+    },
+    "alien": {
+      "G_vs_B_pct": 1.8576534605954167,
+      "P_vs_B_pct": -0.14740565724066088,
+      "GP_vs_B_pct": 1.8065505326219429,
+      "G_added_after_P_pct": 1.9510801872892378,
+      "P_added_after_G_pct": -0.0520702120699304
+    }
+  },
+  "descriptive_5fold_bootstrap95": {
+    "native": {
+      "G_vs_B_pct": [
+        -2.2368228648508777,
+        4.114123613262072
+      ],
+      "P_vs_B_pct": [
+        -1.4648647564558102,
+        -0.07277216515802197
+      ],
+      "GP_vs_B_pct": [
+        -3.0402571075075997,
+        4.0476147685031725
+      ],
+      "G_added_after_P_pct": [
+        -1.9401790741108835,
+        4.133442364894563
+      ],
+      "P_added_after_G_pct": [
+        -0.9960195662477136,
+        -0.052264864748213714
+      ]
+    },
+    "alien": {
+      "G_vs_B_pct": [
+        -1.5878504064751995,
+        3.687991334883926
+      ],
+      "P_vs_B_pct": [
+        -1.261989556489334,
+        0.3219502764920448
+      ],
+      "GP_vs_B_pct": [
+        -1.8807821568863747,
+        3.8978012182405912
+      ],
+      "G_added_after_P_pct": [
+        -1.517835338086893,
+        3.8374364966218195
+      ],
+      "P_added_after_G_pct": [
+        -1.290105352434898,
+        0.4880312228723923
+      ]
+    }
+  },
+  "inferential_limit": [
+    "All improvements are relative to source-same baseline including geodesic distance, TDWG botanical Level1 equality, latitude gap and accepted species richness margins.",
+    "The G model adds undirected GSHHG shortest-water route geometry, not NOAA current direction, physical seed drift or island-specific propagule viability.",
+    "The P model adds a contemporary WPI registered-port count product, not actual shipping OD.",
+    "Only 7 independent 2020 AIS source-matched original island pairs were observed; these cannot support global shipping inference.",
+    "Five heldout hashed island groups and fixed botanical source are not five independent natural experiments; intervals across five folds are descriptive.",
+    "Strict five-fold heldout both island endpoints improvements in G had uncertainty intervals spanning 0 for native and alien respectively; do not call confirmatory evidence.",
+    "Do not claim sea current preferentially predicts native or ships introduced flora; G improves both nominally and WPI P independently improves neither.",
+    "WCVP island marginal species richness comes from the same contemporary source in hold-out predictor data, not a prospective unseen island flora."
+  ]
+}

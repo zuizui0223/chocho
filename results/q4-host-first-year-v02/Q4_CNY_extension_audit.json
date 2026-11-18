@@ -1,0 +1,34 @@
+{
+  "schema": "chocho_corrected_Q4_126_island_host_pairs_preserve_original_500_v0.2",
+  "status": "CNY_EXTENDED_PILOT_3_NEW_UNDATED_PLANT_ISLANDS",
+  "source": {
+    "Q1_strict_island_WGSRPD3": 126,
+    "Q1_new_butterfly_resource_cells": 5741,
+    "Q2_introduced_butterfly_host_island_edges": 11573,
+    "Q2_distinct_intro_plant_taxa": 564
+  },
+  "corrected_population": {
+    "introduced_host_plant_x_island_pairs": 5611,
+    "distinct_introduced_host_taxa": 564,
+    "islands_with_new_butterfly_resources": 123,
+    "canary_new_butterfly_cells": 67,
+    "canary_introduced_host_plant_pairs": 66
+  },
+  "fixed_pilot": {
+    "original_pilot_pairs_preserved": 500,
+    "original_pilot_with_dated_GBIF_plants": 219,
+    "new_response_blind_CNY_host_pairs": 3,
+    "new_pilot_pairs": 503,
+    "canary_plant_ids": [
+      "2446722",
+      "2527408",
+      "2812107"
+    ]
+  },
+  "limits": [
+    "The three CNY pairs were selected solely by source-locked SHA256, not by GBIF or butterfly historical results.",
+    "Original 219 dated plant indexes remain in the unrevised 500-pair pilot; 3 new CNY pairs have not yet been queried.",
+    "This corrects geographic opportunity classification without re-estimating old literature or historic port introduction dates.",
+    "GBIF botanical first-record dates are sampling-dependent observation dates, not true plant introduction or butterfly colonization times."
+  ]
+}

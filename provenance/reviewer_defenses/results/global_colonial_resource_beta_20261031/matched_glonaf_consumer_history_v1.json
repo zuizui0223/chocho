@@ -1,0 +1,156 @@
+{
+  "schema": "chocho_lenzner_glonaf_vs_butterfly_resources_same_WGSRPD3_v1",
+  "status": "SAME_GEOGRAPHY_OBSERVATIONAL_POSITIVE_CONTROL_NOT_COLONIAL_CAUSALITY",
+  "source_origin": {
+    "glonaf": {
+      "original_rows": 470962,
+      "distinct_source_site_ids": 1395,
+      "distinct_species": 21712,
+      "source_text_replacement_characters": 30241,
+      "name_exclusions": {
+        "missing_or_corrupt_name_or_key": 5
+      }
+    },
+    "lensed_polygons": 1184,
+    "source_geometry_issues": {},
+    "tdwg_regions": 369,
+    "spatial_rule": "source polygon >=50pct within target OR covers >=threshold share of target",
+    "thresholds": [
+      0.01,
+      0.05,
+      0.1
+    ],
+    "matched_source_absence_per_threshold": {
+      "no_flora_sources_0.1": 24,
+      "no_flora_sources_0.01": 21,
+      "no_flora_sources_0.05": 22
+    }
+  },
+  "historical_source_zenodo_md5": "16f5585d2500676951a4b664bbf0ffde",
+  "butterfly_beta_source": {
+    "accepted_regions": 284,
+    "matched_region_pairs": 40171,
+    "source_butterfly_beta_pairs_sha256": "78341f2191f8295151358b67e91263f3b3e91c1ea0231526c96bf40bac3a5c05",
+    "source_colonial_crosswalk_sha256": "84838c4c5231af68b00e5d03b8efea82e3bb2e93e57f4f03b1b7fb6012b5cb6a",
+    "source_look_up_sha256": "85804d45b0a9ffb3620d13795015ca2a23d2ecd4c99e489f7d312906750d94d7",
+    "source_region_richness_sha256": "242f3495625694e6817c1de66018f401687f51f69a339f1aa45314fc6a58eb54",
+    "lock_sha256": "b7f8b8c6bce6784af5357186ebefaa5314de47de77c8a95cd91b3d5bc0163ae6",
+    "shared_any_empire_pairs": 6667,
+    "colonial_exposure_varies": 1.6635260882375258,
+    "paired_data_missingness_is_structural": true,
+    "eligible_regions_by_continent": {
+      "7": 68,
+      "3": 36,
+      "8": 33,
+      "1": 33,
+      "2": 65,
+      "4": 26,
+      "9": 5,
+      "6": 9,
+      "5": 9
+    }
+  },
+  "precomparison_lock_sha256": "2166f22c6c6ebc644838bfc8ec513a7bd0c5e109436268232f7b03c60dd60a30",
+  "primary_threshold": "0.05",
+  "comparisons": {
+    "0.01": {
+      "threshold_share_of_target_region": 0.01,
+      "eligible_region_nodes": 284,
+      "evaluated_pair_count": 40171,
+      "removed_pairs_with_both_alien_plant_lists_empty": 0,
+      "matched_GloNAF_plant_richness_min": 1,
+      "matched_GloNAF_plant_richness_median": 419.0,
+      "observed_partial_rank_correlations": {
+        "H1_glonaf_alien_plant_legacy": 0.03417283828358472,
+        "H1_strict_after_WCVP_general_flora_delta": 0.04338022588681453,
+        "H2_consumer_resource_delta_after_general_flora": -0.003408966035061619,
+        "H3_alien_plant_similarity_vs_consumer_resource_delta": 0.18549823197082652
+      },
+      "positive_control_alien_plant_jaccard_mean": 0.07443776930664751,
+      "butterfly_resource_delta_mean_same_pair_set": 0.18033856606509463
+    },
+    "0.05": {
+      "threshold_share_of_target_region": 0.05,
+      "eligible_region_nodes": 284,
+      "evaluated_pair_count": 40171,
+      "removed_pairs_with_both_alien_plant_lists_empty": 0,
+      "matched_GloNAF_plant_richness_min": 1,
+      "matched_GloNAF_plant_richness_median": 384.5,
+      "observed_partial_rank_correlations": {
+        "H1_glonaf_alien_plant_legacy": 0.04321745573298032,
+        "H1_strict_after_WCVP_general_flora_delta": 0.05280724955894696,
+        "H2_consumer_resource_delta_after_general_flora": -0.003408966035061619,
+        "H3_alien_plant_similarity_vs_consumer_resource_delta": 0.18916470409107505
+      },
+      "positive_control_alien_plant_jaccard_mean": 0.07284274195729362,
+      "butterfly_resource_delta_mean_same_pair_set": 0.18033856606509463,
+      "history_permutation_reference": {
+        "draws": 499,
+        "seed": 31031,
+        "scheme": "whole 4-empire vector shuffle within level1 region",
+        "source_continent_groups": {
+          "1": 33,
+          "2": 65,
+          "3": 36,
+          "4": 26,
+          "5": 9,
+          "6": 9,
+          "7": 68,
+          "8": 33,
+          "9": 5
+        },
+        "comparisons": {
+          "H1_glonaf_alien_plant_legacy": {
+            "observed": 0.04321745573298032,
+            "null_median": 0.013242878778350193,
+            "null_q025": -0.029468842000764443,
+            "null_q975": 0.05614759547456883,
+            "positive_direction_tail": 0.106,
+            "abs_two_sided_tail": 0.116
+          },
+          "H1_strict_after_WCVP_general_flora_delta": {
+            "observed": 0.05280724955894696,
+            "null_median": 0.020229415918122003,
+            "null_q025": -0.024665687523574554,
+            "null_q975": 0.06545321560642132,
+            "positive_direction_tail": 0.098,
+            "abs_two_sided_tail": 0.098
+          },
+          "H2_consumer_resource_delta_after_general_flora": {
+            "observed": -0.003408966035061619,
+            "null_median": -0.008830973604343732,
+            "null_q025": -0.045408496254906595,
+            "null_q975": 0.030025148751605165,
+            "positive_direction_tail": 0.42,
+            "abs_two_sided_tail": 0.878
+          }
+        }
+      }
+    },
+    "0.1": {
+      "threshold_share_of_target_region": 0.1,
+      "eligible_region_nodes": 284,
+      "evaluated_pair_count": 40171,
+      "removed_pairs_with_both_alien_plant_lists_empty": 0,
+      "matched_GloNAF_plant_richness_min": 1,
+      "matched_GloNAF_plant_richness_median": 384.5,
+      "observed_partial_rank_correlations": {
+        "H1_glonaf_alien_plant_legacy": 0.03776196369455098,
+        "H1_strict_after_WCVP_general_flora_delta": 0.047319164552049126,
+        "H2_consumer_resource_delta_after_general_flora": -0.003408966035061619,
+        "H3_alien_plant_similarity_vs_consumer_resource_delta": 0.19036999845203276
+      },
+      "positive_control_alien_plant_jaccard_mean": 0.07226794364445413,
+      "butterfly_resource_delta_mean_same_pair_set": 0.18033856606509463
+    }
+  },
+  "interpretation_limits": [
+    "Historic exposure is four 2022-study empire-duration variables, not actual colonial-era shipping or import intensity.",
+    "GloNAF alien flora present-day assemblage is an outcome LEVEL, while butterfly potential-resource Jaccard DELTA is a change against native-only WCVP counterfactual.",
+    "Region maps from source GloNAF polygon union mix parts of source regions; 1pct/10pct thresholds are mandatory sensitivities.",
+    "All region pairs share nodes; geographic permutation tail is exploratory and not a causal p-value.",
+    "The observed current host catalogue is not date-specific or demonstrated larval use.",
+    "GloNAF alien observations and WCVP current range define different plant universes.",
+    "This analysis cannot establish host-mediated colonial legacy without independent butterfly occurrence records."
+  ]
+}

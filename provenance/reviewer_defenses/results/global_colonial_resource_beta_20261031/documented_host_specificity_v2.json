@@ -1,0 +1,153 @@
+{
+  "schema": "chocho_documented_HOSTS_focal_host_GloNAF_beta_common_support_v2",
+  "status": "SOURCE_MATCHED_LOWER_BOUND_FOCAL_HOST_SPECIFICITY_SENSITIVITY",
+  "source": {
+    "host": "fixed HOSTS 808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "glonaf": "Lenzner 2022, Zenodo 10.5281/zenodo.6640264",
+    "method_lock_sha256": "96eecb24511dde1f23c18d6b7bc2ac134126e2bdbe527e36c8b4f3685bb9c284",
+    "butterfly_focal_species": 239,
+    "WGSRPD3_regions": 284
+  },
+  "joined_names": {
+    "focal_insect_host_rows": 6672,
+    "focal_rows_with_identifiable_host_binomial": 4693,
+    "focal_host_names": 2147,
+    "focal_butterflies_with_named_hosts": 239,
+    "total_source_rows": 470962,
+    "distinct_glonaf_names": 21712,
+    "distinct_unambiguous_genus_epithet_aliases": 20679,
+    "aliases_with_multiple_raw_GloNAF_names": 765,
+    "normalization_unusable": {
+      "canonical_epithet_unusable": 414,
+      "original_name_unusable": 5
+    },
+    "source_decode_replacements": 30241,
+    "focal_HOSTS_binomial_names_found_in_GloNAF": 1118,
+    "source_raw_bit_positions_for_known_HOSTS_candidates": 1312,
+    "source_region_active_known_taxa": 1254,
+    "source_focal_HOSTS_names_not_found_in_GloNAF": 1029
+  },
+  "all_documented_host_case_without_strict_matched_null": {
+    "tested_region_nodes": 284,
+    "tested_region_pairs": 40171,
+    "omitted_pairs_host_both_empty": 0,
+    "mean_host_jaccard": 0.13318192984182417,
+    "mean_other_alien_jaccard": 0.055963460502113496,
+    "mean_butterfly_resource_beta_delta": 0.18033856606509463,
+    "observed_documented_host_rho_conditioning_on_other_aliens": 0.15557497864865025,
+    "other_alien_rho_conditioning_on_documented_hosts": -0.019966274094962686,
+    "other_alien_pairs_both_empty_treated_zero": 1
+  },
+  "overlap_only_prevalence_support": {
+    "supported_frequency_bins": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "excluded_frequency_bins": [
+      7
+    ],
+    "eligible_original_taxa": 1254,
+    "retained_comparable_taxa": 1168,
+    "excluded_taxa_due_to_no_pseudohost_support": 86,
+    "source_frequency_bins": {
+      "0": {
+        "focal_HOSTS_source_taxa": 228,
+        "alternative_not_documented_source_taxa": 6954,
+        "prevalence_upper_bound": 1,
+        "support": true
+      },
+      "1": {
+        "focal_HOSTS_source_taxa": 132,
+        "alternative_not_documented_source_taxa": 2907,
+        "prevalence_upper_bound": 2,
+        "support": true
+      },
+      "2": {
+        "focal_HOSTS_source_taxa": 168,
+        "alternative_not_documented_source_taxa": 2908,
+        "prevalence_upper_bound": 5,
+        "support": true
+      },
+      "3": {
+        "focal_HOSTS_source_taxa": 117,
+        "alternative_not_documented_source_taxa": 1652,
+        "prevalence_upper_bound": 10,
+        "support": true
+      },
+      "4": {
+        "focal_HOSTS_source_taxa": 173,
+        "alternative_not_documented_source_taxa": 1499,
+        "prevalence_upper_bound": 25,
+        "support": true
+      },
+      "5": {
+        "focal_HOSTS_source_taxa": 172,
+        "alternative_not_documented_source_taxa": 753,
+        "prevalence_upper_bound": 50,
+        "support": true
+      },
+      "6": {
+        "focal_HOSTS_source_taxa": 178,
+        "alternative_not_documented_source_taxa": 375,
+        "prevalence_upper_bound": 100,
+        "support": true
+      },
+      "7": {
+        "focal_HOSTS_source_taxa": 86,
+        "alternative_not_documented_source_taxa": 54,
+        "prevalence_upper_bound": 200,
+        "support": false
+      }
+    }
+  },
+  "matched_frequency_control": {
+    "tested_region_nodes": 284,
+    "tested_region_pairs": 40165,
+    "omitted_pairs_host_both_empty": 6,
+    "mean_host_jaccard": 0.08461924134377569,
+    "mean_other_alien_jaccard": 0.05597182053604883,
+    "mean_butterfly_resource_beta_delta": 0.18036059517415237,
+    "observed_documented_host_rho_conditioning_on_other_aliens": 0.03215623916968423,
+    "other_alien_rho_conditioning_on_documented_hosts": 0.08626245621200074,
+    "other_alien_pairs_both_empty_treated_zero": 0
+  },
+  "matched_null": {
+    "draws": 199,
+    "seed": 31031,
+    "retained_raw_source_taxa_by_prevalence_bin": {
+      "6": 178,
+      "5": 172,
+      "1": 132,
+      "0": 228,
+      "4": 173,
+      "2": 168,
+      "3": 117
+    },
+    "null_available_source_taxa": 18356,
+    "focal_known_hosts_excluded_from_control_pool": 1168,
+    "median": -0.023657509054823184,
+    "q025": -0.07997226502228175,
+    "q975": 0.028746751268863256,
+    "observed": 0.03215623916968423,
+    "upper_tail": 0.03,
+    "two_sided_abs_tail": 0.355,
+    "mean_fake_both_empty_pairs_coded_zero": 0.44221105527638194,
+    "maximum_fake_both_empty_pairs_coded_zero": 4
+  },
+  "limits": [
+    "Focal HOSTS aliases are exact normalized Genus epithet; synonym resolution remains incomplete.",
+    "Recorded in HOSTS is not equivalent to suitable local host; noncatalogued does NOT imply true nonhost.",
+    "Highly widespread known-host bin(s) lacked sufficient alternative plants and were removed as WHOLE strata from strict matched test.",
+    "All-host and common-support tests have different plant predictors and potentially pair support; cannot claim full-taxon generality from overlap test.",
+    "GloNAF source and WCVP source measure different plant universes and modern distribution, not pre-colonial time changes.",
+    "Potential resource Jaccard based on same HOSTS input creates source-linked association; independent field butterfly occurrence is missing.",
+    "Plant bins preserve only coarse 284-region occurrence frequency; neither plant family nor phylogeny nor spatial autocorrelation is conserved.",
+    "Fake-host double-zero pairs are coded zero and reported, not strictly comparable to a fully positive-union observed host pair.",
+    "All pair endpoints reused; tail fractions are exploratory not causal independent-sample p-values."
+  ]
+}

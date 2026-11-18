@@ -1,0 +1,47 @@
+{
+  "schema": "chocho_Q4_same_500_host_x_island_historical_GBIF_date_revision_v0.2",
+  "status": "TECHNICALLY_RESCUED_INDEX_DATES_NOT_IMPORT_OR_RESIDENCE_AGE",
+  "original_fixed_blind_source_pairs": 500,
+  "original_source_dated": 219,
+  "new_rescued_pairs": 12,
+  "new_rescued_dated": 11,
+  "new_rescued_nonindexed": 1,
+  "source_recovery_counts": {
+    "ONE_POLYGON_OR_SMALL_MULTI_ORIGINAL_HTTP429_RETRY": 5,
+    "VALIDATED_FULL_POLYGON_INITIAL_HTTP400": 2,
+    "VALIDATED_FULL_POLYGON_REMAINING_HTTP400": 5
+  },
+  "original_source_status_counts": {
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 163,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 11,
+    "DATED_OCCURRENCE_FOUND": 219,
+    "GBIF_QUERY_FAILED": 94,
+    "WCVP_NON_SPECIES_OR_NONACCEPTED_RANK": 3,
+    "WKT_COMPLEX_OR_INACCURATE": 9,
+    "NO_EXACT_ACCEPTED_SPECIES": 1
+  },
+  "v02_source_status_counts": {
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 164,
+    "ANTIMERIDIAN_GEOMETRY_REVIEW": 11,
+    "DATED_OCCURRENCE_FOUND": 230,
+    "GBIF_QUERY_FAILED": 82,
+    "WCVP_NON_SPECIES_OR_NONACCEPTED_RANK": 3,
+    "WKT_COMPLEX_OR_INACCURATE": 9,
+    "NO_EXACT_ACCEPTED_SPECIES": 1
+  },
+  "v02_dated_plant_island_pairs": 230,
+  "v02_dated_fraction_of_all_fixed_500": 0.46,
+  "v02_island_regions_with_dated_plant": 87,
+  "v02_first_indexed_year_min": 1805,
+  "v02_first_indexed_year_median": 1975.0,
+  "v02_first_indexed_year_max": 2026,
+  "no_new_pairs_or_butterfly_conditioned_sampling": true,
+  "limits": [
+    "GBIF first indexed botanical documentation is not the true first arrival or naturalization year.",
+    "The first indexed year places an upper bound on introduction year and lower bound on elapsed residence time, subject to taxonomic and locality errors.",
+    "Unsuccessful GBIF year searches remain technical missingness, NEVER confirmed absence.",
+    "Split-polygon source requests were validated against a positive control; components cover the original official WGSRPD3 region, but exact component-boundary occurrences could double-count.",
+    "The repaired sample is the same 500 response-blind plant×island opportunities; recovery fraction cannot be extrapolated as a random sample of all 5,611 or 5,545 population pairs.",
+    "GBIF historical botanical effort, geography and species taxonomy produce biased documentation years; no inference of actual butterfly establishment, port transport or climate suitability."
+  ]
+}

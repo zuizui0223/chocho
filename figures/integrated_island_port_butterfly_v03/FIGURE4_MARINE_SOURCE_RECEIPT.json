@@ -1,0 +1,61 @@
+{
+  "schema": "chocho_GEB_v03_main_fig4_marine_20261115",
+  "status": "SOURCE_LOCKED_NO_CAUSAL_TRANSPORT_CLAIM",
+  "description": "Readable two-panel subset extracted from original source-verified Fig5 panels A/B; separate prediction populations and baselines; source CSVs were not refitted",
+  "svg": "figures/integrated_island_port_butterfly_v03/Fig4_marine_predictability_vs_transfer_v03.svg",
+  "sources": {
+    "uniform": {
+      "path": "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv",
+      "git_blob": "636533131b07ea9f6beb99261e2112271a43d838",
+      "sha256": "09e656816dd37e5279e209b6a5151bbd12ffb31e441ccc49b20bc64c3cca5828",
+      "row": "base_vs_uniform new_butterfly_jaccard"
+    },
+    "joint": {
+      "path": "results/island51_host_circuit_joint_20261106/comparison_summary.csv",
+      "git_blob": "96a690d59e70b5abb4fab780723c5ee61aa48c88",
+      "sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "rows": [
+        "C_to_HC new_butterfly_jaccard",
+        "H_to_HC new_butterfly_jaccard"
+      ]
+    },
+    "strict": {
+      "path": "results/island51_cross_community_marine_20261107/comparison_scope_summary.csv",
+      "git_blob": "d4cf324df8c0ee490d7b1b7f302fe19c8f39baa3",
+      "sha256": "3017ca303da5dac5c4ee48b4c15d9877138af6cfb8159789260a5c43d38e20c9",
+      "rows": [
+        "later_butterflies_retro_hosts BASE_to_AIS all_both_plants_indexed",
+        "later_butterflies_retro_hosts BASE_to_BOTH all_both_plants_indexed"
+      ]
+    }
+  },
+  "figure_panels": {
+    "A": {
+      "validation": "retrospective held-one-island community prediction",
+      "n_source_landmasses": 51,
+      "values": {
+        "uniform_ocean_beyond_distance_MSE_reduction_pct": 5.081886845222559,
+        "host_assemblages_beyond_AIS_wind_MSE_reduction_pct": 1.731162479353141,
+        "AIS_wind_beyond_host_assemblages_MSE_reduction_pct": 6.488025054419857
+      },
+      "different_reference_models_no_addition": true
+    },
+    "B": {
+      "validation": "both source-pair endpoints geographically unseen under original source-pair eligibility",
+      "n_source_pairs": 990,
+      "host_adjusted_model": true,
+      "values": {
+        "AIS_only_MSE_reduction_pct": 0.6775557467450279,
+        "AIS_and_wind_MSE_reduction_pct": -4.698595404749899
+      }
+    }
+  },
+  "limitations": [
+    "These are two distinct retrospective cross-validation designs with different units and baseline models; bars cannot be added",
+    "Measured apparent predictive gains are conditional correlations, not mechanism identification",
+    "Modern AIS and wind proxies do not trace historical butterfly flights or plant diaspores",
+    "Host assemblage predictors may postdate butterfly response",
+    "Butterfly GBIF source indexing does not measure colonisation, recruitment, larval utilization or transport pathways",
+    "Original source figures and manuscript remain archived; old Fig5 rendered source is not replaced"
+  ]
+}

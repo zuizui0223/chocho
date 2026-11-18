@@ -1,0 +1,332 @@
+{
+  "schema": "chocho_source_verified_island_port_x_area_native_WCVP_intro_flora_and_HOSTS_20261117_v1",
+  "status": "CONDITIONAL_GEOGRAPHIC_ASSOCIATION_MODERATORS_NOT_HISTORICAL_SHIPPING_CAUSAL_EFFECT",
+  "source_provenance": {
+    "original_126_island_WCVP_port_CI": 44003165119,
+    "joint_two_axis_interaction_CI": 44003404503,
+    "original_port_flora_baseline_on_123": 0.2334712198139267,
+    "original_all_flora_git_blob": "53b618fa51a1a418ccc6e4363f4c866c389c90cc",
+    "original_HOSTS_taxa_git_blob": "cfe82bd8223ea453c015c47cd9659a935d5ba3ab",
+    "original_GBIF_botanical_effort_git_blob": "23f5e5c7f7c875af41ccb5c6094cb4f48f1071fe",
+    "original_WCVP_v13_source_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "original_TDWG3_source_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "source_panel_sizes": [
+      126,
+      123,
+      98
+    ]
+  },
+  "primary_frozen_123_scope_Holm_adj4": [
+    {
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "island_area",
+      "beta": -0.13935644274456238,
+      "Holm_p": 0.024
+    },
+    {
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "native_flora",
+      "beta": -0.181542965024837,
+      "Holm_p": 0.024
+    },
+    {
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "island_area",
+      "beta": -0.01854294890246198,
+      "Holm_p": 0.36533333333333334
+    },
+    {
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "native_flora",
+      "beta": -0.0394733056687176,
+      "Holm_p": 0.136
+    }
+  ],
+  "separately_fitted_mods": [
+    {
+      "scope": "whole_botanical_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "island_area",
+      "n": 126,
+      "coef": -0.13842241257889232,
+      "region_perm_p": 0.004,
+      "bootstrap95": [
+        -0.26174162956329716,
+        -0.033450611421665465
+      ],
+      "loo_range": [
+        -0.20946276505123787,
+        -0.05624799892707579
+      ]
+    },
+    {
+      "scope": "whole_botanical_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "native_flora",
+      "n": 126,
+      "coef": -0.2295377827393342,
+      "region_perm_p": 0.0013333333333333333,
+      "bootstrap95": [
+        -0.34461154576925435,
+        -0.11827362026449456
+      ],
+      "loo_range": [
+        -0.2691133688589983,
+        -0.16355399540160862
+      ]
+    },
+    {
+      "scope": "matched_host_source_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "island_area",
+      "n": 123,
+      "coef": -0.13935644274456238,
+      "region_perm_p": 0.006,
+      "bootstrap95": [
+        -0.26468874663385994,
+        -0.04147362817061113
+      ],
+      "loo_range": [
+        -0.20906937029364894,
+        -0.06298928642218751
+      ]
+    },
+    {
+      "scope": "matched_host_source_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "native_flora",
+      "n": 123,
+      "coef": -0.181542965024837,
+      "region_perm_p": 0.006666666666666667,
+      "bootstrap95": [
+        -0.30825221702839484,
+        -0.0828468929198307
+      ],
+      "loo_range": [
+        -0.22248220398138024,
+        -0.11122902920973389
+      ]
+    },
+    {
+      "scope": "matched_host_source_panel",
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "island_area",
+      "n": 123,
+      "coef": -0.01854294890246198,
+      "region_perm_p": 0.36533333333333334,
+      "bootstrap95": [
+        -0.0482408566981937,
+        0.015228871762358681
+      ],
+      "loo_range": [
+        -0.028609604117303827,
+        -0.00765656717375858
+      ]
+    },
+    {
+      "scope": "matched_host_source_panel",
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "native_flora",
+      "n": 123,
+      "coef": -0.0394733056687176,
+      "region_perm_p": 0.068,
+      "bootstrap95": [
+        -0.07621232182268844,
+        -0.00411512637670555
+      ],
+      "loo_range": [
+        -0.05597840399114027,
+        -0.013371944984304041
+      ]
+    },
+    {
+      "scope": "GBIF_effort_matched_host_source_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "island_area",
+      "n": 98,
+      "coef": -0.1633097666456347,
+      "region_perm_p": 0.014666666666666666,
+      "bootstrap95": [
+        -0.28578319102333893,
+        -0.013289500272330742
+      ],
+      "loo_range": [
+        -0.21993350512953672,
+        -0.03889992559707456
+      ]
+    },
+    {
+      "scope": "GBIF_effort_matched_host_source_panel",
+      "outcome": "ALL_WCVP_introduced_flora",
+      "axis": "native_flora",
+      "n": 98,
+      "coef": -0.2121342424382253,
+      "region_perm_p": 0.008,
+      "bootstrap95": [
+        -0.3679253473078182,
+        -0.015897025799867324
+      ],
+      "loo_range": [
+        -0.31288584841961953,
+        -0.08083479572270215
+      ]
+    },
+    {
+      "scope": "GBIF_effort_matched_host_source_panel",
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "island_area",
+      "n": 98,
+      "coef": -0.006406342274645533,
+      "region_perm_p": 0.808,
+      "bootstrap95": [
+        -0.057432775329144786,
+        0.04633323473786051
+      ],
+      "loo_range": [
+        -0.01421931793791766,
+        0.003305355049738525
+      ]
+    },
+    {
+      "scope": "GBIF_effort_matched_host_source_panel",
+      "outcome": "HOSTS_known_larval_host_taxa_given_all_alien_flora",
+      "axis": "native_flora",
+      "n": 98,
+      "coef": -0.04968583184498158,
+      "region_perm_p": 0.17333333333333334,
+      "bootstrap95": [
+        -0.12035267218332504,
+        0.004654736271302973
+      ],
+      "loo_range": [
+        -0.055825237928120997,
+        -0.03003832256083696
+      ]
+    }
+  ],
+  "simultaneously_fitted_area_native_mods": [
+    {
+      "cohort": "all_126_WCVP",
+      "n": 126,
+      "beta": {
+        "port_x_log_area": 0.0587812582979006,
+        "port_x_log_native_flora": -0.28357957029880937
+      },
+      "p_conditional": {
+        "port_x_log_area": 0.5806666666666667,
+        "port_x_log_native_flora": 0.06133333333333333
+      },
+      "boot_95": {
+        "port_x_log_area": [
+          -0.15458538602544708,
+          0.2600768832761508
+        ],
+        "port_x_log_native_flora": [
+          -0.4879639525519326,
+          -0.08059245683200066
+        ]
+      },
+      "correlation": 0.7839082815491129
+    },
+    {
+      "cohort": "same_123_WCVP_HOSTS",
+      "n": 123,
+      "beta": {
+        "port_x_log_area": -0.04254168022063994,
+        "port_x_log_native_flora": -0.13899715182792102
+      },
+      "p_conditional": {
+        "port_x_log_area": 0.616,
+        "port_x_log_native_flora": 0.3333333333333333
+      },
+      "boot_95": {
+        "port_x_log_area": [
+          -0.23955497592067243,
+          0.16522322237019757
+        ],
+        "port_x_log_native_flora": [
+          -0.3834952961015561,
+          0.05748606665938133
+        ]
+      },
+      "correlation": 0.8165903340797225
+    },
+    {
+      "cohort": "same_123_HOSTS_given_all_alien_flora",
+      "n": 123,
+      "beta": {
+        "port_x_log_area": 0.025385477740822414,
+        "port_x_log_native_flora": -0.06461532798023543
+      },
+      "p_conditional": {
+        "port_x_log_area": 0.2693333333333333,
+        "port_x_log_native_flora": 0.027333333333333334
+      },
+      "boot_95": {
+        "port_x_log_area": [
+          -0.025885867105007686,
+          0.09182031971783057
+        ],
+        "port_x_log_native_flora": [
+          -0.13301575240887734,
+          -0.006569081864973313
+        ]
+      },
+      "correlation": 0.8165903340797225
+    },
+    {
+      "cohort": "same_98_WCVP_with_GBIF_effort",
+      "n": 98,
+      "beta": {
+        "port_x_log_area": -0.08530685427472873,
+        "port_x_log_native_flora": -0.12935531906029588
+      },
+      "p_conditional": {
+        "port_x_log_area": 0.3606666666666667,
+        "port_x_log_native_flora": 0.22266666666666668
+      },
+      "boot_95": {
+        "port_x_log_area": [
+          -0.294493963747546,
+          0.14113382447958997
+        ],
+        "port_x_log_native_flora": [
+          -0.4107825631864091,
+          0.1277631231034174
+        ]
+      },
+      "correlation": 0.8161296219021756
+    },
+    {
+      "cohort": "same_98_HOSTS_given_alien_flora_and_effort",
+      "n": 98,
+      "beta": {
+        "port_x_log_area": 0.051596520347853676,
+        "port_x_log_native_flora": -0.09867055187892396
+      },
+      "p_conditional": {
+        "port_x_log_area": 0.07466666666666667,
+        "port_x_log_native_flora": 0.034
+      },
+      "boot_95": {
+        "port_x_log_area": [
+          -0.03154211220564056,
+          0.13580093159651105
+        ],
+        "port_x_log_native_flora": [
+          -0.19537992706523621,
+          0.0051667631350431
+        ]
+      },
+      "correlation": 0.8161296219021756
+    }
+  ],
+  "limits": [
+    "Same plant geography and WPI ports in the original data; stronger contemporary association is not identified as shipping or historical introduction.",
+    "Area and native WCVP flora strongly correlated (r ~0.82 in 123 HOSTS matched islands); separate negative port interactions do not identify independent mechanisms.",
+    "Joint two-axis estimates are posthoc sensitivity and uncertain in matched123 and effort98; not a new confirmatory discovery.",
+    "HOSTS introduced larval-host plant taxa conditional on entire alien flora does not display a robust positive port enrichment interaction. Some exploratory conditional effects have nominal p<0.05 without multiplicity adjustment.",
+    "GBIF botanical effort is imperfect and the 98-island sensitivity is nonrandom missingness.",
+    "Modern ports and plant origin both contemporary not time-stamped seed transport or observed butterfly larval food consumption."
+  ]
+}

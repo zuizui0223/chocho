@@ -1,0 +1,253 @@
+{
+  "schema": "chocho_Q3_31_species_wing_WPI_indexing_screen_v0.1",
+  "status": "SPARSE_GBIF_INDEXING_PATTERNS_NOT_ESTABLISHMENT_OR_ARRIVAL",
+  "source": {
+    "GEB_species": 239,
+    "Q2_corrected_added_island_cells": 5741,
+    "observed_DOI": "10.15468/dl.pp5nc9",
+    "source_31_observed_species": 31,
+    "31_species_modern_host_resource_opportunities": 920,
+    "source_observed_species_x_resource_island_cells": 13,
+    "WPI_modern_published_port_snapshot_year": 2023,
+    "wing_size_proxy": "GEB frozen LepTraits continuous wing-size proxy"
+  },
+  "observed": {
+    "observed_index_events": 13,
+    "species_with_any_recorded_added_opportunity": 10,
+    "index_events_at_0_ports": 0,
+    "index_events_at_1plus_ports": 13,
+    "all_opportunities_at_0_ports": 184,
+    "all_opportunities_at_1plus_ports": 736,
+    "wing_median_in_detected_cells": 6.3083333335,
+    "wing_median_in_all_opportunity_cells": 5.483333333333333
+  },
+  "conditional_index_permutations": {
+    "within_species": {
+      "n_butterfly_resource_index_events": 13,
+      "n_blocks": 29,
+      "exchangeable_blocks": 10,
+      "exchangeable_index_events": 13,
+      "permutations": 9999,
+      "scores": {
+        "port_index_only": {
+          "observed_mean_at_indexed_resource_cells": 1.960889995817015,
+          "conditional_randomization_mean": 1.5699259710989186,
+          "observed_minus_null_mean": 0.3909640247180963,
+          "null_q025": 1.0625714147507652,
+          "null_q975": 2.100060370885883,
+          "p_high": 0.0762,
+          "p_low": 0.9239,
+          "p_two_centered": 0.1452,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "wing_x_port": {
+          "observed_mean_at_indexed_resource_cells": 0.07072468093175611,
+          "conditional_randomization_mean": 0.5774247335991777,
+          "observed_minus_null_mean": -0.5067000526674216,
+          "null_q025": -0.0501526884766491,
+          "null_q975": 1.1787829729170487,
+          "p_high": 0.9439,
+          "p_low": 0.0562,
+          "p_two_centered": 0.1089,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "log_region_area": {
+          "observed_mean_at_indexed_resource_cells": 8.680760691810985,
+          "conditional_randomization_mean": 7.91512027149841,
+          "observed_minus_null_mean": 0.7656404203125744,
+          "null_q025": 6.49155918282175,
+          "null_q975": 9.332835735483812,
+          "p_high": 0.1502,
+          "p_low": 0.8499,
+          "p_two_centered": 0.2988,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "other_species_GBIF_index_effort": {
+          "observed_mean_at_indexed_resource_cells": 2.3751136179877976,
+          "conditional_randomization_mean": 1.4826279900229253,
+          "observed_minus_null_mean": 0.8924856279648723,
+          "null_q025": 0.6035537550382635,
+          "null_q975": 2.440748414101939,
+          "p_high": 0.0333,
+          "p_low": 0.9668,
+          "p_two_centered": 0.0562,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        }
+      }
+    },
+    "within_species_level1": {
+      "n_butterfly_resource_index_events": 13,
+      "n_blocks": 162,
+      "exchangeable_blocks": 9,
+      "exchangeable_index_events": 11,
+      "permutations": 9999,
+      "scores": {
+        "port_index_only": {
+          "observed_mean_at_indexed_resource_cells": 1.960889995817015,
+          "conditional_randomization_mean": 1.7197992955698969,
+          "observed_minus_null_mean": 0.2410907002471181,
+          "null_q025": 1.3155800583754123,
+          "null_q975": 2.13131874320197,
+          "p_high": 0.1223,
+          "p_low": 0.8779,
+          "p_two_centered": 0.2458,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "wing_x_port": {
+          "observed_mean_at_indexed_resource_cells": 0.07072468093175611,
+          "conditional_randomization_mean": 0.4197429325378714,
+          "observed_minus_null_mean": -0.3490182516061153,
+          "null_q025": -0.1257806139641762,
+          "null_q975": 0.9750649393313853,
+          "p_high": 0.8891,
+          "p_low": 0.111,
+          "p_two_centered": 0.2181,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "log_region_area": {
+          "observed_mean_at_indexed_resource_cells": 8.680760691810985,
+          "conditional_randomization_mean": 8.075378735616498,
+          "observed_minus_null_mean": 0.6053819561944866,
+          "null_q025": 7.016489775805279,
+          "null_q975": 9.09308644741943,
+          "p_high": 0.1317,
+          "p_low": 0.8684,
+          "p_two_centered": 0.264,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "other_species_GBIF_index_effort": {
+          "observed_mean_at_indexed_resource_cells": 2.3751136179877976,
+          "conditional_randomization_mean": 1.5433048392237245,
+          "observed_minus_null_mean": 0.8318087787640731,
+          "null_q025": 0.8766662519448549,
+          "null_q975": 2.19709124575503,
+          "p_high": 0.0064,
+          "p_low": 0.9937,
+          "p_two_centered": 0.013,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        }
+      }
+    },
+    "within_species_level1_and_area_half": {
+      "n_butterfly_resource_index_events": 13,
+      "n_blocks": 260,
+      "exchangeable_blocks": 9,
+      "exchangeable_index_events": 10,
+      "permutations": 9999,
+      "scores": {
+        "port_index_only": {
+          "observed_mean_at_indexed_resource_cells": 1.960889995817015,
+          "conditional_randomization_mean": 1.7880018166005487,
+          "observed_minus_null_mean": 0.17288817921646626,
+          "null_q025": 1.437971502511251,
+          "null_q975": 2.111986864103439,
+          "p_high": 0.1552,
+          "p_low": 0.8451,
+          "p_two_centered": 0.3142,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "wing_x_port": {
+          "observed_mean_at_indexed_resource_cells": 0.07072468093175611,
+          "conditional_randomization_mean": 0.1782108717066677,
+          "observed_minus_null_mean": -0.10748619077491157,
+          "null_q025": -0.29022456898321447,
+          "null_q975": 0.5901334867497621,
+          "p_high": 0.6798,
+          "p_low": 0.3203,
+          "p_two_centered": 0.669,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "log_region_area": {
+          "observed_mean_at_indexed_resource_cells": 8.680760691810985,
+          "conditional_randomization_mean": 8.300946983014098,
+          "observed_minus_null_mean": 0.3798137087968865,
+          "null_q025": 7.63911588183114,
+          "null_q975": 9.00208564449271,
+          "p_high": 0.1382,
+          "p_low": 0.8619,
+          "p_two_centered": 0.272,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "other_species_GBIF_index_effort": {
+          "observed_mean_at_indexed_resource_cells": 2.3751136179877976,
+          "conditional_randomization_mean": 1.646261402223705,
+          "observed_minus_null_mean": 0.7288522157640926,
+          "null_q025": 1.0605621996000094,
+          "null_q975": 2.1900390540614874,
+          "p_high": 0.003,
+          "p_low": 0.9971,
+          "p_two_centered": 0.0104,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        }
+      }
+    },
+    "within_species_level1_and_other_butterfly_records": {
+      "n_butterfly_resource_index_events": 13,
+      "n_blocks": 245,
+      "exchangeable_blocks": 9,
+      "exchangeable_index_events": 10,
+      "permutations": 9999,
+      "scores": {
+        "port_index_only": {
+          "observed_mean_at_indexed_resource_cells": 1.960889995817015,
+          "conditional_randomization_mean": 2.0697753198868627,
+          "observed_minus_null_mean": -0.10888532406984774,
+          "null_q025": 1.6978733891120277,
+          "null_q975": 2.4385831968363343,
+          "p_high": 0.7154,
+          "p_low": 0.2855,
+          "p_two_centered": 0.574,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "wing_x_port": {
+          "observed_mean_at_indexed_resource_cells": 0.07072468093175611,
+          "conditional_randomization_mean": 0.41379084409010847,
+          "observed_minus_null_mean": -0.34306616315835237,
+          "null_q025": -0.14308392255684904,
+          "null_q975": 0.9705529526203306,
+          "p_high": 0.8627,
+          "p_low": 0.1374,
+          "p_two_centered": 0.2674,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "log_region_area": {
+          "observed_mean_at_indexed_resource_cells": 8.680760691810985,
+          "conditional_randomization_mean": 8.78188289028548,
+          "observed_minus_null_mean": -0.10112219847449566,
+          "null_q025": 7.955062394030061,
+          "null_q975": 9.58671004175548,
+          "p_high": 0.5983,
+          "p_low": 0.4018,
+          "p_two_centered": 0.8123,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        },
+        "other_species_GBIF_index_effort": {
+          "observed_mean_at_indexed_resource_cells": 2.3751136179877976,
+          "conditional_randomization_mean": 2.2242931656883154,
+          "observed_minus_null_mean": 0.15082045229948227,
+          "null_q025": 1.8192904724455023,
+          "null_q975": 2.583474560733867,
+          "p_high": 0.2333,
+          "p_low": 0.7669,
+          "p_two_centered": 0.4561,
+          "note": "Difference in event-weighted predictor score, NOT a regression coefficient or colonization effect"
+        }
+      }
+    }
+  },
+  "stop_gate": {
+    "min_positive_cells_to_fit_four_covariates_and_3_interactions": 40,
+    "sufficient_independent_species_or_cells": false,
+    "reason": "13 observed index cells distributed over too few independent species, nonrandom archive and unequal island reporting; effect coefficient would be unstable.",
+    "no_multivariable_port_x_wing_establishment_model_fitted": true
+  },
+  "limitations": [
+    "The 31 sampled species from a frozen historical GBIF validation archive are not the target 239- or 224-species full island-year risk set.",
+    "GBIF index non-record is not absence; tests concern where a nonrandom subset was OBSERVED, not where it colonized.",
+    "Modern WPI 2023 index does not measure shipping volume, transport modes, or port status at any first butterfly arrival.",
+    "Wing size is not direct flight capacity and may itself influence detectability; conditioning on each species index count only partially addresses bias.",
+    "Other-butterfly archived records indicate observation activity but also ecological butterfly richness and taxonomic geography, not independent effort.",
+    "Within-level1 permutations preserve source species and coarse biogeography but not local climate, land cover or observer preferences.",
+    "13 observations cannot identify a wing×port colonization mechanism or a ship-vs-flight distinction."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "chocho_lenzner2022_wgsrpd3_global_overlay_v0.1",
+  "source": {
+    "study_doi": "10.1038/s41559-022-01865-1",
+    "lenzner_git_commit": "7aae72aadd39ae3827ece6935c6740dc0aace030",
+    "wgsrpd_git_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "source_shape_regions_valid": 1184,
+  "source_shape_skipped": 0,
+  "frozen_wgsrpd3_regions": 369,
+  "mapped_wgsrpd3_regions": 369,
+  "no_geometry_regions": [],
+  "high_confidence_classified_regions": 134,
+  "counts_by_assignment": {
+    "Great_Britain": 86,
+    "ambiguous_or_uncovered": 185,
+    "Spain": 38,
+    "Portugal": 10,
+    "multi_empire": 50
+  },
+  "assumptions": [
+    "Area overlaps are calculated in EPSG:6933 from the published GloNAF polygons, not geographic names.",
+    "Historic exposure is multi-valued; islands with competing empires or poor geometric coverage are left ambiguous.",
+    "Empire rule requires at least 80% area coverage, at least 75% of covered area in one empire and at most 20% in each other.",
+    "Empire membership is a historic region-level association, never direct evidence of port arrivals or plant movements.",
+    "Source GloNAF and WGSRPD mapping differences can be pronounced for small archipelagos, oceanic islands and mixed landmasses."
+  ]
+}

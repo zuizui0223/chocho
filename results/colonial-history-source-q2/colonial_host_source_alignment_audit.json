@@ -1,0 +1,376 @@
+{
+  "schema": "chocho_colonial_host_source_match_q2_v0.1",
+  "status": "OBSERVATIONAL_EMPIRE_SOURCE_ALIGNMENT_SCREEN",
+  "sources": {
+    "botanical": {
+      "wcvp": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+      "hosts": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+      "wgsrpd": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+    },
+    "empire_history": {
+      "study_doi": "10.1038/s41559-022-01865-1",
+      "lenzner_git_commit": "7aae72aadd39ae3827ece6935c6740dc0aace030",
+      "wgsrpd_git_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+    }
+  },
+  "source_overlay_strict_islands": 28,
+  "source_overlay_strict_empire_counts": {
+    "Great_Britain": 20,
+    "Portugal": 3,
+    "Spain": 5
+  },
+  "source_native_island_total": 122,
+  "n_with_strict_hist_and_resource": 28,
+  "cohorts": {
+    "strict_geographic_all": {
+      "included": 28,
+      "number_by_empire": {
+        "Great_Britain": 20,
+        "Portugal": 3,
+        "Spain": 5
+      },
+      "total_resource_cells": 1320,
+      "actual_empire_supported_butterfly_region_cells": 557.0,
+      "mean_own_metropole_support_share": 0.3206723662966017,
+      "mean_other_metropoles_support_share": 0.36006113599103323,
+      "mean_raw_actual_minus_other_pp": -3.9388769694431556,
+      "own_exposure_years_vs_actual_host_source_spearman": -0.07013476876150027,
+      "permutation": {
+        "global": {
+          "observed_score": 0.3206723662966017,
+          "null_mean": 0.3292448435357838,
+          "observed_minus_null_percentage_points": -0.8572477239182141,
+          "null_q025": 0.31562491365356565,
+          "null_q975": 0.3435892627985774,
+          "null_p_high": 0.8844,
+          "null_p_two_sided": 0.2421,
+          "null_type": "MONTE_CARLO",
+          "null_assignments": 19999,
+          "effective_islands": 28,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1": {
+          "observed_score": 0.3206723662966017,
+          "null_mean": 0.3277410201183603,
+          "observed_minus_null_percentage_points": -0.7068653821758641,
+          "null_q025": 0.3146730703222233,
+          "null_q975": 0.3397484046729194,
+          "null_p_high": 0.8222222222222222,
+          "null_p_two_sided": 0.3522222222222222,
+          "null_type": "EXACT",
+          "null_assignments": 900,
+          "effective_islands": 16,
+          "independent_exchangeable_blocks": 4,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1_area_half": {
+          "observed_score": 0.3206723662966017,
+          "null_mean": 0.3291077177114841,
+          "observed_minus_null_percentage_points": -0.8435351414882442,
+          "null_q025": 0.31658431598213627,
+          "null_q975": 0.34063298574850337,
+          "null_p_high": 0.8888888888888888,
+          "null_p_two_sided": 0.24444444444444444,
+          "null_type": "EXACT",
+          "null_assignments": 180,
+          "effective_islands": 13,
+          "independent_exchangeable_blocks": 4,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        }
+      },
+      "min_added_cells": 5,
+      "area_median_km2": 5505.798456228092,
+      "region_sample": {
+        "4": 4,
+        "2": 5,
+        "1": 3,
+        "3": 1,
+        "8": 5,
+        "9": 2,
+        "7": 3,
+        "5": 3,
+        "6": 2
+      }
+    },
+    "strict_and_ge_50_years": {
+      "included": 23,
+      "number_by_empire": {
+        "Great_Britain": 15,
+        "Portugal": 3,
+        "Spain": 5
+      },
+      "total_resource_cells": 1130,
+      "actual_empire_supported_butterfly_region_cells": 500.0,
+      "mean_own_metropole_support_share": 0.32020599945725225,
+      "mean_other_metropoles_support_share": 0.36271577200264404,
+      "mean_raw_actual_minus_other_pp": -4.250977254539176,
+      "own_exposure_years_vs_actual_host_source_spearman": -0.10877139433024383,
+      "permutation": {
+        "global": {
+          "observed_score": 0.32020599945725225,
+          "null_mean": 0.33366865469215795,
+          "observed_minus_null_percentage_points": -1.3462655234905696,
+          "null_q025": 0.3183951273471541,
+          "null_q975": 0.34970230159292975,
+          "null_p_high": 0.95595,
+          "null_p_two_sided": 0.097,
+          "null_type": "MONTE_CARLO",
+          "null_assignments": 19999,
+          "effective_islands": 23,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1": {
+          "observed_score": 0.32020599945725225,
+          "null_mean": 0.3304388164308572,
+          "observed_minus_null_percentage_points": -1.0232816973604952,
+          "null_q025": 0.31729861360263034,
+          "null_q975": 0.34011639596611426,
+          "null_p_high": 0.875,
+          "null_p_two_sided": 0.1388888888888889,
+          "null_type": "EXACT",
+          "null_assignments": 72,
+          "effective_islands": 11,
+          "independent_exchangeable_blocks": 3,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1_area_half": {
+          "observed_score": 0.32020599945725225,
+          "null_mean": 0.3319329521473527,
+          "observed_minus_null_percentage_points": -1.1726952690100434,
+          "null_q025": 0.32020599945725225,
+          "null_q975": 0.34017725747361094,
+          "null_p_high": 1.0,
+          "null_p_two_sided": 0.041666666666666664,
+          "null_type": "EXACT",
+          "null_assignments": 24,
+          "effective_islands": 9,
+          "independent_exchangeable_blocks": 3,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        }
+      },
+      "min_added_cells": 5,
+      "area_median_km2": 9082.832032349022,
+      "region_sample": {
+        "4": 4,
+        "2": 4,
+        "3": 1,
+        "8": 4,
+        "7": 3,
+        "5": 3,
+        "1": 2,
+        "9": 1,
+        "6": 1
+      }
+    },
+    "strict_and_ge_100_years": {
+      "included": 17,
+      "number_by_empire": {
+        "Great_Britain": 9,
+        "Portugal": 3,
+        "Spain": 5
+      },
+      "total_resource_cells": 744,
+      "actual_empire_supported_butterfly_region_cells": 326.0,
+      "mean_own_metropole_support_share": 0.3365168487714036,
+      "mean_other_metropoles_support_share": 0.3547183244366265,
+      "mean_raw_actual_minus_other_pp": -1.8201475665222913,
+      "own_exposure_years_vs_actual_host_source_spearman": -0.25691500343145274,
+      "permutation": {
+        "global": {
+          "observed_score": 0.3365168487714036,
+          "null_mean": 0.34741213345615923,
+          "observed_minus_null_percentage_points": -1.0895284684755646,
+          "null_q025": 0.3303186077807376,
+          "null_q975": 0.3642007686805625,
+          "null_p_high": 0.8943,
+          "null_p_two_sided": 0.21135,
+          "null_type": "MONTE_CARLO",
+          "null_assignments": 19999,
+          "effective_islands": 17,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1": {
+          "observed_score": 0.3365168487714036,
+          "null_mean": 0.3364849284476082,
+          "observed_minus_null_percentage_points": 0.0031920323795398,
+          "null_q025": 0.33211246943619105,
+          "null_q975": 0.3394040560725706,
+          "null_p_high": 0.5,
+          "null_p_two_sided": 1.0,
+          "null_type": "EXACT",
+          "null_assignments": 18,
+          "effective_islands": 7,
+          "independent_exchangeable_blocks": 2,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1_area_half": {
+          "observed_score": 0.3365168487714036,
+          "null_status": "NO_EXCHANGEABLE_EMPIRE_LABELS",
+          "effective_islands": 0,
+          "independent_exchangeable_blocks": 0
+        }
+      },
+      "min_added_cells": 5,
+      "area_median_km2": 4734.706940012204,
+      "region_sample": {
+        "4": 3,
+        "2": 3,
+        "8": 4,
+        "7": 3,
+        "1": 2,
+        "9": 1,
+        "5": 1
+      }
+    },
+    "strict_and_ge_50_years_min25_cells": {
+      "included": 18,
+      "number_by_empire": {
+        "Great_Britain": 13,
+        "Portugal": 2,
+        "Spain": 3
+      },
+      "total_resource_cells": 1047,
+      "actual_empire_supported_butterfly_region_cells": 496.0,
+      "mean_own_metropole_support_share": 0.3964536977191874,
+      "mean_other_metropoles_support_share": 0.4311030033560355,
+      "mean_raw_actual_minus_other_pp": -3.464930563684807,
+      "own_exposure_years_vs_actual_host_source_spearman": -0.10531751532562267,
+      "permutation": {
+        "global": {
+          "observed_score": 0.3964536977191874,
+          "null_mean": 0.400629125415472,
+          "observed_minus_null_percentage_points": -0.4175427696284595,
+          "null_q025": 0.387455574386979,
+          "null_q975": 0.4122965710420278,
+          "null_p_high": 0.74305,
+          "null_p_two_sided": 0.5284,
+          "null_type": "MONTE_CARLO",
+          "null_assignments": 19999,
+          "effective_islands": 18,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1": {
+          "observed_score": 0.3964536977191874,
+          "null_mean": 0.396423550746714,
+          "observed_minus_null_percentage_points": 0.003014697247344378,
+          "null_q025": 0.39229400612482,
+          "null_q975": 0.3991805046147341,
+          "null_p_high": 0.5,
+          "null_p_two_sided": 1.0,
+          "null_type": "EXACT",
+          "null_assignments": 18,
+          "effective_islands": 7,
+          "independent_exchangeable_blocks": 2,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1_area_half": {
+          "observed_score": 0.3964536977191874,
+          "null_mean": 0.3967149307390411,
+          "observed_minus_null_percentage_points": -0.026123301985370162,
+          "null_q025": 0.3964536977191874,
+          "null_q975": 0.3964536977191874,
+          "null_p_high": 1.0,
+          "null_p_two_sided": 1.0,
+          "null_type": "EXACT",
+          "null_assignments": 2,
+          "effective_islands": 2,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        }
+      },
+      "min_added_cells": 26,
+      "area_median_km2": 7062.942816293596,
+      "region_sample": {
+        "4": 4,
+        "2": 2,
+        "8": 4,
+        "7": 3,
+        "5": 3,
+        "9": 1,
+        "6": 1
+      }
+    },
+    "strict_and_ge_50_years_non_european": {
+      "included": 21,
+      "number_by_empire": {
+        "Great_Britain": 15,
+        "Portugal": 3,
+        "Spain": 3
+      },
+      "total_resource_cells": 1090,
+      "actual_empire_supported_butterfly_region_cells": 498.0,
+      "mean_own_metropole_support_share": 0.3461666615370813,
+      "mean_other_metropoles_support_share": 0.3972601312409911,
+      "mean_raw_actual_minus_other_pp": -5.10934697039098,
+      "own_exposure_years_vs_actual_host_source_spearman": -0.06929088494719858,
+      "permutation": {
+        "global": {
+          "observed_score": 0.34616666153708125,
+          "null_mean": 0.3568649893055106,
+          "observed_minus_null_percentage_points": -1.0698327768429328,
+          "null_q025": 0.34164728942479183,
+          "null_q975": 0.37290378916567335,
+          "null_p_high": 0.9076,
+          "null_p_two_sided": 0.19805,
+          "null_type": "MONTE_CARLO",
+          "null_assignments": 19999,
+          "effective_islands": 21,
+          "independent_exchangeable_blocks": 1,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1": {
+          "observed_score": 0.34616666153708125,
+          "null_mean": 0.3573740325081724,
+          "observed_minus_null_percentage_points": -1.1207370971091146,
+          "null_q025": 0.342982381791543,
+          "null_q975": 0.3679732862848825,
+          "null_p_high": 0.875,
+          "null_p_two_sided": 0.1388888888888889,
+          "null_type": "EXACT",
+          "null_assignments": 72,
+          "effective_islands": 11,
+          "independent_exchangeable_blocks": 3,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        },
+        "level1_area_half": {
+          "observed_score": 0.34616666153708125,
+          "null_mean": 0.35762378678731,
+          "observed_minus_null_percentage_points": -1.145712525022874,
+          "null_q025": 0.34616666153708125,
+          "null_q975": 0.36570268107310083,
+          "null_p_high": 1.0,
+          "null_p_two_sided": 0.125,
+          "null_type": "EXACT",
+          "null_assignments": 8,
+          "effective_islands": 6,
+          "independent_exchangeable_blocks": 2,
+          "assumptions": "Empire label permutations preserve exactly the observed source-metropole prevalence matrix and the label frequency within each stratum; p values are descriptive and do not correct nonrandom historic locations or host data bias."
+        }
+      },
+      "min_added_cells": 5,
+      "area_median_km2": 5043.053600238169,
+      "region_sample": {
+        "4": 4,
+        "2": 4,
+        "3": 1,
+        "8": 4,
+        "7": 3,
+        "5": 3,
+        "9": 1,
+        "6": 1
+      }
+    }
+  },
+  "interpretation_guardrails": [
+    "The source-native indicator measures plants native in an empire's European metropole; it does not identify butterfly native ranges or import routes.",
+    "The regression of plantation history and plant source match is descriptive. No conditional independent effect of colonization is identified.",
+    "The published Lenzner mapping does not cover all colonial empires, including French, and may flag brief occupations; min50years sensitivity matters.",
+    "Small island and empire cohort, geographic overlap restrictions, and host-taxonomy resolution must be retained in the manuscript.",
+    "Within Level1 stratum permutation retains historical empire frequency but cannot remove unobserved climate/human history confounding.",
+    "Record co-occurrence does not prove larvae actually utilized a plant, species established, or port introduction."
+  ]
+}

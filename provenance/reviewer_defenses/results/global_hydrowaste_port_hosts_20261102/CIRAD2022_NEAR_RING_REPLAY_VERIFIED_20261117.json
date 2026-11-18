@@ -1,0 +1,110 @@
+{
+  "schema": "chocho_CIRAD2022_WPI1596_source_locked_ring_replay_20261117",
+  "action_run": 44062213618,
+  "status": "SOURCE_CSV_REPLAY_SUCCESS_NOT_CAUSAL",
+  "source_SHA256": {
+    "jones": "9e3d35516927741f1f176a029b9d41bb03c70c850c066d15e5fe9730c2036482",
+    "worldcover": "1cb891076e13aa9d93bced1b40e6471d447771af2b8b028f134ed052d13bf071",
+    "cirad": "7d934dec9bf3d62ceb1b7583ca5d84a54c57b0440147913ff27d9895026c3c0c"
+  },
+  "input_port_count": 1596,
+  "models": [
+    {
+      "scope": "0-10km_vs_10-25km_main_ratio",
+      "n": 1013,
+      "countries": 40,
+      "coef": "crop_delta",
+      "b": 0.08616903243891005,
+      "ci": [
+        0.023750734350247917,
+        0.1485873305275722
+      ],
+      "response": "smoothed indexed alien/native log ratio"
+    },
+    {
+      "scope": "main_fractional",
+      "n": 843,
+      "countries": 36,
+      "coef": "crop_delta",
+      "b": 0.10144437752578472,
+      "ci": [
+        0.037699116076534187,
+        0.16518963897503525
+      ],
+      "response": "observed alien share; 0/0 undefined"
+    },
+    {
+      "scope": "coverage50_ratio",
+      "n": 654,
+      "countries": 31,
+      "coef": "crop_delta",
+      "b": 0.08143064805898861,
+      "ci": [
+        -0.0016306804329212776,
+        0.1644919765508985
+      ]
+    },
+    {
+      "scope": "coverage50_fractional",
+      "n": 561,
+      "countries": 27,
+      "coef": "crop_delta",
+      "b": 0.04637495286848412,
+      "ci": [
+        -0.03201403386171175,
+        0.12476393959867998
+      ]
+    },
+    {
+      "scope": "nonzero5_fractional",
+      "n": 607,
+      "countries": 29,
+      "coef": "crop_intensity_delta",
+      "b": 0.09644377543385958,
+      "ci": [
+        -0.0405218498861641,
+        0.23340940075388328
+      ]
+    },
+    {
+      "scope": "nonzero5_fractional",
+      "n": 607,
+      "countries": 29,
+      "coef": "human_intensity_delta",
+      "b": 0.054034370978795036,
+      "ci": [
+        0.006446905557971595,
+        0.10162183639961847
+      ]
+    },
+    {
+      "scope": "main_alien_richness",
+      "n": 1013,
+      "countries": 40,
+      "coef": "crop_delta",
+      "b": -0.015826215356023812,
+      "ci": [
+        -0.09464871679096827,
+        0.06299628607892065
+      ]
+    },
+    {
+      "scope": "main_native_richness",
+      "n": 1013,
+      "countries": 40,
+      "coef": "crop_delta",
+      "b": -0.08968879836411271,
+      "ci": [
+        -0.18494948378927573,
+        0.005571887061050301
+      ]
+    }
+  ],
+  "caveats": [
+    "Modeled agricultural N and human excretion, not measured port effluent or soil N",
+    "Response is indexed potential larval-host taxon records; no plant abundance or butterfly persistence",
+    "Sample eligibility re-screened after excluding 0/0 observations for fractional models",
+    "Repeated exploratory comparisons; no confirmatory N mechanism",
+    "No independent high-valid-area global crop-N fraction signature"
+  ]
+}

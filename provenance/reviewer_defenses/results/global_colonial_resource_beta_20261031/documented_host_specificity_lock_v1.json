@@ -1,0 +1,46 @@
+{
+  "schema": "chocho_same_284_GloNAF_documented_HOSTS_lower_bound_lock_v1",
+  "status": "FROZEN_BEFORE_DOCUMENTED_HOST_SPECIFICITY_OUTCOME",
+  "date": "2026-10-31",
+  "source": {
+    "host": "globalbioticinteractions/HOSTS commit 808e0b869f9ec1adf8efff87cf6a395adda103e0",
+    "panel": "data/frozen/figure_sources/anthropogenic_species_metrics.csv 239 fixed butterfly species",
+    "alien_flora": "Lenzner 2022 original GloNAF (doi 10.5281/zenodo.6640264)",
+    "geometry": "TDWG 369 source commit 52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "match": "casefold genus+species exact BINOMIAL between raw HOSTS focal239 and GloNAF. Nonmatched names are UNKNOWN documented status, not confirmed nonhosts.",
+  "geographic_support": "284 region matched GloNAF/main butterfly beta, same primary 5%/50% source-polygon mapping; exclude pair if both regions have no matched hosts",
+  "tested_associations": [
+    "documented host alien Jaccard vs potential butterfly resource beta change, conditioned on geography, native flora/resource, general WCVP flora delta, colonial duration, and non-documented GloNAF plant Jaccard",
+    "non-documented plant Jaccard vs butterfly resource change, after documented host and identical controls",
+    "compare observed documented-host partial correlation with 199 independently drawn SAME-SIZE GloNAF non-documented taxon subsets matched by regional geographic prevalence bins"
+  ],
+  "geographic_prevalence_bins": [
+    1,
+    2,
+    5,
+    10,
+    25,
+    50,
+    100,
+    200,
+    285
+  ],
+  "null": {
+    "draws": 199,
+    "seed": 31031,
+    "matching": "same source taxon coverage frequency bin on observed 284 regions, sample distinct fake hosts from GloNAF taxa not documented as focal hosts",
+    "unit": "source species identities, not independent geography nodes"
+  },
+  "thresholds": {
+    "minimum_matched_documented_hosts": 20,
+    "minimum_eligible_pairs": 20000
+  },
+  "limits": [
+    "Raw HOSTS names and GloNAF names may be synonyms; exact-name coverage is a lower bound on known host overlap.",
+    "No record in HOSTS cannot mean confirmed biological nonhost.",
+    "Fixed HOSTS interactions are knowledge accumulated after colonial periods.",
+    "Source WCVP and GloNAF native/current data are not historically dated.",
+    "Exploratory matched geography/prevalence null still lacks plant phylogeny, geographic autocorrelation and observer effort."
+  ]
+}

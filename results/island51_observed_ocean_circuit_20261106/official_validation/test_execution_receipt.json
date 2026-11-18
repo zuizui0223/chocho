@@ -1,0 +1,20 @@
+{
+  "recorded_at_utc": "2026-11-06T08:50:49.518878+00:00",
+  "portable_boundary_tests": {
+    "command": "JULIA_BINARY=<Julia1.13.3> CIRCUITSCAPE_PROJECT=<pinned-v6.1.0-checkout> python scripts/verification/test_validate_island51_observed_ocean_circuits.py",
+    "tests_run": 2,
+    "passed": 2,
+    "exit_code": 0,
+    "runtime": "Real Julia1.13.3 / Circuitscape6.1.0, not mocked",
+    "elapsed_seconds": 36.017
+  },
+  "repository_suite": {
+    "command": "python -m pytest -q",
+    "passed": 183,
+    "skipped": 1,
+    "exit_code": 0,
+    "skip": "tests/test_build_island51_NOAA_R1_10m_monthly_wind_1degree.py: optional xarray not installed",
+    "warning": "Existing anyio pytest CallSpec2 deprecation"
+  },
+  "scientific_sources_or_primary_results_changed": false
+}

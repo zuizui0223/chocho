@@ -1,0 +1,1 @@
+Five fixed pilot tiles completed after retrying one RasterioIOError. All five Parquet SHA256 hashes, row counts, finite-value counts and broad elevation bounds verified; 194 finite values of 195 planned land points. Missing values remain missing. Full 1,902-tile acquisition launched; no completed route feature or model result claimed.

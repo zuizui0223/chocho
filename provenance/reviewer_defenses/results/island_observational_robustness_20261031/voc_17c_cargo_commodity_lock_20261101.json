@@ -1,0 +1,109 @@
+{
+  "schema": "chocho_17c_VOC_archived_cargo_commodity_category_lock_v1",
+  "date": "2026-11-01",
+  "status": "VOC_COMMODITY_KEYWORD_CLASSIFICATION_LOCKED_BEFORE_CARGO_JOIN",
+  "source_cargo": "10.34894/5HGTCD file 569978, 7,737 rows, SHA1 d7cc3aff064fb63f58b8b549b1ca9808cb4b76d1",
+  "source_voyages": "10.34894/5HGTCD file 569977, 57,669 rows, SHA1 eed2479019a8570e392f37f3d781d5b0c67448b1",
+  "original_pair_source": "frozen 51-island VOC precise-city named 9 historically observed positive links, not source-absent 1,266 pairs",
+  "join_id": "REISN,N,6,0 exact shared cargo×voyage key; if source REISN maps multiple distinct geographic leg pairs mark AMBIGUOUS and do not count a pair-specific cargo",
+  "source_cargo_text_column": "LADING,C,254",
+  "source_cargo_aux_column": "FACTUUR,C,97",
+  "normalized_search": "casefolded Unicode text, predeclared substring matching (record presence at most once per category per cargo row), report unmatched and overlaps; no translation to Latin species unless verified",
+  "categories": {
+    "pepper": [
+      "peper",
+      "pepper",
+      "piper"
+    ],
+    "clove": [
+      "kruidnagel",
+      "nagelen",
+      "clove",
+      "clou",
+      "kruydnagel"
+    ],
+    "nutmeg_mace": [
+      "nootmuska",
+      "muskaat",
+      "foelie",
+      "mace",
+      "nutmeg"
+    ],
+    "cinnamon": [
+      "kaneel",
+      "caneel",
+      "cassia",
+      "cinnamon"
+    ],
+    "rice": [
+      "rijst",
+      "rysst",
+      "rice"
+    ],
+    "sugar": [
+      "suiker",
+      "suyker",
+      "sugar"
+    ],
+    "cotton": [
+      "katoen",
+      "catoen",
+      "cotton"
+    ],
+    "tea": [
+      "thee",
+      "tea"
+    ],
+    "coffee": [
+      "koffie",
+      "koffy",
+      "coffy",
+      "coffee"
+    ],
+    "tobacco": [
+      "tabak",
+      "tobacco"
+    ],
+    "indigo": [
+      "indigo"
+    ],
+    "sandalwood": [
+      "sandelhout",
+      "sandalwood"
+    ],
+    "ginger": [
+      "gember",
+      "ginger"
+    ],
+    "grain": [
+      "tarwe",
+      "wheat",
+      "graan",
+      "corn"
+    ],
+    "generic_seeds_plants": [
+      "zaad",
+      "zaaden",
+      "zaden",
+      "zaet",
+      "seeds",
+      "plant",
+      "planten"
+    ]
+  },
+  "classification_downgrade": [
+    "Keyword mention in historical Dutch free text is a tentative commodity category, NOT a validated modern plant species or viable seed.",
+    "A voyage-linked cargo reference may describe an entire ship manifest instead of cargo loaded/unloaded at the particular two harbors.",
+    "Do NOT equate pepper, clove, nutmeg, rice, cotton, sandalwood, tobacco etc with species-level larval host records.",
+    "Only original vessel/time/port route and cargo source IDs were joined, never a biological invasion endpoint.",
+    "Some old spelling and OCR may create false positives/negatives; report categories with nonzero source rows but keep exploratory",
+    "Cargo table is a partial historical record set; no cargo mention is not evidence that the ship carried no plants."
+  ],
+  "main_outputs": [
+    "original source cargo SHA-1 and 7737 rows",
+    "historically verified 1193 city-to-city leg keys",
+    "cargo/voyage ID exact overlap and ambiguous IDs",
+    "shared cargo keys specific to 9 observed island pairs",
+    "keyword category counts by 9 historic routes with no ship/voyage row-level detail"
+  ]
+}

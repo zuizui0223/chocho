@@ -1,0 +1,212 @@
+{
+  "schema": "chocho_51island_4empire_port_source_observation_association_v1",
+  "status": "RETROSPECTIVE_ISLAND_PORT_BOTANICAL_HISTORY_ASSOCIATION_NOT_MEDIATION_OR_SHIP_MOVEMENT",
+  "source_sha256": {
+    "island_port_colonial_portmean": "55381b042b87f5ec65a52b3650e7b82c907a330d43772017ea70323333aaaeea",
+    "frozen_island_pairs": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+    "frozen_island_nodes": "bbcfaae2e10d13da0380a7de6059c0ee8f7df81e02cca7cbd255932eca8f53e8",
+    "2010_UNCTAD_LSBCI_country_pair": "587cd6507ea182847138bc63a2fac001911843e3ee01df7c130df8dfddbb5283",
+    "pre_response_lock": "4ff2ded04f5ca972373cdaa28162a3dec516f22ce17b49f97c1d6469f9eddc23"
+  },
+  "max_WPI_port_distance_km": 2,
+  "ridge_lambda": 1.0,
+  "island_source": {
+    "eligible_history_islands": 40,
+    "source_port_total_on_eligible_islands": 152,
+    "source_matched_port_total": 134,
+    "historic_diversity": {
+      "": 701,
+      "GB": 21,
+      "PRT;NL": 21,
+      "NL": 7,
+      "PRT": 15,
+      "ESP": 15
+    },
+    "shared_focal_empire_pairs": 79,
+    "source_2010_country_shipping_pairs": 748,
+    "source_same_current_country_pairs": 32
+  },
+  "island_pair_count": 780,
+  "response": "2011-2022 newly indexed butterfly assemblage Jaccard across 2001-2024 pooled port-indexed possible alien host plant sources",
+  "historical_contact": "sum min of four Lenzner area-weighted empire years across matched 2019-WPI port geographies; binary if >=25 years both in any empire",
+  "pair_rank_associations": {
+    "host_x_new_butterfly_raw": 0.2830777613704727,
+    "host_x_new_butterfly_after_prior_distance": 0.19411306107061507,
+    "host_x_new_butterfly_after_history_prior_distance": 0.19738069955238766,
+    "history_x_hosts_raw": -0.03151828834330645,
+    "history_x_hosts_after_distance_prior": -0.006124601210695458,
+    "history_x_hosts_after_distance_prior_catalogue": 0.04296487327846674,
+    "history_x_new_butterfly_after_distance_prior": 0.08229145813199677
+  },
+  "models": {
+    "B0_geography_prior_richness_ports": {
+      "island_equal_MSE": 0.004978132609543511,
+      "island_equal_MAE": 0.046762216218476316,
+      "island_node_folds": 40
+    },
+    "B1_plus_shared_hosts": {
+      "island_equal_MSE": 0.004929782095508435,
+      "island_equal_MAE": 0.04695890484181213,
+      "island_node_folds": 40
+    },
+    "H0_plus_colonial_history": {
+      "island_equal_MSE": 0.005049636470621197,
+      "island_equal_MAE": 0.04719034775043353,
+      "island_node_folds": 40
+    },
+    "H1_history_plus_hosts": {
+      "island_equal_MSE": 0.004995533260746003,
+      "island_equal_MAE": 0.04739589539944644,
+      "island_node_folds": 40
+    },
+    "H2_history_hosts_interaction": {
+      "island_equal_MSE": 0.004936204103269644,
+      "island_equal_MAE": 0.04699786914375963,
+      "island_node_folds": 40
+    }
+  },
+  "model_comparisons": {
+    "host_addition_without_colonial_context": {
+      "island_equal_mse_reduction_percent": 0.9712580565327632,
+      "mean_mse_reduction": 4.835051403507603e-05,
+      "median_mse_reduction": 0.0001489806838153385,
+      "island_nodes_improved": 22,
+      "island_nodes_worsened": 18,
+      "n_shared_node_folds": 40,
+      "diff_range": [
+        -0.0039681539174097466,
+        0.0019241655662030777
+      ]
+    },
+    "colonial_context_without_host": {
+      "island_equal_mse_reduction_percent": -1.4363591066378525,
+      "mean_mse_reduction": -7.150386107768678e-05,
+      "median_mse_reduction": -1.4494746037349831e-05,
+      "island_nodes_improved": 14,
+      "island_nodes_worsened": 26,
+      "n_shared_node_folds": 40,
+      "diff_range": [
+        -0.0014965270806937374,
+        3.115543327135168e-05
+      ]
+    },
+    "host_addition_given_colonial_context": {
+      "island_equal_mse_reduction_percent": 1.0714278184175672,
+      "mean_mse_reduction": 5.410320987519454e-05,
+      "median_mse_reduction": 0.0001254780105253404,
+      "island_nodes_improved": 23,
+      "island_nodes_worsened": 17,
+      "n_shared_node_folds": 40,
+      "diff_range": [
+        -0.003972478179863998,
+        0.001954468793384869
+      ]
+    },
+    "colonial_context_given_host": {
+      "island_equal_mse_reduction_percent": -1.3337539867629178,
+      "mean_mse_reduction": -6.575116523756827e-05,
+      "median_mse_reduction": -1.4294517554991034e-05,
+      "island_nodes_improved": 16,
+      "island_nodes_worsened": 24,
+      "n_shared_node_folds": 40,
+      "diff_range": [
+        -0.0012859444947906332,
+        2.872657921165235e-05
+      ]
+    },
+    "host_by_colonial_history_interaction_increment": {
+      "island_equal_mse_reduction_percent": 1.1876441288572126,
+      "mean_mse_reduction": 5.932915747635917e-05,
+      "median_mse_reduction": -1.288259150978785e-07,
+      "island_nodes_improved": 20,
+      "island_nodes_worsened": 20,
+      "n_shared_node_folds": 40,
+      "diff_range": [
+        -0.0008128172343786783,
+        0.0011849446491434268
+      ]
+    }
+  },
+  "country_shipping_sensitivity": {
+    "status": "COUNTRY_PAIR_LSBCI_ASSOCIATION_NOT_PORT_TO_PORT_OBSERVED_VOYAGES",
+    "scored_country_bilateral_pairs": 748,
+    "island_nodes": 40,
+    "associations": {
+      "host_x_new_butterfly_adjust_history_dist_prior_and_shipping": 0.18420907745050313,
+      "history_x_hosts_adjust_distance_prior_and_country_shipping": -0.03526708219736779,
+      "shipping_x_hosts_adjust_distance_prior_and_colonial": 0.06995935857006576
+    },
+    "models": {
+      "S0_2010_country_shipping": {
+        "island_equal_MSE": 0.004065412169259748,
+        "island_equal_MAE": 0.04303807943457948,
+        "island_node_folds": 40
+      },
+      "S1_plus_colonial_history": {
+        "island_equal_MSE": 0.004070038982217814,
+        "island_equal_MAE": 0.04306278636221171,
+        "island_node_folds": 40
+      },
+      "S2_plus_host_composition": {
+        "island_equal_MSE": 0.004008828213026214,
+        "island_equal_MAE": 0.042986737884185576,
+        "island_node_folds": 40
+      },
+      "S3_host_by_colonial_history": {
+        "island_equal_MSE": 0.004018903776057178,
+        "island_equal_MAE": 0.04305097869300532,
+        "island_node_folds": 40
+      }
+    },
+    "comparisons": {
+      "historical_context_after_country_shipping": {
+        "island_equal_mse_reduction_percent": -0.1138091973318349,
+        "mean_mse_reduction": -4.626812958065257e-06,
+        "median_mse_reduction": 4.033038271485014e-05,
+        "island_nodes_improved": 23,
+        "island_nodes_worsened": 17,
+        "n_shared_node_folds": 40,
+        "diff_range": [
+          -0.0005111469141125405,
+          0.00017523360508405307
+        ]
+      },
+      "host_after_shipping_and_colonial_context": {
+        "island_equal_mse_reduction_percent": 1.5039356983810865,
+        "mean_mse_reduction": 6.121076919159995e-05,
+        "median_mse_reduction": -4.604152842779515e-06,
+        "island_nodes_improved": 20,
+        "island_nodes_worsened": 20,
+        "n_shared_node_folds": 40,
+        "diff_range": [
+          -0.001558957931508669,
+          0.0013316893168154355
+        ]
+      },
+      "history_host_interaction_after_country_shipping": {
+        "island_equal_mse_reduction_percent": -0.25133436743996024,
+        "mean_mse_reduction": -1.0075563030964097e-05,
+        "median_mse_reduction": -1.6856770258689285e-06,
+        "island_nodes_improved": 7,
+        "island_nodes_worsened": 33,
+        "n_shared_node_folds": 40,
+        "diff_range": [
+          -0.00010636954047998481,
+          4.774673633689552e-07
+        ]
+      }
+    }
+  },
+  "interpretation_limits": [
+    "Port source coordinates are current World Port Index geocodes. They do NOT identify operating colonial-era ports.",
+    "Only historical GB/ESP/PRT/NL domains in Lenzner, not France or other empires; zero four-empire exposure is not absence of colonial history.",
+    "Lenzner area-weighted region years are not actual port-to-port shipping edges or documented plant exchange dates.",
+    "Original 51-island positive host/butterfly correlation and other analyses were not discarded by selecting the history-geocoded island subset.",
+    "2011-2022 newly GBIF-indexed butterfly records are not documented arrival/establishment.",
+    "Port-indexed host presence 2001–2024 can postdate first butterfly records and reflects botanical reporting effort.",
+    "Catalogued host species richness and port count are not observation-effort-complete controls; general alien-plant composition unavailable on the exact same island/port unit.",
+    "Non-independent island pair observations and overlapping LOIO scores are not 51 statistically independent tests.",
+    "Contemporary country bilateral liner index is not a 2001 historical voyage or per-port route.",
+    "Potential host×shared history interaction is retrospective, exploratory and not proof of mediation."
+  ]
+}

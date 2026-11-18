@@ -1,0 +1,144 @@
+{
+  "schema": "chocho_endemic18_external_validity_no_overlap_missing_host_nonmonotonic_v1",
+  "date": "2026-11-18",
+  "source_scope": {
+    "independent_INBO_butterflies_all": 42,
+    "historic_extinct_excluded": "Pieris wollastoni",
+    "living_butterflies": 41,
+    "independently_origin_classified_endemic_extant_butterflies": 18,
+    "living_nonendemic_butterflies": 23,
+    "endemic_origin_sources": {
+      "Canary_BIOTA": 13,
+      "Madeira_Borges2008": 3,
+      "Azores_University2023": 2
+    },
+    "original_selection_sources": [
+      "data/frozen/s1_species_manifest.json",
+      "data/external/leptraits_consensus_v1.0.csv",
+      "data/frozen/figure_sources/s1_resource_descriptors.csv",
+      "data/frozen/figure_sources/anthropogenic_species_metrics.csv"
+    ],
+    "original_INBO_42_git_blob": "3c56054fa21e667eed422a67010059c8e198b1bc",
+    "independent_butterfly_foodplant_source": "provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/VERIFIED_INDEPENDENT8_HOST_GEOGRAPHY_AND_FIELD_GATES_20261118.json"
+  },
+  "original_selection": {
+    "original_source339": {
+      "endemic_n": 0,
+      "endemic_denominator": 18,
+      "nonendemic_n": 15,
+      "nonendemic_denominator": 23
+    },
+    "original_final239": {
+      "endemic_n": 0,
+      "endemic_denominator": 18,
+      "nonendemic_n": 13,
+      "nonendemic_denominator": 23
+    },
+    "endemic_raw_LepTraits_names_n": 10,
+    "endemic_raw_LepTraits_major_complete_n": 0,
+    "positivity_condition_for_endemic_transportability": false,
+    "inverse_propensity_transportability_from_original239_supported": false,
+    "caveat": "A descriptive selection contrast, not proof of a biological endemic-resource deficit, and phylogenetic clades are not independent trials."
+  },
+  "foodplant_source_selected_effect": {
+    "independently_classified_endemic_target_n": 18,
+    "exact_named_larval_host_plant_species_known_butterflies_n": 8,
+    "exact_foodplant_species_unknown_butterflies_n": 10,
+    "source_list_observed_positive_added_WGSRPD3_n": 4,
+    "source_list_observed_zero_added_WGSRPD3_n": 4,
+    "source_positive_names": [
+      "Euchloe grancanariensis",
+      "Euchloe hesperidum",
+      "Pararge xiphioides",
+      "Pieris cheiranthi"
+    ],
+    "source_zero_names": [
+      "Gonepteryx cleobule",
+      "Gonepteryx maderensis",
+      "Hipparchia azorina",
+      "Hipparchia miguelensis"
+    ],
+    "host_genus_known_species_unknown": [
+      "Cyclyrius webbianus",
+      "Euchloe eversi",
+      "Hipparchia maderensis",
+      "Pararge xiphia",
+      "Thymelicus christi"
+    ],
+    "host_genus_unknown": [
+      "Hipparchia bacchus",
+      "Hipparchia gomera",
+      "Hipparchia tamadabae",
+      "Hipparchia tilosi",
+      "Hipparchia wyssii"
+    ],
+    "strict_wild_larval_evidence_taxa_n": 3,
+    "source_lists_per_butterfly_exhaustive": false
+  },
+  "partial_identification": {
+    "estimand": "Indicator for positive WCVP native-to-contemporary additional botanical WGSRPD3 regions across the butterfly's COMPLETE true host-plant species list, not observed butterfly establishment.",
+    "computational_formula": "For a butterfly's host list, let N = union host native WGSRPD3 units; C = union host native+introduced WGSRPD3 units; A = C minus N. The size of C is monotone when host list grows; size of A is not.",
+    "if_8_known_host_lists_were_biologically_complete_only": {
+      "positive_n_min": 4,
+      "positive_n_max": 14,
+      "denominator": 18,
+      "fraction_min": 0.2222222222222222,
+      "fraction_max": 0.7777777777777778,
+      "confidence_interval": false,
+      "biological_point_estimate": false,
+      "assumption_supported_by_sources": false
+    },
+    "no_host_completeness_assumption": {
+      "mathematical_possible_positive_n_min": 0,
+      "mathematical_possible_positive_n_max": 18,
+      "denominator": 18,
+      "no_nontrivial_empirical_bound": true,
+      "source_4_positive_is_not_guaranteed_true_lower_bound": true,
+      "source_4_zero_is_not_guaranteed_true_zero": true
+    },
+    "hypothetical_counterexample": {
+      "existing_source_host_native": [
+        "AZO"
+      ],
+      "introduced": [],
+      "new_hypothetical_host_native": [
+        "MDR"
+      ],
+      "added_region_count_before": 1,
+      "added_region_count_after": 0,
+      "natural_history_claim": false,
+      "code_unit_test_passed": true
+    }
+  },
+  "source_to_island_grain": {
+    "selected_eight_butterflies_INBO_named_island_pairs_n": 22,
+    "direct_named_plant_larval_observation_pairs_n": 4,
+    "strict_wild_pairs_n": 3,
+    "garden_pairs_n": 1,
+    "other_pairs_unobserved_not_negative": 18,
+    "population_colonization_caused_by_alien_host_measured": false
+  },
+  "retained_original_positive_results": {
+    "global_known_HOSTS_butterflies_resource_expansion_percent": 54.9,
+    "sampled_island_butterflies_relative_resource_expansion_percent": 118.9,
+    "original_GEB_paper_changed": false
+  },
+  "verification": {
+    "github_repo": "zuizui0223/chocho",
+    "branch": "analysis/island-endemic-host-synonyms-20261118",
+    "draft_pr": "https://github.com/zuizui0223/chocho/pull/177",
+    "verified_run": "https://github.com/zuizui0223/chocho/actions/runs/44234108322",
+    "run_status": "success",
+    "artifact_id": 14396656745,
+    "artifact_sha256": "ac6d48d93d265938d0a2d21261b0ac5c04098898a7060c42686abfc65a4425b1",
+    "output_files": [
+      "extant41_independent_origin_vs_original_GEB_selection.csv",
+      "independent18_source_plants_possibilities_not_imputed.csv",
+      "nonidentification_transportability_result.json"
+    ],
+    "code": "scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py",
+    "source_replay_code": "scripts/audit_independent42_original339_LepTraits_selection_20261118.py",
+    "japanese_report": "provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/ENDEMIC18_TRANSPORTABILITY_NONIDENTIFICATION_20261118_JA.md"
+  },
+  "next_scientific_gate": "Resolve actual larval host plant species for 5 butterfly endemics with genus-only literature, then 5 Canary Hipparchia with only family/undefined plant identity, verify native/introduced plant status and co-occurrence at named islands, and evaluate larval performance separately."
+}

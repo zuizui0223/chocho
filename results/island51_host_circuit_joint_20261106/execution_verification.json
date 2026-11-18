@@ -1,0 +1,113 @@
+{
+  "schema": "chocho_island51_joint_execution_verification_v1",
+  "recorded_at_utc": "2026-11-06T12:30:57.303863+00:00",
+  "base_commit": "a32975a45d372d2521ec9968bf4e4999fb540f09",
+  "local_execution_status": "COMPLETE_AND_INDEPENDENTLY_REVIEWED",
+  "full_repository_test_command": "python -m pytest -q",
+  "full_repository_test_result": {
+    "exit_code": 0,
+    "passed": 216,
+    "skipped": 1,
+    "warnings": 1,
+    "elapsed_seconds": 2.79,
+    "skip_reason": "Optional xarray is absent for the inherited NOAA wind-builder test; this extension reuses frozen wind matrices.",
+    "warning_reason": "Installed anyio plugin uses pytest CallSpec2 alias deprecated for pytest 10."
+  },
+  "fresh_runner_reproduction_exit_code": 0,
+  "numeric_reproduction": [
+    {
+      "file": "heldout_predictions.csv.gz",
+      "committed_output_sha256": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+      "fresh_reproduction_sha256": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+      "byte_identical": true
+    },
+    {
+      "file": "model_fold_losses.csv",
+      "committed_output_sha256": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+      "fresh_reproduction_sha256": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+      "byte_identical": true
+    },
+    {
+      "file": "comparison_fold_losses.csv",
+      "committed_output_sha256": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+      "fresh_reproduction_sha256": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+      "byte_identical": true
+    },
+    {
+      "file": "model_summary.csv",
+      "committed_output_sha256": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+      "fresh_reproduction_sha256": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+      "byte_identical": true
+    },
+    {
+      "file": "comparison_summary.csv",
+      "committed_output_sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "fresh_reproduction_sha256": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "byte_identical": true
+    }
+  ],
+  "independent_saved_prediction_audit_exit_code": 0,
+  "fresh_audit_status": "PASS_SAVED_PREDICTIONS_AND_LOCKED_COMPARISONS_INDEPENDENTLY_RECONSTRUCTED",
+  "independent_reviews": {
+    "task1_specification": "PASS",
+    "task1_code_quality": "PASS",
+    "complete_branch_specification": "PASS",
+    "complete_branch_quality": "PASS",
+    "figure_metadata_correction": "PNG/SVG and renderer SHA256 added; regenerated receipt and independently verified each digest."
+  },
+  "figure_png_visually_inspected": true,
+  "all_parent_tracked_files_unchanged_before_staging": true,
+  "frozen_protocol_plan_and_lock_unchanged": true,
+  "scientific_results_selected_or_tuned_after_new_scores": false,
+  "implementation_and_review_decisions": [
+    "Preserved protocol and plan bytes; execution completion is recorded separately.",
+    "Reused specialised continuation agents with separate implementation and independent review ownership.",
+    "Retained the fixed five models; host richness, climate and detailed recording effort remain stated limitations rather than post-result model sweeps.",
+    "Continued through an independent fresh clone after the previous checkout lost its Git alternates; original files were not deleted or rewritten."
+  ],
+  "remote_delivery": "Continuation branch and draft PR target the PR127 branch; remote commit and CI links are reported by the delivery message rather than retroactively inserted into this pre-commit receipt.",
+  "anonymous_snapshot_followup": {
+    "recorded_at_utc": "2026-11-06T12:44:31.542183+00:00",
+    "failed_run": "https://github.com/zuizui0223/chocho/actions/runs/42218779444",
+    "failure": "All13 newly added auditor tests reached the anonymous snapshot without their verifier under the intentionally excluded root results/ directory.",
+    "cause": "The independent GEB snapshot copies tests/ and scripts/ but deliberately omits root results/ and data/exploratory/.",
+    "fix": "Two explicit EXCLUDE_RELATIVE entries align the joint-only test modules with the existing anonymous export scope. Both modules remain active in the full repository and dedicated joint CI.",
+    "changed_implementation": "scripts/build_anonymous_review_bundle.py",
+    "scientific_runner_sources_predictions_and_tests_unchanged": true,
+    "controlled_staging_regression": "Observed failure before the exclusions; pass afterward.",
+    "real_archive_build": {
+      "exit_code": 0,
+      "files": 832,
+      "sha256": "7be3b4f57661fdaa6effab36114774f030727619d4891c2b4a4540fe718f1ca4"
+    },
+    "root_fresh_full_suite": {
+      "passed": 216,
+      "skipped": 1,
+      "warnings": 1,
+      "elapsed_seconds": 3.25,
+      "exit_code": 0,
+      "skip_reason": "netCDF4 is absent for the inherited optional wind-data builder; frozen wind matrices are reused here."
+    },
+    "independent_scoped_specification_review": "PASS",
+    "independent_scoped_quality_review": "PASS",
+    "scope_of_initial_parent_invariance": "The earlier all-parent-tracked-files invariant records the original joint-analysis commit; this followup changes only the separate packaging builder plus completion documentation.",
+    "actual_anonymous_stage_suite": {
+      "passed": 122,
+      "skipped": 31,
+      "warnings": 1,
+      "elapsed_seconds": 2.02,
+      "exit_code": 0
+    },
+    "anonymous_scope_verification": {
+      "status": "PASS_ANONYMOUS_EXPORT_BOUNDARY_AND_FROZEN_SOURCES",
+      "archive_files": 832,
+      "joint_tests_excluded_from_archive_only": [
+        "tests/test_run_island51_host_circuit_joint.py",
+        "tests/test_verify_island51_joint_predictions.py"
+      ],
+      "root_results_and_exploratory_data_remain_excluded": true,
+      "full_repository_analysis_tests_remain_present": true,
+      "frozen_figure_source_hashes_verified": 4
+    }
+  }
+}

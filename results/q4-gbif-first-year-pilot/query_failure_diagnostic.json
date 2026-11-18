@@ -1,0 +1,17 @@
+{
+  "schema": "chocho_q4_gbif_first_year_query_failure_diagnostic_v0.1",
+  "source_artifact_run": 41396012274,
+  "source_artifact_id": 13119557622,
+  "pilot_pairs": 500,
+  "dated": 219,
+  "failures": {
+    "HTTP_400": 25,
+    "HTTP_429": 69
+  },
+  "examples": {
+    "HTTP_400": "HTTPError: HTTP Error 400: Bad Request",
+    "HTTP_429": "HTTPError: HTTP Error 429: Too Many Requests"
+  },
+  "not_absence": true,
+  "retry_should_preserve_original_500_pairs": true
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "chocho_LenznerGloNAF_vs_HOSTS_matchedWGSrpd3_lock_v1",
+  "status": "EXPLORATORY_METHOD_PRECOMMITTED_BEFORE_MATCHED_OUTCOMES",
+  "date": "2026-10-31",
+  "source": {
+    "glonaf_zenodo_doi": "10.5281/zenodo.6640264",
+    "original_zip_md5": "16f5585d2500676951a4b664bbf0ffde",
+    "official_tdwg_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "source_beta": "beta_baseline_v1.pairs.csv.gz source-locked PR118; 239 fixed butterflies, 369 level3 regions"
+  },
+  "geography": {
+    "primary_mask": "Lenzner crosswalk coverage>=0.8 and <=1.05, numeric climate, accepted region in butterfly beta",
+    "allowed_crosswalk_target_regions": "284 or fewer only if matched GloNAF alien flora zero",
+    "source_site_assign_primary": "source polygon intersects at least 50% of source polygon OR at least 5% of target polygon, after EPSG:6933 equal-area",
+    "source_site_assign_sensitivity": [
+      "1%",
+      "10%"
+    ],
+    "source_flora_union": "deduplicated set of source GloNAF recorded naturalized alien species on source regions passing polygon threshold"
+  },
+  "exposure": {
+    "empires": [
+      "GB",
+      "ESP",
+      "PRT",
+      "NL"
+    ],
+    "min_region_duration_years": 25,
+    "metric": "log1p(sum min(durationA,durationB) per empire if both >=25)",
+    "no_requirement_of_temporal_overlapping_colonial_rule": true
+  },
+  "endpoints": [
+    {
+      "name": "H1_plant_positive_control",
+      "outcome": "same WGSRPD3 GloNAF alien plant Jaccard",
+      "controls": "distance, same level1, temperature/aridity differences, native WCVP plant Jaccard, source native plant richness min/max"
+    },
+    {
+      "name": "H1_plant_strict",
+      "outcome": "same GloNAF alien plant Jaccard",
+      "controls": "above plus change in general WCVP plant similarity"
+    },
+    {
+      "name": "H2_consumer",
+      "outcome": "same-284 WGSRPD3 butterfly potential-resource Jaccard change",
+      "controls": "same plus native butterfly-resource Jaccard, general WCVP plant similarity change"
+    },
+    {
+      "name": "H3_plant_resource",
+      "outcome": "butterfly potential-resource Jaccard change",
+      "predictor": "GloNAF alien plant Jaccard",
+      "controls": "geography/climate + native flora/resource + general WCVP flora delta + colonial exposure"
+    }
+  ],
+  "null": {
+    "shuffles": 499,
+    "seed": 31031,
+    "shuffle": "whole 4 empire duration vectors per region within WGSRPD level1, stable joined support and responses",
+    "stat": "rank partial correlation; exploratory node permutation tail"
+  },
+  "caution": [
+    "Both plants and consumers reflect WCVP/HOSTS/GloNAF current catalogs, not dates of historical introduction",
+    "No direct island port shipping or true butterfly arrival",
+    "Region pairs share nodes; not iid",
+    "Positive GloNAF study is previously published, not original butterfly discovery",
+    "Same 284 WGSRPD3 region support crucial for cross-response comparison, but responses differ as level vs change"
+  ],
+  "posthoc_sensitivity_will_not_select_best_threshold": true
+}

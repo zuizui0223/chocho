@@ -1,0 +1,62 @@
+{
+  "schema": "chocho_17c_VOC_commodity_name_to_focal239_HOSTS_genus_screen_v1",
+  "date": "2026-11-01",
+  "status": "GENUS_MAPPING_LOCKED_BEFORE_HOSTS_COMPARISON",
+  "host_network_repository": "globalbioticinteractions/HOSTS",
+  "host_network_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+  "host_network_file": "resource.csv",
+  "butterfly_panel": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+  "expected_focal_butterfly_species": 239,
+  "cargo_receipt": "voc_17c_cargo_on_verified_island_routes_v1.json",
+  "genus_mapping": {
+    "pepper": [
+      "Piper"
+    ],
+    "clove": [
+      "Syzygium"
+    ],
+    "nutmeg_mace": [
+      "Myristica"
+    ],
+    "cinnamon": [
+      "Cinnamomum"
+    ],
+    "rice": [
+      "Oryza"
+    ],
+    "sugar": [
+      "Saccharum"
+    ],
+    "cotton": [
+      "Gossypium"
+    ],
+    "tea": [
+      "Camellia"
+    ],
+    "coffee": [
+      "Coffea"
+    ],
+    "tobacco": [
+      "Nicotiana"
+    ],
+    "indigo": [
+      "Indigofera"
+    ],
+    "sandalwood": [
+      "Santalum"
+    ],
+    "ginger": [
+      "Zingiber"
+    ],
+    "grain": [],
+    "generic_seeds_plants": []
+  },
+  "method": "For each fixed historic commodity keyword group, count exact matching Hostplant Genus in source-pinned original HOSTS and unique focal 239 butterfly names. Do not assign commodity to exact Latin species. Do not infer port presence or feasible propagule from names.",
+  "limits": [
+    "Positive HOSTS genus overlap is only a possible taxonomic overlap between a commodity genus and a larval-host genus in a modern database, not the species shipped on a particular original voyage.",
+    "Historic plant commodities can be processed or non-viable; no dispersal/plant establishment/actual butterfly feeding evidence.",
+    "Some genus names have changed or are synonyms; exact source spellings chosen to prevent aggressive false positive matching.",
+    "The 239 focal butterfly genus-level inventory is a globally pooled host list, not an island and historical period-specific larval record.",
+    "A positive category on a historical pair does not imply that any focal butterfly or host species was transported during that voyage."
+  ]
+}

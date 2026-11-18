@@ -1,0 +1,99 @@
+{
+  "schema": "chocho_WCVP126_native_alien_exact_species_geography_GSHHG2020_AIS_crossed_evidence_20261117_v1",
+  "status": "SOURCE_VERIFIED_WHOLE_FLORA_GEOGRAPHY_AND_PREDICTION_WITHOUT_BIOLOGICAL_TRANSPORT_CAUSALITY",
+  "original_WCVP_accepted_species_source_R_CI": 44010011288,
+  "original_strict_TDWG3_and_WPI2020_AIS_CI": 44010307551,
+  "original_GSHHG_water_graph_126_island_boundary_CI": 44010673580,
+  "original_island_held_out_crossed_geometry_port_prediction_CI": 44011154673,
+  "original_WCVP_accepted_species": 360064,
+  "original_126_island_native_species_region_records": 184997,
+  "original_126_island_alien_species_region_records": 39024,
+  "original_126_island_species_region_total": 224021,
+  "total_unordered_strict_island_pairs": 7875,
+  "median_native_Jaccard": 0.004487,
+  "median_alien_Jaccard": 0.04603,
+  "original_WPI2019_strict_ports_in_126_islands": 546,
+  "original_AIS2020_verified_126_regions": 10,
+  "original_2020_actual_AIS_unordered_island_pair_sources": 7,
+  "original_AIS2020_both_verified_regions_unordered_pairs": 45,
+  "original_GSHHG126_verified_model_coastal_islands": 104,
+  "original_GSHHG126_eligible_geometry_island_pairs": 5356,
+  "original_exact_common_WCVP_native_alien_and_GSHHG_pair_sample": 5355,
+  "relative_MSE_positive_is_improvement": {
+    "native": {
+      "G_vs_B_pct": 2.234321123027717,
+      "P_vs_B_pct": -0.0770954857099129,
+      "GP_vs_B_pct": 2.1544342493922746,
+      "G_added_after_P_pct": 2.2298106517498097,
+      "P_added_after_G_pct": -0.08171259541497353
+    },
+    "alien": {
+      "G_vs_B_pct": 1.7750986997451879,
+      "P_vs_B_pct": 0.04286982645042896,
+      "GP_vs_B_pct": 1.9361996257792211,
+      "G_added_after_P_pct": 1.8941418146374522,
+      "P_added_after_G_pct": 0.16401230635150113
+    }
+  },
+  "descriptive_island_bootstrap95": {
+    "native": {
+      "G_vs_B_pct": [
+        1.1176046058927311,
+        3.3791301106338163
+      ],
+      "P_vs_B_pct": [
+        -0.15938343645059624,
+        -0.006889074189416381
+      ],
+      "GP_vs_B_pct": [
+        1.0244515903817866,
+        3.305523217326889
+      ],
+      "G_added_after_P_pct": [
+        1.0881034349206467,
+        3.3812114213673654
+      ],
+      "P_added_after_G_pct": [
+        -0.11713124602705335,
+        -0.05276527068960762
+      ]
+    },
+    "alien": {
+      "G_vs_B_pct": [
+        0.6194896787374606,
+        2.936100379898245
+      ],
+      "P_vs_B_pct": [
+        -0.38012976914072577,
+        0.44609359495510753
+      ],
+      "GP_vs_B_pct": [
+        0.6478663404636434,
+        3.250578701579743
+      ],
+      "G_added_after_P_pct": [
+        0.6787717323726066,
+        3.1341800879147157
+      ],
+      "P_added_after_G_pct": [
+        -0.33880049785173566,
+        0.6743526911176057
+      ]
+    }
+  },
+  "crossed": {
+    "native_water_geometry_after_port": 2.2298106517498097,
+    "alien_water_geometry_after_port": 1.8941418146374522,
+    "native_port_after_water_geometry": -0.08171259541497353,
+    "alien_port_after_water_geometry": 0.16401230635150113
+  },
+  "inference": {
+    "sea_geometry": "Shortest marine water graph distance on GSHHG 0.0625/0.5deg source graph, UNDIRECTED, NOT directed NOAA OSCAR or true circuit resistance",
+    "port_proxy": "Product of contemporary log1p WPI port counts, NOT observed shipping origin destination or port cargo",
+    "actual_voyage": "Only 7 verified 126-island pairs from selected 2020 AIS WPI194 coverage, very sparse nonrandom and temporally noncausal",
+    "native_alien_pair_similarity": "Accepted WCVP presence-origin same-name taxon Jaccard in contemporary region labels, not independently measured species exchange",
+    "assessment": "Both native and alien flora gain predictive information from marine geometry conditional on distance, but selective current-native/shipping-alien cross mechanism remains UNTESTED",
+    "next_physical_gate": "Construct the 126-island original NOAA legacy 2005 time-varying directional Lagrangian origin-destination accessibility with full original land/coast/sea and source missingness",
+    "original_gEB": "Original butterfly resource +54.9%, island +118.9%, known butterfly record +4.12% separate estimands unchanged"
+  }
+}

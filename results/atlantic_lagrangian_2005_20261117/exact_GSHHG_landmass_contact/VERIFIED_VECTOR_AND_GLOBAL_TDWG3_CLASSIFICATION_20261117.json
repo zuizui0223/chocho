@@ -1,0 +1,174 @@
+{
+  "schema": "chocho_original_NOAA2005_19actual10reversed_GSHHG_and_global_TDWG3_geometry_gate_v1",
+  "status": "SOURCE_VERIFIED_GSHHG_AND_GLOBAL_TDWG3_CONTACT_LOCATION_NOT_BIOLOGICAL_SEED_LANDFALL",
+  "original_particle_CI": 43902616033,
+  "original_GSHHG_coast_CI": 43906815380,
+  "independent_vector_resolution_CI": 43907339901,
+  "global_TDWG3_resolution_CI": 43907807059,
+  "source_GSHHG_2p3p7_zip_sha256": "8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41",
+  "TDWG_source_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+  "GSHHG_original_intermediate_polygon_count": 32830,
+  "GSHHG_matching": {
+    "OBSERVED_NOAA_FLOW": {
+      "original_contacts": 19,
+      "class_counts": {
+        "OTHER_GSHHG_POLYGON_IN_ORIGIN_TDWG3_REGION": 3,
+        "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 3,
+        "SAME_ORIGIN_GSHHG_POLYGON": 13
+      },
+      "vector_coast_point_contained": 13,
+      "vector_nearest_but_not_contained": 6,
+      "within_8km_nearest_coast": 19,
+      "with_other_fixed_destination_region": 0
+    },
+    "MATHEMATICAL_REVERSED_FLOW": {
+      "original_contacts": 10,
+      "class_counts": {
+        "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 7,
+        "SAME_ORIGIN_GSHHG_POLYGON": 3
+      },
+      "vector_coast_point_contained": 1,
+      "vector_nearest_but_not_contained": 9,
+      "within_8km_nearest_coast": 10,
+      "with_other_fixed_destination_region": 0
+    }
+  },
+  "independently_verified_details": {
+    "source": 43906815380,
+    "actual": {
+      "original_contacts": 19,
+      "class_counts": {
+        "SAME_ORIGIN_GSHHG_POLYGON": 13,
+        "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 3,
+        "OTHER_GSHHG_POLYGON_IN_ORIGIN_TDWG3_REGION": 3
+      },
+      "by_source": {
+        "AZO": 6,
+        "CNY": 6,
+        "CVI": 7
+      },
+      "point_inside_original_GSHHG_vector_polygon": 13,
+      "point_nearest_GSHHG_vector_but_outside": 6,
+      "contact_point_vector_distance_median_km": 0,
+      "contact_point_vector_within_km": {
+        "0.001": 13,
+        "0.5": 15,
+        "1.0": 15,
+        "2.0": 17,
+        "4.0": 19,
+        "8.0": 19
+      },
+      "source_WPI_port_distance_median_km": 22.768,
+      "class_by_source": {
+        "AZO": {
+          "SAME_ORIGIN_GSHHG_POLYGON": 3,
+          "OTHER_GSHHG_POLYGON_IN_ORIGIN_TDWG3_REGION": 1,
+          "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 2
+        },
+        "CNY": {
+          "SAME_ORIGIN_GSHHG_POLYGON": 6
+        },
+        "CVI": {
+          "SAME_ORIGIN_GSHHG_POLYGON": 4,
+          "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 1,
+          "OTHER_GSHHG_POLYGON_IN_ORIGIN_TDWG3_REGION": 2
+        }
+      }
+    },
+    "original_ambiguous_three_regions": [
+      {
+        "source": "CVI",
+        "day": 68,
+        "coast_km": 0,
+        "gshhg_poly_index": 716,
+        "TDWG3_region": "",
+        "port_name": "PORTO DA PRAIA"
+      },
+      {
+        "source": "AZO",
+        "day": 3,
+        "coast_km": 0.1457,
+        "gshhg_poly_index": 761,
+        "TDWG3_region": "",
+        "port_name": "LAJES"
+      },
+      {
+        "source": "AZO",
+        "day": 8,
+        "coast_km": 0,
+        "gshhg_poly_index": 956,
+        "TDWG3_region": "",
+        "port_name": "LAJES"
+      }
+    ],
+    "reversed_counts": {
+      "SAME_ORIGIN_GSHHG_POLYGON": 3,
+      "OTHER_GSHHG_POLYGON_WITH_AMBIGUOUS_TDWG_REGION": 7
+    },
+    "status": "VERIFIED_SOURCE_LAND_CONTACT_IDENTIFIABILITY_NOT_LARVAL_OR_SEED_LANDFALL"
+  },
+  "global_region_matching": {
+    "status": "GLOBAL_TDWG3_SOURCE_ONLY_GEOGRAPHIC_RESOLUTION_NOT_SEED_TRANSPORT",
+    "tdwg_source_features": 369,
+    "actual_flow": {
+      "contacts": 19,
+      "global_TDWG3_contact_classes": {
+        "WITHIN_ORIGIN_TDWG3": 12,
+        "NOT_EXACTLY_ASSIGNABLE_GLOBAL_TDWG3": 7
+      },
+      "global_TDWG3_match_statuses": {
+        "TDWG3_CONTAINS_ORIGINAL_GSHHG_LAND_POINT": 12,
+        "NEAR_TDWG3_POLYGON_WITHIN_5KM_NOT_CONTAINED": 4,
+        "NO_EXACT_TDWG3_REGION_AND_GEOGRAPHIC_UNCERTAINTY": 3
+      },
+      "different_TDWG3_exact_regions": []
+    },
+    "original_ambiguous": [
+      {
+        "source": "CVI",
+        "failure_day": 68,
+        "GSHHG_polygon_native_id": "777",
+        "contact_nearest_vector_km": 0,
+        "full_TDWG3_exact_codes": "",
+        "full_TDWG3_names": "",
+        "TDWG3_match_status": "NO_EXACT_TDWG3_REGION_AND_GEOGRAPHIC_UNCERTAINTY",
+        "nearest_TDWG3_code_if_not_exact": "CVI",
+        "nearest_TDWG3_km_if_not_exact": 44.5015,
+        "global_TDWG3_contact_class": "NOT_EXACTLY_ASSIGNABLE_GLOBAL_TDWG3"
+      },
+      {
+        "source": "AZO",
+        "failure_day": 3,
+        "GSHHG_polygon_native_id": "827",
+        "contact_nearest_vector_km": 0.1457,
+        "full_TDWG3_exact_codes": "",
+        "full_TDWG3_names": "",
+        "TDWG3_match_status": "NO_EXACT_TDWG3_REGION_AND_GEOGRAPHIC_UNCERTAINTY",
+        "nearest_TDWG3_code_if_not_exact": "AZO",
+        "nearest_TDWG3_km_if_not_exact": 26.2534,
+        "global_TDWG3_contact_class": "NOT_EXACTLY_ASSIGNABLE_GLOBAL_TDWG3"
+      },
+      {
+        "source": "AZO",
+        "failure_day": 8,
+        "GSHHG_polygon_native_id": "1038",
+        "contact_nearest_vector_km": 0,
+        "full_TDWG3_exact_codes": "",
+        "full_TDWG3_names": "",
+        "TDWG3_match_status": "NO_EXACT_TDWG3_REGION_AND_GEOGRAPHIC_UNCERTAINTY",
+        "nearest_TDWG3_code_if_not_exact": "AZO",
+        "nearest_TDWG3_km_if_not_exact": 8.9163,
+        "global_TDWG3_contact_class": "NOT_EXACTLY_ASSIGNABLE_GLOBAL_TDWG3"
+      }
+    ]
+  },
+  "inferential_limit": "Actual past plant/seed arrival is not observed; model paths are source-port starts with coarse NOAA ocean flow and a finite GSHHG landmask.",
+  "caution": [
+    "Same GSHHG physical coastline polygon (13/19) and same official TDWG3 botanical region (12/19) differ because the maps have different resolution and boundary conventions.",
+    "Seven of 19 cannot be assigned to an exact TDWG3 polygon; four are within 5km of one and three farther.",
+    "The three original unknown contacts nearest TDWG3 origin region at 8.9-44.5km are not force-assigned to that region.",
+    "No actual-flow contact was exactly assigned to a different official TDWG3 region, but unassigned is not biologically absent.",
+    "No actual drifting seed or propagule survival, port-to-port ship service, local host availability or butterfly reproduction was observed."
+  ],
+  "manuscript_decision": "Original integrated GEB results remain unedited; this is exploratory physical feasibility/source QA."
+}

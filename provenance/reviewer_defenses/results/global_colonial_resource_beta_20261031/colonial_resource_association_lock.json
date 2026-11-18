@@ -1,0 +1,58 @@
+{
+  "schema": "chocho_colonial_global_resource_beta_lock_v1",
+  "status": "EXPLORATORY_SOURCE_AND_METHOD_LOCK_BEFORE_OWN_COLONIAL_OUTCOME_COMPARISON",
+  "date_utc": "2026-10-31",
+  "spatial_units": "official TDWG 369 WGSRPD3 codes",
+  "plant_resource_source": "Global fixed239 butterfly WCVP+HOSTS potential resource beta v1 source SHA retained in result",
+  "colony_history_source": "Lenzner et al 2022 Zenodo 6640264 fixed archive MD5 16f5585d2500676951a4b664bbf0ffde",
+  "eligibility": {
+    "min_glonaf_area_coverage": 0.8,
+    "max_glonaf_overlap_coverage": 1.05,
+    "required_continuous_covariates": [
+      "source_temp_mean",
+      "source_aridity_mean"
+    ],
+    "missing_butterfly_resource_pairs": "exclude-undefined-unions-not-zero"
+  },
+  "exposure": {
+    "empires": [
+      "GB",
+      "ESP",
+      "PRT",
+      "NL"
+    ],
+    "minimum_area_weighted_duration_years_per_region": 25,
+    "shared_min_duration": "sum of min(years_a,years_b) for each of four empires where both durations>=25",
+    "binary_shared_ever": "1 if any of four emp >=25 in both areas; does NOT require overlapping years"
+  },
+  "base_controls": [
+    "log1p(region representative point distance km)",
+    "same WGSRPD level1",
+    "abs(delta region temp mean)",
+    "abs(delta region aridity mean)",
+    "plant native Jaccard",
+    "butterfly-resource native Jaccard",
+    "log native plant richness min and max"
+  ],
+  "additional_control_for_independent_consumer_claim": "plant_Jaccard_delta",
+  "primary_associations": [
+    "shared colonial minimum duration versus plant delta controlling geography native flora and climate",
+    "shared colonial minimum duration versus butterfly resource delta controlling geography native composition and climate",
+    "shared colonial minimum duration versus resource delta additionally controlling general plant delta"
+  ],
+  "negative_control": "same historical exposure versus native-only potential butterfly-resource similarity, after geography/climate/native flora",
+  "node_dependencies": "Region endpoints repeated; no ordinary independent-pair p values",
+  "randomization": {
+    "method": "permute the complete 4-empire region vector at region nodes within WGSRPD level1, keeping pairs and outcomes unchanged",
+    "draws": 499,
+    "seed": 31031,
+    "caveat": "post-hoc exploratory geographic strata not exact randomization inference"
+  },
+  "interpretation_limits": [
+    "WCVP current nonnative ranges are not specifically date-verified colonial imports",
+    "Source historical durations are weighted across heterogeneous regional geometry, and may refer to different periods",
+    "A positive conditional association is not causal mediation or evidence of movement of particular butterflies",
+    "Shared colonial history does not imply direct historical ship route or trade volume",
+    "Only source-matched 239 potential butterfly resource species, not realized butterfly communities"
+  ]
+}

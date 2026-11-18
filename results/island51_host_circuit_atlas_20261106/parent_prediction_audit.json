@@ -1,0 +1,190 @@
+{
+  "schema": "chocho_island51_joint_independent_prediction_audit_v1",
+  "status": "PASS_SAVED_PREDICTIONS_AND_LOCKED_COMPARISONS_INDEPENDENTLY_RECONSTRUCTED",
+  "audited_at_utc": "2026-11-06T13:08:46.091382+00:00",
+  "auditor_sha256": "1d96a46e07dfd4d88a96e15ee6ca646691fcd6b1f2e5ab19274830832ff5d912",
+  "specification_compliance": {
+    "verdict": "PASS_FOR_AUDITED_OUTPUT_CONTRACT_AND_FROZEN_INPUTS",
+    "checked": [
+      "frozen protocol, plan and all 12 inputs",
+      "prior frozen source bundle",
+      "native AIS plus unchanged uniform/wind matrix identity and island order",
+      "original 51-island/1275-pair support and original port counts",
+      "two fixed targets and five fixed model labels",
+      "all endpoint-held-out test rows and their complementary training-set sizes",
+      "original observed target values and clipped predictions",
+      "all five fixed comparison directions, roles and strict tie definitions",
+      "recorded output and implementation hashes plus declared source-gate timing"
+    ],
+    "scope_limit": "Prediction files cannot alone establish the fitted feature equations, actual training exclusion or train-only scaling. Those require the runner implementation and leakage tests; this auditor does not refit any model."
+  },
+  "numerical_audit": {
+    "verdict": "PASS",
+    "prediction_checks": {
+      "rows": 25500,
+      "unique_source_pairs": 1275,
+      "islands": 51,
+      "models": [
+        "G",
+        "H",
+        "C",
+        "HC",
+        "I"
+      ],
+      "targets": [
+        "new_butterfly_jaccard",
+        "earlier_butterfly_jaccard"
+      ],
+      "each_pair_predicted_once_per_endpoint_per_model_and_target": true,
+      "maximum_absolute_numeric_errors": {
+        "observed_vs_source": 9.71445146547012e-17,
+        "individual.squared_error": 0.0,
+        "individual.absolute_error": 0.0
+      },
+      "aggregation": "individual prediction loss, then mean within held-out island, then unweighted mean across islands",
+      "endpoint_predictions_averaged_before_scoring": false
+    },
+    "saved_table_checks": {
+      "model_fold_losses": {
+        "checked_rows": 510,
+        "all_values_match": true,
+        "maximum_absolute_numeric_errors": {
+          "MSE": 6.938893903907228e-18,
+          "MAE": 2.7755575615628914e-17
+        }
+      },
+      "comparison_fold_losses": {
+        "checked_rows": 510,
+        "all_values_match": true,
+        "maximum_absolute_numeric_errors": {
+          "reference_mse": 6.938893903907228e-18,
+          "augmented_mse": 6.938893903907228e-18,
+          "delta_mse_augmented_minus_reference": 6.938893903907228e-18,
+          "reference_mae": 2.7755575615628914e-17,
+          "augmented_mae": 2.7755575615628914e-17
+        }
+      },
+      "model_summary": {
+        "checked_rows": 10,
+        "all_values_match": true,
+        "maximum_absolute_numeric_errors": {
+          "MSE": 1.734723475976807e-18,
+          "MAE": 1.3877787807814457e-17
+        }
+      },
+      "comparison_summary": {
+        "checked_rows": 10,
+        "all_values_match": true,
+        "maximum_absolute_numeric_errors": {
+          "MSE_reference": 1.734723475976807e-18,
+          "MSE_augmented": 1.734723475976807e-18,
+          "relative_MSE_reduction_percent": 2.864375403532904e-14,
+          "MAE_reference": 1.3877787807814457e-17,
+          "MAE_augmented": 1.3877787807814457e-17,
+          "absolute_MSE_gain": 1.734723475976807e-18
+        }
+      }
+    },
+    "prior_G_C_reproduction": {
+      "verdict": "PASS",
+      "model_folds_checked": 204,
+      "comparison_summaries_checked": 2,
+      "absolute_tolerance": 1e-12,
+      "relative_tolerance": 1e-12,
+      "maximum_absolute_numeric_errors": {
+        "G_fold_MSE": 6.938893903907228e-18,
+        "G_fold_MAE": 2.7755575615628914e-17,
+        "C_fold_MSE": 3.469446951953614e-18,
+        "C_fold_MAE": 2.7755575615628914e-17,
+        "prior_summary.MSE_reference": 1.734723475976807e-18,
+        "prior_summary.MSE_augmented": 8.673617379884035e-19,
+        "prior_summary.relative_MSE_reduction_percent": 1.5987211554602254e-14,
+        "prior_summary.MAE_reference": 0.0,
+        "prior_summary.MAE_augmented": 1.3877787807814457e-17
+      }
+    }
+  },
+  "source_checks": {
+    "input_lock_sha256": "8603741375c29ce175a7a7e0db78818d69ef892d0647c752162c794b62a900c3",
+    "protocol_sha256": "2ec6c5c195ce4139aac1fe7a8f179928684cece5a7aec036a05d7311e8efbb70",
+    "implementation_plan_sha256": "0f90cdc484c65a442a15dd047603800625ccd721e665d483f66e2c7a562551de",
+    "frozen_at_utc": "2026-11-06T12:10:44.591762+00:00",
+    "locked_inputs_verified": {
+      "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+      "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv": "bbcfaae2e10d13da0380a7de6059c0ee8f7df81e02cca7cbd255932eca8f53e8",
+      "results/island51_observed_ocean_circuit_20261106/uniform_distributed_port_resistance.npz": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1",
+      "results/island51_observed_ocean_circuit_20261106/wind_distributed_port_resistance.npz": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e",
+      "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_distributed_port_resistance.npz": "9d140feacaa547cfed36e4ee67e5a2d4552619203419b394a068cf02eaffb013",
+      "results/island51_observed_ocean_circuit_20261106/source_preparation.json": "06cdbb2b21cdb95b22fbb503648649f80983ef6d5b60fe7c557de7b758ee15db",
+      "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/model_comparison_summary.csv": "b043132aad9f63e7f63c6caf625fd58b8d4aac3439e18567f0eed579a837d8f2",
+      "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/all_island_holdout_losses.csv": "2021b1cb46f41955faf6cc4e6d1b39cc4dca05e5537b61efcb11742c07cb137a",
+      "results/island51_observed_ocean_circuit_20261106/official_circuitscape_validation.json": "07883e92279e1c8f1298efd7ee83363b914ca3c71536de1d8d483130956d80e4",
+      "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_official_validation.json": "772d6c81b7aabb48b77ae5fd790c14113c84addbfd1ae058caef1c106f1bc8ba",
+      "data/exploratory/island51_observed_ocean_20261106/source_bundle_manifest.json": "14b23a4f514ce71a18cb0781667e2e63fdc4e23250763b8cf434e1f09ece624c",
+      "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md": "3998f338051870a1e83db3874fee6f95349dca1fcdb15fa706e676e337a1004a"
+    },
+    "prior_bundle_files_verified": 16,
+    "matrix_checks": {
+      "uniform": {
+        "path": "results/island51_observed_ocean_circuit_20261106/uniform_distributed_port_resistance.npz",
+        "sha256": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1",
+        "canonical_island_order_verified": true
+      },
+      "wind": {
+        "path": "results/island51_observed_ocean_circuit_20261106/wind_distributed_port_resistance.npz",
+        "sha256": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e",
+        "canonical_island_order_verified": true
+      },
+      "native_ais": {
+        "path": "results/island51_observed_ocean_circuit_20261106/native_source_sensitivity/native_AIS_distributed_port_resistance.npz",
+        "sha256": "9d140feacaa547cfed36e4ee67e5a2d4552619203419b394a068cf02eaffb013",
+        "canonical_island_order_verified": true
+      }
+    },
+    "original_port_counts_verified_for_all_islands": true
+  },
+  "runner_receipt_link_checks": {
+    "output_hashes_verified": 7,
+    "implementation_hashes_verified": 4,
+    "embedded_and_standalone_receipts_identical": true,
+    "freeze_precedes_preflight_and_completion": true,
+    "declared_source_preflight_at_utc": "2026-11-06T12:23:05.519536+00:00",
+    "declared_run_completed_at_utc": "2026-11-06T12:23:06.349770+00:00"
+  },
+  "audited_output_sha256": {
+    "heldout_predictions.csv.gz": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+    "model_fold_losses.csv": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+    "comparison_fold_losses.csv": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+    "model_summary.csv": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+    "comparison_summary.csv": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+    "source_validation.json": "6c4d0ebd8b4f4561af052cf72327f16bd7871b14c54563c9952c9dbb13e4208a",
+    "prior_circuit_reproduction.json": "7851c5380fcf7221ac50b2a4375c649dad966e3033b22b48c690ca55dc065d6e",
+    "joint_run_receipt.json": "a96a806468bffd7ef911fc6780c5b82056e45a9d2ec6facb02e7282cede71561"
+  },
+  "runner_receipts_recorded_not_used_as_numeric_truth": {
+    "source_validation.json": {
+      "schema": null,
+      "status": "ALL_LOCKED_JOINT_INPUTS_AND_PROTOCOL_VERIFIED",
+      "sha256": "6c4d0ebd8b4f4561af052cf72327f16bd7871b14c54563c9952c9dbb13e4208a"
+    },
+    "prior_circuit_reproduction.json": {
+      "schema": null,
+      "status": "PRIOR_NATIVE_G_AND_C_FOLDS_AND_SUMMARIES_REPRODUCED",
+      "sha256": "7851c5380fcf7221ac50b2a4375c649dad966e3033b22b48c690ca55dc065d6e"
+    },
+    "joint_run_receipt.json": {
+      "schema": "chocho_fixed_island51_joint_host_circuit_run_v1",
+      "status": "FIVE_FIXED_JOINT_MODELS_AND_ALL_HELDOUT_PREDICTIONS_COMPLETE",
+      "sha256": "a96a806468bffd7ef911fc6780c5b82056e45a9d2ec6facb02e7282cede71561"
+    }
+  },
+  "independence": "Original source observations plus independent CSV parsing and math.fsum. No joint-runner imports, no model fitting, no averaging of endpoint predictions before scoring.",
+  "interpretation_limit": "This is an arithmetic, support and provenance audit, not independent ecological replication or a causal test. Pair and fold dependence is unchanged.",
+  "reconstructed_table_row_counts": {
+    "model_fold_losses": 510,
+    "comparison_fold_losses": 510,
+    "model_summaries": 10,
+    "comparison_summaries": 10
+  },
+  "prior_parent_audit_sha256": "ce9b396ea73a947ff515d90937c18e76d321af3c17ce6528c56b67fbc0a52ce5"
+}

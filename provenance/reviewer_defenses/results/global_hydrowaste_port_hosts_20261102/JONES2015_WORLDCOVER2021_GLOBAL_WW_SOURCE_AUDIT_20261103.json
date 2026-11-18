@@ -1,0 +1,140 @@
+{
+  "schema": "chocho_HydroWASTE58502_WPI1596_Jones2015_WorldCover2021_independent_global_WW_synthesis_v1",
+  "status": "SOURCE_VERIFIED_EXPLORATORY_GLOBAL_WASTEWATER_BUT_NOT_CAUSAL_N_INPUT",
+  "source_runs": {
+    "wwtp_facility_global": 41414513676,
+    "ESA2021_global_ports_urban": 41562997326,
+    "Jones2015_original_grid": 41563940689,
+    "three_source_joint_models": 41564527169
+  },
+  "source_DOIs": {
+    "HydroWASTE": "10.6084/m9.figshare.14847786",
+    "Jones2015": "10.1594/PANGAEA.918731"
+  },
+  "counts": {
+    "hydrowaste_facilities": 58502,
+    "original_WPI_ports": 3630,
+    "complete_botanical_ports": 1596,
+    "ESA2021_valid_ports": 1241,
+    "country_comparison_full_ports": 1368,
+    "country_comparison_full_countries": 52,
+    "country_city_comparison_ports": 1055,
+    "country_city_comparison_countries": 42
+  },
+  "WWTP_host_relation_baseline": {
+    "initial_country_geo_only": {
+      "WWTP_beta": 0.12850292930681598,
+      "cluster95": [
+        0.00765441696157293,
+        0.24935144165205902
+      ]
+    },
+    "country_geography_and_botanical_indexing_proxy": {
+      "WWTP_beta": 0.09696334272195514,
+      "cluster95": [
+        -0.023228852617867904,
+        0.21715553806177817
+      ]
+    },
+    "plus_modeled_2015_WWproduction": {
+      "WWTP_beta": 0.040064140581665825,
+      "cluster95": [
+        -0.08761211697286761,
+        0.16774039813619926
+      ],
+      "WWproduction_beta": 0.06308616104564169,
+      "WWproduction_cluster95": [
+        0.015375693178819073,
+        0.1107966289124643
+      ]
+    }
+  },
+  "city_raster_2021_matched_models": {
+    "sample_n": 1055,
+    "countries": 42,
+    "WWTP_plus_urban_crop_only": {
+      "WWTP_beta": 0.09951694401164034,
+      "CI95": [
+        -0.023937346504082996,
+        0.22297123452736367
+      ],
+      "R2": 0.6460400924020766
+    },
+    "WWTP_plus_WWproduction_plus_urban_crop": {
+      "WWTP_beta": 0.0517688006474433,
+      "WWTP_CI95": [
+        -0.07565346009722532,
+        0.1791910613921119
+      ],
+      "WWproduction_beta": 0.05869779926973754,
+      "WWproduction_CI95": [
+        0.013103565488758878,
+        0.1042920330507162
+      ],
+      "WWproduction_nominal_p": 0.01162762693278007,
+      "built_fraction_beta": 0.37126279898025827,
+      "built_fraction_CI95": [
+        0.21918797655758757,
+        0.5233376214029289
+      ],
+      "R2": 0.6477532385532653
+    },
+    "WWproduction_plus_urban_crop_no_WWTP": {
+      "WWproduction_beta": 0.07727747464208294,
+      "WWproduction_CI95": [
+        0.016778607941664775,
+        0.1377763413425011
+      ],
+      "R2": 0.6471653130070032
+    },
+    "WWTP_plus_WWproduction_plus_modeled_not_treated_plus_urban_crop": {
+      "WWTP_beta": 0.04087653951667496,
+      "WWTP_CI95": [
+        -0.09150224128208975,
+        0.1732553203154397
+      ],
+      "WWproduction_beta": 0.09829625847619888,
+      "WWproduction_CI95": [
+        0.03282251239943958,
+        0.1637700045529582
+      ],
+      "modelled_not_treated_beta": -0.06726092485629322,
+      "modelled_not_treated_CI95": [
+        -0.1384282877331433,
+        0.003906438020556874
+      ],
+      "R2": 0.6485037946769077
+    },
+    "treated_share_adjustment": {
+      "n": 1026,
+      "countries": 42,
+      "treated_share_beta": 0.10901876261190234,
+      "treated_share_CI95": [
+        -0.24454625202269908,
+        0.4625837772465038
+      ]
+    }
+  },
+  "WWTP_vs_2015_wastewater_production_port_rho": 0.5170496273677321,
+  "native_and_nonnative_negative_controls": {
+    "alien_logrichness_WWTP_beta": 0.2362506390786289,
+    "alien_logrichness_WWp_beta": 0.2286154546342452,
+    "native_logrichness_WWTP_beta": 0.18572382364373655,
+    "native_logrichness_WWp_beta": 0.17539191041593136
+  },
+  "interpretation": [
+    "Positive source-backed co-geography between modelled local WW production and relative GBIF-indexed introduced candidate butterfly larval host richness persists after country, coarse geography, indexed host count, 2021 built and crop, and WWTP count controls.",
+    "An independent WWTP number coefficient no longer differs reliably from zero after these controls; baseline global WWTP association remains an observational result.",
+    "Small model R2 increment of adding production to WWTP+urban+crop does not establish a meaningful out-of-sample forecast improvement or a causal nutrient process.",
+    "Modeled untreated wastewater and modeled treatment share provide no robust evidence of sewage nutrient enrichment when the full urban+WWTP+production controls are included."
+  ],
+  "limits": [
+    "2015 modeled wastewater generation and treatment volumes are NOT observed nitrogen loads or discharge to terrestrial plants.",
+    "2015 PANGAEA 5 arcmin gridded values, 2019 WPI, 2021 WorldCover and pooled 2001–2024 GBIF records are not synchronous exposures.",
+    "500m city-cover sampling, 25km WW production, 25km WWTP count and 5km botanical observations differ in footprint.",
+    "2015 modelled wastewater grids derive from human return flows, so residual associations may reflect human settlement/industry and plant sampling rather than sewage enrichment.",
+    "Contemporary nonnative candidate host regions do not establish plant introduction on individual ports or butterfly colonization.",
+    "Data selected to 42 eligible countries and 1055 ports; missing global coast satellite pixels and biased WWTP country coverage constrain generality.",
+    "Island host-butterfly distribution and original GEB +54.9% remain separate ecological outcomes, no full causal chain shown."
+  ]
+}

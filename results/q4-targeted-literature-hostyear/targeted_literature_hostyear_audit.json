@@ -1,0 +1,44 @@
+{
+  "schema": "chocho_Q4_targeted_literature_host_index_dates_v0.1",
+  "status": "EXPLORATORY_LITERATURE_SELECTED_YEAR_OVERLAPS_NOT_COLONIZATION",
+  "source": {
+    "candidate_literature_events": 47,
+    "unique_eligible_butterfly_region_cells": 15,
+    "Q2_corrected_island_resource_cells": 5741,
+    "Q2_corrected_source_edges": 11573,
+    "GBIF_earliest_species_index_range": "1700-2026",
+    "recorded_on_utc": "2026-11-02T06:31:57.952959+00:00"
+  },
+  "targets": {
+    "distinct_plant_island_pairs": 84,
+    "distinct_plants": 56,
+    "regions": 12,
+    "reused_previous_GBIF_query_success": 7,
+    "new_GBIF_queries_attempted": 76,
+    "botanical_effort_region_queries": 12
+  },
+  "plant_query_status": {
+    "DATED_OCCURRENCE_FOUND": 67,
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 10,
+    "GBIF_QUERY_FAILED": 6,
+    "WCVP_NON_SPECIES_OR_NONACCEPTED_RANK": 1
+  },
+  "plant_pairs_with_first_index_year": 67,
+  "literature_events_Q2_modern_host_resource_gain": 25,
+  "literature_events_with_dated_compatible_plant_index": 24,
+  "literature_events_with_compatible_plant_index_before_butterfly_first_report": 21,
+  "distinct_butterfly_WGSRPD3_cells_with_prior_host_index": 11,
+  "same_physical_island_host_prior_verified": 0,
+  "botanical_effort_status": {
+    "DATED_OCCURRENCE_FOUND": 11,
+    "GBIF_QUERY_FAILED": 1
+  },
+  "limits": [
+    "Target pairs are chosen conditional on a published butterfly first report: no natural control cohort, not a confirmatory test of lag or access.",
+    "GBIF first indexed plant year is not date of arrival, planting, establishment or naturalization; retrospective date gaps are only record-order gaps.",
+    "A broad WGSRPD3 region can contain multiple physical islands, including the Canary Islands; regional index order does not prove physical-island temporal precedence.",
+    "The same butterfly species can have multiple physical-island literature cases within a single region: these are non-independent.",
+    "No butterfly absence or island-first-colonization risk set, no species climate suitability, no port vessel arrivals and no causal last-gate labels.",
+    "Some historical botanical first records are controlled by taxonomic and detection biases; raw documentation dates are not comparable without effort by era."
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "schema": "chocho_huygens_DAS_island_endpoints_prelocked_mapping_v1",
+  "status": "PRECOMMITTED_BEFORE_READING_ORIGINAL_8178_SOURCE_VOYAGE_PAIRS",
+  "source": {
+    "huygens": "https://www.huygens.knaw.nl/en/resources/dutch-asiatic-shipping-in-the-17th-and-18th-centuries-2/",
+    "normalized_repo": "IBM/chuk-mcp-maritime-archives",
+    "normalized_commit": "33ae4ef8dfa6acd5f35e619e079ceec518306c9f",
+    "normalized_source_blob": "f7a55fcc91fec1e845c955cebd3355eb5bfa8a58",
+    "normalized_source_sha256": "c875a0a59568713347b1d50e4a2f62708006be524133d30ee5ff4fe23f05b77f",
+    "records_source_replayed": 8178,
+    "years": [
+      1595,
+      1795
+    ],
+    "coverage": "Dutch VOC and predecessors Europe–Asia round trips, not complete intra-Asian routes, ports outside WPI51 not a route-negative"
+  },
+  "historical_to_WPI51": {
+    "precise": {
+      "Batavia": {
+        "island_id": "19",
+        "place": "Jakarta on Java"
+      },
+      "Jacatra": {
+        "island_id": "19",
+        "place": "early historic Jakarta on Java"
+      },
+      "Bantam": {
+        "island_id": "19",
+        "place": "Banten on Java"
+      },
+      "Atjeh": {
+        "island_id": "12",
+        "place": "Aceh on Sumatra"
+      },
+      "Colombo": {
+        "island_id": "31",
+        "place": "Colombo on Sri Lanka"
+      },
+      "Negombo": {
+        "island_id": "31",
+        "place": "Negombo on Sri Lanka"
+      },
+      "Gale": {
+        "island_id": "31",
+        "place": "Galle on Sri Lanka"
+      },
+      "Bathicaloa": {
+        "island_id": "31",
+        "place": "Batticaloa on Sri Lanka"
+      },
+      "Macassar": {
+        "island_id": "17",
+        "place": "Makassar on Sulawesi"
+      }
+    },
+    "coarse_island_labels_sensitivity_only": {
+      "Ceylon": {
+        "island_id": "31",
+        "place": "Sri Lanka island label"
+      },
+      "Madagascar": {
+        "island_id": "10",
+        "place": "Madagascar island label"
+      },
+      "Mauritius": {
+        "island_id": "218",
+        "place": "Mauritius island label"
+      }
+    },
+    "exclusions": {
+      "Bali": "island not among source-verified WPI 51 indexed landmass nodes",
+      "Amboina": "Moluccas island outside WPI source panel",
+      "Ternate": "Moluccas island outside WPI source panel",
+      "Tidore": "Moluccas island outside WPI source panel",
+      "China": "vague region, no unique geographic destination",
+      "Bengal": "vague region, not a specific island"
+    }
+  },
+  "metropole_NL_historic_places": [
+    "Texel",
+    "Goeree",
+    "Rammekens",
+    "Wielingen",
+    "Vlie",
+    "Maas",
+    "Hellevoetsluis",
+    "Veere",
+    "Vlissingen",
+    "Zeeland",
+    "Amsterdam",
+    "Enkhuizen",
+    "Rotterdam",
+    "Middelburg",
+    "Eems",
+    "Ooster Eems",
+    "Grevelingen",
+    "Terschelling",
+    "Amelander Gat"
+  ],
+  "primary_metric": "voyages with one Dutch metropolitan source port endpoint and one specific historic Asian/island port assigned to an original WPI51 island node, 1595–1795",
+  "secondary": "also include coarse island-labelled endpoints, but preserve counts separately",
+  "other_voyage_endpoint_pairs": "map only when BOTH source endpoints independently map to eligible WPI51 island nodes; if no such journeys source-covered not equal to no trade",
+  "year_periods": [
+    [
+      1595,
+      1649
+    ],
+    [
+      1650,
+      1699
+    ],
+    [
+      1700,
+      1749
+    ],
+    [
+      1750,
+      1795
+    ]
+  ],
+  "links_not_negatives": "unrecorded voyage edges from this selected transoceanic VOC archive are UNKNOWN, not absence of all colonial shipping",
+  "scientific_inference_ceiling": [
+    "These are 16th-18th century Dutch Europe–Asia journey endpoints; Cape of Good Hope stopover cannot be ignored or relabeled a direct transshipment",
+    "Historical port alias matches to physical islands do NOT establish that modern WPI 2019 harbors operated then",
+    "These routes do NOT establish recorded host plant cargo, naturalization chronology or butterfly colonization in 2001–2024",
+    "Use source-verified port-city aliases only for primary direct harbor coverage; broad Ceylon/Madagascar/Mauritius aliases are alternate",
+    "Source archival sampling is Dutch VOC, not comprehensive colonial shipping of GB/ESP/PRT/NL or France and other empires"
+  ]
+}

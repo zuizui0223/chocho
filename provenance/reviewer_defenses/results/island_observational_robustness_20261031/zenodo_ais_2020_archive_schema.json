@@ -1,0 +1,162 @@
+{
+  "source": "Duvallet et al. 2024",
+  "doi": "10.5281/zenodo.10783698",
+  "source_url": "https://zenodo.org/records/10783698/files/triplet_2020.zip?download=1",
+  "archive_md5": "af27e1bef1f706e2e29ed53aee47ff10",
+  "license": "CC BY 4.0",
+  "archive_size_bytes": 32453859,
+  "members": [
+    {
+      "filename": "triplet_2020.csv",
+      "size_uncompressed": 113764323,
+      "compressed_size": 32453677,
+      "is_dir": false,
+      "first_line_fields": 1,
+      "first_line_separator_counts": {
+        "comma": 0,
+        "semicolon": 13,
+        "tab": 0,
+        "pipe": 0
+      },
+      "first_line_lengths": [
+        185,
+        151,
+        154
+      ],
+      "has_verified_header": true,
+      "column_names": [
+        "date-out",
+        "date-in",
+        "mmsi_imo_vessel_mame",
+        "time_mooring",
+        "nb_mooring_terminal",
+        "Port_ID_waiting_area_id_from",
+        "PortName_from",
+        "lon_from",
+        "lat_from",
+        "Port_ID_waiting_area_id_to",
+        "PortName_to",
+        "lon_to",
+        "lat_to"
+      ],
+      "delimiter": ";",
+      "first_line_token_profile": [
+        {
+          "index": 1,
+          "length": 8,
+          "letters": 7,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "date"
+        },
+        {
+          "index": 2,
+          "length": 7,
+          "letters": 6,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "date"
+        },
+        {
+          "index": 3,
+          "length": 20,
+          "letters": 17,
+          "digits": 0,
+          "punctuation": 3,
+          "header_keyword": "mmsi"
+        },
+        {
+          "index": 4,
+          "length": 12,
+          "letters": 11,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "time"
+        },
+        {
+          "index": 5,
+          "length": 19,
+          "letters": 17,
+          "digits": 0,
+          "punctuation": 2,
+          "header_keyword": null
+        },
+        {
+          "index": 6,
+          "length": 28,
+          "letters": 23,
+          "digits": 0,
+          "punctuation": 5,
+          "header_keyword": "port"
+        },
+        {
+          "index": 7,
+          "length": 13,
+          "letters": 12,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "port"
+        },
+        {
+          "index": 8,
+          "length": 8,
+          "letters": 7,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "lon"
+        },
+        {
+          "index": 9,
+          "length": 8,
+          "letters": 7,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "lat"
+        },
+        {
+          "index": 10,
+          "length": 26,
+          "letters": 21,
+          "digits": 0,
+          "punctuation": 5,
+          "header_keyword": "port"
+        },
+        {
+          "index": 11,
+          "length": 11,
+          "letters": 10,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "port"
+        },
+        {
+          "index": 12,
+          "length": 6,
+          "letters": 5,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "lon"
+        },
+        {
+          "index": 13,
+          "length": 6,
+          "letters": 5,
+          "digits": 0,
+          "punctuation": 1,
+          "header_keyword": "lat"
+        }
+      ],
+      "header_keyword_hits": 12,
+      "first_line_is_probably_observations": false,
+      "sample_raw_values_exported": false
+    }
+  ],
+  "status": "SOURCE_SCHEMA_ONLY_NO_VOYAGE_OR_BUTTERFLY_TEST",
+  "limits": [
+    "2020 AIS indices are retrospective relative to some 2011-2022 butterflies.",
+    "A date-ship-port triplet is not itself a validated consecutive-port voyage.",
+    "Port IDs must be mapped to WPI 2019 coordinates/landmasses independently.",
+    "The global completeness and ship types of AIS sources must be verified.",
+    "No valid port-to-port island similarity effect can be concluded from this ZIP audit."
+  ]
+}

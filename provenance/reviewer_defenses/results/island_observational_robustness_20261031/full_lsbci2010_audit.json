@@ -1,0 +1,145 @@
+{
+  "source_csv_rows": 686925,
+  "year_counts_including_missing": {
+    "2006": 32173,
+    "2007": 31827,
+    "2008": 31483,
+    "2009": 32173,
+    "2010": 32173
+  },
+  "valid_2006_2010_source_rows": 128804,
+  "source_country_pairs": 13840,
+  "unknown_country_labels_top20": [
+    [
+      "Curacao",
+      1835
+    ],
+    [
+      "Serbia and Montenegro",
+      1787
+    ],
+    [
+      "Cote d'Ivoire",
+      1714
+    ],
+    [
+      "Dem. People's Rep. of Korea",
+      1714
+    ],
+    [
+      "Dem. Rep. of the Congo",
+      1714
+    ],
+    [
+      "Iran (Islamic Republic of)",
+      1714
+    ],
+    [
+      "Micronesia (Federated States of)",
+      1714
+    ],
+    [
+      "Netherlands (Kingdom of the)",
+      1714
+    ],
+    [
+      "Netherlands Antilles",
+      1714
+    ],
+    [
+      "Sudan (...2011)",
+      1714
+    ],
+    [
+      "Turkiye",
+      1714
+    ],
+    [
+      "United States Virgin Islands",
+      1714
+    ],
+    [
+      "Venezuela (Bolivarian Rep. of)",
+      1714
+    ],
+    [
+      "Wallis and Futuna Islands",
+      1714
+    ],
+    [
+      "Saint Helena",
+      47
+    ]
+  ],
+  "unknown_country_label_rows": 24237,
+  "pilot_matched_country_pairs": 162,
+  "pilot_max_absolute_difference": 0.0,
+  "status": "SOURCE_VERIFIED_COUNTRY_BILATERAL_COHORT_NOT_PORT_OD",
+  "source_url": "https://raw.githubusercontent.com/DeckardShaw31/Eureka-2026/main/data/raw/unctad/US_LSBCI.csv",
+  "source_sha256": "edab41de33b9a6b4fc568bf454544dedfcbf32117e2bad7ccc77203e1ee6c33e",
+  "pilot_subset_url": "https://raw.githubusercontent.com/DeckardShaw31/Eureka-2026/main/data/processed/panel_bilateral_year.csv",
+  "pilot_blob_sha": "b24aeae93acf7f987bea313b4eb99c99e68bdb65",
+  "source_port_count": 194,
+  "eligible_islands": 51,
+  "single_country_islands": 50,
+  "multicountry_islands": {
+    "9": [
+      "BRN",
+      "IDN",
+      "MYS"
+    ]
+  },
+  "candidate_pairs": 1275,
+  "pair_status_counts": {
+    "INDEX_2010_OBSERVED": 1130,
+    "MISSING_2010_BILATERAL_COUNTRY_INDEX": 49,
+    "MULTICOUNTRY_ISLAND_UNRESOLVED": 50,
+    "SAME_COUNTRY_ISLAND_PAIR_UNRESOLVED": 46
+  },
+  "matched_2010_islands": 49,
+  "matched_2010_country_pairs": 325,
+  "source_git_blobs": {
+    "port_island": "0a01831056c2cd59a4bd41bd1dbd4c84d77cf922",
+    "port_country": "fdf73b11ddcb1644f46730123350ae52cc61cae6",
+    "eligible_islands": "18cecde5bf3066f276380167f451f1fa5cc1caa1",
+    "island_pairs": "5663d2ffe42419f5c4496b92c9f3bbf76175907b"
+  },
+  "limits": [
+    "The 2010 LSBCI is between countries, not measured voyages between matched WPI ports.",
+    "Same-country island pairs have no bilateral score and are NOT zero-ship pairs.",
+    "2010 index can precede 2011-2022 butterflies but not all 2001-2010 plants.",
+    "The 2001-2024 candidate host catalogue is retrospective and may postdate butterflies.",
+    "No shipping/host mediation, direct vessel transport or population establishment is identified.",
+    "The 51-island host-eligible cohort is selected on plant and previous butterfly observation."
+  ],
+  "sample_size": {
+    "island_pairs": 1130,
+    "island_nodes": 49,
+    "country_nodes": 26,
+    "country_pairs": 325
+  },
+  "rank_associations": {
+    "ship_host_rho": 0.16676837789933527,
+    "ship_butterfly_rho": 0.04053820312186473,
+    "host_butterfly_rho": 0.23245248571553676,
+    "ship_host_adjust_distance_prior": 0.04570208367819676,
+    "ship_butterfly_adjust_distance_prior": -0.0169863545083427,
+    "ship_butterfly_adjust_distance_prior_host": -0.025373087929045603,
+    "host_butterfly_adjust_distance_prior_ship": 0.1754115560684828
+  },
+  "leave_one_island_ranges": {
+    "ship_host_adjust_distance_prior": [
+      0.0021220700727084692,
+      0.08751133540547824
+    ],
+    "ship_butterfly_adjust_distance_prior_host": [
+      -0.044783281541365336,
+      0.003045213753444095
+    ],
+    "host_butterfly_adjust_distance_prior_ship": [
+      0.1469628450438998,
+      0.19871366526070278
+    ]
+  },
+  "note": "Post-hoc descriptive correlations; country-pair LSBCI values repeat over multiple island pairs."
+}

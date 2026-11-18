@@ -1,0 +1,73 @@
+{
+  "schema": "chocho_verified_17c_VOC_57669_place_alias_WPI51_landmass_20261101_v1",
+  "source_original_doi": "10.34894/5HGTCD",
+  "source_original_sha1": "eed2479019a8570e392f37f3d781d5b0c67448b1",
+  "source_verified_records": 57669,
+  "source_columns": {
+    "voyage_record_key": "REISN,N,6,0",
+    "departure_date": "VERTREK,D",
+    "from_port": "VERPLAATS,C,52",
+    "arrival_date": "AANKOMST,D",
+    "to_port": "APLAATS,C,51"
+  },
+  "primary_specific_named_harbor_aliases": {
+    "batavia": "19",
+    "jacatra": "19",
+    "bantam": "19",
+    "japara": "19",
+    "japare": "19",
+    "atjeh": "12",
+    "jamby": "12",
+    "gale": "31",
+    "colombo": "31",
+    "negombo": "31",
+    "bathicaloa": "31",
+    "macassar": "17",
+    "tayouan": "44",
+    "taijouan": "44",
+    "deshima": "43"
+  },
+  "sensitivities_broad_island_or_area_names_not_ports": {
+    "ceylon": "31",
+    "taiwan": "44",
+    "madagascar": "10",
+    "mauritius": "218"
+  },
+  "known_outside_51or_ambiguous_do_not_force_assign": [
+    "malacca",
+    "amboina",
+    "banda",
+    "ternate",
+    "piscadores",
+    "tafelbaai",
+    "the cape",
+    "cape",
+    "st helena",
+    "goa",
+    "china",
+    "bengal",
+    "siam",
+    "gamron",
+    "suratte",
+    "masulipatnam",
+    "batavia?"
+  ],
+  "distance_or_historical_place_name_ambiguity": "Historical Dutch/Malay spellings require further archival-place-name evidence. Place-to-island identity does not imply specific 2019 WPI port location, continuity of operation, actual cargo, or island colonization.",
+  "fixed_main_analysis": "source rows having date-out and date-in (when parseable), with two different source-alias specific harbor landmasses, count direct annotated journey legs by island pair, do not classify unknown links as zero",
+  "secondary": "include four broad island/area labels, report delta and changes of sampled islands",
+  "year_bins": [
+    "1595–1649",
+    "1650–1699",
+    "1700–1749",
+    "1750–1795"
+  ],
+  "island_pair_baseline": "original 51 islands,1,275 frozen pairs, pooled 2001–2024 alien host catalog Jaccard and 2011–2022 first-GBIF-indexed butterfly Jaccard",
+  "source_record_dependence": "REISN numeric recorded IDs may recur; count rows and unique source-voyage IDs separately",
+  "ecological_limits": [
+    "No dated plant transported on any historical leg",
+    "No named butterfly/larval transport in 17th c",
+    "2001–2024 botanical indexing is not temporally close to original route",
+    "No no-route control from absent 17c database edges; coverage and effort vary",
+    "Historical voyages represent Dutch VOC subset, not Spanish, British, Portuguese or all colonial ports"
+  ]
+}

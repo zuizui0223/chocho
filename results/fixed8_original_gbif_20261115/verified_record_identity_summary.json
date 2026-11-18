@@ -1,0 +1,90 @@
+{
+  "schema": "chocho_20261115_fixed8_three_gbif_record_source_verification_summary_v1",
+  "original_model_run": "https://github.com/zuizui0223/chocho/actions/runs/43586888038",
+  "recheck_run": "https://github.com/zuizui0223/chocho/actions/runs/43666845606",
+  "recheck_artifact": "https://github.com/zuizui0223/chocho/actions/runs/43666845606/artifacts/14141399877",
+  "recheck_artifact_json_sha256": "08a5e851ad421cbd7985c64c3cf2ff346c316383722830f6fd62845ce797053b",
+  "geography": "Original frozen GSHHG 2.3.7 landmass polygons with source species keys",
+  "population": "All 8 host-indexed source-first cases after 1700-2010 historical GBIF reindex; target three externally unresolved cases",
+  "all_3_cases_source_success": true,
+  "cases": [
+    {
+      "species": "Lycaena dispar",
+      "speciesKey": "1929270",
+      "GSHHG_landmass_id": "391",
+      "island": "Madeira",
+      "year_range": "2018-2022",
+      "GBIF_indexed_records": 4,
+      "dates": [
+        "2020-03-09",
+        "2020-03-10",
+        "2020-03-11",
+        "2020-03-12"
+      ],
+      "gbifIDs": [
+        "5019945211",
+        "5024616829",
+        "5025406767",
+        "5025680523"
+      ],
+      "n_distinct_coordinate_pairs": 1,
+      "common_lat": 32.748955,
+      "common_lon": -16.867933,
+      "source_datasetKey": "6ac3f774-d9fb-4796-b3e9-92bf6c81c084",
+      "basisOfRecord": "HUMAN_OBSERVATION",
+      "locality": "UTM50_28S_0300_3600",
+      "occurrence_page_example": "https://www.gbif.org/occurrence/5019945211",
+      "external_checklist": "https://www.madeirabirds.com/node/82",
+      "interpretation": "Four dates at one location/provider; absent from regional butterfly checklist. Identity/provenance requires original observation verification. Not 4 independent colonization events or demonstrated breeding."
+    },
+    {
+      "species": "Nymphalis polychloros",
+      "speciesKey": "7762841",
+      "GSHHG_landmass_id": "26",
+      "island": "Ireland",
+      "year_range": "2018-2022",
+      "GBIF_indexed_records": 1,
+      "dates": [
+        "2019-08-06"
+      ],
+      "gbifIDs": [
+        "4462800997"
+      ],
+      "n_distinct_coordinate_pairs": 1,
+      "lat": 52.161463,
+      "lon": -7.15683,
+      "location": "Tramore, Ireland",
+      "reported_coordinate_uncertainty_m": 100,
+      "source_datasetKey": "5275c9b8-f9be-4f89-b0e0-5e43518f4051",
+      "basisOfRecord": "HUMAN_OBSERVATION",
+      "occurrence_page": "https://www.gbif.org/occurrence/4462800997",
+      "external_checklist": "https://maps.biodiversityireland.ie/Dataset/363/Species/77534",
+      "interpretation": "One indexed adult-like observation (lifeStage not populated). Identity and breeding unverified; prior literature does not establish Irish resident populations."
+    },
+    {
+      "species": "Pararge aegeria",
+      "speciesKey": "8049830",
+      "GSHHG_landmass_id": "456",
+      "island": "Orkney Mainland",
+      "year_range": "2018-2022",
+      "GBIF_indexed_records": 1,
+      "dates": [
+        "2018-07-18"
+      ],
+      "gbifIDs": [
+        "4453667332"
+      ],
+      "n_distinct_coordinate_pairs": 1,
+      "lat": 58.984674,
+      "lon": -2.962249,
+      "source_datasetKey": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+      "basisOfRecord": "HUMAN_OBSERVATION",
+      "iNaturalist_original": "https://www.inaturalist.org/observations/21648338",
+      "reported_coordinate_uncertainty_m": 2094,
+      "locality": "near Kirkwall, United Kingdom",
+      "external_atlas": "https://butterfly-conservation.org/sites/default/files/2024-04/Highland%20Butterfly%20Atlas%202022%20Online.pdf",
+      "interpretation": "A single 2018 indexed observation on Orkney Mainland. Possible vagrant or new occurrence; no demonstrated establishment or host use."
+    }
+  ],
+  "boundary": "All three are exact GBIF speciesKeys on original polygons and contain no definitive local feeding/breeding or source island transport evidence. Counts are observed records, not propagule arrivals or biological population replicates."
+}

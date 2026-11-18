@@ -1,0 +1,47 @@
+{
+  "schema": "chocho_q4_host_island_first_record_inventory_v0.1",
+  "status": "AUDITED_SOURCE_ONLY_NO_GBIF_DATES_YET",
+  "frozen_input": {
+    "butterfly_host_island_edges": 11455,
+    "new_butterfly_island_resource_cells": 5674,
+    "distinct_introduced_host_plant_ids": 560,
+    "islands_with_added_resources": 122
+  },
+  "analysis_unit": {
+    "distinct_introduced_host_x_island_pairs": 5545,
+    "host_island_pairs_by_biogeographic_level1": {
+      "8": 965,
+      "9": 181,
+      "7": 143,
+      "6": 1570,
+      "3": 329,
+      "5": 598,
+      "2": 796,
+      "4": 745,
+      "1": 218
+    },
+    "unique_host_islands_from_one_host": 115,
+    "median_plant_islands": 5,
+    "min_host_pairs_per_island": 2,
+    "median_host_pairs_per_island": 36,
+    "max_host_pairs_per_island": 228
+  },
+  "fixed_pilot": {
+    "sample_size": 500,
+    "islands_in_pilot": 122,
+    "minimum_three_pairs_per_island": 364,
+    "selection": "3 deterministic SHA256 smallest host-island pairs per island plus SHA256 global until 500; do not select by GBIF first year, port data or butterfly detection",
+    "no_overlapping_pairs": true
+  },
+  "unresolved": [
+    "WCVP accepted plant ID → unambiguous GBIF accepted species key mapping.",
+    "GBIF first indexed year per plant × entire WGSRPD3 island, potentially left-censored.",
+    "Era-specific all-botanical-observation effort by the same island geometry.",
+    "Species × island historic butterfly first records and observation effort over same years."
+  ],
+  "claims": [
+    "Source host-island pairs are WCVP contemporary introduced-host potential resources, not dated introductions.",
+    "GBIF non-detections cannot be imputed as plant absence or unused opportunity.",
+    "The pilot's 500 sampled pairs cannot establish coverage of the entire pair panel."
+  ]
+}

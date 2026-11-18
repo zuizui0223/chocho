@@ -1,0 +1,1393 @@
+{
+  "schema": "chocho_published_AIS_native_overview_coarse_source_quality_v1",
+  "audit_utc": "2026-11-06T08:50:33.403245+00:00",
+  "status": "PUBLISHED_MAGNITUDES_PRESENT_IN_NATIVE_SOURCE_NO_SAMPLED_TRANSFORM_ERROR",
+  "source_ZIP_sha256": "0cfdce41d9934982bbc8f16bd92ce7545cc088839327cbaa9b0ed1469dda31e8",
+  "coarse_grid_sha256": "84c0b41c42414503aed846afee763eab9c32453a19662e3554212be85ab881d5",
+  "official_catalogue": "https://datacatalog.worldbank.org/search/dataset/0037580/global-shipping-traffic-density",
+  "official_readme": "https://datacatalogfiles.worldbank.org/ddh-published/0037580/5/DR0084213/readme.txt",
+  "source_definition": "Published total hourly AIS position reports per0.005-degree cell, Jan2015-Feb2021; moving and stationary vessels.",
+  "native_metadata": {
+    "shape": [
+      33998,
+      72006
+    ],
+    "dtypes": [
+      "int32"
+    ],
+    "nodata": 2147483647.0,
+    "scales": [
+      1.0
+    ],
+    "offsets": [
+      0.0
+    ],
+    "crs": "EPSG:4326",
+    "transform": [
+      0.005,
+      0.0,
+      -180.015311275,
+      0.0,
+      -0.005,
+      85.00264793700009
+    ],
+    "band_tags": {
+      "RepresentationType": "ATHEMATIC",
+      "STATISTICS_COVARIANCES": "6007269783219.459",
+      "STATISTICS_MAXIMUM": "62652999",
+      "STATISTICS_MEAN": "266363.70509718",
+      "STATISTICS_MINIMUM": "0",
+      "STATISTICS_SKIPFACTORX": "1",
+      "STATISTICS_SKIPFACTORY": "1",
+      "STATISTICS_STDDEV": "2450973.2318447"
+    },
+    "dataset_tags": {
+      "AREA_OR_POINT": "Area"
+    },
+    "image_structure": {
+      "INTERLEAVE": "BAND"
+    },
+    "overview_factors": []
+  },
+  "overview_metadata": {
+    "shape": [
+      16999,
+      36003
+    ],
+    "dtypes": [
+      "int32"
+    ],
+    "nodata": 2147483647.0,
+    "scales": [
+      1.0
+    ],
+    "offsets": [
+      0.0
+    ],
+    "crs": "None",
+    "transform": [
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "band_tags": {},
+    "dataset_tags": {},
+    "image_structure": {
+      "INTERLEAVE": "BAND"
+    },
+    "overview_factors": [
+      2,
+      4,
+      8,
+      16,
+      32,
+      64,
+      128
+    ]
+  },
+  "original_aux_statistics": {
+    "RepresentationType": "ATHEMATIC",
+    "STATISTICS_COVARIANCES": "6007269783219.459",
+    "STATISTICS_EXCLUDEDVALUES": null,
+    "STATISTICS_MAXIMUM": "62652999",
+    "STATISTICS_MEAN": "266363.70509718",
+    "STATISTICS_MINIMUM": "0",
+    "STATISTICS_SKIPFACTORX": "1",
+    "STATISTICS_SKIPFACTORY": "1",
+    "STATISTICS_STDDEV": "2450973.2318447"
+  },
+  "original_aux_histogram_total": 2147483645,
+  "native_full_pixel_count": 2448059988,
+  "archive_members": {
+    "ShipDensity_Commercial1.tif.ovr": {
+      "uncompressed_bytes": 3290970915,
+      "CRC32": "0x11a05bf6"
+    },
+    "ShipDensity_Commercial1.tfw": {
+      "uncompressed_bytes": 83,
+      "CRC32": "0x5ed92f34"
+    },
+    "ShipDensity_Commercial1.tif": {
+      "uncompressed_bytes": 9818136931,
+      "CRC32": "0xca2fef6"
+    },
+    "ShipDensity_Commercial1.tif.aux.xml": {
+      "uncompressed_bytes": 2374,
+      "CRC32": "0x27eb2bc8"
+    }
+  },
+  "extraction": "Native and external overview sequentially extracted by Python zipfile; both member CRCs verified at EOF before audit.",
+  "sampling": "10 fixed diagnostic locations plus5latitudes\u00d76longitudes, excluding exact geographic duplicates; no biological inputs.",
+  "diagnostic_locations": 39,
+  "native_sample_profile": {
+    "valid_sampled_pixels": 638976,
+    "min": 0,
+    "max": 57394320,
+    "zero_count": 549430,
+    "negative_count": 0,
+    "nodata_sentinel_in_valid_sample": 0,
+    "greater_than_one_million": 43370,
+    "quantiles": {
+      "0.5": 0.0,
+      "0.9": 1.0,
+      "0.95": 10536431.0,
+      "0.99": 34241832.25
+    }
+  },
+  "overview_sample_profile": {
+    "valid_sampled_pixels": 159744,
+    "min": 0,
+    "max": 57230568,
+    "zero_count": 137426,
+    "negative_count": 0,
+    "nodata_sentinel_in_valid_sample": 0,
+    "greater_than_one_million": 10822,
+    "quantiles": {
+      "0.5": 0.0,
+      "0.9": 1.0,
+      "0.95": 10534952.400000002,
+      "0.99": 34253946.81
+    }
+  },
+  "sampled_native_to_overview": {
+    "overview_pixels_compared": 159744,
+    "exact_top_left_native_2x2_matches": 159744,
+    "exact_match_fraction": 1.0,
+    "nodata_mask_disagreements": 0,
+    "not_equal_to_2x2_mean_count": 41099,
+    "absolute_difference_from_2x2_mean_quantiles": {
+      "0.5": 0.0,
+      "0.9": 151160.25000000215,
+      "0.95": 1743150.175,
+      "0.99": 8488732.075000161,
+      "1.0": 35789744.25
+    }
+  },
+  "coarse_overlap_reproduction": {
+    "compared_cells": 39,
+    "all_within_float32_tolerance": true,
+    "max_absolute_error": 0.36875007674098015,
+    "max_relative_error": 4.6822593584048e-08
+  },
+  "cases": [
+    {
+      "name": "open_NPacific",
+      "longitude": -150.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 60,
+      "native_window_max": 21097319,
+      "overview_window_max": 21097319,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 356149.2224954882,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 384642.7091432395,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999992468
+      },
+      "saved_coarse_mean": 384642.71875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.00960676051909104,
+      "saved_vs_overview_mean_relative_error": 2.4975802974374118e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.0800043488740517
+    },
+    {
+      "name": "open_SPacific",
+      "longitude": -120.0,
+      "latitude": -20.0,
+      "coarse_row": 210,
+      "coarse_col": 120,
+      "native_window_max": 3086818,
+      "overview_window_max": 3073304,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 6098.416214544033,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 3648.5887993839583,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006684
+      },
+      "saved_coarse_mean": 3648.5888671875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 6.780354169677594e-05,
+      "saved_vs_overview_mean_relative_error": 1.85834977370495e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.4017153518183153
+    },
+    {
+      "name": "northAtlantic",
+      "longitude": -30.0,
+      "latitude": 35.0,
+      "coarse_row": 100,
+      "coarse_col": 300,
+      "native_window_max": 24819391,
+      "overview_window_max": 24819391,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 758918.6876393568,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 816865.2181733609,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999573
+      },
+      "saved_coarse_mean": 816865.1875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.03067336091771722,
+      "saved_vs_overview_mean_relative_error": 3.755008811160754e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.07635406991261318
+    },
+    {
+      "name": "Singapore",
+      "longitude": 103.8,
+      "latitude": 1.25,
+      "coarse_row": 167,
+      "coarse_col": 567,
+      "native_window_max": 17483974,
+      "overview_window_max": 17470935,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 4765305.0068381885,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990692
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 4781679.723890646,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000005123
+      },
+      "saved_coarse_mean": 4781679.5,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.22389064636081457,
+      "saved_vs_overview_mean_relative_error": 4.6822593584048e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.0034362369311009932
+    },
+    {
+      "name": "EnglishChannel",
+      "longitude": -2.0,
+      "latitude": 50.0,
+      "coarse_row": 70,
+      "coarse_col": 356,
+      "native_window_max": 53746115,
+      "overview_window_max": 52705577,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 16921636.73768622,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000004903
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 17092741.631249923,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999998019
+      },
+      "saved_coarse_mean": 17092742.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.36875007674098015,
+      "saved_vs_overview_mean_relative_error": 2.15734891860069e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.010111604226950135
+    },
+    {
+      "name": "HongKong",
+      "longitude": 114.2,
+      "latitude": 22.25,
+      "coarse_row": 125,
+      "coarse_col": 588,
+      "native_window_max": 30371440,
+      "overview_window_max": 30354616,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 8992089.617708402,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 8944990.001259856,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006684
+      },
+      "saved_coarse_mean": 8944990.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0012598559260368347,
+      "saved_vs_overview_mean_relative_error": 1.4084486688742977e-10,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.005237894466241872
+    },
+    {
+      "name": "IndianOcean",
+      "longitude": 80.0,
+      "latitude": -10.0,
+      "coarse_row": 190,
+      "coarse_col": 520,
+      "native_window_max": 8218238,
+      "overview_window_max": 8218238,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 72212.22631069599,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999992466
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 80128.21886114145,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000004903
+      },
+      "saved_coarse_mean": 80128.21875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.00011114144581370056,
+      "saved_vs_overview_mean_relative_error": 1.3870450060334377e-09,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.10962122281601712
+    },
+    {
+      "name": "SouthAtlantic",
+      "longitude": -10.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 340,
+      "native_window_max": 2582452,
+      "overview_window_max": 1616751,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 46657.338976408755,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999574
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 44825.61856458933,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.000000000000135
+      },
+      "saved_coarse_mean": 44825.6171875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0013770893274340779,
+      "saved_vs_overview_mean_relative_error": 3.072103345210568e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.039258998734274075
+    },
+    {
+      "name": "TokyoBay",
+      "longitude": 139.8,
+      "latitude": 35.4,
+      "coarse_row": 99,
+      "coarse_col": 639,
+      "native_window_max": 41558669,
+      "overview_window_max": 41558669,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 11771099.273889564,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 11704047.22635567,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "saved_coarse_mean": 11704047.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.22635567001998425,
+      "saved_vs_overview_mean_relative_error": 1.9339948450504108e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.005696328437449132
+    },
+    {
+      "name": "continental_zero",
+      "longitude": 30.0,
+      "latitude": 20.0,
+      "coarse_row": 130,
+      "coarse_col": 420,
+      "native_window_max": 0,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": null
+    },
+    {
+      "name": "systematic_-150_-60",
+      "longitude": -150.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 60,
+      "native_window_max": 0,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": null
+    },
+    {
+      "name": "systematic_-90_-60",
+      "longitude": -90.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 180,
+      "native_window_max": 65583,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.00014411270635712996,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0004,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.00039999998989515007,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 1.0104849953746636e-11,
+      "saved_vs_overview_mean_relative_error": 1.0104849953746636e-11,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 1.7756053585500515
+    },
+    {
+      "name": "systematic_-30_-60",
+      "longitude": -30.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 300,
+      "native_window_max": 64960,
+      "overview_window_max": 64361,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 50.6268,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 100.9032,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999573
+      },
+      "saved_coarse_mean": 100.9031982421875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 1.7578124982264853e-06,
+      "saved_vs_overview_mean_relative_error": 1.7420780492853403e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.9930787646068879
+    },
+    {
+      "name": "systematic_30_-60",
+      "longitude": 30.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 420,
+      "native_window_max": 65973,
+      "overview_window_max": 64624,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 45.87116720179367,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 54.37261328369002,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999573
+      },
+      "saved_coarse_mean": 54.37261199951172,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 1.2841783032513376e-06,
+      "saved_vs_overview_mean_relative_error": 2.361810892831499e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.18533311011026396
+    },
+    {
+      "name": "systematic_90_-60",
+      "longitude": 90.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 540,
+      "native_window_max": 65167,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 6.185499999999999,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -1.0
+    },
+    {
+      "name": "systematic_150_-60",
+      "longitude": 150.0,
+      "latitude": -60.0,
+      "coarse_row": 290,
+      "coarse_col": 660,
+      "native_window_max": 65770,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 12.6908,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 25.549599999999998,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "saved_coarse_mean": 25.54960060119629,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 6.011962909724389e-07,
+      "saved_vs_overview_mean_relative_error": 2.353055589803515e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 1.0132379361427175
+    },
+    {
+      "name": "systematic_-150_-30",
+      "longitude": -150.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 60,
+      "native_window_max": 1610058,
+      "overview_window_max": 1608381,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 3035.568140379381,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 3678.5066940825204,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999992468
+      },
+      "saved_coarse_mean": 3678.506591796875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0001022856454255816,
+      "saved_vs_overview_mean_relative_error": 2.7806295851010626e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.21180172012965778
+    },
+    {
+      "name": "systematic_-90_-30",
+      "longitude": -90.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 180,
+      "native_window_max": 1615682,
+      "overview_window_max": 1610097,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 20107.82390125414,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 24784.067196656022,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006681
+      },
+      "saved_coarse_mean": 24784.06640625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0007904060221335385,
+      "saved_vs_overview_mean_relative_error": 3.1891699447949515e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.23255839708792253
+    },
+    {
+      "name": "systematic_-30_-30",
+      "longitude": -30.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 300,
+      "native_window_max": 2541727,
+      "overview_window_max": 1663504,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 20828.302198235397,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 18118.99329699185,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 18118.994140625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0008436331518169027,
+      "saved_vs_overview_mean_relative_error": 4.6560707760566605e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.13007824043733554
+    },
+    {
+      "name": "systematic_30_-30",
+      "longitude": 30.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 420,
+      "native_window_max": 1,
+      "overview_window_max": 1,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0001,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0004,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.00039999998989515007,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 1.0104849953746636e-11,
+      "saved_vs_overview_mean_relative_error": 1.0104849953746636e-11,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 3.0
+    },
+    {
+      "name": "systematic_90_-30",
+      "longitude": 90.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 540,
+      "native_window_max": 1610709,
+      "overview_window_max": 1610709,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 2783.071430728473,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 3784.4469283930785,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006684
+      },
+      "saved_coarse_mean": 3784.447021484375,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 9.30912965486641e-05,
+      "saved_vs_overview_mean_relative_error": 2.4598388697233438e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.3598094848045255
+    },
+    {
+      "name": "systematic_150_-30",
+      "longitude": 150.0,
+      "latitude": -30.0,
+      "coarse_row": 230,
+      "coarse_col": 660,
+      "native_window_max": 0,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999992468
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": null
+    },
+    {
+      "name": "systematic_-150_0",
+      "longitude": -150.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 60,
+      "native_window_max": 6995582,
+      "overview_window_max": 6957356,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 15608.433826688106,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 12581.57391808053,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990914
+      },
+      "saved_coarse_mean": 12581.57421875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0003006694696523482,
+      "saved_vs_overview_mean_relative_error": 2.389760387770459e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.19392463985925956
+    },
+    {
+      "name": "systematic_-90_0",
+      "longitude": -90.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 180,
+      "native_window_max": 6893715,
+      "overview_window_max": 1226387,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 8124.693159213876,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990914
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 7333.092118016308,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.000000000000512
+      },
+      "saved_coarse_mean": 7333.09228515625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.00016713994227757212,
+      "saved_vs_overview_mean_relative_error": 2.279256002620427e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.09743149995761338
+    },
+    {
+      "name": "systematic_-30_0",
+      "longitude": -30.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 300,
+      "native_window_max": 8090804,
+      "overview_window_max": 8090804,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 245173.07167338365,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999998017
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 193457.23994488432,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.000000000000157
+      },
+      "saved_coarse_mean": 193457.234375,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.00556988432072103,
+      "saved_vs_overview_mean_relative_error": 2.8791294253489205e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.21093601909672396
+    },
+    {
+      "name": "systematic_30_0",
+      "longitude": 30.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 420,
+      "native_window_max": 1223859,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999998017
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.000000000000157
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": null
+    },
+    {
+      "name": "systematic_90_0",
+      "longitude": 90.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 540,
+      "native_window_max": 10639249,
+      "overview_window_max": 7286339,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 48290.18035940745,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 61688.911615564844,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.000000000000512
+      },
+      "saved_coarse_mean": 61688.91015625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.001459314844396431,
+      "saved_vs_overview_mean_relative_error": 2.3656031629973327e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.2774628538645989
+    },
+    {
+      "name": "systematic_150_0",
+      "longitude": 150.0,
+      "latitude": 0.0,
+      "coarse_row": 170,
+      "coarse_col": 660,
+      "native_window_max": 8027986,
+      "overview_window_max": 8027986,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 180016.84935185526,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 193321.86164756407,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999990914
+      },
+      "saved_coarse_mean": 193321.859375,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0022725640737917274,
+      "saved_vs_overview_mean_relative_error": 1.175533927939682e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.07390981646225382
+    },
+    {
+      "name": "systematic_-90_30",
+      "longitude": -90.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 180,
+      "native_window_max": 30376994,
+      "overview_window_max": 30376994,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 815299.1850260609,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 830926.7637170481,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006681
+      },
+      "saved_coarse_mean": 830926.75,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.013717048102989793,
+      "saved_vs_overview_mean_relative_error": 1.650813128419197e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.019167906675250344
+    },
+    {
+      "name": "systematic_-30_30",
+      "longitude": -30.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 300,
+      "native_window_max": 19231414,
+      "overview_window_max": 18598248,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 306928.36723796034,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 322023.749154871,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 322023.75,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0008451290195807815,
+      "saved_vs_overview_mean_relative_error": 2.6244307191589564e-09,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.04918210086853019
+    },
+    {
+      "name": "systematic_30_30",
+      "longitude": 30.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 420,
+      "native_window_max": 17526970,
+      "overview_window_max": 1,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 819.4877736254053,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -1.0
+    },
+    {
+      "name": "systematic_90_30",
+      "longitude": 90.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 540,
+      "native_window_max": 0,
+      "overview_window_max": 0,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 366.44609999999994,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000006684
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -1.0
+    },
+    {
+      "name": "systematic_150_30",
+      "longitude": 150.0,
+      "latitude": 30.0,
+      "coarse_row": 110,
+      "coarse_col": 660,
+      "native_window_max": 19999272,
+      "overview_window_max": 19148836,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 285458.14169756515,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988917
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 359874.4613503099,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999992468
+      },
+      "saved_coarse_mean": 359874.46875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.007399690104648471,
+      "saved_vs_overview_mean_relative_error": 2.056186503727878e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.26069082917097786
+    },
+    {
+      "name": "systematic_-150_60",
+      "longitude": -150.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 60,
+      "native_window_max": 11154045,
+      "overview_window_max": 6707679,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 342551.58589926094,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 282982.62113256304,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "saved_coarse_mean": 282982.625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.003867436957079917,
+      "saved_vs_overview_mean_relative_error": 1.3666694235856338e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.17389779297129337
+    },
+    {
+      "name": "systematic_-90_60",
+      "longitude": -90.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 180,
+      "native_window_max": 32559247,
+      "overview_window_max": 32494828,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 0.0005,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996021
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0012000000000000001,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.0012000000569969416,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 5.6996941454751093e-11,
+      "saved_vs_overview_mean_relative_error": 5.6996941454751093e-11,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 1.4000000000000001
+    },
+    {
+      "name": "systematic_-30_60",
+      "longitude": -30.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 300,
+      "native_window_max": 32581200,
+      "overview_window_max": 32581200,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 85178.25377717403,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 99315.03895049824,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999573
+      },
+      "saved_coarse_mean": 99315.0390625,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0001120017550420016,
+      "saved_vs_overview_mean_relative_error": 1.1277421448510614e-09,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.16596706960330493
+    },
+    {
+      "name": "systematic_30_60",
+      "longitude": 30.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 420,
+      "native_window_max": 57394320,
+      "overview_window_max": 57230568,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 1974009.8078508684,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 1978768.4869224853,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999999573
+      },
+      "saved_coarse_mean": 1978768.5,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.013077514711767435,
+      "saved_vs_overview_mean_relative_error": 6.608915999115425e-09,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": 0.0024106663769810173
+    },
+    {
+      "name": "systematic_90_60",
+      "longitude": 90.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 540,
+      "native_window_max": 39333036,
+      "overview_window_max": 32581824,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 6477.693499999999,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 0.0,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 1.0000000000003126
+      },
+      "saved_coarse_mean": 0.0,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0,
+      "saved_vs_overview_mean_relative_error": 0.0,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -1.0
+    },
+    {
+      "name": "systematic_150_60",
+      "longitude": 150.0,
+      "latitude": 60.0,
+      "coarse_row": 50,
+      "coarse_col": 660,
+      "native_window_max": 32512589,
+      "overview_window_max": 32512589,
+      "native_window_nodata": 0,
+      "overview_window_nodata": 0,
+      "overview_equals_selected_native_pixel_count": 4096,
+      "overview_pixels_compared": 4096,
+      "native_direct_coarse_overlap": {
+        "mean": 409834.74478239054,
+        "native_pixels_in_window": 10201,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999996022
+      },
+      "overview_direct_coarse_overlap": {
+        "mean": 305333.1910055315,
+        "native_pixels_in_window": 2601,
+        "source_nodata_in_window": 0,
+        "valid_overlap_fraction": 0.9999999999988916
+      },
+      "saved_coarse_mean": 305333.1875,
+      "saved_coarse_valid": true,
+      "saved_vs_overview_mean_absolute_error": 0.0035055315238423645,
+      "saved_vs_overview_mean_relative_error": 1.148100379227641e-08,
+      "saved_coarse_mean_matches_within_float32_tolerance": true,
+      "overview_vs_native_coarse_mean_relative_difference": -0.2549846129623443
+    }
+  ],
+  "limits": [
+    "Checks establish faithful reproduction of published numeric values, not independent physical calibration of AIS reporting counts.",
+    "The native high values and scale1/offset0 provide no documented rescaling rule; no arbitrary rescaling or value clipping was applied.",
+    "First overview samples are nearest-neighbor selections of native2x2 pixels, not native2x2 arithmetic means; coarse outputs are correctly labeled overview-derived indices.",
+    "The source aux histogram population need not cover every native cell; its total is recorded without interpreting this as a pixel-data defect.",
+    "Sampled checks do not certify every native/overview pixel or source reception coverage."
+  ]
+}

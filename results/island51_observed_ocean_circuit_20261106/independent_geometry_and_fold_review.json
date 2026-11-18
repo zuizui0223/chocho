@@ -1,0 +1,111 @@
+{
+  "schema": "chocho_island51_independent_geometry_and_fold_review_v1",
+  "status": "PASS_NO_BLOCKING_FINDINGS_IN_REVIEWED_SCOPE",
+  "recorded_at_utc": "2026-11-06T08:47:34Z",
+  "scope": [
+    "Actual fine-mask versus aggregated-graph connectivity",
+    "Port exclusion denominator and distributed-terminal normalization",
+    "Held-out-island model code inspection and saved-fold arithmetic",
+    "Saved circuit matrix invariants and consistency with official validation hashes"
+  ],
+  "geometry": {
+    "method": "Independently label all fine sea cells with scipy.ndimage.label using the orthogonal cross structure; union labels connected across the longitude seam; compare resulting fine-component membership with saved graph node_component for every fine water cell in 32-row chunks.",
+    "fine_periodic_components": 3093,
+    "graph_components": 3093,
+    "fine_component_split_conflicts": 0,
+    "graph_components_merging_disconnected_fine_pieces": 0,
+    "boundary_contact_method": "Count all vertical and horizontal fine-cell neighbor pairs, plus the longitude seam, for which both cells are water and their saved graph-node IDs differ.",
+    "independently_counted_fine_cross_node_contacts": 2912808,
+    "stored_boundary_crossing_count_sum": 2912808,
+    "undirected_graph_edges": 372096,
+    "scope_limit": "Checks preservation of the finite-resolution sea-mask topology, not subcell coastline accuracy or resistance-equivalent aggregation."
+  },
+  "port_weights": {
+    "method": "From included rows of the full original194_port_attachment_audit.csv, count eligible ports at each graph node within each island, divide by that island eligible-port count, and compare with exported island_node_weights.csv; independently sum weights per island.",
+    "original_ledger_rows": 194,
+    "original_unique_ports": 194,
+    "included_ports": 182,
+    "excluded_ports": 12,
+    "islands_retained": 51,
+    "expected_distributed_node_weight_entries": 157,
+    "exported_distributed_node_weight_entries": 157,
+    "max_absolute_weight_difference": 8.326672684688674e-17,
+    "max_absolute_island_weight_sum_error": 9.992007221626409e-16,
+    "exported_island_node_weights_sha256": "05647e8a50c682d7b2c50b34d3de0ab5f1daeabb60ac57b75f69956a2b6cb646"
+  },
+  "fold_arithmetic": {
+    "method": "Group all saved fold rows by comparison and target; recompute mean reference and augmented MSE and 100*(reference-augmented)/reference, and compare with the saved model_comparison_summary.csv.",
+    "saved_fold_rows": 612,
+    "comparison_target_groups": 12,
+    "folds_per_group": 51,
+    "max_absolute_MSE_reduction_percentage_point_difference": 2.2470914018413168e-13,
+    "code_inspection": "Training excludes every pair involving the held-out island; predictor scaling uses training rows only. Earlier butterfly Jaccard is a predictor only for the later target. Coast geometry, port eligibility and conductance construction do not select parameters using biological response values.",
+    "inference_limit": "The 51 folds and 1275 unique pairs are dependent; this review does not establish independent significance, prospective prediction or causal transport."
+  },
+  "saved_circuit_matrices": {
+    "method": "Load each saved resistance matrix; check shape, finite values, symmetry, diagonal and minimum upper-triangle value. Compare matrix-file SHA256 with the official validation receipt; the official solver was not rerun during this review.",
+    "uniform": {
+      "shape": [
+        51,
+        51
+      ],
+      "all_finite": true,
+      "max_absolute_asymmetry": 0.0,
+      "max_absolute_diagonal": 0.0,
+      "minimum_offdiagonal": 0.7347296272590427
+    },
+    "ais": {
+      "shape": [
+        51,
+        51
+      ],
+      "all_finite": true,
+      "max_absolute_asymmetry": 0.0,
+      "max_absolute_diagonal": 0.0,
+      "minimum_offdiagonal": 0.053192920795902654
+    },
+    "wind": {
+      "shape": [
+        51,
+        51
+      ],
+      "all_finite": true,
+      "max_absolute_asymmetry": 0.0,
+      "max_absolute_diagonal": 0.0,
+      "minimum_offdiagonal": 0.15389126822549115
+    },
+    "all_three_hashes_match_official_validation": true
+  },
+  "findings": {
+    "blocking_issues_in_reviewed_scope": 0,
+    "resolved_documentation_findings": [
+      {
+        "severity": "low",
+        "finding": "Source README previously implied excluded ports retained individual attachment distances, although all12 excluded ledger rows have no accepted displacement_km.",
+        "resolution": "README now states that harbor types, original coordinates and failure reasons are retained; successful attachment distances are recorded and excluded rows have no accepted attachment distance.",
+        "corrected_wording_observed_before_receipt": true
+      }
+    ]
+  },
+  "not_audited_by_this_receipt": [
+    "Original AIS pixel magnitude or units; handled by a separate source audit",
+    "Full project test suite; handled by the integrating agent",
+    "An independent rerun of official Circuitscape; existing validation hashes were inspected"
+  ],
+  "checked_files_sha256": {
+    "data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz": "79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906",
+    "data/exploratory/island51_observed_ocean_20261106/wpi/ports_2019_source.geojson": "62159ee5ce4a31aff90ee46efdb3cdf11a9b368472a147392eb742148f340d83",
+    "data/exploratory/island51_observed_ocean_20261106/coordinates/island51_original_WPI_ports_coords_unique_source.json": "2c19983a3e564de6e397abea24738e688236485ceda42f1f02122e83dd113d01",
+    "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+    "results/island51_observed_ocean_circuit_20261106/original194_port_attachment_audit.csv": "e41dda04ccd03ffc5b9cdf267e205a66e8f507a574f87c19ecc971129f29a887",
+    "results/island51_observed_ocean_circuit_20261106/all_island_holdout_losses.csv": "ae8b8deb10b31b40f388668be098c020ee7b1a9428755684a0919063ac75a047",
+    "results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv": "09e656816dd37e5279e209b6a5151bbd12ffb31e441ccc49b20bc64c3cca5828",
+    "results/island51_observed_ocean_circuit_20261106/uniform_distributed_port_resistance.npz": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1",
+    "results/island51_observed_ocean_circuit_20261106/ais_distributed_port_resistance.npz": "8977667072e83d8db890f65f22ea835e781c835fb0b6a8fbf84145bfcd540564",
+    "results/island51_observed_ocean_circuit_20261106/wind_distributed_port_resistance.npz": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e",
+    "scripts/build_island51_coastal_ocean_graph.py": "e226cfd29a4f79ab76bcef220251a588bd25f699a82a3757f1eea19ff580e9a2",
+    "scripts/island51_ocean_circuit.py": "76388d28ab47b149060eb5be7b0f793ff31e9554be4680bab2245a5b9a96f1a6",
+    "scripts/run_island51_observed_ocean_circuits.py": "b23975a1ad604f1dcdf3a21f332fde2572a6b6416b67a259d3e3dd824173990a",
+    "scripts/exploratory_island51_circuit_network_holdout.py": "4656af83656fe7d97dd6809ad4f1344c81830a9bf694412b1169adc341aea331"
+  }
+}

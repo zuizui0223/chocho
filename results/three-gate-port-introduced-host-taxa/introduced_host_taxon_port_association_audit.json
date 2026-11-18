@@ -1,0 +1,843 @@
+{
+  "schema": "chocho_three_gate_port_vs_introduced_larval_host_taxa_v0.1",
+  "status": "DESCRIPTIVE_MODERN_PORTS_VS_HOST_TAXA_NOT_INTRODUCTION_PATHWAY",
+  "source": {
+    "Q1": "fixed 126-region 239 butterfly WCVP HOSTS source",
+    "Q2_edges": 11573,
+    "distinct_plant_island_pairs": 5611,
+    "Q2_species_island_resources": 5741,
+    "global_plant_taxa": 564,
+    "public_port_inventory": "2023 WPI published mirror",
+    "units": "WGSRPD3 strict island level3 regions, not individual physical islands"
+  },
+  "main_response": "ln(1 + distinct introduced WCVP larval host plant taxa in selected HOSTS butterfly panel)",
+  "exposure": "log2(1+2023 indexed WPI count)",
+  "seed": 20261102,
+  "permutations": 4999,
+  "baseline": {
+    "active_islands": 123,
+    "ports_positive": 91,
+    "mean_host_taxa_if_ports": {
+      "n": 91,
+      "mean": 53.94505494505494,
+      "median": 48.0,
+      "min": 4.0,
+      "max": 228.0
+    },
+    "mean_host_taxa_if_no_ports": {
+      "n": 32,
+      "mean": 21.9375,
+      "median": 19.5,
+      "min": 2.0,
+      "max": 55.0
+    },
+    "naive_spearman_port_count_vs_introduced_host_taxa": {
+      "rho": 0.393357627475699,
+      "p_nonspatial": 6.76934681807046e-06
+    }
+  },
+  "cohorts": {
+    "all_active_123": {
+      "n": 123,
+      "indexed_port_regions": 91,
+      "host_taxon_count_primary": {
+        "n": 123,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.1737338271207705,
+        "outcome_mean": 3.5342376244703355,
+        "exposure_mean": 1.9230247519500676,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 123,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.1737338271207705,
+            "null_mean": 0.0006184090383857968,
+            "observed_minus_null_mean": 0.1731154180823847,
+            "null_q025": -0.07434461090188035,
+            "null_q975": 0.07557974859067317,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 123,
+            "exchangeable_blocks": 9,
+            "exposure_coefficient_observed": 0.1737338271207705,
+            "null_mean": 0.0004691340519634428,
+            "observed_minus_null_mean": 0.17326469306880707,
+            "null_q025": -0.07510472385913132,
+            "null_q975": 0.0761876317560123,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 121,
+            "exchangeable_blocks": 17,
+            "exposure_coefficient_observed": 0.1737338271207705,
+            "null_mean": -0.011731157905780623,
+            "observed_minus_null_mean": 0.18546498502655112,
+            "null_q025": -0.09620346240645149,
+            "null_q975": 0.06961322610071038,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "host_taxon_native_baseline_adjusted": {
+        "n": 123,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.1674575757815968,
+        "outcome_mean": 3.5342376244703355,
+        "exposure_mean": 1.9230247519500676,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 123,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.1674575757815968,
+            "null_mean": 0.0007793725085488554,
+            "observed_minus_null_mean": 0.16667820327304797,
+            "null_q025": -0.07136875667084175,
+            "null_q975": 0.07049459688140615,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 123,
+            "exchangeable_blocks": 9,
+            "exposure_coefficient_observed": 0.1674575757815968,
+            "null_mean": 2.9957312099824786e-05,
+            "observed_minus_null_mean": 0.167427618469497,
+            "null_q025": -0.07434119278552238,
+            "null_q975": 0.0746622940622874,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 121,
+            "exchangeable_blocks": 17,
+            "exposure_coefficient_observed": 0.1674575757815968,
+            "null_mean": -0.006453941030172642,
+            "observed_minus_null_mean": 0.17391151681176945,
+            "null_q025": -0.0861534170167612,
+            "null_q975": 0.06973086896762622,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "resource_added_count_secondary": {
+        "n": 123,
+        "exposure": "log2ports",
+        "outcome": "log_added",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.09177536615302911,
+        "outcome_mean": 3.691868949794556,
+        "exposure_mean": 1.9230247519500676
+      }
+    },
+    "native_resource_positive": {
+      "n": 113,
+      "indexed_port_regions": 88,
+      "host_taxon_count_primary": {
+        "n": 113,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.19767796591528927,
+        "outcome_mean": 3.6117114528984655,
+        "exposure_mean": 2.057805703450073,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 113,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.19767796591528927,
+            "null_mean": 0.0009807899998596377,
+            "observed_minus_null_mean": 0.19669717591542962,
+            "null_q025": -0.07498810157842892,
+            "null_q975": 0.0754431614652847,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 111,
+            "exchangeable_blocks": 8,
+            "exposure_coefficient_observed": 0.19767796591528927,
+            "null_mean": 0.0007744542043390399,
+            "observed_minus_null_mean": 0.19690351171095022,
+            "null_q025": -0.07445335359498625,
+            "null_q975": 0.07349341518349056,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 109,
+            "exchangeable_blocks": 15,
+            "exposure_coefficient_observed": 0.19767796591528927,
+            "null_mean": -0.003065083869221615,
+            "observed_minus_null_mean": 0.20074304978451088,
+            "null_q025": -0.08634499085827288,
+            "null_q975": 0.07935888593673773,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "host_taxon_native_baseline_adjusted": {
+        "n": 113,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.19616597647144565,
+        "outcome_mean": 3.6117114528984655,
+        "exposure_mean": 2.057805703450073,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 113,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.19616597647144565,
+            "null_mean": 0.00031756306490229874,
+            "observed_minus_null_mean": 0.19584841340654335,
+            "null_q025": -0.07563901016626971,
+            "null_q975": 0.07385682219660569,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 111,
+            "exchangeable_blocks": 8,
+            "exposure_coefficient_observed": 0.19616597647144565,
+            "null_mean": -0.00010624232646814184,
+            "observed_minus_null_mean": 0.1962722187979138,
+            "null_q025": -0.07501198078312517,
+            "null_q975": 0.07367426643684451,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 109,
+            "exchangeable_blocks": 15,
+            "exposure_coefficient_observed": 0.19616597647144565,
+            "null_mean": 0.0005265816992770789,
+            "observed_minus_null_mean": 0.19563939477216857,
+            "null_q025": -0.08163739573363417,
+            "null_q975": 0.08207027525837571,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "resource_added_count_secondary": {
+        "n": 113,
+        "exposure": "log2ports",
+        "outcome": "log_added",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.11404059699803627,
+        "outcome_mean": 3.706084773750025,
+        "exposure_mean": 2.057805703450073
+      }
+    },
+    "excluding_pacific_antarctic": {
+      "n": 87,
+      "indexed_port_regions": 69,
+      "host_taxon_count_primary": {
+        "n": 87,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==7",
+          "level1==8"
+        ],
+        "coefficient": 0.17843505853770247,
+        "outcome_mean": 3.547086041749278,
+        "exposure_mean": 2.300549429512819,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 87,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.17843505853770247,
+            "null_mean": 7.334693106595196e-05,
+            "observed_minus_null_mean": 0.17836171160663652,
+            "null_q025": -0.08000387925815661,
+            "null_q975": 0.08010534547721068,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 87,
+            "exchangeable_blocks": 7,
+            "exposure_coefficient_observed": 0.17843505853770247,
+            "null_mean": 0.0005274619223399745,
+            "observed_minus_null_mean": 0.1779075966153625,
+            "null_q025": -0.07590463716011361,
+            "null_q975": 0.0791797048647645,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 85,
+            "exchangeable_blocks": 13,
+            "exposure_coefficient_observed": 0.17843505853770247,
+            "null_mean": 0.011065724997684908,
+            "observed_minus_null_mean": 0.16736933354001757,
+            "null_q025": -0.07722246726962406,
+            "null_q975": 0.09943793495662795,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "host_taxon_native_baseline_adjusted": {
+        "n": 87,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==7",
+          "level1==8"
+        ],
+        "coefficient": 0.17684792674253327,
+        "outcome_mean": 3.547086041749278,
+        "exposure_mean": 2.300549429512819,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 87,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.17684792674253327,
+            "null_mean": -0.00011663220676885356,
+            "observed_minus_null_mean": 0.17696455894930213,
+            "null_q025": -0.08149585290065316,
+            "null_q975": 0.08273870959221886,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 87,
+            "exchangeable_blocks": 7,
+            "exposure_coefficient_observed": 0.17684792674253327,
+            "null_mean": -5.73170932123623e-05,
+            "observed_minus_null_mean": 0.17690524383574563,
+            "null_q025": -0.07630798687381894,
+            "null_q975": 0.07611758401034599,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 85,
+            "exchangeable_blocks": 13,
+            "exposure_coefficient_observed": 0.17684792674253327,
+            "null_mean": 0.013794922768151929,
+            "observed_minus_null_mean": 0.16305300397438136,
+            "null_q025": -0.07618495539469963,
+            "null_q975": 0.10014760417781463,
+            "one_sided_positive_p": 0.0004,
+            "two_sided_centered_p": 0.0006,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "resource_added_count_secondary": {
+        "n": 87,
+        "exposure": "log2ports",
+        "outcome": "log_added",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==7",
+          "level1==8"
+        ],
+        "coefficient": 0.10305717711794028,
+        "outcome_mean": 3.6125458781811153,
+        "exposure_mean": 2.300549429512819
+      }
+    },
+    "contemporary_at_least_75": {
+      "n": 67,
+      "indexed_port_regions": 65,
+      "host_taxon_count_primary": {
+        "n": 67,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.11934633564033716,
+        "outcome_mean": 3.9659428852727814,
+        "exposure_mean": 2.8507448010821332,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 67,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.11934633564033716,
+            "null_mean": -0.001274851298580764,
+            "observed_minus_null_mean": 0.12062118693891792,
+            "null_q025": -0.07358730172020575,
+            "null_q975": 0.0750093603759961,
+            "one_sided_positive_p": 0.001,
+            "two_sided_centered_p": 0.0016,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 66,
+            "exchangeable_blocks": 8,
+            "exposure_coefficient_observed": 0.11934633564033716,
+            "null_mean": -0.0003327514949562965,
+            "observed_minus_null_mean": 0.11967908713529345,
+            "null_q025": -0.08105756863151665,
+            "null_q975": 0.07914995224511989,
+            "one_sided_positive_p": 0.0012,
+            "two_sided_centered_p": 0.0034,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 65,
+            "exchangeable_blocks": 15,
+            "exposure_coefficient_observed": 0.11934633564033716,
+            "null_mean": -0.002424531462805327,
+            "observed_minus_null_mean": 0.12177086710314249,
+            "null_q025": -0.07199980842164518,
+            "null_q975": 0.06864904057001289,
+            "one_sided_positive_p": 0.0004,
+            "two_sided_centered_p": 0.0008,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "host_taxon_native_baseline_adjusted": {
+        "n": 67,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.11831802323405728,
+        "outcome_mean": 3.9659428852727814,
+        "exposure_mean": 2.8507448010821332,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 67,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.11831802323405728,
+            "null_mean": -0.0005153125744106016,
+            "observed_minus_null_mean": 0.11883333580846789,
+            "null_q025": -0.0772831782551488,
+            "null_q975": 0.07462036077705929,
+            "one_sided_positive_p": 0.0006,
+            "two_sided_centered_p": 0.0022,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 66,
+            "exchangeable_blocks": 8,
+            "exposure_coefficient_observed": 0.11831802323405728,
+            "null_mean": -0.0005750145274389897,
+            "observed_minus_null_mean": 0.11889303776149628,
+            "null_q025": -0.08333401406217604,
+            "null_q975": 0.08397273640490088,
+            "one_sided_positive_p": 0.002,
+            "two_sided_centered_p": 0.0034,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 65,
+            "exchangeable_blocks": 15,
+            "exposure_coefficient_observed": 0.11831802323405728,
+            "null_mean": -0.010668761118965054,
+            "observed_minus_null_mean": 0.12898678435302233,
+            "null_q025": -0.0822070169337789,
+            "null_q975": 0.06264114113291507,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "resource_added_count_secondary": {
+        "n": 67,
+        "exposure": "log2ports",
+        "outcome": "log_added",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.06241403181990252,
+        "outcome_mean": 3.8892841725377063,
+        "exposure_mean": 2.8507448010821332
+      }
+    },
+    "excluding_biggest_port_region": {
+      "n": 122,
+      "indexed_port_regions": 90,
+      "host_taxon_count_primary": {
+        "n": 122,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.1559263642009183,
+        "outcome_mean": 3.5286206565956983,
+        "exposure_mean": 1.877779516344341,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 122,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.1559263642009183,
+            "null_mean": -0.0006769753791539366,
+            "observed_minus_null_mean": 0.15660333958007222,
+            "null_q025": -0.07783939122920447,
+            "null_q975": 0.07490955139025138,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 122,
+            "exchangeable_blocks": 9,
+            "exposure_coefficient_observed": 0.1559263642009183,
+            "null_mean": 0.0006914403898766613,
+            "observed_minus_null_mean": 0.15523492381104162,
+            "null_q025": -0.0804446930061827,
+            "null_q975": 0.07809363356968328,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 120,
+            "exchangeable_blocks": 17,
+            "exposure_coefficient_observed": 0.1559263642009183,
+            "null_mean": -0.013367849623444885,
+            "observed_minus_null_mean": 0.1692942138243632,
+            "null_q025": -0.09443412321136094,
+            "null_q975": 0.06543154920341956,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0002,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "host_taxon_native_baseline_adjusted": {
+        "n": 122,
+        "exposure": "log2ports",
+        "outcome": "log_introduced_host_taxa",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.14726626067976414,
+        "outcome_mean": 3.5286206565956983,
+        "exposure_mean": 1.877779516344341,
+        "permutations": {
+          "global": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 122,
+            "exchangeable_blocks": 1,
+            "exposure_coefficient_observed": 0.14726626067976414,
+            "null_mean": -0.00020785303338283605,
+            "observed_minus_null_mean": 0.14747411371314698,
+            "null_q025": -0.07731555831137236,
+            "null_q975": 0.07491736733703842,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0004,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 122,
+            "exchangeable_blocks": 9,
+            "exposure_coefficient_observed": 0.14726626067976414,
+            "null_mean": 0.00012629683007936923,
+            "observed_minus_null_mean": 0.14713996384968478,
+            "null_q025": -0.07552450643408151,
+            "null_q975": 0.07345502034794966,
+            "one_sided_positive_p": 0.0006,
+            "two_sided_centered_p": 0.0006,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          },
+          "within_level1_and_within_level_area_half": {
+            "status": "DESCRIPTIVE_CONDITIONAL_PORT_PERMUTATION",
+            "permutations": 4999,
+            "excluded_degenerate_permutations": 0,
+            "exchangeable_islands": 120,
+            "exchangeable_blocks": 17,
+            "exposure_coefficient_observed": 0.14726626067976414,
+            "null_mean": -0.008651309545692284,
+            "observed_minus_null_mean": 0.15591757022545644,
+            "null_q025": -0.0883050597271903,
+            "null_q975": 0.06917840682402783,
+            "one_sided_positive_p": 0.0002,
+            "two_sided_centered_p": 0.0004,
+            "notes": "No causal or spatial independence guarantee; port counts are shuffled among measured regions."
+          }
+        }
+      },
+      "resource_added_count_secondary": {
+        "n": 122,
+        "exposure": "log2ports",
+        "outcome": "log_added",
+        "controls": [
+          "intercept",
+          "ln_area_km2",
+          "ln1p_native_host_resource_units",
+          "level1==2",
+          "level1==3",
+          "level1==4",
+          "level1==5",
+          "level1==6",
+          "level1==7",
+          "level1==8",
+          "level1==9"
+        ],
+        "coefficient": 0.07703506656905255,
+        "outcome_mean": 3.690064408354936,
+        "exposure_mean": 1.877779516344341
+      }
+    }
+  },
+  "limits": [
+    "Modern WPI ports and modern naturalized larval host geography do not indicate historical shipping route or causal introduction.",
+    "All plant taxa are restricted to the HOSTS network used by 239 butterflies. This is not total introduced flora diversity.",
+    "Port absence in an index does not imply a plant-free or traffic-free island.",
+    "Area, Level1 and native resource abundance cannot control climate, human population, colonial history, horticultural imports or sampling bias.",
+    "Count responses within one WGSRPD3 region do not represent actual host suitability on each constituent island.",
+    "An associated port count alone cannot identify direct maritime transport."
+  ]
+}

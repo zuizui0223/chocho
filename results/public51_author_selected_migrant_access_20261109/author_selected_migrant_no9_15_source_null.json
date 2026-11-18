@@ -1,0 +1,495 @@
+{
+  "limitations": [
+    "Author-review linked GBIF selected taxa are indirect documented migrant candidates; not a direct life-history dispersal measurement.",
+    "Species absent from selected list are UNKNOWN, not confirmed non-migrants.",
+    "Non-index does not prove biological absence; first index does not prove immigration, breeding or establishment.",
+    "Region, species and island positive case totals alone do not control geographic visibility and seasonal observation effort.",
+    "Sea resistance is uniform Circuitscape, not verified ship travel or self-propelled butterfly ocean crossings.",
+    "No historic species-specific larval-host presence or plant introduction dates are used.",
+    "Same recorded species can occur at several sampled islands and does not represent independent biological crossing events.",
+    "Conditional MCMC p-values are exploratory under dependent swap draws and posthoc comparisons."
+  ],
+  "migrant_proxy_source": "Author-released GBIF predicate derived from published migration review; original Table S1 inaccessible",
+  "nonlisted_migration": "UNKNOWN_NOT_NONMIGRANT",
+  "null_method": "2x2 species/island case count fixed, + species/region case counts for constrained null",
+  "periods": {
+    "2011_2017": {
+      "candidate_species": 60,
+      "indexed_first_cases": 139,
+      "ocean_from_geo_source_only_quadratic_beta": [
+        -0.06261325496514646,
+        0.21839726856038205,
+        0.0019100737753245682
+      ],
+      "risk_cells": 2455,
+      "source_geographic_islands": 49,
+      "two_margin": {
+        "chains": [
+          {
+            "acceptance_fraction": 0.4893926978056997,
+            "accepted": 64500,
+            "chain": 0,
+            "proposed": 131796,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.008396403924705973,
+              "centered_wing_x_ocean_access": -0.08740233324635113,
+              "nearest_prior_conspecific_geo_access": 0.3198316359412442,
+              "residual_uniform_ocean_access": 0.06279074290140595
+            }
+          },
+          {
+            "acceptance_fraction": 0.4901253049035327,
+            "accepted": 64500,
+            "chain": 1,
+            "proposed": 131599,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.00366972593545387,
+              "centered_wing_x_ocean_access": -0.092251955405711,
+              "nearest_prior_conspecific_geo_access": 0.3190608106523715,
+              "residual_uniform_ocean_access": 0.06047228328185982
+            }
+          },
+          {
+            "acceptance_fraction": 0.48878448014549863,
+            "accepted": 64500,
+            "chain": 2,
+            "proposed": 131960,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.012764026480875773,
+              "centered_wing_x_ocean_access": -0.08991976614984051,
+              "nearest_prior_conspecific_geo_access": 0.31489655499389635,
+              "residual_uniform_ocean_access": 0.05836773479022139
+            }
+          },
+          {
+            "acceptance_fraction": 0.48693577732313664,
+            "accepted": 64500,
+            "chain": 3,
+            "proposed": 132461,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.012677700766123534,
+              "centered_wing_x_ocean_access": -0.08411417089118793,
+              "nearest_prior_conspecific_geo_access": 0.3229233537253549,
+              "residual_uniform_ocean_access": 0.06421980443494614
+            }
+          }
+        ],
+        "not_arrival_colonisation_or_actual_migration": true,
+        "status": "EXPLORATORY_AUTHOR_SELECTED_MIGRANT_CONDITIONAL_GBIF_INDEX",
+        "support": {
+          "eligible_2x2_switch_pairs_initial": 4902,
+          "fraction_initially_swappable": 1.0,
+          "positive_cells": 139,
+          "positive_cells_initially_in_swaps": 139,
+          "support_does_not_prove_MCMC_mix": true
+        },
+        "tests": {
+          "centered_wing_x_geo_access": {
+            "null_95pct": [
+              -0.15482349981142043,
+              0.13805538338739567
+            ],
+            "null_mean": -0.009376964276789785,
+            "num_draws": 4000,
+            "observed": -0.021139211658088033,
+            "observed_minus_null": -0.011762247381298248,
+            "p_one_sided_high": 0.55936015996001,
+            "p_two_sided_monte_carlo": 0.8805298675331167
+          },
+          "centered_wing_x_ocean_access": {
+            "null_95pct": [
+              -0.24567069168191114,
+              0.06561274733226123
+            ],
+            "null_mean": -0.08842205642327268,
+            "num_draws": 4000,
+            "observed": -0.16984781613855154,
+            "observed_minus_null": -0.08142575971527886,
+            "p_one_sided_high": 0.8572856785803549,
+            "p_two_sided_monte_carlo": 0.28767808047988
+          },
+          "nearest_prior_conspecific_geo_access": {
+            "null_95pct": [
+              0.17063301571026443,
+              0.475742079181469
+            ],
+            "null_mean": 0.31917808882821663,
+            "num_draws": 4000,
+            "observed": 1.831228973075105,
+            "observed_minus_null": 1.5120508842468885,
+            "p_one_sided_high": 0.00024993751562109475,
+            "p_two_sided_monte_carlo": 0.00024993751562109475
+          },
+          "residual_uniform_ocean_access": {
+            "null_95pct": [
+              -0.0019657522365208687,
+              0.13028957770318716
+            ],
+            "null_mean": 0.06146264135210832,
+            "num_draws": 4000,
+            "observed": 0.2419693444701995,
+            "observed_minus_null": 0.18050670311809117,
+            "p_one_sided_high": 0.00024993751562109475,
+            "p_two_sided_monte_carlo": 0.00024993751562109475
+          }
+        }
+      },
+      "within_original_geographic_region": {
+        "chains": [
+          {
+            "acceptance_fraction": 0.030185927015916825,
+            "accepted": 49500,
+            "chain": 0,
+            "proposed": 1639837,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": 0.0075842527507439415,
+              "centered_wing_x_ocean_access": -0.2185298125307573,
+              "nearest_prior_conspecific_geo_access": 1.57960389418519,
+              "residual_uniform_ocean_access": 0.18954657540445588
+            }
+          },
+          {
+            "acceptance_fraction": 0.030050594273267357,
+            "accepted": 49500,
+            "chain": 1,
+            "proposed": 1647222,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": 0.01092625041791916,
+              "centered_wing_x_ocean_access": -0.21692472077019742,
+              "nearest_prior_conspecific_geo_access": 1.5797339405484354,
+              "residual_uniform_ocean_access": 0.1885734282549918
+            }
+          },
+          {
+            "acceptance_fraction": 0.02988933699412297,
+            "accepted": 49500,
+            "chain": 2,
+            "proposed": 1656109,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": 0.013119690679586439,
+              "centered_wing_x_ocean_access": -0.2163503110527541,
+              "nearest_prior_conspecific_geo_access": 1.5771048769631795,
+              "residual_uniform_ocean_access": 0.19026925412932075
+            }
+          },
+          {
+            "acceptance_fraction": 0.02997384101148089,
+            "accepted": 49500,
+            "chain": 3,
+            "proposed": 1651440,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": 0.013728815183687824,
+              "centered_wing_x_ocean_access": -0.21680180210874156,
+              "nearest_prior_conspecific_geo_access": 1.579018591605832,
+              "residual_uniform_ocean_access": 0.187332526390937
+            }
+          }
+        ],
+        "not_arrival_colonisation_or_actual_migration": true,
+        "status": "EXPLORATORY_AUTHOR_SELECTED_MIGRANT_CONDITIONAL_GBIF_INDEX",
+        "support": {
+          "eligible_2x2_switch_pairs_initial": 292,
+          "fraction_initially_swappable": 0.7985611510791367,
+          "positive_cells": 139,
+          "positive_cells_initially_in_swaps": 111,
+          "support_does_not_prove_MCMC_mix": true
+        },
+        "tests": {
+          "centered_wing_x_geo_access": {
+            "null_95pct": [
+              -0.05902390824795639,
+              0.0768980980478356
+            ],
+            "null_mean": 0.011339752257984332,
+            "num_draws": 3000,
+            "observed": -0.021139211658088033,
+            "observed_minus_null": -0.03247896391607236,
+            "p_one_sided_high": 0.8243918693768744,
+            "p_two_sided_monte_carlo": 0.3598800399866711
+          },
+          "centered_wing_x_ocean_access": {
+            "null_95pct": [
+              -0.27838236389821375,
+              -0.1569903756134672
+            ],
+            "null_mean": -0.21715166161561258,
+            "num_draws": 3000,
+            "observed": -0.16984781613855154,
+            "observed_minus_null": 0.04730384547706104,
+            "p_one_sided_high": 0.06564478507164279,
+            "p_two_sided_monte_carlo": 0.13462179273575475
+          },
+          "nearest_prior_conspecific_geo_access": {
+            "null_95pct": [
+              1.5065895995191447,
+              1.6597269817225382
+            ],
+            "null_mean": 1.5788653258256589,
+            "num_draws": 3000,
+            "observed": 1.831228973075105,
+            "observed_minus_null": 0.25236364724944615,
+            "p_one_sided_high": 0.0003332222592469177,
+            "p_two_sided_monte_carlo": 0.0003332222592469177
+          },
+          "residual_uniform_ocean_access": {
+            "null_95pct": [
+              0.14951890484214525,
+              0.23267918233339563
+            ],
+            "null_mean": 0.18893044604492645,
+            "num_draws": 3000,
+            "observed": 0.2419693444701995,
+            "observed_minus_null": 0.05303889842527304,
+            "p_one_sided_high": 0.011329556814395202,
+            "p_two_sided_monte_carlo": 0.01432855714761746
+          }
+        }
+      }
+    },
+    "2018_2022": {
+      "candidate_species": 68,
+      "indexed_first_cases": 64,
+      "ocean_from_geo_source_only_quadratic_beta": [
+        -0.44875861970995334,
+        0.33022516413689457,
+        -0.0060908858707472485
+      ],
+      "risk_cells": 2697,
+      "source_geographic_islands": 49,
+      "two_margin": {
+        "chains": [
+          {
+            "acceptance_fraction": 0.47331112317830254,
+            "accepted": 64500,
+            "chain": 0,
+            "proposed": 136274,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.011965967590746442,
+              "centered_wing_x_ocean_access": 0.001983773648404567,
+              "nearest_prior_conspecific_geo_access": 0.5013311765041278,
+              "residual_uniform_ocean_access": 0.006166641373401266
+            }
+          },
+          {
+            "acceptance_fraction": 0.4705281587394222,
+            "accepted": 64500,
+            "chain": 1,
+            "proposed": 137080,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.007141740990982184,
+              "centered_wing_x_ocean_access": 0.006867572918861335,
+              "nearest_prior_conspecific_geo_access": 0.5022238300090319,
+              "residual_uniform_ocean_access": 0.00543467521235493
+            }
+          },
+          {
+            "acceptance_fraction": 0.4699248120300752,
+            "accepted": 64500,
+            "chain": 2,
+            "proposed": 137256,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.002294343020429956,
+              "centered_wing_x_ocean_access": 0.005304205787304106,
+              "nearest_prior_conspecific_geo_access": 0.5113318116924104,
+              "residual_uniform_ocean_access": 0.007561963270511583
+            }
+          },
+          {
+            "acceptance_fraction": 0.47077542917201914,
+            "accepted": 64500,
+            "chain": 3,
+            "proposed": 137008,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": 0.0021122864498715564,
+              "centered_wing_x_ocean_access": 0.006754066419474137,
+              "nearest_prior_conspecific_geo_access": 0.5022514469871285,
+              "residual_uniform_ocean_access": 0.004825112042432693
+            }
+          }
+        ],
+        "not_arrival_colonisation_or_actual_migration": true,
+        "status": "EXPLORATORY_AUTHOR_SELECTED_MIGRANT_CONDITIONAL_GBIF_INDEX",
+        "support": {
+          "eligible_2x2_switch_pairs_initial": 979,
+          "fraction_initially_swappable": 1.0,
+          "positive_cells": 64,
+          "positive_cells_initially_in_swaps": 64,
+          "support_does_not_prove_MCMC_mix": true
+        },
+        "tests": {
+          "centered_wing_x_geo_access": {
+            "null_95pct": [
+              -0.19056893002766928,
+              0.17714502426833434
+            ],
+            "null_mean": -0.004822441288071752,
+            "num_draws": 4000,
+            "observed": -0.15273111372618717,
+            "observed_minus_null": -0.14790867243811542,
+            "p_one_sided_high": 0.9385153711572107,
+            "p_two_sided_monte_carlo": 0.11897025743564109
+          },
+          "centered_wing_x_ocean_access": {
+            "null_95pct": [
+              -0.20301044563823217,
+              0.21399832579295708
+            ],
+            "null_mean": 0.0052274046935110365,
+            "num_draws": 4000,
+            "observed": -0.1532958116698428,
+            "observed_minus_null": -0.15852321636335384,
+            "p_one_sided_high": 0.9265183704073982,
+            "p_two_sided_monte_carlo": 0.14346413396650837
+          },
+          "nearest_prior_conspecific_geo_access": {
+            "null_95pct": [
+              0.3246171397378064,
+              0.7113220002937596
+            ],
+            "null_mean": 0.5042845662981744,
+            "num_draws": 4000,
+            "observed": 1.65039771205914,
+            "observed_minus_null": 1.1461131457609657,
+            "p_one_sided_high": 0.00024993751562109475,
+            "p_two_sided_monte_carlo": 0.00024993751562109475
+          },
+          "residual_uniform_ocean_access": {
+            "null_95pct": [
+              -0.07410660744652775,
+              0.10101302706078305
+            ],
+            "null_mean": 0.005997097974675116,
+            "num_draws": 4000,
+            "observed": 0.15729549192649425,
+            "observed_minus_null": 0.15129839395181913,
+            "p_one_sided_high": 0.0022494376405898524,
+            "p_two_sided_monte_carlo": 0.0022494376405898524
+          }
+        }
+      },
+      "within_original_geographic_region": {
+        "chains": [
+          {
+            "acceptance_fraction": 0.042302594302737875,
+            "accepted": 49500,
+            "chain": 0,
+            "proposed": 1170141,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.1921033543465649,
+              "centered_wing_x_ocean_access": -0.1507102177695736,
+              "nearest_prior_conspecific_geo_access": 1.5208210016763548,
+              "residual_uniform_ocean_access": 0.11726595743958657
+            }
+          },
+          {
+            "acceptance_fraction": 0.04268746480440086,
+            "accepted": 49500,
+            "chain": 1,
+            "proposed": 1159591,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.1954337924034777,
+              "centered_wing_x_ocean_access": -0.15168780843751944,
+              "nearest_prior_conspecific_geo_access": 1.5171514305403158,
+              "residual_uniform_ocean_access": 0.11672456112060134
+            }
+          },
+          {
+            "acceptance_fraction": 0.04230017227706527,
+            "accepted": 49500,
+            "chain": 2,
+            "proposed": 1170208,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.19145476524203486,
+              "centered_wing_x_ocean_access": -0.15146781053417468,
+              "nearest_prior_conspecific_geo_access": 1.517692129362634,
+              "residual_uniform_ocean_access": 0.11679924439403429
+            }
+          },
+          {
+            "acceptance_fraction": 0.042894615295959844,
+            "accepted": 49500,
+            "chain": 3,
+            "proposed": 1153991,
+            "statistics_mean": {
+              "centered_wing_x_geo_access": -0.19457013114192856,
+              "centered_wing_x_ocean_access": -0.1538056657000739,
+              "nearest_prior_conspecific_geo_access": 1.5140154436252047,
+              "residual_uniform_ocean_access": 0.11572482775072802
+            }
+          }
+        ],
+        "not_arrival_colonisation_or_actual_migration": true,
+        "status": "EXPLORATORY_AUTHOR_SELECTED_MIGRANT_CONDITIONAL_GBIF_INDEX",
+        "support": {
+          "eligible_2x2_switch_pairs_initial": 84,
+          "fraction_initially_swappable": 0.65625,
+          "positive_cells": 64,
+          "positive_cells_initially_in_swaps": 42,
+          "support_does_not_prove_MCMC_mix": true
+        },
+        "tests": {
+          "centered_wing_x_geo_access": {
+            "null_95pct": [
+              -0.2725357304128836,
+              -0.11151890653483301
+            ],
+            "null_mean": -0.19339051078350158,
+            "num_draws": 3000,
+            "observed": -0.15273111372618717,
+            "observed_minus_null": 0.04065939705731442,
+            "p_one_sided_high": 0.1602799066977674,
+            "p_two_sided_monte_carlo": 0.32255914695101634
+          },
+          "centered_wing_x_ocean_access": {
+            "null_95pct": [
+              -0.23436359440668472,
+              -0.06469531455004424
+            ],
+            "null_mean": -0.15191787561033532,
+            "num_draws": 3000,
+            "observed": -0.1532958116698428,
+            "observed_minus_null": -0.0013779360595074786,
+            "p_one_sided_high": 0.5078307230923026,
+            "p_two_sided_monte_carlo": 0.9760079973342219
+          },
+          "nearest_prior_conspecific_geo_access": {
+            "null_95pct": [
+              1.434515384775631,
+              1.6002497108898845
+            ],
+            "null_mean": 1.5174200013011268,
+            "num_draws": 3000,
+            "observed": 1.65039771205914,
+            "observed_minus_null": 0.13297771075801323,
+            "p_one_sided_high": 0.0026657780739753416,
+            "p_two_sided_monte_carlo": 0.0026657780739753416
+          },
+          "residual_uniform_ocean_access": {
+            "null_95pct": [
+              0.0520920537772664,
+              0.18309324828622509
+            ],
+            "null_mean": 0.11662864767623762,
+            "num_draws": 3000,
+            "observed": 0.15729549192649425,
+            "observed_minus_null": 0.04066684425025663,
+            "p_one_sided_high": 0.11762745751416194,
+            "p_two_sided_monte_carlo": 0.22859046984338555
+          }
+        }
+      }
+    }
+  },
+  "region_groups_frozen_from_all_51_before_exclusion": true,
+  "roster_git_sha1": "439dd1034ca16f96ff94222695d98dc39747c2e4",
+  "schema": "chocho_public51_author_selected_migrant_two_margin_20261109_v1",
+  "scientific_target": "GBIF first INDEX of butterflies with previous indexed conspecific source within the 51 landmass sample; not real dispersal",
+  "sensitivity_excluded_original_landmass_ids": [
+    "9",
+    "15"
+  ],
+  "source_island_groups_remaining": 49,
+  "source_sha256": "d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887",
+  "status": "EXPLORATORY_WITHIN_POSITIVELY_AUTHOR_REVIEW_SELECTED_SPECIES_NOT_MIGRANT_VS_NONMIGRANT",
+  "strictly_remove_excluded_islands_from_both_target_records_and_prior_conspecific_index_sources": true
+}

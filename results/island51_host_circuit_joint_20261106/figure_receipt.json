@@ -1,0 +1,109 @@
+{
+  "description": "Exact saved model MSEs and the two conditional comparisons; no independent-fold intervals",
+  "inputs_sha256": {
+    "model_summary.csv": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+    "comparison_summary.csv": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee"
+  },
+  "outputs": [
+    "joint_host_circuit_summary.png",
+    "joint_host_circuit_summary.svg"
+  ],
+  "outputs_sha256": {
+    "joint_host_circuit_summary.png": "dc61b55f81379b3db86da5be66b5b762d4167023f05e738ed5b9ef7735c92112",
+    "joint_host_circuit_summary.svg": "87b8d5ff222ec6c0c25a4754659e07440644ee0bc80497a5ec421371fc81058a"
+  },
+  "renderer_sha256": "376ad92d812a2a1275824cd5c487be0fa48504a1d22b38fd2a1d91a0c0743d78",
+  "values_in_left_panel": [
+    {
+      "model": "G",
+      "MSE": 0.0064523062608844,
+      "MAE": 0.0571634316379044
+    },
+    {
+      "model": "H",
+      "MSE": 0.0063054522474417,
+      "MAE": 0.0558631303101077
+    },
+    {
+      "model": "C",
+      "MSE": 0.0060002265973629,
+      "MAE": 0.0541318508090059
+    },
+    {
+      "model": "HC",
+      "MSE": 0.0058963529258332,
+      "MAE": 0.0533333236115888
+    },
+    {
+      "model": "I",
+      "MSE": 0.0058761453477628,
+      "MAE": 0.0534032387446752
+    }
+  ],
+  "values_in_right_panel": [
+    {
+      "comparison": "C_to_HC",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "C",
+      "augmented_model": "HC",
+      "MSE_reference": 0.0060002265973629,
+      "MSE_augmented": 0.0058963529258332,
+      "relative_MSE_reduction_percent": 1.731162479353141,
+      "MAE_reference": 0.0541318508090059,
+      "MAE_augmented": 0.0533333236115888,
+      "absolute_MSE_gain": 0.0001038736715297,
+      "islands_improved": 31,
+      "islands_worse": 20,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "H_to_HC",
+      "target": "new_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "H",
+      "augmented_model": "HC",
+      "MSE_reference": 0.0063054522474417,
+      "MSE_augmented": 0.0058963529258332,
+      "relative_MSE_reduction_percent": 6.488025054419857,
+      "MAE_reference": 0.0558631303101077,
+      "MAE_augmented": 0.0533333236115888,
+      "absolute_MSE_gain": 0.0004090993216084,
+      "islands_improved": 39,
+      "islands_worse": 12,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "C_to_HC",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "C",
+      "augmented_model": "HC",
+      "MSE_reference": 0.0111428716918903,
+      "MSE_augmented": 0.0105528549748231,
+      "relative_MSE_reduction_percent": 5.29501490622605,
+      "MAE_reference": 0.070941809544697,
+      "MAE_augmented": 0.0683689405315076,
+      "absolute_MSE_gain": 0.0005900167170672,
+      "islands_improved": 33,
+      "islands_worse": 18,
+      "islands_tied": 0
+    },
+    {
+      "comparison": "H_to_HC",
+      "target": "earlier_butterfly_jaccard",
+      "comparison_role": "primary",
+      "reference_model": "H",
+      "augmented_model": "HC",
+      "MSE_reference": 0.0104139429026756,
+      "MSE_augmented": 0.0105528549748231,
+      "relative_MSE_reduction_percent": -1.3339046838044677,
+      "MAE_reference": 0.0678973192061905,
+      "MAE_augmented": 0.0683689405315076,
+      "absolute_MSE_gain": -0.0001389120721475,
+      "islands_improved": 22,
+      "islands_worse": 29,
+      "islands_tied": 0
+    }
+  ]
+}

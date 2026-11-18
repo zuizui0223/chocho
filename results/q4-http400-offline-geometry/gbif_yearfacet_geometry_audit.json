@@ -1,0 +1,148 @@
+{
+  "schema": "chocho_GBIF_historical_plant_year_HTTP400_geographic_diagnosis_v0.1",
+  "source_retried_run": 41412312725,
+  "network_requests_made_by_this_diagnostic": 0,
+  "n_retried": 12,
+  "n_http400": 7,
+  "n_retried_dated": 4,
+  "status_by_geometry_type": {
+    "HTTP_400": {
+      "MultiPolygon": 7
+    },
+    "non_HTTP_400": {
+      "MultiPolygon": 4,
+      "Polygon": 1
+    }
+  },
+  "http400_body_excerpts": [],
+  "per_region": [
+    {
+      "plant_id": "2703260",
+      "region": "NWG",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 7106,
+      "n_geographic_parts": 45,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2614368",
+      "region": "NWG",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 7106,
+      "n_geographic_parts": 45,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2697999",
+      "region": "CRZ",
+      "status": "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 289,
+      "n_geographic_parts": 3,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2707791",
+      "region": "SUM",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 7321,
+      "n_geographic_parts": 67,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2559676",
+      "region": "MOL",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 4062,
+      "n_geographic_parts": 36,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2601837",
+      "region": "SOL",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 5036,
+      "n_geographic_parts": 50,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "223906",
+      "region": "MRQ",
+      "status": "DATED_OCCURRENCE_FOUND",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 1004,
+      "n_geographic_parts": 11,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2394644",
+      "region": "TUA",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 4148,
+      "n_geographic_parts": 44,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2503912",
+      "region": "SOL",
+      "status": "HTTP_400",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 5036,
+      "n_geographic_parts": 50,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "398398",
+      "region": "MRQ",
+      "status": "DATED_OCCURRENCE_FOUND",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 1004,
+      "n_geographic_parts": 11,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "3119664",
+      "region": "REU",
+      "status": "DATED_OCCURRENCE_FOUND",
+      "geometry_type": "Polygon",
+      "wkt_chars": 132,
+      "n_geographic_parts": 1,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    },
+    {
+      "plant_id": "2523199",
+      "region": "HAW",
+      "status": "DATED_OCCURRENCE_FOUND",
+      "geometry_type": "MultiPolygon",
+      "wkt_chars": 1811,
+      "n_geographic_parts": 17,
+      "geometry_fidelity": 1.0,
+      "gbif_error_body_excerpt": ""
+    }
+  ],
+  "diagnosis_is_causal": false,
+  "notes": [
+    "The geometries are the original query geometries, not simplified bounding boxes or location guesses.",
+    "An HTTP400 response is a rejected GBIF API request. Never mark plant as absent.",
+    "If MULTIPOLYGON geometry is a consistent failure mode, split-query logic requires overlap-safe aggregation and quality checks before a full rerun.",
+    "Avoid treating a diagnostic comparison of a few WKT geometries as proof that all 25 original 400 queries share a single cause.",
+    "The successful dated 4 cases must be preserved, not folded into the original 219 response-blind record count without a new version."
+  ]
+}

@@ -1,0 +1,1717 @@
+{
+  "schema": "chocho_HOSTS_vs_whole_family_matched_WCVP_baseline_20261116_v1",
+  "status": "SOURCE_VERIFIED_OBSERVATIONAL_TAXON_OPPORTUNITY_BASELINE_NOT_FIELD_PREFERENCE",
+  "source_run": 43887252612,
+  "source_Hosts_commit": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+  "source_WCVP_commit": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+  "regions": 139,
+  "accepted_WCVP_species_region_records": 809162,
+  "accepted_WCVP_global_species": 360064,
+  "family_region_count_rows": 132568,
+  "original_WCVP_island_flora_validation": {
+    "matching_island_regions": 44,
+    "mismatches": 0,
+    "all_source_baseline_regions": 139
+  },
+  "original_cohorts": {
+    "HOSTS_Papilionoidea": "Primary same butterflies",
+    "fixed239_butterflies": "Subset original chocho 239",
+    "all_HOSTS_lepidoptera": "Sensitivity broader moth+butterfly"
+  },
+  "scopes": {
+    "HOSTS_Papilionoidea__all_hosts__min10": {
+      "n": 24,
+      "host_rows": 2110,
+      "island": {
+        "localities": 12,
+        "median_host_report_alien_share": 0.43434343434343436,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.16543886531510293,
+          0.6109375
+        ],
+        "median_flora_all_alien_share": 0.17590299848808383,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.11878758214130253,
+          0.2899216274809541
+        ],
+        "median_flora_family_mixture_expected_share": 0.28438508694185655,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.17512428779291356,
+          0.44754796786753925
+        ],
+        "median_host_minus_flora_all": 0.15316942246876716,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          0.021494793256550224,
+          0.3186485744897693
+        ],
+        "median_host_minus_flora_family": 0.05308344340199836,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.013094611525125976,
+          0.1814660602044334
+        ]
+      },
+      "mainland": {
+        "localities": 12,
+        "median_host_report_alien_share": 0.08782742681047766,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.07417582417582418,
+          0.11815856777493605
+        ],
+        "median_flora_all_alien_share": 0.061745358580663046,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.044094289733240824,
+          0.11981818112100384
+        ],
+        "median_flora_family_mixture_expected_share": 0.09438383625194842,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.05479941835667818,
+          0.12078902769892497
+        ],
+        "median_host_minus_flora_all": 0.014312351717893294,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.060286628230745126,
+          0.04373313707723683
+        ],
+        "median_host_minus_flora_family": -0.018340370065000215,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.060767166602685344,
+          0.032802995313697736
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            12,
+            12
+          ],
+          "median_difference": 0.3465160075329567,
+          "descriptive_locality_bootstrap95": [
+            0.07452977440601202,
+            0.5261917372881356
+          ],
+          "exploratory_mannwhitney_p": 0.014117006113376324,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            12,
+            12
+          ],
+          "median_difference": 0.13885707075087386,
+          "descriptive_locality_bootstrap95": [
+            0.009378139357411094,
+            0.3215313079102494
+          ],
+          "exploratory_mannwhitney_p": 0.0303828219765775,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            12,
+            12
+          ],
+          "median_difference": 0.07142381346699858,
+          "descriptive_locality_bootstrap95": [
+            -0.016678186389706102,
+            0.20557990340799695
+          ],
+          "exploratory_mannwhitney_p": 0.1939308522824107,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 24,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.18255183567464106,
+          "is_island": 0.12377305022121074,
+          "log2_1plus_WPI_ports": -0.02302468546157236,
+          "log_region_area_km2": 0.019248925987729662,
+          "log1plus_HOSTS_record_count": 0.0024355335910713413
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.839037798577385,
+            0.34669754998140423
+          ],
+          "is_island": [
+            -0.028803765925860134,
+            0.2870510842337159
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.09275731247054537,
+            0.018447673289302902
+          ],
+          "log_region_area_km2": [
+            -0.024242460152389563,
+            0.07208424613907939
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.05226020883643799,
+            0.1028333256073236
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 4,
+      "continental": 4
+    },
+    "HOSTS_Papilionoidea__exclude_FAO_exact__min10": {
+      "n": 22,
+      "host_rows": 1898,
+      "island": {
+        "localities": 11,
+        "median_host_report_alien_share": 0.20967741935483872,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.08345323741007195,
+          0.4857142857142857
+        ],
+        "median_flora_all_alien_share": 0.15862708719851576,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.1050628092881614,
+          0.26824034334763946
+        ],
+        "median_flora_family_mixture_expected_share": 0.21740902945018925,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.12151150517549911,
+          0.3542461177363247
+        ],
+        "median_host_minus_flora_all": -0.01018958719851576,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.05856292399280075,
+          0.21609294733304524
+        ],
+        "median_host_minus_flora_family": -0.03805826776542716,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.1177057266166177,
+          0.10195198865711073
+        ]
+      },
+      "mainland": {
+        "localities": 11,
+        "median_host_report_alien_share": 0.07142857142857142,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.038461538461538464,
+          0.1111111111111111
+        ],
+        "median_flora_all_alien_share": 0.06725043782837128,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.03657539844707806,
+          0.12877833753148615
+        ],
+        "median_flora_family_mixture_expected_share": 0.08611498889383985,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.05347593582887701,
+          0.11487964905923682
+        ],
+        "median_host_minus_flora_all": -0.015783987249000278,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.05240290289950508,
+          0.025052619087769262
+        ],
+        "median_host_minus_flora_family": -0.017261579657200224,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.08493952929875778,
+          0.007400395391404885
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": 0.1382488479262673,
+          "descriptive_locality_bootstrap95": [
+            0.012024665981500524,
+            0.41428571428571426
+          ],
+          "exploratory_mannwhitney_p": 0.027778586009314783,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": 0.005594400050484519,
+          "descriptive_locality_bootstrap95": [
+            -0.06274105759300089,
+            0.2415035395251816
+          ],
+          "exploratory_mannwhitney_p": 0.4701007598741286,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": -0.020796688108226935,
+          "descriptive_locality_bootstrap95": [
+            -0.10044414695941747,
+            0.12690985076119804
+          ],
+          "exploratory_mannwhitney_p": 0.9476445296225945,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 22,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.3435008110308208,
+          "is_island": 0.06074380613966637,
+          "log2_1plus_WPI_ports": -0.016889962297718428,
+          "log_region_area_km2": 0.02989803200799658,
+          "log1plus_HOSTS_record_count": 0.003943976030151609
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.8863640351541417,
+            0.03246721818850017
+          ],
+          "is_island": [
+            -0.05109024932667947,
+            0.19333632593644298
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.06598563333491422,
+            0.01639610213416379
+          ],
+          "log_region_area_km2": [
+            -0.00209816330929172,
+            0.07734315666826244
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.037667183836491376,
+            0.07499474258651422
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 3,
+      "continental": 4
+    },
+    "HOSTS_Papilionoidea__exclude_FAO_exact_plus_genus_wildcards__min10": {
+      "n": 22,
+      "host_rows": 1804,
+      "island": {
+        "localities": 11,
+        "median_host_report_alien_share": 0.20833333333333334,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.08507462686567165,
+          0.5121951219512195
+        ],
+        "median_flora_all_alien_share": 0.15271867612293144,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.10413416536661467,
+          0.2597686777117849
+        ],
+        "median_flora_family_mixture_expected_share": 0.2140983758199184,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.12768487551096244,
+          0.3471576718533575
+        ],
+        "median_host_minus_flora_all": -0.0042811761229314405,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.06952320196578773,
+          0.19012791286727457
+        ],
+        "median_host_minus_flora_family": -0.035851634472822386,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.12768487551096244,
+          0.10582500881944745
+        ]
+      },
+      "mainland": {
+        "localities": 11,
+        "median_host_report_alien_share": 0.07017543859649122,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.01948051948051948,
+          0.1038961038961039
+        ],
+        "median_flora_all_alien_share": 0.06490727532097004,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.03477717617659309,
+          0.12504049238743117
+        ],
+        "median_flora_family_mixture_expected_share": 0.08278751123941923,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.04958677685950415,
+          0.1134513992705032
+        ],
+        "median_host_minus_flora_all": -0.03477717617659309,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04671781151999432,
+          0.019616691780315484
+        ],
+        "median_host_minus_flora_family": -0.02500380278547948,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.09323968041634212,
+          -0.001967729240456531
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": 0.13815789473684212,
+          "descriptive_locality_bootstrap95": [
+            0.014899188269180422,
+            0.4420196833547283
+          ],
+          "exploratory_mannwhitney_p": 0.017951619010479074,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": 0.030496000053661647,
+          "descriptive_locality_bootstrap95": [
+            -0.03867623028125851,
+            0.23357053581809423
+          ],
+          "exploratory_mannwhitney_p": 0.32463627173040743,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            11,
+            11
+          ],
+          "median_difference": -0.010847831687342907,
+          "descriptive_locality_bootstrap95": [
+            -0.10268107272548296,
+            0.14730336113658746
+          ],
+          "exploratory_mannwhitney_p": 0.8955142436987509,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 22,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.3491023151045207,
+          "is_island": 0.06425683691449402,
+          "log2_1plus_WPI_ports": -0.013398544342430752,
+          "log_region_area_km2": 0.027289020866535493,
+          "log1plus_HOSTS_record_count": 0.009373978986365758
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.9010812100115946,
+            0.07013455347886086
+          ],
+          "is_island": [
+            -0.05040233619091022,
+            0.20528812973988822
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.06541747407991672,
+            0.02009192488586115
+          ],
+          "log_region_area_km2": [
+            -0.007335387267646657,
+            0.07402533471709594
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.03452431642641035,
+            0.08522131857265344
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 3,
+      "continental": 4
+    },
+    "HOSTS_Papilionoidea__exclude_FAO_all_crop_genera__min10": {
+      "n": 20,
+      "host_rows": 1620,
+      "island": {
+        "localities": 11,
+        "median_host_report_alien_share": 0.17543859649122806,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.08681135225375626,
+          0.3939393939393939
+        ],
+        "median_flora_all_alien_share": 0.14360041623309053,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.09497907949790795,
+          0.2471264367816092
+        ],
+        "median_flora_family_mixture_expected_share": 0.21108274866895557,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.1268122081985613,
+          0.35729330406749765
+        ],
+        "median_host_minus_flora_all": 0.014732917100242798,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.07168784029038114,
+          0.19180846853977046
+        ],
+        "median_host_minus_flora_family": -0.0186564582995406,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.1268122081985613,
+          0.08581515280510829
+        ]
+      },
+      "mainland": {
+        "localities": 9,
+        "median_host_report_alien_share": 0.07142857142857142,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0,
+          0.12121212121212122
+        ],
+        "median_flora_all_alien_share": 0.07618510158013544,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.038756677999028655,
+          0.13901734104046243
+        ],
+        "median_flora_family_mixture_expected_share": 0.07800056320315195,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.042605558036929496,
+          0.19208069399491917
+        ],
+        "median_host_minus_flora_all": -0.03451843491346878,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.07977311532123978,
+          0.012014991181657844
+        ],
+        "median_host_minus_flora_family": -0.03869523920471371,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.08049880147068472,
+          0.022839823710874257
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            11,
+            9
+          ],
+          "median_difference": 0.10401002506265664,
+          "descriptive_locality_bootstrap95": [
+            0.015382780825184836,
+            0.3225108225108225
+          ],
+          "exploratory_mannwhitney_p": 0.03993873394489462,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            11,
+            9
+          ],
+          "median_difference": 0.04925135201371158,
+          "descriptive_locality_bootstrap95": [
+            -0.03716940537691236,
+            0.23056514653879912
+          ],
+          "exploratory_mannwhitney_p": 0.22414515405220226,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            11,
+            9
+          ],
+          "median_difference": 0.02003878090517311,
+          "descriptive_locality_bootstrap95": [
+            -0.09810788397860556,
+            0.1284207108420378
+          ],
+          "exploratory_mannwhitney_p": 0.9394400080349974,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 20,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.2987474402636912,
+          "is_island": 0.03822376044865942,
+          "log2_1plus_WPI_ports": -0.009401925820775245,
+          "log_region_area_km2": 0.023563277432654996,
+          "log1plus_HOSTS_record_count": 0.0076816791407667995
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.7848659581231441,
+            0.10365702396497448
+          ],
+          "is_island": [
+            -0.056601319951826594,
+            0.15220528036647687
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.0666695280837151,
+            0.023975889796526758
+          ],
+          "log_region_area_km2": [
+            -0.009144387647378276,
+            0.06725902998305416
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.03548638540771198,
+            0.08312184780541115
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 3,
+      "continental": 4
+    },
+    "fixed239_butterflies__all_hosts__min10": {
+      "n": 13,
+      "host_rows": 554,
+      "island": {
+        "localities": 8,
+        "median_host_report_alien_share": 0.5484330484330484,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.19626168224299065,
+          0.7
+        ],
+        "median_flora_all_alien_share": 0.17590299848808383,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.12573057733428367,
+          0.28241296518607445
+        ],
+        "median_flora_family_mixture_expected_share": 0.30655766517374045,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.2600968475968476,
+          0.50389550803242
+        ],
+        "median_host_minus_flora_all": 0.2376633426703495,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          0.08441709529466926,
+          0.47265650520547986
+        ],
+        "median_host_minus_flora_family": 0.1263284980582628,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.041568782405640214,
+          0.3180486998100487
+        ]
+      },
+      "mainland": {
+        "localities": 5,
+        "median_host_report_alien_share": 0.11538461538461539,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.0847457627118644,
+          0.3269230769230769
+        ],
+        "median_flora_all_alien_share": 0.13362472681860754,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.03773259820813232,
+          0.2180176306170716
+        ],
+        "median_flora_family_mixture_expected_share": 0.14108015275658864,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.06898430717506168,
+          0.3228213413516445
+        ],
+        "median_host_minus_flora_all": -0.021265872711535724,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.10263301523245622,
+          0.28919047871494463
+        ],
+        "median_host_minus_flora_family": -0.05334392910099084,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.20743672596702908,
+          0.2579387697480152
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.433048433048433,
+          "descriptive_locality_bootstrap95": [
+            0.08087706685837526,
+            0.5750000000000001
+          ],
+          "exploratory_mannwhitney_p": 0.06526806526806528,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.25892921538188524,
+          "descriptive_locality_bootstrap95": [
+            -0.0757549222285562,
+            0.5224340611437386
+          ],
+          "exploratory_mannwhitney_p": 0.06526806526806528,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.17967242715925363,
+          "descriptive_locality_bootstrap95": [
+            -0.14268248860948293,
+            0.3847912348939597
+          ],
+          "exploratory_mannwhitney_p": 0.17094017094017094,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 13,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -1.647881987664543,
+          "is_island": 0.4884889913176784,
+          "log2_1plus_WPI_ports": -0.03723353828628101,
+          "log_region_area_km2": 0.14340213319437056,
+          "log1plus_HOSTS_record_count": -0.011584549971585867
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -3.7155806915476974,
+            -0.08418702948670566
+          ],
+          "is_island": [
+            0.045291659890984104,
+            1.0149165938079863
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.17796851600784824,
+            0.017058264369438074
+          ],
+          "log_region_area_km2": [
+            0.02678893257791976,
+            0.31929052388942697
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.1295742374256588,
+            0.23221176089304815
+          ]
+        },
+        "valid_bootstrap_draws": 1498,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 3,
+      "continental": 2
+    },
+    "fixed239_butterflies__exclude_FAO_exact__min10": {
+      "n": 13,
+      "host_rows": 481,
+      "island": {
+        "localities": 8,
+        "median_host_report_alien_share": 0.4142156862745098,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.1568627450980392,
+          0.6666666666666666
+        ],
+        "median_flora_all_alien_share": 0.16133418455526005,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.11724038600028806,
+          0.26824034334763946
+        ],
+        "median_flora_family_mixture_expected_share": 0.26924390488151506,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.24051713581198042,
+          0.4627411614620763
+        ],
+        "median_host_minus_flora_all": 0.2009584989926133,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04324034334763946,
+          0.3442980755381735
+        ],
+        "median_host_minus_flora_family": 0.08942625582206146,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.1434976648646382,
+          0.18026446599859153
+        ]
+      },
+      "mainland": {
+        "localities": 5,
+        "median_host_report_alien_share": 0.125,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.08,
+          0.2727272727272727
+        ],
+        "median_flora_all_alien_share": 0.12877833753148615,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.034020083102493076,
+          0.210595160235448
+        ],
+        "median_flora_family_mixture_expected_share": 0.1279144539319764,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.066508794691982,
+          0.29589994570336814
+        ],
+        "median_host_minus_flora_all": -0.020626468285043068,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.085595160235448,
+          0.23870718962477963
+        ],
+        "median_host_minus_flora_family": -0.047914453931976395,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.17089994570336814,
+          0.2062184780352907
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.2892156862745098,
+          "descriptive_locality_bootstrap95": [
+            0.008239064856711914,
+            0.4839743589743589
+          ],
+          "exploratory_mannwhitney_p": 0.09184496356427185,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.22158496727765636,
+          "descriptive_locality_bootstrap95": [
+            -0.09482977110770394,
+            0.36492454382321654
+          ],
+          "exploratory_mannwhitney_p": 0.2222222222222222,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            8,
+            5
+          ],
+          "median_difference": 0.13734070975403784,
+          "descriptive_locality_bootstrap95": [
+            -0.14669124115547613,
+            0.26510456924453896
+          ],
+          "exploratory_mannwhitney_p": 0.7241647241647241,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 13,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -1.0825153561956535,
+          "is_island": 0.30207167616195546,
+          "log2_1plus_WPI_ports": -0.029859082325722944,
+          "log_region_area_km2": 0.10063782846600325,
+          "log1plus_HOSTS_record_count": -0.025926700546659853
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -3.0886603274323248,
+            0.3316813719594072
+          ],
+          "is_island": [
+            -0.0727220344785183,
+            0.8445498005521261
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.1573486162517786,
+            0.016429577897880736
+          ],
+          "log_region_area_km2": [
+            0.0021389091265941267,
+            0.2524928524150622
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.12809612761194172,
+            0.1809626006469536
+          ]
+        },
+        "valid_bootstrap_draws": 1498,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 3,
+      "continental": 2
+    },
+    "fixed239_butterflies__exclude_FAO_exact_plus_genus_wildcards__min10": {
+      "n": 12,
+      "host_rows": 433,
+      "island": {
+        "localities": 7,
+        "median_host_report_alien_share": 0.36363636363636365,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.15,
+          0.4166666666666667
+        ],
+        "median_flora_all_alien_share": 0.15271867612293144,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.11268221574344023,
+          0.2597686777117849
+        ],
+        "median_flora_family_mixture_expected_share": 0.25906416380554315,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.23862040687122635,
+          0.3598381493415433
+        ],
+        "median_host_minus_flora_all": 0.15065385641846807,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.07341597796143252,
+          0.26255449932099206
+        ],
+        "median_host_minus_flora_family": 0.013508916744500277,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.17562762302575383,
+          0.16450191002450276
+        ]
+      },
+      "mainland": {
+        "localities": 5,
+        "median_host_report_alien_share": 0.1,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.046511627906976744,
+          0.2727272727272727
+        ],
+        "median_flora_all_alien_share": 0.12504049238743117,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.03387747937510971,
+          0.20880913539967375
+        ],
+        "median_flora_family_mixture_expected_share": 0.1278552010321493,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.06636387257786257,
+          0.2877589411566385
+        ],
+        "median_host_minus_flora_all": -0.05061391541609822,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.15880913539967373,
+          0.238849793352163
+        ],
+        "median_host_minus_flora_family": -0.06431113892559615,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.23775894115663854,
+          0.20636340014941013
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": 0.26363636363636367,
+          "descriptive_locality_bootstrap95": [
+            -0.03604651162790698,
+            0.3666666666666667
+          ],
+          "exploratory_mannwhitney_p": 0.10606060606060606,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": 0.2012677718345663,
+          "descriptive_locality_bootstrap95": [
+            -0.13442199720190834,
+            0.31579989085246024
+          ],
+          "exploratory_mannwhitney_p": 0.3434343434343435,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": 0.07782005567009642,
+          "descriptive_locality_bootstrap95": [
+            -0.19285448340490985,
+            0.2512678579011388
+          ],
+          "exploratory_mannwhitney_p": 0.638888888888889,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 12,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -1.0792482538587607,
+          "is_island": 0.26093380974140334,
+          "log2_1plus_WPI_ports": -0.024642200114543295,
+          "log_region_area_km2": 0.08375275253977657,
+          "log1plus_HOSTS_record_count": 0.02112805502235078
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -3.3954489028735586,
+            0.6179445299688637
+          ],
+          "is_island": [
+            -0.14759738187242175,
+            0.7755335289069833
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.15467801438248155,
+            0.03131778415062122
+          ],
+          "log_region_area_km2": [
+            -0.054075881712344225,
+            0.2482432890059268
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.0844847820906039,
+            0.27739806284895285
+          ]
+        },
+        "valid_bootstrap_draws": 1498,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 2,
+      "continental": 2
+    },
+    "fixed239_butterflies__exclude_FAO_all_crop_genera__min10": {
+      "n": 12,
+      "host_rows": 396,
+      "island": {
+        "localities": 7,
+        "median_host_report_alien_share": 0.1891891891891892,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.15730337078651685,
+          0.43478260869565216
+        ],
+        "median_flora_all_alien_share": 0.14360041623309053,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.1030911658559548,
+          0.2471264367816092
+        ],
+        "median_flora_family_mixture_expected_share": 0.25906416380554315,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.23346514340638755,
+          0.3426254758311674
+        ],
+        "median_host_minus_flora_all": 0.062324291288608905,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.05793724759242,
+          0.26054519778040885
+        ],
+        "median_host_minus_flora_family": -0.07809297620618372,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.15343628664197823,
+          0.08009338915137687
+        ]
+      },
+      "mainland": {
+        "localities": 5,
+        "median_host_report_alien_share": 0.11764705882352941,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.024390243902439025,
+          0.3
+        ],
+        "median_flora_all_alien_share": 0.11815181518151815,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.031326205214781466,
+          0.1972972972972973
+        ],
+        "median_flora_family_mixture_expected_share": 0.11010106758937514,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.07419641995850199,
+          0.249363190489726
+        ],
+        "median_host_minus_flora_all": -0.021370282216933018,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.1446657183499289,
+          0.2686737947852185
+        ],
+        "median_host_minus_flora_family": -0.03455246541074275,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.19673161154235758,
+          0.225803580041498
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": 0.07154213036565979,
+          "descriptive_locality_bootstrap95": [
+            -0.11081081081081079,
+            0.38215102974828374
+          ],
+          "exploratory_mannwhitney_p": 0.20202020202020204,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": 0.08369457350554192,
+          "descriptive_locality_bootstrap95": [
+            -0.20634950349660963,
+            0.3290859639360517
+          ],
+          "exploratory_mannwhitney_p": 0.4318181818181819,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            7,
+            5
+          ],
+          "median_difference": -0.04354051079544097,
+          "descriptive_locality_bootstrap95": [
+            -0.30389655624768175,
+            0.21944486540319294
+          ],
+          "exploratory_mannwhitney_p": 1,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 12,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.5740818877198074,
+          "is_island": 0.09688703937593551,
+          "log2_1plus_WPI_ports": -0.010089012214959774,
+          "log_region_area_km2": 0.03645247419397328,
+          "log1plus_HOSTS_record_count": 0.03877389643548266
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -3.0559559331938186,
+            1.2103229021139563
+          ],
+          "is_island": [
+            -0.4340228420870534,
+            0.7762195424439597
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.16395272202091957,
+            0.04561759532561209
+          ],
+          "log_region_area_km2": [
+            -0.09632985884075204,
+            0.22284240570805058
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.08734876900823682,
+            0.29175832222710424
+          ]
+        },
+        "valid_bootstrap_draws": 1498,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 2,
+      "continental": 2
+    },
+    "all_HOSTS_lepidoptera__all_hosts__min10": {
+      "n": 46,
+      "host_rows": 8944,
+      "island": {
+        "localities": 17,
+        "median_host_report_alien_share": 0.4378698224852071,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.2608695652173913,
+          0.6387665198237885
+        ],
+        "median_flora_all_alien_share": 0.16561314791403287,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.09497515184980673,
+          0.28241296518607445
+        ],
+        "median_flora_family_mixture_expected_share": 0.24636781829751897,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.14431358792749757,
+          0.33913707034429486
+        ],
+        "median_host_minus_flora_all": 0.25796602462078155,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          0.04504384527126701,
+          0.44209591058944564
+        ],
+        "median_host_minus_flora_family": 0.19770503491886304,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.033399626516356806,
+          0.25452654625068416
+        ]
+      },
+      "mainland": {
+        "localities": 29,
+        "median_host_report_alien_share": 0.2733812949640288,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.15873015873015872,
+          0.3333333333333333
+        ],
+        "median_flora_all_alien_share": 0.07197496522948539,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.05151975683890578,
+          0.10601163542340013
+        ],
+        "median_flora_family_mixture_expected_share": 0.1333069498390412,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.08540265562581051,
+          0.19045560617852886
+        ],
+        "median_host_minus_flora_all": 0.1693656316916488,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          0.10232639700724808,
+          0.23564869675589648
+        ],
+        "median_host_minus_flora_family": 0.10220181059978134,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          0.05954439382147114,
+          0.1852037082692271
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            17,
+            29
+          ],
+          "median_difference": 0.16448852752117832,
+          "descriptive_locality_bootstrap95": [
+            -0.023333333333333317,
+            0.4061714995122818
+          ],
+          "exploratory_mannwhitney_p": 0.045203657958539256,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            17,
+            29
+          ],
+          "median_difference": 0.08860039292913274,
+          "descriptive_locality_bootstrap95": [
+            -0.12693052251461912,
+            0.2979024522744895
+          ],
+          "exploratory_mannwhitney_p": 0.35079728786720865,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            17,
+            29
+          ],
+          "median_difference": 0.0955032243190817,
+          "descriptive_locality_bootstrap95": [
+            -0.1349710034844092,
+            0.1709270996009174
+          ],
+          "exploratory_mannwhitney_p": 0.45266073438509713,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 46,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.12233826229869078,
+          "is_island": 0.14504896933312467,
+          "log2_1plus_WPI_ports": -0.016946073800361255,
+          "log_region_area_km2": 0.033137573106190865,
+          "log1plus_HOSTS_record_count": -0.02804102774570956
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.6836542963205241,
+            0.43478218912284505
+          ],
+          "is_island": [
+            -0.02722581598222071,
+            0.3392114943914787
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.04997422532179824,
+            0.01373059487378412
+          ],
+          "log_region_area_km2": [
+            -0.008776756323439725,
+            0.07872803905969145
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.07890613445019128,
+            0.017079818775926493
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 6,
+      "continental": 5
+    },
+    "all_HOSTS_lepidoptera__exclude_FAO_exact__min10": {
+      "n": 39,
+      "host_rows": 7117,
+      "island": {
+        "localities": 15,
+        "median_host_report_alien_share": 0.1958041958041958,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.10526315789473684,
+          0.3595505617977528
+        ],
+        "median_flora_all_alien_share": 0.15862708719851576,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.07119741100323625,
+          0.2690602748839051
+        ],
+        "median_flora_family_mixture_expected_share": 0.22506563775624275,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.12123624051765791,
+          0.35465881457010134
+        ],
+        "median_host_minus_flora_all": 0.04722028259262302,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04488162152955204,
+          0.2876311358632301
+        ],
+        "median_host_minus_flora_family": -0.0022165937472770347,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.0762582341210088,
+          0.12231350042044664
+        ]
+      },
+      "mainland": {
+        "localities": 24,
+        "median_host_report_alien_share": 0.10555555555555556,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.058823529411764705,
+          0.23529411764705882
+        ],
+        "median_flora_all_alien_share": 0.06509790299969634,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.04512281950872196,
+          0.10062646828504307
+        ],
+        "median_flora_family_mixture_expected_share": 0.10253638148761826,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.07307692307692307,
+          0.15432325611177872
+        ],
+        "median_host_minus_flora_all": 0.021837300727031363,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.03943192540038476,
+          0.12919097001886315
+        ],
+        "median_host_minus_flora_family": -0.004231098615465877,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.05504570924731311,
+          0.06631047795050932
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": 0.09024864024864025,
+          "descriptive_locality_bootstrap95": [
+            -0.03642752414176653,
+            0.2840343662640719
+          ],
+          "exploratory_mannwhitney_p": 0.03382162846936347,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": 0.02538298186559166,
+          "descriptive_locality_bootstrap95": [
+            -0.1276446362779579,
+            0.2602039279830153
+          ],
+          "exploratory_mannwhitney_p": 0.9654613787091454,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": 0.0020145048681888423,
+          "descriptive_locality_bootstrap95": [
+            -0.09302275208763663,
+            0.12823097102251954
+          ],
+          "exploratory_mannwhitney_p": 0.9884839282159474,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 39,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.1994443000348344,
+          "is_island": 0.05750084779716605,
+          "log2_1plus_WPI_ports": -0.015203200258872049,
+          "log_region_area_km2": 0.022515886983851402,
+          "log1plus_HOSTS_record_count": -0.005265059353373073
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.5848206079005794,
+            0.14264163213425152
+          ],
+          "is_island": [
+            -0.02283720726207442,
+            0.14411298317085927
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.03886550944135932,
+            0.007434313706048682
+          ],
+          "log_region_area_km2": [
+            -0.004755039810002074,
+            0.05280155020288255
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.03753631728390155,
+            0.023908128775513557
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 6,
+      "continental": 5
+    },
+    "all_HOSTS_lepidoptera__exclude_FAO_exact_plus_genus_wildcards__min10": {
+      "n": 39,
+      "host_rows": 6477,
+      "island": {
+        "localities": 15,
+        "median_host_report_alien_share": 0.1958041958041958,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.1111111111111111,
+          0.3301204819277108
+        ],
+        "median_flora_all_alien_share": 0.15271867612293144,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.07102272727272728,
+          0.2606730705911468
+        ],
+        "median_flora_family_mixture_expected_share": 0.2232141185144522,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.12141495806181402,
+          0.3481416531213998
+        ],
+        "median_host_minus_flora_all": 0.04308551968126437,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04470693779904307,
+          0.2456641253834705
+        ],
+        "median_host_minus_flora_family": -0.035184081844846005,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.09182930857760169,
+          0.09995187351389018
+        ]
+      },
+      "mainland": {
+        "localities": 24,
+        "median_host_report_alien_share": 0.09339975093399751,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.04411764705882353,
+          0.19301848049281314
+        ],
+        "median_flora_all_alien_share": 0.06292120930452726,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.04362426722547254,
+          0.09975701943844492
+        ],
+        "median_flora_family_mixture_expected_share": 0.08410132792770031,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.06686626074541582,
+          0.1440736810560498
+        ],
+        "median_host_minus_flora_all": 0.012057818039550281,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04089676216307849,
+          0.08286988264693632
+        ],
+        "median_host_minus_flora_family": -0.017839736754982478,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.0542405924619906,
+          0.053840109844797354
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": 0.1024044448701983,
+          "descriptive_locality_bootstrap95": [
+            -0.005128205128205138,
+            0.26777416696674194
+          ],
+          "exploratory_mannwhitney_p": 0.02253505637017541,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": 0.031027701641714086,
+          "descriptive_locality_bootstrap95": [
+            -0.09079159800829421,
+            0.24770247809920592
+          ],
+          "exploratory_mannwhitney_p": 0.8738490423006635,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            15,
+            24
+          ],
+          "median_difference": -0.017344345089863527,
+          "descriptive_locality_bootstrap95": [
+            -0.09651501053828172,
+            0.11668606331817911
+          ],
+          "exploratory_mannwhitney_p": 0.9654613787091454,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 39,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.20626911361066083,
+          "is_island": 0.053269888512786634,
+          "log2_1plus_WPI_ports": -0.01605424073542975,
+          "log_region_area_km2": 0.022132562051172908,
+          "log1plus_HOSTS_record_count": -0.004178095860183195
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.5905170729052989,
+            0.12927300650991266
+          ],
+          "is_island": [
+            -0.01689783919121189,
+            0.1402809208584891
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.039206706355226,
+            0.006203567315887147
+          ],
+          "log_region_area_km2": [
+            -0.0038636620130714627,
+            0.05274187766254895
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.03678923919115302,
+            0.025178089184380546
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 6,
+      "continental": 5
+    },
+    "all_HOSTS_lepidoptera__exclude_FAO_all_crop_genera__min10": {
+      "n": 37,
+      "host_rows": 5743,
+      "island": {
+        "localities": 15,
+        "median_host_report_alien_share": 0.20689655172413793,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.1111111111111111,
+          0.34055727554179566
+        ],
+        "median_flora_all_alien_share": 0.14360041623309053,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.06324635117204777,
+          0.2479637031052862
+        ],
+        "median_flora_family_mixture_expected_share": 0.21947944650575293,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.12038936062113043,
+          0.33193963106670094
+        ],
+        "median_host_minus_flora_all": 0.03960569063713848,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.03471598250460537,
+          0.24891985614173417
+        ],
+        "median_host_minus_flora_family": -0.03188004385094409,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.10281610745552922,
+          0.08403228431531118
+        ]
+      },
+      "mainland": {
+        "localities": 22,
+        "median_host_report_alien_share": 0.06666666666666667,
+        "median_host_report_alien_share_bootstrap95_descriptive": [
+          0.029924242424242423,
+          0.16806722689075632
+        ],
+        "median_flora_all_alien_share": 0.06150629710784463,
+        "median_flora_all_alien_share_bootstrap95_descriptive": [
+          0.04479583049199899,
+          0.09773183286559721
+        ],
+        "median_flora_family_mixture_expected_share": 0.08513211590083374,
+        "median_flora_family_mixture_expected_share_bootstrap95_descriptive": [
+          0.06818181818181818,
+          0.15513122296579032
+        ],
+        "median_host_minus_flora_all": -0.0347758888195596,
+        "median_host_minus_flora_all_bootstrap95_descriptive": [
+          -0.04122873825844123,
+          0.03332050027338515
+        ],
+        "median_host_minus_flora_family": -0.028845885328988862,
+        "median_host_minus_flora_family_bootstrap95_descriptive": [
+          -0.06651336176763195,
+          0.010276991559004814
+        ]
+      },
+      "contrasts": {
+        "raw_report_share": {
+          "n": [
+            15,
+            22
+          ],
+          "median_difference": 0.14022988505747125,
+          "descriptive_locality_bootstrap95": [
+            0.03418803418803418,
+            0.2877246041629603
+          ],
+          "exploratory_mannwhitney_p": 0.012639443036162913,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "whole_flora_adjusted_excess": {
+          "n": [
+            15,
+            22
+          ],
+          "median_difference": 0.07438157945669807,
+          "descriptive_locality_bootstrap95": [
+            -0.0355196485780155,
+            0.24719427628672763
+          ],
+          "exploratory_mannwhitney_p": 0.4485149959925677,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        },
+        "family_flora_adjusted_excess": {
+          "n": [
+            15,
+            22
+          ],
+          "median_difference": -0.0030341585219552276,
+          "descriptive_locality_bootstrap95": [
+            -0.06698868464576592,
+            0.12076978560714091
+          ],
+          "exploratory_mannwhitney_p": 0.79259490166397,
+          "test_unit": "HOSTS original exact locality; geography and host reporting correlated"
+        }
+      },
+      "ports": {
+        "status": "EXPLORATORY_EQUAL_LOCALITY_EMPIRICAL_LOGIT",
+        "n": 37,
+        "rank": 5,
+        "coef_log_odds": {
+          "intercept": -0.34340449857063615,
+          "is_island": 0.08720861962487306,
+          "log2_1plus_WPI_ports": -0.02333683143685034,
+          "log_region_area_km2": 0.0315166712536684,
+          "log1plus_HOSTS_record_count": 0.0027963154252445555
+        },
+        "source_locality_bootstrap_95pct_descriptive": {
+          "intercept": [
+            -0.7414112322435822,
+            -0.019907807160927646
+          ],
+          "is_island": [
+            0.026026450229702527,
+            0.1660988819806927
+          ],
+          "log2_1plus_WPI_ports": [
+            -0.045195842002619745,
+            -0.002813753256858829
+          ],
+          "log_region_area_km2": [
+            0.007610120583283585,
+            0.06052081955406951
+          ],
+          "log1plus_HOSTS_record_count": [
+            -0.027893507291905744,
+            0.032585645329550036
+          ]
+        },
+        "valid_bootstrap_draws": 1499,
+        "model_unit": "one original HOSTS Location label",
+        "model_description": "unweighted empirical logit of (introduced+0.5)/(resolved+1); origin as outcome, island and marine-geology indicators and WPI port count plus region area and recording intensity",
+        "not_causal": true
+      },
+      "oceanic": 6,
+      "continental": 5
+    }
+  },
+  "warning": "Current vascular flora and within-family expected alien fraction are proxies for plant taxonomic supply not abundance of edible host plants; no wild larval consumption, preference, shipping, population persistence or causal mediation inferred",
+  "port_model_note": "This source script's borrowed static model_description wrongly refers to empirical logit. In this analysis the response is host-minus-family-flora fraction, so coefficients are FRACTION-POINT differences and not log odds. Treat via verified results only."
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS_SYNTHETIC_INTEGRATION_NOT_REAL_DATA_RESULT",
+  "test": "test_route_terrain_aggregation.py",
+  "checks": [
+    "full-pass gate",
+    "failed-retrieval gate",
+    "corrupted-data hash rejection",
+    "80 percent boundary accepted",
+    "75 percent support flagged unknown",
+    "two valid samples flagged unknown",
+    "ocean-only raw quantiles remain missing",
+    "all species-cell rows retained"
+  ],
+  "script_sha256": "f51d5824aa891165f14a6f7312bbf831b69b9f39252084a4c5f86f81ac268f39",
+  "implementation_sha256": "5450438dbf3ac5bfd7ddb62569272c4a3cefcfba511a33e6de7dcb50fe09bc44",
+  "limits": "Temporary synthetic four-route fixture; full real-data aggregation remains pending acquisition."
+}

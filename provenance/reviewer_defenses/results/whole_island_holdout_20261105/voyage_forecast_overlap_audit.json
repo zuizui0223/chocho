@@ -1,0 +1,61 @@
+{
+  "status": "SOURCE_PINNED_SPATIAL_TEMPORAL_OVERLAP_AUDIT_NOT_NEW_MODEL",
+  "source_commit": "bb9f7d08e09416635725359eb4c7c3c48b866a33",
+  "sources": {
+    "ais_2020_wpi51_island_5km.audit.json": {
+      "commit": "bb9f7d08e09416635725359eb4c7c3c48b866a33",
+      "path": "provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_5km.audit.json",
+      "sha256": "abc9a9724af42dda3ea1a1beef1aeaa2bba1acae8fe39fb54229bc0469624d97"
+    },
+    "voc_57669_17c_interisland_routes_v1.audit.json": {
+      "commit": "bb9f7d08e09416635725359eb4c7c3c48b866a33",
+      "path": "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_57669_17c_interisland_routes_v1.audit.json",
+      "sha256": "59679ace845657dc7c3f2ccd4d86308d6d23d721b56966f14f1bef7e19a41217"
+    },
+    "ais_2020_wpi51_island_5km.island_pairs.csv": {
+      "commit": "bb9f7d08e09416635725359eb4c7c3c48b866a33",
+      "path": "provenance/reviewer_defenses/results/island_observational_robustness_20261031/ais_2020_wpi51_island_5km.island_pairs.csv",
+      "sha256": "7a239e6ea5db1ea1cc0a18deaa7edf1b30d9e063ee049df5bc58e9115850b8c5"
+    },
+    "voc_57669_17c_interisland_routes_v1.positive_historic_links.csv": {
+      "commit": "bb9f7d08e09416635725359eb4c7c3c48b866a33",
+      "path": "provenance/reviewer_defenses/results/island_observational_robustness_20261031/voc_57669_17c_interisland_routes_v1.positive_historic_links.csv",
+      "sha256": "ce82505fcd20d16cf76f58e7bc2f774a47fd53f056aabb97a029db0904f71e4f"
+    }
+  },
+  "shared_original_pair_sha256": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+  "summary": [
+    {
+      "source": "AIS2020",
+      "period": "2020",
+      "positive_links": 12,
+      "positive_endpoint_islands": 9,
+      "holdout_islands_with_positive_endpoint": 4,
+      "links_both_endpoints_in_holdout": 2,
+      "holdout_rows": 38681,
+      "holdout_species": 90,
+      "holdout_rows_excluding_GB_Ireland": 117,
+      "admissible_as_period_specific_shipping_predictor": false,
+      "reason": "Postdates2011\u20132014/2015\u20132018 predictor windows; overlaps response2019\u20132022"
+    },
+    {
+      "source": "VOC17c",
+      "period": "1595\u20131698",
+      "positive_links": 9,
+      "positive_endpoint_islands": 6,
+      "holdout_islands_with_positive_endpoint": 1,
+      "links_both_endpoints_in_holdout": 0,
+      "holdout_rows": 48,
+      "holdout_species": 24,
+      "holdout_rows_excluding_GB_Ireland": 48,
+      "admissible_as_period_specific_shipping_predictor": false,
+      "reason": "Predates predictors but is sparse archival history, not measured2011/2015 transport intensity"
+    }
+  ],
+  "limits": [
+    "Same original island-pair source hash verifies shared landmass ID lineage; not a new coastline reconstruction",
+    "Unmatched island/edge is unknown, never zero shipping",
+    "Historical voyage rows are not independent vessels or introductions",
+    "Neither source identifies ship-borne host establishment; no outcome-selected model fitted"
+  ]
+}

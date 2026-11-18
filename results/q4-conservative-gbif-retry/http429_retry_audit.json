@@ -1,0 +1,28 @@
+{
+  "schema": "chocho_q4_fixed500_public_GBIF_HTTP429_conservative_retry_v0.1",
+  "status": "LOW_RATE_TECHNICAL_RECOVERY_DIAGNOSTIC_NOT_NEW_COLONIZATION_DATA",
+  "original_fixed_500_pairs": 500,
+  "original_dated_pairs": 219,
+  "original_http429_failed_pairs": 69,
+  "selected_for_retry": 12,
+  "attempted": 12,
+  "not_attempted_in_selected": 0,
+  "stopped_after_two_consecutive_429": false,
+  "status_counts": {
+    "HTTP_400": 7,
+    "NO_GBIF_INDEXED_PLANT_RECORD_IN_COHORT": 1,
+    "DATED_OCCURRENCE_FOUND": 4
+  },
+  "source_selection": "SHA256(plant_id|WGSRPD3_code), fixed before API retry, no selection on butterfly presence",
+  "new_dated_pairs_in_original_failure_cohort": 4,
+  "zero_indexed_plant_records_on_retry": 1,
+  "no_automatic_imputation_of_failed_queries": true,
+  "limits": [
+    "Technical retries can improve record-coverage estimates but not detect original plant introduction or naturalization year.",
+    "This is only up to 12 of 69 original HTTP 429 failures; success fraction must not be extrapolated to all missing pairs.",
+    "Fixed original 500 response-blind source and successful outcomes remain unchanged.",
+    "The speciesKey/WKT request reuses the same original GBIF year facet query, 1700–2026.",
+    "HTTP 400 source errors are not retried or recoded as absence.",
+    "Two consecutive GBIF 429 throttles halt queries to protect API service."
+  ]
+}

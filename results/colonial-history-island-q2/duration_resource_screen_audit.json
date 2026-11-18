@@ -1,0 +1,111 @@
+{
+  "schema": "chocho_colonial_duration_island_resource_screen_v0.1",
+  "source": "Lenzner et al 2022 empire history polygons and Q1 exact 239 butterfly host resource reconstruction",
+  "status": "OBSERVATIONAL_COLONIAL_EXPOSURE_SCREEN",
+  "exposure": "log1p(max_4_empire_area_weighted_years) from published GloNAF, not age since introduction",
+  "response": "fraction of contemporary potential butterfly x WGSRPD3 resource opportunity newly supplied by introduced hosts",
+  "area_control": "ln(WGSRPD3 area km2) and Level1 biogeographic fixed effects in ordinary least squares",
+  "variants": {
+    "primary_all_verified": {
+      "islands": 67,
+      "with_empire_50plus_years": 44,
+      "mean_introduced_share": 0.5268018387042537,
+      "area_median_km2": 8349.024838582678,
+      "by_biogeographic_level1": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.022303317541447414,
+        "null_mean": 4.4957425648046835e-05,
+        "observed_minus_null": -0.02234827496709546,
+        "p_high": 0.977,
+        "p_two_sided": 0.0432,
+        "q025": -0.02178857015868267,
+        "q975": 0.02130377815386727,
+        "n_draws": 4999,
+        "effective_islands": 67,
+        "effective_blocks": 9
+      },
+      "by_level1_and_area_half": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.022303317541447414,
+        "null_mean": 0.003254020118157559,
+        "observed_minus_null": -0.025557337659604974,
+        "p_high": 0.9982,
+        "p_two_sided": 0.0048,
+        "q025": -0.01600480792783687,
+        "q975": 0.02284075463391459,
+        "n_draws": 4999,
+        "effective_islands": 64,
+        "effective_blocks": 13
+      }
+    },
+    "excluding_europe": {
+      "islands": 60,
+      "with_empire_50plus_years": 41,
+      "mean_introduced_share": 0.565513754274642,
+      "area_median_km2": 5505.798456228092,
+      "by_biogeographic_level1": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.024248730671085104,
+        "null_mean": -0.00016690217151589168,
+        "observed_minus_null": -0.024081828499569212,
+        "p_high": 0.953,
+        "p_two_sided": 0.0938,
+        "q025": -0.027927373422300564,
+        "q975": 0.027222983143102467,
+        "n_draws": 4999,
+        "effective_islands": 60,
+        "effective_blocks": 8
+      },
+      "by_level1_and_area_half": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.024248730671085104,
+        "null_mean": 0.004332171315914373,
+        "observed_minus_null": -0.028580901986999478,
+        "p_high": 0.9902,
+        "p_two_sided": 0.0168,
+        "q025": -0.02042744950698536,
+        "q975": 0.02932225219531835,
+        "n_draws": 4999,
+        "effective_islands": 56,
+        "effective_blocks": 11
+      }
+    },
+    "positive_history_only": {
+      "islands": 44,
+      "with_empire_50plus_years": 44,
+      "mean_introduced_share": 0.47416791366558697,
+      "area_median_km2": 9249.628345671326,
+      "by_biogeographic_level1": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.033310115931791055,
+        "null_mean": -0.0008515274721994168,
+        "observed_minus_null": -0.03245858845959164,
+        "p_high": 0.7262,
+        "p_two_sided": 0.547,
+        "q025": -0.09741865734578571,
+        "q975": 0.09524628515627521,
+        "n_draws": 4999,
+        "effective_islands": 43,
+        "effective_blocks": 8
+      },
+      "by_level1_and_area_half": {
+        "status": "DESCRIPTIVE_PERMUTATION",
+        "observed_slope": -0.033310115931791055,
+        "null_mean": 0.013300833095572074,
+        "observed_minus_null": -0.04661094902736313,
+        "p_high": 0.8188,
+        "p_two_sided": 0.3588,
+        "q025": -0.07946364747657514,
+        "q975": 0.10112219314971597,
+        "n_draws": 4999,
+        "effective_islands": 38,
+        "effective_blocks": 9
+      }
+    }
+  },
+  "caution": [
+    "No colonial empire among four does not imply no colonization (France and other empires absent).",
+    "Correlations do not demonstrate historical plant imports, ship arrivals, or resident butterflies.",
+    "Unmeasured climate and historic human factors, imbalanced islands and area/geospatial uncertainty remain."
+  ]
+}

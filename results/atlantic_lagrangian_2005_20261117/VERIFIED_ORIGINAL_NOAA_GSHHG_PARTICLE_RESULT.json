@@ -1,0 +1,157 @@
+{
+  "schema": "chocho_legacy_OSCAR_GSHHG_2005_ocean_advection_source_pilot_v1",
+  "source_success_CI": 43902616033,
+  "source_job": 133422971778,
+  "source_code_head_sha": "1380b2934c80138f0798a2ecffa82b674dff99fc",
+  "source_NetCDF_preflight_success_CI": 43900899514,
+  "WPI_TDWG3_geometry_source_CI": 43895414730,
+  "model_status": "PHYSICAL_SOURCE_ONLY_REAL_NOAA_ADVECTION_NOT_BIOLOGICAL_DISPERSAL",
+  "source_cube": {
+    "start": "2005-04-12T00:00:00+00:00",
+    "end": "2006-01-01T00:00:00+00:00",
+    "grid_shape": [
+      53,
+      126,
+      201
+    ],
+    "finite": 796953,
+    "missing": 545325,
+    "chunks": [
+      [
+        [
+          898,
+          915
+        ],
+        7301748
+      ],
+      [
+        [
+          916,
+          933
+        ],
+        7301748
+      ],
+      [
+        [
+          934,
+          950
+        ],
+        6896524
+      ]
+    ]
+  },
+  "track_total": 81,
+  "launch_failures": 0,
+  "scenario_counts": {
+    "OBSERVED_NOAA_FLOW": {
+      "GSHHG_FINE_MASK_LAND_CONTACT": 19,
+      "COMPLETED_90_DAYS": 7,
+      "SOURCE_VELOCITY_MISSING": 1
+    },
+    "MATHEMATICAL_REVERSED_FLOW": {
+      "COMPLETED_90_DAYS": 17,
+      "GSHHG_FINE_MASK_LAND_CONTACT": 10
+    },
+    "STATIONARY_NO_CURRENT": {
+      "COMPLETED_90_DAYS": 27
+    }
+  },
+  "source_summaries": {
+    "AZO": {
+      "OBSERVED_NOAA_FLOW": {
+        "tracks": 9,
+        "90d_completed": 3,
+        "source_missing": 0,
+        "land_mask_contacts": 6,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 25.612
+      },
+      "MATHEMATICAL_REVERSED_FLOW": {
+        "tracks": 9,
+        "90d_completed": 4,
+        "source_missing": 0,
+        "land_mask_contacts": 5,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 66.382
+      },
+      "STATIONARY_NO_CURRENT": {
+        "tracks": 9,
+        "90d_completed": 9,
+        "source_missing": 0,
+        "land_mask_contacts": 0,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 0
+      }
+    },
+    "CNY": {
+      "OBSERVED_NOAA_FLOW": {
+        "tracks": 9,
+        "90d_completed": 2,
+        "source_missing": 1,
+        "land_mask_contacts": 6,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 36.65
+      },
+      "MATHEMATICAL_REVERSED_FLOW": {
+        "tracks": 9,
+        "90d_completed": 6,
+        "source_missing": 0,
+        "land_mask_contacts": 3,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 188.287
+      },
+      "STATIONARY_NO_CURRENT": {
+        "tracks": 9,
+        "90d_completed": 9,
+        "source_missing": 0,
+        "land_mask_contacts": 0,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 0
+      }
+    },
+    "CVI": {
+      "OBSERVED_NOAA_FLOW": {
+        "tracks": 9,
+        "90d_completed": 2,
+        "source_missing": 0,
+        "land_mask_contacts": 7,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 73.653
+      },
+      "MATHEMATICAL_REVERSED_FLOW": {
+        "tracks": 9,
+        "90d_completed": 7,
+        "source_missing": 0,
+        "land_mask_contacts": 2,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 367.06
+      },
+      "STATIONARY_NO_CURRENT": {
+        "tracks": 9,
+        "90d_completed": 9,
+        "source_missing": 0,
+        "land_mask_contacts": 0,
+        "within_25km_other_WPI_port_proxy": 0,
+        "within_50km_other_WPI_port_proxy": 0,
+        "median_displacement_km": 0
+      }
+    }
+  },
+  "limits": [
+    "Three 2005 release dates at up to three valid NOAA ocean grid centers around each of three fixed WPI source ports; 81 total paths contain nonindependent spatial release/time replicates.",
+    "Observed flow source group 27 paths, 19 fine-coastmask contacts, 7 complete 90-day trajectories, 1 velocity-missing termination.",
+    "GSHHG land contact often could be source-island recontact, not arrival at the destination.",
+    "No observed NOAA scenario path comes within 50 km of the other two fixed WPI port-proxy anchor sites; does not imply no physical island coast arrival.",
+    "Grid wet/dry mask and 15m currents are low resolution; missing source cells cannot be interpreted as no plant dispersal.",
+    "Control reversed velocity is deterministic vector negation, not independent environmental null.",
+    "No seed floating duration, physical seed viability, botanical introduction chronology, actual shipping, butterfly breeding or movement was measured."
+  ]
+}

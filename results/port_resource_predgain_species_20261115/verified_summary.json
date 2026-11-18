@@ -1,0 +1,74 @@
+{
+  "schema": "chocho_port_resource_predgain_species_20261115_verified_v1",
+  "source_run": "https://github.com/zuizui0223/chocho/actions/runs/43674229891",
+  "source_artifact": "https://github.com/zuizui0223/chocho/actions/runs/43674229891/artifacts/14145049953",
+  "source_zip_sha256": "1daabf91e8c53a530f0b3a62b506832da426ab282cb379455900357aefefee45",
+  "source_sha256": {
+    "temporal155": "4fa6b9e1e13eacfb0984fe90d2fe0e940736739920fae6e49b0f5633cf9f8f14",
+    "island95": "7f9519e2422bc61da9243751071c3932687b518186c8bd94edb1f38b35e9db93",
+    "island_nonGB95": "c93ae1acfb2cd87d370b70dc423448a71c0018d30e751f80ac6f3a331854554e",
+    "comp": "d0060a8c2cab2b9a0403224355c0571ed191291a7805742a9704b866bfa03d04",
+    "traits": "7b2a20387d656dbfcd7b3c38ec6a7fe2505474ad51f783dd1f201eb6b7eabd30",
+    "forecast_support": "2e3971ec9cff2194b0462ba53f63fb580cd0127f9ebde01dbb39f54c7df95c01",
+    "island_support": "7f01e825b563f7a0d0f69bb99cbc70d3c24c7aabcc64be985d6d726a832c2003",
+    "lock": "2c9eff854d5e8a72393eeec957115f59efdc045239f7234bffc26f6ff856739e"
+  },
+  "target": "Additional within-source temporal squared error reduction from adding port-connectivity proxy T1 to already host-informed M5; NOT unarchived M3→M5 per-species host-importance change",
+  "species_results": {
+    "all155": {
+      "n": 155,
+      "M5_MSE": 0.030742794634013266,
+      "T0_MSE": 0.030809744002587857,
+      "T1_MSE": 0.030673696988983375,
+      "T1_vs_M5_MSE_reduction_pct": 0.2247604547748647,
+      "n_T1_better": 96,
+      "rho_added_resource_regions_vs_absolute_MSE_gain": -0.05258560436083878,
+      "rho_bootstrap_95pct": [
+        -0.19996499608701201,
+        0.10000906647116235
+      ],
+      "partial_rank_rho_with_7_source_covariates": -0.06650764979231585,
+      "stratified_permutation_4999_two_sided_p": 0.4988,
+      "stratified_null_rho_95pct": [
+        -0.1419861281077774,
+        0.1291936608367249
+      ],
+      "rho_relative_resource_expansion": -0.11119885430403018,
+      "rho_added_regions_vs_T1_beyond_T0_only": -0.04044290220450937
+    },
+    "strict_islands": {
+      "n": 95,
+      "M5_MSE": 0.02212782499107318,
+      "T1_MSE": 0.022259567893726524,
+      "T1_vs_M5_MSE_reduction_pct": -0.5953721285598512,
+      "n_T1_better": 57,
+      "rho_added_resource_regions_vs_absolute_MSE_gain": 0.03395386772790756,
+      "rho_bootstrap_95pct": [
+        -0.1640713793294353,
+        0.2332265429547219
+      ],
+      "stratified_permutation_4999_two_sided_p": 0.696
+    },
+    "strict_islands_excluding_GB_Ireland": {
+      "n": 95,
+      "M5_MSE": 0.02867267191066745,
+      "T1_MSE": 0.028817657137787472,
+      "T1_vs_M5_MSE_reduction_pct": -0.505656492606372,
+      "n_T1_better": 47,
+      "rho_added_resource_regions_vs_absolute_MSE_gain": -0.015492152519416567,
+      "rho_bootstrap_95pct": [
+        -0.20356612556568537,
+        0.16763797142999362
+      ],
+      "stratified_permutation_4999_two_sided_p": 0.7028
+    }
+  },
+  "ecological_limitations": [
+    "No support for a monotonic coupling of global potential host-resource expansion with the incremental port predictor benefit, conditional on original source cohort",
+    "Species-specific M3 and M5 loss contrast for the original host-only predictor benefit is not publicly archived and not inferred",
+    "Islands mostly lack independent indexed port-support outside Great Britain and Ireland: 25 rows in 3 cells and 3 islands directly supported there",
+    "Retrospective source comparison, port registry 2019/2026 and static host-source chronology",
+    "Fixed species source re-sampling and source-stratified permutation are exploratory, not phylogenetically independent or causal",
+    "No observed transport, breeding, butterfly range expansion or larval food preference demonstrated"
+  ]
+}

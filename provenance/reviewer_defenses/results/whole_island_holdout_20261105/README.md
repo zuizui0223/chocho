@@ -1,0 +1,1 @@
+Frozen aggregate evidence snapshot. Scripts retain their original work/barriers location assumptions and require the original local Parquet inputs; this directory is not a standalone runnable data release. Original 225-candidate scope is retained; this is a secondary 25-island evaluation. See the Japanese results and validation receipt for limitations.

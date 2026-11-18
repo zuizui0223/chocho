@@ -1,0 +1,70 @@
+{
+  "checked_at_utc": "2026-11-06T09:05:31.266771+00:00",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "pandas": "2.2.3",
+    "rasterio": "1.4.4",
+    "geopandas": "1.2.0",
+    "shapely": "2.1.2",
+    "pytest": "9.2.0",
+    "matplotlib": "3.10.8"
+  },
+  "suite_result": {
+    "passed": 189,
+    "skipped": 1,
+    "failed": 0
+  },
+  "skip_reason": "Optional xarray absent; upstream NOAA raster-building test module skipped. Frozen wind and both full circuit analyses verified.",
+  "commands": [
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-m",
+        "pytest",
+        "-q"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/run_island51_observed_ocean_circuits.py",
+        "--input-root",
+        "data/exploratory/island51_observed_ocean_20261106",
+        "--coast-dir",
+        "data/exploratory/island51_observed_ocean_20261106/coast_0p0625",
+        "--marine-ports-only",
+        "--out-dir",
+        "/workspace/scratch/03ebdd5db04f/circuit_final_reproduction/primary",
+        "--network-dir",
+        "/workspace/scratch/03ebdd5db04f/circuit_final_reproduction/primary_networks"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "scripts/run_island51_native_AIS_source_sensitivity.py",
+        "--input-root",
+        "data/exploratory/island51_observed_ocean_20261106",
+        "--primary-results-dir",
+        "/workspace/scratch/03ebdd5db04f/circuit_final_reproduction/primary",
+        "--native-grid",
+        "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021.npz",
+        "--native-receipt",
+        "data/exploratory/island51_observed_ocean_20261106/ais_native_quality_check/commercial_AIS_native_mean_0p5deg_2015_2021_receipt.json",
+        "--native-audit",
+        "/workspace/scratch/03ebdd5db04f/chocho/results/island51_observed_ocean_circuit_20261106/ais_source_quality/published_AIS_source_quality_receipt.json",
+        "--out-dir",
+        "/workspace/scratch/03ebdd5db04f/circuit_final_reproduction/native",
+        "--network-dir",
+        "/workspace/scratch/03ebdd5db04f/circuit_final_reproduction/native_networks"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "primary_and_native_saved_pair_tables_summaries_and_all_fold_losses_reproduced": true,
+  "comparison_absolute_and_relative_tolerance": 1e-12
+}

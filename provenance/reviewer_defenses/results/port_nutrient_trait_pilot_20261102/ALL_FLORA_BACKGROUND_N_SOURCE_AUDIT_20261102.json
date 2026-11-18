@@ -1,0 +1,147 @@
+{
+  "schema": "chocho_WPI78_GBIF_port_nonport_full_flora_ellenberg_N_synthesis_20261102_v1",
+  "status": "EXPLORATORY_GLOBAL_POSITIVE_ISLAND_FLORA_CONTRAST_NO_NUTRIENT_CAUSAL_IDENTIFICATION",
+  "source_runs": {
+    "global_prevalence": 41403516863,
+    "strict_geometry": 41402076182,
+    "strict_78site_botany": 41402214941,
+    "all_scored_flora_taxonomy_and_facets": 41407370295,
+    "independent_island_robustness": 41408334693,
+    "predicted_soil_N_wcs_diagnostic": 41408816351
+  },
+  "counts": {
+    "candidate_port_host_species": 687,
+    "Ellenberg_N_scored_all_names": 2531,
+    "N_scored_strict_binomial_names": 1768,
+    "GBIF_exact_accepted_unambiguous_N_species": 1494,
+    "candidate_host_GBIF_N_accepted": 182,
+    "islands_geo_paired": 35,
+    "ports_geo_paired": 78,
+    "site_period_flora_facets": 312,
+    "gbif_record_count_drift_sites": 0,
+    "gbif_species_count_drift_sites": 0,
+    "gbif_candidate_host_N_count_drift_sites": 0
+  },
+  "global_n_port_rho_after_GBIF_country_record_controls": 0.20971005225460093,
+  "source_local_early": {
+    "pairs": 27,
+    "islands": 6,
+    "other_plant_N_port_minus_nonport": {
+      "mean": 0.1885395209838089,
+      "bootstrap95": [
+        0.0629618448466097,
+        0.3164808378549585
+      ]
+    },
+    "candidate_host_N_port_minus_nonport": {
+      "mean": 0.01103453355539717,
+      "bootstrap95": [
+        -0.11143962651646339,
+        0.10307487589438002
+      ]
+    },
+    "host_minus_other": {
+      "mean": -0.17750498742841173,
+      "bootstrap95": [
+        -0.31360240713571286,
+        -0.030218067337843744
+      ]
+    }
+  },
+  "source_local_later": {
+    "pairs": 43,
+    "islands": 18,
+    "other_plant_N_port_minus_nonport": {
+      "mean": 0.1317020249850074,
+      "bootstrap95": [
+        -0.09643923983633165,
+        0.37984242869236157
+      ]
+    },
+    "candidate_host_N_port_minus_nonport": {
+      "mean": -0.0727667563491159,
+      "bootstrap95": [
+        -0.416245675793137,
+        0.2396469981393015
+      ]
+    },
+    "host_minus_other": {
+      "mean": -0.20446878133412333,
+      "bootstrap95": [
+        -0.569004080341221,
+        0.09510569491317719
+      ]
+    }
+  },
+  "same_exact_27_port_pairs_6_islands": {
+    "countries": [
+      "DK",
+      "FR",
+      "GB",
+      "SE"
+    ],
+    "mean_temporal_change_relative_host_vs_other_N": 0.1493596770601339,
+    "island_bootstrap95": [
+      0.05260689023531375,
+      0.2517750495007045
+    ],
+    "all_six_island_estimates_positive": true,
+    "exact_signflip_two_sided_descriptive": 0.03125,
+    "leave_one_island_out_mean_range": [
+      0.10985345224924907,
+      0.17841057019445794
+    ],
+    "port_pairs_imbalance": "One GB island contributes 18 of 27 site pairs; analysis weights islands equally",
+    "background_N_change": -0.0982472166987124,
+    "candidate_host_N_change": 0.051112460361421475
+  },
+  "robustness": {
+    "max_fivefold_site_effort_ratio": {
+      "pairs": 26,
+      "islands": 6,
+      "mean": 0.14627639087440403,
+      "CI95": [
+        0.04644031786385402,
+        0.2517750495007045
+      ],
+      "islands_positive": 5
+    },
+    "min_20percent_scored_plant_coverage_both_sides": {
+      "pairs": 24,
+      "islands": 5,
+      "mean": 0.11664855498814969,
+      "CI95": [
+        0.036141427165354685,
+        0.23820814314760613
+      ],
+      "islands_positive": 5
+    },
+    "later_cross_section_trait_coverage_10percent": {
+      "pairs": 39,
+      "islands": 14,
+      "mean": 0.003398058142618444,
+      "CI95": [
+        -0.22944721267505813,
+        0.23761838944756675
+      ]
+    }
+  },
+  "soil_N_feasibility": {
+    "provider": "SoilGrids 2.0 WCS nitrogen 0–5cm mean, predicted not sampled",
+    "coast_test_sites": 8,
+    "positive_nonzero_pixels": 1,
+    "zero_or_masked_pixels": 7,
+    "inland_positive_controls": 2,
+    "source_gate": "NOT_READY_NO_FULL_COASTAL_SOIL_N_ANALYSIS",
+    "note": "Topsoil zero-valued 250m coastal cells interpreted as missing/uncertain and not actual nitrogen zero"
+  },
+  "caveats": [
+    "Other N-scored plants are not biologically verified non-host plants",
+    "GBIF indexed species identity and year windows are not actual colonization, plant abundance or transport routes",
+    "Only 6 European islands support identical-pair before/after contrasts; poor global scope",
+    "European Ellenberg N indicator reflects ecological fertility affinity rather than measured N",
+    "Species taxonomic/trait matching is selectively restricted",
+    "Descriptive bootstraps and unadjusted exploratory sign tests are not confirmatory causal inference",
+    "No nitrogen flux, soil direct sample, wastewater treatment facility exposure, or butterfly larval response measured"
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "chocho_Huygens_DAS_voyage_endpoints_2001_2010_port_botanical_observation_support_v1",
+  "status": "HISTORIC_SHIPPING_ENDPOINTS_OBSERVED_BUT_EARLY_GBIF_PLANT_OBSERVATION_NOT_COVERED_AT_ALL_HARBORS",
+  "sources": {
+    "historic_DAS_voyage_table_SHA256": "770385b5d05ef6f59f3812d7f105972445d3b3e57b90165bae81ee7feede3e73",
+    "historic_DAS_original_receipt_SHA256": "2687f1daeb34adc1ce2be2cd6d36e9d94e4bb907c2db5d6513c9bfa4bc3eba07",
+    "port_GBIF_early_botanical_observation_counts_SHA256": "51dac833250fc71299313148ec2de9ea05071c64f23dd223527af01723344c49",
+    "WPI_original_194_port_index_SHA256": "7d3cd381e298b27a1c776d00540424a2e57838f1bfa34cee7b3ba9c3d99fd9a6"
+  },
+  "cohort": {
+    "islands": 51,
+    "WPI_indexed_ports": 194,
+    "source_botanical_observations_2001_2010": 155002,
+    "source_city_port_historic_VOC_endpoint_islands": 4,
+    "source_dated_historical_metropole_island_endpoint_rows": 6135,
+    "source_historic_endpoint_islands_without_any_2001_2010_port_botanical_index": 2,
+    "source_historic_endpoint_islands_without_any_2001_2010_port_botanical_index_ids": [
+      "12",
+      "19"
+    ]
+  },
+  "matched_historical_source_islands": [
+    {
+      "landmass_id": "12",
+      "historic_original_DAS_VOC_transoceanic_voyage_endpoint_rows": 16,
+      "historic_original_DAS_VOC_island_place_names": "Atjeh",
+      "original_WPI_ports": 5,
+      "2001_2010_indexed_plant_records_across_port_search_circles": 0,
+      "2001_2010_ports_with_positive_botanical_indexed_records": 0,
+      "2001_2024_indexed_candidate_alien_larval_host_species": 5,
+      "2011_2022_newly_indexed_butterfly_species": 17,
+      "historic_NL_area_proxy_years": 331.0
+    },
+    {
+      "landmass_id": "17",
+      "historic_original_DAS_VOC_transoceanic_voyage_endpoint_rows": 1,
+      "historic_original_DAS_VOC_island_place_names": "Macassar",
+      "original_WPI_ports": 5,
+      "2001_2010_indexed_plant_records_across_port_search_circles": 18,
+      "2001_2010_ports_with_positive_botanical_indexed_records": 3,
+      "2001_2024_indexed_candidate_alien_larval_host_species": 5,
+      "2011_2022_newly_indexed_butterfly_species": 13,
+      "historic_NL_area_proxy_years": 331.0
+    },
+    {
+      "landmass_id": "19",
+      "historic_original_DAS_VOC_transoceanic_voyage_endpoint_rows": 6092,
+      "historic_original_DAS_VOC_island_place_names": "Bantam;Batavia;Jacatra",
+      "original_WPI_ports": 9,
+      "2001_2010_indexed_plant_records_across_port_search_circles": 0,
+      "2001_2010_ports_with_positive_botanical_indexed_records": 0,
+      "2001_2024_indexed_candidate_alien_larval_host_species": 19,
+      "2011_2022_newly_indexed_butterfly_species": 16,
+      "historic_NL_area_proxy_years": 347.0
+    },
+    {
+      "landmass_id": "31",
+      "historic_original_DAS_VOC_transoceanic_voyage_endpoint_rows": 26,
+      "historic_original_DAS_VOC_island_place_names": "Bathicaloa;Colombo;Gale;Negombo",
+      "original_WPI_ports": 3,
+      "2001_2010_indexed_plant_records_across_port_search_circles": 25,
+      "2001_2010_ports_with_positive_botanical_indexed_records": 2,
+      "2001_2024_indexed_candidate_alien_larval_host_species": 15,
+      "2011_2022_newly_indexed_butterfly_species": 15,
+      "historic_NL_area_proxy_years": 0.0
+    }
+  ],
+  "limits": [
+    "Historical VOC route names are matched to physical islands, NOT the exact 2019 WPI harbor locations.",
+    "No original botanical GBIF records between 2001 and 2010 in a WPI 5km harbor buffer cannot establish plant absence during 17th century or 2001–2010.",
+    "WPI buffer record totals can double count overlapping searches and may emphasize heavily sampled urban harbors.",
+    "Modern host-plant alien status is not historic and the source does not contain voyage cargo species.",
+    "Source islands were chosen for host/butterfly indexing in the initial positive observational study; ship linked islands are not independent replicates.",
+    "This audit is source-coverage triage, NOT a historic trade effect on butterfly similarity."
+  ]
+}

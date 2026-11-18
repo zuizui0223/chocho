@@ -1,0 +1,209 @@
+{
+  "schema": "chocho_official_circuitscape_real_observed_ocean_validation_v1",
+  "status": "SIX_OFFICIAL_REAL_NETWORK_DISTRIBUTED_CURRENT_CHECKS_PASS",
+  "checked_at_utc": "2026-11-06T08:38:07.816754+00:00",
+  "scope": "Two geometry-selected island pairs, each on all three entire marine graphs; full51-island matrices are SciPy sparse grounded-LU results independently checked on these six cases.",
+  "official_circuitscape_real_network_crosscheck_completed": true,
+  "protocol_sha256_before_outcome_fit": "3998f338051870a1e83db3874fee6f95349dca1fcdb15fa706e676e337a1004a",
+  "source_bundle_manifest_sha256": "14b23a4f514ce71a18cb0781667e2e63fdc4e23250763b8cf434e1f09ece624c",
+  "fixed_pairs_selected_before_outcomes": [
+    [
+      "9",
+      "15"
+    ],
+    [
+      "715",
+      "1577"
+    ]
+  ],
+  "julia_version": "1.13.3",
+  "julia_archive_url": "https://julialang-s3.julialang.org/bin/linux/x64/1.13/julia-1.13.3-linux-x86_64.tar.gz",
+  "julia_archive_sha256": "5c61cb4b40332cb5a3504e7779e2f5dac093caa4a1116ded19f01413f85c63e4",
+  "circuitscape_version": "6.1.0",
+  "circuitscape_repository": "https://github.com/Circuitscape/Circuitscape.jl",
+  "circuitscape_tag": "v6.1.0",
+  "circuitscape_commit": "253a4189296a01158b8e38f48b9fcb1745815161",
+  "julia_dependency_manifest_sha256": "0be996454077b0de717e4e3ee8d6934aff2c5c896c04fd3d9354bed7d231f1a2",
+  "official_solver": "CHOLMOD",
+  "official_precision": "double",
+  "official_residual_tolerance": 1e-09,
+  "official_configuration": {
+    "data_type": "network",
+    "scenario": "advanced",
+    "habitat_map_is_resistances": false,
+    "ground_file_is_resistances": true,
+    "use_unit_currents": false,
+    "use_direct_grounds": true,
+    "remove_src_or_gnd": "keepall",
+    "write_cur_maps": false,
+    "write_volt_maps": false
+  },
+  "distributed_injection_method": "Balanced b represented by explicit signed currents at all but one negative-current node; that node is direct ground and supplies the omitted sink by conservation. This avoids v6.1 advanced_kernel skip on exact sum(sources)==0.",
+  "independent_checks": [
+    "Relative agreement with SciPy matrix<1e-7",
+    "All-node Kirchhoff current conservation relative residual<1e-7",
+    "Energy sum over branches agrees with bTvoltage to relative1e-7",
+    "Direct ground voltage0; positive finite resistance"
+  ],
+  "relative_difference_tolerance": 1e-07,
+  "max_absolute_resistance_difference": 3.6037599571159262e-09,
+  "max_relative_resistance_difference": 7.988424869828099e-10,
+  "max_relative_Kirchhoff_residual": 8.805363521657839e-09,
+  "max_energy_relative_difference": 7.985229484995877e-10,
+  "known_electrical_network_fixture_checks": {
+    "assertions_passed": 7,
+    "fixtures": {
+      "series": {
+        "max_abs_error": 4.440892098500626e-15
+      },
+      "ring": {
+        "max_abs_error": 1.1102230246251565e-15
+      },
+      "distributed_chain": {
+        "expected_effective_resistance": 1.5,
+        "observed_effective_resistance": 1.4999999999999858,
+        "abs_error": 1.4210854715202004e-14
+      }
+    }
+  },
+  "verification_files_sha256": {
+    "julia_runner": "6470e832baa762e15cd7c20464afede28bbad052df45332792d4667536bf2638",
+    "official_run_log": "a80652176f5643a8aace08657f8b8b36a4783b2a46cbf314f68b33ff782226c1",
+    "official_case_definition": "7ecc96b3b07d709ff480405cc1a11d0ec033bc65c4b2a21119ee2b4543a4c18f",
+    "official_raw_results": "99ddc9ebb6ddf123403e5ab4329c979166ce87414e9ac96c1883e152763162a8",
+    "island_node_weights": "05647e8a50c682d7b2c50b34d3de0ab5f1daeabb60ac57b75f69956a2b6cb646"
+  },
+  "cases": [
+    {
+      "field": "uniform",
+      "island_a": "9",
+      "island_b": "15",
+      "scipy_distributed_resistance": 4.511227201656682,
+      "official_circuitscape_resistance": 4.511227198052922,
+      "absolute_difference": 3.6037599571159262e-09,
+      "relative_difference": 7.988424869828099e-10,
+      "energy_from_branch_currents": 4.511227194450604,
+      "max_absolute_Kirchhoff_residual": 1.1740484695543785e-09,
+      "relative_Kirchhoff_residual": 8.805363521657839e-09,
+      "energy_relative_difference": 7.985229484995877e-10,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 25393,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 7.787048816680908,
+      "scipy_matrix_sha256": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1",
+      "network_sha256": "062425c751794e1d3e7f20b276db077879d0c1eb5f25fd94294dc75fbacd3f69"
+    },
+    {
+      "field": "ais",
+      "island_a": "9",
+      "island_b": "15",
+      "scipy_distributed_resistance": 0.44409535815742684,
+      "official_circuitscape_resistance": 0.44409535813929574,
+      "absolute_difference": 1.8131107726304663e-11,
+      "relative_difference": 4.082705975926321e-11,
+      "energy_from_branch_currents": 0.4440953581211294,
+      "max_absolute_Kirchhoff_residual": 5.950959169886971e-11,
+      "relative_Kirchhoff_residual": 4.4632193774152285e-10,
+      "energy_relative_difference": 4.090643366202089e-11,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 25393,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 0.6932179927825928,
+      "scipy_matrix_sha256": "8977667072e83d8db890f65f22ea835e781c835fb0b6a8fbf84145bfcd540564",
+      "network_sha256": "40b41ddcfbda46fc0decd8e7b364eee1d00fd7fbfe598654d5bb53d81dd8b974"
+    },
+    {
+      "field": "wind",
+      "island_a": "9",
+      "island_b": "15",
+      "scipy_distributed_resistance": 1.2468233904076529,
+      "official_circuitscape_resistance": 1.2468233901536658,
+      "absolute_difference": 2.539870536111266e-10,
+      "relative_difference": 2.037073217948572e-10,
+      "energy_from_branch_currents": 1.246823389899451,
+      "max_absolute_Kirchhoff_residual": 3.232830808608256e-10,
+      "relative_Kirchhoff_residual": 2.424623106456192e-09,
+      "energy_relative_difference": 2.0389004038851787e-10,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 25393,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 0.6611380577087402,
+      "scipy_matrix_sha256": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e",
+      "network_sha256": "cf29e45bd26a8ae702daaf223569c3641ac9696ef1d5d1185820f406060eb5a9"
+    },
+    {
+      "field": "uniform",
+      "island_a": "715",
+      "island_b": "1577",
+      "scipy_distributed_resistance": 2.3085758748364285,
+      "official_circuitscape_resistance": 2.3085758748364116,
+      "absolute_difference": 1.687538997430238e-14,
+      "relative_difference": 7.309870192374797e-15,
+      "energy_from_branch_currents": 2.3085758748363996,
+      "max_absolute_Kirchhoff_residual": 5.10702591327572e-15,
+      "relative_Kirchhoff_residual": 5.10702591327572e-15,
+      "energy_relative_difference": 5.193855136687394e-15,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 27594,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 0.7627120018005371,
+      "scipy_matrix_sha256": "b2f76588462fb0ab8ccce84634d81ff10843e3ab25c6e34405ca6e61747e5da1",
+      "network_sha256": "062425c751794e1d3e7f20b276db077879d0c1eb5f25fd94294dc75fbacd3f69"
+    },
+    {
+      "field": "ais",
+      "island_a": "715",
+      "island_b": "1577",
+      "scipy_distributed_resistance": 0.14041050476479056,
+      "official_circuitscape_resistance": 0.14041050476479033,
+      "absolute_difference": 2.220446049250313e-16,
+      "relative_difference": 1.5813959596327253e-15,
+      "energy_from_branch_currents": 0.14041050476479028,
+      "max_absolute_Kirchhoff_residual": 3.3306690738754696e-16,
+      "relative_Kirchhoff_residual": 3.3306690738754696e-16,
+      "energy_relative_difference": 3.9534898990818195e-16,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 27594,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 0.6908440589904785,
+      "scipy_matrix_sha256": "8977667072e83d8db890f65f22ea835e781c835fb0b6a8fbf84145bfcd540564",
+      "network_sha256": "40b41ddcfbda46fc0decd8e7b364eee1d00fd7fbfe598654d5bb53d81dd8b974"
+    },
+    {
+      "field": "wind",
+      "island_a": "715",
+      "island_b": "1577",
+      "scipy_distributed_resistance": 0.8966048258785388,
+      "official_circuitscape_resistance": 0.8966048258785382,
+      "absolute_difference": 6.661338147750939e-16,
+      "relative_difference": 7.429514046195126e-16,
+      "energy_from_branch_currents": 0.8966048258785366,
+      "max_absolute_Kirchhoff_residual": 1.7763568394002505e-15,
+      "relative_Kirchhoff_residual": 1.7763568394002505e-15,
+      "energy_relative_difference": 1.7335532774455307e-15,
+      "nodes": 189550,
+      "edges": 370996,
+      "ground_node": 27594,
+      "ground_voltage": 0.0,
+      "elapsed_seconds": 0.7066600322723389,
+      "scipy_matrix_sha256": "d3e11c1455ada23cbd154645e04dfe16e020c9cccf0dc34b8d901a48c3e5a71e",
+      "network_sha256": "cf29e45bd26a8ae702daaf223569c3641ac9696ef1d5d1185820f406060eb5a9"
+    }
+  ],
+  "source_bundle_manifest_sha256_at_official_execution": "1e332ad47963632f2b0e3afe17b0bc3149a670474b28d8cc2651121aaf9d83c2",
+  "protocol_path": "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md",
+  "provenance_metadata_refreshed_at_utc": "2026-11-06T08:42:01.123805+00:00",
+  "post_execution_metadata_update": {
+    "reason": "Frozen protocol moved unchanged from docs/exploratory to the result directory to preserve the existing sealed docs whitelist.",
+    "protocol_bytes_and_hash_unchanged": true,
+    "all_three_exported_networks_and_matrices_bytes_unchanged": true,
+    "distributed_terminal_weights_bytes_unchanged": true,
+    "full_pipeline_reexecuted_after_manifest_path_update": true,
+    "source_bundle_files_verified_after_relocation": 16
+  }
+}

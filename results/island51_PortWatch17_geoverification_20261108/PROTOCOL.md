@@ -1,0 +1,26 @@
+# Original WPI194: independently geoverify 17 three-source port identities with bounded IMF PortWatch registry samples
+
+Date 2026-11-08. This is a source-only port identity audit, NOT a butterfly/community model and NOT a grant of rights to copy the complete IMF PortWatch global port registry/Maritime Connections source table.
+
+## Source cohort preselected without examining butterfly outcomes
+Use the original source-pinned 194 WPI2019 botanical ports, 51 landmass groups, 182 marine-qualified terminals in results/island51_host_circuit_atlas_20261106/original_port_geography.csv, original Git blob a4681c3e3c1406d3a37f51464a298286e9d0ee4f. Use the existing PR146 complete cross-source country+name-candidate table, results/island51_maritime_raw_recovery_20261108/GLSN2018_UNCTAD2006_2010_Zenodo2020_originalWPI194_candidate_join.csv. Select all **exactly 17** WPI original port IDs for which:
+- GLSN2018 original country+name is globally unique (source 2018 model port sheet has no coordinates);
+- UNCTAD old 2006–2021 PLSCIQ port series is country+name unique (source has no coordinates); AND
+- independent Zenodo2020 AIS OD source source port-name and original WPI position are verified (within 25km).
+
+Frozen source-only WPI IDs ascending: **28, 274, 404, 428, 430, 668, 682, 758, 764, 767, 817, 876, 916, 1143, 1416, 1515, 1546**. Do not add source-only candidates or drop data based on butterfly scores. Original 17 list spans 14 source landmass groups (check actual count in code); read from source-locked CSV and validate against the frozen ID set. Four pre-pilot source-matched original WPI/PortWatch identities in PR144 include original WPI 28, 428, 817, 1416, but previous successful results do not authorize assuming all 17 IDs match.
+
+## External independent port registry (bounded no bulk)
+Public PortWatch registry feature layer hosted for International Monetary Fund at:
+https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/PortWatch_ports_database/FeatureServer/0
+
+Field schema from prior independently inspected layer: portid, portname, country, ISO3, lat, lon, LOCODE. Full registry count-only previously 2065 global ports. Respect IMF source terms: NO systematic all-registry bulk download and NO retrieval of 155,521 global connection edges. Only 17 source-selected original WPI geographic 0.35° latitude/longitude boxes, 2 public source queries each: (i) returnCountOnly true, (ii) up to 15 records with just the seven approved registry fields and no vessel identifiers. Absolute maximum **34 API queries, 255 provider source example records**. A box with >15 provider rows, source failure, unsupported geo bounds or transfer truncation is an INCOMPLETE original WPI match, never a missing port, and must not be force-matched.
+
+Independently map ISO2 original WPI country to ISO3 using pycountry, not manual guessed ISO mapping. Normalize WPI and provider port names by NFKD ASCII uppercase, punctuation-to-space and whitespace collapse (no fuzzy matching, no edit distance, no "nearby only"). A single provider row is verified iff (1) same normalized exact port name, (2) same ISO3 country, (3) WPI coordinates within **25km** of PortWatch provider lat/lon (spherical haversine Earth radius 6371.0088km), (4) provider box query complete, (5) exactly one row meets conditions. Preserve external portid, LOCODE and source geographic displacement, all query/status/errors. Missing LOCODE is not a port rejection if other identity tests pass, but code must record it as missing. No PortWatch portid may be treated as the same WPI OBJECTID by integer equality.
+
+## Outcomes and invariants
+Always retain all 17 source preselected original WPI IDs, including failed/unmatched rows and exact reason. Record independent PortWatch-verified matched WPI count, original island groups count, UNCTAD 2006–2010 usable quarterly index count, original 2018 GLSN edge compatibility among verified 17 only, original independently source-verified 2020 Zenodo matched OD port pairs among verified 17 only. Crucially: GLSN 2018 co-service MODEL EDGES are not 2018 real consecutive vessel voyages; PLSCIQ is a port index, not OD; Zenodo 2020 original source OD events are only source-inferred movements January 1–Oct 7, 2020. Do not create a fake chronological causal comparison or infer actual plant/larval introductions.
+
+A separately written independent Python stdlib auditor must verify the 17 original source IDs, match/ambiguity/empty cases, distances, country and name checks, all original 17 mappings and aggregate source stats. The published source receipt must preserve query URLs, timestamps, exact records with no private vessel identifiers, provider attribution, and source-specific data-access limits. Do not download the full global source registry or full 155,521 connection model rows; use the existing PR145 4-port separate bounded source model solely as context.
+
+This is first-stage limited independent geoverification of source-selected original WPI identities, NOT a global source sample, hypothesis test or administrative UN/LOCODE certification. No original GEB manuscript or previous source results modified; user authorized GitHub commit and Draft PR but NOT journal submission.

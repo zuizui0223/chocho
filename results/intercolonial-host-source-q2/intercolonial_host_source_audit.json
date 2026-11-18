@@ -1,0 +1,116 @@
+{
+  "schema": "chocho_q2_other_colony_native_host_source_v0.1",
+  "status": "EXPLORATORY_ALTERNATIVE_AFTER_METROPOLE_NULL",
+  "source": {
+    "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05",
+    "Lenzner_GIS": "7aae72aadd39ae3827ece6935c6740dc0aace030",
+    "WGSRPD3": "52da7828aba9d461dd133c27b3bd7a4407161f54"
+  },
+  "scope": {
+    "all_added_butterfly_region_cells": 14553,
+    "added_strict_island_cells": 5674,
+    "islands_with_added_resource": 122,
+    "introduced_butterfly_plant_island_edges": 11455,
+    "distinct_intro_host_taxa": 560
+  },
+  "variants": {
+    "non_european_other_colonies": {
+      "source_membership": "WCVP native region + GloNAF territory with >=50 weighted historic empire years, >=50% polygon overlap; 4 European metropoles excluded",
+      "islands_with_new_resources": 122,
+      "introduced_host_taxa": 559,
+      "source_territory_regions_by_empire": {
+        "Great_Britain": 95,
+        "Spain": 48,
+        "Portugal": 37,
+        "Netherlands": 18
+      },
+      "native_source_hosts_by_empire": {
+        "Great_Britain": 415,
+        "Spain": 378,
+        "Portugal": 388,
+        "Netherlands": 230
+      },
+      "new_opportunity_cells_supported_by_native_territory_sources": {
+        "Great_Britain": 4890,
+        "Spain": 4776,
+        "Portugal": 4774,
+        "Netherlands": 2937
+      },
+      "new_opportunity_cell_source_support_share": {
+        "Great_Britain": 0.861825872400423,
+        "Spain": 0.8417342262953824,
+        "Portugal": 0.8413817412759957,
+        "Netherlands": 0.5176242509693338
+      },
+      "island_csv": "colonial_network_non_european_other_colonies_island_source_summary.csv"
+    },
+    "all_other_empire_territories": {
+      "source_membership": "WCVP native region + GloNAF territory with >=50 weighted historic empire years, >=50% polygon overlap; 4 European metropoles excluded",
+      "islands_with_new_resources": 122,
+      "introduced_host_taxa": 559,
+      "source_territory_regions_by_empire": {
+        "Great_Britain": 96,
+        "Spain": 51,
+        "Portugal": 37,
+        "Netherlands": 18
+      },
+      "native_source_hosts_by_empire": {
+        "Great_Britain": 429,
+        "Spain": 408,
+        "Portugal": 388,
+        "Netherlands": 230
+      },
+      "new_opportunity_cells_supported_by_native_territory_sources": {
+        "Great_Britain": 4961,
+        "Spain": 4833,
+        "Portugal": 4774,
+        "Netherlands": 2937
+      },
+      "new_opportunity_cell_source_support_share": {
+        "Great_Britain": 0.87433909058865,
+        "Spain": 0.8517800493479027,
+        "Portugal": 0.8413817412759957,
+        "Netherlands": 0.5176242509693338
+      },
+      "island_csv": "colonial_network_all_other_empire_territories_island_source_summary.csv"
+    },
+    "other_colonial_islands_only": {
+      "source_membership": "WCVP native region + GloNAF territory with >=50 weighted historic empire years, >=50% polygon overlap; 4 European metropoles excluded",
+      "islands_with_new_resources": 122,
+      "introduced_host_taxa": 559,
+      "source_territory_regions_by_empire": {
+        "Great_Britain": 33,
+        "Spain": 14,
+        "Portugal": 17,
+        "Netherlands": 10
+      },
+      "native_source_hosts_by_empire": {
+        "Great_Britain": 295,
+        "Spain": 292,
+        "Portugal": 200,
+        "Netherlands": 112
+      },
+      "new_opportunity_cells_supported_by_native_territory_sources": {
+        "Great_Britain": 4027,
+        "Spain": 4137,
+        "Portugal": 3229,
+        "Netherlands": 1944
+      },
+      "new_opportunity_cell_source_support_share": {
+        "Great_Britain": 0.7097285865350723,
+        "Spain": 0.7291152626013394,
+        "Portugal": 0.5690870637997885,
+        "Netherlands": 0.34261543884384915
+      },
+      "island_csv": "colonial_network_other_colonial_islands_only_island_source_summary.csv"
+    }
+  },
+  "limits": [
+    "This is an exploratory test developed after the simpler metropole-native source hypothesis did not have convincing positive support.",
+    "Native plant distribution within an empire's territories does not imply human transport or intra-imperial colonization.",
+    "Host records are literature/observation-derived and are not demonstrated local use.",
+    "Donor identities and former empire memberships overlap; percentages for empires cannot be added.",
+    "French and other empires are absent from this published four-empire source.",
+    "WDG/GLONAF polygon crosswalk is incomplete or uncertain for many very small oceanic islands."
+  ]
+}

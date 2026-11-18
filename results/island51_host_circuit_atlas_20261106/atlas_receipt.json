@@ -1,0 +1,131 @@
+{
+  "schema": "chocho_island51_host_circuit_atlas_v1",
+  "status": "COMPLETE_POSTHOC_SAVED_PREDICTION_GEOGRAPHIC_ACCOUNTING",
+  "started_at_utc": "2026-11-06T13:08:45.707806+00:00",
+  "parent_audit_completed_before_accounting_at_utc": "2026-11-06T13:08:46.100626+00:00",
+  "completed_at_utc": "2026-11-06T13:08:46.151850+00:00",
+  "source_validation": {
+    "status": "ALL_20_ATLAS_INPUTS_AND_FROZEN_ACCOUNTING_RULES_VERIFIED",
+    "input_lock_sha256": "0349d77f8d51b3bc5ca6928376a73227a035e9fda614478f56f0d4c84145a22a",
+    "protocol_sha256": "10f69585215e7776d3ab87bb00266e8e6b9c1e57ffc7176a6a461c44d3672f8b",
+    "implementation_plan_sha256": "ee77f8f5d220838f1c25372ebdf0a4aed3ae2cfa8192c23a99455c262ca3642d",
+    "frozen_at_utc": "2026-11-06T12:59:35.585966+00:00",
+    "parent_commit": "17a4768cbb6cddf249449bd67e3ea1124e0db2f5",
+    "files_sha256": {
+      "results/island51_host_circuit_joint_20261106/heldout_predictions.csv.gz": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+      "results/island51_host_circuit_joint_20261106/model_fold_losses.csv": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+      "results/island51_host_circuit_joint_20261106/comparison_fold_losses.csv": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+      "results/island51_host_circuit_joint_20261106/model_summary.csv": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+      "results/island51_host_circuit_joint_20261106/comparison_summary.csv": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee",
+      "results/island51_host_circuit_joint_20261106/joint_run_receipt.json": "a96a806468bffd7ef911fc6780c5b82056e45a9d2ec6facb02e7282cede71561",
+      "results/island51_host_circuit_joint_20261106/source_validation.json": "6c4d0ebd8b4f4561af052cf72327f16bd7871b14c54563c9952c9dbb13e4208a",
+      "results/island51_host_circuit_joint_20261106/prior_circuit_reproduction.json": "7851c5380fcf7221ac50b2a4375c649dad966e3033b22b48c690ca55dc065d6e",
+      "results/island51_host_circuit_joint_20261106/input_lock.json": "8603741375c29ce175a7a7e0db78818d69ef892d0647c752162c794b62a900c3",
+      "results/island51_host_circuit_joint_20261106/independent_prediction_audit.json": "ce9b396ea73a947ff515d90937c18e76d321af3c17ce6528c56b67fbc0a52ce5",
+      "results/island51_host_circuit_joint_20261106/PROTOCOL.md": "2ec6c5c195ce4139aac1fe7a8f179928684cece5a7aec036a05d7311e8efbb70",
+      "results/island51_host_circuit_joint_20261106/IMPLEMENTATION_PLAN.md": "0f90cdc484c65a442a15dd047603800625ccd721e665d483f66e2c7a562551de",
+      "results/island51_host_circuit_joint_20261106/verify_saved_predictions.py": "1d96a46e07dfd4d88a96e15ee6ca646691fcd6b1f2e5ab19274830832ff5d912",
+      "data/exploratory/island51_observed_ocean_20261106/coordinates/island51_original_WPI_ports_coords_unique_source.json": "2c19983a3e564de6e397abea24738e688236485ceda42f1f02122e83dd113d01",
+      "data/exploratory/island51_observed_ocean_20261106/wpi/ports_2019_source.geojson": "62159ee5ce4a31aff90ee46efdb3cdf11a9b368472a147392eb742148f340d83",
+      "results/island51_observed_ocean_circuit_20261106/original194_port_attachment_audit.csv": "e41dda04ccd03ffc5b9cdf267e205a66e8f507a574f87c19ecc971129f29a887",
+      "results/island51_observed_ocean_circuit_20261106/source_preparation.json": "06cdbb2b21cdb95b22fbb503648649f80983ef6d5b60fe7c557de7b758ee15db",
+      "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_islands.csv": "bbcfaae2e10d13da0380a7de6059c0ee8f7df81e02cca7cbd255932eca8f53e8",
+      "provenance/reviewer_defenses/results/island_host_network_20261030/island_host_network_pairs.csv": "eb0e7623dcb88a563ff7094e485d761312d58d5838d21c6d897b1f79030f5e34",
+      "data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz": "79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906"
+    },
+    "existing_joint_results_already_known": true,
+    "accounting_rules_fixed_before_atlas_computation": true
+  },
+  "geography_checks": {
+    "islands": 51,
+    "original_ports": 194,
+    "marine_ports": 182,
+    "excluded_marine_ports": 12,
+    "all_original_port_groups_spherical_means_verified": true,
+    "maximum_representative_coordinate_error_degrees": 2.842170943040401e-14,
+    "exact_OBJECTID_ledger_join_and_source_names_coordinates_verified": true,
+    "source_labels": "Canonical landmass ID and smallest-OBJECTID example port; country sets describe sampled WPI ports",
+    "representative_point": "Saved spherical mean of all original complete-port coordinates; marine exclusions retained"
+  },
+  "parent_summary_checks": {
+    "comparisons_verified": 10,
+    "absolute_tolerance": 1e-12,
+    "relative_tolerance": 1e-12,
+    "maximum_absolute_errors": {
+      "MSE_reference": 1.734723475976807e-18,
+      "MSE_augmented": 1.734723475976807e-18,
+      "absolute_MSE_gain": 2.4936649967166602e-18,
+      "relative_MSE_reduction_percent": 3.3084646133829665e-14,
+      "MAE_reference": 1.3877787807814457e-17,
+      "MAE_augmented": 1.3877787807814457e-17,
+      "islands_improved": 0.0,
+      "islands_worse": 0.0,
+      "islands_tied": 0.0
+    }
+  },
+  "row_counts": {
+    "island_geography.csv": 51,
+    "original_port_geography.csv": 194,
+    "island_gain_decomposition.csv": 510,
+    "island_conditional_status.csv": 102,
+    "gain_concentration_summary.csv": 10
+  },
+  "conditional_MSE_category_counts": {
+    "new_butterfly_jaccard": {
+      "both_positive": 23,
+      "host_positive_circuit_negative": 8,
+      "host_negative_circuit_positive": 16,
+      "both_negative": 4,
+      "at_least_one_tie": 0
+    },
+    "earlier_butterfly_jaccard": {
+      "both_positive": 15,
+      "host_positive_circuit_negative": 18,
+      "host_negative_circuit_positive": 7,
+      "both_negative": 11,
+      "at_least_one_tie": 0
+    }
+  },
+  "both_conditional_MAE_positive_counts": {
+    "new_butterfly_jaccard": 29,
+    "earlier_butterfly_jaccard": 19
+  },
+  "parent_artifacts_verified_unchanged_sha256": {
+    "results/island51_host_circuit_joint_20261106/model_fold_losses.csv": "73413250b7b32dabe8ce73d24beb400e2c6de1e392bca88f023424a0a24c40a9",
+    "results/island51_host_circuit_joint_20261106/PROTOCOL.md": "2ec6c5c195ce4139aac1fe7a8f179928684cece5a7aec036a05d7311e8efbb70",
+    "results/island51_host_circuit_joint_20261106/joint_host_circuit_summary.png": "dc61b55f81379b3db86da5be66b5b762d4167023f05e738ed5b9ef7735c92112",
+    "results/island51_host_circuit_joint_20261106/figure_receipt.json": "2df7888ad514d57a70ebc450843d206cfb218e7903b7408b31d7eafe6d80bdcc",
+    "results/island51_host_circuit_joint_20261106/verify_saved_predictions.py": "1d96a46e07dfd4d88a96e15ee6ca646691fcd6b1f2e5ab19274830832ff5d912",
+    "results/island51_host_circuit_joint_20261106/input_lock.json": "8603741375c29ce175a7a7e0db78818d69ef892d0647c752162c794b62a900c3",
+    "results/island51_host_circuit_joint_20261106/joint_run_receipt.json": "a96a806468bffd7ef911fc6780c5b82056e45a9d2ec6facb02e7282cede71561",
+    "results/island51_host_circuit_joint_20261106/model_summary.csv": "a77e6b963dc50d940a6ff3de8068a23c7489d537980ef1d9ee7da47ef5acaf61",
+    "results/island51_host_circuit_joint_20261106/heldout_predictions.csv.gz": "1b60b512148de255a9e80c9f4aa5e0cb52813dbb58d8738b4c1f4fa018e5b127",
+    "results/island51_host_circuit_joint_20261106/execution_verification.json": "ff6d3217369cc595764b373eaddea2e4ca85ad959423f84e408283cc8a84a12e",
+    "results/island51_host_circuit_joint_20261106/prior_circuit_reproduction.json": "7851c5380fcf7221ac50b2a4375c649dad966e3033b22b48c690ca55dc065d6e",
+    "results/island51_host_circuit_joint_20261106/IMPLEMENTATION_PLAN.md": "0f90cdc484c65a442a15dd047603800625ccd721e665d483f66e2c7a562551de",
+    "results/island51_host_circuit_joint_20261106/render_summary.py": "376ad92d812a2a1275824cd5c487be0fa48504a1d22b38fd2a1d91a0c0743d78",
+    "results/island51_host_circuit_joint_20261106/comparison_fold_losses.csv": "49a66c19b4cb753ef9be4e96a9f38015da3b8ee24c655265bc6bc1c9825232ad",
+    "results/island51_host_circuit_joint_20261106/independent_prediction_audit.json": "ce9b396ea73a947ff515d90937c18e76d321af3c17ce6528c56b67fbc0a52ce5",
+    "results/island51_host_circuit_joint_20261106/joint_host_circuit_summary.svg": "87b8d5ff222ec6c0c25a4754659e07440644ee0bc80497a5ec421371fc81058a",
+    "results/island51_host_circuit_joint_20261106/README.md": "7e898d4ffc0b067d6220aa57701c694de72af94fa70a7f8acb945df7e08f3400",
+    "results/island51_host_circuit_joint_20261106/source_validation.json": "6c4d0ebd8b4f4561af052cf72327f16bd7871b14c54563c9952c9dbb13e4208a",
+    "results/island51_host_circuit_joint_20261106/comparison_summary.csv": "4c148af445bede39f3cbcdb46993df2fe42b0d97a1284e0cdbd47e2724bd8eee"
+  },
+  "outputs_sha256": {
+    "island_geography.csv": "3727b1764a7416a85cbb28d573bdc6af3d401a54d3da3838c2e5de9fb913e89d",
+    "original_port_geography.csv": "590a3f92314eb7a1a89de913939e671c7cbc7e75735a696ad3b697bc80c8f154",
+    "island_gain_decomposition.csv": "779e268ddc4d3fa2a345b4ae2ce1e4f835c8a0cc474b0119ad5b0bd9528c2197",
+    "island_conditional_status.csv": "235e73d9aa5b019d5ee9a192b8861644091ecaa3b982c838ff39d5841b649653",
+    "gain_concentration_summary.csv": "60a13199f050ae568da40e9f118971585737c4308a17c9e68eede03e1e409121",
+    "parent_prediction_audit.json": "55aad8463d7d0eecbf60c14eb47df9e14792a96e5470bec51aacfc94c0bd6283"
+  },
+  "implementation_sha256": {
+    "scripts/summarize_island51_host_circuit_atlas.py": "c802bf1989417cd7ccd20d8b729da3f4b8703496727e1d1e3b390628d9f8ec51",
+    "results/island51_host_circuit_joint_20261106/verify_saved_predictions.py": "1d96a46e07dfd4d88a96e15ee6ca646691fcd6b1f2e5ab19274830832ff5d912"
+  },
+  "python_version": "3.12.14",
+  "no_models_refitted": true,
+  "undefined_values": "Blank CSV cells / JSON null; no denominator threshold or invented zero",
+  "concentration": "MSE only; k=1,3,5; gross positive/adverse masses separate; numeric island ID breaks exact ties",
+  "interpretation": "Post-hoc geography of 50 endpoint-held-out pair predictions per island. Shared HC and overlapping folds; no independent replication, causal transport, abundance or establishment inference."
+}
