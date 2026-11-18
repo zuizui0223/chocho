@@ -4,6 +4,7 @@ on:
     branches: [analysis/island-endemic-host-synonyms-20261118]
     paths:
       - scripts/audit_Azores2023_independent_DwCA_20261118.py
+      - scripts/audit_Azores_endemic_NHM_HOSTS_species_20261118.py
       - .github/workflows/chocho-Azores2023-independent-checklist.yml
   workflow_dispatch:
 permissions:
@@ -23,6 +24,21 @@ jobs:
           python3 -m py_compile scripts/audit_Azores2023_independent_DwCA_20261118.py
           python3 scripts/audit_Azores2023_independent_DwCA_20261118.py \
             --out-dir results/Azores2023_independent_origin_20261118
+      - name: Checkout exact original NHM HOSTS mirror
+        uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _nhm_original
+      - name: Cross official Azores origin labels to original larval host PLANT SPECIES records
+        run: |
+          set -euo pipefail
+          test "$(git -C _nhm_original rev-parse HEAD)" = "808e0b869f9ec1adf8efff87cf6a395adda103e0"
+          python3 -m py_compile scripts/audit_Azores_endemic_NHM_HOSTS_species_20261118.py
+          python3 scripts/audit_Azores_endemic_NHM_HOSTS_species_20261118.py \
+            --hosts _nhm_original/resource.csv \
+            --azores-source-summary results/Azores2023_independent_origin_20261118/azores_official_2023_SOURCE_AUDIT.json \
+            --out-dir results/Azores2023_independent_origin_20261118
       - name: Ensure at least full raw taxonomy and source-establishment statuses
         run: |
           python3 - <<'PY'
@@ -35,6 +51,15 @@ jobs:
           f=root/'azores_arthropoda_checklist_v1_7_dwca.zip'
           assert hashlib.sha256(f.read_bytes()).hexdigest()==j['original_archive_sha256']
           assert len(j['exact_taxon_results'])==8
+          named=json.loads((root/'Azores_original_NHM_HOSTS_eight_source_summary.json').read_text(encoding='utf8'))
+          assert named['original_n_Azores_butterfly_species']==8
+          assert named['source_official_native_nonendemic']==6
+          assert named['source_official_endemic']==2
+          assert named['source_original_HOSTS_record_count']==140485
+          for key in ('Hipparchia azorina','Hipparchia miguelensis'):
+              assert named['source_records'][key]['named_plant_species']
+          assert j['harmonized_species_rank_origin_counts']=={'native':6,'endemic':2,'uncertain':0}
+          print('OFFICIAL_AZORES_NATIVE_ENDEMIC_NHM_HOST_SPECIES_SOURCE_VERIFIED')
           print('OFFICIAL_AZORES_SOURCE_HASH_AND_INDEPENDENT_DENOMINATOR_VALIDATED')
           for x in j['exact_taxon_results']:
               print(x['independent_INBO_species'],x['official_establishment_means'])
