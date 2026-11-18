@@ -4,6 +4,7 @@ on:
     branches: [analysis/island-endemic-host-synonyms-20261118]
     paths:
       - scripts/audit_focal_island_larval_plant_species_20261118.py
+      - scripts/audit_Pcheiranthi_host_portfolio_vs_geography_20261118.py
       - scripts/audit_focal_island_plant_WCVP_v13_20261118.R
       - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/independent_butterfly_host_plant_species_events_v1.csv
       - .github/workflows/chocho-island-host-species-evidence-20261118.yml
@@ -41,6 +42,10 @@ jobs:
             _original_wcvp \
             results/focal_island_larval_plant_species_20261118/focal_host_plant_species_evidence_checked.csv \
             results/focal_island_larval_plant_species_20261118
+      - name: Preserve separation of added host species versus newly occupied butterfly-island resource units
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_Pcheiranthi_host_portfolio_vs_geography_20261118.py
       - name: Protect biological and locality inference limits
         run: |
           python3 - <<'PY'
@@ -64,6 +69,12 @@ jobs:
           assert {r['named_island'] for r in confirmed}<= {'Tenerife','La Palma'}
           assert all(r['admissible_species_origin']=='quarantined_plant_taxonomic_concept'
                      for r in plants if r['source_taxonomic_grade']=='taxon_unresolved')
+          portfolio=json.loads((root/'P_cheiranthi_native_alien_host_portfolio_two_islands.json').read_text())
+          assert portfolio['butterfly_island_units_source_documented']==2
+          assert portfolio['minimum_new_documented_introduced_host_species_butterfly_island_links']==2
+          assert portfolio['newly_gained_island_units_under_native_host_already_documented']==0
+          assert all(x['time_coincident_resources_verified']==0 for x in portfolio['islands'])
+          print('SPECIES_PORTFOLIO_VS_GEO_UNITS_NOT_CONFLATED',portfolio['butterfly_island_units_source_documented'])
           print('SPECIES_LEVEL_ORIGIN_CROSSWALK_ROWS',len(plants),'confirmed_direct_alien_field',len(confirmed))
           assert all(int(r['confirmed_larval_performance'])==0 for r in data)
           print('EXACT_PLANT_SPECIES_NATIVE_ALIEN_FIELD_AND_LITERATURE_SEPARATION_VALIDATED')
