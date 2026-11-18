@@ -50,13 +50,20 @@ def discover_version():
             obj=request_json(resource_url(href))
             number=obj.get("versionNumber")
             identifier=obj.get("id")
-            if identifier: return dataset,obj,int(identifier)
+            if not identifier:
+                identifier=href.rstrip("/").split("/")[-1]
+            if str(identifier).isdigit(): return dataset,obj,int(identifier)
     # Explicit versions endpoint and source-ranked max published version.
     versions=request_json(DATASET+"/versions")
     items=versions.get("_embedded",{}).get("stash:versions",[])
     if not items and isinstance(versions,dict):
         items=versions.get("versions",[])
     if not items: raise ValueError("Dryad version list missing")
+    for item in items:
+        if not item.get("id"):
+            href=(item.get("_links",{}).get("self") or {}).get("href","")
+            suffix=href.rstrip("/").split("/")[-1]
+            if suffix.isdigit():item["id"]=int(suffix)
     acceptable=[x for x in items if x.get("id")]
     if not acceptable:
         print("DRYAD_DIAGNOSTIC_DATASET_LINKS="+json.dumps(
