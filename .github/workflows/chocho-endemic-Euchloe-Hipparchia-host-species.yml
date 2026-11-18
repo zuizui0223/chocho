@@ -1,0 +1,75 @@
+name: chocho independent endemic Euchloe exact wild host species and Hipparchia censored grass
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Egrancanariensis_primary_host_20261118.py
+      - scripts/audit_Egrancanariensis_WCVP_v13_20261118.R
+      - provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/E_grancanariensis_H_tamadabae_source_evidence_20261118.csv
+      - .github/workflows/chocho-endemic-Euchloe-Hipparchia-host-species.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-evidence-and-original-WCVP:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source-frozen independent endemic and host/pupation evidence
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_Egrancanariensis_primary_host_20261118.py
+          python3 scripts/audit_Egrancanariensis_primary_host_20261118.py
+      - name: Pin original WCVP version used for original GEB butterfly resource estimates
+        uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _wcvp
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Resolve only actually named accepted host PLANT SPECIES to original Canary WCVP origin
+        run: |
+          set -euo pipefail
+          test "$(git -C _wcvp rev-parse HEAD)" = "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+          Rscript scripts/audit_Egrancanariensis_WCVP_v13_20261118.R \
+            _wcvp \
+            provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/E_grancanariensis_H_tamadabae_source_evidence_20261118.csv \
+            results/independent_endemic_species_host_rescue_20261118
+      - name: Fail-closed validation of the source, butterfly, plant and outcome gates
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,csv
+          d=Path('results/independent_endemic_species_host_rescue_20261118')
+          x=json.loads((d/'native_endemic_host_species_field_evidence.json').read_text(encoding='utf8'))
+          with (d/'Egrancanariensis_two_hosts_original_WCVP_v13_CNY.csv').open(encoding='utf8',newline='') as f:
+              p=list(csv.DictReader(f))
+          assert len(p)==2
+          assert {z['plant'] for z in p}=={'Hirschfeldia incana','Descurainia preauxiana'}
+          assert all(z['source_v13_origin']=='native_CNY' for z in p)
+          assert sum(int(z['direct_wild_larva_on_species']) for z in p)==1
+          assert sum(int(z['direct_oviposition_on_species']) for z in p)==1
+          assert x['updated_confirmed_min_documentation']['documented_butterflies_with_named_larval_host_genus_n']==36
+          assert x['updated_confirmed_min_documentation']['extant_only_denominator']==41
+          assert x['updated_confirmed_min_documentation']['Canary_endemic_named_host_genus_n']==8
+          assert len(x['updated_confirmed_min_documentation']['still_no_named_larval_host_genus'])==5
+          assert x['new_native_endemic_host_source']['field_larvae_collected_2009_n']==15
+          assert x['new_native_endemic_host_source']['parasitized_larvae_n']==9
+          assert x['new_native_endemic_host_source']['pupated_n']==5
+          assert not x['new_native_endemic_host_source']['adult_emergence_confirmed']
+          assert x['still_unidentified_grass']['additional_named_host_genus_species']==0
+          print('ORIGINAL_WCVP_CNY_AND_NATIVE_END_EMIC_36_OF_41_SOURCE_AUDIT_VALID')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-endemic-Euchloe-GranCanaria-larval-host-and-WCVP2026
+          path: results/independent_endemic_species_host_rescue_20261118/
+          if-no-files-found: warn
+          retention-days: 90
