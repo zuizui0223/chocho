@@ -43,6 +43,9 @@ EXCLUDE_RELATIVE = {
     Path("tests/test_butterfly_climate_release_postgate_recovery.py"),
     Path("tests/test_butterfly_climate_release_execution_binding.py"),
     Path("tests/test_repository_layout.py"),
+    # The original v0.2 anonymous bundle does not include results/island51_*. 
+    # Keep this independent v0.3 marine source verifier in its dedicated CI.
+    Path("tests/test_verify_island51_joint_predictions.py"),
     Path("provenance/reviewer_defenses/GEB_V02_DECISION_MEMO.md"),
     Path("provenance/reviewer_defenses/REVIEW_RESPONSE_MAP.md"),
 }
