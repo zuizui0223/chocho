@@ -1,0 +1,96 @@
+{
+  "schema": "chocho_observed_ocean_source_bundle_v1",
+  "base_commit": "0f739cf6f502112699302aae46635b039361ba19",
+  "protocol_path": "results/island51_observed_ocean_circuit_20261106/PROTOCOL.md",
+  "protocol_sha256_before_outcome_fit": "3998f338051870a1e83db3874fee6f95349dca1fcdb15fa706e676e337a1004a",
+  "geometry_chosen_before_new_outcome_model": true,
+  "fixed_islands": 51,
+  "fixed_pairs": 1275,
+  "original_ports": 194,
+  "marine_ports": 182,
+  "files": [
+    {
+      "path": "ais/commercial_AIS_mean_0p5deg_2015_2021.npz",
+      "bytes": 534370,
+      "sha256": "84c0b41c42414503aed846afee763eab9c32453a19662e3554212be85ab881d5"
+    },
+    {
+      "path": "ais/commercial_AIS_mean_0p5deg_2015_2021_receipt.json",
+      "bytes": 2848,
+      "sha256": "3bfea82c584e39f49ea4d97624a1643528738064d0fabcbe71d2e7cc75dc893c"
+    },
+    {
+      "path": "wind/NOAA_NCEP_R1_10m_wind2015to2021_1deg.npz",
+      "bytes": 664319,
+      "sha256": "46280a6accfacf77d403d650f814995960a90a4615c335776ee743c3d68da9ff"
+    },
+    {
+      "path": "wind/NOAA_NCEP_R1_10m_wind2015to2021_1deg_receipt.json",
+      "bytes": 1799,
+      "sha256": "ffb0de9fa4ae5c978b23975472022a0774425b59608a71606b2294d3cb67fef6"
+    },
+    {
+      "path": "coast_0p0625/island51_coastal_ocean_graph.npz",
+      "bytes": 1938205,
+      "sha256": "79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906"
+    },
+    {
+      "path": "coast_0p0625/island51_coastal_ocean_graph_receipt.json",
+      "bytes": 57873,
+      "sha256": "41f4f5a46118691d0d42e5aa2481194a217c75b5f1b6165c60aee88f0d7210af"
+    },
+    {
+      "path": "wpi/ports_2019_source.geojson",
+      "bytes": 748020,
+      "sha256": "62159ee5ce4a31aff90ee46efdb3cdf11a9b368472a147392eb742148f340d83"
+    },
+    {
+      "path": "wpi/noaa_WPI2019_source_receipt.json",
+      "bytes": 1849,
+      "sha256": "3a16d82605f3cba72faf765c8ed652b85ce724d62491e3f51407cf42ed17dc3c"
+    },
+    {
+      "path": "coordinates/island51_original_WPI_ports_coords_unique_source.json",
+      "bytes": 16695,
+      "sha256": "2c19983a3e564de6e397abea24738e688236485ceda42f1f02122e83dd113d01"
+    },
+    {
+      "path": "geometry_audits/marine_port_attachments_0p0625_preflight.json",
+      "bytes": 86379,
+      "sha256": "dd5b2cffcff6bfc53c0a05297e3719c1969b9598a0c6560baeb71645b221a464"
+    },
+    {
+      "path": "geometry_audits/marine_port_attachments_0p0625_summary.json",
+      "bytes": 6379,
+      "sha256": "ad20d101df1a4e98719d90d207eda9dea308d1927e0022ced25e5b994e65299c"
+    },
+    {
+      "path": "geometry_audits/failed_1degree_centroid_topology.json",
+      "bytes": 22705,
+      "sha256": "f0dfea778df796c27e059a937c228895b49aa0de6b019f1d7d9fe84694471cd4"
+    },
+    {
+      "path": "geometry_audits/marine_port_attachments_0p125_preflight.json",
+      "bytes": 49631,
+      "sha256": "d9f285e98bd3729f9c747d3d0c9449682c26dc17d824bf851d40b113666ae0f0"
+    },
+    {
+      "path": "source_notices/GSHHG_LICENSE.TXT",
+      "bytes": 1375,
+      "sha256": "dc53a4833bf9121360a5286917683f041439327353ffe0231206c6b746005b81"
+    },
+    {
+      "path": "source_notices/GSHHG_COPYING.LESSERv3",
+      "bytes": 7816,
+      "sha256": "ea7d049c7705dc13afc202dd18e1827f3484f8212fd3fa7b82fc4a0c363432c9"
+    },
+    {
+      "path": "source_notices/GSHHG_README.TXT",
+      "bytes": 15350,
+      "sha256": "8c83b0d9e861c3cf9390ccfcc28d57dd484b192e1767524e094c988ee9f84ac7"
+    }
+  ],
+  "protocol_frozen_at_utc": "2026-11-06T08:29:53Z",
+  "geometry_selection_basis": "source-only coastline, marine accessibility and terminal aliases; new biological models not fitted at freeze",
+  "protocol_location_note": "Moved unchanged to result directory to preserve frozen GEB docs/exploratory whitelist; content checksum unchanged."
+}
