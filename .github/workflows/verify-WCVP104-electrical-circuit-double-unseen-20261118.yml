@@ -1,0 +1,81 @@
+name: Verify WCVP 104-island electrical circuit double-unseen botanical transfer
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/audit_WCVP126_uniform_circuit_double_unseen_20261118.py
+      - results/WCVP126_circuit_strict_geographic_transfer_20261118/PROTOCOL.md
+      - .github/workflows/verify-WCVP104-electrical-circuit-double-unseen-20261118.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  strict-electrical-circuit-double-unseen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed original numerical dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44013658955
+          github-token: ${{ github.token }}
+          name: chocho-original104-WCVP-GSHHG-finite-volume-uniform-circuit-null
+          path: _src/uniformGSHHG
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/WCVP126_original
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/source_shortest_sea_comparator
+      - name: Reproduce frozen shortest-path double-unseen control before circuit substitution
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py scripts/audit_WCVP126_uniform_circuit_double_unseen_20261118.py
+          python scripts/audit_WCVP126_uniform_circuit_double_unseen_20261118.py \
+            --plants _src/WCVP126_original/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/source_shortest_sea_comparator/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --uniform-circuit _src/uniformGSHHG/WCVP126_original104_uniform_finvol_electrical_resistance.csv \
+            --circuit-receipt _src/uniformGSHHG/uniform104_WCVP_GSHHG_source_circuit_numerical_audit.json \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir _result
+      - name: Validate native/alien source pair identity, no island leakage and all gains
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          d=json.loads(Path("_result/WCVP126_104_true_uniform_circuit_strict_double_unseen.json").read_text())
+          assert d["source_common_regions"]==104
+          assert d["source_common_pairs"]==5355
+          assert d["source_n_test_double_unseen_pairs"]==1089
+          assert d["n_source_folds"]==5 and d["source_model_ridge_alpha"]==20.0
+          for key in ("native_uniform_circuit","alien_uniform_circuit"):
+              obj=d[key]
+              assert len(obj["folds"])==5 and obj["test_islands_absent_from_train_endpoints"]
+              assert obj["n_double_unseen_test_pairs"]==1089
+              assert set(obj["macro_equal_fold_relative_mse_improvement_percent"])=={
+                  "G_vs_B_pct","P_vs_B_pct","GP_vs_B_pct","G_added_after_P_pct","P_added_after_G_pct"}
+              assert all(math.isfinite(x) for x in obj["macro_equal_fold_relative_mse_improvement_percent"].values())
+          delta=d["origin_paired_comparison"]
+          assert delta["same_folds_same_pairs"] and delta["bootstrap_draws"]==4999
+          assert len(delta["descriptive_shared_5fold_resample_4999_interval"])==2
+          print("PASS strict native/alien 104-island uniform circuit, no outcome-selected threshold")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: WCVP104-uniform-circuit-strict-double-unseen-source-scores
+          path: _result/
+          retention-days: 90
+          if-no-files-found: warn
