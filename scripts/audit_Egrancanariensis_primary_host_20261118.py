@@ -115,7 +115,8 @@ def run():
             "Hipparchia bacchus","Hipparchia gomera","Hipparchia tamadabae",
             "Hipparchia tilosi","Hipparchia wyssii"
           ],
-          "historical_extinct_without_named_larval_host_genus":["Pieris wollastoni"]
+          "historical_extinct_excluded_from_current_resource_denominator":["Pieris wollastoni"],
+          "historic_taxon_note":"Pieris wollastoni has separate historical host reports but is excluded from extant host-coverage estimates; no biological absence implied"
         },
         "scientific_boundary":[
           "Documented larval host genus remains a source-sampled lower bound, NOT unbiased true biological host knowledge prevalence.",
