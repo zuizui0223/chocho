@@ -1,0 +1,44 @@
+name: chocho Clarke 2024 Dryad original butterfly-larval host evidence source
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/inspect_clarke2024_Dryad_source_20261118.py
+      - scripts/audit_clarke2024_canary_host_evidence_20261118.py
+      - .github/workflows/chocho-clarke2024-canary-source.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-evidence-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Acquire author-original 2024 Dryad files under exact DOI and source metadata
+        run: |
+          set -euo pipefail
+          python3 scripts/inspect_clarke2024_Dryad_source_20261118.py \
+            --out-dir results/clarke2024_dryad_canary_20261118
+      - name: Validate original 2024 Dryad source identities
+        run: |
+          python3 - <<'PY'
+          import json,pathlib
+          r=pathlib.Path('results/clarke2024_dryad_canary_20261118')
+          m=json.loads((r/'SOURCE_MANIFEST.json').read_text())
+          assert m['doi']=='doi:10.5061/dryad.1vhhmgr12'
+          must={'larval_plants.csv','larval_host_plant.csv','butterfly_synonym.csv','larval_host_plant_status.csv'}
+          assert must <= set(m['retrieved'])
+          assert all(m['retrieved'][n]['sha256'] for n in must)
+          print('AUTHOR_ORIGINAL_DRYAD_FILE_METADATA_VERIFIED',m['dryad_version_id'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-clarke2024-original-Dryad-evidence-20261118
+          path: results/clarke2024_dryad_canary_20261118/
+          retention-days: 90
+          if-no-files-found: warn
