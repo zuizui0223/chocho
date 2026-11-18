@@ -1,0 +1,47 @@
+name: chocho independent island butterflies relaxed host-only LepTraits gate
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_independent42_relaxed_host_only_traits_20261118.py
+      - .github/workflows/chocho-independent42-relaxed-host-only-traits.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-data-eligibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reclassify original 42 butterflies with host-only versus major-habitat complete data
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_independent42_relaxed_host_only_traits_20261118.py
+          python3 scripts/audit_independent42_relaxed_host_only_traits_20261118.py
+      - name: Source-consistent independent-sample no-fabrication audit
+        run: |
+          python3 - <<'PY'
+          import csv,json,pathlib
+          root=pathlib.Path('results/independent42_relaxed_host_only_traits_20261118')
+          x=json.loads((root/'independent42_relaxed_host_only_trait_gate.json').read_text())
+          with (root/'independent42_original_vs_relaxed_trait_gate.csv').open(newline='') as f:
+            r=list(csv.DictReader(f))
+          assert len(r)==42
+          assert x['independently_classified_endemic18']['n']==18
+          assert x['independently_classified_endemic18']['raw_LepTraits']==10
+          assert x['independently_classified_endemic18']['relaxed_three_host_relevant_traits_eligible']==10
+          assert x['independently_classified_endemic18']['old_full_traits_complete']==0
+          assert x['independently_classified_endemic18']['old_frozen339_selected']==0
+          print('INDEPENDENT_END_EMICS_HOST_ONLY_RELAXED_TRAIT_GATES_REPLAY_VALID')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-independent42-original-vs-relaxed-host-only-trait-gates
+          path: results/independent42_relaxed_host_only_traits_20261118/
+          retention-days: 90
+          if-no-files-found: warn
