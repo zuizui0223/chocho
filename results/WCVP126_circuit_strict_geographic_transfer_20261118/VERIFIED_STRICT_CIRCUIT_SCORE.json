@@ -1,0 +1,90 @@
+{
+  "schema": "chocho_WCVP104_uniform_finite_volume_circuit_5hashfold_both_endpoints_unseen_score_v1",
+  "status": "SOURCE_CI_SUCCESS_SOURCE_LOCKED_EXPLORATORY_STRICT_SPATIAL_TRANSFER",
+  "date": "2026-11-18",
+  "source_workflow": {
+    "run_id": 44290887759,
+    "job_id": 134755478690,
+    "artifact_id": 14419709321,
+    "conclusion": "success",
+    "full_source_report_file": "WCVP126_104_true_uniform_circuit_strict_double_unseen.json",
+    "artifact_sha256": "cc427d36f673337b7226598d9b5e0f67551d4413f285e159504ac49cd95b9d62"
+  },
+  "protocol": "results/WCVP126_circuit_strict_geographic_transfer_20261118/PROTOCOL.md",
+  "source_population": {
+    "islands": 104,
+    "matched_native_alien_pairs": 5355,
+    "strict_test_pairs": 1089,
+    "hashed_held_island_folds": 5,
+    "pair_test_counts": [
+      406,
+      231,
+      190,
+      91,
+      171
+    ],
+    "ridge_alpha": 20
+  },
+  "controls": {
+    "original_shortest_double_unseen_native_gain_pct": 1.73510722916521,
+    "original_shortest_double_unseen_alien_gain_pct": 1.8576534605954167,
+    "baseline_and_port_predictor_fold_losses_unchanged": true,
+    "fold_ids_unchanged": true,
+    "no_test_island_in_training": true
+  },
+  "uniform_circuit": {
+    "native": {
+      "MSE_equal_fold_B": 0.0012906947715055224,
+      "MSE_equal_fold_C": 0.00129126661500904,
+      "MSE_equal_fold_P": 0.001295746595103786,
+      "MSE_equal_fold_PC": 0.001296476003358985,
+      "gain_pct_equal_fold": -0.04430509181116742,
+      "gain_pct_pair_weighted": -0.1556408460687917,
+      "descriptive_5fold_paired_bootstrap95": [
+        -0.9844110652036249,
+        0.43080162389915583
+      ],
+      "circuit_folds_improved": 3,
+      "port_only_gain_pct": -0.3914034293616128,
+      "port_after_circuit_gain_pct": -0.4034324352069272
+    },
+    "introduced": {
+      "MSE_equal_fold_B": 0.002816216438190657,
+      "MSE_equal_fold_C": 0.0027391917729554928,
+      "MSE_equal_fold_P": 0.0028203677005406913,
+      "MSE_equal_fold_PC": 0.002747405702151381,
+      "gain_pct_equal_fold": 2.735040680490108,
+      "gain_pct_pair_weighted": 3.259866993181351,
+      "descriptive_5fold_paired_bootstrap95": [
+        -1.6487554068083963,
+        5.508243607085061
+      ],
+      "circuit_folds_improved": 3,
+      "port_only_gain_pct": -0.14740565724066107,
+      "port_after_circuit_gain_pct": -0.2998668905545678
+    }
+  },
+  "differential_origin_relative_mse_gain": {
+    "introduced_minus_native_points": 2.7793457723012756,
+    "descriptive_same_5fold_bootstrap95": [
+      -1.6932613640236287,
+      5.400035298923851
+    ],
+    "bootstrap_draws": 4999,
+    "seed": 20261118,
+    "not_a_confirmatory_origin_interaction": true
+  },
+  "comparison_to_original_one_island_unseen": {
+    "earlier_native_gain_pct": -0.10961036875490482,
+    "earlier_introduced_gain_pct": 4.239013650845648,
+    "earlier_test_population": "Same 104 island groups but 104 leave-one-island-out folds; each unordered pair evaluated once per endpoint, not the same 1089 strict two-endpoint-unseen test pairs"
+  },
+  "limits": [
+    "The source circuit is an undirected, finite-resolution, finite-volume sea electrical resistance, not observed current direction, seed drift, ship voyages or cargo.",
+    "The native-versus-introduced differential gain and strict introduced gain have five-fold descriptive intervals spanning zero; positive points are not confirmed selective effect.",
+    "Fold resampling shares overlapping source plant observations and training populations; not an independent regional replication.",
+    "Matched dyads share endpoints and native versus introduced WCVP distributions differ in composition and Jaccard prevalence; relative MSE comparison does not identify ecology or transport.",
+    "Modern botanical species-richness margins of held island used as predictor; not prospective forecast of first plant arrival.",
+    "Butterfly consumer responses and larval establishment are not part of this model."
+  ]
+}
