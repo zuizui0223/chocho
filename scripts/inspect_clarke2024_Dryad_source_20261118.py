@@ -58,7 +58,15 @@ def discover_version():
         items=versions.get("versions",[])
     if not items: raise ValueError("Dryad version list missing")
     acceptable=[x for x in items if x.get("id")]
-    if not acceptable: raise ValueError("No Dryad version IDs")
+    if not acceptable:
+        print("DRYAD_DIAGNOSTIC_DATASET_LINKS="+json.dumps(
+          {"identifier":dataset.get("identifier"),"links":dataset.get("_links"),"keys":list(dataset)},ensure_ascii=False),flush=True)
+        print("DRYAD_DIAGNOSTIC_VERSIONS_STRUCTURE="+json.dumps({
+          "keys":list(versions) if isinstance(versions,dict) else "not_object",
+          "embedded_keys":list(versions.get("_embedded",{})) if isinstance(versions,dict) else [],
+          "first_versions":items[:2],
+        },ensure_ascii=False)[:5000],flush=True)
+        raise ValueError("No Dryad version IDs; see API structure diagnostic")
     obj=max(acceptable,key=lambda x:(int(x.get("versionNumber") or 0),int(x["id"])))
     return dataset,obj,int(obj["id"])
 
