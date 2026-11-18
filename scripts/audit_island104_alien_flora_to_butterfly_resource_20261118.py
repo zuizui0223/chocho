@@ -82,6 +82,7 @@ def setup(source_root,plants,geometry,area):
             **e,"response":cres,
             "native_resource_jaccard":nres if nres is not None else 0.,
             "native_resource_missing":int(nres is None),
+            "native_both_island_margins_positive":int(native[i]!=0 and native[j]!=0),
             "native_count_A":native[i].bit_count(),
             "native_count_B":native[j].bit_count(),
             "current_count_A":current[i].bit_count(),
@@ -136,10 +137,10 @@ def fold_cohort(entries,*,native_only):
         held=group[fold]
         tr=np.array([k for k,e in enumerate(entries)
              if e["island1"] not in held and e["island2"] not in held and
-             (not native_only or not e["native_resource_missing"])],int)
+             (not native_only or e["native_both_island_margins_positive"])],int)
         te=np.array([k for k,e in enumerate(entries)
              if e["island1"] in held and e["island2"] in held and
-             (not native_only or not e["native_resource_missing"])],int)
+             (not native_only or e["native_both_island_margins_positive"])],int)
         if len(tr)<1500 or len(te)<35:
             raise RuntimeError(f"Insufficient frozen fold support: {fold}, {len(tr)}, {len(te)}")
         # Exclude cross-boundary pairs for each fold, exactly as original source.
