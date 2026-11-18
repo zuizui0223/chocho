@@ -1,0 +1,65 @@
+name: Reproduce clean island51 raw ocean circuit
+on:
+  push:
+    branches:
+      - analysis/chocho-clean-marine-replay-20261118
+    paths:
+      - ".github/workflows/verify-main-island51-ocean-raw-replay.yml"
+      - "data/exploratory/island51_observed_ocean_20261106/**"
+      - "scripts/run_island51_observed_ocean_circuits.py"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  reproduce-ocean-graph-and-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install frozen scientific analysis packages
+        run: python -m pip install -e ".[test,analysis]" "pandas>=2.2" "scipy>=1.12"
+      - name: Rebuild three original ocean circuits and all 51 held-island models
+        run: |
+          mkdir -p _ci_ocean_full
+          python -u scripts/run_island51_observed_ocean_circuits.py \
+            --input-root data/exploratory/island51_observed_ocean_20261106 \
+            --coast-dir data/exploratory/island51_observed_ocean_20261106/coast_0p0625 \
+            --marine-ports-only \
+            --out-dir _ci_ocean_full \
+            --network-dir /tmp/chocho-island51-replay-networks
+      - name: Verify fixed source-model contrasts independently
+        run: |
+          python - <<'PY'
+          import csv, math
+          from pathlib import Path
+          base=Path("results/island51_observed_ocean_circuit_20261106/model_comparison_summary.csv")
+          new=Path("_ci_ocean_full/model_comparison_summary.csv")
+          with base.open(newline="") as f: original={ (r["comparison"],r["target"]):r for r in csv.DictReader(f)}
+          with new.open(newline="") as f: current={ (r["comparison"],r["target"]):r for r in csv.DictReader(f)}
+          assert set(original)==set(current) and len(original)==12, (len(original),len(current))
+          for k in original:
+              for metric in ("MSE_reference","MSE_augmented","relative_MSE_reduction_percent","MAE_reference","MAE_augmented"):
+                  x,y=float(original[k][metric]),float(current[k][metric])
+                  assert math.isclose(x,y,abs_tol=1e-8,rel_tol=1e-7),(k,metric,x,y)
+              assert original[k]["islands_improved"]==current[k]["islands_improved"],k
+          k=("base_vs_uniform","new_butterfly_jaccard")
+          assert 5.0<float(current[k]["relative_MSE_reduction_percent"])<5.2
+          print("OCEAN_51_ISLAND_12_CONTRASTS_ORIGINAL_SOURCE_REPRODUCED",len(current))
+          PY
+      - name: Keep small rerun scientific receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean-main-original-island51-ocean-three-circuit-replay
+          path: |
+            _ci_ocean_full/*.json
+            _ci_ocean_full/*.csv
+            _ci_ocean_full/*_resistance.npz
+          if-no-files-found: ignore
