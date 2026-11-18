@@ -126,7 +126,10 @@ def main(dest,offline=False):
     source_by_name={}
     for row in taxa:
         nm=safe_token(row.get("scientificName",""))
-        if nm in source_names and row.get("family","").lower()==source_names[nm]["checklist_family"].lower():
+        # Species-rank only: never infer endemism of the whole Pieris brassicae
+        # species from an endemic named subspecies row in the official source.
+        if (nm in source_names and row.get("family","").lower()==source_names[nm]["checklist_family"].lower()
+            and row.get("taxonRank","").strip().lower()=="species"):
             source_by_name.setdefault(nm,[]).append(row)
     exact_join=[]
     for name, source in sorted(source_names.items()):
@@ -140,6 +143,40 @@ def main(dest,offline=False):
                "source_localities":sorted({r.get("locality","") for r in dist if r.get("locality")}),
                "original_HOSTS_named_genus_exact":int(source["hosts_named_genus"]),
                "in_original_GEB239_binomial_exact":int(source["in_frozen239"])})
+    taxon_concept_diagnostics=[
+      {"taxonID":r.get("taxonID"),"scientificName":r.get("scientificName"),
+       "acceptedNameUsage":r.get("acceptedNameUsage"),
+       "taxonRank":r.get("taxonRank"),"taxonomicStatus":r.get("taxonomicStatus"),
+       "family":r.get("family"),"infraspecificEpithet":r.get("infraspecificEpithet")}
+      for r in taxa if r.get("family","").lower() in ("pieridae","nymphalidae") and (
+          r.get("scientificName","").startswith("Colias croce") or
+          r.get("scientificName","").startswith("Hipparchia azor") or
+          r.get("scientificName","").startswith("Hipparchia miguel") or
+          r.get("scientificName","").startswith("Pieris brassicae")
+      )]
+    # Only one homotypic species equivalence was independently verified
+    # against the original GEB239 source; never auto-collapse azorina/azorinus.
+    guarded_verified_alias={"Colias crocea":"Colias croceus"}
+    species_rank_by_name={}
+    for r in taxa:
+        if r.get("taxonRank","").strip().lower()!="species":continue
+        nm=safe_token(r.get("scientificName",""))
+        species_rank_by_name.setdefault(nm,[]).append(r)
+    for row in exact_join:
+        name=row["independent_INBO_species"]
+        source_alias=guarded_verified_alias.get(name,"")
+        if row["source_taxon_rows"]==0 and source_alias:
+            alt=[x for x in species_rank_by_name.get(source_alias,[])
+                  if x.get("family","").lower()==row["family"].lower()]
+            row["independently_verified_alias"]=source_alias if len(alt)==1 else ""
+            row["alias_taxon_rank_only"]=len(alt)
+            row["alias_official_origin_status"]=[]
+            if len(alt)==1:
+                rr=[x for x in distribution if x.get("_coreid")==alt[0]["taxonID"]]
+                row["alias_official_origin_status"]=sorted({x["establishmentMeans"] for x in rr if x.get("establishmentMeans")})
+                row["alias_official_named_islands"]=sorted({x.get("locality","") for x in rr if x.get("locality")})
+        if name=="Hipparchia azorina":
+            row["taxonomy_conflict_note"]="Official 2023 source may use H. azorinus and infraspecific names; not automatically counted as synonym of H. azorina."
     report={
        "schema":"chocho_azores_official2023_independent_origin_initial_crosswalk_v1",
        "source":SOURCE,"source_doi":DOI,"source_description":"Borges et al 2023 Updated Checklist of Arthropods from Azores v1.7 University Azores",
@@ -149,6 +186,7 @@ def main(dest,offline=False):
        "counts":{"taxa":len(taxa),"distribution":len(distribution),"original_INBO_Azores_unique":len(source_names)},
        "source_taxon_sample":taxa[:4],
        "source_distribution_sample":distribution[:4],
+       "original_source_taxon_concept_diagnostics":taxon_concept_diagnostics,
        "exact_taxon_results":exact_join,
        "known_limits":[
          "Only source-exact original butterfly binomials are joined; accepted synonyms and subspecies are a separate, explicit subsequent gate.",
@@ -162,7 +200,8 @@ def main(dest,offline=False):
        "counts":report["counts"],
        "taxon_headers":structs["Taxon"]["columns"],
        "dist_headers":structs["Distribution"]["columns"],
-       "independent_eight":exact_join
+       "independent_eight":exact_join,
+       "taxonomy_source_conflicts":taxon_concept_diagnostics
     },ensure_ascii=False)[:12000],flush=True)
     return report
 if __name__=="__main__":
