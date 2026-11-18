@@ -1,0 +1,48 @@
+name: chocho Azores 2023 independent island endemic/native source census
+on:
+  push:
+    branches: [analysis/island-endemic-host-synonyms-20261118]
+    paths:
+      - scripts/audit_Azores2023_independent_DwCA_20261118.py
+      - .github/workflows/chocho-Azores2023-independent-checklist.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  independent-Azores-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Obtain and parse the actual University Azores 2023 fixed v1.7 DwCA and its taxon and distribution tables
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/audit_Azores2023_independent_DwCA_20261118.py
+          python3 scripts/audit_Azores2023_independent_DwCA_20261118.py \
+            --out-dir results/Azores2023_independent_origin_20261118
+      - name: Ensure at least full raw taxonomy and source-establishment statuses
+        run: |
+          python3 - <<'PY'
+          import json, pathlib,hashlib
+          root=pathlib.Path('results/Azores2023_independent_origin_20261118')
+          j=json.loads((root/'azores_official_2023_SOURCE_AUDIT.json').read_text(encoding='utf-8'))
+          assert j['counts']['original_INBO_Azores_unique']==8
+          assert j['counts']['taxa']>=4000
+          assert j['counts']['distribution']>=8000
+          f=root/'azores_arthropoda_checklist_v1_7_dwca.zip'
+          assert hashlib.sha256(f.read_bytes()).hexdigest()==j['original_archive_sha256']
+          assert len(j['exact_taxon_results'])==8
+          print('OFFICIAL_AZORES_SOURCE_HASH_AND_INDEPENDENT_DENOMINATOR_VALIDATED')
+          for x in j['exact_taxon_results']:
+              print(x['independent_INBO_species'],x['official_establishment_means'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-original-Azores2023-independent-native-endemic-DwCA
+          path: results/Azores2023_independent_origin_20261118/
+          retention-days: 90
+          if-no-files-found: warn
