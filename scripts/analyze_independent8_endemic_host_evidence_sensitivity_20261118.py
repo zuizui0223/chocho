@@ -160,6 +160,46 @@ def main(source,original,out):
             "with_zero_added_global_potential_regions":[b for b,v in items if v["global_potential_added_region_count"]==0],
             "no_claim_as_population_prevalence":True,
         }
+    # Source region = botanical archipelago, not a resolved same-island
+    # host ecology observation. These 8 species are selected on documented
+    # source-host plant identities, so percentages are never projected to 18.
+    local=[]
+    for butterfly,item in sorted(per_species.items()):
+        v=item["modes"]["all_named_sources_including_NHM_nonlocal"]
+        local.append({
+            "butterfly":butterfly,
+            "source_WGSRPD3":item["source_region"],
+            "documented_native_host_species_in_source_region_n":v["host_native_in_butterfly_source_region_n"],
+            "documented_introduced_host_species_in_source_region_n":v["host_introduced_in_butterfly_source_region_n"],
+            "new_host_present_source_region_unit_from_introduced_host":v["source_region_new_host_presence_created_by_introduced_only"],
+            "introduced_source_host_species":v["introduced_hosts_in_butterfly_source_region"]
+        })
+    if (len(local)!=8 or sum(x["documented_native_host_species_in_source_region_n"]>0 for x in local)!=8 or
+       sum(x["documented_introduced_host_species_in_source_region_n"]>0 for x in local)!=1 or
+       sum(x["new_host_present_source_region_unit_from_introduced_host"] for x in local)!=0):
+        raise ValueError("Original eight independently source-selected endemics no longer have the same origin-region native/alien host identity")
+    source_intro=[x for x in local if x["documented_introduced_host_species_in_source_region_n"]>0]
+    if len(source_intro)!=1 or source_intro[0]["butterfly"]!="Pieris cheiranthi" or source_intro[0]["introduced_source_host_species"]!=["Tropaeolum majus"]:
+        raise ValueError("Source-verified introduced named host must only be Pieris cheiranthi / Tropaeolum majus in this selected panel")
+    host_concentration=[]
+    for butterfly,item in sorted(per_species.items()):
+        first=item["modes"]["all_named_sources_including_NHM_nonlocal"]
+        changes=sorted((x for x in item["leave_one_reported_host_out"] if x["global_added_region_count_difference"] is not None),
+            key=lambda x: (-x["global_added_region_count_difference"],x["removed_host_species"]))
+        host_concentration.append({
+            "butterfly":butterfly,
+            "full_global_added_regions":first["global_potential_added_region_count"],
+            "number_of_documented_host_species":first["host_species_n"],
+            "largest_sensitivity_on_removing_one_plant":changes[0] if changes else None,
+            "all_removed_hosts_are_a_different_hypothetical_host_knowledge_sample":True
+        })
+    # Differences in the count of 'added' regions after removing a host
+    # are a sensitivity, not a unique additive decomposition. Removing a
+    # plant changes BOTH the native and contemporary denominators.
+    by_tier={}
+    for grade in sorted({x["evidence_tier"] for x in edges}):
+        by_tier[grade]={"source_host_edges":sum(x["evidence_tier"]==grade for x in edges),
+                         "butterflies":sorted({x["butterfly"] for x in edges if x["evidence_tier"]==grade})}
     # Avoid cross-species average of 40x ratio dominated by a single host
     # and incompletely sampled origination histories.
     summary={
@@ -170,6 +210,15 @@ def main(source,original,out):
       "unique_accepted_host_plant_species":EXACT_PLANTS,
       "replay_all_32_R_combinations_success":True,
       "by_mode":by_mode_stats,
+      "source_region_host_origin_evidence":{
+          "butterflies_with_a_documented_native_host_species_in_their_archipelago":8,
+          "butterflies_with_a_documented_introduced_host_species_in_their_archipelago":1,
+          "newly_host_present_origin_archipelagos_in_source_documented_panel":0,
+          "individual_butterflies":local,
+          "not_individual_island_presence":True
+      },
+      "plant_species_one_at_a_time_sensitivity":host_concentration,
+      "host_evidence_stage_counts":by_tier,
       "butterflies":per_species,
       "most_important_validations":{
           "Pieris_cheiranthi_one_introduced_host_is_Tropaeolum_majus":alien[0],
@@ -196,6 +245,9 @@ def main(source,original,out):
         writer=csv.DictWriter(f,fieldnames=list(rows[0]));writer.writeheader();writer.writerows(rows)
     print("INDEPENDENT8_HOST_EVIDENCE_SENSITIVITY_VERIFIED="+json.dumps({
       "by_mode":by_mode_stats,
+      "source_region_origin_summary":{"8_native":8,"1_alien":source_intro[0]["butterfly"],
+                                    "new_origin_archipelago_hosts":0},
+      "host_drop_sensitivity":host_concentration,
       "Pieris_without_intro_host":alien[0],
       "source_panels_replay_exact":True
     },ensure_ascii=False),flush=True)
