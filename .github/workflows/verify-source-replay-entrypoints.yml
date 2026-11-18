@@ -1,0 +1,46 @@
+name: Verify archived butterfly source replays
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verify-source-replay-entrypoints.yml"
+      - "scripts/audit_host_prediction_transfer_20261115.py"
+      - "scripts/audit_island_host_filling_species_traits_20261115.py"
+      - "scripts/verify_HOSTS_reported_use_summary_20261116.py"
+      - "scripts/audit_independent42_original339_LepTraits_selection_20261118.py"
+      - "scripts/verify_fig4_marine_source_20261115.py"
+      - "data/frozen/**"
+      - "results/**"
+      - "provenance/reviewer_defenses/results/**"
+      - "figures/integrated_island_port_butterfly_v03/**"
+
+permissions:
+  contents: read
+
+jobs:
+  replay-source-receipt-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Frozen 155-butterfly record forecast source-prediction audit
+        run: python3 scripts/audit_host_prediction_transfer_20261115.py --out-dir "$RUNNER_TEMP/host-transfer"
+      - name: Original 239 butterfly island/mainland paired source contrast
+        run: python3 scripts/audit_island_host_filling_species_traits_20261115.py --out-dir "$RUNNER_TEMP/island-host-filling"
+      - name: Original HOSTS location reporting result and manuscript correspondence
+        run: python3 scripts/verify_HOSTS_reported_use_summary_20261116.py
+      - name: Independent 42 butterfly checklist versus original LepTraits selection
+        run: python3 scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir "$RUNNER_TEMP/checklist-vs-GEB"
+      - name: Marine model contrast and source-locked Figure 4 labels
+        run: python3 scripts/verify_fig4_marine_source_20261115.py
+      - name: Source replay receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: preserved-source-replay-audits
+          path: |
+            ${{ runner.temp }}/host-transfer
+            ${{ runner.temp }}/island-host-filling
+            ${{ runner.temp }}/checklist-vs-GEB
+          if-no-files-found: ignore
