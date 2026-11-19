@@ -188,12 +188,14 @@ def main():
             raise AssertionError("New independent recorded butterfly source supplement lacks expected sections")
     for literal in [
         "14,553", "+54.9%", "+118.9%", "+40.9%", "22.7%", "24.5%",
-        "+0.2854", "−0.0187", "+4.12%", "+0.0913%", "+0.215%",
+        "+0.2854", "−0.0187", "+0.0913%", "+0.215%",
         "+0.438%", "+0.695%", "+0.779%", "−4.036%", "−2.697%",
         "18 living endemic", "not a causal", "29", "source",
     ]:
         if literal not in first:
             raise AssertionError(f"Missing result or interpretation guardrail: {literal}")
+    if not re.search(r"(?<!\d)\+?4\.12%(?!\d)",first):
+        raise AssertionError("Original 155-butterfly host forecast +4.12% improvement is absent")
     for forbidden in ["../../results/pr179_source_evidence_20261119/README.md",
                       "../../results/gbif224_thinned_world_transfer_20261119/README_JA.md"]:
         if forbidden in first:
