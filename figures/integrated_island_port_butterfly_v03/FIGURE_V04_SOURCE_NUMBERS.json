@@ -1,5 +1,5 @@
 {
-  "schema": "chocho_geb_four_figure_v04_editorial_display_receipt_20261119",
+  "schema": "chocho_geb_four_figure_v04_enhanced_source_display_receipt_20261119",
   "status": "FROZEN_MAIN_NUMBERS_USED_ONLY_FOR_EDITORIAL_SVG; NO_NEW_MODEL",
   "source_repo": "zuizui0223/chocho",
   "main_evidence_commit_at_read": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
@@ -61,17 +61,102 @@
         "native_median": 0.004487,
         "introduced_median": 0.04603,
         "unorded_pairs": 7875
+      },
+      "marine_circuit": {
+        "source_report": "results/WCVP126_circuit_strict_geographic_transfer_20261118/VERIFIED_STRICT_CIRCUIT_SCORE.json",
+        "source_n_botanical_islands": 104,
+        "original_source_pair_count": 5355,
+        "source_original_one_island_heldout": {
+          "introduced_MSE_gain_percent": 4.239,
+          "native_MSE_gain_percent": -0.11,
+          "native_descriptive_interval": [
+            -0.39,
+            0.17
+          ],
+          "introduced_descriptive_interval": [
+            2.51,
+            6.03
+          ],
+          "original_note": "Original one-island held-out source results verified in scientific source report; approximate intervals read from original source summary, not a new regression."
+        },
+        "strict_both_endpoints_unseen": {
+          "fixed_geography_folds": 5,
+          "test_pairs": 1089,
+          "native_MSE_gain_percent": -0.04430509181116742,
+          "introduced_MSE_gain_percent": 2.735040680490108,
+          "native_descriptive_interval": [
+            -0.9844110652036249,
+            0.43080162389915583
+          ],
+          "introduced_descriptive_interval": [
+            -1.6487554068083963,
+            5.508243607085061
+          ],
+          "native_positive_folds": 3,
+          "introduced_positive_folds": 3,
+          "note": "Strict 5-fold overlapping-source bootstrap ranges include zero; undirected electrical resistance, not measured currents."
+        },
+        "source_population_not_identical_to_port_panel": true
       }
     },
     "fig3": {
-      "source_same_image_copied_with_new_sequential_filename": "figures/integrated_island_port_butterfly_v03/Fig3_global_host_contributors_at_ports_restructured_v04.svg",
-      "original": "figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg",
-      "source_fig_original_blob_sha": "43498013fd3910ac809abef130fc439f100b7f03",
-      "host_taxa_for_half_added_opportunities": 38,
-      "top_10_contribution_percent": 25.1,
-      "top_10_found_original_port_early_buffers": 8,
-      "original_early_port_buffers": 38,
-      "distinct_total_queried_port_buffers": 1596
+      "new_svg": "figures/integrated_island_port_butterfly_v03/Fig3_global_host_contributors_at_ports_restructured_v04.svg",
+      "source_original_top10_port_plot_retained": "figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg",
+      "source_original_blob_sha": "43498013fd3910ac809abef130fc439f100b7f03",
+      "evidence_sources": {
+        "plant_concentration": "provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json",
+        "all_butterfly_metrics": "data/frozen/figure_sources/anthropogenic_species_metrics.csv",
+        "island_butterfly_gains": "results/island_resource_gap_filling/by_species.csv",
+        "source_contributor_blob_sha": "201a762de94b9ecf42a766c8cb5d8d1739a2ca3c"
+      },
+      "panelA_plants": {
+        "total_introduced_host_contributors": 670,
+        "contributors_for_half": 38,
+        "concentration_Gini": 0.7773943319671659,
+        "top_k_cumulative_share": {
+          "1": 0.045507425093446685,
+          "5": 0.15703824534381533,
+          "10": 0.2510105136113853,
+          "20": 0.3727389302409627,
+          "50": 0.5700407340691861,
+          "100": 0.7364332088455046
+        },
+        "top10_share_percent": 25.10105136113853,
+        "original_addition_counts": 14553,
+        "contributor_credit_rule": "Within each butterfly×WGSRPD3 unit added by introduced host distributions, one unit is divided equally among contributing host species. For the genus sensitivity, contributing species are first collapsed to unique genera within that butterfly×unit and one unit is divided equally among those genera.",
+        "genera_half": 25,
+        "only_exact_source_top_k_anchors_plotted": true
+      },
+      "panelB_butterflies": {
+        "n_species": 239,
+        "source_native_global_resources_vs_added_island_opportunities_Spearman_rho": 0.5788964068803357,
+        "total_added_island_units": 5741,
+        "native_global_broadest_n": 59,
+        "native_global_broadest_added": 2271,
+        "native_global_broadest_share": 0.3955756836788016,
+        "native_global_narrowest_n": 60,
+        "native_global_narrowest_added": 644,
+        "native_global_narrowest_share": 0.11217557916739244,
+        "source_ranks": "Stable source CSV order within equal global native host-resource counts",
+        "scatter_all_239_source_records": true
+      },
+      "panelC_butterflies": {
+        "one_documented_host_family_n": 97,
+        "one_documented_host_family_gaining_global_n": 82,
+        "all_source_butterflies_n": 239,
+        "all_source_butterflies_gaining_global_n": 206,
+        "gaining_at_least_one_island_n": 198,
+        "global_opportunity_gain_excluding_crop_host_range_approx_percent": [
+          46,
+          47
+        ],
+        "observation": "These are reconstructed known-host coverage calculations, not actual field fitness."
+      },
+      "old_fig3_port_context": {
+        "top10_early_port_detected": 8,
+        "original_sampled_port_buffers": 38,
+        "total_queried_port_buffers": 1596
+      }
     },
     "fig4": {
       "new_svg": "figures/integrated_island_port_butterfly_v03/Fig4_independent_butterfly_record_predictability_v04.svg",
@@ -144,5 +229,6 @@
     "Present-day ports and plant presences do not identify source-resolved historical shipping, feeding quality, butterfly colonization or population growth.",
     "The 29 simulation draws per proxy are dependent thinning of one original observational GBIF source; not independent biogeographic replication.",
     "Source figure3 is unchanged source-verified host contributor art with a new figure ordinal path; original retained."
-  ]
+  ],
+  "quality_gate": "Exact source numeric, 239 species CSV, 670 contributing plants, 104 marine botanical islands, original Fig3 port plot preserved. This is editorial new SVG, no new model."
 }
