@@ -1,0 +1,102 @@
+{
+  "schema": "chocho_GBIF224_observed_region_paired_resampling_20261119_verified_source_summary",
+  "status": "source_score_exact_reproduced_post_hoc_descriptive_bootstrap_not_detection_correction",
+  "workflow_run_id": 44452349265,
+  "workflow_artifact_id": 14496216879,
+  "full_original_output_sha256": "635d21eef5956cdb5b43ca1c4d35d7f83e36c29b9667afd0a221cf9239c2248f",
+  "source_GBIF_DOI": "10.15468/dl.umqmsf",
+  "source_butterflies": 224,
+  "source_years": "2001-2024",
+  "region_error_models": [
+    "M0_all_flora_effort_prior",
+    "M1_known_host",
+    "M2_other_aliens",
+    "M3_both"
+  ],
+  "method": "Paired region equal-MSE H-given-O, within-world and unstratified bootstrap of original crossvalidated regional errors; 4999 deterministic draws",
+  "primary": {
+    "region_selection": "at least 5 indexed species; at least 10 prior dataset-calendar-days; at least 20 late dataset-calendar-days",
+    "regions": 169,
+    "original_pairs": 14196,
+    "source_csv_sha256": "be2018b452e6c44eb3c60282e9d4af6414d9a70c",
+    "H_given_other_MSE_improvement_percent": 0.09129078138747806,
+    "H_given_base_improvement_percent": 0.15744070881150746,
+    "regions_H_given_O_improved": 96,
+    "regions_H_given_O_worsened": 73,
+    "bootstrap_n": 4999,
+    "bootstrap_seed": 20261119,
+    "bootstrap_percentile_95_unstrat": [
+      -0.09153476814471459,
+      0.2620747873420477
+    ],
+    "bootstrap_percentile_95_within_world": [
+      -0.0763998973956691,
+      0.247418868705498
+    ],
+    "equal_world_weight_point_percent": 0.2239313516072034,
+    "bootstrap_percentile_95_equal_world": [
+      -0.07693893523913858,
+      0.4720231968999222
+    ]
+  },
+  "relaxed": {
+    "region_selection": "5 indexed species; 5 prior dataset-calendar-days; 10 late dataset-calendar-days",
+    "regions": 194,
+    "original_pairs": 18721,
+    "H_given_other_MSE_improvement_percent": 0.332496289843568,
+    "regions_H_given_O_improved": 123,
+    "regions_H_given_O_worsened": 71,
+    "bootstrap_n": 4999,
+    "bootstrap_seed": 20261120,
+    "bootstrap_percentile_95_unstrat": [
+      0.07124406482952289,
+      0.5769906280222887
+    ],
+    "bootstrap_percentile_95_within_world": [
+      0.08354975311472713,
+      0.561722128248028
+    ],
+    "equal_world_weight_point_percent": 0.5396611437596134,
+    "bootstrap_percentile_95_equal_world": [
+      0.06993870447422905,
+      0.9410264331033321
+    ]
+  },
+  "stringent": {
+    "region_selection": "10 indexed species; 20 prior dataset-calendar-days; 50 late dataset-calendar-days",
+    "regions": 133,
+    "original_pairs": 8778,
+    "H_given_other_MSE_improvement_percent": -0.07638369209656604,
+    "regions_H_given_O_improved": 59,
+    "regions_H_given_O_worsened": 74,
+    "bootstrap_n": 4999,
+    "bootstrap_seed": 20261121,
+    "bootstrap_percentile_95_unstrat": [
+      -0.1554167395966569,
+      -0.0006500529615640449
+    ],
+    "bootstrap_percentile_95_within_world": [
+      -0.1447355282686443,
+      -0.010701165396926117
+    ],
+    "equal_world_weight_point_percent": -0.02716125697704025,
+    "bootstrap_percentile_95_equal_world": [
+      -0.12780890914840462,
+      0.06433199934827247
+    ]
+  },
+  "main_unavailable_source": {
+    "source_file": "gbif_global224_annual_v1.species_region_year.csv.gz",
+    "frozen_source_branch": "analysis/global-colonial-alien-flora-control-20261031",
+    "frozen_source_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+    "original_species_region_year_sha256": "f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525",
+    "original_region_year_effort_sha256": "310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82"
+  },
+  "limitations": [
+    "Source regional errors are correlated through shared training and overlapping region-pair evaluations, so percentile ranges are descriptive, not iid confidence intervals",
+    "Strict/relaxed thresholds change observed geographic cohorts, not a controlled intervention on effort",
+    "World leaveout from stored scores is not a new geographically refitted estimate",
+    "Source aggregate GBIF detection histories are required for true time-effort matching",
+    "Original WCVP/HOSTS/GloNAF potential host maps are contemporary; no historical arrival dates or butterfly colonization measured"
+  ]
+}
