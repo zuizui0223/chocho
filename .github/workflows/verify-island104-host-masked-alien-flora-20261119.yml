@@ -1,0 +1,117 @@
+name: Audit 104-island HOSTS-masked WCVP alien flora negative control
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/audit_island104_host_masked_alien_flora_20261119.py
+      - results/island104_host_masked_alien_flora_20261119/PROTOCOL.md
+      - .github/workflows/verify-island104-host-masked-alien-flora-20261119.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-source-plant-species-masking:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Source-only setup (no external archives published)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+          mkdir -p _scratch_inputs/native _scratch_inputs/contemporary _scratch_inputs/allflora current/_result
+      - name: Rebuild exact frozen accepted HOSTS edges and WCVP allflora origin status
+        shell: bash
+        run: |
+          set -euo pipefail
+          Rscript frozen-pr118-source/scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS _scratch_inputs/native _scratch_inputs/contemporary
+          Rscript frozen-pr118-source/scripts/build_wcvp_all_flora_region_baselines.R \
+            _external/WCVP _scratch_inputs/allflora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/geometry
+      - name: Reproduce exact original alien WCVP species-pair Jaccard before host masking
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_island104_host_masked_alien_flora_20261119.py
+          python current/scripts/audit_island104_host_masked_alien_flora_20261119.py \
+            --archived-root frozen-pr118-source \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/geometry/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area current/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --allflora-native _scratch_inputs/allflora/allflora_native_accepted_wgsrpd3.csv \
+            --allflora-current _scratch_inputs/allflora/allflora_contemporary_accepted_wgsrpd3.csv \
+            --insect-hosts _scratch_inputs/native/insect_host_accepted.csv \
+            --out-dir current/_result
+      - name: Fail-closed integrity validation and both signs retained
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          f=Path('current/_result/island104_host_masked_alien_flora_bridge_source_scores.json')
+          d=json.loads(f.read_text())
+          assert d['source_104_island_pairs_WCVP_origin_recomputed_exactly']==5353
+          assert d['source_original_239_butterflies']==239
+          assert d['source_original_239_distinct_host_accepted_plant_IDs']==1706
+          assert d['source_strict_both_endpoints_unseen_test_pairs']==1088
+          for group in ('E_non_target_richness','S_with_target_derived_current_resource_richness'):
+              q=d['model_likelihood'][group]
+              assert q['n_test_pairs']==1088
+              assert q['source_n_folds']==5
+              for model in ('W','H','O','H_O','W_H','W_O'):
+                  assert math.isfinite(q['gain_pct_vs_common_flagged_base'][model])
+              for k,v in q['incremental_gain_pct'].items():
+                  assert math.isfinite(v)
+          print('SOURCE MATCHED: all 239 host candidate IDs and 104 WCVP island pair Jaccards exact; masks scored')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island104-known-host-vs-unlisted-alien-flora-source-negative-control
+          path: current/_result/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Clear derived accepted plant lists and raw third-party repositories
+        if: always()
+        run: rm -rf _scratch_inputs _external
