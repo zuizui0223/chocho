@@ -206,14 +206,25 @@ def main():
     entries,area,audit=bridge.setup(a.archived_root,a.plants,a.geometry,a.island_area)
     if audit["source_pairs"]!=5355 or len(entries)!=5353 or len(set([e["island1"] for e in entries]+[e["island2"] for e in entries]))!=104:
         raise RuntimeError("Prior 104 island botanical/resource cohort not recreated")
-    source_pair_rows=list(rows(a.plants))
-    source_pair={tuple(sorted((r["source_region"],r["destination_region"]))):r for r in source_pair_rows}
+    # The plant CSV includes more botanical region pairs than the original 104-island
+    # coastal geometry cohort. Select the 5,355 matched pairs using the FROZEN
+    # source geometry join, not the full source CSV nor response-defined entries.
+    raw_plant_rows=list(rows(a.plants))
+    source_pair={tuple(sorted((r["source_region"],r["destination_region"]))):r for r in raw_plant_rows}
+    if len(source_pair)!=len(raw_plant_rows):
+        raise RuntimeError("Original full plant CSV has duplicate unordered pair keys")
+    original_matched_pairs,unmatched=bridge.src.input_pair(
+        bridge.SimpleNamespace(plants=a.plants,geometry=a.geometry))
+    original_matched_keys=[tuple(sorted((e["island1"],e["island2"]))) for e in original_matched_pairs]
+    if len(original_matched_keys)!=5355 or len(set(original_matched_keys))!=5355 or len(unmatched)!=1:
+        raise RuntimeError("Original 5,355 unique matched coastal flora dyads not recreated")
+    if any(k not in source_pair for k in original_matched_keys):
+        raise RuntimeError("Original matched coastal flora dyad absent from plant source CSV")
+    source_pair_rows=[source_pair[k] for k in original_matched_keys]
     src_codes={e["island1"] for e in entries}|{e["island2"] for e in entries}
-    if len(source_pair_rows)!=5355 or len(source_pair)!=5355:
-        raise RuntimeError("Original 5,355 flora dyads not unique")
     if {r["source_region"] for r in source_pair_rows}|{r["destination_region"] for r in source_pair_rows}!=src_codes:
-        raise RuntimeError("Original source flora island identities differ from resource cohort")
-    # Validate ALL source plant dyads, including the two whose resource response is undefined.
+        raise RuntimeError("Original matched coastal flora island identities differ from resource cohort")
+    # Validate ALL matched plant dyads, including two whose resource response is undefined.
     native,current,alien,flora_rows=read_region_plant_sets(a.allflora_native,a.allflora_current,src_codes)
     count_compared=0
     failures=[]
