@@ -1,0 +1,150 @@
+{
+  "schema": "chocho_GBIF224_South_America_host_transfer_failure_diagnostics_20261119_verified_summary",
+  "status": "SOURCE_REPLAY_SUCCESS; descriptive error calibration and original GloNAF host-mask shift, not causal ecological explanation",
+  "verification": {
+    "successful_actions_run": 44475488078,
+    "original_complete_json_artifact_id": 14506426867,
+    "full_original_result_json_sha256": "a8e37af3f794f4c608d81aacab2471e2a0036ef30889026fe3053488a4175d87",
+    "full_artifact_zip_sha256": "45575bd8aeaa84988109d02eb247ed3a70eec811f190065238620393ae69afc4",
+    "frozen_GBIF_DOI": "10.15468/dl.umqmsf",
+    "frozen_source_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+    "original_annual_species_region_year_SHA256": "f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525",
+    "original_annual_region_year_effort_SHA256": "310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82",
+    "all_4_original_169_region_models_exactly_replayed": true,
+    "all_8_original_entire_world_models_replayed": true,
+    "source_GloNAF_whole_H_O_jaccards_matched_original_predictors": true,
+    "within_cross_MSE_weighted_reconstruction_exact": true
+  },
+  "cohort": {
+    "indexed_focal_butterflies": 224,
+    "original_regions": 169,
+    "region_pairs": 14196,
+    "original_TDWG_Level1_8_South_America_regions": 20,
+    "test_pairs_held_any_South_America_region": 3170,
+    "within_South_America_pairs": 190,
+    "South_America_to_other_world_pairs": 2980,
+    "non_South_America_training_pairs": 11026,
+    "source_TDWG_Level1_7_North_America_regions": 64
+  },
+  "original_source_stat": {
+    "raw_before_record_intensity_matching": {
+      "South_America_within": {
+        "H_after_O_MSE_gain_pct": 1.0592569326881183,
+        "MSE_M2": 0.025299102244704597,
+        "MSE_M3": 0.02503111975026971,
+        "recorded_butterfly_Jaccard_mean": 0.6350072536512623
+      },
+      "South_America_to_other": {
+        "H_after_O_MSE_gain_pct": -5.399077790050044,
+        "MSE_M2": 0.002694466057785533,
+        "MSE_M3": 0.0028399423762718685,
+        "recorded_butterfly_Jaccard_mean": 0.06447115420294518,
+        "M2_predicted_Jaccard_mean": 0.0828101391191844,
+        "M3_predicted_Jaccard_mean": 0.08380316981409619,
+        "mean_M3_minus_M2_prediction": 0.0009930306949117674
+      },
+      "entire_South_America_world_H_after_O_gain_pct": -2.9806222525435357,
+      "North_America_to_other_H_after_O_gain_pct": 1.1011
+    },
+    "registered_host_alien_taxa_per_region_median": {
+      "South_America": 99,
+      "outside_South_America": 167,
+      "North_America": 207.5
+    },
+    "unlisted_alien_taxa_per_region_median": {
+      "South_America": 252,
+      "outside_South_America": 487,
+      "North_America": 586.5
+    },
+    "all_alien_taxa_per_region_median": {
+      "South_America": 344.5,
+      "outside_South_America": 647,
+      "North_America": 790.5
+    },
+    "registered_known_H_fraction_of_all_aliens_per_region_median": {
+      "South_America": 0.24063408792837998,
+      "outside_South_America": 0.23557692307692307,
+      "North_America": 0.2612
+    },
+    "recording_dataset_days_per_region_median": {
+      "prior_South_America": 33.5,
+      "prior_outside": 67,
+      "later_South_America": 777,
+      "later_outside": 1109,
+      "later_over_prior_ratio_South_America": 20.8734,
+      "later_over_prior_ratio_outside": 13.6845
+    },
+    "original_dyad_Jaccard_medians": {
+      "registered_host_H_training_outside_South_America": 0.1738,
+      "registered_host_H_test_South_America_to_other": 0.1068,
+      "unregistered_O_training_outside_South_America": 0.0659,
+      "unregistered_O_test_South_America_to_other": 0.0326,
+      "whole_alien_training_outside_South_America": 0.0885,
+      "whole_alien_test_South_America_to_other": 0.0479,
+      "prior_recorded_butterflies_training_outside_South_America": 0.0597,
+      "prior_recorded_butterflies_test_South_America_to_other": 0
+    },
+    "zero_prior_recorded_butterfly_Jaccard_fraction": {
+      "training_outside_South_America": 0.153,
+      "test_South_America_to_other": 0.578
+    }
+  },
+  "registered_H_after_O_world_transfer_under_original_thinning": {
+    "datasetKey_calendar_day": {
+      "draws": 29,
+      "whole_South_America_H_gain_median_pct": -2.2516542879830586,
+      "South_America_within_gain_median_pct": -0.4963816926257154,
+      "South_America_within_MC95_pct": [
+        -2.5797592898336816,
+        1.3963683232210005
+      ],
+      "South_America_within_positive_draws": 10,
+      "South_America_to_other_gain_median_pct": -4.036075015728973,
+      "South_America_to_other_MC95_pct": [
+        -7.267878623510068,
+        -1.4734843694003712
+      ],
+      "South_America_to_other_positive_draws": 0,
+      "South_America_to_other_mean_M3_minus_M2_prediction_median": 0.0006186081423553448,
+      "South_America_to_other_prediction_change_positive_draws": 29,
+      "North_America_to_other_gain_median_pct": 2.9401
+    },
+    "indexed_record_count": {
+      "draws": 29,
+      "whole_South_America_H_gain_median_pct": -2.0700035130792385,
+      "South_America_within_gain_median_pct": -0.12586404063082185,
+      "South_America_within_MC95_pct": [
+        -2.7443476167552006,
+        1.7020097078479455
+      ],
+      "South_America_within_positive_draws": 10,
+      "South_America_to_other_gain_median_pct": -2.6967580974575722,
+      "South_America_to_other_MC95_pct": [
+        -8.043235304410201,
+        -0.13722386835469774
+      ],
+      "South_America_to_other_positive_draws": 1,
+      "South_America_to_other_mean_M3_minus_M2_prediction_median": 0.0005703969218666331,
+      "South_America_to_other_prediction_change_positive_draws": 29,
+      "North_America_to_other_gain_median_pct": 3.2699
+    }
+  },
+  "scientific_scope": {
+    "identified": "source-specific H/O botanical and prior butterfly similarity distribution shift; forecast calibration failure on SA-to-other-world dyads",
+    "not_identified": [
+      "true biological host use or host fitness in South America",
+      "South American HOSTS species-list completeness or missing ecological interactions",
+      "causal historical plant/cargo arrival or shipping",
+      "new butterfly colonization, occupancy or real homogenization",
+      "survey-level detection probability"
+    ],
+    "independent_positive_evidence_unchanged": [
+      "239 butterfly known-host potential resource +54.9% across botanical regions",
+      "island potential resource +118.9% relative to native baseline",
+      "port versus introduced whole flora positive adjusted association",
+      "verified wild/garden larval use of introduced plants by independent endemic butterfly"
+    ],
+    "Monte_Carlo_29_draws_are_not_independent_natural_replicates": true,
+    "world_heldout_cross_world_region_pairs_are_dependent": true
+  }
+}
