@@ -206,23 +206,33 @@ def main():
     entries,area,audit=bridge.setup(a.archived_root,a.plants,a.geometry,a.island_area)
     if audit["source_pairs"]!=5355 or len(entries)!=5353 or len(set([e["island1"] for e in entries]+[e["island2"] for e in entries]))!=104:
         raise RuntimeError("Prior 104 island botanical/resource cohort not recreated")
-    source_pair={tuple(sorted((r["source_region"],r["destination_region"]))):r for r in rows(a.plants)}
+    source_pair_rows=list(rows(a.plants))
+    source_pair={tuple(sorted((r["source_region"],r["destination_region"]))):r for r in source_pair_rows}
     src_codes={e["island1"] for e in entries}|{e["island2"] for e in entries}
-    # two plant pairs had undefined butterfly-resource Jaccard and were removed
+    if len(source_pair_rows)!=5355 or len(source_pair)!=5355:
+        raise RuntimeError("Original 5,355 flora dyads not unique")
+    if {r["source_region"] for r in source_pair_rows}|{r["destination_region"] for r in source_pair_rows}!=src_codes:
+        raise RuntimeError("Original source flora island identities differ from resource cohort")
+    # Validate ALL source plant dyads, including the two whose resource response is undefined.
     native,current,alien,flora_rows=read_region_plant_sets(a.allflora_native,a.allflora_current,src_codes)
     count_compared=0
     failures=[]
-    for e in entries:
-        ia,ib=e["island1"],e["island2"]
-        pair=source_pair[tuple(sorted((ia,ib)))]
+    for pair in source_pair_rows:
+        ia,ib=pair["source_region"],pair["destination_region"]
         x,y=alien[ia],alien[ib]
         n_shared,n_union,n_j=overlap(x,y)
-        expected=(int(pair["source_alien_WCVP_accepted"]) if pair["source_region"]==ia else int(pair["dest_alien_WCVP_accepted"]),
-                  int(pair["dest_alien_WCVP_accepted"]) if pair["source_region"]==ia else int(pair["source_alien_WCVP_accepted"]))
+        expected=(int(pair["source_alien_WCVP_accepted"]),int(pair["dest_alien_WCVP_accepted"]))
         if (len(x),len(y))!=expected or n_shared!=int(pair["alien_shared_accepted_taxa"]) or n_union!=int(pair["alien_union_accepted_taxa"]) or n_j is None or abs(n_j-float(pair["alien_Jaccard"]))>1e-12:
             failures.append({"source":ia,"dest":ib,"computed":[len(x),len(y),n_shared,n_union,n_j],"original":[*expected,pair["alien_shared_accepted_taxa"],pair["alien_union_accepted_taxa"],pair["alien_Jaccard"]]})
             if len(failures)>5:break
-        # preserve exactly accepted original WCVP source and its union H/O split
+        count_compared+=1
+    if failures:
+        raise RuntimeError("Original accepted WCVP alien Jaccard cannot be reconstructed from pinned original raw sidecars: "+json.dumps(failures[:5]))
+    if count_compared!=5355:raise RuntimeError("Host-mask original full WCVP source cohort not matched")
+    # Model only the 5,353 original dyads with defined butterfly-resource Jaccard.
+    for e in entries:
+        ia,ib=e["island1"],e["island2"]
+        x,y=alien[ia],alien[ib]
         H1,H2=x&hosts,y&hosts
         O1,O2=x-hosts,y-hosts
         sh,un,jh=overlap(H1,H2)
@@ -231,10 +241,6 @@ def main():
                  other_alien_jaccard=(jo if jo is not None else 0.0),
                  host_undefined=int(jh is None),other_undefined=int(jo is None),
                  host_union_size=un,other_union_size=uo)
-        count_compared+=1
-    if failures:
-        raise RuntimeError("Original accepted WCVP alien Jaccard cannot be reconstructed from the pinned original raw source sidecars: "+json.dumps(failures[:5]))
-    if count_compared!=5353:raise RuntimeError("Host-mask original WCVP sample not matched")
     result=eval_models(entries,area,None,None)
     info={
         "schema":"chocho_104_WCVP_island_HOSTS239_host_masked_other_alien_flora_20261119_v1",
