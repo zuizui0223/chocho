@@ -306,8 +306,12 @@ def main():
     args=ap.parse_args()
     # Original model paths and GloNAF/TDWG sources are source-root-relative.
     original_cwd=Path.cwd()
+    # Resolve paths BEFORE switching to frozen original working directory.
+    args.frozen_root=args.frozen_root.resolve()
+    args.current_scripts=args.current_scripts.resolve()
+    args.output=args.output.resolve()
     try:
-        os.chdir(args.frozen_root.resolve())
+        os.chdir(args.frozen_root)
         result=analyse(args)
     finally:
         os.chdir(original_cwd)
