@@ -1,5 +1,12 @@
 # GEB v0.4 impact audit: the strongest positive result is a two-scale asymmetry
 
+## Implementation status: main paper figures and abstract updated (19 November 2026)
+
+**Implemented on Draft PR #179; the previous audit below is retained as the original before-change diagnosis.** The original GEB title remains *Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities*. Figure 2 now has **C, source-original and geographically strict marine-circuit native/alien predictions**, with actual point scores and descriptive uncertainty. Figure 3 has been **rebuilt, not copied**, as source verified **670 host-plant contributor concentration** (38 provide half, Gini 0.777), all **239 butterfly native-host geography versus added island food opportunities** (ρ +0.578896, 39.6% versus 11.2%), and **82/97 one-family host species gain +46–47% crop-free opportunity source**. The former top-ten accepted host plant/port figure remains unmodified at `figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg` with source link in updated figure legends. Updated structured abstract includes **54.3% of currently host-covered island resource combinations newly covered by introduced known hosts**, **native whole-flora port slope +0.095 with uncertainty crossing zero**, named endemic larval use by *Pieris cheiranthi* of introduced *Tropaeolum majus*, and retains positive resource/sea numbers (**292 words**). Results 3.4 now positively heads "Host geography improves prediction of independently recorded butterflies". New figure input receipt and dedicated source audit check exact numerical sources and all 239 source scatter points; **render-CI status remains a separate release gate until its final matching-head Actions run succeeds**. The original v0.3 References and original S.A–S.F supplement are unchanged, and additional independent GBIF source results remain in S.G. This is not a paper submission or merge.
+
+---
+
+
 **19 Nov 2026 | Independent editorial review of source evidence | No new model or manuscript submission.** This audit compares Draft PR #179's full v0.4 body and four actual source SVGs with original repo main source files, including the 239-butterfly species CSV and the positive/adverse R01–R37 synthesis. The existing manuscript is NOT edited by this memo.
 
 ## Decision
