@@ -1,0 +1,318 @@
+{
+  "schema": "chocho_GBIF224_entire_world_HO_transfer_on_effort_thinned_communities_20261119_verified_summary",
+  "status": "SOURCE_LOCKED_SUCCESS; post-hoc Monte Carlo retrospective MSE transfer not independent ecological validation",
+  "source": {
+    "workflow_run": 44461719514,
+    "source_full_json_artifact_id": 14500267175,
+    "source_full_json_sha256": "1c0fc6394a784d94a597036eb966f92428fc943c44b24fcb0b6c94d72f102628",
+    "source_zip_sha256": "df095d8c4d97f8e4d1e938cb88114e519c00c4bd13390acf083f14af342891d0",
+    "GBIF_doi": "10.15468/dl.umqmsf",
+    "original_source_git_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+    "original_model_all_169_regions_reproduced": true,
+    "original_8_entire_world_MSE_scores_reproduced": true,
+    "source_original_224_butterflies": true
+  },
+  "cohort": {
+    "butterfly_species": 224,
+    "WGSRPD3_regions": 169,
+    "region_pairs": 14196,
+    "unseen_TDWG_Level1_world_groups": 8,
+    "held_world_method": "all pairs whose either endpoint is in the excluded world are test; both endpoints outside are training",
+    "original_levels": [
+      {
+        "level1": "1",
+        "regions": 32,
+        "test_pairs": 4880,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.40597508999330234
+      },
+      {
+        "level1": "2",
+        "regions": 11,
+        "test_pairs": 1793,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.4531412219400561
+      },
+      {
+        "level1": "3",
+        "regions": 20,
+        "test_pairs": 3170,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.12221826785075664
+      },
+      {
+        "level1": "4",
+        "regions": 13,
+        "test_pairs": 2106,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.5612225009493472
+      },
+      {
+        "level1": "5",
+        "regions": 7,
+        "test_pairs": 1155,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.5692562842146452
+      },
+      {
+        "level1": "6",
+        "regions": 2,
+        "test_pairs": 335,
+        "unthinned_H_after_O_MSE_improvement_percent": 0.29230511143587506
+      },
+      {
+        "level1": "7",
+        "regions": 64,
+        "test_pairs": 8736,
+        "unthinned_H_after_O_MSE_improvement_percent": 1.0271660266850136
+      },
+      {
+        "level1": "8",
+        "regions": 20,
+        "test_pairs": 3170,
+        "unthinned_H_after_O_MSE_improvement_percent": -2.9806222525435357
+      }
+    ]
+  },
+  "raw_original_world_equal_MSE_improvement_percent": 0.09712994312481885,
+  "original_source_strict_worlds_improving": 7,
+  "per_proxy": {
+    "dataset_key_calendar_day": {
+      "draws": 29,
+      "region_level1_equal_MSE_gain_percent_median": 0.6945136350733762,
+      "MC_central_95": [
+        0.14700908817967134,
+        1.1570473024611887
+      ],
+      "world_aggregate_n_draws_positive": 29,
+      "test_pair_weighted_MSE_gain_percent_median": 1.2765752208261765,
+      "test_pair_weighted_MC_central_95": [
+        0.42361084877516875,
+        1.6789834415856937
+      ],
+      "number_worlds_improving_per_draw": {
+        "median": 6,
+        "min": 5,
+        "max": 7
+      },
+      "per_world": {
+        "1": {
+          "regions_heldout": 32,
+          "source_test_pairs": 4880,
+          "source_raw_gain_pct": 0.40597508999330234,
+          "median_gain_pct": 0.926846059543133,
+          "MC_central_95": [
+            -0.2715141853767915,
+            1.9614164275763915
+          ],
+          "n_positive_draws": 25,
+          "n_draws": 29
+        },
+        "2": {
+          "regions_heldout": 11,
+          "source_test_pairs": 1793,
+          "source_raw_gain_pct": 0.4531412219400561,
+          "median_gain_pct": 0.3654769208794701,
+          "MC_central_95": [
+            0.0630548314608281,
+            0.8622312770261349
+          ],
+          "n_positive_draws": 28,
+          "n_draws": 29
+        },
+        "3": {
+          "regions_heldout": 20,
+          "source_test_pairs": 3170,
+          "source_raw_gain_pct": 0.12221826785075664,
+          "median_gain_pct": 0.5923603398315083,
+          "MC_central_95": [
+            0.12430999848922339,
+            1.092486329107362
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "4": {
+          "regions_heldout": 13,
+          "source_test_pairs": 2106,
+          "source_raw_gain_pct": 0.5612225009493472,
+          "median_gain_pct": 0.7807642127375916,
+          "MC_central_95": [
+            0.37108736184813773,
+            1.3514150905322553
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "5": {
+          "regions_heldout": 7,
+          "source_test_pairs": 1155,
+          "source_raw_gain_pct": 0.5692562842146452,
+          "median_gain_pct": 1.8955254314256103,
+          "MC_central_95": [
+            0.6831612093394769,
+            3.265538369972366
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "6": {
+          "regions_heldout": 2,
+          "source_test_pairs": 335,
+          "source_raw_gain_pct": 0.29230511143587506,
+          "median_gain_pct": -0.015245840416126952,
+          "MC_central_95": [
+            -0.6215383968213674,
+            0.4605716265203038
+          ],
+          "n_positive_draws": 14,
+          "n_draws": 29
+        },
+        "7": {
+          "regions_heldout": 64,
+          "source_test_pairs": 8736,
+          "source_raw_gain_pct": 1.0271660266850136,
+          "median_gain_pct": 2.4160565537812664,
+          "MC_central_95": [
+            1.131820916292956,
+            3.2519331653693557
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "8": {
+          "regions_heldout": 20,
+          "source_test_pairs": 3170,
+          "source_raw_gain_pct": -2.9806222525435357,
+          "median_gain_pct": -2.2516542879830586,
+          "MC_central_95": [
+            -4.7595827424885115,
+            -1.0282031432641858
+          ],
+          "n_positive_draws": 0,
+          "n_draws": 29
+        }
+      }
+    },
+    "indexed_candidate_record_count": {
+      "draws": 29,
+      "region_level1_equal_MSE_gain_percent_median": 0.7793058242822573,
+      "MC_central_95": [
+        0.435518228648149,
+        1.6182778926625434
+      ],
+      "world_aggregate_n_draws_positive": 29,
+      "test_pair_weighted_MSE_gain_percent_median": 1.4869209985307335,
+      "test_pair_weighted_MC_central_95": [
+        0.9158259647074725,
+        2.5899609740400265
+      ],
+      "number_worlds_improving_per_draw": {
+        "median": 6,
+        "min": 5,
+        "max": 7
+      },
+      "per_world": {
+        "1": {
+          "regions_heldout": 32,
+          "source_test_pairs": 4880,
+          "source_raw_gain_pct": 0.40597508999330234,
+          "median_gain_pct": 2.0465206558094486,
+          "MC_central_95": [
+            0.8795941952272184,
+            2.9059390055986145
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "2": {
+          "regions_heldout": 11,
+          "source_test_pairs": 1793,
+          "source_raw_gain_pct": 0.4531412219400561,
+          "median_gain_pct": 0.22558066001779925,
+          "MC_central_95": [
+            -0.29570593391194033,
+            0.9579669878993271
+          ],
+          "n_positive_draws": 23,
+          "n_draws": 29
+        },
+        "3": {
+          "regions_heldout": 20,
+          "source_test_pairs": 3170,
+          "source_raw_gain_pct": 0.12221826785075664,
+          "median_gain_pct": 0.9414095763179834,
+          "MC_central_95": [
+            0.3025017048135692,
+            1.964550828097275
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "4": {
+          "regions_heldout": 13,
+          "source_test_pairs": 2106,
+          "source_raw_gain_pct": 0.5612225009493472,
+          "median_gain_pct": 0.9125966889024211,
+          "MC_central_95": [
+            0.29864237684203465,
+            1.5674510575875107
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "5": {
+          "regions_heldout": 7,
+          "source_test_pairs": 1155,
+          "source_raw_gain_pct": 0.5692562842146452,
+          "median_gain_pct": 2.4316266870501857,
+          "MC_central_95": [
+            1.1769292319126925,
+            3.921922934257924
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "6": {
+          "regions_heldout": 2,
+          "source_test_pairs": 335,
+          "source_raw_gain_pct": 0.29230511143587506,
+          "median_gain_pct": -0.35738019427061263,
+          "MC_central_95": [
+            -0.923530374050355,
+            0.28900951932139185
+          ],
+          "n_positive_draws": 5,
+          "n_draws": 29
+        },
+        "7": {
+          "regions_heldout": 64,
+          "source_test_pairs": 8736,
+          "source_raw_gain_pct": 1.0271660266850136,
+          "median_gain_pct": 2.5749907814015316,
+          "MC_central_95": [
+            1.49739450216989,
+            4.419205574516155
+          ],
+          "n_positive_draws": 29,
+          "n_draws": 29
+        },
+        "8": {
+          "regions_heldout": 20,
+          "source_test_pairs": 3170,
+          "source_raw_gain_pct": -2.9806222525435357,
+          "median_gain_pct": -2.0700035130792385,
+          "MC_central_95": [
+            -4.158701402384847,
+            0.04649487259163404
+          ],
+          "n_positive_draws": 1,
+          "n_draws": 29
+        }
+      }
+    }
+  },
+  "methodological_limits": [
+    "Modern HOSTS/GloNAF flora may postdate original prior/late GBIF indexing. Indexed record presence not true occupancy or proven absence.",
+    "Regional source effort matched via dependent proxies, not independent survey visits, so not a genuine detection-corrected population model.",
+    "Late observation-effort and record-count covariates are held original while simulated response is thinned; model retrospective and possibly observation-process mismatched.",
+    "29 simulation draws per proxy are not independent biogeographical populations; conditional Monte Carlo intervals not ecological confidence intervals.",
+    "Only eight uneven world Level1 groups, including one with 2 regions, and some cross-world dyads reused across evaluation folds. Average positive does not imply universality.",
+    "No direct larval establishment, butterfly abundance growth, historical shipping/seed delivery, or biological homogenization identified."
+  ]
+}
