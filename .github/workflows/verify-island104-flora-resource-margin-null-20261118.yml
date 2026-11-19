@@ -1,0 +1,89 @@
+name: Calibrate 104-island flora-resource prediction against exact margin null
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/audit_island104_alien_flora_resource_margin_null_20261118.py
+      - results/island104_alien_flora_resource_margin_null_20261118/PROTOCOL.md
+      - .github/workflows/verify-island104-flora-resource-margin-null-20261118.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  three-source-locked-null-chains:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/geometry
+      - name: Verify observed 5fold source scores, then three independently seeded exact gain-margin chains
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_island104_alien_flora_to_butterfly_resource_20261118.py current/scripts/audit_island104_alien_flora_resource_margin_null_20261118.py
+          python current/scripts/audit_island104_alien_flora_resource_margin_null_20261118.py \
+            --archived-root frozen-pr118-source \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/geometry/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area current/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --region-class current/results/island-mainland-resource-q1/region_metrics.csv \
+            --out-dir current/_result
+      - name: Verify all positive and adverse source draws and original resource limits
+        run: |
+          python - <<'PY'
+          import csv,json,math
+          from pathlib import Path
+          d=json.loads(Path('current/_result/margin_null_flora_resource_source_summary.json').read_text())
+          assert d['source_original104_plant_pairs']==5355
+          assert d['source_resource_defined_pairs']==5353
+          assert d['source_double_unseen_pairs']==1088
+          assert d['source_resource_counts']=={'native':26530,'added':14553,'current':41083}
+          assert d['source_n_butterflies']==239
+          assert d['seeds']==[20261119,20261120,20261121]
+          assert len(d['chains'])==3
+          assert d['draws_per_chain']==75
+          assert d['proposals_per_retained_draw']==72765
+          for chain in d['chains']:
+              assert chain['retained_draws']==75 and chain['accepted_swaps_min']>=200
+          for key in ('E','S'):
+              x=d['observed_vs_null'][key]
+              assert x['n_null_scores']==225
+              assert math.isfinite(x['observed_minus_null_median_gain_points'])
+              assert x['observed_gain_pct']>0
+          with Path('current/_result/margin_null_225_source_scores.csv').open() as f:
+              z=list(csv.DictReader(f))
+          assert len(z)==225
+          print('PASS original 239x369 source: 225 full signed, exact regional and species margin null scores retained')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island104-whole-alien-flora-resource-threechain-margin-null
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn

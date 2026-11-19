@@ -1,0 +1,84 @@
+name: Verify 104-island alien whole flora vs potential butterfly resource similarity
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/audit_island104_alien_flora_to_butterfly_resource_20261118.py
+      - results/island104_alien_flora_to_butterfly_resources_20261118/PROTOCOL.md
+      - .github/workflows/verify-island104-flora-to-butterfly-resource-20261118.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  double-unseen-source-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/geometry
+      - name: Reproduce true source cohorts and evaluate alien whole flora increment on 5 fixed unseen-island folds
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_island104_alien_flora_to_butterfly_resource_20261118.py
+          python current/scripts/audit_island104_alien_flora_to_butterfly_resource_20261118.py \
+            --archived-root frozen-pr118-source \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/geometry/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area current/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir current/_result
+      - name: Keep positive, null, adverse and source-circular results
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path('current/_result/source_104_flora_to_butterfly_resource_strict_transfer.json').read_text())
+          assert d['source_original_bit_counts']['source_islands']==104
+          assert d['source_original_bit_counts']['source_pairs']==5355
+          assert d['source_original_bit_counts']['source_taxa']==239
+          assert d['source_original_bit_counts']['source_units']=={'native':26530,'added':14553,'current':41083}
+          assert d['source_original_ridge_alpha']==20
+          for cohort,v in [('all_source_pairs',1080),('both_islands_nonempty_native_resource_sensitivity',500)]:
+              for key in ['no_current_resource_margin_baseline_E','current_resource_margin_conditioned_baseline_S']:
+                  z=d[cohort][key]
+                  assert z['n_test_pairs']>=v
+                  assert len(z['folds'])==5
+                  assert z['alien_jaccard_added_features']==1
+                  assert math.isfinite(z['macro_equal_fold_relative_gain_pct'])
+                  assert z['n_folds_adding_alien_flora_helped'] in range(6)
+                  for f in z['folds']:
+                      assert f['MSE_baseline']>0 and f['MSE_plus_alien_flora_jaccard']>0
+          print('PASS source-locked flora/butterfly resource bridge with both-endpoints-unseen and exposure-margin controls')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island104-alien-whole-flora-to-butterfly-resource-strict-bridge
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn
