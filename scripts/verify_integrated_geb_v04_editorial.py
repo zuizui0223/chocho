@@ -109,8 +109,36 @@ def main():
     if original_suffix!=new_suffix:
         raise AssertionError("Original v0.3 References / Supplement S.A–S.F source text was modified or lost")
     first=main.split(ORIGINAL_PREFIX,1)[0]
-    if not main.startswith("# Ports, island floras and the redistribution"):
-        raise AssertionError("GEB restructuring title not installed")
+    abstract_text=first.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
+    abstract_plain=re.sub(r"[*#]+","",abstract_text)
+    abstract_words=len(abstract_plain.strip().split())
+    if abstract_words>300:
+        raise AssertionError(f"GEB Research Article structured abstract exceeds 300 words: {abstract_words}")
+    required_abstract_headers=("Aim","Location","Time period","Major taxa studied",
+                               "Methods","Results","Main conclusions")
+    for title in required_abstract_headers:
+        if f"**{title}.**" not in abstract_text:
+            raise AssertionError("GEB abstract missing official required section: "+title)
+    for key in ("82/97","39.6%","11.2%","10.3-fold","4.24%",
+                "−0.11%","+2.95","+54.9%","+118.9%","+40.9%"):
+        if key not in abstract_text:
+            raise AssertionError("Restored positive source numeric missing from abstract: "+key)
+    body_text=first.split("## 1. Introduction",1)[1].split("## Data and code availability",1)[0]
+    stripped_main=re.sub(r"!\[[^]]*\]\([^)]*\)","",body_text)
+    stripped_main=re.sub(r"[#*\x60]+","",stripped_main)
+    main_body_words=len(stripped_main.strip().split())
+    if main_body_words>5000:
+        raise AssertionError(f"GEB regular 5000-word research-body target exceeded: {main_body_words}")
+    if "### 4.2. Ports mark where a shared introduced flora accumulates" not in first:
+        raise AssertionError("Positive 4.2 port section heading not installed")
+    if "### 4.3. Introduced host geography contributes to recorded butterflies" not in first:
+        raise AssertionError("Supported positive 4.3 consumer heading not installed")
+    if "22 islands" not in first or "seawater-dispersal morphology" not in first:
+        raise AssertionError("Original EuDiS 22-island positive trait estimate missing")
+    if "54.3%" not in first:
+        raise AssertionError("Source island contemporary resource share missing")
+    if not main.startswith("# Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities"):
+        raise AssertionError("GEB island-port-sea title not installed")
     expected=[
         "### 3.1. Island resource gains were amplified",
         "### 3.2. Ports and introduced floras formed",
@@ -185,6 +213,9 @@ def main():
         "protected_original_reference_and_supplement_chars":len(new_suffix),
         "original_four_main_sections":len(expected),
         "main_chars":len(first),
+        "GEB_structured_abstract_words":abstract_words,
+        "GEB_main_body_words":main_body_words,
+        "positive_island_port_sea_figures_verified":True,
         "SVG_visual_previews":bool(args.preview_dir),
         "main_source_commit":MAIN_SOURCE,
     },ensure_ascii=False))
