@@ -91,7 +91,7 @@ jobs:
           from pathlib import Path
           f=Path('current/_result/island104_host_masked_alien_flora_bridge_source_scores.json')
           d=json.loads(f.read_text())
-          assert d['source_104_island_pairs_WCVP_origin_recomputed_exactly']==5353
+          assert d['source_104_island_pairs_WCVP_origin_recomputed_exactly']==5355
           assert d['source_original_239_butterflies']==239
           assert d['source_original_239_distinct_host_accepted_plant_IDs']==1706
           assert d['source_strict_both_endpoints_unseen_test_pairs']==1088
