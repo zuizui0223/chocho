@@ -1,0 +1,81 @@
+name: Verify source-pinned independent GBIF224 annual recording-effort thinning
+on:
+  push:
+    branches: [analysis/gbif224-annual-effort-thinning-20261119]
+    paths:
+      - scripts/audit_gbif224_annual_effort_thinning_20261119.py
+      - results/gbif224_annual_effort_thinning_20261119/PROTOCOL.md
+      - .github/workflows/verify-gbif224-annual-effort-thinning-20261119.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/audit_gbif224_annual_effort_thinning_20261119.py
+      - results/gbif224_annual_effort_thinning_20261119/PROTOCOL.md
+      - .github/workflows/verify-gbif224-annual-effort-thinning-20261119.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-224-species-annual-source-thinning:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: original_annual
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Source SHA checks and paired 499-draw dataset-day/record-count rarefaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_gbif224_annual_effort_thinning_20261119.py
+          folder=provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031
+          mkdir -p current/_result
+          python current/scripts/audit_gbif224_annual_effort_thinning_20261119.py \
+            --cells "original_annual/$folder/gbif_global224_annual_v1.species_region_year.csv.gz" \
+            --effort "original_annual/$folder/gbif_global224_annual_v1.region_year_effort.csv" \
+            --audit "current/$folder/gbif_global224_annual_v1.audit.json" \
+            --region-scores "current/$folder/gbif_global224_observed_beta_region_holdout_v1.csv" \
+            --original-readout "current/$folder/gbif_global224_observed_beta_v1.json" \
+            --out current/_result/GBIF224_source_annual_effort_matched_thinning_20261119.json
+      - name: Fail closed original 224,169,14196,91882 and retain both signs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path('current/_result/GBIF224_source_annual_effort_matched_thinning_20261119.json').read_text())
+          assert d['source']['original_yearly_species_rows']==91882
+          assert d['source']['original_year_effort_rows']==5390
+          assert d['source']['original_mapped_candidate_records']==13587452
+          assert d['cohort']['species']==224 and d['cohort']['regions']==169
+          assert d['cohort']['region_pairs']==14196
+          for p,expected in [('prior',.11421295035628568),('later',.16788018941797136)]:
+            z=d['original_observed_recorded_community'][p]
+            assert abs(z['all_defined_Jaccard_mean']-expected)<1e-10
+            assert z['both_empty_pairs']==0
+          assert set(d['tests'])=={'dataset_key_calendar_day','indexed_candidate_record_count'}
+          for test in d['tests'].values():
+            assert test['n_monte_carlo_draws']==499
+            assert 0<=test['fraction_draws_late_minus_prior_positive']<=1
+            assert math.isfinite(test['conditional_monte_carlo_distributions']['late_minus_prior']['median'])
+          print('PASS original GBIF source hashes, 169-region raw Jaccard, both recording intensity proxies and all 499 draws')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-GBIF224-annual-raw-and-thinned-recording-effort-v1
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Remove large copied original annual source data
+        if: always()
+        run: rm -rf original_annual
