@@ -9,6 +9,7 @@ Only renders PNG previews on request; does not fit biological models.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
 import re
@@ -87,6 +88,132 @@ def assert_source(receipt,source):
     ]:
         near(saout[value_name],orig)
 
+def average_ranks(values):
+    order=sorted(range(len(values)),key=lambda i:(values[i],i))
+    result=[0.0]*len(values)
+    at=0
+    while at<len(order):
+        end=at+1
+        while end<len(order) and values[order[end]]==values[order[at]]:
+            end+=1
+        rank=(at+1+end)/2
+        for i in range(at,end):
+            result[order[i]]=rank
+        at=end
+    return result
+
+def pearson(a,b):
+    ma=sum(a)/len(a)
+    mb=sum(b)/len(b)
+    num=sum((x-ma)*(y-mb) for x,y in zip(a,b))
+    d1=sum((x-ma)**2 for x in a)
+    d2=sum((y-mb)**2 for y in b)
+    return num/math.sqrt(d1*d2)
+
+def validate_enhanced_figures(receipt,source,repo_root,figurepaths):
+    fig2=receipt["figures"]["fig2"]
+    sea=fig2["marine_circuit"]
+    source_strict=load_j(source/sea["source_report"])
+    if sea["source_n_botanical_islands"]!=104 or sea["original_source_pair_count"]!=5355:
+        raise AssertionError("Original marine cohort drift")
+    orig=sea["source_original_one_island_heldout"]
+    near(orig["introduced_MSE_gain_percent"],4.239)
+    near(orig["native_MSE_gain_percent"],-.110)
+    source_readme=(source/"results/WCVP126_circuit_strict_geographic_transfer_20261118/README.md").read_text(encoding="utf8")
+    if "+4.239%" not in source_readme or "−0.110%" not in source_readme:
+        raise AssertionError("Archived original marine model sign/magnitude not verified")
+    strict=sea["strict_both_endpoints_unseen"]
+    if strict["test_pairs"]!=1089 or strict["fixed_geography_folds"]!=5:
+        raise AssertionError("Strict source geographic transfer support drift")
+    for label,k in [("native","native"),("introduced","introduced")]:
+        row=source_strict["uniform_circuit"][k]
+        near(strict[label+"_MSE_gain_percent"],row["gain_pct_equal_fold"])
+        for a,b in zip(strict[label+"_descriptive_interval"],row["descriptive_5fold_paired_bootstrap95"]):
+            near(a,b)
+        if strict[label+"_positive_folds"]!=row["circuit_folds_improved"]:
+            raise AssertionError("Strict marine CV fold count drift")
+    svg2=figurepaths[1].read_text(encoding="utf8")
+    for token in ("+4.239%","-0.110%","+2.735%","-0.044%","Both islands unseen","5,355"):
+        if token not in svg2:
+            raise AssertionError("Missing original/strict positive or adverse sea plot: "+token)
+
+    fig3=receipt["figures"]["fig3"]
+    f3=fig3["evidence_sources"]
+    concentration=load_j(source/f3["plant_concentration"])
+    p=concentration["plant_species"]
+    plot=fig3["panelA_plants"]
+    if (plot["total_introduced_host_contributors"]!=p["contributors"]
+        or plot["contributors_for_half"]!=p["contributors_for_50pct"]
+        or plot["total_introduced_host_contributors"]!=670
+        or plot["contributors_for_half"]!=38):
+        raise AssertionError("Plant source concentration audit drift")
+    near(plot["concentration_Gini"],p["gini"])
+    for k,v in p["top_k_share"].items():
+        near(plot["top_k_cumulative_share"][k],v)
+    if fig3["source_original_top10_port_plot_retained"] not in [
+        "figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg"
+    ] or not (repo_root/fig3["source_original_top10_port_plot_retained"]).is_file():
+        raise AssertionError("Original supplemental top-ten port source graphic not retained")
+    metrics_path=source/f3["all_butterfly_metrics"]
+    region_path=source/f3["island_butterfly_gains"]
+    # Both panels derive from original archived main, never from a rewritten species table.
+    with metrics_path.open(encoding="utf8",newline="") as fh:
+        metrics=list(csv.DictReader(fh))
+    with region_path.open(encoding="utf8",newline="") as fh:
+        regions=list(csv.DictReader(fh))
+    ids={}
+    for row in regions:
+        if row["group"]=="island":
+            if row["species"] in ids:
+                raise AssertionError("Duplicate original island species")
+            ids[row["species"]]=row
+    if len(metrics)!=239 or len(ids)!=239:
+        raise AssertionError("Original butterfly sample is not 239 species")
+    points=[]
+    for row in metrics:
+        name=row["species"]
+        if name not in ids:
+            raise AssertionError("Original 239 butterfly species do not align across source CSVs")
+        points.append({
+            "species":name,
+            "native":float(row["native_resource_units"]),
+            "added":float(ids[name]["added"]),
+            "family":float(row["host_family_count"]),
+            "global_added":float(row["introduced_added_units"])
+        })
+    if sum(p["added"] for p in points)!=5741:
+        raise AssertionError("Original island resource increments changed")
+    q=fig3["panelB_butterflies"]
+    rhos=pearson(average_ranks([p["native"] for p in points]),
+                 average_ranks([p["added"] for p in points]))
+    near(q["source_native_global_resources_vs_added_island_opportunities_Spearman_rho"],rhos,1e-10)
+    ordered=sorted(points,key=lambda r:r["native"])
+    top=ordered[-59:]
+    bottom=ordered[:60]
+    if (q["n_species"]!=239 or q["total_added_island_units"]!=5741
+        or q["native_global_broadest_n"]!=59
+        or q["native_global_narrowest_n"]!=60):
+        raise AssertionError("Original resource quartile cohort labels drift")
+    near(q["native_global_broadest_added"],sum(z["added"] for z in top))
+    near(q["native_global_narrowest_added"],sum(z["added"] for z in bottom))
+    near(q["native_global_broadest_share"],sum(z["added"] for z in top)/5741)
+    near(q["native_global_narrowest_share"],sum(z["added"] for z in bottom)/5741)
+    f=fig3["panelC_butterflies"]
+    lone=[r for r in points if r["family"]==1]
+    if (len(lone)!=f["one_documented_host_family_n"]
+        or sum(r["global_added"]>0 for r in lone)!=f["one_documented_host_family_gaining_global_n"]
+        or len(points)!=f["all_source_butterflies_n"]
+        or sum(r["global_added"]>0 for r in points)!=f["all_source_butterflies_gaining_global_n"]
+        or sum(r["added"]>0 for r in points)!=f["gaining_at_least_one_island_n"]):
+        raise AssertionError("One-family consumer or overall butterfly gains drift")
+    svg3=figurepaths[2].read_text(encoding="utf8")
+    for token in ("670 accepted","38 supply half","Gini = 0.777","239 butterflies",
+                  "Spearman","39.6%","11.2%","82/97","+46–47%"):
+        if token not in svg3:
+            raise AssertionError("New source numerical butterfly/plant graphic missing: "+token)
+    if svg3.count("<circle ")<239:
+        raise AssertionError("Expected actual 239 species plotted, not a summary-only cartoon")
+
 def main():
     arg=argparse.ArgumentParser()
     arg.add_argument("--repo-root",type=Path,default=Path("."))
@@ -143,7 +270,7 @@ def main():
         "### 3.1. Island resource gains were amplified",
         "### 3.2. Ports and introduced floras formed",
         "### 3.3. A small set of redistributed plant identities",
-        "### 3.4. Independent butterfly observations contained",
+        "### 3.4. Host geography improves prediction of independently recorded butterflies",
     ]
     for line in expected:
         if first.count(line)!=1:
@@ -174,13 +301,13 @@ def main():
     figfiles=receipt["figures"]
     if (figurepaths[0].name!=Path(figfiles["fig1"]["source_unchanged"]).name
         or figurepaths[1].name!=Path(figfiles["fig2"]["new_svg"]).name
-        or figurepaths[2].name!=Path(figfiles["fig3"]["source_same_image_copied_with_new_sequential_filename"]).name
+        or figurepaths[2].name!=Path(figfiles["fig3"]["new_svg"]).name
         or figurepaths[3].name!=Path(figfiles["fig4"]["new_svg"]).name):
         raise AssertionError("Figure source receipt and manuscript are not the same four SVGs")
-    # New Figure 3 is the exactly same source plot, not an unsupported new numerical barplot.
-    original_fig3=root/figfiles["fig3"]["original"]
-    if figurepaths[2].read_bytes()!=original_fig3.read_bytes():
-        raise AssertionError("Source-verifiable leading host plants were altered when renamed Figure 3")
+    # Fig. 3 is now rebuilt from original source 670 plants and 239 butterfly CSVs,
+    # not copied from the original top-ten host species/port observational panel.
+    # The old original plot remains present and linked in the supplementary record.
+    validate_enhanced_figures(receipt,args.source_root.resolve(),root,figurepaths)
     if "### S.G.6." not in supp or supp.count("## S.G.")!=0:
         # S.G.1–6 are separate headings within a standalone appendix;
         # check exact positive and boundary-result section markers instead.
@@ -218,6 +345,8 @@ def main():
         "GEB_structured_abstract_words":abstract_words,
         "GEB_main_body_words":main_body_words,
         "positive_island_port_sea_figures_verified":True,
+        "Fig2C_exact_source_original_and_strict_marine_verified":True,
+        "Fig3_670_plant_and_239_butterfly_points_verified":True,
         "SVG_visual_previews":bool(args.preview_dir),
         "main_source_commit":MAIN_SOURCE,
     },ensure_ascii=False))
