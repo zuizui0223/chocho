@@ -6,6 +6,12 @@ on:
       - scripts/audit_island104_host_masked_alien_flora_20261119.py
       - results/island104_host_masked_alien_flora_20261119/PROTOCOL.md
       - .github/workflows/verify-island104-host-masked-alien-flora-20261119.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/audit_island104_host_masked_alien_flora_20261119.py
+      - results/island104_host_masked_alien_flora_20261119/PROTOCOL.md
+      - .github/workflows/verify-island104-host-masked-alien-flora-20261119.yml
   workflow_dispatch:
 permissions:
   contents: read
