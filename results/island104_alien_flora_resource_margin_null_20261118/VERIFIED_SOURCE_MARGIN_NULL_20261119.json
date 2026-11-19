@@ -1,0 +1,111 @@
+{
+  "schema": "chocho_WCVP104_alien_whole_flora_to_239_potential_resource_exact_margin_null_v1",
+  "status": "SOURCE_LOCKED_3CHAIN_225_SIMULATED_SCORES_EXECUTED_NOT_INDEPENDENT_BUTTERFLY_EVIDENCE",
+  "date": "2026-11-19_JST_source_run_2026-11-18_UTC",
+  "source": {
+    "original_pr118_sha": "bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2",
+    "original_source_resource_matrix_sha256": "ec6a5530d65ac0b04f230e0c51fd68bf543555641a17b94795996bf11ce257d0",
+    "original_WCVP_plants_pairs_run": 44010307551,
+    "source_WCVP_flora_to_resource_run": 44302060549,
+    "null_verification_run": 44306092217,
+    "artifact_id": 14426384784,
+    "artifact_sha256": "1c8731a411683e860a815c522909726e191a0c3b519d2e402aef6aace28cae96",
+    "full_source_artifact_files": [
+      "margin_null_225_source_scores.csv",
+      "margin_null_flora_resource_source_summary.json"
+    ],
+    "protocol": "results/island104_alien_flora_resource_margin_null_20261118/PROTOCOL.md"
+  },
+  "population": {
+    "botanical_island_regions": 104,
+    "matched_WCVP_native_alien_plant_pairs": 5355,
+    "butterfly_potential_resource_defined_pairs": 5353,
+    "held_both_islands_unseen_test_pairs": 1088,
+    "butterflies": 239,
+    "WGSRPD3_original_regions": 369,
+    "original_native_resource_cells": 26530,
+    "additional_accepted_host_resource_cells": 14553,
+    "current_resource_cells": 41083,
+    "hashed_geographical_folds": 5,
+    "ridge_alpha": 20
+  },
+  "design": {
+    "null_rule": "Fix the original native potential-resource matrix, each butterfly's total introduced-added region count, each botanical region's number of gains, and butterfly's gain count within TDWG-Level1 × island/mainland/mixed; forbid gains over native source bits.",
+    "independent_prng_chains": 3,
+    "seeds": [
+      20261119,
+      20261120,
+      20261121
+    ],
+    "draws_per_chain": 75,
+    "total_retained_draws": 225,
+    "per_chain_burnin_proposals": 363825,
+    "proposals_between_saved_draws": 72765,
+    "serially_correlated_simulated_states": true,
+    "original_X_predictors_fixed": true,
+    "null_changes": "Identity of the fixed 239 butterfly resource additions across existing 369 botanical regions; original plant-flora Jaccard and native resources unchanged."
+  },
+  "models": {
+    "E_without_target_contemporary_resource_richness": {
+      "observed_MSE_gain_pct": 26.36323764850138,
+      "null_median_MSE_gain_pct": 18.97374786529012,
+      "null_mean_MSE_gain_pct": 18.99715827465685,
+      "null_95_descriptive_draw_quantiles": [
+        17.107037025888342,
+        20.91679979609412
+      ],
+      "observed_minus_null_median_percentage_points": 7.389489783211257,
+      "null_min": 15.647113010185349,
+      "null_max": 21.64699298726209,
+      "null_high_tail_add_one": 0.004424778761061947
+    },
+    "S_with_target_contemporary_resource_richness": {
+      "observed_MSE_gain_pct": 33.76782049915366,
+      "null_median_MSE_gain_pct": 24.507224043525987,
+      "null_mean_MSE_gain_pct": 24.50280380980431,
+      "null_95_descriptive_draw_quantiles": [
+        22.200859141860445,
+        26.436183618967764
+      ],
+      "observed_minus_null_median_percentage_points": 9.26059645562767,
+      "null_min": 20.43039860823206,
+      "null_max": 27.457221352708622,
+      "null_high_tail_add_one": 0.004424778761061947
+    }
+  },
+  "chain_diagnostics": {
+    "chain1": {
+      "E_mean": 18.831347684531867,
+      "S_mean": 24.33993086133496,
+      "S_lag1": 0.22650060016524332,
+      "S_approx_effective_simulated_states": 47.18795312196229
+    },
+    "chain2": {
+      "E_mean": 19.124646624736062,
+      "S_mean": 24.56504294254358,
+      "S_lag1": 0.26321398911461963,
+      "S_approx_effective_simulated_states": 45.24053355866749
+    },
+    "chain3": {
+      "E_mean": 19.035480514702623,
+      "S_mean": 24.603437625534394,
+      "S_lag1": 0.005308639826367512,
+      "S_approx_effective_simulated_states": 67.23825646321778
+    }
+  },
+  "interpretation": {
+    "supported": "The shared-WCVP alien whole-flora Jaccard to potential 239-butterfly resource Jaccard association exceeds a source-replayed, geographically stratified fixed resource-gain-margin null under frozen strict geographic folds.",
+    "not_supported": [
+      "Independent cross-trophic signal or observed butterfly species geography: potential resource sets are constructed directly from WCVP+HOSTS and predictor is WCVP alien plant overlap.",
+      "Causal host supply benefit or shipping/ocean pathway: sources do not observe temporal establishment, larval growth or ships/currents.",
+      "Traditional p=0.0044 hypothesis test: 225 draws are serially correlated MCMC states and post-previous-results design; reported tail is descriptive.",
+      "Predictive-new-butterfly result: model S conditions on test-island current resource richness, which requires the target-derived data.",
+      "Specific host interactions beyond all alien vegetation: the null does not fix plant-family species composition, host phylogeny, or climate spatial autocorrelation; requires a negative control masking known-host plant species."
+    ]
+  },
+  "independent_observational_limit": {
+    "external_GBIF_224_candidate_panel_169_regions_known_host_composition_increment_MSE_pct": 0.157,
+    "external_check_is_different_population": true,
+    "reference": "provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/GBIF_GLOBAL224_EMPIRICAL_READOUT_20261101_ja.md"
+  }
+}
