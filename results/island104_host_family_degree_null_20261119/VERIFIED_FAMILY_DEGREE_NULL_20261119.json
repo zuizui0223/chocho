@@ -1,0 +1,181 @@
+{
+  "schema": "chocho_WCVP104_HOSTS239_family_degree_null_20261119_verified_summary",
+  "source_run_id": 44448741452,
+  "source_full_json_artifact_id": 14495580519,
+  "source_full_json_sha256": "12eee7aad38472b098c327e8c09d7f569508ef1430c65dda2199037fd1215ec6",
+  "source_archive_zip_sha256": "9dfca10346b9b19ae0693f49c0d9873f49860b47243444006a7d6a9517cc361e",
+  "status": "PASS exploratory same-source matched host-label null; not independent biological confirmation",
+  "sample": {
+    "islands": 104,
+    "source_flora_pairs_exact": 5355,
+    "potential_resource_defined_pairs": 5353,
+    "held_both_endpoints_unseen_pairs": 1088,
+    "fold_test_counts": [
+      405,
+      231,
+      190,
+      91,
+      171
+    ],
+    "focal_butterflies": 239,
+    "alien_accepted_species": 7887,
+    "host_registered_alien_species": 668,
+    "other_alien_species": 7219,
+    "plant_families": 245
+  },
+  "source_host_plant_island_incidence": {
+    "registered_H": 7726,
+    "unlisted_O": 29439,
+    "mean_islands_per_H_plant": 11.565868263473053,
+    "mean_islands_per_O_plant": 4.077988641086023
+  },
+  "null": {
+    "iterations": 199,
+    "seed": 20261119,
+    "family_x_log2_island_degree_strata": 783,
+    "mixed_strata": 163,
+    "fully_host_strata": 40,
+    "immovable_hosts": 54,
+    "movable_hosts": 614,
+    "missing_WCVP_accepted_family": 0,
+    "degree_bins": [
+      "1",
+      "2-3",
+      "4-7",
+      "8-15",
+      "16-31",
+      "32-63",
+      "64-104"
+    ],
+    "upper_tail": "(1 + count(null >= observed))/200, descriptive source-conditional rank"
+  },
+  "E_primary": {
+    "observed_relative_MSE_gain_pct": {
+      "H_given_O": 16.365190247994903,
+      "O_given_H": -0.22785143599360266,
+      "B_to_H": 32.54151637749244,
+      "B_to_O": 19.157837571908882,
+      "H_minus_O": 13.38367880558356
+    },
+    "pair_weighted_relative_MSE_gain_pct": {
+      "H_given_O": 17.906821609062376,
+      "O_given_H": -0.3230246674768874,
+      "B_to_H": 36.580971737163544,
+      "B_to_O": 22.49796071359921,
+      "H_minus_O": 14.083011023564335
+    },
+    "null_median_pct": {
+      "H_given_O": 7.699433651731078,
+      "O_given_H": 0.08323496870172127,
+      "B_to_H": 28.856373646690333,
+      "B_to_O": 22.573777545682415,
+      "H_minus_O": 5.781854422888529
+    },
+    "null_central_95_percent_pct": {
+      "H_given_O": [
+        1.708100115554045,
+        17.59716205640551
+      ],
+      "O_given_H": [
+        -1.8157305858217825,
+        3.159070950095527
+      ],
+      "B_to_H": [
+        22.95896011908085,
+        35.107691766711994
+      ],
+      "B_to_O": [
+        19.215408072985717,
+        25.62350155270758
+      ],
+      "H_minus_O": [
+        -0.743627711459918,
+        14.787051335384763
+      ]
+    },
+    "null_at_least_observed": {
+      "H_given_O": 9,
+      "O_given_H": 116,
+      "B_to_H": 28,
+      "B_to_O": 195,
+      "H_minus_O": 10
+    },
+    "descriptive_upper_tail": {
+      "H_given_O": 0.05,
+      "O_given_H": 0.585,
+      "B_to_H": 0.145,
+      "B_to_O": 0.98,
+      "H_minus_O": 0.055
+    }
+  },
+  "S_retrospective": {
+    "observed_relative_MSE_gain_pct": {
+      "H_given_O": 21.64746228539385,
+      "O_given_H": -0.3089039669867962,
+      "B_to_H": 41.770390778713676,
+      "B_to_O": 25.452978936196804,
+      "H_minus_O": 16.317411842516872
+    },
+    "pair_weighted_relative_MSE_gain_pct": {
+      "H_given_O": 23.45107371742812,
+      "O_given_H": -0.4009467394348396,
+      "B_to_H": 45.71378375783276,
+      "B_to_O": 28.79864198884026,
+      "H_minus_O": 16.9151417689925
+    },
+    "null_median_pct": {
+      "H_given_O": 10.38039467448734,
+      "O_given_H": 1.3567321287441685,
+      "B_to_H": 37.10276135904487,
+      "B_to_O": 30.671631587408996,
+      "H_minus_O": 6.284926470727921
+    },
+    "null_central_95_percent_pct": {
+      "H_given_O": [
+        3.3656083826363896,
+        19.255905720240943
+      ],
+      "O_given_H": [
+        -1.221082828175615,
+        5.259354619682291
+      ],
+      "B_to_H": [
+        31.982063242618736,
+        42.57330918602209
+      ],
+      "B_to_O": [
+        27.735509725874138,
+        33.65095933243379
+      ],
+      "H_minus_O": [
+        -0.8394714226077533,
+        14.31105618171463
+      ]
+    },
+    "null_at_least_observed": {
+      "H_given_O": 1,
+      "O_given_H": 170,
+      "B_to_H": 9,
+      "B_to_O": 199,
+      "H_minus_O": 1
+    },
+    "descriptive_upper_tail": {
+      "H_given_O": 0.01,
+      "O_given_H": 0.855,
+      "B_to_H": 0.05,
+      "B_to_O": 1,
+      "H_minus_O": 0.01
+    }
+  },
+  "interpretation": [
+    "Same WCVP/HOSTS source defines predictor and potential resource response, and thereby host-label advantage may be tautological.",
+    "E positive above null median but descriptive upper-tail rank 0.05 with central 95% null interval including original value.",
+    "S stronger but incorporates target-derived current potential consumer-resource margins and is retrospective.",
+    "199 permutations are dependent rewiring of one data system; tail rank is not biological significance.",
+    "No observed new butterfly colonization, larval recruitment, population growth, historical vessel dispersal, or independent butterfly assemblage inference."
+  ],
+  "next_independent_comparison": {
+    "existing_GBIF_224_butterfly_169_region_H_given_O_MSE_improvement_pct": 0.09129078138747806,
+    "cohort_not_equivalent": true
+  }
+}
