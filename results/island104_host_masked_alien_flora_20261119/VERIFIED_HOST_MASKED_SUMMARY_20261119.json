@@ -1,0 +1,120 @@
+{
+  "schema": "pr179_WCVP104_host_mask_H_vs_O_verified_summary_20261119",
+  "status": "source_exact_matched_and_score_verified; exploratory source-linked",
+  "source_run": 44445904218,
+  "artifact_id": 14493153837,
+  "full_artifact_JSON_sha256": "3d9531806d25c0d08022ec63b99b7c7224d89303383139abe964b31aa85ceb62",
+  "source_104_island_all_plant_pairs_exact": 5355,
+  "source_104_island_resource_pairs": 5353,
+  "double_unseen_pairs": 1088,
+  "original_frozen_butterfly_species": 239,
+  "source_original_distinct_accepted_HOSTS_plant_IDs": 1706,
+  "alien_plant_taxa": {
+    "total_distinct_IDs": 7887,
+    "known_HOSTS_distinct_IDs": 668,
+    "other_distinct_IDs": 7219,
+    "known_host_species_region_units": 7726,
+    "other_species_region_units": 29439
+  },
+  "unions_undefined": {
+    "H": 0,
+    "O": 0
+  },
+  "original_5_folds_test_pairs": [
+    405,
+    231,
+    190,
+    91,
+    171
+  ],
+  "E": {
+    "gain_MSE_percent_vs_flagged_base": {
+      "W": 26.363237648501535,
+      "H": 33.8214798093749,
+      "O": 19.53859900994786,
+      "H_O": 33.707207863415725,
+      "W_H": 33.535751128132055,
+      "W_O": 31.946975166748594
+    },
+    "incremental_gain_MSE_percent": {
+      "O_to_O_plus_H": 17.609199789125725,
+      "H_to_H_plus_O": -0.1726722592618001,
+      "W_to_W_plus_H": 9.740397663592494,
+      "W_to_W_plus_O": 7.582812361566881
+    },
+    "fivefold_resampling_95_descriptive": {
+      "O_to_O_plus_H": [
+        8.538502047108116,
+        28.224275130713778
+      ],
+      "H_to_H_plus_O": [
+        -0.480929006175499,
+        0.058005596154817915
+      ],
+      "W_to_W_plus_H": [
+        5.361205072784444,
+        15.421893851056387
+      ],
+      "W_to_W_plus_O": [
+        4.87165393963071,
+        11.194208893848693
+      ]
+    },
+    "n_positive_held_folds": {
+      "W": 4,
+      "H": 5,
+      "O": 4,
+      "H_O": 5,
+      "W_H": 4,
+      "W_O": 4
+    }
+  },
+  "S": {
+    "gain_MSE_percent_vs_flagged_base": {
+      "W": 33.76782049915363,
+      "H": 41.80431031928996,
+      "O": 26.111822764290107,
+      "H_O": 41.58352027778727,
+      "W_H": 41.498581988489306,
+      "W_O": 38.35473247264271
+    },
+    "incremental_gain_MSE_percent": {
+      "O_to_O_plus_H": 20.939341167046347,
+      "H_to_H_plus_O": -0.3793924304601454,
+      "W_to_W_plus_H": 11.672213639348644,
+      "W_to_W_plus_O": 6.925503596677598
+    },
+    "fivefold_resampling_95_descriptive": {
+      "O_to_O_plus_H": [
+        11.120675137377631,
+        31.50300291050625
+      ],
+      "H_to_H_plus_O": [
+        -0.8617924961019168,
+        0.1328843301846697
+      ],
+      "W_to_W_plus_H": [
+        6.964785665547545,
+        17.205966428461362
+      ],
+      "W_to_W_plus_O": [
+        4.587775771163102,
+        9.790476585542969
+      ]
+    },
+    "n_positive_held_folds": {
+      "W": 5,
+      "H": 5,
+      "O": 5,
+      "H_O": 5,
+      "W_H": 5,
+      "W_O": 5
+    }
+  },
+  "limits": [
+    "Source-linked predictor and potential-resource response from WCVP/HOSTS, not independent butterfly biology",
+    "O means not listed as host of selected 239 species, not proved non-host",
+    "S includes target-derived contemporary resource margins",
+    "Five folds are descriptive, no independent iid p-values"
+  ]
+}
