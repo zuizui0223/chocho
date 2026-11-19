@@ -1,0 +1,144 @@
+name: Verify 104-island host identity against family and occupancy matched null
+on:
+  push:
+    branches: [analysis/chocho-family-degree-matched-host-null-20261119]
+    paths:
+      - scripts/audit_island104_host_family_degree_null_20261119.py
+      - results/island104_host_family_degree_null_20261119/PROTOCOL.md
+      - .github/workflows/verify-island104-host-family-degree-null-20261119.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/audit_island104_host_family_degree_null_20261119.py
+      - results/island104_host_family_degree_null_20261119/PROTOCOL.md
+      - .github/workflows/verify-island104-host-family-degree-null-20261119.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify-matched-host-identity-null:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          persist-credentials: false
+          fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Prepare frozen original sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+          mkdir -p _scratch_inputs/native _scratch_inputs/contemporary _scratch_inputs/allflora current/_result
+          Rscript frozen-pr118-source/scripts/build_wcvp_hosts_null_sidecars.R \
+            _external/WCVP _external/HOSTS _scratch_inputs/native _scratch_inputs/contemporary
+          Rscript frozen-pr118-source/scripts/build_wcvp_all_flora_region_baselines.R \
+            _external/WCVP _scratch_inputs/allflora
+      - name: Export accepted WCVP plant-family mapping without publishing raw taxonomy
+        shell: bash
+        run: |
+          set -euo pipefail
+          Rscript - <<'RS'
+          e <- new.env(parent=emptyenv())
+          load("_external/WCVP/data/wcvp_names.rda", envir=e)
+          n <- get("wcvp_names", envir=e)
+          stopifnot(all(c("plant_name_id","family","taxon_rank","taxon_status") %in% names(n)))
+          ok <- !is.na(n$plant_name_id) &
+                tolower(trimws(as.character(n$taxon_rank)))=="species" &
+                tolower(trimws(as.character(n$taxon_status)))=="accepted"
+          out <- unique(data.frame(accepted_plant_name_id=as.character(n$plant_name_id[ok]),
+                                   family=as.character(n$family[ok]),stringsAsFactors=FALSE))
+          write.csv(out,"_scratch_inputs/allflora/accepted_WCVP_family.csv",row.names=FALSE,na="")
+          cat("Original accepted plant-family entries:",nrow(out),"\n")
+          RS
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: \${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: \${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/geometry
+      - name: Source check and 199 family × occupancy constrained host-label randomisations
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_island104_host_family_degree_null_20261119.py
+          python current/scripts/audit_island104_host_family_degree_null_20261119.py \
+            --archived-root frozen-pr118-source \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/geometry/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --island-area current/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --allflora-native _scratch_inputs/allflora/allflora_native_accepted_wgsrpd3.csv \
+            --allflora-current _scratch_inputs/allflora/allflora_contemporary_accepted_wgsrpd3.csv \
+            --insect-hosts _scratch_inputs/native/insect_host_accepted.csv \
+            --families _scratch_inputs/allflora/accepted_WCVP_family.csv \
+            --out-dir current/_result
+      - name: Validate all signs and original frozen cohort
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          p=Path("current/_result/family_occupancy_matched_host_label_null_20261119.json")
+          d=json.loads(p.read_text())
+          assert d["original_plant_source_pairs_exact"]==5355
+          assert d["original_resource_defined_pairs"]==5353
+          assert d["test_both_endpoints_unseen_pairs"]==1088
+          assert d["test_fold_sizes"]==[405,231,190,91,171]
+          assert d["null_draws"]==199
+          assert d["source_accepted_plant_IDs"]==7887
+          assert d["source_host_accepted_IDs"]==668
+          for lev in ("E","S"):
+              v=d["scores"][lev]
+              assert len(v["observed"]["folds"])==5
+              for k in ("H_given_O","O_given_H","B_to_H","B_to_O","H_minus_O"):
+                  x=v["null_family_occupancy_199"][k]
+                  assert math.isfinite(v["observed"]["equal_fold"][k])
+                  assert math.isfinite(x["median"])
+                  assert x["descriptive_upper_tail_add_one"]>=.005
+          print("PASS: original data + all H/O signs + 199 source-matched null labels")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island104-host-family-degree-matched-199-null-results
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Clear temporary third-party source files
+        if: always()
+        run: rm -rf _scratch_inputs _external
