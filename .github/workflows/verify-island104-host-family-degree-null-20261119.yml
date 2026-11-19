@@ -83,13 +83,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           run-id: 44010307551
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
           path: _src/flora
       - uses: actions/download-artifact@v4
         with:
           run-id: 44010673580
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
           path: _src/geometry
       - name: Source check and 199 family × occupancy constrained host-label randomisations
