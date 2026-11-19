@@ -1,0 +1,148 @@
+{
+  "schema": "chocho_geb_four_figure_v04_editorial_display_receipt_20261119",
+  "status": "FROZEN_MAIN_NUMBERS_USED_ONLY_FOR_EDITORIAL_SVG; NO_NEW_MODEL",
+  "source_repo": "zuizui0223/chocho",
+  "main_evidence_commit_at_read": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
+  "source_paths": [
+    "results/port_native_alien_cross_20261118/port_native_alien_cross_source_verified.json",
+    "results/WCVP126_crossed_native_alien_20261117/VERIFIED_SOURCE_NATIVE_ALIEN_CROSSED_20261117.json",
+    "provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_temporal_results.json",
+    "provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_spatial_results.json",
+    "provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_spatial_buffer100_results.json",
+    "results/gbif224_thinned_HO_transfer_20261119/VERIFIED_THINNED_HO_TRANSFER_20261119.json",
+    "results/gbif224_thinned_world_transfer_20261119/VERIFIED_THINNED_WORLD_TRANSFER_20261119.json",
+    "results/gbif224_south_america_domain_shift_20261119/VERIFIED_SOUTH_AMERICA_DOMAIN_SHIFT_20261119.json"
+  ],
+  "display_rule": "Round original source estimates to 2–5 decimals as shown; no pooling/normalizing across populations",
+  "figures": {
+    "fig1": {
+      "source_unchanged": "figures/integrated_island_port_butterfly_v03/Fig1_resource_geography_scales_v03.svg",
+      "population": "239 butterflies; 126 island vs 237 mainland WGSRPD3 botanical regions",
+      "native_host_coverage_percent": {
+        "island": 16,
+        "mainland": 37.5
+      },
+      "gap_filled_percent": {
+        "island": 22.7,
+        "mainland": 24.5
+      },
+      "relative_increase_percent": {
+        "island": 118.9,
+        "mainland": 40.9
+      }
+    },
+    "fig2": {
+      "new_svg": "figures/integrated_island_port_butterfly_v03/Fig2_ports_native_alien_floras_restructured_v04.svg",
+      "island_botanical_regions": 126,
+      "port_coefficient": {
+        "native": {
+          "estimate": 0.09543135254143587,
+          "descriptive_HC3_95": [
+            -0.07740197553845599,
+            0.2682646806213277
+          ]
+        },
+        "introduced": {
+          "estimate": 0.2854430614548416,
+          "descriptive_HC3_95": [
+            0.06221252766047994,
+            0.5086735952492033
+          ]
+        },
+        "introduced_minus_native": {
+          "estimate": 0.19001170891339747,
+          "descriptive_HC3_95": [
+            -0.018691700401749667,
+            0.3987151182285446
+          ]
+        }
+      },
+      "whole_flora_jaccard": {
+        "native_median": 0.004487,
+        "introduced_median": 0.04603,
+        "unorded_pairs": 7875
+      }
+    },
+    "fig3": {
+      "source_same_image_copied_with_new_sequential_filename": "figures/integrated_island_port_butterfly_v03/Fig3_global_host_contributors_at_ports_restructured_v04.svg",
+      "original": "figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg",
+      "source_fig_original_blob_sha": "43498013fd3910ac809abef130fc439f100b7f03",
+      "host_taxa_for_half_added_opportunities": 38,
+      "top_10_contribution_percent": 25.1,
+      "top_10_found_original_port_early_buffers": 8,
+      "original_early_port_buffers": 38,
+      "distinct_total_queried_port_buffers": 1596
+    },
+    "fig4": {
+      "new_svg": "figures/integrated_island_port_butterfly_v03/Fig4_independent_butterfly_record_predictability_v04.svg",
+      "panel_A_155_independently_indexed_butterflies": {
+        "test_cells": 208482,
+        "mse_reduction_percent": {
+          "time_held": 4.120175607931823,
+          "spatial_held": 2.9952059516988134,
+          "over_100km": 2.735657911003299
+        },
+        "models": "M3 prior/environment against M5 host composition",
+        "not_same_as_224_beta": true
+      },
+      "panel_B_224_butterfly_source": {
+        "regions": 169,
+        "pairs": 14196,
+        "original_H_after_O_MSE_improvement_pct": 0.09129078138747806,
+        "dataset_days_MSE_improvement_pct_median": 0.21495627983798976,
+        "dataset_days_MC95": [
+          0.06588829515727632,
+          0.4705550287854321
+        ],
+        "record_count_MSE_improvement_pct_median": 0.43783286666891713,
+        "record_count_MC95": [
+          0.15431786467115408,
+          0.7361626270333107
+        ]
+      },
+      "panel_C_eight_unseen_worlds": {
+        "original_H_after_O_world_equal_pct": 0.09712994312481885,
+        "dataset_day_median": 0.6945136350733762,
+        "dataset_day_MC95": [
+          0.14700908817967134,
+          1.1570473024611887
+        ],
+        "record_count_median": 0.7793058242822573,
+        "record_count_MC95": [
+          0.435518228648149,
+          1.6182778926625434
+        ]
+      },
+      "panel_D_south_america": {
+        "within_pairs": 190,
+        "cross_world_pairs": 2980,
+        "dataset_day_within_median": -0.4963816926257154,
+        "dataset_day_within_MC95": [
+          -2.5797592898336816,
+          1.3963683232210005
+        ],
+        "dataset_day_cross_median": -4.036075015728973,
+        "dataset_day_cross_MC95": [
+          -7.267878623510068,
+          -1.4734843694003712
+        ],
+        "record_count_within_median": -0.12586404063082185,
+        "record_count_within_MC95": [
+          -2.7443476167552006,
+          1.7020097078479455
+        ],
+        "record_count_cross_median": -2.6967580974575722,
+        "record_count_cross_MC95": [
+          -8.043235304410201,
+          -0.13722386835469774
+        ]
+      }
+    }
+  },
+  "scientific_guardrails": [
+    "Figures show separate populations, source-original target-specific model contrasts and conditional Monte Carlo ranges, not pooled ecological effects or population confidence intervals.",
+    "Present-day ports and plant presences do not identify source-resolved historical shipping, feeding quality, butterfly colonization or population growth.",
+    "The 29 simulation draws per proxy are dependent thinning of one original observational GBIF source; not independent biogeographic replication.",
+    "Source figure3 is unchanged source-verified host contributor art with a new figure ordinal path; original retained."
+  ]
+}
