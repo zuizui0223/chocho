@@ -1,0 +1,98 @@
+{
+  "schema": "chocho_GBIF224_observed_HO_on_effort_thinned_communities_20261119_verified_source_summary",
+  "status": "EXACT_FROZEN_ORIGINAL_SOURCE_REPLAY_AND_58_RETROSPECTIVE_THINNED_REFITS_SUCCESS_NOT_DETECTION_CORRECTION",
+  "source_replay_successful_workflow_run": 44456355685,
+  "source_full_artifact_id": 14498146982,
+  "original_full_result_JSON_SHA256": "672325ca408aca3c62ec3de901bea0d6b4458d166f3bf9251d2ba362a7041d7d",
+  "original_artifact_ZIP_SHA256": "f1ba32e298592819199b338276ecee44787f6908a71fa9cef3c86f442ddfd537",
+  "original_GBIF_DOI": "10.15468/dl.umqmsf",
+  "original_source_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+  "original_source_annual_species_region_year_sha256": "f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525",
+  "original_source_region_year_effort_sha256": "310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82",
+  "provenance_assertions": {
+    "butterflies": 224,
+    "regions": 169,
+    "original_pairs": 14196,
+    "leave_one_region_out_folds": 169,
+    "source_model_M2_columns": 23,
+    "source_model_M3_columns": 24,
+    "original_four_models_reproduced": true,
+    "original_Jaccard_reproduced_pairwise": true,
+    "original_H_after_O_percent": 0.09129078138747806
+  },
+  "original_before_effort_thinning": {
+    "prior_mean_jaccard": 0.11421295035628568,
+    "later_mean_jaccard": 0.16788018941797136,
+    "known_H_after_other_O_MSE_improvement_percent": 0.09129078138747806
+  },
+  "method": "original GloNAF/HOSTS/WCVP 169-region retrospective ridge lambda=10; simulate 29 effort-thinned prior and late butterfly communities per proxy; use thinned prior Jaccard as original prior response covariate and thinned late Jaccard as outcome; original late GBIF effort/record predictors held fixed",
+  "primary_dataset_key_calendar_day": {
+    "draws": 29,
+    "seed": 20261119,
+    "H_after_O_MSE_improvement_median_percent": 0.21495627983798976,
+    "H_after_O_MSE_improvement_mean_percent": 0.23278765402977844,
+    "min_max_percent": [
+      0.06223272564231558,
+      0.5917818056608249
+    ],
+    "MC_29draw_descriptive_central95_percent": [
+      0.06588829515727632,
+      0.4705550287854321
+    ],
+    "number_draws_positive": 29,
+    "improvement_regions_median": 102,
+    "improvement_regions_range": [
+      92,
+      110
+    ],
+    "effort_retention_region_average": {
+      "prior": 0.9986182287835346,
+      "later": 0.11861198853177034
+    },
+    "thinned_later_minus_prior_jaccard_median": 0.015406858677104757,
+    "MC_29draw_descriptive_central95_late_minus_prior_jaccard": [
+      0.013031964637302506,
+      0.01750851422302722
+    ],
+    "number_draws_with_undefined_prior_or_late_pairs": 0
+  },
+  "secondary_indexed_candidate_record_count": {
+    "draws": 29,
+    "seed": 20261120,
+    "H_after_O_MSE_improvement_median_percent": 0.43783286666891713,
+    "H_after_O_MSE_improvement_mean_percent": 0.4221284289619789,
+    "min_max_percent": [
+      0.15032150672796915,
+      0.8291085690770326
+    ],
+    "MC_29draw_descriptive_central95_percent": [
+      0.15431786467115408,
+      0.7361626270333107
+    ],
+    "number_draws_positive": 29,
+    "improvement_regions_median": 104,
+    "improvement_regions_range": [
+      90,
+      112
+    ],
+    "effort_retention_region_average": {
+      "prior": 0.9963932625973541,
+      "later": 0.07299507069407102
+    },
+    "thinned_later_minus_prior_jaccard_median": 0.0030078881823630277,
+    "MC_29draw_descriptive_central95_late_minus_prior_jaccard": [
+      -0.0011864216109062353,
+      0.005203755436405981
+    ],
+    "number_draws_with_undefined_prior_or_late_pairs": 0
+  },
+  "interpretation_limits": [
+    "All 29 draws for each proxy are conditional simulations of the same observed GBIF source, not independent ecological replication or a biological confidence interval",
+    "Both positive source-independent GBIF prediction signals remain small: under one percent held-region MSE improvement",
+    "Host names and contemporary GloNAF distribution may be dependent on butterfly catalogue selection and may postdate observations",
+    "Original later GBIF record and effort predictors were held fixed while the simulated late community changed",
+    "Dataset-calendar-day counts are proxies derived from indexed butterflies and not standardized independent survey visits",
+    "The data do not identify true larval use in each region, host quality, colonization, abundance, competition, or actual historical seed/ship movement",
+    "Previously confirmed +54.9% potential host-resource supply and port–alien flora associations remain separate positive source results"
+  ]
+}
