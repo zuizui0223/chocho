@@ -64,31 +64,43 @@ def main():
     check(abs(gains["BASE_to_AIS"]-.677555746745)<1e-8 and
           abs(gains["BASE_to_BOTH"]+4.69859540475)<1e-8,
           "Stricter AIS-only positive and AIS-plus-wind adverse results")
+    # v0.4 has four Results subsections and the independent endemic methods at 2.6.
+    # Original numerical cross-geography studies remain in its untouched S.A–S.F.
+    split_key="## References (DOI identities checked; final source and style audit outstanding)"
+    check(doc.count(split_key)==1, "Original reference and source supplement boundary preserved")
+    main_text, appendix=doc.split(split_key,1)
     for phrase in ("21.4", "17.7", "39.6%", "2.95", "+4.24%", "−0.11%",
-                   "+2.23%", "+1.78%", "+0.678%", "−4.699%", "### S.F.",
-                   "McRae, B. H.", "ESR (2009)", "Vargas, P."):
-        check(phrase in doc, "Island-port-marine conclusion missing: "+phrase)
+                   "Pieris cheiranthi", "Tropaeolum majus"):
+        check(phrase in main_text, "Positive resource/port/marine or endemic use missing from main: "+phrase)
+    for phrase in ("### S.F.", "McRae, B. H.", "ESR (2009)", "Vargas, P."):
+        check(phrase in appendix, "Original references/sea methodological audit removed: "+phrase)
     check("no new butterfly colonization" not in doc.lower(),
-          "A claimed lack of *any* colonization is stronger than an unobserved effect")
-    check(doc.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0].count("0/18")==1,
-          "Endemic ascertainment must be declared in abstract")
-    # The verbatim source-history appendix legitimately repeats old headings.
-    # Check the currently proposed main Results and their order only.
-    main_results=doc.split("## 3. Results",1)[1].split("## 4. Discussion",1)[0]
-    headings=[list(re.finditer(r"^### 3\."+str(n)+r"\.",main_results,re.M)) for n in range(1,7)]
+          "Do not infer a population-level absence of colonization from nonidentification")
+    abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
+    check("Pieris cheiranthi" in abstract and "Tropaeolum majus" in abstract,
+          "Direct independent endemic larvae and introduced host must be named in the revised abstract")
+    check("18 endemic" in main_text and "none of those 18" in main_text,
+          "Main text must report the 0/18 independently source-defined endemic ascertainment gap")
+    results=main_text.split("## 3. Results",1)[1].split("## 4. Discussion",1)[0]
+    headings=[list(re.finditer(r"^### 3\."+str(n)+r"\.",results,re.M)) for n in range(1,5)]
     check(all(len(h)==1 for h in headings) and
-          all(headings[n][0].start()<headings[n+1][0].start() for n in range(5)),
-          "Six unique and ordered main-Results sections")
-    check("### 2.8. Independent endemic" in doc and "### S.E. Independent island-endemic" in doc,
-          "Independent source methods and SI")
-    check("SUPPLEMENTARY_ENDEMIC_HOST_VALIDITY_20261118.md" in doc,"Complete companion SI linked")
+          all(headings[n][0].start()<headings[n+1][0].start() for n in range(3)) and
+          len(re.findall(r"^### 3\.[1-9]\.",results,re.M))==4,
+          "Four unique and ordered v0.4 main Results sections")
+    check("### 2.6. Independently documented island-endemic" in main_text and
+          "### S.E. Independent island-endemic" in appendix,
+          "Independent source Methods 2.6 and preserved original Supplement S.E")
+    check("SUPPLEMENTARY_ENDEMIC_HOST_VALIDITY_20261118.md" in main_text,
+          "Complete companion endemic methods source linked")
     for name in ("Pieris cheiranthi","Tropaeolum majus","Tenerife","La Palma",
                  "Euchloe grancanariensis","Hirschfeldia incana","Gonepteryx cleobule"):
-        check(name in doc and name in si,"Source name or island missing: "+name)
-    for exact in ("+118.9%","+40.9%","4.12%","5.08%","−3.87 points","−15.85 to +8.13"):
-        check(exact in doc,"Original result or matched-family control missing: "+exact)
+        check(name in doc and name in si,"Original named source observation or island missing: "+name)
+    for exact in ("+118.9%","+40.9%","4.12%"):
+        check(exact in main_text,"Verified butterfly source positive missing from current main: "+exact)
+    for exact in ("5.08%","−3.87 points","−15.85 to +8.13"):
+        check(exact in appendix,"Archived source sensitivity or adverse check missing: "+exact)
     check("newly host-present region" in doc and "home archipelago" in doc,
-          "Native host presence in source archipelago must be distinguished")
+          "Source native-host presence and endemic island origin not distinguished")
     sc=endemic["source_scope"]
     check(sc["living_butterflies"]==41 and
           sc["independently_origin_classified_endemic_extant_butterflies"]==18 and
