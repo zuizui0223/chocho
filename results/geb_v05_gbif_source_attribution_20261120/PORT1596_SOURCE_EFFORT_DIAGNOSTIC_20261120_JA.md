@@ -2,7 +2,7 @@
 
 **元の科学的原稿PR179には統合しない。** 2026-11-20のPR189に保存する、異なる時点の元の種数表と現在GBIF provider index の品質・交絡診断。
 
-元ソース：完成した1,596港の『native_in_catalogue』『contemporary_not_native_in_catalogue』という既知寄主候補種数。これは野外で生存した宿主の確認や独立した侵入指定ではない。新ソース：同じWPI港IDsの現在(2026-11-20)5km GBIF Plantae記録数/提供元数で、取得日と歴史的WKT検索条件は一致しない。141国＋不詳2港を別の計142国グループとして扱った。
+元ソース：完成した1,596港の『native_in_catalogue』『contemporary_not_native_in_catalogue』という既知寄主候補種数。これは野外で生存した宿主の確認や独立した侵入指定ではない。新ソース：同じWPI港IDsの現在(2026-11-20)5km GBIF Plantae記録数/提供元数で、取得日と歴史的WKT検索条件は一致しない。国・領域コード142群として扱った。原CSVの国コード 'NA' はナミビアの2港を表し、欠損値ではない（全1,596港でcountry欠損0）。
 
 ## 観測値
 - 元の外来候補既知寄主種数 vs 新しいGBIF記録数：Spearman rho=0.8210。
