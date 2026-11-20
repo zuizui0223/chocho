@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   original-download-contributors:
@@ -37,6 +37,34 @@ jobs:
           assert z["no_GBIF_download_or_derived_DOI_created"] is True
           print("ARCHIVED_155_224_DOI_ORIGINAL_PUBLISHER_LIST_RECONCILED")
           PY
+      - name: Persist the public original-download datasetKey contributions on the audit branch only
+        if: github.ref == 'refs/heads/analysis/geb-v05-review-data-source-audit-20261120'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/geb_v05_gbif_source_attribution_20261120
+          cp dist/gbif_155_224_original_download/VERIFIED_GBIF_SOURCE_DOWNLOAD_DATASETS.json \
+            results/geb_v05_gbif_source_attribution_20261120/VERIFIED_GBIF_155_224_ORIGINAL_DOWNLOAD_PUBLISHER_COUNTS.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/geb_v05_gbif_source_attribution_20261120/VERIFIED_GBIF_155_224_ORIGINAL_DOWNLOAD_PUBLISHER_COUNTS.json")
+          z=json.loads(p.read_text())
+          assert z["provider_count"] == 1716
+          assert z["original_record_count_verified"] == z["contributors_record_sum_if_available"] == 14637152
+          assert z["no_GBIF_download_or_derived_DOI_created"] is True
+          assert len(z["dataset_contributors"]) == 1716
+          print("READONLY_SOURCE_GBIF_CONTRIBUTOR_LIST_ARCHIVABLE")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_gbif_source_attribution_20261120/VERIFIED_GBIF_155_224_ORIGINAL_DOWNLOAD_PUBLISHER_COUNTS.json
+          if git diff --cached --quiet; then
+            echo "Original downloaded dataset providers already archived without changes"
+          else
+            git commit -m "Archive public GBIF original 155/224 DOI provider contribution counts [skip ci]"
+            git push origin HEAD:refs/heads/analysis/geb-v05-review-data-source-audit-20261120
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
