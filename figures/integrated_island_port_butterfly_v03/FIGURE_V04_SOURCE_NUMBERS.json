@@ -1,6 +1,6 @@
 {
   "schema": "chocho_geb_four_figure_v04_enhanced_source_display_receipt_20261119",
-  "status": "FROZEN_MAIN_NUMBERS_USED_ONLY_FOR_EDITORIAL_SVG; NO_NEW_MODEL",
+  "status": "ORIGINAL_FOUR_FIGURES_PRESERVED; SOURCE_PINNED_NEW_FIG2D_239_ISOLATION",
   "source_repo": "zuizui0223/chocho",
   "main_evidence_commit_at_read": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
   "source_paths": [
@@ -32,7 +32,7 @@
       }
     },
     "fig2": {
-      "new_svg": "figures/integrated_island_port_butterfly_v03/Fig2_ports_native_alien_floras_restructured_v04.svg",
+      "new_svg": "figures/integrated_island_port_butterfly_v03/Fig2_ports_native_alien_floras_isolation_v05.svg",
       "island_botanical_regions": 126,
       "port_coefficient": {
         "native": {
@@ -97,6 +97,41 @@
           "note": "Strict 5-fold overlapping-source bootstrap ranges include zero; undirected electrical resistance, not measured currents."
         },
         "source_population_not_identical_to_port_panel": true
+      },
+      "isolation_panel": {
+        "source_receipt": "results/isolation_port_resource_reanalysis_20261120/SOURCE239_PAPER_RECEIPT_V01.json",
+        "source_analysis_ci": "https://github.com/zuizui0223/chocho/actions/runs/44672145927",
+        "cohort": {
+          "islands": 126,
+          "active_islands": 123,
+          "fixed_butterflies": 239
+        },
+        "native_host_distance_standardized_beta": -0.16756536997969254,
+        "contemporary_host_distance_standardized_beta": 0.019190000649659384,
+        "paired_distance_slope_shift_standardized_beta": 0.18675537062935188,
+        "paired_shift_nine_level1_t8_p": 0.06773957638335248,
+        "introduced_only_share_distance_logodds_beta": 0.42509951174046273,
+        "introduced_only_share_nine_level1_t8_p": 0.013970558715405377,
+        "adjusted_introduced_only_shares": {
+          "km100": 0.5515446390549161,
+          "km1000": 0.6561447604303048,
+          "km4000": 0.7151110606045363
+        },
+        "count_panel_marginal_fitted_host_numbers": {
+          "km100": {
+            "native": 23.293206,
+            "contemporary": 66.654399
+          },
+          "km1000": {
+            "native": 16.612487,
+            "contemporary": 68.150369
+          },
+          "km4000": {
+            "native": 13.502804,
+            "contemporary": 69.070038
+          }
+        },
+        "limitation": "Approximate mainland polygon-border distance, nine macroregions, original 125/2517 scratchpad inaccessible; not actual butterfly abundance/transport."
       }
     },
     "fig3": {
@@ -230,7 +265,8 @@
     "Figures show separate populations, source-original target-specific model contrasts and conditional Monte Carlo ranges, not pooled ecological effects or population confidence intervals.",
     "Present-day ports and plant presences do not identify source-resolved historical shipping, feeding quality, butterfly colonization or population growth.",
     "The 29 simulation draws per proxy are dependent thinning of one original observational GBIF source; not independent biogeographic replication.",
-    "Source figure3 is unchanged source-verified host contributor art with a new figure ordinal path; original retained."
+    "Source figure3 is unchanged source-verified host contributor art with a new figure ordinal path; original retained.",
+    "New Fig2D is different source-pinned frozen239 host-opportunity estimation; paired distance shift is uncertain after nine region clustering (p=0.068), unlike HC3 p=0.001."
   ],
-  "quality_gate": "Exact source numeric, 239 species CSV, 670 contributing plants, 104 marine botanical islands, original Fig3 port plot preserved. This is editorial new SVG, no new model."
+  "quality_gate": "Exact source numeric, 239 species CSV, 670 contributing plants, 104 marine botanical islands, original Fig3 port plot preserved. This is editorial new SVG, no new model.; source-pinned fixed239 isolation Fig2D with nine-cluster uncertainty"
 }

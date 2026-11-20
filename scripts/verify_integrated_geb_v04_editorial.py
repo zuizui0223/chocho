@@ -138,6 +138,24 @@ def validate_enhanced_figures(receipt,source,repo_root,figurepaths):
         if token not in svg2:
             raise AssertionError("Missing original/strict positive or adverse sea plot: "+token)
 
+    # Fig2D: source-backed newly recomputed original fixed239 isolation model.
+    new239=load_j(repo_root/"results/isolation_port_resource_reanalysis_20261120/SOURCE239_PAPER_RECEIPT_V01.json")
+    ip=fig2.get("isolation_panel") or {}
+    if ip.get("source_receipt")!="results/isolation_port_resource_reanalysis_20261120/SOURCE239_PAPER_RECEIPT_V01.json" or new239["cohort"]["islands"]!=126:
+        raise AssertionError("Fig2D current source/126 islands missing")
+    if new239["cohort"]["native_island_coverage_units"]!=4829 or new239["cohort"]["contemporary_island_coverage_units"]!=10570:
+        raise AssertionError("Fixed239 island resource denominators have drifted")
+    for field,label in [("native_host_distance_standardized_beta","native_host239"),
+                        ("contemporary_host_distance_standardized_beta","contemporary_host239")]:
+        near(ip[field],new239["models"][label]["distance_beta"])
+    near(ip["paired_distance_slope_shift_standardized_beta"],new239["models"]["paired_native_current_shift"]["distance_beta"])
+    near(ip["paired_shift_nine_level1_t8_p"],new239["models"]["paired_native_current_shift"]["distance_nine_cluster_p"])
+    near(ip["introduced_only_share_distance_logodds_beta"],new239["models"]["introduced_only_share_logodds"]["distance_beta"])
+    near(ip["introduced_only_share_nine_level1_t8_p"],new239["models"]["introduced_only_share_logodds"]["distance_nine_cluster_p"])
+    for txt in ("Mainland isolation and candidate butterfly food","Original fixed 239-host panel",
+                "55%","66%","72%","Nine-Level1 p = 0.014","p = 0.068","Both islands unseen"):
+        if txt not in svg2: raise AssertionError("Fig2D source or uncertainty label lost: "+txt)
+
     fig3=receipt["figures"]["fig3"]
     f3=fig3["evidence_sources"]
     concentration=load_j(source/f3["plant_concentration"])
