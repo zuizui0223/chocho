@@ -56,7 +56,7 @@ def replay(frame, islands, pairs):
         raise ValueError(f"Original Parquet lacks required fields: {sorted(missing)}")
     if frame[list(REQUIRED)].isna().any().any():
         raise ValueError("Null value in original Parquet required columns")
-    frame = frame.loc[:, REQUIRED].copy()
+    frame = frame.loc[:, list(REQUIRED)].copy()
     frame["landmass_id"] = frame["landmass_id"].astype(str)
     frame["speciesKey"] = frame["speciesKey"].astype("int64")
     frame["year"] = frame["year"].astype("int64")
