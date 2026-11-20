@@ -97,7 +97,7 @@ jobs:
             ("introduced_only_share_logodds_239","introduced_only_share_logodds","distance"),
             ("plant_introduced","introduced_whole_flora","ports")]:
               close(spatial["results"][key]["spatial_MEM10"][term]["beta"],
-                    expected["spatial_sensitivity"]["spatial_mem10"][receiptkey][term+"_beta"],key)
+                    expected["spatial_sensitivity"]["spatial_mem10"][receiptkey][("port" if term=="ports" else term)+"_beta"],key)
           assert baseline["models"]["counts"]["islands"]==126
           assert spatial["active_resource_islands"]==123
           print("ZIP_EXTRACTED_FIXED239_AND_MEM10_SUBANALYSIS_REPLAY_SOURCE_EXACT")
