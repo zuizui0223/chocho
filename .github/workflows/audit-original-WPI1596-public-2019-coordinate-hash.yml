@@ -41,7 +41,9 @@ jobs:
           p=Path("dist/wpi1596_source/WPI1596_PUBLIC_MIRROR_VS_PRIVATE_SOURCE_SHA.json")
           x=json.loads(p.read_text())
           assert x["matched_WPI_OBJECTID_and_coords"]==1596
-          assert x["current_public_WPI_1596_7dp_coordinate_SHA256"]==x["original_private_WPI_1596_7dp_coordinate_SHA256"]
+          assert x["current_public_WPI_1596_6dp_coordinate_SHA256"]==x["original_private_WPI_1596_6dp_coordinate_SHA256"]
+          assert x["original_7dp_not_byte_identical_to_mirror"]
+          assert x["exact_private_original_source_match"]
           assert x["original_private_WPI_geojson_NOT_UPLOADED"]
           assert x["GBIF_individual_occurrence_provenance_not_recovered"]
           print("ALL1596_ORIGINAL_WPI2019_POINTS_REPRODUCIBLE_WITHOUT_PRIVATE_GEOJSON")
