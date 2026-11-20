@@ -16,11 +16,13 @@
 | 上位の提供元1件が占める港バッファ索引ヒット数 | 851,148（27.12%） |
 | 上位10提供元の割合 | 72.26% |
 
-- **[全1,596港・1,482提供元のJSON](../../../results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json)**、**2,062,065バイト**、SHA256 `73aa16ce190aee301c790786acbee01beda3ca9b53b02b8226a7b4a762b628e7`。
-- 4シャードの実GBIF取得はすべて成功（[Actions #44742493164](https://github.com/zuizui0223/chocho/actions/runs/44742493164)）。その実行の最初の統合ジョブは文字コード指定 `utf8-sig` のタイポにより失敗したが、**再照会せず**取得済み4シャードから統合し、[Actions #44744153539](https://github.com/zuizui0223/chocho/actions/runs/44744153539) で厳格な照合に成功してGitへコミット（`10eecbb`）。
-- 独立した **[オフライン再検証 CI #44744848836](https://github.com/zuizui0223/chocho/actions/runs/44744848836)** が、固定ソースSHA、原WPIの完了1,596港、正1,461・ゼロ135、各港の提供元件数総和、提供元1,482種類と総計3,138,675を再検算して成功した。[再現用オフライン検証コード](../../../scripts/verify_new_full1596_GBIF_port_provider_snapshot_20261120.py)。
+- **[全1,596港・1,482提供元のJSON](../../../results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json)**、**2,071,788バイト**、SHA256 `e79c3ad437d484424d41a5fc8e784c9c829070d740f1120be769d5a2d69548b6`。
+- 4シャードの実GBIF取得はすべて成功（[Actions #44742493164](https://github.com/zuizui0223/chocho/actions/runs/44742493164)）。その実行の最初の統合ジョブは文字コード指定 `utf8-sig` のタイポにより失敗したが、**再照会せず**取得済み4シャードから統合し、[Actions #44750091122](https://github.com/zuizui0223/chocho/actions/runs/44744153539) で厳格な照合に成功してGitへコミット（`f639fce`）。
+- 独立した **[オフライン再検証 CI #44750836606](https://github.com/zuizui0223/chocho/actions/runs/44744848836)** が、固定ソースSHA、原WPIの完了1,596港、正1,461・ゼロ135、各港の提供元件数総和、提供元1,482種類と総計3,138,675を再検算して成功した。[再現用オフライン検証コード](../../../scripts/verify_GEB_v05_new_port1596_attribution_20261120.py)。
 - 正確な取得時刻は**4シャードで2026-11-20 13:14:05～13:24:06 UTC**の間にまたがる。元の植物キャッシュの検索時刻、WKTバッファ形状と現在の`geoDistance`検索が完全同一ではないため、**過去の提供元を復元した成果とは呼ばない**。
 - 各港の5km圏には重複があり、3,138,675は**一意なGBIF出現記録数ではない**。提供元の寄与集中も生態的な個体数・定着の差ではなく、報告・データソースの構造である。
+
+**保存形式の最終統一：** 同じ4シャードを集約した初版 v1 JSON（初回コミット `10eecbb`）に続き、SHA256 `e79c3ad437d484424d41a5fc8e784c9c829070d740f1120be769d5a2d69548b6` の **canonical v2** JSONを[CI #44750091122](https://github.com/zuizui0223/chocho/actions/runs/44750091122)で固定し、[v2独立検証CI #44750836606](https://github.com/zuizui0223/chocho/actions/runs/44750836606)で1,596港・1,482提供元の整合を再確認した。初版を再生成するワークフローは今後 **read-only** とし、現行 v2 を上書きできない。これらは新しいGBIF索引に関する出典監査であり、元の取得時点の提供者を証明するものではない。
 
 [この新しい全港スナップショットの詳細と投稿上の制約](../../../results/geb_v05_gbif_source_attribution_20261120/README_NEW_ALL1596_PORT_GBIF_PROVIDER_SOURCE_20261120.md)。
 
