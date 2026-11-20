@@ -245,6 +245,53 @@ def bootstrap_slope(f, draws=999, seed=20261120):
         }
     }
 
+def conservative_geographic_cluster(f):
+    """Descriptive nine-Level1 cluster standard errors, using t with G-1 df.
+
+    Nine broad regions are a limited number of independent units: this is
+    an explicit sensitivity, NOT a fully identified spatial error model.
+    """
+    from scipy.stats import t as t_dist
+    categories = [
+        ("plant_native","native_plant"),
+        ("plant_introduced","introduced_plant"),
+        ("host_native_239","native_host_239"),
+        ("host_current_239","current_host_239"),
+    ]
+    ys = {key: y_standardized(f, field) for key, field in categories}
+    ys["plant_introduced_minus_native_z"] = ys["plant_introduced"] - ys["plant_native"]
+    ys["host_current_minus_native_z"] = ys["host_current_239"] - ys["host_native_239"]
+    out = {}
+    for cohort, data, subys in [
+        ("all_126",f,ys),
+        ("resource_active_123",f.loc[f.current_host_239>0].copy(),None)
+    ]:
+        if subys is None:
+            subys = {"introduced_only_share_logodds_239":np.log(
+                (data.introduced_only_host_239+0.5)/(data.native_host_239+0.5))}
+        xx = design(data)
+        g = int(data.level1.nunique())
+        df = g-1
+        require(g==9, "Unexpected Level1 cluster cohort")
+        out[cohort] = {}
+        for key, val in subys.items():
+            m = sm.OLS(val,xx).fit(cov_type="cluster",
+                cov_kwds={"groups": data.level1, "use_correction":True})
+            effects={}
+            for term in ("ports","distance"):
+                b,se = float(m.params[term]),float(m.bse[term])
+                critical = t_dist.ppf(.975,df)
+                effects[term]={
+                    "beta":b,"cluster9_SE":se,
+                    "t8_two_sided_p":float(2*t_dist.sf(abs(b/se),df)),
+                    "t8_95":[float(b-critical*se),float(b+critical*se)]
+                }
+            out[cohort][key]=effects
+    return {
+        "method":"TDWG Level1 9-region CR1 grouped sandwich, t8 sensitivity; only nine clusters, not geographic proof",
+        "models":out
+    }
+
 def marginal_predictions(f):
     # In-range counterfactual predictions at common port, area, latitude and
     # Level1 compositions: only plotted x varies; not historical counterfactuals.
@@ -314,6 +361,7 @@ def main():
             "without_latitude":eval_suite(f,without_lat=True)
         },
         "bootstrap":bootstrap_slope(f),
+        "conservative_level1_cluster":conservative_geographic_cluster(f),
         "interpretation_guardrails":[
             "Geographic vegetation categories and modern port counts are not actual shipborne introduction, measured currents or host quality.",
             "Not 2517 original butterflies or original 125 islands; raw dd.py/dd_data.csv never inspected.",
