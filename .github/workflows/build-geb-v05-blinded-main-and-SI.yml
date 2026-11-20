@@ -10,7 +10,8 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
       - figures/integrated_island_port_butterfly_v03/**
   pull_request:
-    branches: [main]
+    # Also preflight scoped evidence/word-count edits targeting the live GEB paper branch.
+    branches: [main, paper/geb-single-island-port-endemics-20261118]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - manuscript/integrated_butterfly_resource_access_20261109/**
