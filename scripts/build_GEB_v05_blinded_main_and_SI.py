@@ -110,6 +110,26 @@ def build(root,out):
     appendices="Detailed supporting methods and evidence appear in Appendix S1, Appendix S2, Appendix S3, Appendix S4, Appendix S5, Appendix S6, Appendix S7 and Appendix S8 in Supporting Information.\n"
     if mainbody.count("## 3. Results")!=1:raise RuntimeError("Results section not unique")
     mainbody=mainbody.replace("## 3. Results",appendices+"\n## 3. Results")
+    # The legacy working paper's old S.F/S.G pointers are not valid appendix
+    # identifiers in the new, separate journal-facing S1–S8 SI.
+    converted=[]
+    for line in mainbody.splitlines():
+        if "Supplement S.F" in line:
+            if "species-equal" in line or "contributors were collapsed" in line:
+                appendix="Appendix S2"
+            elif "source-built" in line or "potential-resource composition" in line:
+                appendix="Appendix S4"
+            else:
+                appendix="Appendix S3"
+            line=line.replace("Supplement S.F",appendix)
+        if "Supplement S.B–S.D" in line:
+            line=line.replace("Supplement S.B–S.D","Appendix S7")
+        if "Supplement S.G.2–S.G.5" in line:
+            line=line.replace("Supplement S.G.2–S.G.5","Appendix S5")
+        converted.append(line)
+    mainbody="\\n".join(converted)+"\\n"
+    if re.search(r"Supplement S\\.[A-G]",mainbody):
+        raise RuntimeError("Legacy source appendix labels remain in GEB independent SI export")
     bodywords=len(re.sub(r"[*#]","",mainbody).split())
     if a_words>300 or bodywords>5000:
         raise RuntimeError("Current source exceeds GEB abstract/main word goals")
