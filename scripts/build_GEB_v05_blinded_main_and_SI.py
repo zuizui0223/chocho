@@ -106,6 +106,10 @@ def build(root,out):
     abstract=main.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     a_words=len(re.sub(r"[*#]","",abstract).split())
     mainbody="## 1. Introduction"+main.split("## 1. Introduction",1)[1].split("## Data and code availability",1)[0]
+    # Per GEB: explicitly cite each separate Supporting Information appendix.
+    appendices="Detailed supporting methods and evidence appear in Appendix S1, Appendix S2, Appendix S3, Appendix S4, Appendix S5, Appendix S6, Appendix S7 and Appendix S8 in Supporting Information.\n"
+    if mainbody.count("## 3. Results")!=1:raise RuntimeError("Results section not unique")
+    mainbody=mainbody.replace("## 3. Results",appendices+"\n## 3. Results")
     bodywords=len(re.sub(r"[*#]","",mainbody).split())
     if a_words>300 or bodywords>5000:
         raise RuntimeError("Current source exceeds GEB abstract/main word goals")
