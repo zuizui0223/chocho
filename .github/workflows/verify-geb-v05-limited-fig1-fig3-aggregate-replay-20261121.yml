@@ -62,10 +62,9 @@ jobs:
           assert abs(r["fig3B"]["Spearman_native_global_to_island_added"]-b["source_native_global_resources_vs_added_island_opportunities_Spearman_rho"])<1e-12
           assert r["fig3B"]["top59_added"]==b["native_global_broadest_added"]==2271
           assert r["fig3B"]["bottom60_added"]==b["native_global_narrowest_added"]==644
-          assert r["fig3B"]["island_gaining_butterflies"] if False else True
           assert r["fig3C"]["one_documented_host_plant_family"]==c["one_documented_host_family_n"]==97
           assert r["fig3C"]["one_family_global_gainers"]==c["one_documented_host_family_gaining_global_n"]==82
-          assert r["fig3C"]["gaining_at_least_one_island"]==c["gaining_at_least_one_island_n"]==198
+          assert r["fig3C"]["island_gaining_butterflies"]==c["gaining_at_least_one_island_n"]==198
           assert r["fig3C"]["globally_gaining_butterflies"]==c["all_source_butterflies_gaining_global_n"]==206
           plant=src["plant_species"]
           assert a["total_introduced_host_contributors"]==plant["contributors"]==670
