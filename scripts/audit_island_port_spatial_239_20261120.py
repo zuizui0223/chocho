@@ -137,6 +137,31 @@ def evaluate(frame, weights, mem):
                      "residual_moran_2000km":moran(filtered.resid,weights,frame.level1.to_numpy()),
                      "r2":float(filtered.rsquared)},
         }
+    # Resource-active subset: same 123-island log odds as parent source model.
+    mask = (frame.current_host_239 > 0).to_numpy()
+    active = frame.loc[mask].copy().reset_index(drop=True)
+    wa = weights[np.ix_(mask, mask)]
+    ma, _ = preselected_mem(wa)
+    xa = design(active)
+    xa_mem = pd.concat([
+        xa, pd.DataFrame(ma, columns=[f"spatial_MEM_{i+1:02d}" for i in range(MEM_COUNT)])
+    ], axis=1)
+    if np.linalg.matrix_rank(xa_mem.to_numpy()) != xa_mem.shape[1]:
+        raise RuntimeError("Active-island spatial fit rank deficiency")
+    odds = np.log((active.introduced_only_host_239 + 0.5) /
+                  (active.native_host_239 + 0.5))
+    raw = sm.OLS(odds, xa).fit(cov_type="HC3")
+    adjusted = sm.OLS(odds, xa_mem).fit(cov_type="HC3")
+    out["introduced_only_share_logodds_239"] = {
+        "plain": {"ports": term_summary(raw,"ports"),
+                  "distance": term_summary(raw,"distance"),
+                  "residual_moran_2000km": moran(raw.resid,wa,active.level1.to_numpy()),
+                  "r2":float(raw.rsquared), "islands":len(active)},
+        "spatial_MEM10": {"ports": term_summary(adjusted,"ports"),
+                  "distance": term_summary(adjusted,"distance"),
+                  "residual_moran_2000km": moran(adjusted.resid,wa,active.level1.to_numpy()),
+                  "r2":float(adjusted.rsquared), "islands":len(active)}
+    }
     return out
 
 
@@ -163,6 +188,7 @@ def main():
                           "plain permutation p-values need not control residual confounding",
                           "no causal shipping or butterfly establishment inference"],
       "graph":graph,
+      "active_resource_islands":int((frame.current_host_239>0).sum()),
       "top_10_positive_moran_eigenvalues":[float(v) for v in eig],
       "results":results,
     }
@@ -182,6 +208,8 @@ def main():
         "graph":graph,
         "positive_eigenvalues_count":len(eig),
         "endpoints":{k:{"raw_Moran_I":v["plain"]["residual_moran_2000km"]["I"],
+                        "raw_Moran_p_within_L1":v["plain"]["residual_moran_2000km"]["p_positive_within_level1_permutation"],
+                        "raw_Moran_p_global":v["plain"]["residual_moran_2000km"]["p_positive_global_permutation"],
                         "mem10_Moran_I":v["spatial_MEM10"]["residual_moran_2000km"]["I"],
                         "mem10_beta_ports":v["spatial_MEM10"]["ports"]["beta"],
                         "mem10_p_ports":v["spatial_MEM10"]["ports"]["HC3_p"],
