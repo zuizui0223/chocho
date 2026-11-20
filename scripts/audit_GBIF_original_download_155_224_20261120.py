@@ -66,10 +66,29 @@ def main():
     declared=meta.get("totalRecords") or meta.get("total_records") or meta.get("totalCount")
     if declared is not None and int(declared)!=14637152:
         raise RuntimeError(f"Original 14637152-record DOI and metadata count inconsistent: {declared}")
-    datasets,provider_sha=get_json(API+"/"+DOI+"/datasets")
-    items,complete=providers_from(datasets)
-    if not complete:
-        raise RuntimeError("GBIF dataset-list response is paginated/truncated; incomplete provider attribution")
+    # The official contributors endpoint is paginated; never mistake page 1
+    # for the complete set of GBIF data publishers.
+    items=[]
+    provider_page_shas=[]
+    offset=0
+    pages=0
+    for _ in range(150):
+        dataset_page,page_sha=get_json(API+"/"+DOI+"/datasets?offset="+str(offset)+"&limit=300")
+        page_rows,complete=providers_from(dataset_page)
+        provider_page_shas.append(page_sha)
+        items.extend(page_rows)
+        pages+=1
+        print("ORIGINAL_GBIF_PUBLISHER_PAGE",json.dumps({
+            "page":pages,"offset":offset,"returned":len(page_rows),"complete":complete
+        }),flush=True)
+        if complete:
+            break
+        if not page_rows:
+            raise RuntimeError("Original GBIF contributor paging returned zero rows before end")
+        offset += len(page_rows)
+    else:
+        raise RuntimeError("Too many GBIF contribution pages without a complete response")
+    provider_sha=hashlib.sha256("".join(provider_page_shas).encode()).hexdigest()
     attribution=[]
     for x in items:
         if not isinstance(x,dict):
@@ -101,7 +120,9 @@ def main():
       "provider_count":len(attribution),
       "contributors_record_sum_if_available":contribution_sum,
       "official_metadata_response_sha256":meta_sha,
-      "official_dataset_list_response_sha256":provider_sha,
+      "official_dataset_pages":pages,
+      "official_dataset_page_sha256s":provider_page_shas,
+      "official_dataset_pages_digest":provider_sha,
       "read_utc_note":"Retrieval time is execution time, not a new GBIF data download",
       "DOI_not_valid_for":[
           "historical private 224 species×landmass×year aggregated 14425536 records",
