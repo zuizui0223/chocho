@@ -5,12 +5,14 @@ on:
       - analysis/geb-v05-review-data-source-audit-20261120
     paths:
       - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - "scripts/verify_chocho_recovered_private_zip_20261120.py"
       - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
   pull_request:
     branches:
       - paper/geb-single-island-port-endemics-20261118
     paths:
       - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - "scripts/verify_chocho_recovered_private_zip_20261120.py"
       - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
   workflow_dispatch:
 
@@ -39,6 +41,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m py_compile current/scripts/audit_GEB_v05_review_source_bundle_20261120.py
+          python -m py_compile current/scripts/verify_chocho_recovered_private_zip_20261120.py
           python -u current/scripts/audit_GEB_v05_review_source_bundle_20261120.py \
             --current-root current \
             --source-root source_main \
