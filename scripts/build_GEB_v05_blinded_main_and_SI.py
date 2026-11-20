@@ -80,11 +80,17 @@ def markdown(doc,txt,root,out,with_images=True,fig_prefix="main"):
                 i+=1
             table=doc.add_table(rows=1,cols=len(vals))
             table.style="Table Grid"
-            for j,v in enumerate(vals):table.rows[0].cells[j].text=v
+            # Repeat table headers on every rendered page (w:tblHeader).
+            trpr=table.rows[0]._tr.get_or_add_trPr()
+            repeat=OxmlElement("w:tblHeader")
+            repeat.set(qn("w:val"),"true")
+            trpr.append(repeat)
+            for j,v in enumerate(vals):
+                table.rows[0].cells[j].text=v.replace("**","").replace("`","")
             for row in rows:
                 cells=table.add_row().cells
                 for j,v in enumerate(row):
-                    cells[j].text=v
+                    cells[j].text=v.replace("**","").replace("`","")
                     for p in cells[j].paragraphs:
                         for run in p.runs:run.font.size=Pt(8)
             continue
