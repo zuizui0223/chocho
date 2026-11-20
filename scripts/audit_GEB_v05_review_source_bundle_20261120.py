@@ -237,6 +237,8 @@ def main():
     args = ap.parse_args()
     report = audit(args.current_root, args.source_root, args.out_dir)
     print("GEB_V05_INTERNAL_SOURCE_PREVIEW_QA_PASS")
+    for hit in report["identity_scanner"]["hits"]:
+        print("REVIEW_IDENTITY_LEAK_FILE", hit["origin"], hit["file"], ",".join(hit["identity_categories"]))
     print(json.dumps({
         "state": report["state"],
         "inventory_count": report["included_inventory_count"],
