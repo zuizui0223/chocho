@@ -69,10 +69,9 @@ def run(root:Path):
     raw="port_id,latitude_7dp,longitude_7dp\n"+"".join(
       f"{k},{coords[k][0]:.7f},{coords[k][1]:.7f}\n" for k in ids)
     digest=hashlib.sha256(raw.encode("utf8")).hexdigest()
-    if digest!=PRIVATE_ORIGINAL_1596_GEO_SHA256:
-        raise ValueError("Public WPI mirror diverged from private original 2019 point SHA256; no full port requery authorized. Mirror SHA256 "+digest)
+    matches = digest == PRIVATE_ORIGINAL_1596_GEO_SHA256
     return {"schema":"chocho_original1596_WPI2019_private_source_vs_public_arcgis_coordinate_sha_v1",
-       "status":"ALL_ORIGINAL_1596_PORT_ID_COORDINATES_REPRODUCED_FROM_PUBLIC_WPI_MIRROR",
+       "status":"ALL_ORIGINAL_1596_PORT_ID_COORDINATES_REPRODUCED_FROM_PUBLIC_WPI_MIRROR" if matches else "PUBLIC_WPI_MIRROR_DIFFERS_FROM_PRIVATE_ORIGINAL_2019_DO_NOT_USE_AS_HISTORIC_GEO",
        "source_original_commit":ORIGINAL,
        "full_original_port_candidates":len(rows),
        "original_complete_plant_query_ports":len(ids),
@@ -81,19 +80,26 @@ def run(root:Path):
        "original_private_WPI_1596_7dp_coordinate_SHA256":PRIVATE_ORIGINAL_1596_GEO_SHA256,
        "current_public_WPI_1596_7dp_coordinate_SHA256":digest,
        "original_private_WPI_geojson_NOT_UPLOADED":True,
+       "exact_private_original_source_match":matches,
+       "temporary_public_mirror_coordinates_for_LOCAL_DIAGNOSTIC_ONLY":True,
        "GBIF_individual_occurrence_provenance_not_recovered":True,
        "only_port_geography_not_original_plant_query_buffer_hash":True,
-       "checked_at_utc":datetime.now(timezone.utc).isoformat()}
+       "checked_at_utc":datetime.now(timezone.utc).isoformat()},raw
 
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--source-root",type=Path,required=True)
     p.add_argument("--out",type=Path,required=True)
+    p.add_argument("--mirror-diagnostic-csv",type=Path,required=True)
     args=p.parse_args()
-    receipt=run(args.source_root)
+    receipt, current_public_csv = run(args.source_root)
     args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
-    print("WPI_ORIGINAL1596_SOURCE_GEO_MIRROR_CHECK_PASS",
+    args.mirror_diagnostic_csv.parent.mkdir(parents=True,exist_ok=True)
+    args.mirror_diagnostic_csv.write_text(current_public_csv,encoding="utf8")
+    print("WPI_ORIGINAL1596_PUBLIC_MIRROR_DIAGNOSTIC_COMPLETED",receipt["status"],
           receipt["current_public_WPI_1596_7dp_coordinate_SHA256"])
+    if not receipt["exact_private_original_source_match"]:
+        raise RuntimeError("Source 2019 WPI geo differed; full 1596 GBIF requery stays BLOCKED, see local-only mirror diagnostic artifact")
 if __name__=="__main__":
     main()
