@@ -35,11 +35,11 @@
 
 ## 再現性・元データとの区別
 
-- 新しい完全提供元表：[`NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json`](NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json)（2,062,065バイト、SHA256 `73aa16ce190aee301c790786acbee01beda3ca9b53b02b8226a7b4a762b628e7`）。
+- 新しい完全提供元表：[`NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json`](NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json)（**canonical v2**、2,071,788バイト、SHA256 `e79c3ad437d484424d41a5fc8e784c9c829070d740f1120be769d5a2d69548b6`）。
 - 4分割の元GBIF照会：[`#44742493164`](https://github.com/zuizui0223/chocho/actions/runs/44742493164)。**4分割の取得・検証は4/4成功**。同じ実行の最初の統合ジョブはPython `utf8-sig` タイポのため失敗した（GBIF取得失敗ではない）。
-- **追加GBIF照会なし**で既存4分割を統合し、ブランチへコミットした検証：[`#44744153539`](https://github.com/zuizui0223/chocho/actions/runs/44744153539)、コミット `10eecbb`。集計時に1,596港IDの過不足、各港の提供元別件数総和、4シャードの出典・日時・元WPI SHA・集計の整合を再検証した。
+- **追加GBIF照会なし**で既存4分割を統合し、ブランチへコミットした検証：[`#44750091122`](https://github.com/zuizui0223/chocho/actions/runs/44744153539)、コミット `f639fce`。新しい v2 スキーマで集計時に1,596港IDの過不足、各港の提供元別件数総和、4シャードの出典・日時・元WPI SHA・集計の整合を再検証した。
 - 港座標公開ミラーの6桁整合：[`#44741901216`](https://github.com/zuizui0223/chocho/actions/runs/44741901216)。元の非公開WPI GeoJSONはGitHubにアップロードしていない。
-- 実行コード：`scripts/audit_gbif_all1596_port_datasetkey_facets_20261120.py`、`.github/workflows/audit-gbif-1596-port-provider-complete-new-snapshot.yml`、`.github/workflows/archive-geb-1596-completed-GBIF-provider-shards-20261120.yml`。
+- 実行コード：`scripts/audit_gbif_all1596_port_datasetkey_facets_20261120.py`、`.github/workflows/audit-gbif-1596-port-provider-complete-new-snapshot.yml`、`.github/workflows/archive-gbif-1596-new-providers-from-successful-shards.yml` (former v1 archiver now deprecated to read-only verifier)。
 
 ## この結果をどこまで使えるか
 
@@ -49,3 +49,9 @@
 4. **生態学的主張は維持**：港と外来植物相の関係、島の寄主機会拡大、隔離の勾配はもとの別解析・別母集団の肯定結果である。本監査はそれらを否定も強化もする独立の因果検定ではなく、出典データの提供元追跡可能性の確認である。植物を船が輸送したこと、チョウが実際に定着したことはこの索引からは立証できない。
 
 **次の出典作業**：元の港ごとのWKT・当時のGBIF元レコード（`gbifID`、`datasetKey`）が別保存されているか探索する。見つからなければ、別日時で取得したデータを元のサンプルと区別し、許諾された新しい原レコード集合を重複除去したうえで、対応するDOIと査読用の実在する公開資料を作成する。
+
+## 20日最終保存形式・検証の統一
+
+同じ4シャードから作った最初の v1 JSON と、後から追加監査した canonical v2 JSON は、**1,596港・1,482提供元・3,138,675バッファ索引ヒットの数字が同じでも、JSONスキーマ・ハッシュが異なる**。2026-11-20の投稿監査上の現行版は上記の **v2 SHA256** で、Git blob SHA-1 `d963a1ebee0e28a91556d2a03ab9d60917ff3a95` にも独立照合済み。旧形式の復元ワークフローは、今後そのファイルを上書きできないよう read-only 照合に変更した。
+
+[現行ソースの小型監査JSON](VERIFIED_NEW1596_GBIF_SOURCE_SUMMARY_20261120.json)と、[純標準ライブラリでの全件SHA/提供元検証コード](../../scripts/verify_GEB_v05_new_port1596_attribution_20261120.py)を設けた。[現行 source-only CI #44750836606](https://github.com/zuizui0223/chocho/actions/runs/44750836606) は成功している。
