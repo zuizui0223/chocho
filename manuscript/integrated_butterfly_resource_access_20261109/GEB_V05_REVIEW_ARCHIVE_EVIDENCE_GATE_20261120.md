@@ -45,6 +45,14 @@ These are identification risks **inside the internal source preview**, not a cla
 
 **DOI scope rule:** `10.15468/dl.umqmsf` is exclusively the 224-butterfly GBIF acquisition; `10.15468/dl.pp5nc9` belongs to an older 31-butterfly pilot. Neither is a citation for the 155, 225×51, or 1,596-port datasets without an actual source match. No GBIF derived-dataset DOI has been registered in this audit.
 
+## November 20 — private source archive located and verified
+
+**This resolves the previously missing-file question, but not public/anonymous release permission.** A separate user-supplied recovery ZIP has been inspected in the current analysis environment: all three previously missing named inputs are present and match their manifest SHA256. Exact converted WPI GeoJSON source checksum `d580e8520dc5bd77c0ab464df3bdc9ea95653c47b00c42a510dc7c1519feaa78` agrees with the historical pinned source; the recovered historical Parquet checksum `8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f` also appears in prior original-source audit records.
+
+Original 3,630 WPI points and 1,596 completed botanical queries reproduce 194 original port coordinates on the selected 51 island groups. Independent calculation of all 1,275 archived pair distances differs by at most **6.61×10⁻¹¹ km**, confirming their geometry provenance. The recovered Parquet has **83,573** rows according to independently parsed footer metadata, and `speciesKey`/`landmass_id`/`year`/`records`/`precise1km_records`/`landmass_area_km2` as its six columns. **It does not contain original `datasetKey` or `gbifID`**, and the six-shard public51 JSON is only a query/aggregate validation receipt. The manifest reports 2,636 historical rows with `landmass_id=0`, which may conflict with older importer validation; rows were not deleted.
+
+**Private access and Git checkout are different states:** these originals remain absent from the GitHub source tree and are intentionally not uploaded, because the ZIP includes identifying local-path metadata and external data that require licence/rights review. See [the separate evidence-specific receipt](GEB_ORIGINAL_SOURCE_ZIP_RECOVERY_AUDIT_20261120.md) and locally runnable `scripts/verify_chocho_recovered_private_zip_20261120.py` (requires the original private ZIP; current GitHub Actions do not have these bytes). The full manuscript, DOI scope, original data rights and anonymous-review archive gates remain open.
+
 ## Exact release blockers after this audit
 
 1. **Dataset provenance:** recover actual original GBIF contributing dataset identifiers/counts for each distinct published query cohort, with licensed original data or clearly documented restrictions. Do not mint or cite a nonexistent derived DOI.
