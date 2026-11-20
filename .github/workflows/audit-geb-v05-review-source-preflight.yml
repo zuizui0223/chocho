@@ -1,0 +1,70 @@
+name: Audit current GEB v0.5 reviewer source package (internal, not anonymous)
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
+  pull_request:
+    branches:
+      - paper/geb-single-island-port-endemics-20261118
+    paths:
+      - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-current-review-source-lineage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: source_main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source and figure identity preflight; deliberately non-anonymous internal preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_GEB_v05_review_source_bundle_20261120.py
+          python -u current/scripts/audit_GEB_v05_review_source_bundle_20261120.py \
+            --current-root current \
+            --source-root source_main \
+            --out-dir dist/geb_v05_source_preflight
+          python - <<'PY'
+          import json,zipfile
+          from pathlib import Path
+          p=Path("dist/geb_v05_source_preflight")
+          j=json.loads((p/"GEB_V05_SOURCE_PREVIEW_AUDIT.json").read_text())
+          assert j["state"] == "INTERNAL_EVIDENCE_PREVIEW_ONLY_NOT_JOURNAL_REVIEW_ARCHIVE"
+          assert j["figures"]["main_svg_count"] == 4
+          assert j["figures"]["SI_svg_count"] == 2
+          assert j["figures"]["source_numeric_receipts"] == 8
+          assert all(x["exists"] for x in j["included_inventory"])
+          assert j["publication_gates"]["anonymous_reviewer_access_and_stable_archive"] == "BLOCKED"
+          z=p/"GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip"
+          with zipfile.ZipFile(z) as f:
+            assert f.testzip() is None
+            assert "README_INTERNAL_NOT_FOR_ANONYMOUS_REVIEW.md" in f.namelist()
+          print("GEB_V05_SOURCE_PREVIEW_INCOMPLETE_BY_DESIGN_PASS")
+          PY
+          sha256sum dist/geb_v05_source_preflight/* > dist/geb_v05_source_preflight/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-internal-source-evidence-preview-NOT-ANONYMOUS-NOT-SUBMISSION
+          path: dist/geb_v05_source_preflight/
+          if-no-files-found: warn
+          retention-days: 90
