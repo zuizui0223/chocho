@@ -238,19 +238,43 @@ def main():
         raise AssertionError("Unedited v0.3 full source archive is not byte-exact")
     original_references=original_suffix.split("## Supplementary results:",1)[0]
     current_references=main.split(ORIGINAL_PREFIX,1)[1].split("## Supplementary results:",1)[0]
-    original_reference_lines=[x for x in original_references.splitlines()[1:] if x.strip()]
-    added_references=(
-        "- MacArthur, R. H. & Wilson, E. O. (1967).",
-        "- Sax, D. F. & Gaines, S. D. (2008).",
-        "- McKinney, M. L. & Lockwood, J. L. (1999).",
-        "- Hobbs, R. J. et al. (2006)."
-    )
-    extra=[x for x in current_references.splitlines() if any(x.startswith(prefix) for prefix in added_references)]
-    if len(extra)!=4 or len({x.split("https://doi.org/")[-1] for x in extra})!=4:
-        raise AssertionError("All four new verified bibliographic records not present")
-    filtered=[x for x in current_references.splitlines() if x.strip() and x not in extra]
-    if filtered!=original_reference_lines:
-        raise AssertionError("Original bibliography entries were altered or lost")
+    original_reference_lines=[x for x in original_references.splitlines()[1:] if x.startswith("- ")]
+    current_reference_lines=[x for x in current_references.splitlines() if x.startswith("- ")]
+    verified_literature_dois={
+        "10.1111/geb.70292",  # Couto et al. 2026: global non-native Lepidoptera establishment
+        "10.1111/geb.70195",  # Hatfield et al. 2026: actual species-level beta turnover
+        "10.1073/pnas.0802290105",  # Sax & Gaines 2008
+        "10.1016/S0169-5347(99)01679-1",  # McKinney & Lockwood 1999
+        "10.1111/j.1466-822X.2006.00212.x",  # Hobbs et al. 2006
+    }
+    # MacArthur & Wilson book has no DOI; exact publication/author identity required.
+    def source_reference_identity(textline):
+        m=re.search(r"https://doi\.org/([^\s]+)",textline)
+        return m.group(1).lower() if m else textline.strip().lower()
+    def unique_by_identity(lines):
+        output={}
+        for item in lines:
+            key=source_reference_identity(item)
+            if key not in output:
+                output[key]=item
+        return output
+    original_by_id=unique_by_identity(original_reference_lines)
+    current_by_id=unique_by_identity(current_reference_lines)
+    for key,original_entry in original_by_id.items():
+        if key not in current_by_id or current_by_id[key]!=original_entry:
+            raise AssertionError("Original unique reference lost or altered: "+key)
+    added_references=[key for key in current_by_id if key not in original_by_id]
+    if len(added_references)!=6 or not verified_literature_dois.issubset(set(added_references)):
+        raise AssertionError("GEB exact published comparison and original theory references not all in sorted bibliography")
+    if not any("MacArthur, R. H. & Wilson, E. O. (1967)" in current_by_id[k] for k in added_references):
+        raise AssertionError("Original island biogeography book missing")
+    if len(current_by_id)!=len(current_reference_lines):
+        raise AssertionError("Duplicate citations remain in cleaned GEB bibliography")
+    if len(current_reference_lines)!=39:
+        raise AssertionError("Expected 39 distinct original+verified new GEB source references")
+    if current_reference_lines != sorted(current_reference_lines,
+        key=lambda row:re.sub(r"[^A-Za-z0-9]","",row[2:]).lower()):
+        raise AssertionError("References are not in consistent first-author alphabetic order")
     old_sup="## Supplementary results:"+old.split("## Supplementary results:",1)[1]
     actual_sup="## Supplementary results:"+main.split("## Supplementary results:",1)[1]
     replacements=(
