@@ -244,7 +244,7 @@ def main():
         "10.1111/geb.70292",  # Couto et al. 2026: global non-native Lepidoptera establishment
         "10.1111/geb.70195",  # Hatfield et al. 2026: actual species-level beta turnover
         "10.1073/pnas.0802290105",  # Sax & Gaines 2008
-        "10.1016/S0169-5347(99)01679-1",  # McKinney & Lockwood 1999
+        "10.1016/s0169-5347(99)01679-1",  # McKinney & Lockwood 1999
         "10.1111/j.1466-822X.2006.00212.x",  # Hobbs et al. 2006
     }
     # MacArthur & Wilson book has no DOI; exact publication/author identity required.
