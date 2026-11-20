@@ -113,7 +113,7 @@ def probe(source_root,gshhg_zip,work_dir,islands):
     src,filter_used=read_original_receipts(source_root)
     if not set(islands)<=set(src):
         raise ValueError("Requested island not present in original fixed source")
-    shape,audits,digest=original.load_polygons(gshhg_zip,work_dir,set(islands),4300)
+    # Original 2026-11-09 CI explicitly used --wkt-max-chars 2300, not default 4300.\n    shape,audits,digest=original.load_polygons(gshhg_zip,work_dir,set(islands),2300)
     if digest!=original.GSHHG_SHA256:
         raise ValueError("Original GSHHG archive source checksum mismatch")
     matched={}
