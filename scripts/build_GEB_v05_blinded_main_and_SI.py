@@ -127,8 +127,8 @@ def build(root,out):
         if "Supplement S.G.2–S.G.5" in line:
             line=line.replace("Supplement S.G.2–S.G.5","Appendix S5")
         converted.append(line)
-    mainbody="\\n".join(converted)+"\\n"
-    if re.search(r"Supplement S\\.[A-G]",mainbody):
+    mainbody="\n".join(converted)+"\n"
+    if re.search(r"Supplement S\.[A-G]",mainbody):
         raise RuntimeError("Legacy source appendix labels remain in GEB independent SI export")
     bodywords=len(re.sub(r"[*#]","",mainbody).split())
     if a_words>300 or bodywords>5000:
