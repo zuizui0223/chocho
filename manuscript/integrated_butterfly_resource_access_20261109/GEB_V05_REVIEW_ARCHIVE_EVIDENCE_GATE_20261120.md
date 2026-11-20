@@ -8,12 +8,15 @@ This gate belongs to new Draft PR #189 and changes **no manuscript result, figur
 ## Executed, inspectable audit
 
 - Independent review-pack audit code: `scripts/audit_GEB_v05_review_source_bundle_20261120.py`.
-- CI: https://github.com/zuizui0223/chocho/actions/runs/44678394840
+- **Final source-ZIP extraction/replay CI (SUCCESS):** https://github.com/zuizui0223/chocho/actions/runs/44678903555 ; [artifact #14603227495](https://github.com/zuizui0223/chocho/actions/runs/44678903555/artifacts/14603227495) (90-day retention, internal/non-anonymous).
+- Initial inventory-only CI: https://github.com/zuizui0223/chocho/actions/runs/44678394840
 - Previous zipped internal preview: https://github.com/zuizui0223/chocho/actions/runs/44678230957/artifacts/14603351378 (90-day GitHub retention, not archival DOI).
 - Two Git checkouts are essential: **paper branch** and pinned original numerical source commit
   `3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250`. Selected original figure model receipts are **not** at their original paths in the paper checkout alone. A single-branch ZIP could conceal this gap.
 - **35 input/code/numeric files** were present, hashed SHA256 and copied into an INTERNAL evidence preview; four current Figure SVGs and two actual SI SVGs parsed, and the eight figure numeric source paths were found at the frozen source commit. Fixed 239×126 and 123-active-island isolation panel values were cross-checked.
 - The preview contains selected code, figure receipts, SVGs, and derived summary tables. It **does not** contain all third-party original records or claim end-to-end raw-data reproduction. ZIP hash and machine-readable per-file inventory are emitted by the Action.
+- **Subanalysis actually replayed from the extracted ZIP:** the frozen 126-island fixed-239 source model and 2,000-km Moran/MEM10 analysis, after downloading and SHA256-verifying the pinned official TDWG Level3 boundary GeoJSON. Recomputed port/flora, native and current host-slope contrast, and introduced-only-resource share coefficients matched the article's frozen numeric receipt to 1e−4. This independently tests **one** model family from packaged source tables, not the historical plant/GBIF record extraction or the 155/224 butterfly analyses. CI label: `ZIP_EXTRACTED_FIXED239_AND_MEM10_SUBANALYSIS_REPLAY_SOURCE_EXACT`.
+- Three explicitly referenced **original input paths were absent from both inspected Git trees** (paper snapshot `99b8764` and pinned source `3dbf038`): `work/barriers/ports_2019.geojson`, `work/barriers/global_original_species_island_year.parquet`, and `data/exploratory/public51_butterfly_index_20261109/full51_source_validation.json`. They could exist in private archives or old Action artifacts, but are not reproducibly checked out from either Git commit.
 
 ## Explicit author-anonymity findings
 
