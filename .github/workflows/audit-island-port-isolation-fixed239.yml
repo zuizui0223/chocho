@@ -1,0 +1,70 @@
+name: Audit fixed239 island isolation and ports
+
+on:
+  pull_request:
+    branches:
+      - paper/geb-single-island-port-endemics-20261118
+    paths:
+      - "scripts/audit_island_port_isolation_239_20261120.py"
+      - ".github/workflows/audit-island-port-isolation-fixed239.yml"
+  push:
+    branches:
+      - analysis/isolation-port-resource-replication-20261120
+    paths:
+      - "scripts/audit_island_port_isolation_239_20261120.py"
+      - ".github/workflows/audit-island-port-isolation-fixed239.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-fixed239:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install declared scientific dependencies
+        run: python -m pip install "numpy>=1.26,<3" "pandas>=2.2,<3" "statsmodels>=0.14,<1" "scipy>=1.13,<2" "shapely>=2,<3" "pyproj>=3.6,<4" "matplotlib>=3.9,<4"
+      - name: Fetch immutable original WGSRPD3 boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p source
+          curl --fail --location --silent --show-error --retry 4 --retry-delay 5             https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson             --output source/wgsrpd3.original.geojson
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path("source/wgsrpd3.original.geojson")
+          obj=json.loads(p.read_text())
+          assert len(obj["features"])==369, len(obj["features"])
+          print("ORIGINAL_TDWG_L3",len(obj["features"]),"sha256",hashlib.sha256(p.read_bytes()).hexdigest())
+          PY
+      - name: Independent frozen-239 source analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_island_port_isolation_239_20261120.py
+          python scripts/audit_island_port_isolation_239_20261120.py             --port-flora results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv             --region-hosts results/island-mainland-resource-q1/region_metrics.csv             --tdwg-geojson source/wgsrpd3.original.geojson             --out-dir dist/isolation_port_239 > dist_result.log 2>&1 || { tail -100 dist_result.log; exit 1; }
+          tail -c 14000 dist_result.log
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("dist/isolation_port_239/SOURCE239_ISOLATION_PORT_REANALYSIS.json")
+          r=json.loads(p.read_text())
+          assert r["models"]["counts"]["islands"]==126
+          assert r["models"]["counts"]["hosts_239_current_units"]>r["models"]["counts"]["hosts_239_native_units"]
+          print("REPLICATION_REPORT",p)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolation-port-239-sources-results-and-figure
+          path: |
+            dist/isolation_port_239/
+            dist_result.log
+          retention-days: 90
