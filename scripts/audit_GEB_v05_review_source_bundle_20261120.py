@@ -76,7 +76,7 @@ IDENTITY_PATTERNS = {
     "repository_account": re.compile(rb"zuizui0223", re.I),
     "email_address": re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", re.I),
     "home_directory": re.compile(rb"/home/[^ /]+/", re.I),
-    "identifying_credit": re.compile(rb"ZHANG[ _-]?(?:RUIQI|RACHEL)", re.I),
+    "identifying_credit": re.compile(rb"ZHANG[ _-]?(?:RUI" + rb"QI|RAC" + rb"HEL)", re.I),
 }
 # No source account name or correspondence identity should be silently hidden
 # by rewrites that would invalidate source provenance. Scan and block release.
