@@ -1,0 +1,59 @@
+{
+  "schema": "chocho_GEB_v05_all1596_new_GBIF_port_source_summary_20261120_v1",
+  "status": "NEW_2026_11_20_SNAPSHOT_FULL_SOURCE_PROVIDERS_VALIDATED;HISTORICAL_ORIGINAL_PUBLISHER_DOI_UNRESOLVED",
+  "original_source": {
+    "git_commit": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
+    "original_WPI_candidate_ports": 3630,
+    "original_GBIF_speciesKey_facet_query_complete_ports": 1596,
+    "original_WPI_centres_match_public_mirror_at_6_decimals": true,
+    "original_GBIF_plant_publisher_datasetKeys_recovered": false
+  },
+  "new_2026_11_20_GBIF_source": {
+    "source_shards_workflow": "https://github.com/zuizui0223/chocho/actions/runs/44742493164",
+    "source_shards_completed": 4,
+    "source_shard_ports": [
+      399,
+      399,
+      399,
+      399
+    ],
+    "successful_offline_aggregation_and_git_archive": "https://github.com/zuizui0223/chocho/actions/runs/44750091122",
+    "source_file": "results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json",
+    "source_file_sha256": "e79c3ad437d484424d41a5fc8e784c9c829070d740f1120be769d5a2d69548b6",
+    "source_file_git_blob": "d963a1ebee0e28a91556d2a03ab9d60917ff3a95",
+    "start_utc": "2026-11-20T13:14:05.860948+00:00",
+    "end_utc": "2026-11-20T13:24:06.391464+00:00",
+    "source_query": "GBIF occurrence/search; Plantae taxonKey=6; 2001-2024; geoDistance 5km using original WPI2019 centre to 6 decimals; PRESENT; valid geospatial coordinate; facet=datasetKey",
+    "complete_original_WPI_port_roster_reindexed": 1596,
+    "GBIF_positive_port_search_buffers": 1461,
+    "GBIF_zero_index_port_search_buffers": 135,
+    "distinct_current_GBIF_datasetKeys": 1482,
+    "sum_GBIF_port_buffer_record_hits_including_overlap": 3138675,
+    "top1_source_datasetKey": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+    "top1_source_provider_port_buffer_record_hits": 851148,
+    "top1_aggregate_share_of_port_buffer_hits": 0.27118067337331836,
+    "top1_number_of_port_buffers_including_dataset": 1342,
+    "top10_provider_aggregate_share_of_port_buffer_hits": 0.7225507578835018,
+    "seven_port_previous_GBIF_pilot_index_counts_reproduced": {
+      "2": 1034,
+      "28": 4285,
+      "33": 5565,
+      "145": 16,
+      "425": 4544,
+      "428": 1363,
+      "609": 3614
+    },
+    "duplicate_or_missing_original_port_IDs": 0,
+    "sum_of_provider_counts_equals_sum_of_current_GBIF_index_hits": true,
+    "four_shard_historical_snapshot_not_simultaneous": true
+  },
+  "citation_and_scientific_guards": {
+    "historic_2026_original_GBIF_faceted_1596_datasetKey_attribution_completed": false,
+    "retrospectively_minted_GBIF_derived_DOI": false,
+    "source_WPI_original_5km_WKT_buffer_is_exactly_current_GBIF_geoDistance_5km": false,
+    "old_155_224_butterfly_download_DOI_must_not_be_reused": true,
+    "counts_are_not_unique_occurrence_records_due_to_port_buffer_overlap": true,
+    "GBIF_indexed_plant_records_are_not_host_use_or_shipborne_introduction": true,
+    "old_paper_original_effect_estimates_modified": false
+  }
+}
