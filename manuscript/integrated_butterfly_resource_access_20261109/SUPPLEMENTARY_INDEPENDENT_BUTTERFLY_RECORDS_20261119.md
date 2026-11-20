@@ -53,3 +53,18 @@ No above result identifies a dated source ship carrying a known-host plant to a 
 ### Reproducibility and decision gate
 
 The exact original GBIF DOI, source file SHA, source-only prediction protocol, complete 169-region folds, all eight Level1 holdouts, Monte Carlo seed/draw lists and positive and negative source estimates are linked in the main repository's [source-qualified PR #179 evidence register](https://github.com/zuizui0223/chocho/blob/main/results/pr179_source_evidence_20261119/README.md). The original source model and each new refinement are reproducible without treating GBIF first-index presence as colonization. Source historical DOIs, media attribution, anonymization and coauthor approval remain **unresolved** before submission.
+
+## S.G.7. Original independently recorded butterfly host predictor is sensitive to eligible-region thresholds
+
+**Reconstructed original source scores, reported here because the original 133/194-region adverse/positive sensitivity was absent numerically from the prior SI.** We compared the *original unthinned recorded GBIF224* H-after-O region-equal relative MSE improvement across three **source-defined, overlapping regional eligibility populations**. All original model folds and scores were reproduced before 4,999 region bootstrap resamples; the bootstrap values below are descriptive because folds reuse dyads and training data.
+
+| Original effort criterion | Botanical regions | Butterfly region dyads | H-after-O MSE gain | Regional resample 2.5–97.5% range | Regions improving |
+|---|---:|---:|---:|---:|---:|
+| Relaxed: 5 eligible butterflies, ≥5 prior / ≥10 later dataset-days | **194** | **18,721** | **+0.3325%** | +0.0712 to +0.5770% | 123/194 |
+| Main: 5 species, ≥10 prior / ≥20 later dataset-days | **169** | **14,196** | **+0.0913%** | **−0.0915 to +0.2621%** | 96/169 |
+| Stringent: 10 species, ≥20 prior / ≥50 later dataset-days | **133** | **8,778** | **−0.0764%** | −0.1554 to −0.0007% | 59/133 |
+
+This is an explicit **source-eligibility and geography shift**, not a controlled manipulation of true observer effort; neither the relaxed nor stringent result is an independent population replicate. Thus the original regional H-after-O prediction increment **is not sign-stable across original record-effort eligibility thresholds**. The later 29×2 observation-intensity matching simulations in S.G.3–5 use the fixed primary 169-region cohort, and **do not erase** this source-selection vulnerability. All positive resource geography, port-associated whole flora, independent 155-species retrospective indexing and direct observed larval-use results are unaffected.
+
+The full exact 169/194/133 source score JSON is [the source-verified PR #183 eligibility/uncertainty audit](https://github.com/zuizui0223/chocho/blob/main/results/gbif224_region_uncertainty_20261119/VERIFIED_GBIF224_REGION_UNCERTAINTY_20261119.json), run [#44452349265](https://github.com/zuizui0223/chocho/actions/runs/44452349265). Original data source DOI **10.15468/dl.umqmsf**.
+
