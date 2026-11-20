@@ -212,9 +212,40 @@ from two SI figures and from the source-manuscript v0.2 submission scripts.
 Source attribution and data licensing still require human confirmation before
 any sharing beyond this internal GitHub Actions QA. No DOI was minted.
 """
+    replay_guide = """#!/usr/bin/env bash
+# Internal reproduction of one 126-island / fixed-239 *potential host* submodel.
+# NOT reproduction of original WCVP/HOSTS extraction or all GEB endpoints.
+set -euo pipefail
+cd "$(dirname "$0")"
+python -m pip install "numpy>=1.26,<3" "pandas>=2.2,<3" \
+    "statsmodels>=0.14,<1" "scipy>=1.13,<2" \
+    "shapely>=2,<3" "pyproj>=3.6,<4" "matplotlib>=3.9,<4"
+mkdir -p external_geojson fixed239_recomputed
+curl --fail --silent --show-error --location --retry 4 \
+  https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson \
+  -o external_geojson/level3.geojson
+python - <<'PY'
+from pathlib import Path
+import hashlib
+expected="c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840"
+actual=hashlib.sha256(Path("external_geojson/level3.geojson").read_bytes()).hexdigest()
+assert actual == expected, (actual,expected)
+PY
+python current_paper/scripts/audit_island_port_isolation_239_20261120.py \
+  --port-flora current_paper/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+  --region-hosts current_paper/results/island-mainland-resource-q1/region_metrics.csv \
+  --tdwg-geojson external_geojson/level3.geojson \
+  --out-dir fixed239_recomputed
+python current_paper/scripts/audit_island_port_spatial_239_20261120.py \
+  --island-csv fixed239_recomputed/fixed239_source_islands_with_isolation.csv \
+  --tdwg-geojson external_geojson/level3.geojson \
+  --out-dir fixed239_recomputed
+echo "INTERNAL_FIXED239_REPLAY_SUCCESS_NOT_FULL_GEB_REPRODUCTION"
+"""
     reportname = "README_INTERNAL_NOT_FOR_ANONYMOUS_REVIEW.md"
     with ZipFile(out / "GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip", "w") as z:
         canonical_zip(reportname, guide.encode("utf-8"), z)
+        canonical_zip("RUN_FIXED239_REPLAY_INTERNAL.sh", replay_guide.encode("utf-8"), z)
         for (origin, p), data in sorted(staged, key=lambda item: (item[0][0], str(item[0][1]))):
             canonical_zip(f"{origin}/{p.as_posix()}", data, z)
         canonical_zip("GEB_V05_SOURCE_PREVIEW_AUDIT.json",
@@ -222,9 +253,9 @@ any sharing beyond this internal GitHub Actions QA. No DOI was minted.
         canonical_zip("SOURCE_PREVIEW_MANIFEST.csv",
                       (out / "SOURCE_PREVIEW_MANIFEST.csv").read_bytes(), z)
     with ZipFile(out / "GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip") as z:
-        assert len(z.namelist()) == len(staged) + 3
+        assert len(z.namelist()) == len(staged) + 4
         assert all(name.startswith(("current_paper/", "immutable_numeric_source/"))
-                   or name in (reportname, "GEB_V05_SOURCE_PREVIEW_AUDIT.json",
+                   or name in (reportname, "RUN_FIXED239_REPLAY_INTERNAL.sh", "GEB_V05_SOURCE_PREVIEW_AUDIT.json",
                                "SOURCE_PREVIEW_MANIFEST.csv") for name in z.namelist())
     return report
 
