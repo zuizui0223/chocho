@@ -210,6 +210,11 @@ Four figures appear in order of the main Results. Recent source-locked independe
 - Vargas, P., Heleno, R. & Costa, J. M. (2023). EuDiS — A comprehensive database of the seed dispersal syndromes of the European flora. *Biodiversity Data Journal*, **11**, e104079. https://doi.org/10.3897/BDJ.11.e104079
 - Vargas, P., Heleno, R. & Costa, J. (2025). *EuDiS — A comprehensive database of seed dispersal syndromes of the European flora*, source-used version 5 [data set]. Figshare. https://doi.org/10.6084/m9.figshare.22251028.v5
 
+- MacArthur, R. H. & Wilson, E. O. (1967). *The Theory of Island Biogeography*. Princeton University Press.
+- Sax, D. F. & Gaines, S. D. (2008). Species invasions and extinction: The future of native biodiversity on islands. *Proceedings of the National Academy of Sciences*, **105**(Supplement 1), 11490–11497. https://doi.org/10.1073/pnas.0802290105
+- McKinney, M. L. & Lockwood, J. L. (1999). Biotic homogenization: a few winners replacing many losers in the next mass extinction. *Trends in Ecology & Evolution*, **14**, 450–453. https://doi.org/10.1016/S0169-5347(99)01679-1
+- Hobbs, R. J. et al. (2006). Novel ecosystems: theoretical and management aspects of the new ecological world order. *Global Ecology and Biogeography*, **15**, 1–7. https://doi.org/10.1111/j.1466-822X.2006.00212.x
+
 **Reference scope:** The article and dataset names/DOIs above were checked against the publisher, PubMed, museum or dataset landing records. This does not replace a final GEB-style author-list, punctuation and citation-in-text audit. The **WCVP v13 version and DOI are now traced to the pinned 2024 source and Kew archival dataset**; the 2019 WPI identity crosswalk beyond a source fingerprint, raw-data sharing permissions and **independent GBIF acquisition DOIs** still require documentation in [REFERENCE_DATA_ATTRIBUTION_AUDIT_V03.md](REFERENCE_DATA_ATTRIBUTION_AUDIT_V03.md). The `rWCVPdata` v13 embedded citation points to DOI `10.34885/nswv-8994`, which Kew currently identifies as **WCVP v10**; this manuscript deliberately cites the correct **v13 DOI `10.34885/0yex-xv26`**.
 
 ## Supplementary results: island record histories and maritime comparisons
@@ -322,6 +327,8 @@ Wild *Pieris cheiranthi* L4 larval use of introduced *Tropaeolum majus* on Tener
 
 ### S.F. Full island–port–marine estimates, alternate comparisons and prior main-text detail
 
+**Provenance:** The entire earlier reference list and supplementary source, before editorial heading renumbering, is preserved verbatim in the [original unedited v0.3 References and Supplement S.A–S.F](SUPPLEMENTARY_LEGACY_REFERENCES_AND_APPENDICES_V03_UNEDITED.md). Only heading structure was regularized; source-positive and adverse numerical prose remains intact.
+
 **Island–mainland decomposition of resource assemblage similarity (new source-locked analysis).** Using the exact original PR #118 binary matrix (239 butterflies; 369 official botanical regions; native **26,530** and contemporary **41,083** resource units), we scored only the **355** regions with nonempty native candidate-host resources. The total **62,835** non-independent region pairs have mean Jaccard change **+0.1851015**, exactly reproducing the original global source. By region status, **6,328 island–island** pairs changed by **+0.2366674**, **27,730 mainland–mainland** by **+0.1504446**, **26,668 island–mainland** by **+0.2138117**; the raw island–island minus mainland–mainland delta was **+0.0862227**. Baseline means were **0.1727** for island–island and **0.3711** for mainland–mainland: different starting resource pools require separate interpretation. The original **126 island / 237 mainland / 6 mixed** regions yielded **113/236/6** with native resources; 13 island and one mainland regions lacked *documented* native known-host resources and were excluded from the nonempty comparison, **not treated as true species absences**.
 
 **Degree-preserving geographical nulls (199 sequential, correlated swaps each; new run).** Both constrained 2×2 source rewiring methods held all native species×region entries fixed, preserved each butterfly's exact number of newly accessible regions and each region's exact number of newly supported butterflies, and never placed a new gain over a native resource. The original Level1-only null was re-run with its original seed to reproduce global mean **+0.1815811**; for the island–island minus mainland–mainland observed difference **+0.0862227**, the source restricted null median was **+0.0795367**, leaving **+0.0066860**. A stricter null also preserved species-specific additions **within each Level1 × island/mainland/mixed class**; its contrast median was **+0.0850338**, leaving just **+0.0011889**. Comparing only same-Level1 island and mainland pairs under the stricter null gave a residual **−0.0001083**. Both methods used **199 serial MCMC draws**, not independent sampling experiments; descriptive tail frequencies are not confirmatory p-values. The stricter conditioning absorbs variation in whether a butterfly's added resources were located on islands, and the small remaining excess cannot identify plant trafficking, sea-current dispersal, butterfly colonization or demographic convergence. The original +54.9% resource and +118.9% island-proportional gains retain their separate denominators. [Protocol](../../results/island_mainland_butterfly_resource_beta_20261118/PROTOCOL.md), [full method/result report](../../results/island_mainland_butterfly_resource_beta_20261118/README_JA.md), [machine-readable source receipt](../../results/island_mainland_butterfly_resource_beta_20261118/VERIFIED_ISLAND_MAINLAND_SOURCE_SUMMARY.json), [executed CI #44299353236](https://github.com/zuizui0223/chocho/actions/runs/44299353236).
@@ -402,7 +409,7 @@ The plant and butterfly layers have different units, species filters, geography 
 
 The reverse-time host benchmark is not a causal negative-control experiment: plants recorded near ports in 2001–2010 may have existed there much earlier, while butterfly record detectability, digitisation and taxonomic reporting differ between the historical windows. The 51-landmass GBIF panel comprises selected port-linked groups and uses a new 2026 public index rather than the unavailable 83,573-row author original. Non-indexing is not absence, first indexing is not first arrival, and the independently dated source distances are among sampled landmasses only. A subsequent all-cell 1700–2000 GBIF historical-index check found prior source records for **145 of 317 (45.7%)** apparent post-2010 first-index species–island cells defined by an empty 2001–2010 window. Older published island faunal reports also precede several of the remaining cases; neither a longer-window first index nor a newly indexed adult establishes colonization or breeding. Pairwise Jaccard rows reuse the same island identities and do not constitute 1,275 independent biological replicates. Modelled electrical marine resistance, current concentration, present-day port abundance and maritime activity proxies must not be interpreted as realized immigration, ship routes or historically dated propagule delivery. The conditional randomisations are retrospective and multiple comparisons are exploratory. The jointly fitted host–marine regressions permit predictors from a held island's contemporary host inventory, so they are retrospective held-island rather than full prospective establishment forecasts. The separate 990-pair test with both endpoints geographically unseen shows both smaller positive AIS-only gains and adverse AIS-plus-wind results. The 17-island port/nonport coastal pilot has selection on previous botanical recording and incompletely matched habitat and survey effort. Although results about the geography of *recording* are reproducible, no integrated historical island host × access × butterfly establishment likelihood is estimated.
 
-**conclusions.** ## 6. Conclusions
+**Archived v0.3 conclusions.**
 
 Moving **already-known larval-host plants** changes the geography of potential resources even when butterfly diets are held fixed: across 239 butterflies, introduced host ranges added **14,553 butterfly × botanical-region combinations (+54.9%)**. The disproportionately large **relative** island expansion (+118.9%, versus +40.9% on the mainland) arose mainly because fewer butterfly–region combinations initially contained native hosts on islands—not because introduced hosts filled a greater share of resource gaps. This distinguishes a change in consumer resource geography from a change in dietary specialization.
 
@@ -414,9 +421,9 @@ Complementary analyses add two consumer-facing endpoints: regionally localized *
 
 **Editorial source archive of the complete prior main-text panels moved for word count (no estimates deleted).**
 
-#### port whole flora results
+#### S.F.1. Port whole flora results
 
-### 3.2. Globally influential host plants in island port vegetation
+**Archived v0.3 result: globally influential host plants in island port vegetation.**
 
 We followed the same plant species from the global reconstruction into dated port inventories (Figure 2). The **ten most influential plants** in the global resource calculation supplied **25.1%** of added opportunity across the 239 butterflies. **Eight of those ten species** had a 2001–2010 accepted-name GBIF index in at least one of **38 surveyed port buffers on 17 landmasses** (contributor credits together accounting for **20.7%** of the global added units). *Medicago sativa* appeared at **7 ports/3 landmasses**, *Poa pratensis* at **8/4**, and *Dactylis glomerata* at **9/5**.
 
@@ -440,17 +447,17 @@ Among **98 botanical-effort-covered insular regions**, higher modern World Port 
 
 The introduced-host reports included **125/321 (38.9%)** exact FAO crop species, indicating strong agricultural/resource reporting contexts. Extra alien-host preference beyond plant-family and botanical supply was not independently established. The much fuller crop, geography and HOSTS sampling audits are preserved in Supplementary Results S.F.
 
-#### endemic source selection
+#### S.F.2. Endemic source selection
 
-### 3.3. Source-independent island-endemic larvae reveal local use but also incomplete coverage
+**Archived v0.3 result: source-independent island-endemic larvae and incomplete taxonomic coverage.**
 
 From the external Macaronesian checklist, **18 of 41 living butterfly taxa** were independently classified as endemic (13 Canary, three Madeira, two Azores). **None of these 18 endemics** was included in the frozen original 339-species source or the GEB **239-butterfly** model (versus **13/23** living nonendemics in the final panel). Just eight of the 18 endemic species had named accepted host-plant *species* in the curated sources. Applying the original WCVP method to their currently documented plants yielded positive extra *global botanical resource regions* for four taxa: *Pieris cheiranthi* **2→80**, *Euchloe grancanariensis* **30→77**, *E. hesperidum* **60→111** and *Pararge xiphioides* **92→101**. However, none of the eight gained a newly host-present region within its **home archipelago**. Because additional undocumented native hosts could reduce an apparent introduced-only gain, **4/8 is neither a representative rate nor a lower bound for all 18 endemics**.
 
 Original photographic records independently show a wild L4 larva of Canary-endemic *P. cheiranthi* on accepted introduced *Tropaeolum majus* on **Tenerife** in 2015 and another larva on the same named plant in a **La Palma garden** in 2011. WCVP and the Canary alien-flora registry confirm the regional introduced status of that plant; native host alternatives are also documented. A separate field study recorded **15 wild larvae of *E. grancanariensis*** on native *Hirschfeldia incana* (five pupated, adult emergence unverified), and documented *Gonepteryx cleobule* eggs and larvae on native *Rhamnus crenulata*. These establish **individual larval use of named plants**, not historical plant importation, a newly founded butterfly population, increased recruitment or an island-level prevalence of alien-host dependence (Supplementary Results S.E; [source and evidence classification](SUPPLEMENTARY_ENDEMIC_HOST_VALIDITY_20261118.md)).
 
-#### predictive source results
+#### S.F.3. Independent butterfly recording source results
 
-### 3.4. Independent butterfly-record prediction supports an information role for host geography
+**Archived v0.3 result: independent butterfly-record prediction and host-geography information.**
 
 In a separate **155-butterfly** evaluation, adding known larval-host resources and host-family composition to a climate-, land-cover-, geography- and earlier-record-based model improved prediction of **later GBIF recording probability**, rather than merely increasing a plant-defined envelope. Species-equal MSE decreased from **0.032064 to 0.030743** (**4.12%**) for **208,482** time-held test combinations. Retaining spatial blocks outside training reduced MSE from **0.032327 to 0.031359** (**3.00%**); the subset at least **100 km** from training cells improved **2.74%**, without constituting an independent model fit. The host-informed model improved MSE for **119/155** butterflies in temporal evaluation and **115/155** in spatial evaluation. Fixed-prediction resampling intervals for both positive differences excluded zero.
 
@@ -467,17 +474,17 @@ This improvement also appeared when the focal butterfly lacked an immediate prio
 
 These observations provide a complementary butterfly-recording endpoint, but the **155 recording species**, **239 global resource species**, and **51 selected island landmasses** represent different analysis populations. Current host distributions may postdate the butterfly records; neither model comparison establishes introduced-host feeding, a historical island arrival or a causal port–ocean-access pathway. Full model differences, recording-quality sensitivities and the original source-lock audit are documented in Supplementary Results S.A and the [155-species transfer audit](../../results/host_prediction_transfer_bridge_20261115/README.md). A selected **31-species** independent GBIF-DOI island overlap check did **not** show a positive surplus of butterfly source records in regions supported **only** by introduced known hosts after conditioning on species, island source margins and broad biogeography (13 observed versus 12.87 null expectation; Supplementary Results S.A); the positive 155-species prediction results must not be attributed specifically to alien hosts.
 
-#### historical record safeguards
+#### S.F.4. Historical record safeguards
 
-### 3.6. Historical butterfly records constrain a port–host establishment interpretation
+**Archived v0.3 result: historical butterfly records constrain a port–host establishment interpretation.**
 
 An observational reverse-time check on **8,100 butterfly × landmass cells** compared fixed 2001–2010 port-host inventories with butterfly records indexed before and after that inventory. With species and island fixed effects, native-only known-host records were associated with butterfly indexing **already in 1700–2000** (**+17.11 percentage points**, approximate 95% **+11.86 to +22.36**) as well as **2011–2022** (**+19.09**, **+12.82 to +25.36**). For introduced-only candidate hosts, the corresponding coefficients were **+1.93** (−0.31 to +4.16) and **+3.07** (+0.27 to +5.87). The paired same-cell *later-minus-pre-2001* introduced-only coefficient difference was **+1.14 percentage points** (−0.89 to +3.18). The contemporary host-index association therefore cannot be identified as a newly created introduced-host-specific colonization effect. The historical source windows differ strongly in recording effort and duration, so these are observation-index contrasts rather than inferred changes in populations (Supplementary Results S.C).
 
 Positive retrospective first-index associations also occurred in separate, smaller island samples: among 26 islands with both native-only and mixed-origin port-host categories represented within the retained species and islands, the adjusted mixed-minus-native-only annual first-index difference was **+0.545 percentage points** (approximate 95% **+0.094 to +0.997**). The comparable additional-destination sample retained 18 islands and gave **+0.223** (−0.348 to +0.795). Moreover, in all ten named cases where a candidate introduced port host preceded the butterfly record and a regional native alternative existed, compatible native hosts were also indexed near those ports. A full 1700–2000 source-history search found earlier butterfly indices for **145/317** apparent post-2010 first records defined solely by an empty 2001–2010 window. These distinct selected cohorts cannot be combined as independent establishment events, and the positive historical index association is retained without treating it as proven port-mediated arrival or successful larval recruitment (Supplementary Results S.B–S.D).
 
-#### data availability concise
+#### S.F.5. Historical data and code availability (source archive)
 
-## Data and code availability (draft; final rights and archive check required)
+**Archived v0.3 data-availability detail (supplementary source record).**
 
 The independently reprocessed NHM HOSTS source is version-pinned to GloBI HOSTS commit `808e0b869f9ec1adf8efff87cf6a395adda103e0` (NHM portal query DOI 10.5519/qd.bsucrxdz), with the original 140,485 raw records left in its source repository. The new analysis includes exact accepted-plant WCVP v13 resolution, location-to-WGSRPD3 crosswalk, FAO crop-taxonomy parser output, and a 24-scope locality-level table, archived in [source-linked research PR #162](https://github.com/zuizui0223/chocho/pull/162). The raw HOSTS literature entries and location labels do not contain verified field feeding coordinates; these reports are an observational host-use layer.
 
@@ -493,7 +500,7 @@ For the new island record analysis, a derived **11,475-row, 225-butterfly × 51-
 
 The main figures are presented in the source-named formats listed in the Figure legends; the new Figure 4 is a source-driven SVG, whereas the archived Figure 4 source fit and numerical receipt are retained separately for supplementary inspection. Final data licences, source metadata/GBIF citations for all independent acquisitions, coauthor rights, long-term repository DOI, unblinded/anonymous submission-package segregation and figure accessibility remain to be audited before submission.
 
-### Source archive and reproducibility pointers (NOT independent extra studies)
+#### S.F.6. Source archive and reproducibility pointers (NOT independent extra studies)
 
 1. Frozen original butterfly global manuscript: ../butterfly_specialization_ecology_v0.2.md (239-species source, claims and supplementary methods).
 2. Frozen island-port manuscript from the separate source branch: https://github.com/zuizui0223/chocho/blob/manuscript/island-resources-marine-access-jbi-v02-20261108/manuscript/island_resources_marine_access_20261108/ISLAND_RESOURCES_MARINE_ACCESS_MANUSCRIPT_V02.md .
@@ -506,7 +513,7 @@ The main figures are presented in the source-named formats listed in the Figure 
 
 ---
 
-## v0.3 provenance and scientific claims
+#### S.F.7. Original v0.3 provenance and scientific claims
 
 - **No new models fitted for this revision.** The [archived 51-island joint result](../../results/island51_host_circuit_joint_20261106/README.md), its [complete 10 contrasts](../../results/island51_host_circuit_joint_20261106/comparison_summary.csv), and the stricter [990-pair cross-community result](../../results/island51_cross_community_marine_20261107/README.md) already exist in the repository and are now explicitly integrated into the scientific argument.
 - Existing v0.2 main Figure 1–5 rendering, 27-claim ledger, 239-species global increase, 126/237 area-matched resource analysis, 98-region port coefficient, 155-species record prediction, 225×51 community similarity and original historical host nulls are preserved rather than replaced.
