@@ -20,7 +20,7 @@ permissions:
 jobs:
   verify-current-review-source-lineage:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -61,6 +61,48 @@ jobs:
           print("GEB_V05_SOURCE_PREVIEW_INCOMPLETE_BY_DESIGN_PASS")
           PY
           sha256sum dist/geb_v05_source_preflight/* > dist/geb_v05_source_preflight/SHA256SUMS.txt
+      - name: Extract the preview ZIP and independently replay the fixed-239 isolation analyses
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p replay
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path("dist/geb_v05_source_preflight/GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip")
+          with ZipFile(p) as z:
+              assert z.testzip() is None
+              z.extractall("replay")
+          PY
+          bash replay/RUN_FIXED239_REPLAY_INTERNAL.sh > replay_run.log 2>&1 || { tail -100 replay_run.log; exit 1; }
+          tail -c 2500 replay_run.log
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          expected=json.loads(Path("replay/current_paper/results/isolation_port_resource_reanalysis_20261120/SOURCE239_PAPER_RECEIPT_V01.json").read_text())
+          root=Path("replay/fixed239_recomputed")
+          baseline=json.loads((root/"SOURCE239_ISOLATION_PORT_REANALYSIS.json").read_text())
+          spatial=json.loads((root/"SOURCE239_MORAN_MEM10_SPATIAL_SENSITIVITY.json").read_text())
+          def close(a,b,n):
+              assert abs(float(a)-float(b))<0.0001,(n,a,b)
+          models=baseline["models"]
+          paper=expected["models"]
+          close(models["host_native_239"]["distance"]["beta"],paper["native_host239"]["distance_beta"],"native_distance")
+          close(models["host_current_minus_native_z"]["distance"]["beta"],paper["paired_native_current_shift"]["distance_beta"],"slope_shift")
+          close(models["plant_introduced"]["ports"]["beta"],paper["introduced_flora"]["ports_beta"],"port_alien")
+          close(models["introduced_only_share_logodds_239"]["distance"]["beta"],paper["introduced_only_share_logodds"]["distance_beta"],"share")
+          for key,receiptkey,term in [
+            ("host_native_239","native_host","distance"),
+            ("host_current_minus_native_z","paired_current_minus_native","distance"),
+            ("introduced_only_share_logodds_239","introduced_only_share_logodds","distance"),
+            ("plant_introduced","introduced_whole_flora","ports")]:
+              close(spatial["results"][key]["spatial_MEM10"][term]["beta"],
+                    expected["spatial_sensitivity"]["spatial_mem10"][receiptkey][term+"_beta"],key)
+          assert baseline["models"]["counts"]["islands"]==126
+          assert spatial["active_resource_islands"]==123
+          print("ZIP_EXTRACTED_FIXED239_AND_MEM10_SUBANALYSIS_REPLAY_SOURCE_EXACT")
+          PY
+          cp replay_run.log dist/geb_v05_source_preflight/fixed239_replay.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
