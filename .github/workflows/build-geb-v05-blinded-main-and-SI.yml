@@ -1,0 +1,92 @@
+name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/build_GEB_v05_blinded_main_and_SI.py
+      - .github/workflows/build-geb-v05-blinded-main-and-SI.yml
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - manuscript/integrated_butterfly_resource_access_20261109/GEB_SUPPORTING_INFORMATION_V05.md
+      - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
+      - figures/integrated_island_port_butterfly_v03/**
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/build_GEB_v05_blinded_main_and_SI.py
+      - manuscript/integrated_butterfly_resource_access_20261109/**
+      - figures/integrated_island_port_butterfly_v03/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  blinded-main-and-separate-supporting-information:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Word/figure/page QA tools
+        run: |
+          python -m pip install --disable-pip-version-check "python-docx>=1.1,<2" "cairosvg>=2.7,<3" "pymupdf>=1.24,<2"
+          python -m py_compile scripts/build_GEB_v05_blinded_main_and_SI.py
+      - name: Source-bound separate 4-figure blinded article and 2-figure S1-S8 supporting info
+        run: |
+          set -euo pipefail
+          python -u scripts/build_GEB_v05_blinded_main_and_SI.py --repo-root . --outdir dist/geb_v05
+      - name: Convert separate blinded article and SI to PDF
+        run: |
+          set -euo pipefail
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq libreoffice-writer
+          fi
+          libreoffice -env:UserInstallation=file:///tmp/gebv05-$GITHUB_RUN_ID --headless --convert-to pdf \
+            --outdir dist/geb_v05 dist/geb_v05/GEB_v05_BLINDED_MAIN_4figures.docx \
+            dist/geb_v05/GEB_v05_SUPPORTING_INFORMATION_S1-S8.docx
+      - name: Audit PDF pages and actual figure images, no author leak
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz
+          root=Path("dist/geb_v05")
+          receipt=json.loads((root/"GEB_v05_REVIEW_PREFLIGHT.json").read_text())
+          assert receipt["state"].startswith("DOCUMENT_STRUCTURE_VALID; JOURNAL_SUBMISSION_BLOCKED")
+          for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
+                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",2)]:
+              p=root/(stem+".pdf")
+              assert p.exists() and p.stat().st_size>30000, p
+              pdf=fitz.open(p)
+              assert 4<=len(pdf)<=70, len(pdf)
+              pages_with_images=[]
+              for pageid,page in enumerate(pdf):
+                  blocks=page.get_text("dict")["blocks"]
+                  imgs=[q for q in blocks if q["type"]==1]
+                  for img in imgs:
+                      x0,y0,x1,y1=img["bbox"]
+                      assert 0<=x0<x1<=page.rect.width+1 and 0<=y0<y1<=page.rect.height+1, (stem,pageid,img["bbox"])
+                  if imgs:pages_with_images.append(pageid+1)
+              assert len(pages_with_images)>=n, (stem,pages_with_images,n)
+              text="\n".join(q.get_text() for q in pdf)
+              assert "zuizui0223" not in text.lower()
+              if n==4:
+                  for phrase in ["Pieris cheiranthi","54.3%","38 (5.7%)","0.579"]:
+                      assert phrase in text, (stem,phrase)
+              else:
+                  for phrase in ["Appendix S1","Appendix S5","Appendix S8","133","194"]:
+                      assert phrase in text, (stem,phrase)
+              receipt[stem+"_pages"]=len(pdf)
+              receipt[stem+"_pages_with_images"]=pages_with_images
+          (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
+          print("GEB_V05_SOURCE_MAIN_SEPARATE_SI_2PDF_QA_PASS",json.dumps(receipt,ensure_ascii=False))
+          PY
+          sha256sum dist/geb_v05/*.docx dist/geb_v05/*.pdf > dist/geb_v05/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-GEB-v05-DOUBLE-ANONYMOUS-4fig-main-and-separate-2fig-SI-review-DOCX-PDF
+          path: dist/geb_v05/
+          retention-days: 90
+          if-no-files-found: warn
