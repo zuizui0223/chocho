@@ -1,6 +1,6 @@
 {
   "schema": "chocho_GEB_v05_GBIF_source_citation_reconciliation_20261120_v1",
-  "status": "155_GBIF_DOWNLOAD_CITATION_IDENTITY_RESOLVED;PUBLIC51_SOURCE_FACET_REPLAYED;REMAINING_DERIVED_DOI_GATES_OPEN",
+  "status": "SOURCE155_224_DOWNLOAD_AND_1716_PUBLISHER_CONTRIBUTIONS_OFFICIALLY_VERIFIED;PUBLIC51_FACET_REPLAYED;OTHER_API_DERIVED_DOI_GATES_OPEN",
   "verification_date": "2026-11-20",
   "original_source_155": {
     "original_source_ref": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
@@ -12,13 +12,24 @@
     "original_download_occurrence_count": 14637152,
     "original_download_indexed_butterfly_species": 224,
     "eligible_butterfly_forecast_species": 155,
-    "scientific_scoping": "Cite shared underlying original download; full raw-to-155 original date, data-provider and filter transformation are not available in the audit ZIP."
+    "scientific_scoping": "Cite shared underlying original download; full raw-to-155 original date, data-provider and filter transformation are not available in the audit ZIP.",
+    "original_GBIF_official_provider_confirmation": {
+      "gbif_Download_DOI": "10.15468/dl.umqmsf",
+      "original_download_record_count": 14637152,
+      "contributor_dataset_count": 1716,
+      "provider_records_sum": 14637152,
+      "official_API_pages": 6,
+      "CI": "https://github.com/zuizui0223/chocho/actions/runs/44728625961",
+      "read_only": true,
+      "doi_registered_this_turn": false
+    }
   },
   "original_source_224_observed": {
     "download_DOI": "10.15468/dl.umqmsf",
     "original_download_occurrence_count": 14637152,
     "scientific_scoping": "Distinct model/eligibility cohort but same archived original GBIF download as 155 prediction source; not independent data acquisition.",
-    "original_source": "Independent GBIF224 annual source pinned in PR179 and the fixed 2026-10-29 155 forecast source."
+    "original_source": "Independent GBIF224 annual source pinned in PR179 and the fixed 2026-10-29 155 forecast source.",
+    "original_GBIF_official_provider_confirmation": "Same original 1716-dataset DOI provider list; no new download/DOI"
   },
   "public51_2026_225": {
     "source_branch_commit": "365526cc70e57b8a6634ee29494bd678f95961ff",
@@ -58,7 +69,7 @@
     "Historic private 224-species annual aggregate contributing GBIF datasets at its original snapshot; no datasetKey in aggregate",
     "Original 2026 Nov 9 225×51 speciesKey facet contributing datasetKey/publisher counts",
     "1,596 port plant facet original contributing datasets and snapshot",
-    "Review-accessible source-licensed 155/224 original GBIF data and full raw-to-aggregate transformations"
+    "Raw occurrence-to-155/224 subset source transformations, provider/date/precision filters and reviewer-accessible licensed input files (original download DOI citation and contributor list now verified)"
   ],
   "limitation": "Source attribution and exact historical reconstruction must not be confused: confirmed DOI citation alone does not supply the original raw 155 source tables; no new DOI minted or GBIF account used."
 }
