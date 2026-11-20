@@ -1,0 +1,54 @@
+name: Verify all original 1596 WPI 2019 port coordinates from public mirror
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/audit_original_WPI1596_public_coordinate_mirror_20261120.py
+      - .github/workflows/audit-original-WPI1596-public-2019-coordinate-hash.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-original-1596-WPI-point-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fail-closed 1596 complete source WPI2019 point verification against original private 7dp digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_original_WPI1596_public_coordinate_mirror_20261120.py
+          python current/scripts/audit_original_WPI1596_public_coordinate_mirror_20261120.py \
+            --source-root original --out dist/wpi1596_source/WPI1596_PUBLIC_MIRROR_VS_PRIVATE_SOURCE_SHA.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("dist/wpi1596_source/WPI1596_PUBLIC_MIRROR_VS_PRIVATE_SOURCE_SHA.json")
+          x=json.loads(p.read_text())
+          assert x["matched_WPI_OBJECTID_and_coords"]==1596
+          assert x["current_public_WPI_1596_7dp_coordinate_SHA256"]==x["original_private_WPI_1596_7dp_coordinate_SHA256"]
+          assert x["original_private_WPI_geojson_NOT_UPLOADED"]
+          assert x["GBIF_individual_occurrence_provenance_not_recovered"]
+          print("ALL1596_ORIGINAL_WPI2019_POINTS_REPRODUCIBLE_WITHOUT_PRIVATE_GEOJSON")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: WPI-1596-original-2019-source-public-mirror-identity-sha-only
+          path: dist/wpi1596_source/
+          if-no-files-found: warn
+          retention-days: 90
