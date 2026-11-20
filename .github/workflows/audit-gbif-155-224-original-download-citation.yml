@@ -1,0 +1,46 @@
+name: GBIF original 155/224 shared occurrence-download citation publisher audit
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/audit_GBIF_original_download_155_224_20261120.py
+      - .github/workflows/audit-gbif-155-224-original-download-citation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  original-download-contributors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify the ORIGINAL archived GBIF download and datasets from the official API (no new download)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_GBIF_original_download_155_224_20261120.py
+          python scripts/audit_GBIF_original_download_155_224_20261120.py \
+            --out dist/gbif_155_224_original_download/VERIFIED_GBIF_SOURCE_DOWNLOAD_DATASETS.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("dist/gbif_155_224_original_download/VERIFIED_GBIF_SOURCE_DOWNLOAD_DATASETS.json")
+          z=json.loads(p.read_text())
+          assert z["original_DOI"]=="10.15468/dl.umqmsf"
+          assert z["provider_count"]>0
+          assert z["no_GBIF_download_or_derived_DOI_created"] is True
+          print("ARCHIVED_155_224_DOI_ORIGINAL_PUBLISHER_LIST_RECONCILED")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GBIF-original-download-155-224-source-provider-attribution-NOT-NEW-DOI
+          path: dist/gbif_155_224_original_download/
+          retention-days: 90
+          if-no-files-found: warn
