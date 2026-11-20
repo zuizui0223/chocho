@@ -92,5 +92,50 @@
     "scope_note": "nine macrogeographic regions do not identify independent causal exposure"
   },
   "status": "ORIGINAL_125_ISLAND_2517_SPECIES_SCRATCHPAD_NOT_AVAILABLE; FIXED_239_RECALCULATED",
-  "warning": "No butterfly presence, local larval diet dependence, shipborne host arrival or proven mechanism"
+  "warning": "No butterfly presence, local larval diet dependence, shipborne host arrival or proven mechanism",
+  "spatial_sensitivity": {
+    "source_workflow": {
+      "run_id": 44674041763,
+      "head_sha": "cf9cadf35a6ecf520f7c891becbdba989ef5d7a1",
+      "conclusion": "success"
+    },
+    "graph": {
+      "threshold_km": 2000,
+      "undirected_pairs": 350,
+      "isolated_regions": 5
+    },
+    "raw_residual_moran": {
+      "native_host": {
+        "I": 0.13237345429680783,
+        "within_level1_p": 0.001
+      },
+      "introduced_only_share": {
+        "I": 0.1225758277865721,
+        "within_level1_p": 0.003
+      }
+    },
+    "spatial_mem10": {
+      "native_host": {
+        "distance_beta": -0.1330290218602384,
+        "HC3_p": 0.020438504597333648
+      },
+      "contemporary_host": {
+        "distance_beta": 0.07087949167530917,
+        "HC3_p": 0.3169855486560569
+      },
+      "paired_current_minus_native": {
+        "distance_beta": 0.20390851353554756,
+        "HC3_p": 0.004307924169762921
+      },
+      "introduced_only_share_logodds": {
+        "distance_beta": 0.3948940113274428,
+        "HC3_p": 0.0007855639895080951
+      },
+      "introduced_whole_flora": {
+        "port_beta": 0.38770981970365637,
+        "HC3_p": 0.005596225021716079
+      }
+    },
+    "caveat": "MEM10 is separate from nine macroregional cluster-t8 sensitivity; original paired slope shift clustered p=0.0677. No causal historical plant-transport claim."
+  }
 }

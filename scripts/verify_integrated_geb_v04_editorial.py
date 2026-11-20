@@ -152,6 +152,13 @@ def validate_enhanced_figures(receipt,source,repo_root,figurepaths):
     near(ip["paired_shift_nine_level1_t8_p"],new239["models"]["paired_native_current_shift"]["distance_nine_cluster_p"])
     near(ip["introduced_only_share_distance_logodds_beta"],new239["models"]["introduced_only_share_logodds"]["distance_beta"])
     near(ip["introduced_only_share_nine_level1_t8_p"],new239["models"]["introduced_only_share_logodds"]["distance_nine_cluster_p"])
+    spatial=new239.get("spatial_sensitivity") or {}
+    if spatial.get("source_workflow",{}).get("conclusion")!="success":
+        raise AssertionError("Fig2D extra spatial sensitivity lacks successful source run")
+    near(spatial["spatial_mem10"]["native_host"]["distance_beta"],-0.1330290218602384)
+    near(spatial["spatial_mem10"]["introduced_only_share_logodds"]["distance_beta"],0.3948940113274428)
+    if not (repo_root/"scripts/audit_island_port_spatial_239_20261120.py").is_file():
+        raise AssertionError("Spatial source validator script missing from journal branch")
     for txt in ("Mainland isolation and candidate butterfly food","Original fixed 239-host panel",
                 "55%","66%","72%","Nine-Level1 p = 0.014","p = 0.068","Both islands unseen"):
         if txt not in svg2: raise AssertionError("Fig2D source or uncertainty label lost: "+txt)
