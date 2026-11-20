@@ -1,118 +1,24 @@
-name: Finalize previously completed all1596 WPI NEW GBIF provider source shards without requery
+name: Legacy GBIF 1596 port source snapshot recheck (read-only; v2 canonical)
 on:
-  push:
-    branches: [analysis/geb-v05-review-data-source-audit-20261120]
-    paths:
-      - .github/workflows/archive-geb-1596-completed-GBIF-provider-shards-20261120.yml
   workflow_dispatch:
+
 permissions:
-  contents: write
-  actions: read
+  contents: read
+
 jobs:
-  consolidate-and-pin-source:
+  verify-canonical-v2-source:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: true
-      - uses: actions/download-artifact@v4
+          persist-credentials: false
+      - uses: actions/setup-python@v5
         with:
-          run-id: 44742493164
-          github-token: ${{ github.token }}
-          pattern: NEW-2026-GBIF-port1596-source-shard-*
-          merge-multiple: true
-          path: _new_1596
-      - name: Fail closed unless all source original 1596 completed ports, all current datasetKeys, four Git shas reconciled
+          python-version: "3.12"
+      - name: Check already archived source; never regenerate or overwrite with prior v1 schema
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          from collections import defaultdict
-          import csv,hashlib,json
-          raw=Path("provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_all_ports.csv").read_bytes()
-          expected=hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
-          assert expected=="fdf73b11ddcb1644f46730123350ae52cc61cae6"
-          original=list(csv.DictReader(raw.decode("utf-8-sig").splitlines()))
-          complete={int(x["port_id"]) for x in original if x["query_complete"]=="True"}
-          assert len(original)==3630 and len(complete)==1596
-          sources=sorted(Path("_new_1596").rglob("shard_new_provider_*.json"))
-          assert len(sources)==4, [str(x) for x in sources]
-          allrows=[]
-          receipts=[]
-          for p in sources:
-            j=json.loads(p.read_text())
-            assert j["schema"]=="chocho_new_20261120_all1596_WPI_plants_GBIF_datasetkey_facets_shard_v1"
-            assert j["n_port_queries"]==399
-            assert j["original_complete_ports"]==1596 and j["original_all_ports"]==3630
-            assert j["source_original_private_WPI2019_location_match_6dp"]
-            assert j["new_provider_data_not_original_citation"]
-            assert not j["historical_2026_GBIF_publisher_datasetKeys_recovered"]
-            assert not j["new_GBIF_derived_DOI_minted"]
-            allrows.extend(j["new_datasetKey_facets"])
-            receipts.append({"part":j["source_shard_index"],"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
-                  "new_source_start_utc":j["new_index_timestamp_start_utc"],
-                  "new_source_end_utc":j["new_index_timestamp_end_utc"],
-                  "records_per_port_buffer_sum":j["new_indexed_port_buffers_sum_not_unique_occurrence_records"]})
-          ids=[x["original_WPI2019_OBJECTID"] for x in allrows]
-          assert len(ids)==1596 and len(set(ids))==1596 and set(ids)==complete
-          assert sorted(x["part"] for x in receipts)==[0,1,2,3]
-          for x in allrows:
-            assert sum(z["count"] for z in x["current_GBIF_record_counts_by_datasetKey"])==x["new_2026_GBIF_index_count"]
-          byprovider=defaultdict(int)
-          for x in allrows:
-            for d in x["current_GBIF_record_counts_by_datasetKey"]:
-              byprovider[d["datasetKey"]]+=d["count"]
-          total=sum(x["new_2026_GBIF_index_count"] for x in allrows)
-          assert sum(byprovider.values())==total
-          nonzero=sum(x["new_2026_GBIF_index_count"]>0 for x in allrows)
-          out={
-            "schema":"chocho_full1596_originalWPI_ports_NEW_2026_GBIF_botanical_datasetKey_index_v1",
-            "status":"COMPLETE_1596_NEW_CURRENT_PORT_BUFFER_PROVIDER_FACETS_NOT_HISTORICAL_2026_ORIGINAL",
-            "original_source_complete_1596_ports":1596,
-            "original_source_all_WPI_candidates":3630,
-            "original_WPI2019_coordinates_match_to_6dp":True,
-            "original_pooled_botanical_speciesKey_cache_not_reproduced":True,
-            "new_GBIF_query_period":"2001,2024",
-            "new_GBIF_query":"Plantae taxonKey6, geoDistance5km original 2019 WPI centre, PRESENT, coordinate+geospatial-issue checks, facet=datasetKey",
-            "original_cached_query_used_WKT_buffer_nonidentical":True,
-            "new_snapshot_shards_acquired_at_distinct_times":receipts,
-            "n_new_index_positive_port_buffers":nonzero,
-            "n_new_index_zero_port_buffers":1596-nonzero,
-            "new_sum_of_port_buffer_GBIF_indexed_records_WITH_OVERLAP_NOT_UNIQUE":total,
-            "unique_new_source_datasetKeys":len(byprovider),
-            "new_indexed_record_counts_by_datasetKey_WITH_OVERLAP":[{"datasetKey":k,"sum_port_buffer_record_hits":v} for k,v in sorted(byprovider.items())],
-            "original_port_plant_source_datasetKey_citation_NOT_recovered":True,
-            "read_only_NO_GBIF_DOI_minted":True,
-            "limitations":[
-             "New WPI centre geoDistance 5km is not necessarily identical to the original speciesKey WKT-based buffered area",
-             "New GBIF index datetime differs from original 2026 flora queries; butterfly and plant dynamics not inferred",
-             "Original sampled 1596 ports were selected in geographically structured, partial discovery order",
-             "Summed port-counts can count the same occurrence in overlapping port buffers and are not 1 unique observation per record",
-             "DatasetKey counts from new live GBIF indexes cannot retroactively cite original source providers or generate its historic DOI",
-             "No evidence of plant introduction through ships, larval host field utilisation or butterfly colonization"
-            ],
-            "source_rows":sorted(allrows,key=lambda r:r["original_WPI2019_OBJECTID"])
-          }
-          Path("results/geb_v05_gbif_source_attribution_20261120").mkdir(parents=True,exist_ok=True)
-          path=Path("results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json")
-          path.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
-          print("NEW_GBIF_ALL1596_WPI_COMPLETED_PROVIDERS",len(byprovider),"count_overlapping",total,"source_sha256",hashlib.sha256(path.read_bytes()).hexdigest())
-          PY
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
-          if git diff --cached --quiet; then
-            echo "Same dated new-source botanical GBIF audit already archived"
-          else
-            git commit -m "Archive 1596-source-WPI-port NEW GBIF plant datasetKey index with complete attribution caveat [skip ci]"
-            git push origin HEAD:refs/heads/analysis/geb-v05-review-data-source-audit-20261120
-          fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: NEW-original1596-WPI-port-new-Gbif-datasetkey-complete-source-and-audit-NOT-historical
-          path: results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
-          if-no-files-found: warn
-          retention-days: 90
+          python scripts/verify_GEB_v05_new_port1596_attribution_20261120.py
+          echo 'LEGACY_ARCHIVER_GBIF1596_NOW_READ_ONLY_RECHECK_V2'
