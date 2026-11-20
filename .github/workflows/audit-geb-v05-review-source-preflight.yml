@@ -7,6 +7,7 @@ on:
       - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
       - "scripts/verify_chocho_recovered_private_zip_20261120.py"
       - "scripts/audit_chocho_historical_parquet_20261120.py"
+      - "scripts/audit_public51_gbif_facet_sources_20261120.py"
       - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
   pull_request:
     branches:
@@ -15,6 +16,7 @@ on:
       - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
       - "scripts/verify_chocho_recovered_private_zip_20261120.py"
       - "scripts/audit_chocho_historical_parquet_20261120.py"
+      - "scripts/audit_public51_gbif_facet_sources_20261120.py"
       - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
   workflow_dispatch:
 
@@ -35,6 +37,11 @@ jobs:
           ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
           path: source_main
           persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 365526cc70e57b8a6634ee29494bd678f95961ff
+          path: public51_archive
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -45,6 +52,7 @@ jobs:
           python -m py_compile current/scripts/audit_GEB_v05_review_source_bundle_20261120.py
           python -m py_compile current/scripts/verify_chocho_recovered_private_zip_20261120.py
           python -m py_compile current/scripts/audit_chocho_historical_parquet_20261120.py
+          python -m py_compile current/scripts/audit_public51_gbif_facet_sources_20261120.py
           python current/scripts/audit_chocho_historical_parquet_20261120.py --self-test
           python -u current/scripts/audit_GEB_v05_review_source_bundle_20261120.py \
             --current-root current \
@@ -68,6 +76,23 @@ jobs:
           print("GEB_V05_SOURCE_PREVIEW_INCOMPLETE_BY_DESIGN_PASS")
           PY
           sha256sum dist/geb_v05_source_preflight/* > dist/geb_v05_source_preflight/SHA256SUMS.txt
+      - name: Verify six immutable original 2026 public51 GBIF source facet shards and DOI provenance gap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python current/scripts/audit_public51_gbif_facet_sources_20261120.py \
+            --source-root public51_archive \
+            --out dist/geb_v05_source_preflight/PUBLIC51_GBIF_FACET_PROVENANCE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("dist/geb_v05_source_preflight/PUBLIC51_GBIF_FACET_PROVENANCE.json").read_text())
+          assert d["source_population"]["cells"]==11475
+          assert d["source_population"]["total_source_query_receipts"]==153
+          assert d["status"]=="SIX_ORIGINAL_FACET_SHARDS_SOURCE_EXACT_NO_RECORD_PUBLISHERS"
+          assert d["DOI_gate"].startswith("NOT_MET:")
+          print("PUBLIC51_GBIF_SOURCE_AND_NO_DATASETKEY_CITATION_GATE_CHECKED")
+          PY
       - name: Extract the preview ZIP and independently replay the fixed-239 isolation analyses
         shell: bash
         run: |
