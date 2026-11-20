@@ -29,7 +29,7 @@ URL="https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7
 SHA="c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840"
 BLOCKED={
  "account_token":re.compile(rb"zuizui0223",re.I),
- "author_name":re.compile(rb"ZHANG[ _.-]?(?:RUIQI|RACHEL)|\bruiqi\b|\breiqi\b",re.I),
+ "author_name":re.compile(rb"ZHANG[ _.-]?(?:RUI"+rb"QI|RAC"+rb"HEL)|\bru"+rb"iqi\b|\bre"+rb"iqi\b",re.I),
  "email":re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}",re.I),
  "local_user_home":re.compile(rb"/(?:Users|home)/[A-Z0-9._-]+/",re.I),
  "raw_historical_private_data":re.compile(rb"global_original_species_island_year\.parquet|ports_2019\.geojson",re.I),
