@@ -311,6 +311,29 @@ def marginal_predictions(f):
                      "pred_native_host_239": vals[0], "pred_current_host_239": vals[1]})
     return rows
 
+def leave_one_island_out(f):
+    """Check that the 126 vs unavailable 125 island mismatch is not one leverage point."""
+    v = []
+    for i in f.index:
+        d = f.drop(index=i)
+        xx = design(d)
+        change = y_standardized(d,"current_host_239")-y_standardized(d,"native_host_239")
+        m = sm.OLS(change,xx).fit(cov_type="HC3")
+        v.append({
+            "omitted_island":str(f.loc[i,"code"]),
+            "slope_difference_distance_beta":float(m.params["distance"]),
+            "HC3_p":float(m.pvalues["distance"])
+        })
+    return {
+        "n_single_island_exclusions":len(v),
+        "beta_min":min(z["slope_difference_distance_beta"] for z in v),
+        "beta_max":max(z["slope_difference_distance_beta"] for z in v),
+        "n_positive":sum(z["slope_difference_distance_beta"]>0 for z in v),
+        "n_p_under_0p05":sum(z["HC3_p"]<.05 for z in v),
+        "per_island":v,
+        "warning":"This does not identify the specific island excluded in the inaccessible 125-island scratchpad."
+    }
+
 def adjusted_share_predictions(f):
     """Region-level, equal-island marginal fitted shares at requested distances.
 
@@ -388,6 +411,7 @@ def main():
         },
         "bootstrap":bootstrap_slope(f),
         "marginal_adjusted_share_at_100_1000_4000km":adjusted_share_predictions(f),
+        "leave_one_island_out":leave_one_island_out(f),
         "conservative_level1_cluster":conservative_geographic_cluster(f),
         "interpretation_guardrails":[
             "Geographic vegetation categories and modern port counts are not actual shipborne introduction, measured currents or host quality.",
