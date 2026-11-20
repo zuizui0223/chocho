@@ -1,0 +1,68 @@
+name: GBIF source-matched NEW-time datasetKey facet pilot (NOT original DOI)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/requery_GBIF_225x51_datasetkey_pilot_20261120.py
+      - .github/workflows/audit-gbif-2026-source-matched-provider-facet-pilot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-matched-new-provider-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: original_public51
+          ref: 365526cc70e57b8a6634ee29494bd678f95961ff
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install original source geometry dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'shapely>=2.1,<3' 'geopandas>=1.0,<2' 'pyproj>=3.6,<4' 'pyogrio>=0.10,<1'
+          python -m py_compile current/scripts/requery_GBIF_225x51_datasetkey_pilot_20261120.py
+      - name: Reconstruct exact original GSHHG 2.3.7 polygons and acquire provider facets for only two islands
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _source_gshhg _probe_work dist/new_GBIF_2026_provider_pilot
+          curl -fSL --retry 4 --max-time 360 -o _source_gshhg/gshhg-shp-2.3.7.zip \
+            https://github.com/GenericMappingTools/gshhg-gmt/releases/download/2.3.7/gshhg-shp-2.3.7.zip
+          python current/scripts/requery_GBIF_225x51_datasetkey_pilot_20261120.py \
+            --source-root original_public51 \
+            --gshhg-zip _source_gshhg/gshhg-shp-2.3.7.zip \
+            --work _probe_work \
+            --islands 9,276 \
+            --out dist/new_GBIF_2026_provider_pilot/ISLAND9_276_POSTSOURCE_DATASETKEY_FACET.json
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          path=Path('dist/new_GBIF_2026_provider_pilot/ISLAND9_276_POSTSOURCE_DATASETKEY_FACET.json')
+          j=json.loads(path.read_text(encoding='utf8'))
+          assert j['island_ids']==['9','276']
+          assert len(j['results'])==6
+          assert all(x['new_provider_count']>0 for x in j['results'])
+          assert all(sum(d['indexed_count'] for d in x['new_snapshot_datasetkey_contributors'])==x['new_snapshot_index_count'] for x in j['results'])
+          assert j['read_only_no_DOI_minted'] is True
+          assert j['original_historical_dataset_publishers_recovered'] is False
+          print('NEW_DATED_SNAPSHOT_DATASETKEY_SOURCE_MAPPED_CITATION_PROBE_PASSED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GBIF-new-time-two-island-provider-facets-NOT-20261109-historical-publishers
+          path: dist/new_GBIF_2026_provider_pilot/
+          retention-days: 90
+          if-no-files-found: warn
