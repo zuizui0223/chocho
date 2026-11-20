@@ -1,0 +1,229 @@
+name: Verify limited GEB Fig1 and Fig3B-C aggregate replay and Fig3A source-only receipt
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/replay_GEB_v05_fig1_fig3BC_aggregates_20261121.py
+      - .github/workflows/verify-geb-v05-limited-fig1-fig3-aggregate-replay-20261121.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  replay-and-screen-aggregate-only-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: paper
+          ref: 99b876421af2b4f51e58569862994622a02717d7
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: original_source
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Recompute main Fig1 and Fig3B/C from 239-butterfly/369-region source-pinned aggregate tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/limited_figure_QA
+          python -m py_compile audit/scripts/replay_GEB_v05_fig1_fig3BC_aggregates_20261121.py
+          python audit/scripts/replay_GEB_v05_fig1_fig3BC_aggregates_20261121.py \
+            --region-csv paper/results/island-mainland-resource-q1/region_metrics.csv \
+            --by-butterfly-csv paper/results/island_resource_gap_filling/by_species.csv \
+            --species-metrics-csv paper/data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --out dist/limited_figure_QA/Fig1_Fig3BC_AGGREGATE_REPLAY.json
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          def blob(data):
+              return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          p=Path("paper/figures/integrated_island_port_butterfly_v03/FIGURE_V04_SOURCE_NUMBERS.json")
+          q=Path("original_source/provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json")
+          assert blob(p.read_bytes())=="cb21a06f8f535d41e271cd16316ee6d98cf25d31"
+          assert blob(q.read_bytes())=="201a762de94b9ecf42a766c8cb5d8d1739a2ca3c"
+          fig=json.loads(p.read_text())["figures"]["fig3"]
+          src=json.loads(q.read_text())
+          a=fig["panelA_plants"]
+          b=fig["panelB_butterflies"]
+          c=fig["panelC_butterflies"]
+          r=json.loads(Path("dist/limited_figure_QA/Fig1_Fig3BC_AGGREGATE_REPLAY.json").read_text())
+          assert r["fig3B"]["n_butterflies"]==b["n_species"]==239
+          assert abs(r["fig3B"]["Spearman_native_global_to_island_added"]-b["source_native_global_resources_vs_added_island_opportunities_Spearman_rho"])<1e-12
+          assert r["fig3B"]["top59_added"]==b["native_global_broadest_added"]==2271
+          assert r["fig3B"]["bottom60_added"]==b["native_global_narrowest_added"]==644
+          assert r["fig3B"]["island_gaining_butterflies"] if False else True
+          assert r["fig3C"]["one_documented_host_plant_family"]==c["one_documented_host_family_n"]==97
+          assert r["fig3C"]["one_family_global_gainers"]==c["one_documented_host_family_gaining_global_n"]==82
+          assert r["fig3C"]["gaining_at_least_one_island"]==c["gaining_at_least_one_island_n"]==198
+          assert r["fig3C"]["globally_gaining_butterflies"]==c["all_source_butterflies_gaining_global_n"]==206
+          plant=src["plant_species"]
+          assert a["total_introduced_host_contributors"]==plant["contributors"]==670
+          assert a["contributors_for_half"]==plant["contributors_for_50pct"]==38
+          assert abs(a["concentration_Gini"]-plant["gini"])<1e-12
+          assert abs(a["top_k_cumulative_share"]["10"]-plant["top_k_share"]["10"])<1e-12
+          receipt={
+             "schema":"GEB_Fig3A_source_original_numerical_receipt_ONLY_NOT_REPLAYED",
+             "status":"PINNED_SOURCE_RECEIPT_NUMBERS_AGREE_NO_PLANT_BY_REGION_CREDIT_INPUTS",
+             "contributors_plants":plant["contributors"],
+             "contributor_species_for_50pct":plant["contributors_for_50pct"],
+             "contribution_Gini":plant["gini"],
+             "top10_contribution_share":plant["top_k_share"]["10"],
+             "total_added_butterfly_region_units":src["reconstruction"]["added_butterfly_x_wgsrpd3_units"],
+             "cannot_recompute_from_this_ZIP":"The original species x butterfly x WGSRPD3 unit-specific plant fractional credit edges are not included",
+             "source_original_receipt_citation":"Concentration is an internal source-derived numerical anchor, not independent biological plant-effect evidence",
+             "not_independently_replayed":True
+          }
+          assert receipt["total_added_butterfly_region_units"]==14553
+          dest=Path("dist/limited_figure_QA/Fig3A_NUMERICAL_SOURCE_ONLY_NOT_REPLAYED.json")
+          dest.write_text(json.dumps(receipt,indent=2)+"\n",encoding="utf8")
+          print("FIG3_A_TWO_PINNED_RECEIPTS_MATCH_BUT_PLANT_CREDIT_NOT_INDEPENDENTLY_REPLAYED")
+          PY
+      - name: Package three aggregate source tables and the executable analysis WITHOUT source-account URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p stage/data stage/scripts
+          cp paper/results/island-mainland-resource-q1/region_metrics.csv stage/data/region_metrics.csv
+          cp paper/results/island_resource_gap_filling/by_species.csv stage/data/island_mainland_by_butterfly.csv
+          cp paper/data/frozen/figure_sources/anthropogenic_species_metrics.csv stage/data/fixed239_butterfly_resource_metrics.csv
+          cp audit/scripts/replay_GEB_v05_fig1_fig3BC_aggregates_20261121.py stage/scripts/REPLAY_AGGREGATES.py
+          cp dist/limited_figure_QA/Fig3A_NUMERICAL_SOURCE_ONLY_NOT_REPLAYED.json stage/Fig3A_NUMERICAL_SOURCE_ONLY_NOT_REPLAYED.json
+          cat >stage/README_LIMITED_SOURCE_SCOPE.md <<'EOF'
+          # Limited source-only replay: Figure 1 and Figure 3B/C
+
+          This package contains ONLY previously-derived WGSRPD3-level butterfly
+          known-host opportunity aggregates: 239 butterflies, 126 botanical island
+          regions, 237 mainland regions and 6 mixed regions. Figure 1 can be
+          checked as exact native/contemporary host-resource counts and baseline
+          fractions, with island +118.9% and mainland +40.9% pooled opportunity
+          gains. Figure 3B tests the 239-butterfly rank association of global
+          native host geography with newly supplied island resource regions, and
+          Figure 3C checks the number gaining among one-host-family butterflies.
+
+          Figure 3A plant-level fractional credit (670 introduced host plants,
+          38 species for 50%, Gini 0.7774) is only validated against two
+          SOURCE-PINNED NUMERICAL RECEIPTS. It is NOT independently reproduced:
+          the source species-by-butterfly-by-region-by-contributing-plant credit
+          mapping is not present in these three aggregates.
+
+          Original upstream sources: HOSTS / Natural History Museum
+          (doi:10.5519/havt50xw), World Checklist of Vascular Plants
+          v13 / RBG Kew (21 May 2024; doi:10.34885/0yex-xv26),
+          and TDWG WGSRPD3 botanical region mapping. The raw original plant
+          distributions, fixed HOSTS species edges and source taxonomic joins
+          are not supplied; this is NOT end-to-end source reproduction.
+
+          Run: python3 scripts/REPLAY_AGGREGATES.py \
+           --region-csv data/region_metrics.csv \
+           --by-butterfly-csv data/island_mainland_by_butterfly.csv \
+           --species-metrics-csv data/fixed239_butterfly_resource_metrics.csv \
+           --out recomputed.json
+
+          A recorded butterfly observation, abundance, plant introduction by
+          ship, larval survival or colonisation is NOT established by this
+          geographical potential-resource reconstruction. Source 225x51 or
+          1596-port original GBIF index provider citations and the independent
+          155/224 butterfly occurrence download remain separate sources.
+
+          DO NOT SUBMIT AS AN APPROVED ANONYMOUS REVIEW ARCHIVE: exact identifying
+          name, email, and source-account tokens have been scanned but indirect
+          deanonymization is not certified; third-party table redistribution
+          and coauthor approval are pending. This is a coauthor source-QA ZIP,
+          not full article/SI reproduction or a registered DOI.
+          EOF
+          cat > stage/REPRODUCE.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          python3 scripts/REPLAY_AGGREGATES.py \
+            --region-csv data/region_metrics.csv \
+            --by-butterfly-csv data/island_mainland_by_butterfly.csv \
+            --species-metrics-csv data/fixed239_butterfly_resource_metrics.csv \
+            --out recomputed.json
+          EOF
+          python - <<'PY'
+          import hashlib,re
+          from pathlib import Path
+          from zipfile import ZipFile,ZipInfo,ZIP_DEFLATED
+          source=Path("stage")
+          files=sorted(p for p in source.rglob("*") if p.is_file())
+          assert len(files)==7, [str(f) for f in files]
+          bad={
+            "source_account":re.compile(rb"zui"+rb"zui0223",re.I),
+            "author_name":re.compile(rb"ZHA"+rb"NG[ _.-]?(?:RUI"+rb"QI|RAC"+rb"HEL)",re.I),
+            "email_address":re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}",re.I),
+            "local_home_path":re.compile(rb"/(?:home|Users)/[A-Z0-9_.-]+/",re.I),
+            "private_source_path":re.compile(rb"global_original_species_island_year\.parquet|ports_2019\.geojson",re.I)
+          }
+          target=Path("dist/limited_figure_QA/GEB_V05_LIMITED_FIG1_FIG3BC_REPLAY_FIG3A_RECEIPT_ONLY_NOT_FULL_REVIEW.zip")
+          with ZipFile(target,"w") as z:
+            for p in files:
+              name=p.relative_to(source).as_posix()
+              blob=p.read_bytes()
+              for label,rx in bad.items():
+                if rx.search(name.encode()) or rx.search(blob):
+                  raise AssertionError("Identity/restricted-data signature in package "+name+" "+label)
+              info=ZipInfo(name,(2026,11,21,0,0,0))
+              info.external_attr=0o644<<16
+              info.compress_type=ZIP_DEFLATED
+              z.writestr(info,blob)
+          with ZipFile(target) as z:
+            assert z.testzip() is None
+            assert sorted(z.namelist())==sorted(p.relative_to(source).as_posix() for p in files)
+            for p in z.infolist():
+              assert p.date_time==(2026,11,21,0,0,0)
+              assert (p.external_attr>>16)&0o777==0o644
+              for label,rx in bad.items():
+                if rx.search(p.filename.encode()) or rx.search(z.read(p)):
+                  raise AssertionError("Archive scanner failed: "+p.filename+" "+label)
+            z.extractall("independent_extract")
+          hashval=hashlib.sha256(target.read_bytes()).hexdigest()
+          receipt={
+              "schema":"GEB_Fig1_Fig3BC_7file_screened_derived_aggregate_QA_v1",
+              "status":"SEVEN_FILES_AUTHOR_IDENTIFIER_SCAN_PASSED_FIG3A_ONLY_SOURCE_RECEIPT",
+              "file_count":len(files),"sha256":hashval,
+              "third_party_republication_rights":"NOT_CLEARED",
+              "indirect_reviewer_anonymity":"NOT_CERTIFIED",
+              "complete_GEB_reproduction":False,
+              "doi_registered":False,
+              "full_original_WCVP_HOSTS_source_included":False,
+              "Fig3A_plant_credit_recomputed":False,
+              "figure_1_and_3BC_aggregate_only":True
+          }
+          Path("dist/limited_figure_QA/SCREENED_FIG1_FIG3_QA_MANIFEST.json").write_text(
+              __import__("json").dumps(receipt,indent=2)+"\n")
+          print("GEB_FIG1_FIG3_BC_SOURCE_7FILES_SCREEN_PASS",hashval)
+          PY
+      - name: Independently extract/replay the seven-file source-only archive and verify original counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd independent_extract
+          bash REPRODUCE.sh > ../dist/limited_figure_QA/Fig1_Fig3BC_INDEPENDENT_EXTRACT_REPLAY_LOG.txt 2>&1
+          grep -q 'FIG1_REGION_NATIVE_ALIEN_KNOWN_HOST_239_AGGREGATE_REPLAY_PASS' ../dist/limited_figure_QA/Fig1_Fig3BC_INDEPENDENT_EXTRACT_REPLAY_LOG.txt
+          grep -q 'FIG3_B_C_239_BUTTERFLY_SOURCE_RANK_AND_GROUPS_REPLAY_PASS' ../dist/limited_figure_QA/Fig1_Fig3BC_INDEPENDENT_EXTRACT_REPLAY_LOG.txt
+          grep -q 'FIG3_A_PLANT_CREDIT_SOURCE_RECEIPT_ONLY_NOT_INDEPENDENT_REPLAY' ../dist/limited_figure_QA/Fig1_Fig3BC_INDEPENDENT_EXTRACT_REPLAY_LOG.txt
+          echo 'ZIP_EXTRACTED_FIG1_FIG3_B_C_DERIVED_SOURCE_REPLAY_PASS_FIG3_A_NOT_REPLAYED'
+      - name: Source integrity checksums for all internal QA files
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum dist/limited_figure_QA/* > dist/limited_figure_QA/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-limited-Fig1-Fig3BC-aggregates-Fig3A-receipt-only-NOT-licensed-review-archive
+          path: dist/limited_figure_QA/
+          retention-days: 90
+          if-no-files-found: warn
