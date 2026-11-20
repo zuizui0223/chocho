@@ -22,6 +22,7 @@ CAPTIONS = REL / "FIGURE_CAPTIONS_V03.md"
 SUP_G = REL / "SUPPLEMENTARY_INDEPENDENT_BUTTERFLY_RECORDS_20261119.md"
 NUMBERS = Path("figures/integrated_island_port_butterfly_v03/FIGURE_V04_SOURCE_NUMBERS.json")
 ORIGINAL_PREFIX = "## References (DOI identities checked; final source and style audit outstanding)"
+LEGACY_ARCHIVE = REL / "SUPPLEMENTARY_LEGACY_REFERENCES_AND_APPENDICES_V03_UNEDITED.md"
 MAIN_SOURCE = "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250"
 
 def near(a,b,limit=1e-6):
@@ -229,12 +230,67 @@ def main():
     old=args.frozen_v03.read_text(encoding="utf8")
     if main.count(ORIGINAL_PREFIX)!=1 or old.count(ORIGINAL_PREFIX)!=1:
         raise AssertionError("Original reference/supplement protected marker moved")
-    # Exact original 18-Nov references, original supplementary positive and adverse data,
-    # and v0.3 provenance are preserved in full, byte-for-byte after this boundary.
-    original_suffix=old.split(ORIGINAL_PREFIX,1)[1]
+    # Full unedited historical bibliography, Supplement S.A-S.F and source details
+    # remain at exactly their original bytes in a separate source archive.
+    original_suffix=ORIGINAL_PREFIX+old.split(ORIGINAL_PREFIX,1)[1]
+    archived=(root/LEGACY_ARCHIVE).read_text(encoding="utf8")
+    if original_suffix!=archived:
+        raise AssertionError("Unedited v0.3 full source archive is not byte-exact")
+    original_references=original_suffix.split("## Supplementary results:",1)[0]
+    current_references=main.split("## Supplementary results:",1)[0].split("## References",1)[1]
+    original_reference_lines=[x for x in original_references.splitlines()[1:] if x.strip()]
+    added_references=(
+        "- MacArthur, R. H. & Wilson, E. O. (1967).",
+        "- Sax, D. F. & Gaines, S. D. (2008).",
+        "- McKinney, M. L. & Lockwood, J. L. (1999).",
+        "- Hobbs, R. J. et al. (2006)."
+    )
+    extra=[x for x in current_references.splitlines() if any(x.startswith(prefix) for prefix in added_references)]
+    if len(extra)!=4 or len({x.split("https://doi.org/")[-1] for x in extra})!=4:
+        raise AssertionError("All four new verified bibliographic records not present")
+    filtered=[x for x in current_references.splitlines() if x.strip() and x not in extra]
+    if filtered!=original_reference_lines:
+        raise AssertionError("Original bibliography entries were altered or lost")
+    old_sup="## Supplementary results:"+old.split("## Supplementary results:",1)[1]
+    actual_sup="## Supplementary results:"+main.split("## Supplementary results:",1)[1]
+    replacements=(
+        ("### 3.2. Globally influential host plants in island port vegetation",
+         "**Archived v0.3 result: globally influential host plants in island port vegetation.**"),
+        ("### 3.3. Source-independent island-endemic larvae reveal local use but also incomplete coverage",
+         "**Archived v0.3 result: source-independent island-endemic larvae and incomplete taxonomic coverage.**"),
+        ("### 3.4. Independent butterfly-record prediction supports an information role for host geography",
+         "**Archived v0.3 result: independent butterfly-record prediction and host-geography information.**"),
+        ("### 3.6. Historical butterfly records constrain a port–host establishment interpretation",
+         "**Archived v0.3 result: historical butterfly records constrain a port–host establishment interpretation.**"),
+        ("#### port whole flora results","#### S.F.1. Port whole flora results"),
+        ("#### endemic source selection","#### S.F.2. Endemic source selection"),
+        ("#### predictive source results","#### S.F.3. Independent butterfly recording source results"),
+        ("#### historical record safeguards","#### S.F.4. Historical record safeguards"),
+        ("#### data availability concise","#### S.F.5. Historical data and code availability (source archive)"),
+        ("## Data and code availability (draft; final rights and archive check required)",
+         "**Archived v0.3 data-availability detail (supplementary source record).**"),
+        ("### Source archive and reproducibility pointers (NOT independent extra studies)",
+         "#### S.F.6. Source archive and reproducibility pointers (NOT independent extra studies)"),
+        ("## v0.3 provenance and scientific claims","#### S.F.7. Original v0.3 provenance and scientific claims"),
+        ("**conclusions.** ## 6. Conclusions","**Archived v0.3 conclusions.**")
+    )
+    expected_sup=old_sup
+    for old_header,new_header in replacements:
+        if expected_sup.count(old_header)!=1:
+            raise AssertionError("Frozen old Supplement heading changed: "+old_header)
+        expected_sup=expected_sup.replace(old_header,new_header)
+    sf="### S.F. Full island–port–marine estimates, alternate comparisons and prior main-text detail"
+    archive_note="**Provenance:** The entire earlier reference list and supplementary source, before editorial heading renumbering, is preserved verbatim in the [original unedited v0.3 References and Supplement S.A–S.F](SUPPLEMENTARY_LEGACY_REFERENCES_AND_APPENDICES_V03_UNEDITED.md). Only heading structure was regularized; source-positive and adverse numerical prose remains intact."
+    if expected_sup.count(sf)!=1:
+        raise AssertionError("Original S.F marker changed")
+    expected_sup=expected_sup.replace(sf,sf+"\n\n"+archive_note)
+    if expected_sup!=actual_sup:
+        raise AssertionError("Historical Supplement content changed beyond approved headings and one provenance note")
+    if main.count("## Data and code availability (draft; final rights and archive check required)")!=1:
+        raise AssertionError("Main manuscript contains duplicate Data availability headings")
+    if re.search(r"^### 3\.[2-6]\.",actual_sup,re.M):
+        raise AssertionError("Historical Results section numbering still masquerades as a second main Results")
     new_suffix=main.split(ORIGINAL_PREFIX,1)[1]
-    if original_suffix!=new_suffix:
-        raise AssertionError("Original v0.3 References / Supplement S.A–S.F source text was modified or lost")
     first=main.split(ORIGINAL_PREFIX,1)[0]
     abstract_text=first.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     abstract_plain=re.sub(r"[*#]+","",abstract_text)
@@ -256,10 +312,22 @@ def main():
     main_body_words=len(stripped_main.strip().split())
     if main_body_words>5000:
         raise AssertionError(f"GEB regular 5000-word research-body target exceeded: {main_body_words}")
-    if "### 4.2. Ports mark where a shared introduced flora accumulates" not in first:
-        raise AssertionError("Positive 4.2 port section heading not installed")
-    if "### 4.3. Introduced host geography contributes to recorded butterflies" not in first:
-        raise AssertionError("Supported positive 4.3 consumer heading not installed")
+    five_headings=(
+        "### 4.1. Islands show larger relative resource gains",
+        "### 4.2. Ports and the sea reveal two spatial layers",
+        "### 4.3. Plants and butterflies receive unequal shares",
+        "### 4.4. Independent butterfly records reveal a biological filter",
+        "### 4.5. Conservation: manage introduced host plants with consumer interactions"
+    )
+    for title in five_headings:
+        if first.count(title)!=1:
+            raise AssertionError("Five ecologically positive Discussion sections missing or repeated: "+title)
+    if len(re.findall(r"^### 4.[0-9]+.",first,re.M))!=5:
+        raise AssertionError("Discussion does not contain the intended five implications")
+    if not all(w in first for w in ("54.3%","38 (5.7%)","Gini coefficient was 0.777",
+                                   "39.6%","11.2%","McKinney & Lockwood, 1999",
+                                   "Hobbs et al., 2006","Sax & Gaines, 2008")):
+        raise AssertionError("New ecological discussion and cited island/nonrandom resource literature incomplete")
     if "22 islands" not in first or "seawater-dispersal morphology" not in first:
         raise AssertionError("Original EuDiS 22-island positive trait estimate missing")
     if "54.3%" not in first:
@@ -308,6 +376,23 @@ def main():
     # not copied from the original top-ten host species/port observational panel.
     # The old original plot remains present and linked in the supplementary record.
     validate_enhanced_figures(receipt,args.source_root.resolve(),root,figurepaths)
+    original_full=root/receipt["figures"]["fig4"]["supplementary_original_full_190_2980_South_America_diagram"]
+    if not original_full.is_file():
+        raise AssertionError("Full South America four-subgroup source graphic lost")
+    ET.parse(original_full)
+    main_f4=figurepaths[3].read_text(encoding="utf8")
+    for required in ("Cross-world pairs (n = 2,980)","-4.036%","-2.697%",
+                     "0%","Within-SA: −0.496% / −0.126%"):
+        if required not in main_f4:
+            raise AssertionError("Compact South America figure lost its signed source boundary: "+required)
+    tree=ET.parse(figurepaths[3])
+    for elem in tree.iter():
+        for key in ("x1","x2","cx"):
+            if key in elem.attrib and not (0<=float(elem.attrib[key])<=1240):
+                raise AssertionError("Figure 4 element outside source SVG canvas: "+str((elem.tag,key,elem.attrib[key])))
+    if main_f4.count("Cross-world pairs (n = 2,980)")!=1:
+        raise AssertionError("Source regional qualification unexpectedly duplicated")
+
     if "### S.G.6." not in supp or supp.count("## S.G.")!=0:
         # S.G.1–6 are separate headings within a standalone appendix;
         # check exact positive and boundary-result section markers instead.
@@ -339,7 +424,10 @@ def main():
     print("GEB_V04_SOURCE_AND_FOUR_FIGURES_PASS",json.dumps({
         "main_figures":[str(x.relative_to(root)) for x in figurepaths],
         "new_supplement":"Supplement S.G independent GBIF source",
-        "protected_original_reference_and_supplement_chars":len(new_suffix),
+        "archived_original_reference_and_supplement_chars":len(original_suffix),
+        "approved_heading_cleanup_only":True,
+        "new_verified_4_ecological_literature_references":4,
+        "compact_Fig4D_with_frozen_full_supplement":True,
         "original_four_main_sections":len(expected),
         "main_chars":len(first),
         "GEB_structured_abstract_words":abstract_words,
