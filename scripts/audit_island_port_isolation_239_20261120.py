@@ -311,6 +311,32 @@ def marginal_predictions(f):
                      "pred_native_host_239": vals[0], "pred_current_host_239": vals[1]})
     return rows
 
+def adjusted_share_predictions(f):
+    """Region-level, equal-island marginal fitted shares at requested distances.
+
+    These are NOT the ratio of separately back-transformed native/current
+    fitted host counts. Other recorded covariates are kept at each island's
+    measured values, varying the isolation distance in the prediction only.
+    """
+    from scipy.special import expit
+    active = f.loc[f.current_host_239>0].copy()
+    x = design(active)
+    logdist = active.log_distance_calc
+    odds = np.log((active.introduced_only_host_239+.5)/
+                  (active.native_host_239+.5))
+    model = sm.OLS(odds,x).fit(cov_type="HC3")
+    ret = {}
+    for km in (100,1000,4000):
+        temp=x.copy()
+        temp["distance"]=(math.log1p(km)-float(logdist.mean()))/float(logdist.std(ddof=1))
+        y=np.asarray(model.predict(temp),dtype=float)
+        ret[str(km)]={
+            "equal_island_mean_share":float(expit(y).mean()),
+            "equal_island_median_share":float(np.median(expit(y))),
+            "units":"fraction of covered butterfly-region potential resource combinations newly supported by introduced hosts"
+        }
+    return ret
+
 def make_figure(f, pred, out):
     import matplotlib
     matplotlib.use("Agg")
@@ -361,6 +387,7 @@ def main():
             "without_latitude":eval_suite(f,without_lat=True)
         },
         "bootstrap":bootstrap_slope(f),
+        "marginal_adjusted_share_at_100_1000_4000km":adjusted_share_predictions(f),
         "conservative_level1_cluster":conservative_geographic_cluster(f),
         "interpretation_guardrails":[
             "Geographic vegetation categories and modern port counts are not actual shipborne introduction, measured currents or host quality.",
