@@ -22,7 +22,7 @@ from shapely.ops import nearest_points, unary_union
 
 FLORA_BLOB = "53b618fa51a1a418ccc6e4363f4c866c389c90cc"
 HOST_REGION_BLOB = "4aba89565354edc6c44d566523864cec66a30cbe"
-URL = "https://raw.githubusercontent.com/tdwg/wgsrpd/master/geojson/level3.geojson"
+URL = "https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson"
 RESPONSES = {
     "plant_native": "native_plant", "plant_introduced": "introduced_plant",
     "host_native_239": "native_host_239", "host_current_239": "current_host_239"
