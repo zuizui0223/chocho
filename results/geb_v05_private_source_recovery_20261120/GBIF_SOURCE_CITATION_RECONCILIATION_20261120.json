@@ -1,0 +1,64 @@
+{
+  "schema": "chocho_GEB_v05_GBIF_source_citation_reconciliation_20261120_v1",
+  "status": "155_GBIF_DOWNLOAD_CITATION_IDENTITY_RESOLVED;PUBLIC51_SOURCE_FACET_REPLAYED;REMAINING_DERIVED_DOI_GATES_OPEN",
+  "verification_date": "2026-11-20",
+  "original_source_155": {
+    "original_source_ref": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
+    "original_README": "provenance/reviewer_defenses/results/host_forecast_validation_20261029/README.md",
+    "original_README_git_blob": "b02a85bfff84dfa212ebb57343fc3bfdd42123c9",
+    "original_completion_report": "provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_completion_audit_ja.md",
+    "original_completion_git_blob": "b15e5d63bcb3e268566f4c3208fb8df6920da71d",
+    "download_DOI": "10.15468/dl.umqmsf",
+    "original_download_occurrence_count": 14637152,
+    "original_download_indexed_butterfly_species": 224,
+    "eligible_butterfly_forecast_species": 155,
+    "scientific_scoping": "Cite shared underlying original download; full raw-to-155 original date, data-provider and filter transformation are not available in the audit ZIP."
+  },
+  "original_source_224_observed": {
+    "download_DOI": "10.15468/dl.umqmsf",
+    "original_download_occurrence_count": 14637152,
+    "scientific_scoping": "Distinct model/eligibility cohort but same archived original GBIF download as 155 prediction source; not independent data acquisition.",
+    "original_source": "Independent GBIF224 annual source pinned in PR179 and the fixed 2026-10-29 155 forecast source."
+  },
+  "public51_2026_225": {
+    "source_branch_commit": "365526cc70e57b8a6634ee29494bd678f95961ff",
+    "source_full_csv": "data/exploratory/public51_butterfly_index_20261109/full51_225butterfly_period_index.csv",
+    "merged_csv_sha256": "d8fbb3fbf936bfdbedc6c91f1e19f11deda882d3125ccb6600a9c8d800a57887",
+    "n_butterfly_island_cells": 11475,
+    "n_butterfly_species": 225,
+    "n_islands": 51,
+    "original_specieskey_facet_shard_csv_count": 6,
+    "original_query_receipt_shard_json_count": 6,
+    "original_island_period_query_receipts": 153,
+    "acquired_at": "2026-11-09",
+    "original_query": "https://api.gbif.org/v1/occurrence/search (speciesKey facets, year periods, geometry filters)",
+    "source_exact_replay_CI": "https://github.com/zuizui0223/chocho/actions/runs/44726510461",
+    "source_replay_script": "scripts/audit_public51_gbif_facet_sources_20261120.py",
+    "original17_index_drift": "Among 3825 corresponding prior original17 source cells (2026-10-31 versus 2026-11-09), exactly one 2011–2017 binary first-index flag changed, zero 2018–2022 binary first-index flags changed. This is index drift, not biological change.",
+    "original_gbifID_available": false,
+    "original_datasetKey_provider_counts_available": false,
+    "source_DOI": null,
+    "no_false_DOI_claim": true
+  },
+  "historical_private_224": {
+    "sha256": "8362ec4538d28916b2f9aaf98d1512b343b15f8f2eefe060ee61798c9a67406f",
+    "rows": 83573,
+    "source_indexed_records": 14425536,
+    "original_gbifID": false,
+    "original_datasetKey": false,
+    "not_same_as_155_224_observed_GBIF_download": true
+  },
+  "global_port_plant_1596": {
+    "source_type": "2001-2024 pooled GBIF speciesKey facets in source-cached work/barriers/port_flora_inventory/port_ID.json",
+    "original_occurrence_datasetKey_not_recovered": true,
+    "DOI": null,
+    "cannot_borrow_butterfly_DOI": true
+  },
+  "exact_remaining_gates": [
+    "Historic private 224-species annual aggregate contributing GBIF datasets at its original snapshot; no datasetKey in aggregate",
+    "Original 2026 Nov 9 225×51 speciesKey facet contributing datasetKey/publisher counts",
+    "1,596 port plant facet original contributing datasets and snapshot",
+    "Review-accessible source-licensed 155/224 original GBIF data and full raw-to-aggregate transformations"
+  ],
+  "limitation": "Source attribution and exact historical reconstruction must not be confused: confirmed DOI citation alone does not supply the original raw 155 source tables; no new DOI minted or GBIF account used."
+}
