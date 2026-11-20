@@ -237,7 +237,7 @@ def main():
     if original_suffix!=archived:
         raise AssertionError("Unedited v0.3 full source archive is not byte-exact")
     original_references=original_suffix.split("## Supplementary results:",1)[0]
-    current_references=main.split("## Supplementary results:",1)[0].split("## References",1)[1]
+    current_references=main.split(ORIGINAL_PREFIX,1)[1].split("## Supplementary results:",1)[0]
     original_reference_lines=[x for x in original_references.splitlines()[1:] if x.strip()]
     added_references=(
         "- MacArthur, R. H. & Wilson, E. O. (1967).",
