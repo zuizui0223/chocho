@@ -93,6 +93,29 @@ jobs:
           assert d["DOI_gate"].startswith("NOT_MET:")
           print("PUBLIC51_GBIF_SOURCE_AND_NO_DATASETKEY_CITATION_GATE_CHECKED")
           PY
+      - name: Cross-check 155 forecast original DOI citation against pinned 2026 source and block wrong-cohort reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("source_main/provenance/reviewer_defenses/results/host_forecast_validation_20261029")
+          readme=(root/"README.md").read_text(encoding="utf-8")
+          audit=(root/"forecast_completion_audit_ja.md").read_text(encoding="utf-8")
+          citation="10.15468/dl.umqmsf"
+          assert "https://doi.org/"+citation in readme
+          assert "14,637,152" in audit and "155種" in audit and "224種" in audit
+          receipt=json.loads(Path("current/results/geb_v05_private_source_recovery_20261120/GBIF_SOURCE_CITATION_RECONCILIATION_20261120.json").read_text())
+          assert receipt["original_source_155"]["download_DOI"]==citation
+          assert receipt["original_source_224_observed"]["download_DOI"]==citation
+          assert receipt["original_source_155"]["original_download_occurrence_count"]==14637152
+          assert receipt["public51_2026_225"]["source_DOI"] is None
+          assert receipt["global_port_plant_1596"]["DOI"] is None
+          assert receipt["historical_private_224"]["not_same_as_155_224_observed_GBIF_download"] is True
+          print("SAME_ORIGINAL_GBIF_DOWNLOAD_155_SUBSET_AND_224_OBSERVED_DOI_SOURCE_CONFIRMED")
+          print("PUBLIC51_HISTORIC_AND_PORT_API_FACET_SOURCE_DOI_NOT_INFERRED")
+          PY
       - name: Extract the preview ZIP and independently replay the fixed-239 isolation analyses
         shell: bash
         run: |
