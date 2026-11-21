@@ -1,0 +1,63 @@
+# GEB published-paper comparison, scientific gap and reference audit — 20 November 2026
+
+**Audited source:** the current 2026 publisher research articles' *structured abstracts and indexed article records*, plus official GEB submission guidelines. This is a targeted comparison of actual published examples, not exhaustive evidence that no earlier publication addressed any part of host geography.
+
+## Nine directly relevant published GEB research articles (2025–2026)
+
+| First publication | Published paper / DOI | What it actually demonstrates | Exact gap or inferential non-overlap with chocho |
+|---|---|---|---|
+| 2026-08-05 | [The Lepidopteran Hitchhiker's Guide to the Globe](https://doi.org/10.1111/geb.70292) | 969 independently recorded established non-native moths and butterflies (55 butterflies) across 258 regions; temporal trade and geographical origin/destination patterns | Our RESPONSE is source-registered larval food OPPORTUNITY for 239 species, not independently established 969 non-native Lepidoptera. Do not claim first global butterfly transport mapping. |
+| 2026-01-07 | [Species Contributions to Biotic Homogenisation and Differentiation](https://doi.org/10.1111/geb.70195) | Real beta-diversity change across five multigroup cases; initially localized species, rather than already most widespread species, can dominate observed homogenisation/differentiation | Our 39.6% vs 11.2% is absolute newly mapped potential food units, NOT actual butterfly beta-diversity change. Cite to prevent a false rich-get-richer homogenization mechanism. |
+| 2025-11-02 | [Observed and Dark Diversity of Alien Plants Across the World](https://doi.org/10.1111/geb.70142) | Potential alien dark diversity mapped via plant co-occurrence across 367 regions; stronger in dry and species-poor areas; socioeconomic risk projections | Our host-availability measure is based on plant species already documented as native/introduced regionally, not predicted environmentally suitable but absent alien plants. Isolated baseline scarcity is a different denominator. |
+| 2026-05-03 | [From Purpose to Persistence: How Intentional Introductions by Humans Influence Ecological Niches of Non-Native Plants](https://doi.org/10.1111/geb.70245) | 220 alien plants across >60,000 European vegetation plots; intentional vs unintentional introduction pathways associated with invaded niche conditions | Our WPI port counts are contextual proxies, not measured intentionality nor species-specific transport pathway; only present-day whole flora association. |
+| 2026-06-19 | [Discrete Isolation and Continuous Area Drive Genetic Divergence Across Mediterranean Islands](https://doi.org/10.1111/geb.70263) | 105 butterfly species, 34 islands, 10,367 COI sequences, 47 sea straits; sea barrier and area jointly structure genuine population genetic differentiation | Our sea result is undirected plant floristic circuit prediction with uncertain strict transfer, not butterfly gene flow/immigration. This is an example of separating island area and sea processes with independently observed outcomes. |
+| 2026-02 | [The Interplay of Climate Change, Urbanisation, and Species Traits Shapes European Butterfly Population Trends](https://doi.org/10.1111/geb.70204) | >8,400 monitored butterfly populations of 145 species across 12 European countries; standardized population trends | Unlike GBIF indexed occurrences, these are true monitoring trends. Host-informed record prediction +4.12% is not a population-growth or field-demographic effect. Shows a relevant GEB-level replication/observation standard. |
+| 2025-10-02 | [Gaps in Global Alien Plant Trait Data and How to Fill Them](https://doi.org/10.1111/geb.70131) | Global trait coverage source-bias analysis: 14,539 naturalised plants, matrix ~1.5% complete | HOSTS/GloNAF plant source completeness and taxonomic selection cannot be treated as measured worldwide biological host availability; original independent endemic overlap 0/18 is a transparent scope gate. |
+| 2026-03-02 | [Global Patterns and Drivers of Urban Biotic Homogenization: A Meta-Analysis](https://doi.org/10.1111/geb.70219) | 45 studies and 110 effect sizes; spatial beta patterns and urbanization contrasts | Our potential resource Jaccard and effort-sensitive GBIF recorded beta are not established actual ecological homogenization. Place uncertainty controls in SI, not a global temporal community claim. |
+| 2025-09-04 | [The Diverse Reactions of Butterflies and Zygaenids (Lepidoptera) to Climate Change—A Large Scale, Multi-Species Study](https://doi.org/10.1111/geb.70112) | European historical 46-species >1.5-million observation analyses of phenological/altitudinal trends | Shows GEB values source and evaluation resolution and explicitly separates observation-response scales. Our distinct 155 versus 224 source populations must remain distinct. |
+
+## Older close precedents outside GEB
+
+| Year | Study | Established result | Consequence for our novelty claim |
+|---|---|---|---|
+| 2003 | [Graves & Shapiro](https://doi.org/10.1016/S0006-3207(02)00233-1) | California butterfly use of exotics and local range/season effects | Already established that butterflies can use exotic hosts; do not claim local host use itself is novel. |
+| 2020 | [Halsch et al.](https://doi.org/10.1111/een.12845) | Gulf fritillary expansion with landscape and planted Passiflora host | Already established species-specific resource-mediated expansion; our difference is fixed-host multi-species geography with island baseline. |
+| 2023 | [Braga](https://doi.org/10.1016/j.cois.2023.101074) | Exotic host plants can be benefit or trap depending on larval performance and interacting taxa | Confirms potential resource increase does not imply fitness benefit. |
+| 2026 | [Rashid et al.](https://doi.org/10.1111/ddi.70245) | 118 Europe-centred specialized butterflies and host constraints at current/future climatic margins | Our counterfactual moves recorded plant ranges, not a warming-driven host-range limitation experiment. |
+| 2021 | [Daru et al.](https://doi.org/10.1038/s41467-021-27186-8) | Naturalized plants drive documented regional plant compositional homogenization | Our native/alien plant-layer present-day Jaccard contrast is complementary but does not demonstrate butterfly homogenization. |
+
+## Exact novelty formulation recommended for the Introduction
+
+Previous work has separately established three relevant facts: (i) alien plants change local and global botanical composition, (ii) established non-native Lepidoptera have a global and trade-related spatial history, and (iii) larval host ranges and exotic host use can constrain or facilitate specific butterfly ranges. The unaddressed **combined estimand in the inspected literature** is how the *native versus introduced distribution of already documented host partners*, **with consumer diet held fixed**, changes the number and identity of potential butterfly–botanical-region food opportunities across islands and mainlands, and whether these plant-defined gains match any independent butterfly records.
+
+The manuscript's **nontrivial tests** are: relative island increase versus original native-host baseline/gap-filling fraction (different denominators); source plant contribution concentration and butterfly prior-host geography (not observed population dominance); port/sea-related contemporary plant spatial layers (not causal transportation); and small, spatially nonuniversal incremental independent GBIF prediction (not field establishment). The **biological presence and quality of a host** remain to be verified locally.
+
+## Claims to avoid after checking neighboring GEB studies
+
+- Do NOT title the paper as the first global Lepidopteran invasion or shipping-route analysis: Couto et al. (2026) does that for **established** non-native Lepidoptera with different data and purpose.
+- Do NOT convert the currently positive but small host geography model gain into host-caused insect arrival: the 224-species strict 133-region cohort is adverse, the 169-region bootstrap interval crosses zero, and South America cross-world transfer worsens.
+- Do NOT call the fixed-HOSTS resource maps a demonstrated butterfly community homogenization; Hatfield et al. (2026) tests real community and species turnover and shows mechanisms cannot simply be read from widespread species gains.
+- Do NOT claim ports selectively assemble larval hosts beyond general alien plants; direct native−introduced port contrast CI includes zero, port×host effect after whole alien flora weakens.
+- Do NOT imply native floras were proven to be 'created by currents' or introduced plants by recorded ships. Undirected marine electrical circuit and WPI contemporary port counts are spatial predictors; source EuDiS is incomplete and not harmonized with broad Tonga water dispersal.
+- Do NOT treat 239 butterfly species or 18 island endemics as exhaustive butterfly biodiversity; selected fixed-host records exclude **all 18** independently enumerated endemic taxa.
+
+## What the accepted examples teach for editorial presentation
+
+1. **Scope/general question first.** GEB published papers emphasize a conceptual alternative or unexpected denominator in Aim/Results; chocho should lead with low native-host baseline producing large proportional opportunity increase despite similar or smaller gap filling.
+2. **Exact biological response label.** The GEB established Lepidoptera paper classifies confirmed non-natives; the butterfly monitoring paper reports actual monitored populations; chocho must say *known host opportunity* or *GBIF record-index prediction* rather than ‘colonization’.
+3. **Sign plus heterogeneity.** GEB published papers report explicit counterexamples and population units; keep source South America and original stringent eligibility results in SI rather than claiming universal mechanisms.
+4. **Publisher-ready SI.** Paganeli et al. provide nine separately numbered source SI appendices with sampling sensitivity and validation. Couto et al. provide supporting datasets and a code repository with a Zenodo DOI. Our SI needs 2026 GBIF source derivation, source fidelity, and clear Appendix S1–S8 numbering, not duplicated old manuscript Results headings.
+5. **Stable code/data provenance.** Both cited GEB examples give real persistent archives (e.g., Couto's https://doi.org/10.5281/zenodo.21620831); a GitHub source branch alone is not a finalized GEB data availability statement.
+
+## GEB formal readiness based on official Author Guidelines
+
+**Research Article:** structured 7-heading abstract <=300 words; main body ~5,000 words typical; ~50 references; 6–8 total display pieces is a typical target, NOT a required minimum. The cited authors are in eight research papers with relevant text/figures, but their evidence standards depend on the endpoint. Current chocho abstract ~292 and main body ~4,983 words; four main figures are acceptable under free-format submission.
+
+**Double anonymous and format:** separate identifying title page; blinded main and SI; running title under 40 characters; **6–10 alphabetically arranged keywords**; continuous line numbers; main order Title/Abstract/Main/References/Data and Code/Figure legends and actual figures; SI separately editable/appendix-numbered and Figures S3.1 / S5.1 correctly numbered. Original working manuscript has SI source history appended after references, hence a **separate reviewer-facing clean main + standalone SI export** is needed.
+
+**Mandatory data/code:** reviewer-accessible data/code link (or supplied SI files) before submission and stable public archive for publication. The old selected GBIF/port index acquisition family lacks complete original contributor DOI/rights and restricted 83,573-record historical Parquet; do NOT claim the exact historical source is public when it is not. Main known HOSTS/WCVP/GBIF source citations are pinned but do not close all attribution gates.
+
+**Cover letter:** include <250-word global conceptual significance paragraph, separately uploaded PDF; one corresponding author and coauthor-approved title/affiliations/funding/COI in separate title page. No actual consent or submission is claimed here.
+
+**Reference status:** the active working manuscript has 39 unique alphabetized source references after removing two duplicated Tonga entries and adding fully attributed **Couto et al. 2026** (GEB e70292) and **Hatfield et al. 2026** (GEB e70195). Original references are preserved in unedited source archive. Some older legacy references use 'et al.' or abbreviated author names inconsistent with final APA6 presentation; full author-list and in-text first-citation crosschecks remain copyediting tasks.
+

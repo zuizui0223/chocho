@@ -1,0 +1,141 @@
+{
+  "schema": "chocho_GEB_fixed239_isolation_port_paper_receipt_20261120_v01",
+  "source_workflow": {
+    "run_id": 44672145927,
+    "conclusion": "success",
+    "source_commit": "22acfdf172727efe5126d5c94ebc023a1349e09c",
+    "artifact_id": 14600677264
+  },
+  "source": {
+    "flora_WPI_git_blob": "53b618fa51a1a418ccc6e4363f4c866c389c90cc",
+    "HOSTS_WCVP_239_region_git_blob": "4aba89565354edc6c44d566523864cec66a30cbe",
+    "TDWG_geometry_commit": "52da7828aba9d461dd133c27b3bd7a4407161f54",
+    "TDWG_geometry_sha256": "c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840",
+    "unit": "mapped known-host resource opportunities not occupied butterflies"
+  },
+  "cohort": {
+    "islands": 126,
+    "active_islands": 123,
+    "fixed_butterflies": 239,
+    "native_island_coverage_units": 4829,
+    "contemporary_island_coverage_units": 10570,
+    "added_island_units": 5741
+  },
+  "models": {
+    "native_flora": {
+      "ports_beta": 0.08325711112443301,
+      "ports_HC3_p": 0.27895015775053766,
+      "distance_beta": -0.08263768339114631,
+      "distance_HC3_p": 0.10577822968399896
+    },
+    "introduced_flora": {
+      "ports_beta": 0.35045012083938,
+      "ports_HC3_p": 0.008654131370714429,
+      "ports_nine_cluster_p": 0.048587505787712655,
+      "distance_beta": 0.10072070415465675
+    },
+    "native_host239": {
+      "distance_beta": -0.16756536997969254,
+      "distance_HC3_p": 0.00009543810959802712,
+      "distance_nine_cluster_p": 0.014034161165676545
+    },
+    "contemporary_host239": {
+      "distance_beta": 0.019190000649659384,
+      "distance_HC3_p": 0.7507906518391293,
+      "distance_nine_cluster_p": 0.7846616596761796
+    },
+    "paired_native_current_shift": {
+      "distance_beta": 0.18675537062935188,
+      "distance_HC3_p": 0.001067153805860901,
+      "distance_nine_cluster_p": 0.06773957638335248,
+      "distance_nine_cluster_95": [
+        -0.017225729122802208,
+        0.39073647038150594
+      ]
+    },
+    "introduced_only_share_logodds": {
+      "distance_beta": 0.42509951174046273,
+      "distance_HC3_p": 0.000003888986994255918,
+      "distance_nine_cluster_p": 0.013970558715405377,
+      "distance_nine_cluster_95": [
+        0.11212220187733946,
+        0.738076821603586
+      ]
+    },
+    "adjusted_shares": {
+      "km100": 0.5515446390549161,
+      "km1000": 0.6561447604303048,
+      "km4000": 0.7151110606045363
+    },
+    "marginal_count_predictions": {
+      "km100": {
+        "native": 23.293206,
+        "contemporary": 66.654399
+      },
+      "km1000": {
+        "native": 16.612487,
+        "contemporary": 68.150369
+      },
+      "km4000": {
+        "native": 13.502804,
+        "contemporary": 69.070038
+      }
+    }
+  },
+  "sensitivity": {
+    "port_area_log_corr": 0.8073905946742674,
+    "port_area_raw_corr": 0.2709477309187124,
+    "leave_one_island_out_positive": 126,
+    "leave_one_island_out_slope_min": 0.16981326167518188,
+    "leave_one_island_out_slope_max": 0.2026347778458665,
+    "nine_leave_level1_out_positive": 9,
+    "scope_note": "nine macrogeographic regions do not identify independent causal exposure"
+  },
+  "status": "ORIGINAL_125_ISLAND_2517_SPECIES_SCRATCHPAD_NOT_AVAILABLE; FIXED_239_RECALCULATED",
+  "warning": "No butterfly presence, local larval diet dependence, shipborne host arrival or proven mechanism",
+  "spatial_sensitivity": {
+    "source_workflow": {
+      "run_id": 44674041763,
+      "head_sha": "cf9cadf35a6ecf520f7c891becbdba989ef5d7a1",
+      "conclusion": "success"
+    },
+    "graph": {
+      "threshold_km": 2000,
+      "undirected_pairs": 350,
+      "isolated_regions": 5
+    },
+    "raw_residual_moran": {
+      "native_host": {
+        "I": 0.13237345429680783,
+        "within_level1_p": 0.001
+      },
+      "introduced_only_share": {
+        "I": 0.1225758277865721,
+        "within_level1_p": 0.003
+      }
+    },
+    "spatial_mem10": {
+      "native_host": {
+        "distance_beta": -0.1330290218602384,
+        "HC3_p": 0.020438504597333648
+      },
+      "contemporary_host": {
+        "distance_beta": 0.07087949167530917,
+        "HC3_p": 0.3169855486560569
+      },
+      "paired_current_minus_native": {
+        "distance_beta": 0.20390851353554756,
+        "HC3_p": 0.004307924169762921
+      },
+      "introduced_only_share_logodds": {
+        "distance_beta": 0.3948940113274428,
+        "HC3_p": 0.0007855639895080951
+      },
+      "introduced_whole_flora": {
+        "port_beta": 0.38770981970365637,
+        "HC3_p": 0.005596225021716079
+      }
+    },
+    "caveat": "MEM10 is separate from nine macroregional cluster-t8 sensitivity; original paired slope shift clustered p=0.0677. No causal historical plant-transport claim."
+  }
+}
