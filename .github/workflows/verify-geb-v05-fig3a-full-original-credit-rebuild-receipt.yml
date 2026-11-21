@@ -1,0 +1,31 @@
+name: Verify full original Fig3A HOSTS WCVP plant-credit rebuild receipt and review rights gate
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/verify_GEB_v05_Fig3A_original_credit_rebuild_20261121.py
+      - results/geb_v05_private_source_recovery_20261120/ORIGINAL_FIG3A_WCVP_HOSTS_CREDIT_REBUILT_SOURCE_QA_20261121.json
+      - results/geb_v05_private_source_recovery_20261120/THREE_LIMITED_GEB_REPLAY_COHORT_AND_RELEASE_GATE_20261121.json
+      - .github/workflows/verify-geb-v05-fig3a-full-original-credit-rebuild-receipt.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-original-rebuild-receipt-not-license:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pin original code, old source numerical receipt and successful full Fig3A source rerun receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/verify_GEB_v05_Fig3A_original_credit_rebuild_20261121.py
+          python scripts/verify_GEB_v05_Fig3A_original_credit_rebuild_20261121.py
