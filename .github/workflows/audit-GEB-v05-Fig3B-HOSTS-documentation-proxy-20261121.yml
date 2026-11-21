@@ -1,0 +1,53 @@
+name: Audit GEB v0.5 Fig3B HOSTS documentation coverage sensitivity
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB-v05-Fig3B-HOSTS-documentation-proxy-20261121.yml
+      - scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  frozen-239-figure3b-documentation-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-locked host catalog documentation-richness sensitivity
+        run: |
+          set -euo pipefail
+          python scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py --resamples 2000
+      - name: Assert original source-reproduced rho and bounded partial correlation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("results/geb_v05_fig3b_documentation_proxy_20261121/FIG3B_DOCUMENTATION_PROXY_SENSITIVITY_20261121.json")
+          x=json.loads(p.read_text())
+          assert x["n_species"]==239
+          assert abs(x["original_spearman_native_global_vs_added_island"]-0.578896407)<1e-6
+          assert 0.25 < x["partial_spearman_controlling_documented_host_species_and_families"] < 0.45
+          assert x["status"].startswith("SOURCE_239_EXACT")
+          print("SOURCE_239_FIG3B_DOCUMENTATION_AUDIT_PASS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-v05-fig3b-hosts-documentation-proxy-sensitivity-not-independent-effort
+          path: results/geb_v05_fig3b_documentation_proxy_20261121/
+          if-no-files-found: error
+      - name: Archive non-sensitive aggregate report in Draft audit branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_fig3b_documentation_proxy_20261121
+          if ! git diff --cached --quiet; then
+            git commit -m "archive: frozen239 Figure 3B documented-host-count sensitivity results"
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
