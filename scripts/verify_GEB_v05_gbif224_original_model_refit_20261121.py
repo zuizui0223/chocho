@@ -113,7 +113,7 @@ def main():
     ap.add_argument("--self-test",action="store_true")
     z=ap.parse_args()
     if z.self_test:
-        assert not num_tree({"a":[1.,2]},{"a":[1.+1e-9,2.]})
+        assert not num_tree({"a":[1.,2.]},{"a":[1.+1e-9,2.]})
         assert num_tree({"a":1},{"a":2})
         assert EXPECTED_SPECIES==224 and EXPECTED_PAIRS==14196
         print("GBIF224_REFIT_NUMERIC_COMPARISON_SELFTEST_PASS")
