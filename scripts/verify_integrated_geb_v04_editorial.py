@@ -291,13 +291,42 @@ def main():
     checklist_doi = "10.15468/ye7whj"
     permitted_checklist_source = "- INBO. *European butterfly checklist and distributions*, GBIF dataset. https://doi.org/10.15468/ye7whj. **Dataset-version citation to finalize before submission.**"
     permitted_checklist_current = "- Maes, D., Wiemers, M., Verovnik, R., Warren, M., Brosens, D. & Desmet, P. (2020). *National checklists and red lists for European butterflies* (Version 1.1) [checklist data set]. Research Institute for Nature and Forest (INBO). https://doi.org/10.15468/ye7whj"
+    # DOIs and all title/journal/source text are protected. Only the lead-author-
+    # preserving author lists of these 14 Crossref-verified abbreviations may
+    # change, with the year and everything after it byte-identical. See the
+    # source audit branch's 21-Nov 14/14 DOI/title/year/author metadata receipt.
+    approved_author_list_dois = {
+        "10.1111/ecog.06227": "Bach",
+        "10.1038/s41467-021-27186-8": "Daru",
+        "10.1093/aobpla/plz051": "Essl",
+        "10.1038/s41597-021-00997-6": "Govaerts",
+        "10.1111/een.12845": "Halsch",
+        "10.1111/j.1466-822x.2006.00212.x": "Hobbs",
+        "10.1038/s41559-023-02041-9": "Kawahara",
+        "10.1111/jbi.14258": "Neu",
+        "10.1111/ddi.70245": "Rashid",
+        "10.1002/ajb2.16224": "Schmidt",
+        "10.1038/s41597-022-01473-5": "Shirey",
+        "10.1038/s41467-024-49079-2": "Suchan",
+        "10.1007/s11252-017-0667-0": "Tordoni",
+        "10.1038/nature14910": "van Kleunen",
+    }
     for key, original_entry in original_by_id.items():
         if key not in current_by_id:
             raise AssertionError("Original unique reference lost: " + key)
+        revised = current_by_id[key]
         if key == checklist_doi:
-            if original_entry != permitted_checklist_source or current_by_id[key] != permitted_checklist_current:
+            if original_entry != permitted_checklist_source or revised != permitted_checklist_current:
                 raise AssertionError("Official INBO checklist correction does not match the verified six-author version-1.1 citation")
-        elif current_by_id[key] != original_entry:
+        elif key in approved_author_list_dois:
+            old_tail = re.search(r"\(\d{4}\)\. .*", original_entry)
+            new_tail = re.search(r"\(\d{4}\)\. .*", revised)
+            if not old_tail or not new_tail or old_tail.group() != new_tail.group():
+                raise AssertionError("Title, year or publisher text changed in Crossref author-list-only edit: " + key)
+            if ("et al." not in original_entry or "et al." in revised or
+                not revised.startswith("- " + approved_author_list_dois[key] + ",")):
+                raise AssertionError("Crossref-author-list correction/lead author not applied: " + key)
+        elif revised != original_entry:
             raise AssertionError("Original unique reference altered without source-audited copyedit: " + key)
     added_references=[key for key in current_by_id if key not in original_by_id]
     if len(added_references)!=6 or not verified_literature_dois.issubset(set(added_references)):
