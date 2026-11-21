@@ -1,0 +1,80 @@
+{
+  "schema": "GEB_v05_three_limited_executable_source_QA_cohorts_PLUS_separate_original_Fig3A_20261121_v2",
+  "title": "Source-exact subanalyses in GEB v0.5: Fig1, Fig2D, Fig3B-C, Fig4 stored score outputs",
+  "status": "THREE_LIMITED_SOURCE_QA_ZIPS_AND_SEPARATE_FULL_ORIGINAL_SOURCE_FIG3A_REPLAY_PASSED;JOURNAL_ARCHIVE_NOT_APPROVED",
+  "main_paper_ref": "99b876421af2b4f51e58569862994622a02717d7",
+  "main_paper_PR": 179,
+  "audit_PR": 189,
+  "components": [
+    {
+      "name": "Fig1+Fig3B/C source-derived resource counts and butterfly geographic breadth",
+      "n_files": 7,
+      "sha256": "5f35415b81d26f87538381c53376f4ab8e4069a85069e7d510ddff70fdd9fcec",
+      "successful_actions_run": 44837370642,
+      "scope": "fixed239 butterflies, 126 islands and 237 mainland WGSRPD3 regions; 239-species island-gain ranks and host-family groups",
+      "complete_raw_SOURCE_replay": false,
+      "explicitly_not_replayed": "Fig3A plant-by-butterfly-by-region credit matrix (only 670/38/Gini source numerical receipt)"
+    },
+    {
+      "name": "Fig2D resource mainland-isolation, port whole-introduced-flora source regressions and MEM10",
+      "n_files": 8,
+      "sha256": "c4a9f05f593f59924bdd188c88b7eb036b5d5a89804d665369ab0f4621ba9783",
+      "successful_actions_run": 44769070926,
+      "scope": "126 botanical islands and fixed239 potential-known-host resources, 123 active island host-share spatial MEM10; source-hashed TDWG geometry",
+      "complete_raw_SOURCE_replay": false,
+      "explicitly_not_replayed": "upstream native/introduced plant species×region×HOSTS edges, WPI private original geodata"
+    },
+    {
+      "name": "Fig4 independent original GBIF 155/224 fitted-model evaluation score arithmetic",
+      "n_files": 5,
+      "sha256": "aa87dcf6b58f68d2533557e2940a1b294b372ddd3c096257dc6e0de26bf74d25",
+      "successful_actions_run": 44838019372,
+      "scope": "155-butterfly eight original species-equal prediction score modes; 224-butterfly 169 original heldout region model MSE folds",
+      "complete_raw_SOURCE_replay": false,
+      "retained_negative": "155-species untrained-species holdout: MSE gain -0.2085 percent",
+      "explicitly_not_replayed": "original occurrence input, model refitting, 29-draw thinning, entire world transfer, phylogenetic dynamics"
+    }
+  ],
+  "main_assertions_not_equated": [
+    "Fig3A remained source receipt only inside the seven-file Fig1/3BC ZIP, but is independently reconstructed from pinned original HOSTS/WCVP in separate CI #44847332630; no raw credit table was publicly redistributed",
+    "Fig2A-C source model and Fig4 actual independent training/effort-thinning pipelines are not completely replayed from these ZIPs",
+    "The original 155/224 downloaded GBIF DOI 10.15468/dl.umqmsf is verified; unrelated original 225x51/1596-port GBIF facet publisher lists remain unidentified",
+    "Native and contemporary mapped host opportunities are NOT field host use, butterfly colonization or shipborne plant transport",
+    "The blind-name/metadata scan is not an indirect-identifiability proof and original third-party data rights are not cleared"
+  ],
+  "licenses_rights_and_access": {
+    "author_account_identifiers_detected_in_the_three_packaged_ZIPs": false,
+    "verified_indirect_anonymity": false,
+    "third_party_source_redistribution_permission": false,
+    "original_recordlevel_GBIF_data_included": false,
+    "actual_stable_reviewer_private_URL": false,
+    "full_manuscript_all_figures_and_SI_reproducible": false,
+    "coauthors_final_approval": false,
+    "new_DOI_minted": false
+  },
+  "fig3A_original_upstream_credit_reconstruction": {
+    "status": "FULL_ORIGINAL_PINNED_HOSTS_WCVP_SOURCE_R_PYTHON_FRACTIONAL_PLANT_CREDIT_REPLAY_PASSED",
+    "source_actions_run": 44847332630,
+    "receipt_archive_actions_run": 44848263272,
+    "actual_receipt": "results/geb_v05_private_source_recovery_20261120/ORIGINAL_FIG3A_WCVP_HOSTS_CREDIT_REBUILT_SOURCE_QA_20261121.json",
+    "receipt_sha256": "af5d7327bcb8883c85be94250a218348b40906e8e35b5f8636a87cea21960eff",
+    "resolved_butterfly_accepted_plant_edges": 53449,
+    "native_plant_x_region_edges": 148254,
+    "contemporary_plant_x_region_edges": 222384,
+    "butterflies_expanded": 206,
+    "added_butterfly_x_region_units": 14553,
+    "fractional_credited_plant_species": 670,
+    "plant_species_covering_50_percent_credit": 38,
+    "plant_credit_Gini": 0.7773943319671659,
+    "plant_top10_share": 0.2510105136113853,
+    "genera_contributing": 431,
+    "genera_covering_50_percent_credit": 25,
+    "genus_credit_Gini": 0.7737917033318613,
+    "checks": "Source data and code pinned, native/contemporary R sidecars regenerated, original Python fractional credit rerun, plant/genus Gini HHI top-k and 50pct counts matched original to 1e-9",
+    "individual_rebuilt_plant_credit_csv_released": false,
+    "full_original_HOSTS_WCVP_data_released": false,
+    "source_rights_verified": false,
+    "final_anonymous_reviewer_data_deposit": false,
+    "not_in_earlier_seven_file_fig1_fig3BC_ZIP": true
+  }
+}

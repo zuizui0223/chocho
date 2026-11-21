@@ -1,0 +1,73 @@
+name: Archive source-verified Fig3A original HOSTS-WCVP rebuild receipt only (no original plant tables)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/archive-GEB-Fig3A-original-rebuild-receipt-20261121.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  preserve-original-method-rebuild-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download exact fully successful original HOSTS/WCVP Fig3A rebuild receipt without rerunning 7-minute R data preparation
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44847332630
+          github-token: ${{ github.token }}
+          name: GEB-Fig3A-original-HOSTS-WCVP-fractional-credit-full-rebuild-receipt-internal-NOT-licensed-source-release
+          path: exact_source_receipt
+      - name: Pin exact source hash and verify original 670/38/Gini plant/genera contributions before committing receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,re
+          p=Path('exact_source_receipt/ORIGINAL_FIG3A_PLANT_AND_GENUS_CREDIT_REPLAY_QA.json')
+          b=p.read_bytes()
+          assert hashlib.sha256(b).hexdigest()=='af5d7327bcb8883c85be94250a218348b40906e8e35b5f8636a87cea21960eff'
+          data=json.loads(b)
+          assert data['schema']=='GEB_Fig3A_original_WCVP_HOSTS_host_credit_REBUILT_20261121_v1'
+          assert data['status']=='ORIGINAL_FIXED_SOURCE_FIG3A_FRACTIONAL_PLANT_CREDIT_RECOMPUTED_AGREES_WITH_2026_ORIGINAL_RECEIPT'
+          assert data['original_butterflies_with_new_opportunities']==206
+          assert data['introduced_added_butterfly_region_units']==14553
+          assert data['contributors_plant_species']==670
+          assert data['contributors_plant_species_to_half']==38
+          assert abs(data['plant_credit_gini']-0.7773943319671659)<1e-10
+          assert abs(data['plant_credit_top10_share']-0.2510105136113853)<1e-10
+          assert data['contributing_genera']==431
+          assert data['contributing_genera_to_half']==25
+          assert abs(data['genus_credit_gini']-0.7737917033318613)<1e-10
+          assert data['all_original_report_stat_values_match_1e9']
+          assert data['source_hosts_WCVP_tables_NOT_REUPLOADED']
+          assert data['source_species_level_credit_tables_NOT_RELEASED']
+          assert data['review_deposit_rights_NOT_CLEARED']
+          assert len(data['source_intermediate_and_output_sha256'])==8
+          assert not re.search(rb"zui"+rb"zui0223|ZHA"+rb"NG[ _-]?RUI"+rb"QI|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}",b,re.I)
+          print('ORIGINAL_FIG3A_SOURCE_REBUILD_RECEIPT_670_38_GINI_GENUS_QA_PASS')
+          dest=Path('results/geb_v05_private_source_recovery_20261120/ORIGINAL_FIG3A_WCVP_HOSTS_CREDIT_REBUILT_SOURCE_QA_20261121.json')
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          dest.write_bytes(b)
+          PY
+      - name: Commit only verification receipt SHA and aggregate evidence to independent PR189 audit branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_private_source_recovery_20261120/ORIGINAL_FIG3A_WCVP_HOSTS_CREDIT_REBUILT_SOURCE_QA_20261121.json
+          if git diff --cached --quiet; then
+            echo 'Exact Fig3A original rebuild source receipt already archived'
+          else
+            git commit -m "Freeze Fig3A fully reconstructed original WCVP HOSTS plant credits source QA only [skip ci]"
+            git push origin HEAD:refs/heads/analysis/geb-v05-review-data-source-audit-20261120
+          fi

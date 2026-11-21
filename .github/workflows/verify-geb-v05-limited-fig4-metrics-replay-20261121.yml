@@ -1,0 +1,177 @@
+name: Verify limited Fig4 independent GBIF 155/224 published-score replay (not raw refit)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/replay_GEB_v05_fig4_stored_model_scores_20261121.py
+      - .github/workflows/verify-geb-v05-limited-fig4-metrics-replay-20261121.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-exact-original-evaluation-scores:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Independently reaggregate frozen 155 butterfly and 224 butterfly original prediction scores
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/limited_fig4_scores
+          python -m py_compile audit/scripts/replay_GEB_v05_fig4_stored_model_scores_20261121.py
+          python audit/scripts/replay_GEB_v05_fig4_stored_model_scores_20261121.py \
+            --forecast-metrics original/provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_all_metrics.csv \
+            --observed224-region-losses original/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_observed_beta_region_holdout_v1.csv \
+            --out dist/limited_fig4_scores/Fig4_SCORE_ONLY_RECOMPUTED.json
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          def blob(data):
+            return hashlib.sha1(b"blob "+str(len(data)).encode()+b"\0"+data).hexdigest()
+          base=Path("original/provenance/reviewer_defenses/results")
+          f=base/"host_forecast_validation_20261029/forecast_temporal_results.json"
+          b=base/"host_forecast_validation_20261029/forecast_spatial_results.json"
+          z=base/"host_forecast_validation_20261029/forecast_spatial_buffer100_results.json"
+          q=base/"global_colonial_resource_beta_20261031/gbif_global224_observed_beta_v1.json"
+          assert blob(f.read_bytes())=="77c3663b8d6b0e1dab732becb8a2a4f03706c857"
+          assert blob(b.read_bytes())=="ee541ca8208def59aa13abbd4d1a3cb36bbb9fb0"
+          assert blob(z.read_bytes())=="f432b78c628fc46a198b51d6ddf5bf88bf605010"
+          assert blob(q.read_bytes())=="a7cee922179288999b6d460be417afa6262a2872"
+          m=json.loads(Path("dist/limited_fig4_scores/Fig4_SCORE_ONLY_RECOMPUTED.json").read_text())
+          for name,p in [("temporal",f),("spatial",b),("spatial_buffer100",z)]:
+            original=json.loads(p.read_text())
+            assert m["forecast155"][name]["evaluated_species_cell_cases"]==original["results"]["M5_host_composition"]["rows"]
+            assert abs(m["forecast155"][name]["plus_known_larval_host_resource_and_composition_M5_species_equal_MSE"]-original["results"]["M5_host_composition"]["species_equal_mse"])<1e-14
+            assert abs(m["forecast155"][name]["reference_climate_landcover_M3_species_equal_MSE"]-original["results"]["M3_both"]["species_equal_mse"])<1e-14
+          source=json.loads(q.read_text())
+          assert source["sources"]["GBIF_doi"]=="10.15468/dl.umqmsf"
+          assert source["cohort"]["region_count"]==169 and source["cohort"]["evaluated_region_pairs"]==14196
+          assert m["observed_community224"]["n_species"]==source["cohort"]["positive_GBIF_species_in_matched_region_cohort"]==224
+          assert abs(m["observed_community224"]["source_recomputed_known_host_H_after_other_aliens_O_MSE_gain_pct"]-source["heldout_region_model_comparisons"]["known_host_after_other_aliens"]["MSE_reduction_percent"])<1e-10
+          assert m["forecast155"]["species"]["source_recomputed_MSE_gain_pct"]<0
+          print("FIG4_SOURCE_ORIGINAL_JSON_RECEIPTS_155_224_EVALUATION_SCORES_RECONCILED")
+          PY
+      - name: Stage source-only, name-screened evaluation-score ZIP (no GBIF occurrence records)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p stage/data stage/scripts
+          cp original/provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_validation_all_metrics.csv stage/data/forecast155_original_model_scores.csv
+          cp original/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_observed_beta_region_holdout_v1.csv stage/data/gbif224_original_region_holdout_scores.csv
+          cp audit/scripts/replay_GEB_v05_fig4_stored_model_scores_20261121.py stage/scripts/REPLAY_PUBLISHED_SCORES.py
+          cat >stage/REPRODUCE.sh <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          python3 scripts/REPLAY_PUBLISHED_SCORES.py \
+            --forecast-metrics data/forecast155_original_model_scores.csv \
+            --observed224-region-losses data/gbif224_original_region_holdout_scores.csv \
+            --out recomputed_scores.json
+          EOF
+          cat >stage/README_METRICS_NOT_MODEL_RETRAINING.md <<'EOF'
+          # Fig.4 — limited *published evaluation-score* reproducibility check
+
+          Two original butterfly observation modelling endpoints used the same
+          source GBIF occurrence download, DOI 10.15468/dl.umqmsf, original
+          14,637,152 GBIF occurrences (not provided in this archive).
+
+          This small source-only ZIP takes ORIGINAL output tables of already
+          fitted models, recalculates percentage MSE improvements and compares
+          sources across 155 temporal/spatial validation butterflies and 224
+          butterflies in 169 held-out botanical regions. The first uses
+          original species-equal score summaries over 208,482 or subset cells;
+          the second region-equal 169 holdout MSE records per model, 14,196
+          dependent pairs. Run: bash REPRODUCE.sh (Python 3.12 stdlib).
+
+          This is NOT independent model fitting, original occurrence retrieval,
+          datasetKey/date model reconstruction, host plant distribution replay,
+          source-level field detection, or butterfly colonization evidence.
+
+          Important retained adverse result: the 155-butterfly unseen-species
+          model lost 0.2085% MSE (host addition not generalizable to truly unseen
+          butterflies). In the original 224 model the added documented-host
+          geography H improved original held-region mean MSE after other alien
+          plants O by just 0.0913%. The stronger 29-draw record-thinning and
+          eight-world heldout conclusions are source receipts outside this ZIP,
+          NOT independently refitted or recomputed from here.
+
+          This package is limited coauthor QA, not licensed/anonymity-approved
+          journal deposition. Direct identifying tokens and archive metadata
+          are scanned, but indirect anonymity and copyright/source rights
+          require independent human review. No newly minted DOI.
+          EOF
+          python - <<'PY'
+          import hashlib,re
+          from pathlib import Path
+          from zipfile import ZipFile,ZipInfo,ZIP_DEFLATED
+          root=Path("stage")
+          paths=sorted(p for p in root.rglob("*") if p.is_file())
+          assert len(paths)==5
+          blocked={
+            "owner":re.compile(rb"zui"+rb"zui0223",re.I),
+            "author":re.compile(rb"ZHA"+rb"NG[ _.-]?(?:RUI"+rb"QI|RAC"+rb"HEL)",re.I),
+            "email":re.compile(rb"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}",re.I),
+            "home":re.compile(rb"/(?:Users|home)/[A-Z0-9_.-]+/",re.I),
+            "raw_WPI_GBIF":re.compile(rb"global_original_species_island_year\.parquet|ports_2019\.geojson",re.I)
+          }
+          dest=Path("dist/limited_fig4_scores/GEB_V05_FIG4_155_224_ORIGINAL_EVALUATION_SCORES_ONLY_NOT_MODEL_REPLAY.zip")
+          with ZipFile(dest,"w") as z:
+            for p in paths:
+              name=p.relative_to(root).as_posix()
+              raw=p.read_bytes()
+              for label,r in blocked.items():
+                if r.search(name.encode()) or r.search(raw):
+                  raise AssertionError("Direct identity or restricted source unexpectedly in "+name+" "+label)
+              info=ZipInfo(name,(2026,11,21,0,0,0))
+              info.external_attr=0o644<<16
+              info.compress_type=ZIP_DEFLATED
+              z.writestr(info,raw)
+          with ZipFile(dest) as z:
+            assert z.testzip() is None
+            assert sorted(z.namelist())==[p.relative_to(root).as_posix() for p in paths]
+            for info in z.infolist():
+              assert info.date_time==(2026,11,21,0,0,0)
+              assert (info.external_attr>>16)&0o777==0o644
+              for label,r in blocked.items():
+                if r.search(info.filename.encode()) or r.search(z.read(info)):
+                  raise AssertionError("Bad extracted content "+info.filename+" "+label)
+            z.extractall("extracted_fig4_score_QA")
+          print("GBIF_FIG4_SOURCE_ONLY_5FILES_DIRECT_IDENTITY_SCREEN_PASS",
+                 hashlib.sha256(dest.read_bytes()).hexdigest())
+          PY
+      - name: Independent ZIP-extract replay of original score-error summaries without any original GBIF occurrence events
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd extracted_fig4_score_QA
+          bash REPRODUCE.sh > ../dist/limited_fig4_scores/Fig4_SCORES_ONLY_REPLAY_LOG.txt 2>&1
+          grep -q "GEB_FIG4_155_8_FORECAST_MODES_SCORE_SOURCE_RECALCULATED_PASS" ../dist/limited_fig4_scores/Fig4_SCORES_ONLY_REPLAY_LOG.txt
+          grep -q "GEB_FIG4_224_169_HELD_REGION_H_AFTER_O_SCORE_SOURCE_RECALCULATED_PASS" ../dist/limited_fig4_scores/Fig4_SCORES_ONLY_REPLAY_LOG.txt
+          grep -q "GEB_FIG4_RAW_GBIF_MODEL_RETRAINING_AND_THINNING_NOT_CLAIMED" ../dist/limited_fig4_scores/Fig4_SCORES_ONLY_REPLAY_LOG.txt
+          echo "FIG4_ORIGINAL_DERIVED_EVALUATION_SCORES_EXTRACT_REPLAY_PASS_NO_RAW_MODEL_REFIT"
+      - name: Save source-locked hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha256sum dist/limited_fig4_scores/* > dist/limited_fig4_scores/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-Fig4-155-224-original-evaluation-MSE-scores-only-NOT-raw-butterfly-model-replay
+          path: dist/limited_fig4_scores/
+          if-no-files-found: warn
+          retention-days: 90

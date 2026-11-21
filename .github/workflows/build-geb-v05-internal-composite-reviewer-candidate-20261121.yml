@@ -1,0 +1,113 @@
+name: GEB v0.5 build integrated scoped reviewer-data preflight (INTERNAL ONLY)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/build_GEB_v05_internal_composite_reviewer_candidate_20261121.py
+      - .github/workflows/build-geb-v05-internal-composite-reviewer-candidate-20261121.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-limited-composite-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 2571dc0624f8d4eb695712e34414ed0a41056300
+          path: paper
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: GEB-v05-limited-Fig1-Fig3BC-aggregates-Fig3A-receipt-only-NOT-licensed-review-archive
+          repository: zuizui0223/chocho
+          run-id: 44837370642
+          github-token: ${{ github.token }}
+          path: incoming/fig1
+      - uses: actions/download-artifact@v4
+        with:
+          name: GEB-Fig4-155-224-original-evaluation-MSE-scores-only-NOT-raw-butterfly-model-replay
+          repository: zuizui0223/chocho
+          run-id: 44838019372
+          github-token: ${{ github.token }}
+          path: incoming/fig4
+      - name: Recreate Fig.2D/MEM10 eight-file aggregate model package from the current WPI-corrected builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile audit/scripts/build_GEB_v05_blind_fixed239_subanalysis_20261121.py
+          python audit/scripts/build_GEB_v05_blind_fixed239_subanalysis_20261121.py \
+            --current-root paper --out-dir incoming/fixed239
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path("incoming/fixed239/GEB_V05_SCREENED_LIMITED_FIXED239_NOT_FULL_REVIEW_ARCHIVE.zip")
+          with ZipFile(p) as z:
+              text=z.read("README.md").decode()
+              assert "27th edition" not in text
+              assert "source" in text.lower()
+              assert z.testzip() is None
+          print("WPI_EDITION_CLAIM_REMOVED_AND_FIG2D_COMPONENT_CRC_PASS")
+          PY
+      - name: Build internal composite and independent ZIP file/header/identity checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile audit/scripts/build_GEB_v05_internal_composite_reviewer_candidate_20261121.py
+          python audit/scripts/build_GEB_v05_internal_composite_reviewer_candidate_20261121.py \
+            --incoming incoming --audit-root audit --out dist/internal_candidate
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("dist/internal_candidate/INTERNAL_COMPOSITE_BUILD_QA.json")
+          r=json.loads(p.read_text())
+          assert r["status"]=="INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED"
+          assert r["source_receipt_count"]==5
+          assert set(r["component_file_counts"])=={"fig1_fig3bc","fig2d_fixed239","fig4_scores_only"}
+          assert r["no_source_identity_tokens_in_actual_ZIP"]
+          assert not r["real_Dryad_reviewer_deposit"]
+          print("COMPOSITE_SCOPE_AND_SOURCE_REUSE_STOP_LINE_CHECK_PASS")
+          PY
+      - name: Execute all three source-limited numerical replay components AFTER extracting the combined ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash dist/internal_candidate/extracted_qa/RUN_LIMITED_COMPONENTS.sh \
+            > dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt 2>&1 || {
+              tail -n 100 dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+              exit 1
+            }
+          grep -q "GEB_V05_LIMITED_THREE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER" \
+            dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+          grep -q "GEB_LIMITED_FIXED239_INDEPENDENT_REVIEW_SOURCE_REPLAY_PASS" \
+            dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+          grep -q "FIG1_REGION_NATIVE_ALIEN_KNOWN_HOST_239_AGGREGATE_REPLAY_PASS" \
+            dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+          grep -q "GEB_FIG4_224_169_HELD_REGION_H_AFTER_O_SCORE_SOURCE_RECALCULATED_PASS" \
+            dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+          echo "INTERNAL_CANDIDATE_EXTRACTED_THREE_SUBMODEL_REPLAYS_PASS"
+      - name: Emit metadata and checksums only, omit expanded source files from redundant action upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/to_upload
+          cp dist/internal_candidate/GEB_V05_INTERNAL_COMPOSITE_REPRO_NOT_FOR_JOURNAL_REVIEW.zip dist/to_upload/
+          cp dist/internal_candidate/INTERNAL_COMPOSITE_BUILD_QA.json dist/to_upload/
+          cp dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt dist/to_upload/
+          sha256sum dist/to_upload/* > dist/to_upload/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-THREE-COMPONENT-INTERNAL-REVIEW-SOURCE-ONLY-NOT-A-Dryad-DEPOSIT
+          path: dist/to_upload/
+          if-no-files-found: warn
+          retention-days: 90

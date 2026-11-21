@@ -1,0 +1,167 @@
+name: Audit current GEB v0.5 reviewer source package (internal, not anonymous)
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - "scripts/verify_chocho_recovered_private_zip_20261120.py"
+      - "scripts/audit_chocho_historical_parquet_20261120.py"
+      - "scripts/audit_public51_gbif_facet_sources_20261120.py"
+      - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
+  pull_request:
+    branches:
+      - paper/geb-single-island-port-endemics-20261118
+    paths:
+      - "scripts/audit_GEB_v05_review_source_bundle_20261120.py"
+      - "scripts/verify_chocho_recovered_private_zip_20261120.py"
+      - "scripts/audit_chocho_historical_parquet_20261120.py"
+      - "scripts/audit_public51_gbif_facet_sources_20261120.py"
+      - ".github/workflows/audit-geb-v05-review-source-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-current-review-source-lineage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: source_main
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 365526cc70e57b8a6634ee29494bd678f95961ff
+          path: public51_archive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source and figure identity preflight; deliberately non-anonymous internal preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_GEB_v05_review_source_bundle_20261120.py
+          python -m py_compile current/scripts/verify_chocho_recovered_private_zip_20261120.py
+          python -m py_compile current/scripts/audit_chocho_historical_parquet_20261120.py
+          python -m py_compile current/scripts/audit_public51_gbif_facet_sources_20261120.py
+          python current/scripts/audit_chocho_historical_parquet_20261120.py --self-test
+          python -u current/scripts/audit_GEB_v05_review_source_bundle_20261120.py \
+            --current-root current \
+            --source-root source_main \
+            --out-dir dist/geb_v05_source_preflight
+          python - <<'PY'
+          import json,zipfile
+          from pathlib import Path
+          p=Path("dist/geb_v05_source_preflight")
+          j=json.loads((p/"GEB_V05_SOURCE_PREVIEW_AUDIT.json").read_text())
+          assert j["state"] == "INTERNAL_EVIDENCE_PREVIEW_ONLY_NOT_JOURNAL_REVIEW_ARCHIVE"
+          assert j["figures"]["main_svg_count"] == 4
+          assert j["figures"]["SI_svg_count"] == 2
+          assert j["figures"]["source_numeric_receipts"] == 8
+          assert all(x["exists"] for x in j["included_inventory"])
+          assert j["publication_gates"]["anonymous_reviewer_access_and_stable_archive"] == "BLOCKED"
+          z=p/"GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip"
+          with zipfile.ZipFile(z) as f:
+            assert f.testzip() is None
+            assert "README_INTERNAL_NOT_FOR_ANONYMOUS_REVIEW.md" in f.namelist()
+          print("GEB_V05_SOURCE_PREVIEW_INCOMPLETE_BY_DESIGN_PASS")
+          PY
+          sha256sum dist/geb_v05_source_preflight/* > dist/geb_v05_source_preflight/SHA256SUMS.txt
+      - name: Verify six immutable original 2026 public51 GBIF source facet shards and DOI provenance gap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python current/scripts/audit_public51_gbif_facet_sources_20261120.py \
+            --source-root public51_archive \
+            --out dist/geb_v05_source_preflight/PUBLIC51_GBIF_FACET_PROVENANCE.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("dist/geb_v05_source_preflight/PUBLIC51_GBIF_FACET_PROVENANCE.json").read_text())
+          assert d["source_population"]["cells"]==11475
+          assert d["source_population"]["total_source_query_receipts"]==153
+          assert d["status"]=="SIX_ORIGINAL_FACET_SHARDS_SOURCE_EXACT_NO_RECORD_PUBLISHERS"
+          assert d["DOI_gate"].startswith("NOT_MET:")
+          print("PUBLIC51_GBIF_SOURCE_AND_NO_DATASETKEY_CITATION_GATE_CHECKED")
+          PY
+      - name: Cross-check 155 forecast original DOI citation against pinned 2026 source and block wrong-cohort reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path("source_main/provenance/reviewer_defenses/results/host_forecast_validation_20261029")
+          readme=(root/"README.md").read_text(encoding="utf-8")
+          audit=(root/"forecast_completion_audit_ja.md").read_text(encoding="utf-8")
+          citation="10.15468/dl.umqmsf"
+          assert "https://doi.org/"+citation in readme
+          assert "14,637,152" in audit and "155種" in audit and "224種" in audit
+          receipt=json.loads(Path("current/results/geb_v05_private_source_recovery_20261120/GBIF_SOURCE_CITATION_RECONCILIATION_20261120.json").read_text())
+          assert receipt["original_source_155"]["download_DOI"]==citation
+          assert receipt["original_source_224_observed"]["download_DOI"]==citation
+          assert receipt["original_source_155"]["original_download_occurrence_count"]==14637152
+          assert receipt["public51_2026_225"]["source_DOI"] is None
+          assert receipt["global_port_plant_1596"]["DOI"] is None
+          assert receipt["historical_private_224"]["not_same_as_155_224_observed_GBIF_download"] is True
+          print("SAME_ORIGINAL_GBIF_DOWNLOAD_155_SUBSET_AND_224_OBSERVED_DOI_SOURCE_CONFIRMED")
+          print("PUBLIC51_HISTORIC_AND_PORT_API_FACET_SOURCE_DOI_NOT_INFERRED")
+          PY
+      - name: Extract the preview ZIP and independently replay the fixed-239 isolation analyses
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p replay
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          p=Path("dist/geb_v05_source_preflight/GEB_V05_INTERNAL_SOURCE_PREVIEW_NOT_ANONYMOUS.zip")
+          with ZipFile(p) as z:
+              assert z.testzip() is None
+              z.extractall("replay")
+          PY
+          bash replay/RUN_FIXED239_REPLAY_INTERNAL.sh > replay_run.log 2>&1 || { tail -100 replay_run.log; exit 1; }
+          tail -c 2500 replay_run.log
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          expected=json.loads(Path("replay/current_paper/results/isolation_port_resource_reanalysis_20261120/SOURCE239_PAPER_RECEIPT_V01.json").read_text())
+          root=Path("replay/fixed239_recomputed")
+          baseline=json.loads((root/"SOURCE239_ISOLATION_PORT_REANALYSIS.json").read_text())
+          spatial=json.loads((root/"SOURCE239_MORAN_MEM10_SPATIAL_SENSITIVITY.json").read_text())
+          def close(a,b,n):
+              assert abs(float(a)-float(b))<0.0001,(n,a,b)
+          models=baseline["models"]
+          paper=expected["models"]
+          close(models["host_native_239"]["distance"]["beta"],paper["native_host239"]["distance_beta"],"native_distance")
+          close(models["host_current_minus_native_z"]["distance"]["beta"],paper["paired_native_current_shift"]["distance_beta"],"slope_shift")
+          close(models["plant_introduced"]["ports"]["beta"],paper["introduced_flora"]["ports_beta"],"port_alien")
+          close(models["introduced_only_share_logodds_239"]["distance"]["beta"],paper["introduced_only_share_logodds"]["distance_beta"],"share")
+          for key,receiptkey,term in [
+            ("host_native_239","native_host","distance"),
+            ("host_current_minus_native_z","paired_current_minus_native","distance"),
+            ("introduced_only_share_logodds_239","introduced_only_share_logodds","distance"),
+            ("plant_introduced","introduced_whole_flora","ports")]:
+              close(spatial["results"][key]["spatial_MEM10"][term]["beta"],
+                    expected["spatial_sensitivity"]["spatial_mem10"][receiptkey][("port" if term=="ports" else term)+"_beta"],key)
+          assert baseline["models"]["counts"]["islands"]==126
+          assert spatial["active_resource_islands"]==123
+          print("ZIP_EXTRACTED_FIXED239_AND_MEM10_SUBANALYSIS_REPLAY_SOURCE_EXACT")
+          PY
+          cp replay_run.log dist/geb_v05_source_preflight/fixed239_replay.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-internal-source-evidence-preview-NOT-ANONYMOUS-NOT-SUBMISSION
+          path: dist/geb_v05_source_preflight/
+          if-no-files-found: warn
+          retention-days: 90

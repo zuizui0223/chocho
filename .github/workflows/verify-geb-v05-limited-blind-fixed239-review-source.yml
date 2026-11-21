@@ -1,0 +1,79 @@
+name: Verify limited identity-screened GEB Fig2D fixed239 reviewer-subanalysis bundle
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/build_GEB_v05_blind_fixed239_subanalysis_20261121.py
+      - .github/workflows/verify-geb-v05-limited-blind-fixed239-review-source.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-screen-and-replay-limited-subanalysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 99b876421af2b4f51e58569862994622a02717d7
+          path: paper
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build original-source pinned and direct-author-identifier-screened 8-file limited archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile audit/scripts/build_GEB_v05_blind_fixed239_subanalysis_20261121.py
+          python audit/scripts/build_GEB_v05_blind_fixed239_subanalysis_20261121.py \
+            --current-root paper --out-dir dist/limited_fixed239
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import json
+          base=Path('dist/limited_fixed239')
+          r=json.loads((base/'LIMITED_FIXED239_SCREEN_AUDIT.json').read_text())
+          assert r['status']=='ANONYMITY_SCREENED_LIMITED_SOURCE_SUBANALYSIS_NOT_COMPLETE_REVIEW_ARCHIVE'
+          assert len(r['included_source_files'])==8
+          assert r['source_identity_scan']=='PASS_DIRECT_TEXT_AND_ZIP_HEADER_ONLY'
+          assert r['raw_source_WCVP_HOSTS_and_GBIF']=='NOT_INCLUDED'
+          assert r['complete_GEB_anonymous_review_repository']=='NOT_CREATED'
+          assert r['third_party_derived_table_rights']=='PENDING_CORRESPONDING_AUTHOR_APPROVAL'
+          z=base/'GEB_V05_SCREENED_LIMITED_FIXED239_NOT_FULL_REVIEW_ARCHIVE.zip'
+          with ZipFile(z) as f:
+            assert f.testzip() is None
+            assert sorted(f.namelist())==sorted(r['included_source_files'])
+            f.extractall('extracted_review_subanalysis')
+          print('AUTHOR_IDENTIFIER_NAME_CONTENT_METADATA_8FILE_SCREEN_PASS')
+          PY
+      - name: Replay fixed-239 model and 10-Moran-eigenvector spatial sensitivity from extracted limited ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd extracted_review_subanalysis
+          bash REPRODUCE.sh > ../fixed239_limited_replay.log 2>&1 || { tail -120 ../fixed239_limited_replay.log; exit 1; }
+          tail -c 3300 ../fixed239_limited_replay.log
+          grep -q 'GEB_LIMITED_FIXED239_INDEPENDENT_REVIEW_SOURCE_REPLAY_PASS' ../fixed239_limited_replay.log
+          grep -q 'TDWG_2026_SOURCE_SHA256_PASS' ../fixed239_limited_replay.log
+          echo 'ZIP_EXTRACTED_ANON_IDENTIFIER_SCREENED_FIXED239_MEM10_SOURCE_REPLAY_PASS'
+      - name: Save scoped limitations with exact artifact checksum for internal coauthor consideration
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp fixed239_limited_replay.log dist/limited_fixed239/INDEPENDENT_EXTRACTED_REPLAY_LOG.txt
+          sha256sum dist/limited_fixed239/* > dist/limited_fixed239/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-limited-fixed239-author-identifier-screened-replay-NOT-complete-review-or-rights-approved
+          path: dist/limited_fixed239/
+          retention-days: 90
+          if-no-files-found: warn
