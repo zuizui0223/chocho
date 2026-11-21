@@ -51,7 +51,7 @@ CITE PRIMARY SOURCES:
 - Natural History Museum HOSTS database, DOI 10.5519/havt50xw (larval hosts).
 - Kew World Checklist of Vascular Plants v13, 21 May 2024,
   DOI 10.34885/0yex-xv26 (native and introduced plant distributions).
-- NGA World Port Index 2019, Publication 150, 27th edition.
+- NGA World Port Index 2019, Publication 150. The public 31 August 2019\n  WPI mirror describes the 35th edition; the study input GeoJSON's exact\n  edition is not independently recoverable from its metadata.
 - TDWG World Geographical Scheme for Recording Plant Distributions (WGSRPD3),
   publicly retrieved from the source-pinned file in REPRODUCE.sh.
 
