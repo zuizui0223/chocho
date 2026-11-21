@@ -1,0 +1,56 @@
+{
+  "schema": "chocho_geb_v05_fig3B_source_239_species_documentation_proxy_sensitivity_v1",
+  "status": "SOURCE_239_EXACT;EXPLORATORY_DOCUMENTATION_PROXY_NOT_INDEPENDENT_STUDY_EFFORT",
+  "provenance": {
+    "source_git_blob_sha": {
+      "metrics": "9f83d2d9ac8e46f1cfd4ded572c7a023273503dd",
+      "island": "a230f6d214c96f874a3ab184ee9823cc9023c1bb"
+    },
+    "seed": 20261121,
+    "resamples": 2000
+  },
+  "n_species": 239,
+  "island_regions": 126,
+  "original_spearman_native_global_vs_added_island": 0.578896407,
+  "spearman_recorded_host_species_vs_native_global": 0.62641,
+  "spearman_recorded_host_species_vs_added_island": 0.573184,
+  "partial_spearman_controlling_documented_host_species_only": 0.344191,
+  "partial_spearman_controlling_documented_host_species_and_families": 0.348264,
+  "species_bootstrap_percentile95_exploratory": [
+    0.219078,
+    0.464638
+  ],
+  "within_host_documentation_tier_permutation_two_sided_p_exploratory": 0.0005,
+  "leave_one_species_out_partial_rho_range": [
+    0.333915,
+    0.368472
+  ],
+  "host_count_tier_sizes": {
+    "1": 29,
+    "10+": 81,
+    "2": 35,
+    "3-4": 43,
+    "5-9": 51
+  },
+  "adequate_taxonomy_subset": {
+    "n": 215,
+    "partial_rho": 0.377194
+  },
+  "one_documented_family_subset": {
+    "n": 97,
+    "partial_rho_host_count_only": 0.463037
+  },
+  "positive_island_gain_subset": {
+    "n": 198,
+    "partial_rho": 0.247491
+  },
+  "gap_fill_fraction_sensitivity": {
+    "partial_rho_controls_host_count_and_family_count": 0.463284
+  },
+  "limitations": [
+    "Distinct resolved known-host plant species is a documentation richness proxy, not the independent number of HOSTS reports or publications.",
+    "Both global native resource breadth and island added units derive from the same HOSTS/WCVP network; residual association does not prove independent ecological advantage.",
+    "Species bootstrap ignores phylogeny and source selection, and tier-wise permutations assume within-tier exchangeability. Both are descriptive stress tests, not confirmatory population p values.",
+    "All source cohorts, taxa and original positive/adverse conclusions remain unchanged; no inferred butterfly establishment or host fitness."
+  ]
+}
