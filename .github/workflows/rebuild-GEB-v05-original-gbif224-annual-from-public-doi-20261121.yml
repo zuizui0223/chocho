@@ -1,0 +1,123 @@
+name: Rebuild original 14.6M-record GBIF224 annual source for GEB v0.5
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/verify_GEB_v05_gbif224_raw_to_annual_rebuild_20261121.py
+      - .github/workflows/rebuild-GEB-v05-original-gbif224-annual-from-public-doi-20261121.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-gbif-download-to-annual-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: 20e81fb6aa0937f7f0c544ae2e517ef95bb4578c
+          path: paper
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Confirm audit code and freeze original GBIF annual receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python audit/scripts/verify_GEB_v05_gbif224_raw_to_annual_rebuild_20261121.py --self-test
+          cp paper/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_annual_v1.audit.json "$RUNNER_TEMP/original_annual_audit.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          j=json.loads((Path(os.environ["RUNNER_TEMP"])/"original_annual_audit.json").read_text())
+          assert j["source"]["gbif_doi"]=="10.15468/dl.umqmsf"
+          assert j["records"]["rows"]==14637152
+          print("ORIGINAL_GBIF224_ANNUAL_FROZEN_RECEIPT_PASS")
+          PY
+      - name: Verify official GBIF metadata and retrieve the published download link
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --connect-timeout 30 --max-time 120 \
+            'https://api.gbif.org/v1/occurrence/download/0013264-261023074918325' \
+            --output "$RUNNER_TEMP/gbif_original_meta.json"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          meta=json.loads((Path(os.environ["RUNNER_TEMP"])/"gbif_original_meta.json").read_text())
+          assert meta.get("status")=="SUCCEEDED",meta.get("status")
+          assert "10.15468/dl.umqmsf" in str(meta.get("doi",""))
+          assert int(meta.get("totalRecords",-1))==14637152
+          link=meta.get("downloadLink") or "https://api.gbif.org/v1/occurrence/download/request/0013264-261023074918325.zip"
+          assert link.startswith("https://")
+          (Path(os.environ["RUNNER_TEMP"])/"gbif_download_link.txt").write_text(link+"\n")
+          print("OFFICIAL_GBIF_DOI_RECORD_COUNT_AND_LINK_VERIFIED")
+          PY
+      - name: Fetch original GBIF source ZIP and check SHA256; do not upload raw data
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/private_gbif"
+          link="$(cat "$RUNNER_TEMP/gbif_download_link.txt")"
+          curl --fail --location --retry 6 --retry-all-errors --retry-delay 6 \
+            --connect-timeout 30 --max-time 5400 \
+            "$link" -o "$RUNNER_TEMP/private_gbif/original_gbif224.zip"
+          echo "a1769481e91cb3002c25f69c6d8aa8e6d8d73a012c9495e8394032af02a9df18  $RUNNER_TEMP/private_gbif/original_gbif224.zip" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/private_gbif/original_gbif224.zip")" -eq 1415705617
+          echo GBIF_14M_ORIGINAL_ZIP_BYTE_EXACT_PASS
+      - name: Rebuild original GBIF224 annual butterfly records and effort source tables
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            "pandas>=2.2,<3" "numpy>=1.26,<3" "shapely>=2,<3"
+          mkdir -p paper/_external/wgsrpd/geojson
+          curl --fail --location --retry 4 \
+            'https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson' \
+            --output paper/_external/wgsrpd/geojson/level3.geojson
+          echo 'c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840  paper/_external/wgsrpd/geojson/level3.geojson' | sha256sum -c -
+          cd paper
+          python -u scripts/aggregate_gbif_global224_wgsrpd3_annual.py \
+            --source-zip "$RUNNER_TEMP/private_gbif/original_gbif224.zip" \
+            --geojson _external/wgsrpd/geojson/level3.geojson \
+            --chunk-size 30000 \
+            > ../gbif224_raw_rebuild_counts.log 2>&1 || { tail -n 65 ../gbif224_raw_rebuild_counts.log; exit 1; }
+          tail -n 15 ../gbif224_raw_rebuild_counts.log
+      - name: Independently compare exact original 14.6M-record regional annual aggregates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python audit/scripts/verify_GEB_v05_gbif224_raw_to_annual_rebuild_20261121.py \
+            --original-audit "$RUNNER_TEMP/original_annual_audit.json" \
+            --reconstructed-audit paper/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_annual_v1.audit.json \
+            --source-zip "$RUNNER_TEMP/private_gbif/original_gbif224.zip" \
+            --out audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_RAW_ANNUAL_REBUILD_20261121.json
+          echo GBIF224_RAW_TO_ANNUAL_REBUILD_VERIFIED_NO_ORIGINAL_FILES_SHARED
+      - name: Persist only a source-audit receipt without GBIF or derived occurrence tables
+        if: success()
+        working-directory: audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_RAW_ANNUAL_REBUILD_20261121.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive original GBIF224 14.6M annual reconstruction audit, no occurrence records"
+            git fetch origin analysis/geb-v05-review-data-source-audit-20261120
+            git rebase origin/analysis/geb-v05-review-data-source-audit-20261120
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original-GBIF224-raw-annual-RECEIPT-ONLY
+          path: audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_RAW_ANNUAL_REBUILD_20261121.json
+          if-no-files-found: warn
+          retention-days: 90
