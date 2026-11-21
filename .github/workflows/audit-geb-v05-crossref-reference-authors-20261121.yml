@@ -1,0 +1,56 @@
+name: Audit GEB v0.5 reference author metadata (candidate only)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - "scripts/audit_GEB_v05_crossref_author_lists_20261121.py"
+      - ".github/workflows/audit-geb-v05-crossref-reference-authors-20261121.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-identified-crossref-author-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: paper/geb-single-island-port-endemics-20261118
+          path: paper
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate parser offline
+        run: python audit/scripts/audit_GEB_v05_crossref_author_lists_20261121.py --self-test
+      - name: Fetch author metadata from 14 exact DOIs (never edit manuscript automatically)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C paper rev-parse HEAD
+          python audit/scripts/audit_GEB_v05_crossref_author_lists_20261121.py \
+            --paper-root paper \
+            --output audit/results/geb_v05_reference_metadata/REFERENCE_AUTHOR_METADATA_CANDIDATES_20261121.json
+      - name: Save factual candidate metadata to internal source-audit branch
+        shell: bash
+        working-directory: audit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_reference_metadata/REFERENCE_AUTHOR_METADATA_CANDIDATES_20261121.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive DOI-identified Crossref author metadata candidates for GEB citation copyedit"
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-crossref-metadata-candidates-NOT-MANUSCRIPT
+          path: audit/results/geb_v05_reference_metadata/
+          if-no-files-found: warn
+          retention-days: 90
