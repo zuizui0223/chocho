@@ -1,7 +1,7 @@
 {
-  "schema": "GEB_v05_three_limited_executable_source_QA_cohorts_20261121_v1",
+  "schema": "GEB_v05_three_limited_executable_source_QA_cohorts_PLUS_separate_original_Fig3A_20261121_v2",
   "title": "Source-exact subanalyses in GEB v0.5: Fig1, Fig2D, Fig3B-C, Fig4 stored score outputs",
-  "status": "THREE_SEPARATE_REPLAYED_QA_SOURCE_PACKAGES;FULL_ANONYMOUS_PUBLICATION_ARCHIVE_NOT_APPROVED",
+  "status": "THREE_LIMITED_SOURCE_QA_ZIPS_AND_SEPARATE_FULL_ORIGINAL_SOURCE_FIG3A_REPLAY_PASSED;JOURNAL_ARCHIVE_NOT_APPROVED",
   "main_paper_ref": "99b876421af2b4f51e58569862994622a02717d7",
   "main_paper_PR": 179,
   "audit_PR": 189,
@@ -36,7 +36,7 @@
     }
   ],
   "main_assertions_not_equated": [
-    "Fig3A source plant Gini and 38-of-670 are frozen source receipts, not reproduced from plant credit matrices",
+    "Fig3A remained source receipt only inside the seven-file Fig1/3BC ZIP, but is independently reconstructed from pinned original HOSTS/WCVP in separate CI #44847332630; no raw credit table was publicly redistributed",
     "Fig2A-C source model and Fig4 actual independent training/effort-thinning pipelines are not completely replayed from these ZIPs",
     "The original 155/224 downloaded GBIF DOI 10.15468/dl.umqmsf is verified; unrelated original 225x51/1596-port GBIF facet publisher lists remain unidentified",
     "Native and contemporary mapped host opportunities are NOT field host use, butterfly colonization or shipborne plant transport",
@@ -51,5 +51,30 @@
     "full_manuscript_all_figures_and_SI_reproducible": false,
     "coauthors_final_approval": false,
     "new_DOI_minted": false
+  },
+  "fig3A_original_upstream_credit_reconstruction": {
+    "status": "FULL_ORIGINAL_PINNED_HOSTS_WCVP_SOURCE_R_PYTHON_FRACTIONAL_PLANT_CREDIT_REPLAY_PASSED",
+    "source_actions_run": 44847332630,
+    "receipt_archive_actions_run": 44848263272,
+    "actual_receipt": "results/geb_v05_private_source_recovery_20261120/ORIGINAL_FIG3A_WCVP_HOSTS_CREDIT_REBUILT_SOURCE_QA_20261121.json",
+    "receipt_sha256": "af5d7327bcb8883c85be94250a218348b40906e8e35b5f8636a87cea21960eff",
+    "resolved_butterfly_accepted_plant_edges": 53449,
+    "native_plant_x_region_edges": 148254,
+    "contemporary_plant_x_region_edges": 222384,
+    "butterflies_expanded": 206,
+    "added_butterfly_x_region_units": 14553,
+    "fractional_credited_plant_species": 670,
+    "plant_species_covering_50_percent_credit": 38,
+    "plant_credit_Gini": 0.7773943319671659,
+    "plant_top10_share": 0.2510105136113853,
+    "genera_contributing": 431,
+    "genera_covering_50_percent_credit": 25,
+    "genus_credit_Gini": 0.7737917033318613,
+    "checks": "Source data and code pinned, native/contemporary R sidecars regenerated, original Python fractional credit rerun, plant/genus Gini HHI top-k and 50pct counts matched original to 1e-9",
+    "individual_rebuilt_plant_credit_csv_released": false,
+    "full_original_HOSTS_WCVP_data_released": false,
+    "source_rights_verified": false,
+    "final_anonymous_reviewer_data_deposit": false,
+    "not_in_earlier_seven_file_fig1_fig3BC_ZIP": true
   }
 }
