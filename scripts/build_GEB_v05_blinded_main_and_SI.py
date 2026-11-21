@@ -29,7 +29,8 @@ def neutral(text):
     # private source audit; NEVER substitute a fictional reviewer DOI or URL.
     text=re.sub(r"\[([^\]]+)\]\(https?://github\.com/zuizui0223/chocho[^)]*\)",
                 r"\1",text)
-    text=re.sub(r"\[([^\]]+)\]\((?:\.\./)[^)]*\)",r"\1",text)
+    # Keep ![figure](../../figures/...) intact; only strip ordinary links.
+    text=re.sub(r"(?<!!)\[([^\]]+)\]\((?:\.\./)[^)]*\)",r"\1",text)
     return re.sub(r"https?://github\.com/zuizui0223/chocho[^\s)]*",
                   "archived source material",text)
 
