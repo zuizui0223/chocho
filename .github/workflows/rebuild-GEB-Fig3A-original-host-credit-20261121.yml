@@ -1,0 +1,166 @@
+name: Rebuild GEB Fig3A plant fractional credits from original HOSTS WCVP pins (internal source QA)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/rebuild-GEB-Fig3A-original-host-credit-20261121.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild-plant-credits-with-source-pins:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: original_wcvp
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: original_hosts
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: "release"
+      - name: Pin original complete software/data chain before any model rerun
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          def gitblob(p):
+            raw=Path(p).read_bytes()
+            return hashlib.sha1(b"blob "+str(len(raw)).encode()+b"\0"+raw).hexdigest()
+          expected={
+            "current/scripts/analyze_butterfly_host_contribution_concentration.py":
+               "b49356fd51ce6313adef6ee2ea079fadbeb0ff35",
+            "current/scripts/build_wcvp_hosts_null_sidecars.R":
+               "4adb65979333b9c2914f0f15f7b8b37169edf493",
+            "current/data/frozen/figure_sources/s1_resource_descriptors.csv":
+               "09541b5894529cc8629c7515ea9022ded9edead2",
+            "current/provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json":
+               "201a762de94b9ecf42a766c8cb5d8d1739a2ca3c",
+          }
+          for path,sha in expected.items():
+            v=gitblob(path)
+            assert v==sha,(path,v,sha)
+          descriptor=Path("current/data/frozen/figure_sources/s1_resource_descriptors.csv")
+          actual=hashlib.sha256(descriptor.read_bytes()).hexdigest()
+          print("PINNED_RESOURCE_DESCRIPTOR_SOURCE_SHA256",actual,flush=True)
+          assert actual=="894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc", "Original S1 resource descriptor SHA256 differs; no dataset substitution"
+          for p in ["original_wcvp/data/wcvp_names.rda","original_wcvp/data/wcvp_distributions.rda","original_hosts/resource.csv"]:
+            assert Path(p).is_file() and Path(p).stat().st_size>1000
+          print("PINNED_HOSTS_WCVP_S1_AND_FIG3A_SOURCE_GIT_BLOBS_VERIFIED")
+          PY
+      - name: Rebuild exact original accepted host interactions and WCVP native/contemporary region sidecars
+        shell: bash
+        run: |
+          set -euo pipefail
+          Rscript current/scripts/build_wcvp_hosts_null_sidecars.R \
+            original_wcvp original_hosts work_Fig3A/native work_Fig3A/contemporary
+          test -s work_Fig3A/native/insect_host_accepted.csv
+          test -s work_Fig3A/native/native_extant_nondoubtful_wgsrpd3.csv
+          test -s work_Fig3A/contemporary/extant_nondoubtful_wgsrpd3.csv
+      - name: Independently rerun original fractional plant- and genus-credit computation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work_Fig3A/out dist/Fig3A_source_rebuild
+          python current/scripts/analyze_butterfly_host_contribution_concentration.py \
+            --descriptors-csv current/data/frozen/figure_sources/s1_resource_descriptors.csv \
+            --insect-host-csv work_Fig3A/native/insect_host_accepted.csv \
+            --native-distribution-csv work_Fig3A/native/native_extant_nondoubtful_wgsrpd3.csv \
+            --contemporary-distribution-csv work_Fig3A/contemporary/extant_nondoubtful_wgsrpd3.csv \
+            --output-json work_Fig3A/out/host_contribution_concentration.json \
+            --output-plant-csv work_Fig3A/out/host_contribution_concentration_plants.csv \
+            --output-genus-csv work_Fig3A/out/host_contribution_concentration_genera.csv \
+            > work_Fig3A/recompute_stdout.log
+          python - <<'PY'
+          from pathlib import Path
+          import csv,hashlib,json,math
+          out=Path("work_Fig3A/out")
+          p=json.loads((out/"host_contribution_concentration.json").read_text())
+          o=json.loads(Path("current/provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json").read_text())
+          def read(p):
+            with p.open(encoding="utf8",newline="") as h:return list(csv.DictReader(h))
+          plants=read(out/"host_contribution_concentration_plants.csv")
+          genera=read(out/"host_contribution_concentration_genera.csv")
+          if (p["expanded_butterflies"],p["added_butterfly_x_wgsrpd3_units"])!=(206,14553):
+            raise AssertionError("Full original credit rebuild failed to reproduce 206 butterflies and 14553 additions")
+          original=o["plant_species"]
+          main=p["plant_species"]
+          assert len(plants)==main["contributors"]==original["contributors"]==670
+          assert len(genera)==p["genera"]["contributors"]==o["genera"]["contributors"]==431
+          assert abs(main["total_fractional_credit"]-14553)<1e-7
+          assert abs(p["genera"]["total_fractional_credit"]-14553)<1e-7
+          for kind,orig,new in [("plants",original,main),("genera",o["genera"],p["genera"])]:
+            for name in ["gini","hhi","effective_contributor_number"]:
+              assert math.isclose(float(orig[name]),float(new[name]),abs_tol=1e-9), (kind,name,orig[name],new[name])
+            for k in ["1","5","10","20","50","100"]:
+              assert math.isclose(float(orig["top_k_share"][k]),float(new["top_k_share"][k]),abs_tol=1e-9),(kind,k)
+          plant_counts=[float(x["fractional_credit"]) for x in plants]
+          genus_counts=[float(x["fractional_credit"]) for x in genera]
+          k=next(i for i in range(1,len(plants)+1) if sum(plant_counts[:i])>=14553/2)
+          kg=next(i for i in range(1,len(genera)+1) if sum(genus_counts[:i])>=14553/2)
+          assert k==original["contributors_for_50pct"]==38
+          assert kg==o["genera"]["contributors_for_50pct"]==25
+          f={"schema":"GEB_Fig3A_original_WCVP_HOSTS_host_credit_REBUILT_20261121_v1",
+             "status":"ORIGINAL_FIXED_SOURCE_FIG3A_FRACTIONAL_PLANT_CREDIT_RECOMPUTED_AGREES_WITH_2026_ORIGINAL_RECEIPT",
+             "upstream_source_commits":{
+               "HOSTS":"808e0b869f9ec1adf8efff87cf6a395adda103e0",
+               "WCVP_v13":"65bed76bae9d644ccb6ad200c05f9f5071d89e05"},
+             "original_source_code_pins":{
+               "R_sidecar_git_blob":"4adb65979333b9c2914f0f15f7b8b37169edf493",
+               "Python_credits_git_blob":"b49356fd51ce6313adef6ee2ea079fadbeb0ff35",
+               "S1_descriptors_sha256":"894f48dbca1760fc4fa75bfee8f663540ab4b9380f8b9daf2bc09440e8bb0cdc"},
+             "original_butterflies_with_new_opportunities":206,
+             "introduced_added_butterfly_region_units":14553,
+             "contributors_plant_species":670,
+             "contributors_plant_species_to_half":38,
+             "plant_credit_gini":float(main["gini"]),
+             "plant_credit_top10_share":float(main["top_k_share"]["10"]),
+             "contributing_genera":431,"contributing_genera_to_half":25,
+             "genus_credit_gini":float(p["genera"]["gini"]),
+             "all_original_report_stat_values_match_1e9":True,
+             "source_intermediate_and_output_sha256":{
+               x:hashlib.sha256(Path(x).read_bytes()).hexdigest() for x in [
+                "original_wcvp/data/wcvp_names.rda",
+                "original_wcvp/data/wcvp_distributions.rda",
+                "original_hosts/resource.csv",
+                "work_Fig3A/native/insect_host_accepted.csv",
+                "work_Fig3A/native/native_extant_nondoubtful_wgsrpd3.csv",
+                "work_Fig3A/contemporary/extant_nondoubtful_wgsrpd3.csv",
+                "work_Fig3A/out/host_contribution_concentration_plants.csv",
+                "work_Fig3A/out/host_contribution_concentration_genera.csv"]},
+             "source_hosts_WCVP_tables_NOT_REUPLOADED":True,
+             "source_species_level_credit_tables_NOT_RELEASED":True,
+             "review_deposit_rights_NOT_CLEARED":True,
+             "named_author_identity_NOT_DISCLOSED":True,
+             "ecological_claim":"Potential larval-host distribution opportunities, not field host use or ship transport"}
+          dest=Path("dist/Fig3A_source_rebuild/ORIGINAL_FIG3A_PLANT_AND_GENUS_CREDIT_REPLAY_QA.json")
+          dest.write_text(json.dumps(f,ensure_ascii=False,indent=2)+"\n",encoding="utf8")
+          print("ORIGINAL_FIG3A_REAL_WCVP_HOSTS_PLANT_CREDIT_REBUILT_SOURCE_EXACT_PASS")
+          print(json.dumps({k:f[k] for k in ["contributors_plant_species","contributors_plant_species_to_half","plant_credit_gini","plant_credit_top10_share","contributing_genera"]}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-Fig3A-original-HOSTS-WCVP-fractional-credit-full-rebuild-receipt-internal-NOT-licensed-source-release
+          path: dist/Fig3A_source_rebuild/ORIGINAL_FIG3A_PLANT_AND_GENUS_CREDIT_REPLAY_QA.json
+          if-no-files-found: warn
+          retention-days: 90
