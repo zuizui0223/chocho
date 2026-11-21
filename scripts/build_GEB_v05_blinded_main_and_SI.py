@@ -24,8 +24,31 @@ KEYWORDS=("alien plants","butterfly–plant interactions","island biogeography",
 RUNNING="Island butterfly host resources"
 
 def neutral(text):
+    # Remove inaccessible author-owned and repository-relative Markdown links
+    # from the anonymous editorial copy. Record the original URLs in the
+    # private source audit; NEVER substitute a fictional reviewer DOI or URL.
+    text=re.sub(r"\[([^\]]+)\]\(https?://github\.com/zuizui0223/chocho[^)]*\)",
+                r"\1",text)
+    text=re.sub(r"\[([^\]]+)\]\((?:\.\./)[^)]*\)",r"\1",text)
     return re.sub(r"https?://github\.com/zuizui0223/chocho[^\s)]*",
-                  "[anonymized source archive: reviewer-access link required]",text)
+                  "archived source material",text)
+
+def journal_si(text):
+    # Retain the scientific SI numbers/sections while excluding internal
+    # editorial directions that belong only in the Git source-audit record.
+    substitutions={
+      "**20 November 2026; journal-facing coauthor-review working version, unsubmitted.** Eight consecutively numbered appendices; figures S3.1 and S5.1. The underlying complete old v0.3 source archives remain versioned and separate; this is a source-qualified summary, not a replacement for downloadable data and code.":
+      "Eight appendices provide data definitions and sensitivity analyses, with supporting Figures S3.1 and S5.1.",
+      "**Submission source gate:** HOSTS and WCVP v13 source DOI/version, GSHHG and original 224-butterfly GBIF DOI are fixed. The *other* 2026 butterfly first-index/plant port-acquisition sources still lack an exact, reviewer-accessible original derived GBIF citation/DOI and some original files have distribution limitations. An anonymous read-only repository/archive containing analysis code and redistributable derived data must be provided at **peer review** and deposited in a stable repository for **publication**. This SI does not magically create those original records or a DOI.":
+      "**Data-source limits.** HOSTS, WCVP v13, GSHHG and the original 224-butterfly GBIF download have fixed source identifiers. The separate historical first-index and port-buffer GBIF queries did not preserve original occurrence-level contributing publisher identifiers. Reproduction therefore depends on archived query receipts, permitted derived tables and source-specific access terms; these source limits are distinct from ecological evidence.",
+      "These two figures must be embedded as actual media in any uploaded SI DOCX/PDF, not only linked. ":
+      "",
+    }
+    for old,new in substitutions.items():
+        if text.count(old)!=1:
+            raise RuntimeError("SI editorial export source text drift")
+        text=text.replace(old,new)
+    return neutral(text)
 
 def docbase(title,main=False):
     d=Document()
@@ -41,7 +64,7 @@ def docbase(title,main=False):
     d.core_properties.title=title
     d.core_properties.author=""
     d.core_properties.last_modified_by=""
-    sec.header.paragraphs[0].text="GEB · "+("BLINDED RESEARCH ARTICLE" if main else "SUPPORTING INFORMATION")+" · COAUTHOR PREFLIGHT"
+    sec.header.paragraphs[0].text="GEB · "+("BLINDED RESEARCH ARTICLE" if main else "SUPPORTING INFORMATION")
     if main:set_line_numbering(d)
     return d
 
@@ -146,7 +169,10 @@ def build(root,out):
     if len(reflist)!=39:
         raise RuntimeError("Unexpected source bibliography size")
     data=main.split("## Data and code availability",1)[1].split("## Figure legends",1)[0]
-    data+="\n**Journal submission SOURCE GATE OPEN:** historical butterfly and port GBIF original acquisitions require verified DOI/contributor attribution and private-for-review anonymous accessible data/code; different archived DOIs cannot be substituted.\n"
+    data=re.sub(r"^\s*\(draft; final rights and archive check required\)\s*", "", data, flags=re.I)
+    data=data.replace("not publicly archived in this Draft", "not included in the present source archive")
+    data=data.replace("Original source/data sharing permissions, final citations, rights for individual larval photographs, independent GBIF index DOIs, figure accessibility and coauthor approval must be resolved before any submission. Draft PR #179 remains unmerged.",
+                      "Some independent historical GBIF acquisition sources do not retain original occurrence-level publisher identities; original source access and material permissions are described in the accompanying source provenance and Supporting Information.")
     figs_legend=figcaps.split("## Figure source and rights record",1)[0]
     figs_legend=figs_legend[figs_legend.index("## Figure 1 |"):]
     mainclean=(main.splitlines()[0]+"\n\n**Running title:** "+RUNNING+
@@ -155,11 +181,21 @@ def build(root,out):
              "\n".join(reflist)+"\n\n## Data and Code Availability Statement\n"+
              data+"\n## Figure legends\n"+figs_legend)
     mainclean=neutral(mainclean)
+    for forbidden in ("COAUTHOR PREFLIGHT", "Journal submission SOURCE GATE OPEN",
+                      "reviewer-access link required", "Draft PR #179"):
+        if forbidden in mainclean:
+            raise RuntimeError("Internal editorial status leaked into main export: "+forbidden)
     if "zuizui0223" in mainclean.lower():
         raise RuntimeError("Non-blinded author repository URL in clean manuscript")
     out.mkdir(parents=True,exist_ok=True)
     (out/"GEB_v05_blinded_main.md").write_text(mainclean,encoding="utf8")
-    (out/"GEB_v05_separate_SI.md").write_text(neutral(si),encoding="utf8")
+    siclean=journal_si(si)
+    for forbidden in ("COAUTHOR PREFLIGHT","coauthor-review working version",
+                      "This SI does not magically", "must be embedded as actual media",
+                      "reviewer-access link required"):
+        if forbidden in siclean:
+            raise RuntimeError("Internal editorial status leaked into SI export: "+forbidden)
+    (out/"GEB_v05_separate_SI.md").write_text(siclean,encoding="utf8")
     mdoc=docbase("GEB island-port-sea butterfly potential resource opportunities",main=True)
     imagesmain=markdown(mdoc,mainclean,root,out,with_images=False)
     for i,raw in enumerate(figures,1):
@@ -168,7 +204,7 @@ def build(root,out):
     sf=out/"GEB_v05_BLINDED_MAIN_4figures.docx"
     mdoc.save(sf)
     sdoc=docbase("GEB S1–S8 separate Supporting Information",main=False)
-    imagessi=markdown(sdoc,si,root,out,with_images=True,fig_prefix="SI")
+    imagessi=markdown(sdoc,siclean,root,out,with_images=True,fig_prefix="SI")
     if len(imagessi)!=2:raise RuntimeError("GEB SI S3.1/S5.1 must be embedded")
     si_file=out/"GEB_v05_SUPPORTING_INFORMATION_S1-S8.docx"
     sdoc.save(si_file)
