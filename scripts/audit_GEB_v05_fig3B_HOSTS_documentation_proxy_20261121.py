@@ -26,7 +26,7 @@ SEED = 20261121
 
 def blob_sha(path):
     data=Path(path).read_bytes()
-    return hashlib.sha1(("blob "+str(len(data))+"\\0").encode().replace(b"\\0",b"\\0")+data).hexdigest()
+    return hashlib.sha1(("blob "+str(len(data))).encode()+bytes([0])+data).hexdigest()
 
 def readcsv(path):
     with open(path,newline="",encoding="utf-8") as f:
@@ -35,8 +35,6 @@ def readcsv(path):
 def ranks(v):
     order=sorted(range(len(v)),key=lambda i:v[i])
     out=[0.]*len(v)
-    for lo in range(len(v)):
-        pass
     i=0
     while i<len(v):
         j=i+1
