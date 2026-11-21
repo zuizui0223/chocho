@@ -15,7 +15,7 @@ import audit_island_port_isolation_239_20261120 as original
 EFFORT_BLOB="23f5e5c7f7c875af41ccb5c6094cb4f48f1071fe"
 def blob(path):
     b=Path(path).read_bytes()
-    return hashlib.sha1(b"blob "+str(len(b)).encode()+b"\\0"+b).hexdigest()
+    return hashlib.sha1(b"blob "+str(len(b)).encode()+bytes([0])+b).hexdigest()
 
 def check(cond,description):
     if not cond:raise AssertionError(description)
