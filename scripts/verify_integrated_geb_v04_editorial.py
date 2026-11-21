@@ -274,6 +274,9 @@ def main():
     }
     # MacArthur & Wilson book has no DOI; exact publication/author identity required.
     def source_reference_identity(textline):
+        if ("National Geospatial-Intelligence Agency (2019)." in textline and
+                "*World Port Index (Publication 150)*" in textline):
+            return "wpi-2019-publication150"
         m=re.search(r"https://doi\.org/([^\s]+)",textline)
         return m.group(1).lower().rstrip(".,;") if m else textline.strip().lower()
     def unique_by_identity(lines):
@@ -318,6 +321,11 @@ def main():
         if key == checklist_doi:
             if original_entry != permitted_checklist_source or revised != permitted_checklist_current:
                 raise AssertionError("Official INBO checklist correction does not match the verified six-author version-1.1 citation")
+        elif key == "wpi-2019-publication150":
+            source_wpi = "- National Geospatial-Intelligence Agency (2019). *World Port Index (Publication 150)*, 27th edition. https://msi.nga.mil/Publications/WPI. **Note:** the exact archived source snapshot of the study’s port file must still be matched to the original version and date."
+            amended_wpi = "- National Geospatial-Intelligence Agency (2019). *World Port Index (Publication 150)* [global port-location dataset]. https://msi.nga.mil/Publications/WPI"
+            if original_entry != source_wpi or revised != amended_wpi:
+                raise AssertionError("WPI source edition not correctly qualified against the 2019 public mirror")
         elif key in approved_author_list_dois:
             old_tail = re.search(r"\(\d{4}\)\. .*", original_entry)
             new_tail = re.search(r"\(\d{4}\)\. .*", revised)
