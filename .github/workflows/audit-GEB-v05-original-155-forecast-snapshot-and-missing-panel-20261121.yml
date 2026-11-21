@@ -1,0 +1,122 @@
+name: Audit source-locked GEB v0.5 original 155-butterfly forecast and private-panel gate
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB-v05-original-155-forecast-snapshot-and-missing-panel-20261121.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-source-metric-audit-and-missing-workspace-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: original_155
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify all original metric source hashes, scientific score summaries and fixed 225-candidate cohort
+        shell: bash
+        run: |
+          set -euo pipefail
+          python original_155/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+      - name: Store explicit source code and missing-training-panel audit (not an RF model rerun)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          root=Path("original_155")
+          base=root/"provenance/reviewer_defenses/results/host_forecast_validation_20261029"
+          manifest=json.loads((base/"snapshot_manifest.json").read_text())
+          t=json.loads((base/"forecast_temporal_results.json").read_text())
+          s=json.loads((base/"forecast_spatial_results.json").read_text())
+          b=json.loads((base/"forecast_spatial_buffer100_results.json").read_text())
+          model=json.loads((base/"forecast_model_lock.json").read_text())
+          cohort=json.loads((base/"forecast_panel_audit.json").read_text())
+          def gain(table):
+              baseline=table["results"]["M3_both"]["species_equal_mse"]
+              new=table["results"]["M5_host_composition"]["species_equal_mse"]
+              return 100*(baseline-new)/baseline
+          paths=[
+            "work/temporal/forecast/species_cell_period_panel.parquet",
+            "work/temporal/forecast/species_recording_days.parquet",
+            "work/temporal/forecast/target_group_recording_days.parquet",
+            "work/temporal/forecast/candidate_cells.parquet",
+            "work/temporal/forecast/cell_environment_period.parquet",
+            "work/temporal/forecast/cell_climate_grid.parquet",
+            "work/temporal/forecast/predictions_temporal.parquet",
+            "work/temporal/forecast/predictions_spatial.parquet",
+            "work/temporal/species_year_cells_10km.parquet",
+            "work/temporal/host_region_composition_metrics.parquet",
+            "work/temporal/host_region_family_composition.parquet",
+            "work/temporal/occurrence_parts",
+            "work/remote_sensing/host_region_counts.csv",
+          ]
+          statuses={p:(root/p).exists() for p in paths}
+          model_src=base/"analysis_source"
+          scripts={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
+                   for p in sorted(model_src.glob("*.py"))}
+          assert cohort["candidate_species"]==155 and t["test_rows"]==208482
+          assert model["status"]=="LOCKED_BEFORE_MODEL_FIT"
+          assert len(manifest["completed_modes"])==8
+          assert all(not val for val in statuses.values())
+          assert 4<gain(t)<4.2 and 2.9<gain(s)<3.1 and 2.7<gain(b)<2.9
+          out={
+            "schema":"chocho_GEB_v05_original_155_source_snapshot_AUDIT_NOT_MODEL_REFIT_v1",
+            "status":"ORIGINAL_155_RESULTS_AND_SNAPSHOT_HASHES_VERIFIED;RAW_TO_RF_PANEL_MISSING",
+            "source_commit":"42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+            "underlying_original_GBIF_doi":"10.15468/dl.umqmsf",
+            "source_snapshot_file_count":len(manifest["files"]),
+            "completed_modes":manifest["completed_modes"],
+            "source_eligible_butterflies":155,
+            "original_test_butterfly_cell_pairs":t["test_rows"],
+            "original_training_pairs":t["train_rows"],
+            "pre-registered_model_settings":model["random_forest"],
+            "improvement_percent_vs_M3_climate_landcover":{
+              "temporal":gain(t),"spatial":gain(s),"spatial_at_least100km_from_training":gain(b)
+            },
+            "original_model_source_scripts":scripts,
+            "available_in_original_git_checkout":statuses,
+            "model_refit_completed":False,
+            "scope":"Byte-exact original results manifest, published summary MSE arithmetic and fixed model source code only; NOT a new RF fit, NOT public reviewer data archive.",
+            "reproduction_gate":"Original 842964-row source panel, provider-day observations and environment/host predictor tables were on an unarchived project workspace. They must be recovered or source-exactly rebuilt and granted permitted review access before a model-level refit is claimed.",
+            "no_private_input_exported":True,
+          }
+          dest=Path("audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL155_FORECAST_SOURCE_AND_PANEL_GATE_20261121.json")
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          dest.write_text(json.dumps(out,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          print("ORIGINAL_155_SNAPSHOT_PASSED_WITH_MISSING_PANEL_GATE",out["source_snapshot_file_count"],out["improvement_percent_vs_M3_climate_landcover"])
+          PY
+      - name: Archive restricted-panel-source gap receipt without original records
+        if: success()
+        shell: bash
+        working-directory: audit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_private_source_recovery_20261120/ORIGINAL155_FORECAST_SOURCE_AND_PANEL_GATE_20261121.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Register complete original155 source-metric hash audit and absent model-training inputs"
+            git fetch origin analysis/geb-v05-review-data-source-audit-20261120
+            git rebase origin/analysis/geb-v05-review-data-source-audit-20261120
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original-155-frozen-source-metric-audit-NOT-REFIT
+          path: audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL155_FORECAST_SOURCE_AND_PANEL_GATE_20261121.json
+          if-no-files-found: warn
+          retention-days: 90
