@@ -28,7 +28,7 @@ Official guidance: https://onlinelibrary.wiley.com/page/journal/14668238/homepag
 | Requirement | Current report | State |
 |---|---|---|
 | Seven-heading Research Article structured abstract, ≤300 words | 292 words, all seven official headings | PASS |
-| Approximate 5,000 main text words | 4,979 words in the November 21 journal-export preflight | PASS |
+| Approximate 5,000 main text words | 4,987 words in the November 21 journal-export preflight | PASS |
 | ~50 references, approx 6–8 display pieces suggested, not a minimum | 24 actually cited main references, nine independently cited SI references, four main figures; all 39 historical source references preserved | In target; acceptable first-round free format |
 | Running title fewer than 40 characters | Island butterfly host resources | PASS |
 | 6–10 alphabetically ordered keywords | Seven alphabetically sorted terms | PASS in v0.5 reviewer export |

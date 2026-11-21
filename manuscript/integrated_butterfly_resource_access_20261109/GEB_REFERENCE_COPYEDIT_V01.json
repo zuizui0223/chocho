@@ -662,10 +662,12 @@
       "primary_sources": [
         "https://api.gbif.org/v1/occurrence/download/0013264-261023074918325/citation",
         "https://api.gbif.org/v1/occurrence/download/10.15468/dl.umqmsf",
-        "https://api.datacite.org/dois/10.15468/dl.umqmsf"
+        "https://api.datacite.org/dois/10.15468/dl.umqmsf",
+        "https://github.com/zuizui0223/chocho/blob/42f8fcc3a388e96456c76180d7e56d75dd2ed48c/provenance/reviewer_defenses/results/host_forecast_validation_20261029/README.md",
+        "https://github.com/zuizui0223/chocho/blob/42f8fcc3a388e96456c76180d7e56d75dd2ed48c/provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_completion_audit_ja.md"
       ],
       "metadata_provider": "Publisher-recommended citation",
-      "source_decision": "Use the exact download-recommended organizational author GBIF.org and date 2026-10-29. DataCite registered creator is GBIF.org User. Download key 0013264-261023074918325, 14,637,152 records; applies to original 224-species data only."
+      "source_decision": "Use the exact download-recommended organizational author GBIF.org and date 2026-10-29. DataCite registered creator is GBIF.org User. Download key 0013264-261023074918325 contains 14,637,152 records. The original 155-species forecast and 224-species community analysis use this same occurrence download with different cohorts and outcomes. The separate 225-candidate by 51-landmass first-index and 1596-port acquisitions require their own source attribution. A shared download does not establish an independently refitted 155-species model."
     },
     {
       "id": "govaerts2024",
@@ -1999,6 +2001,18 @@
         "before": "369 WGSRPD3 botanical regions**.",
         "after": "369 WGSRPD3 botanical regions** (Brummitt, 2001).",
         "expected_count": 1
+      },
+      {
+        "id": "forecast_shared_gbif_download",
+        "before": "The first original independent recording analysis used **155 butterfly species**",
+        "after": "The first original independent recording analysis used **155 butterfly species** from the original GBIF download (GBIF.org, 2026)",
+        "expected_count": 1
+      },
+      {
+        "id": "community_shared_download_distinct_cohort",
+        "before": "The second and independent *recorded butterfly community* analysis used GBIF DOI",
+        "after": "The separate *recorded butterfly community* analysis used the same GBIF download, DOI",
+        "expected_count": 1
       }
     ],
     "data": [
@@ -2012,6 +2026,12 @@
         "id": "wgsrpd_geometry_commit",
         "before": "The original NHM HOSTS dataset is licensed",
         "after": "WGSRPD3 geometry follows the published scheme (Brummitt, 2001), with the polygon source pinned to tdwg/wgsrpd commit 52da7828aba9d461dd133c27b3bd7a4407161f54. The original NHM HOSTS dataset is licensed",
+        "expected_count": 1
+      },
+      {
+        "id": "shared_gbif_original_source",
+        "before": "The independent 224-butterfly original GBIF occurrence download is **DOI 10.15468/dl.umqmsf** (14,637,152 original records); its original annual regional derived observations and effort counts are pinned at immutable source commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0 with matching SHA audits.",
+        "after": "The 155-species forecast and 224-species community analysis share the original GBIF occurrence download, **DOI 10.15468/dl.umqmsf** (14,637,152 original records), while evaluating different cohorts and outcomes. The 224-species annual regional observations and effort counts are pinned at source commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0 with matching SHA audits.",
         "expected_count": 1
       }
     ],
@@ -2030,8 +2050,8 @@
       },
       {
         "id": "gbif_first",
-        "before": "Independent 224 species source GBIF download DOI",
-        "after": "Independent 224 species source GBIF download (GBIF.org, 2026), DOI",
+        "before": "Independent 224 species source GBIF download DOI **10.15468/dl.umqmsf** and annual positive/effort aggregates pinned to commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0.",
+        "after": "The 155-species forecast and 224-species community analysis share the original GBIF download (GBIF.org, 2026), DOI **10.15468/dl.umqmsf**, while evaluating different cohorts and outcomes. The 224-species annual positive/effort aggregates are pinned to commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0.",
         "expected_count": 1
       },
       {
@@ -2077,6 +2097,7 @@
     "Distinct historical first-index and 1596-port GBIF acquisition contributor attribution/DOIs remain incomplete; the verified 224-species DOI cannot substitute for them.",
     "Anonymous current-version reviewer data/code access and a permanent publication archive remain outstanding.",
     "Original 155-species training panel (842964 rows) and 12 other model inputs are unavailable; archived model-output checks are not an independent refit.",
+    "The historical 83573-row Parquet was privately recovered, checksum-verified and decoded; permitted anonymous reviewer redistribution remains uncleared. This is distinct from the missing 155-species model inputs.",
     "WPI official publication identity is known; the original converted-GeoJSON download/conversion/edition chain remains unverified.",
     "OSCAR accessed legacy NOAA mirror has its own version metadata; NASA v2 metadata-only access does not establish a v2 model input.",
     "AIS names distinct historical density/voyage products; this copyedit does not assign one DOI to all AIS sources.",

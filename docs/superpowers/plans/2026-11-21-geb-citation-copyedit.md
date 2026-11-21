@@ -37,9 +37,10 @@
 ## Execution record
 
 - The exporter verifies 24 main references and nine SI references against actual callouts. All 39 current historical source entries and the original archive remain untouched.
-- Main body 4,979 words; abstract 292. All 381 non-citation numerical tokens remain in order. The immutable scientific/figure validator passes.
+- Main body 4,987 words; abstract 292. All 381 non-citation numerical tokens remain in order. The immutable scientific/figure validator passes.
 - Final local PDFs: 21 main pages, 11 SI pages. Every page was viewed; the Figure S5.1 lead-in pagination finding was fixed. Re-review covered the four changed SI pages; the remaining 28 page images were byte-identical.
-- Independent source/code and visual reviews are closed. The four delivered PDF/DOCX files were updated successfully as version 1 of their existing file identities.
+- Independent source/code and visual reviews are closed. The four delivered PDF/DOCX files were updated successfully; the final shared-source clarification is version 2 of their existing file identities.
 - Stage A remains active. Source-access and author gates remain explicit; no coauthor review, merge or journal submission is authorized by this copyedit.
+- Cross-branch source-state reconciliation confirmed the shared original GBIF download for the distinct 155/224 analyses and the privately recovered historical Parquet. Export text now states that shared download explicitly; the missing 155-model workspace and uncleared private-data redistribution remain separate gates.
 
 Verification uses the existing source checks plus meaningful citation/data guards and rendered-page review. A presentation-only copyedit does not require implementation-mirroring unit tests.
