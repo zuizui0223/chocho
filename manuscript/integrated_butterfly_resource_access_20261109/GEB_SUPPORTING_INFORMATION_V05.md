@@ -67,6 +67,21 @@ The independently executed source run, full Moran weights and 1999-draw permutat
 
 ![Figure S3.1. Ten influential recorded host plants at original 38 sampled botanical port buffers, not 1,596-port historical arrivals.](../../figures/integrated_island_port_butterfly_v03/Fig2_global_contributors_at_ports.svg)
 
+### S3.4. Mainland isolation and botanical observation-effort index sensitivity
+
+We separately tested whether the original 126-island Figure 2D source-defined HOSTS×WCVP potential-resource association was solely a correlate of uneven botanical recording. The fixed 239-butterfly responses and approximate WGSRPD3 nearest-mainland distances were independently reconstructed from the same WCVP/port table, 369-region HOSTS panel and pinned TDWG polygons. We then linked the pre-existing GBIF all-Plantae index counts (1700–2026; historical pre-1900 subset separately) to the **98 of 126 botanical island regions with a successfully indexed plant-effort record**. For transparent cohort control, **all models below are re-estimated on the identical 98 islands** (all 98 resource-active), with fixed standardized log2(1+ports), log island region area, absolute centroid latitude and nine TDWG Level1 intercepts; the added covariate is standardized log1p(all indexed plant records). Response counts were standardized by log1p *within the common 98-island panel*, while the introduced-only host-share response remained region-level log odds with a 0.5 continuity adjustment.
+
+| Same 98-island source | No plant-record effort: distance β, 9-Level1 t8 p | All-plant-record effort adjusted: distance β, 9-Level1 t8 p |
+|---|---|---|
+| Native documented host opportunities | **−0.1957**, p=0.0310 | **−0.2162**, p=0.0147 |
+| Contemporary documented host opportunities | +0.0062, p=0.9522 | −0.0201, p=0.8406 |
+| Paired contemporary-minus-native standardized slope | +0.2019, p=0.1207 | +0.1961, p=0.1390 |
+| Introduced-only share of currently covered known-host opportunities (log odds) | **+0.5091**, p=0.0111 | **+0.5247**, p=0.0096 |
+
+Using only pre-1900 indexed botanical records instead of the all-period count yielded native distance **β=−0.2104, nine-cluster p=0.0215** and introduced-only share **β=+0.5105, p=0.0088**, with the paired slope difference still uncertain (β=+0.1809, p=0.1206). The corresponding HC3 results and nine-cluster t8 intervals are included in the aggregate source receipt.
+
+This is an observation-index *proxy sensitivity*, **not** an identified or full-population recording-effort adjustment. The 28 omitted botanical regions have no usable original indexed plant-effort measure rather than observed zero effort. They are not missing at random: the separate source audit identified disproportionately large and port-rich omitted regions. Results on the common 98 cannot be extrapolated to all 126 or described as independent biological replication. The original full-126 evidence and its conservative paired-slope uncertainty (nine-cluster p=0.0677) remain primary; no new historical ship/cargo, butterfly occurrence or recruitment evidence is inferred. Independent script `scripts/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py`; machine-readable receipt `results/geb_v05_fig2d_effort_sensitivity_20261121/FIG2D_PLANT_INDEX_EFFORT_SENSITIVITY_20261121.json`.
+
 ## Appendix S4. Same-source HOSTS×WCVP potential resource controls
 
 On the original 104 botanical islands, H=668 introduced WCVP plant taxa registered as hosts of the 239 butterflies; O=7,219 introduced taxa **not registered** as hosts (not confirmed true non-hosts). Under original geography E controls, H-after-O improved prediction of *WCVP/HOSTS-derived potential butterfly resource composition* by +17.609% MSE. With 199 plant-family×island-occupancy-matched label draws, observed source H-after-O +16.365% versus median matched null +7.699% (9/199 null scores at least as large, descriptive rank .050). Contemporary whole alien flora similarity improved source-potential butterfly-resource prediction +26.363% against a 225 serial-state fixed source-gain-margin null median +18.974% (excess +7.389 points). These models share WCVP/HOSTS taxonomic input between predictors and potential response and **are not independently observed butterfly evidence**.
