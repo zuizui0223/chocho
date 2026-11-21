@@ -275,7 +275,7 @@ def main():
     # MacArthur & Wilson book has no DOI; exact publication/author identity required.
     def source_reference_identity(textline):
         m=re.search(r"https://doi\.org/([^\s]+)",textline)
-        return m.group(1).lower() if m else textline.strip().lower()
+        return m.group(1).lower().rstrip(".,;") if m else textline.strip().lower()
     def unique_by_identity(lines):
         output={}
         for item in lines:
@@ -285,9 +285,20 @@ def main():
         return output
     original_by_id=unique_by_identity(original_reference_lines)
     current_by_id=unique_by_identity(current_reference_lines)
-    for key,original_entry in original_by_id.items():
-        if key not in current_by_id or current_by_id[key]!=original_entry:
-            raise AssertionError("Original unique reference lost or altered: "+key)
+    # The archived pre-review bibliography must remain byte exact. This one
+    # independently source-verified checklist correction is the ONLY allowed
+    # in-place copyedit to an original reference; it is not source deletion.
+    checklist_doi = "10.15468/ye7whj"
+    permitted_checklist_source = "- INBO. *European butterfly checklist and distributions*, GBIF dataset. https://doi.org/10.15468/ye7whj. **Dataset-version citation to finalize before submission.**"
+    permitted_checklist_current = "- Maes, D., Wiemers, M., Verovnik, R., Warren, M., Brosens, D. & Desmet, P. (2020). *National checklists and red lists for European butterflies* (Version 1.1) [checklist data set]. Research Institute for Nature and Forest (INBO). https://doi.org/10.15468/ye7whj"
+    for key, original_entry in original_by_id.items():
+        if key not in current_by_id:
+            raise AssertionError("Original unique reference lost: " + key)
+        if key == checklist_doi:
+            if original_entry != permitted_checklist_source or current_by_id[key] != permitted_checklist_current:
+                raise AssertionError("Official INBO checklist correction does not match the verified six-author version-1.1 citation")
+        elif current_by_id[key] != original_entry:
+            raise AssertionError("Original unique reference altered without source-audited copyedit: " + key)
     added_references=[key for key in current_by_id if key not in original_by_id]
     if len(added_references)!=6 or not verified_literature_dois.issubset(set(added_references)):
         raise AssertionError("GEB exact published comparison and original theory references not all in sorted bibliography")
