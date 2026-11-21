@@ -1,0 +1,27 @@
+name: Verify current 1596 WPI port NEW GBIF botanical data-source snapshot offline
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/verify_new_full1596_GBIF_port_provider_snapshot_20261120.py
+      - results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
+      - .github/workflows/verify-new-all1596-GBIF-port-provider-snapshot-offline.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-port-cohort-and-NEW-provider-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify new source exact bytes, all 1596 original ports, all provider/port counts and historical attribution stop gate
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/verify_new_full1596_GBIF_port_provider_snapshot_20261120.py
+          python scripts/verify_new_full1596_GBIF_port_provider_snapshot_20261120.py

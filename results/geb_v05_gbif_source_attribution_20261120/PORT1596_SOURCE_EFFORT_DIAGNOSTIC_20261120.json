@@ -1,0 +1,399 @@
+{
+  "schema": "chocho_GEBv05_source_observation_effort_candidate_native_port1596_20261120_v1",
+  "status": "EXPLORATORY_CROSS_SNAPSHOT_SOURCE_EFFORT_DIAGNOSTIC_NOT_HISTORIC_PROVENANCE_OR_MAIN_WCVP_RESULT",
+  "original_source_git_blob": "fdf73b11ddcb1644f46730123350ae52cc61cae6",
+  "new_GBIF_2026_source_sha256": "e79c3ad437d484424d41a5fc8e784c9c829070d740f1120be769d5a2d69548b6",
+  "n_orig_WPI_complete_ports": 1596,
+  "country_groups_including_UNKNOWN": 142,
+  "ports_missing_original_country": 0,
+  "new_GBIF_current_positive_ports": 1461,
+  "new_GBIF_current_zero_index_ports": 135,
+  "original_candidate_not_native_catalogue_zero_ports": 446,
+  "original_native_catalogue_zero_ports": 495,
+  "new_current_provider_top1_share_median_positive_ports": 0.7405660377358491,
+  "new_current_provider_top1_share_more_than_0_5_all_ports": 1117,
+  "new_current_provider_top1_share_at_least_0_9_all_ports": 352,
+  "cross_snapshot_Spearman_associations": {
+    "contemporary_not_native_in_catalogue__current_GBIF_records": {
+      "rho": 0.8210477195612551,
+      "p": 0.0,
+      "p_is_float_underflow_zero": true
+    },
+    "contemporary_not_native_in_catalogue__current_GBIF_datasets": {
+      "rho": 0.7053761935431108,
+      "p": 1.656129724137664e-240,
+      "p_is_float_underflow_zero": false
+    },
+    "native_in_catalogue__current_GBIF_records": {
+      "rho": 0.8423007755243113,
+      "p": 0.0,
+      "p_is_float_underflow_zero": true
+    },
+    "native_in_catalogue__current_GBIF_datasets": {
+      "rho": 0.7128103721950877,
+      "p": 7.484876714725576e-248,
+      "p_is_float_underflow_zero": false
+    }
+  },
+  "new_GBIF_records_and_datasets_Spearman_rho": 0.8763951967840533,
+  "country_cluster_primary_record_associations": {
+    "candidate_log": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "candidate_log",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.39101833484610793,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": 0.41365820007025755,
+          "se": 0.027301362877032307,
+          "p": 7.39908410967535e-52,
+          "CI95": [
+            0.3601485121024154,
+            0.4671678880380997
+          ]
+        }
+      }
+    },
+    "native_log": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "native_log",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.32263879695955,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": 0.3924293259569632,
+          "se": 0.03505520986123828,
+          "p": 4.3331544794874764e-29,
+          "CI95": [
+            0.3237223771584429,
+            0.4611362747554836
+          ]
+        }
+      }
+    },
+    "log_candidate_native_ratio": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "log_candidate_native_ratio",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.0028177834498803733,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": 0.027455136974134695,
+          "se": 0.032897598708292335,
+          "p": 0.40396348856120134,
+          "CI95": [
+            -0.03702297167196969,
+            0.09193324562023908
+          ]
+        }
+      }
+    }
+  },
+  "country_cluster_two_predictor_sensitivity": {
+    "candidate_log": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "candidate_log",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.39109625517171864,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": 0.4204022479918771,
+          "se": 0.026687607929644138,
+          "p": 6.579614482132173e-56,
+          "CI95": [
+            0.36809549761624905,
+            0.47270899836750513
+          ]
+        },
+        "log_current_GBIF_datasets": {
+          "beta": -0.024249796510017872,
+          "se": 0.053264181861173265,
+          "p": 0.6489121372529562,
+          "CI95": [
+            -0.1286456746239091,
+            0.08014608160387335
+          ]
+        }
+      }
+    },
+    "native_log": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "native_log",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.3245860175767269,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": 0.4276390750747695,
+          "se": 0.04267345325994961,
+          "p": 1.2300427702189915e-23,
+          "CI95": [
+            0.3440006435893149,
+            0.5112775065602241
+          ]
+        },
+        "log_current_GBIF_datasets": {
+          "beta": -0.12660486123451326,
+          "se": 0.08384943044264452,
+          "p": 0.13106709764414778,
+          "CI95": [
+            -0.29094672502629293,
+            0.03773700255726642
+          ]
+        }
+      }
+    },
+    "log_candidate_native_ratio": {
+      "n_ports": 1596,
+      "country_clusters": 142,
+      "response": "log_candidate_native_ratio",
+      "country_fixed_effects": true,
+      "cluster_robust_error": "country CR1 statsmodels",
+      "within_R2": 0.006105894579508386,
+      "regressors": {
+        "log_current_GBIF_records": {
+          "beta": -0.006797597085367171,
+          "se": 0.0367094540972544,
+          "p": 0.8530934025214891,
+          "CI95": [
+            -0.07874680500811213,
+            0.06515161083737778
+          ]
+        },
+        "log_current_GBIF_datasets": {
+          "beta": 0.12316369048800777,
+          "se": 0.06018986545005411,
+          "p": 0.04073148896377702,
+          "CI95": [
+            0.005193721971589987,
+            0.24113365900442554
+          ]
+        }
+      }
+    }
+  },
+  "country_cluster_log_candidate_native_ratio_sensitivities": {
+    "current_GBIF_positive_ports": {
+      "single_record_model": {
+        "n_ports": 1461,
+        "country_clusters": 137,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.0013799068753195254,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": 0.021491417616421062,
+            "se": 0.03656590541892771,
+            "p": 0.556703658005221,
+            "CI95": [
+              -0.05017644006677524,
+              0.09315927529961737
+            ]
+          }
+        }
+      },
+      "joint_record_and_publisher_model": {
+        "n_ports": 1461,
+        "country_clusters": 137,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.003744920517718797,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": -0.00486889716070946,
+            "se": 0.037804159564683526,
+            "p": 0.8975217368354401,
+            "CI95": [
+              -0.07896368837329458,
+              0.06922589405187567
+            ]
+          },
+          "log_current_GBIF_datasets": {
+            "beta": 0.11033138612779264,
+            "se": 0.07375409267234947,
+            "p": 0.1346703912760007,
+            "CI95": [
+              -0.03422397922244183,
+              0.2548867514780271
+            ]
+          }
+        }
+      }
+    },
+    "both_original_catalogue_status_classes_positive": {
+      "single_record_model": {
+        "n_ports": 1024,
+        "country_clusters": 108,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.0009479746560704383,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": 0.015848191714967704,
+            "se": 0.03904803186084838,
+            "p": 0.6848425060476776,
+            "CI95": [
+              -0.060684544399467674,
+              0.09238092782940309
+            ]
+          }
+        }
+      },
+      "joint_record_and_publisher_model": {
+        "n_ports": 1024,
+        "country_clusters": 108,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.004181102086202149,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": -0.006376810497746925,
+            "se": 0.03766642459799301,
+            "p": 0.8655630812533937,
+            "CI95": [
+              -0.08020164613620681,
+              0.06744802514071296
+            ]
+          },
+          "log_current_GBIF_datasets": {
+            "beta": 0.09742880805354785,
+            "se": 0.09837367496312839,
+            "p": 0.32198102760995007,
+            "CI95": [
+              -0.09538005190103342,
+              0.2902376680081291
+            ]
+          }
+        }
+      }
+    },
+    "original_country_groups_at_least_3_ports": {
+      "single_record_model": {
+        "n_ports": 1522,
+        "country_clusters": 87,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.0025964787288517144,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": 0.026219166576195718,
+            "se": 0.033207970279189855,
+            "p": 0.42979389696667825,
+            "CI95": [
+              -0.03886725917069292,
+              0.09130559232308436
+            ]
+          }
+        }
+      },
+      "joint_record_and_publisher_model": {
+        "n_ports": 1522,
+        "country_clusters": 87,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.005380740290359842,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": -0.005084860332501763,
+            "se": 0.03688155476458765,
+            "p": 0.890343152398622,
+            "CI95": [
+              -0.07737137936493518,
+              0.06720165869993167
+            ]
+          },
+          "log_current_GBIF_datasets": {
+            "beta": 0.11283899687148707,
+            "se": 0.061719281303131875,
+            "p": 0.06751028809563375,
+            "CI95": [
+              -0.008128571634347728,
+              0.23380656537732186
+            ]
+          }
+        }
+      }
+    },
+    "exclude_current_one_provider_dominance_90pct": {
+      "single_record_model": {
+        "n_ports": 1244,
+        "country_clusters": 132,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.002118615913754618,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": 0.024046652245358534,
+            "se": 0.031958490596012475,
+            "p": 0.45179015658322597,
+            "CI95": [
+              -0.03859083832308793,
+              0.08668414281380499
+            ]
+          }
+        }
+      },
+      "joint_record_and_publisher_model": {
+        "n_ports": 1244,
+        "country_clusters": 132,
+        "response": "log_candidate_native_ratio",
+        "country_fixed_effects": true,
+        "cluster_robust_error": "country CR1 statsmodels",
+        "within_R2": 0.0026392639189358746,
+        "regressors": {
+          "log_current_GBIF_records": {
+            "beta": 0.00883287192029987,
+            "se": 0.03699467399124229,
+            "p": 0.8112911948037059,
+            "CI95": [
+              -0.06367535672233567,
+              0.0813411005629354
+            ]
+          },
+          "log_current_GBIF_datasets": {
+            "beta": 0.04977999753208558,
+            "se": 0.0643858672902821,
+            "p": 0.43943302268515494,
+            "CI95": [
+              -0.07641398347024286,
+              0.17597397853441404
+            ]
+          }
+        }
+      }
+    }
+  },
+  "leave_one_original_country_out_log_ratio_record_gradient": {
+    "N_dropped_countries": 142,
+    "min_beta": 0.013078167795534872,
+    "max_beta": 0.04804557047246755,
+    "count_negative": 0,
+    "is_not_equivalence_proof": true
+  },
+  "ecological_qualification": [
+    "Original contemporary-not-native catalogue status is a candidate source classification, NOT independently documented establishment through ports.",
+    "Absolute candidate and native status richness strongly correlates with public GBIF botanical recording in both source classes.",
+    "Country-clustered ratio model fails to reject zero, but does not prove ecological equality or absence of effort bias.",
+    "The current 20-Nov GBIF source count and provider count are highly collinear; any marginal multivariable provider coefficient is post hoc and sensitivity-dependent.",
+    "New 2026 sampled source is from a different time and geoDistance area than original 2026 speciesKey WKT port cache; do not use these regressions to retrospectively validate original cached datasetKey publisher identities.",
+    "Most crucially, the MAIN 126-botanical-island WCVP whole-flora versus WPI port-count regression has a different outcome/source panel and cannot be refuted or confirmed by this auxiliary 1596-port index diagnostic.",
+    "The original 1596 sampling is partial (3630 WPI candidates) and geographically ordered; country fixed effects are insufficient to estimate true complete-port biodiversity or causal introduction.",
+    "All country CIs are cluster robust descriptive in reused ports. This exploratory diagnostic was specified after examining raw rho; do not label preregistered inference."
+  ]
+}

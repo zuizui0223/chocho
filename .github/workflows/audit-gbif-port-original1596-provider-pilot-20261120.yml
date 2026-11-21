@@ -1,0 +1,61 @@
+name: Audit NEW current GBIF port plant datasetKey source on seven original complete WPI ports
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/audit_gbif_port_datasetkey_pilot_20261120.py
+      - .github/workflows/audit-gbif-port-original1596-provider-pilot-20261120.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-selected-port-new-provider-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: original_source
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Source-exact 194/1596 port selection and read-only two-period NEW datasetKey facet acquisition
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_gbif_port_datasetkey_pilot_20261120.py
+          python current/scripts/audit_gbif_port_datasetkey_pilot_20261120.py \
+            --source-root original_source \
+            --out dist/geb_v05_port_GBIF/NEW_20261120_SEVEN_PORT_DATASETKEY_FACETS.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          f=Path("dist/geb_v05_port_GBIF/NEW_20261120_SEVEN_PORT_DATASETKEY_FACETS.json")
+          r=json.loads(f.read_text())
+          assert r["source_original_complete_WPI_ports"]==1596
+          assert r["source_original_WPI_candidates"]==3630
+          assert r["source_original_island_subset_ports"]==194
+          assert r["source_original_nov7_early_plant_query_changed_ports"]==100
+          assert len(r["selected_WPI_port_ids"])==7 and r["NEW_port_period_queries"]==14
+          assert all(q["NEW_sum_datasetKey_records"]==q["NEW_2026_11_20_GBIF_index_records"] for q in r["results"])
+          assert r["NEW_2026_index_not_2026_original_index"]
+          assert r["DOI_for_2026_original_1596_ports"] is None
+          assert r["NEW_unique_datasetKeys_in_selected_ports"]>0
+          print("PORT_1596_SOURCE_SELECTED_SEVEN_GBIF_NEW_PROVIDER_FACETS_NOT_OLD_DOI_PASS")
+          PY
+          sha256sum dist/geb_v05_port_GBIF/* > dist/geb_v05_port_GBIF/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEW-port-plants-Gbif-datasetkey-seven-original-ports-NOT-original-2026-snapshot
+          path: dist/geb_v05_port_GBIF/
+          if-no-files-found: warn
+          retention-days: 90

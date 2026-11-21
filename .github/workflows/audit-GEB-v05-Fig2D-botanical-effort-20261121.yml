@@ -1,0 +1,74 @@
+name: Audit GEB v0.5 Fig2D botanical observation effort island isolation
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB-v05-Fig2D-botanical-effort-20261121.yml
+      - scripts/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-exact-126-and-effort-98:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scientific dependencies
+        run: python -m pip install "numpy>=1.26,<3" "pandas>=2.2,<3" "statsmodels>=0.14,<1" "scipy>=1.13,<2" "shapely>=2,<3" "pyproj>=3.6,<4"
+      - name: Download original frozen TDWG Level3 geometry and verify SHA
+        run: |
+          set -euo pipefail
+          mkdir -p source
+          curl --fail --location --retry 4 --retry-delay 5 --silent --show-error \
+            https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson \
+            --output source/wgsrpd3.original.geojson
+          python - <<'PY'
+          from pathlib import Path
+          from hashlib import sha256
+          p=Path("source/wgsrpd3.original.geojson")
+          assert sha256(p.read_bytes()).hexdigest()=="c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840"
+          print("SOURCE_TDWG_369_EXACT")
+          PY
+      - name: Independently recompute fixed 239 source island isolation; add 98-island effort sensitivity
+        run: |
+          set -euo pipefail
+          python scripts/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py \
+            --tdwg-geojson source/wgsrpd3.original.geojson \
+            --out-dir results/geb_v05_fig2d_effort_sensitivity_20261121 \
+            > effort_fig2d.log 2>&1 || { tail -80 effort_fig2d.log; exit 1; }
+          python - <<'PY'
+          from pathlib import Path
+          import json,math
+          p=Path("results/geb_v05_fig2d_effort_sensitivity_20261121/FIG2D_PLANT_INDEX_EFFORT_SENSITIVITY_20261121.json")
+          obj=json.loads(p.read_text())
+          assert obj["cohorts"]["matched_effort_island_regions"]==98
+          assert obj["cohorts"]["missing_botanical_effort_islands"]==28
+          for target,models in obj["models"].items():
+              for n in ("same_restricted_cohort_no_effort","adjusted_all_plant_indexed_records","adjusted_pre1900_plant_indexed_records"):
+                  assert math.isfinite(models[n]["distance"]["beta"])
+          print("PASS_98_126_SCOPE_SEPARATION_AND_ALL_COEFFICIENTS")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: source239-126-island-98-Gbif-plant-effort-figure2D-sensitivity-NOT-causal
+          path: |
+            results/geb_v05_fig2d_effort_sensitivity_20261121/
+            effort_fig2d.log
+          retention-days: 90
+          if-no-files-found: error
+      - name: Commit non-sensitive source-locked Figure 2D aggregate receipt to Draft PR189
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_fig2d_effort_sensitivity_20261121
+          if ! git diff --cached --quiet; then
+            git commit -m "archive: source239 98-island botanical effort isolation QA"
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi

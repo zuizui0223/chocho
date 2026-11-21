@@ -1,0 +1,78 @@
+name: Archive original-WKT GBIF two-island NEW-snapshot datasetKey facets
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/archive-geb-20261120-GBIF-reindex-provider-pilot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  preserve-new-provider-snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Fetch exact already successful Nov20 GBIF datasetKey snapshot (no live requery)
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44734981990
+          name: GBIF-new-time-two-island-provider-facets-NOT-20261109-historical-publishers
+          github-token: ${{ github.token }}
+          path: _recovered_pilot
+      - name: Verify original geometry hashes, six NEW provider facets and archive unchanged bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p results/geb_v05_gbif_source_attribution_20261120
+          python - <<'PY'
+          import json,uuid,hashlib
+          from pathlib import Path
+          source=Path('_recovered_pilot/ISLAND9_276_POSTSOURCE_DATASETKEY_FACET.json')
+          raw=source.read_bytes()
+          j=json.loads(raw)
+          assert j['schema']=='chocho_GBIF_20261120_new_snapshot_datasetKey_facet_after_20261109_source_replay_v1'
+          assert j['source_original_Git_commit']=='365526cc70e57b8a6634ee29494bd678f95961ff'
+          assert j['original_GSHHG_237_sha256']=='8dbbe7e071e77e9e75f2d639239099ebca8d5c16d6a07df8169729d49f15cf41'
+          assert j['island_ids']==['9','276'] and len(j['results'])==6
+          assert j['n_new_index_queries']==9
+          assert j['read_only_no_DOI_minted'] and not j['original_historical_dataset_publishers_recovered']
+          assert j['new_snapshot_start_utc'].startswith('2026-11-20T')
+          assert j['new_snapshot_end_utc'].startswith('2026-11-20T')
+          d={(r['original_landmass_id'],r['original_period']):r for r in j['results']}
+          expected={
+            ('9','pre2001_2010'):(821,826),
+            ('9','first2011_2017'):(1633,1642),
+            ('9','holdout2018_2022'):(2530,2547),
+            ('276','pre2001_2010'):(1656,1656),
+            ('276','first2011_2017'):(2248,2248),
+            ('276','holdout2018_2022'):(2168,2594),
+          }
+          assert set(d)==set(expected)
+          for key,(old,new) in expected.items():
+            q=d[key]
+            assert (q['original_source_GBIF_2026_11_09_index_count'],q['new_snapshot_index_count'])==(old,new)
+            assert q['new_minus_original_index_count']==new-old
+            providers=q['new_snapshot_datasetkey_contributors']
+            assert q['new_provider_count']==len(providers)
+            assert sum(p['indexed_count'] for p in providers)==new
+            assert len({p['datasetKey'] for p in providers})==len(providers)
+            for p in providers: uuid.UUID(p['datasetKey'])
+          dest=Path('results/geb_v05_gbif_source_attribution_20261120/REINDEXED_TWO_ISLAND_GBIF_PROVIDER_SNAPSHOT_20261120.json')
+          dest.write_bytes(raw)
+          print('NEW_PUBLIC_GBIF_SOURCE_COUNT_AND_DATASETKEY_FACET_ARCHIVED',hashlib.sha256(raw).hexdigest())
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_gbif_source_attribution_20261120/REINDEXED_TWO_ISLAND_GBIF_PROVIDER_SNAPSHOT_20261120.json
+          if git diff --cached --quiet; then
+            echo "Exact dated provider snapshot already archived"
+          else
+            git commit -m "Preserve 20Nov two-island GBIF datasetKey source snapshot [skip ci]"
+            git push origin HEAD:refs/heads/analysis/geb-v05-review-data-source-audit-20261120
+          fi

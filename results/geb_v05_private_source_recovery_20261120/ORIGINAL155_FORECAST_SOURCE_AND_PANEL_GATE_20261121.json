@@ -1,0 +1,65 @@
+{
+  "schema": "chocho_GEB_v05_original_155_source_snapshot_AUDIT_NOT_MODEL_REFIT_v1",
+  "status": "ORIGINAL_155_RESULTS_AND_SNAPSHOT_HASHES_VERIFIED;RAW_TO_RF_PANEL_MISSING",
+  "source_commit": "42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+  "underlying_original_GBIF_doi": "10.15468/dl.umqmsf",
+  "source_snapshot_file_count": 54,
+  "completed_modes": [
+    "temporal",
+    "species",
+    "spatial",
+    "spatial_buffer100",
+    "temporal_effort20",
+    "temporal_radius250",
+    "temporal_exclude_top_provider",
+    "temporal_precision100"
+  ],
+  "source_eligible_butterflies": 155,
+  "original_test_butterfly_cell_pairs": 208482,
+  "original_training_pairs": 193703,
+  "pre-registered_model_settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "improvement_percent_vs_M3_climate_landcover": {
+    "temporal": 4.120175607931823,
+    "spatial": 2.9952059516988134,
+    "spatial_at_least100km_from_training": 2.735657911003299
+  },
+  "original_model_source_scripts": {
+    "build_forecast_panel.py": "99af0755252f2bb81c53f1b07a504e34d15092ccbd8a10a0bc16dde0e0b57ec6",
+    "diagnose_forecast_residuals.py": "b47ff8876228507f08ac842deb88d77974fa8d3c42f4923a87c6b723abc2fbe3",
+    "fit_forecast.py": "a34ad4cd1e4f40460c4f6bf6ed0b22ba3885b17d20ac17f74bd6564d0618ce6d",
+    "fit_host_interactions.py": "a61a4f5fbf400dfd4fa0eeee550256220d9e9d300c4aa04a5338a58e6bc58b4f",
+    "prepare_forecast_sensitivities.py": "77da1bf70742d2ca7b50548b8a9408d0224b7be5983818e2d85089c22ddf41cf",
+    "reconcile_validation_coverage.py": "e64fce27778eb2fe34ca719da079d684acad175895290012cc2385bad9762511",
+    "report_forecast_validation.py": "3f57338e5e678bd0e0041fdaa88c62e14f171f2ff45aa69f3e267a28c4cc0d76",
+    "summarize_forecast.py": "3bdd3a2d0c52864661a7ced42fa7577df14f626b3ab515cfc61b3f72a0bfa01b",
+    "summarize_initially_unrecorded.py": "bfdbc38cb83de1d219a7d918e7545607d7ac2266c6e686e293edb343a6569846",
+    "validate_sensitivity_panels.py": "faefaa7364d3e1259c8c54b27445316bd2783cb87fca7d6bdde1531d621883dc",
+    "validate_spatial_split.py": "c77de6da4f04022ef9081c78819615caebd608970922ed3b72250529b0816b97"
+  },
+  "available_in_original_git_checkout": {
+    "work/temporal/forecast/species_cell_period_panel.parquet": false,
+    "work/temporal/forecast/species_recording_days.parquet": false,
+    "work/temporal/forecast/target_group_recording_days.parquet": false,
+    "work/temporal/forecast/candidate_cells.parquet": false,
+    "work/temporal/forecast/cell_environment_period.parquet": false,
+    "work/temporal/forecast/cell_climate_grid.parquet": false,
+    "work/temporal/forecast/predictions_temporal.parquet": false,
+    "work/temporal/forecast/predictions_spatial.parquet": false,
+    "work/temporal/species_year_cells_10km.parquet": false,
+    "work/temporal/host_region_composition_metrics.parquet": false,
+    "work/temporal/host_region_family_composition.parquet": false,
+    "work/temporal/occurrence_parts": false,
+    "work/remote_sensing/host_region_counts.csv": false
+  },
+  "model_refit_completed": false,
+  "scope": "Byte-exact original results manifest, published summary MSE arithmetic and fixed model source code only; NOT a new RF fit, NOT public reviewer data archive.",
+  "reproduction_gate": "Original 842964-row source panel, provider-day observations and environment/host predictor tables were on an unarchived project workspace. They must be recovered or source-exactly rebuilt and granted permitted review access before a model-level refit is claimed.",
+  "no_private_input_exported": true
+}

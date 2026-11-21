@@ -1,0 +1,105 @@
+{
+  "schema": "chocho_GEB_v05_gbif224_original_script_dependency_closure_v1",
+  "status": "SOURCE_MODULE_CHAIN_RECOVERED_NOT_RAW_TO_MODEL_RERUN",
+  "original_paper_snapshot": "3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250",
+  "original_source_module_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+  "shared_source_GBIF_download": {
+    "doi": "10.15468/dl.umqmsf",
+    "key": "0013264-261023074918325",
+    "records": 14637152,
+    "original_zip_sha256": "a1769481e91cb3002c25f69c6d8aa8e6d8d73a012c9495e8394032af02a9df18"
+  },
+  "modules": [
+    {
+      "file": "aggregate_gbif_global224_wgsrpd3_annual.py",
+      "origin": "paper_original",
+      "git_blob_sha": "a06dcb58ffd043623e8227ed4642b17f31c1024e",
+      "sha256": "29b8b2d6fa55048ba66aadd6ed60aac94988ab28bc8598474917c223401147f7",
+      "size": 25836,
+      "imports": []
+    },
+    {
+      "file": "analyze_colonial_legacy_resource_beta.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "1bfdb98ed331c64cc72bcc84f2200b176d229b9e",
+      "sha256": "2550493dbba80c30fdf5cf3f3107f97916027a770fec643bfd4d97135d86f827",
+      "size": 14055,
+      "imports": []
+    },
+    {
+      "file": "analyze_documented_host_specificity.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "f024f1a85ff95b2a0ba2c43fb5e2cac6ee075510",
+      "sha256": "dd7a5aee1e3cd82e2d208d10db7a31ec61fb5d255cc3dea22704576e7ad6f2ff",
+      "size": 15281,
+      "imports": [
+        "analyze_colonial_legacy_resource_beta.py",
+        "analyze_matched_glonaf_consumer_history.py",
+        "build_lenzner_tdwg_colonial_crosswalk.py"
+      ]
+    },
+    {
+      "file": "analyze_gbif_31_observed_host_beta.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "f6dbb8407ca5c3bfdaf64339bf92a1ce68a9d71f",
+      "sha256": "147f329254b53c05d1ec03fb75ed06cdd7bd1391ba84a7a86d3a001a54934665",
+      "size": 24784,
+      "imports": [
+        "analyze_colonial_legacy_resource_beta.py",
+        "analyze_documented_host_specificity.py",
+        "analyze_matched_glonaf_consumer_history.py",
+        "audit_gbif_31_butterfly_wgsrpd3_source.py"
+      ]
+    },
+    {
+      "file": "analyze_gbif_global224_observed_beta.py",
+      "origin": "paper_original",
+      "git_blob_sha": "6efdba5c5b47fbb2ef7f1b59876e414004cf76ff",
+      "sha256": "f292cef7909fc3ebaa9390f14d9b02f4c01b27b6346746ac608bf68511bc0716",
+      "size": 21360,
+      "imports": [
+        "analyze_colonial_legacy_resource_beta.py",
+        "analyze_documented_host_specificity.py",
+        "analyze_gbif_31_observed_host_beta.py",
+        "analyze_matched_glonaf_consumer_history.py"
+      ]
+    },
+    {
+      "file": "analyze_matched_glonaf_consumer_history.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "95f274ecda2e7ae1e85259d0070ad9920fe9a61b",
+      "sha256": "74597397315856e2be391f88da3d8833fffb49e4a69ab416e512d713abf66d7b",
+      "size": 15562,
+      "imports": [
+        "analyze_colonial_legacy_resource_beta.py",
+        "build_lenzner_tdwg_colonial_crosswalk.py"
+      ]
+    },
+    {
+      "file": "audit_gbif_31_butterfly_wgsrpd3_source.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "7fea5b3849f67c8730cbd246bab67045cb7dff35",
+      "sha256": "69367b26f9f00e0d65a55103009848fb943cba6d234c5ae09db08462f16a2f3f",
+      "size": 12638,
+      "imports": []
+    },
+    {
+      "file": "build_lenzner_tdwg_colonial_crosswalk.py",
+      "origin": "source_20261031",
+      "git_blob_sha": "f9ac05d73f4a1de8ca27fa14fe2e6d790b411c34",
+      "sha256": "e36bd622d1d2b0402dffb83e2e7511d41ecf3a257cc86b1326b5bbc816f54e41",
+      "size": 13694,
+      "imports": []
+    }
+  ],
+  "missing_source_modules": [],
+  "missing_for_full_reproduction": [
+    "The original 1.415 GB GBIF occurrence ZIP must be fetched from the same dated download DOI and verified byte-exact before aggregation.",
+    "External TDWG level3 shape and the original Lenzner/GloNAF WCVP HOSTS source inputs and original butterfly beta precomputations must be retrieved and verified.",
+    "Recomputed annual butterfly records and effort must match source audit (not merely stored fitted scores).",
+    "The 155-species RF model train/evaluation and both 224-species primary and geographical-transfer model fits must run end to end and agree with original numeric receipts.",
+    "No raw occurrence IDs, observers, coordinates or restricted third-party inputs may be committed in a public Git tree.",
+    "An anonymous, licence-cleared, stable reviewer-data route does not yet exist."
+  ],
+  "interpretation": "Code lineage only. Independent consumer responses are GBIF recorded communities, not occupancy or causal host use."
+}

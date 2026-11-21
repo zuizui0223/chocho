@@ -1,0 +1,89 @@
+name: Archive original1596 WPI-port NEW GBIF providers from four successful source shards (offline)
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/consolidate_new_gbif_1596_port_providers_20261120.py
+      - .github/workflows/archive-gbif-1596-new-providers-from-successful-shards.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  combine-frozen-original-source-port-cohort:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: original_source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Recover ONLY the four previously successful 399-port source shards; no GBIF live queries
+        uses: actions/download-artifact@v4
+        with:
+          run-id: 44742493164
+          github-token: ${{ github.token }}
+          pattern: NEW-2026-GBIF-port1596-source-shard-*
+          merge-multiple: true
+          path: source_shards
+      - name: Reconcile original 1596 ID roster and every new datasetKey contribution before archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/consolidate_new_gbif_1596_port_providers_20261120.py
+          python current/scripts/consolidate_new_gbif_1596_port_providers_20261120.py \
+            --original-root original_source --shards-root source_shards \
+            --out current/results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          root=Path('current/results/geb_v05_gbif_source_attribution_20261120')
+          file=root/'NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json'
+          j=json.loads(file.read_text())
+          assert j['source_original_WPI_plant_queries_complete']==1596
+          assert j['new_source_original_WPI_portIDs_queried']==1596
+          assert j['audit_no_missing_duplicate_port_ID']
+          assert j['audit_individual_port_and_four_shard_provider_count_exact']
+          assert j['new_source_port_buffers_with_positive_GBIF_index']+j['new_source_port_buffers_with_zero_GBIF_index']==1596
+          assert j['new_source_datasetKey_contributors']>0
+          assert j['new_source_sum_port_buffer_indexed_hits_WITH_OVERLAP']==j['new_source_provider_index_counts_sum_WITH_OVERLAP']
+          assert j['source_original_2026_GBIF_contributing_datasetKeys_recovered'] is False
+          assert j['source_original_2026_plant_GBIF_derived_DOI_registered'] is False
+          assert len(j['new_source_port_index_facets'])==1596
+          assert len(j['new_source_shard_receipts'])==4
+          assert all(z['source_workflow_run']==44742493164 for z in j['new_source_shard_receipts'])
+          print('GBIF_1596_FROZEN_SHARDS_SOURCE_EXACT_REVIEW_AUDIT_PASS')
+          print('PORT1596_NEW_PROVIDER_JSON_SHA256',hashlib.sha256(file.read_bytes()).hexdigest())
+          PY
+      - name: Preserve the complete fully scoped new-source datasetKey audit on draft PR189 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd current
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
+          if git diff --cached --quiet; then
+            echo 'Exactly the same source-audit provider archive is already committed'
+          else
+            git commit -m "Archive new dated GBIF botanical datasetKey sources for all original1596 WPI ports [skip ci]"
+            git push origin HEAD:refs/heads/analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: NEW-GBIF-1596-port-full-dated-datasetKey-provider-audit-NOT-historic-DOI
+          path: current/results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
+          if-no-files-found: warn
+          retention-days: 90

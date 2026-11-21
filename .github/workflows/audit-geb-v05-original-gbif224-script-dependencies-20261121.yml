@@ -1,0 +1,74 @@
+name: Recover original GBIF224 source-code dependency chain for GEB v0.5
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/audit_GEB_v05_original_gbif224_dependency_closure_20261121.py
+      - .github/workflows/audit-geb-v05-original-gbif224-script-dependencies-20261121.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-source-code-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: paper/geb-single-island-port-endemics-20261118
+          path: paper
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: source_20261031
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offline audit parser self-test
+        run: |
+          python -m py_compile audit/scripts/audit_GEB_v05_original_gbif224_dependency_closure_20261121.py
+          python audit/scripts/audit_GEB_v05_original_gbif224_dependency_closure_20261121.py --self-test
+      - name: Verify immutable source model modules and original GBIF DOI receipt
+        run: |
+          set -euo pipefail
+          python audit/scripts/audit_GEB_v05_original_gbif224_dependency_closure_20261121.py \
+            --paper-root paper \
+            --original-root source_20261031 \
+            --output audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_SOURCE_CODE_CLOSURE_20261121.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_SOURCE_CODE_CLOSURE_20261121.json")
+          r=json.loads(p.read_text(encoding="utf-8"))
+          assert r["status"]=="SOURCE_MODULE_CHAIN_RECOVERED_NOT_RAW_TO_MODEL_RERUN"
+          assert len(r["modules"])>=8
+          assert not r["missing_source_modules"]
+          assert r["shared_source_GBIF_download"]["records"]==14637152
+          assert r["shared_source_GBIF_download"]["doi"]=="10.15468/dl.umqmsf"
+          print("GBIF224_ORIGINAL_CODE_DEPENDENCIES_ARCHIVE_RECOVERED_PASS")
+          PY
+      - name: Archive code lineage manifest only, without original occurrence records
+        working-directory: audit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_SOURCE_CODE_CLOSURE_20261121.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record original GBIF224 code import closure pinned to 31-Oct source"
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original-GBIF224-code-lineage-NOT-raw-model-replay
+          path: audit/results/geb_v05_private_source_recovery_20261120/ORIGINAL_GBIF224_SOURCE_CODE_CLOSURE_20261121.json
+          if-no-files-found: warn
+          retention-days: 90

@@ -1,0 +1,29 @@
+name: Verify current GEB Figures1-4 original cohorts vs auxiliary GBIF port-source provenance
+on:
+  push:
+    branches:
+      - analysis/geb-v05-review-data-source-audit-20261120
+    paths:
+      - scripts/verify_GEB_v05_claim_source_boundaries_20261120.py
+      - manuscript/integrated_butterfly_resource_access_20261109/GEB_V05_EVIDENCE_DEPENDENCY_AND_DATA_ACCESS_HANDBACK_20261120.md
+      - .github/workflows/verify-geb-v05-auxiliary-GBIF-source-boundary.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-scope-doi-firewall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Keep full GEB main results independent of the incomplete historical 1596 GBIF facet source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/verify_GEB_v05_claim_source_boundaries_20261120.py
+          python scripts/verify_GEB_v05_claim_source_boundaries_20261120.py

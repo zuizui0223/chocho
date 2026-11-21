@@ -1,0 +1,24 @@
+name: Legacy GBIF 1596 port source snapshot recheck (read-only; v2 canonical)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-canonical-v2-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check already archived source; never regenerate or overwrite with prior v1 schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/verify_GEB_v05_new_port1596_attribution_20261120.py
+          echo 'LEGACY_ARCHIVER_GBIF1596_NOW_READ_ONLY_RECHECK_V2'

@@ -1,0 +1,28 @@
+name: Verify published current GBIF 1596 WPI ports source citation firewall (offline)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/verify_GEB_v05_new_port1596_attribution_20261120.py
+      - results/geb_v05_gbif_source_attribution_20261120/NEW_GBIF_ORIGINAL1596_PORTS_DATASETKEY_INDEX_20261120.json
+      - results/geb_v05_gbif_source_attribution_20261120/VERIFIED_NEW1596_GBIF_SOURCE_SUMMARY_20261120.json
+      - .github/workflows/verify-geb-v05-gbif1596-persisted-current-source.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-permanent-source-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Audit archived full new source, seven-port previous result and do not claim original DOI
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/verify_GEB_v05_new_port1596_attribution_20261120.py
+          python scripts/verify_GEB_v05_new_port1596_attribution_20261120.py

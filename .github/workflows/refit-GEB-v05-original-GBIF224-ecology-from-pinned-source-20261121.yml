@@ -1,0 +1,126 @@
+name: Refit GEB v0.5 original GBIF224 observed ecology model from pinned source
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - scripts/verify_GEB_v05_gbif224_original_model_refit_20261121.py
+      - .github/workflows/refit-GEB-v05-original-GBIF224-ecology-from-pinned-source-20261121.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  original-224-consumer-model-refit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: true
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: source/_external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: zuizui0223/chocho
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: source/_external/butterfly_beta
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: source/_external/wgsrpd
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check source code and independent comparison logic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python audit/scripts/verify_GEB_v05_gbif224_original_model_refit_20261121.py --self-test
+          python -m py_compile source/scripts/analyze_gbif_global224_observed_beta.py
+          python -m pip install --disable-pip-version-check \
+            "numpy>=1.26,<3" "pandas>=2.2,<3" "shapely>=2.1,<3" \
+            "pyproj>=3.7,<4" "pyshp>=2.3" "pytest>=8"
+      - name: Acquire source-locked historical GloNAF data from Zenodo
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p source/_temp_historical_sources
+          curl --fail --show-error --silent --location --retry 3 --connect-timeout 30 --max-time 300 \
+            'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' \
+            --output source/_temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  source/_temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+      - name: Freeze source original expected model and 169-region holdout scores
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp source/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_observed_beta_v1.json "$RUNNER_TEMP/gbif224_source_original_model.json"
+          cp source/provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/gbif_global224_observed_beta_region_holdout_v1.csv "$RUNNER_TEMP/gbif224_source_original_folds.csv"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          x=json.loads((Path(os.environ["RUNNER_TEMP"])/"gbif224_source_original_model.json").read_text())
+          assert x["cohort"]["region_count"]==169 and x["cohort"]["evaluated_region_pairs"]==14196
+          assert x["sources"]["GBIF_doi"]=="10.15468/dl.umqmsf"
+          print("SOURCE_ORIGINAL_224_169_14196_COHORT_PINNED_PASS")
+          PY
+      - name: Refit actual original 224-species ecological Jaccard models and geographical heldouts
+        shell: bash
+        working-directory: source
+        run: |
+          set -euo pipefail
+          python -u scripts/analyze_gbif_global224_observed_beta.py \
+            --output "$RUNNER_TEMP/gbif224_original_model_refit.json" \
+            --region-fold-csv "$RUNNER_TEMP/gbif224_original_region_holdout_refit.csv" \
+            > "$RUNNER_TEMP/gbif224_model_run.log" 2>&1 || {
+              tail -n 100 "$RUNNER_TEMP/gbif224_model_run.log"
+              exit 1
+            }
+          tail -n 25 "$RUNNER_TEMP/gbif224_model_run.log"
+      - name: Independently compare all original model responses, summary coefficients and 676 held-region folds
+        shell: bash
+        run: |
+          set -euo pipefail
+          python audit/scripts/verify_GEB_v05_gbif224_original_model_refit_20261121.py \
+            --original "$RUNNER_TEMP/gbif224_source_original_model.json" \
+            --refit "$RUNNER_TEMP/gbif224_original_model_refit.json" \
+            --original-folds "$RUNNER_TEMP/gbif224_source_original_folds.csv" \
+            --refit-folds "$RUNNER_TEMP/gbif224_original_region_holdout_refit.csv" \
+            --out audit/results/geb_v05_private_source_recovery_20261120/GBIF224_ORIGINAL_FULL_MODEL_REFIT_20261121.json
+      - name: Commit only anonymized aggregate comparison receipt to source audit branch
+        if: success()
+        shell: bash
+        working-directory: audit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/geb_v05_private_source_recovery_20261120/GBIF224_ORIGINAL_FULL_MODEL_REFIT_20261121.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive original GBIF224 observed ecological model refit, full held-region comparison"
+            git fetch origin analysis/geb-v05-review-data-source-audit-20261120
+            git rebase origin/analysis/geb-v05-review-data-source-audit-20261120
+            git push origin HEAD:analysis/geb-v05-review-data-source-audit-20261120
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original-GBIF224-actual-model-refit-NO-RAW-RECORDS
+          path: audit/results/geb_v05_private_source_recovery_20261120/GBIF224_ORIGINAL_FULL_MODEL_REFIT_20261121.json
+          if-no-files-found: warn
+          retention-days: 90
