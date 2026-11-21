@@ -18,8 +18,8 @@ import urllib.request
 from pathlib import Path
 
 PAPER = "manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md"
-DOI_RE = re.compile(r"https://doi.org/(\\S+)", re.I)
-YEAR_RE = re.compile(r"\\((20\\d{2}|19\\d{2})\\)")
+DOI_RE = re.compile(r"https://doi.org/(\S+)", re.I)
+YEAR_RE = re.compile(r"\((20\d{2}|19\d{2})\)")
 FETCH_URL = "https://api.crossref.org/works/"
 USER_AGENT = "chocho-GEB-v05-reference-metadata-preflight/1.0 (public DOI metadata check)"
 
@@ -110,9 +110,9 @@ def run(text: str) -> dict:
 
 
 def self_test() -> None:
-    s = ("## References (DOI identities checked; final source and style audit outstanding)\\n"
-         "- Bach et al. (2022). Placeholder. https://doi.org/10.1111/ecog.06227\\n"
-         "## Supplementary results: anything\\n")
+    s = ("## References (DOI identities checked; final source and style audit outstanding)\n"
+         "- Bach et al. (2022). Placeholder. https://doi.org/10.1111/ecog.06227\n"
+         "## Supplementary results: anything\n")
     assert candidates(s)[0]["doi"] == "10.1111/ecog.06227"
     d = normalize({"DOI": "10.1111/ecog.06227", "author": [{"given":"A","family":"Bach"}],
                    "title":["Hello"], "issued":{"date-parts":[[2022]]}},
@@ -134,7 +134,7 @@ def main() -> None:
         ap.error("--paper-root and --output are required")
     r = run((a.paper_root / PAPER).read_text(encoding="utf-8"))
     a.output.parent.mkdir(parents=True, exist_ok=True)
-    a.output.write_text(json.dumps(r, indent=2, ensure_ascii=False) + "\\n", encoding="utf-8")
+    a.output.write_text(json.dumps(r, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({"candidate_count":r["candidate_count"],"fetched_count":r["fetched_count"]}))
     if r["candidate_count"] != 14 or r["fetched_count"] < 12:
         raise SystemExit("Insufficient Crossref metadata; do not cite as complete")
