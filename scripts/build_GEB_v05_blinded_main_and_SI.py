@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""GEB current-v0.4 coauthor REVIEW build, NOT proof of publication data access."""
+"""GEB v0.5 anonymous review export; source-access gates remain explicit."""
 import argparse
 import json
 import re
@@ -12,6 +12,9 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
 from build_integrated_geb_v04_coauthor_review import add_inline, set_line_numbering
+from geb_reference_copyedit import (apply_copyedit, citation_receipt, load_manifest,
+                                    reference_lines, si_bibliography,
+                                    verify_scientific_numbers)
 
 B=Path("manuscript/integrated_butterfly_resource_access_20261109")
 M=B/"ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md"
@@ -78,6 +81,7 @@ def markdown(doc,txt,root,out,with_images=True,fig_prefix="main"):
     lines=neutral(txt).splitlines()
     imgs=[]
     i=0
+    in_references=False
     while i<len(lines):
         line=lines[i].strip()
         if not line or line=="---":i+=1;continue
@@ -98,6 +102,8 @@ def markdown(doc,txt,root,out,with_images=True,fig_prefix="main"):
             i+=1;continue
         head=re.match(r"^(#{1,4}) (.*)",line)
         if head:
+            in_references=head.group(2) in (
+                "References", "Supporting Information references and source citations")
             doc.add_heading(head.group(2),level=min(len(head.group(1)),3));i+=1;continue
         if line.startswith("|") and i+1<len(lines) and re.fullmatch(r"[\s:|\-]+",lines[i+1].strip()):
             vals=[x.strip() for x in line.strip("|").split("|")]
@@ -128,11 +134,18 @@ def markdown(doc,txt,root,out,with_images=True,fig_prefix="main"):
                 row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
             continue
         if line.startswith("- "):
-            pa=doc.add_paragraph(style="List Bullet")
+            pa=doc.add_paragraph(style="Normal" if in_references else "List Bullet")
+            if in_references:
+                pa.paragraph_format.left_indent=Inches(.25)
+                pa.paragraph_format.first_line_indent=Inches(-.25)
+                pa.paragraph_format.keep_together=True
+                pa.paragraph_format.space_after=Pt(6)
             add_inline(pa,line[2:])
         else:
             pa=doc.add_paragraph()
             add_inline(pa,line)
+            if re.match(r"^\*\*Figure S\d+\.\d+\.",line):
+                pa.paragraph_format.keep_with_next=True
         i+=1
     return imgs
 
@@ -142,6 +155,10 @@ def build(root,out):
     figcaps=(root/F).read_text(encoding="utf8")
     if main.count(START)!=1 or len(re.findall(r"^## Appendix S[1-8]\.",si,re.M))!=8:
         raise RuntimeError("Current source article or SI structure missing")
+    historical_references=[s for s in main.split(START,1)[1].split("**Reference scope:",1)[0].splitlines() if s.startswith("- ")]
+    if len(historical_references)!=39:
+        raise RuntimeError("Unexpected source bibliography size")
+    citations=load_manifest(root,historical_references)
     abstract=main.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     a_words=len(re.sub(r"[*#]","",abstract).split())
     mainbody="## 1. Introduction"+main.split("## 1. Introduction",1)[1].split("## Data and code availability",1)[0]
@@ -169,20 +186,22 @@ def build(root,out):
     mainbody="\n".join(converted)+"\n"
     if re.search(r"Supplement S\.[A-G]",mainbody):
         raise RuntimeError("Legacy source appendix labels remain in GEB independent SI export")
+    before_copyedit=mainbody
+    mainbody=apply_copyedit(mainbody,"mainbody",citations)
+    numerical_tokens=verify_scientific_numbers(before_copyedit,mainbody,citations)
     bodywords=len(re.sub(r"[*#]","",mainbody).split())
     if a_words>300 or bodywords>5000:
         raise RuntimeError("Current source exceeds GEB abstract/main word goals")
     figures=[m.group() for m in FIG.finditer(mainbody)]
     if len(figures)!=4:
         raise RuntimeError("Four actual source main figures are required")
-    reflist=[s for s in main.split(START,1)[1].split("**Reference scope:",1)[0].splitlines() if s.startswith("- ")]
-    if len(reflist)!=39:
-        raise RuntimeError("Unexpected source bibliography size")
+    reflist=reference_lines(citations,"main")
     data=main.split("## Data and code availability",1)[1].split("## Figure legends",1)[0]
     data=re.sub(r"^\s*\(draft; final rights and archive check required\)\s*", "", data, flags=re.I)
     data=data.replace("not publicly archived in this Draft", "not included in the present source archive")
     data=data.replace("Original source/data sharing permissions, final citations, rights for individual larval photographs, independent GBIF index DOIs, figure accessibility and coauthor approval must be resolved before any submission. Draft PR #179 remains unmerged.",
                       "Some independent historical GBIF acquisition sources do not retain original occurrence-level publisher identities; original source access and material permissions are described in the accompanying source provenance and Supporting Information.")
+    data=apply_copyedit(data,"data",citations)
     figs_legend=figcaps.split("## Figure source and rights record",1)[0]
     figs_legend=figs_legend[figs_legend.index("## Figure 1 |"):]
     # The archived Figure 4 inset retains its historical S.G footer; give
@@ -205,12 +224,17 @@ def build(root,out):
         raise RuntimeError("Non-blinded author repository URL in clean manuscript")
     out.mkdir(parents=True,exist_ok=True)
     (out/"GEB_v05_blinded_main.md").write_text(mainclean,encoding="utf8")
-    siclean=journal_si(si)
+    siclean=si_bibliography(apply_copyedit(journal_si(si),"si",citations),citations)
     for forbidden in ("COAUTHOR PREFLIGHT","coauthor-review working version",
                       "This SI does not magically", "must be embedded as actual media",
                       "reviewer-access link required", "PR #"):
         if forbidden in siclean:
             raise RuntimeError("Internal editorial status leaked into SI export: "+forbidden)
+    citation_audit=citation_receipt(citations,mainbody+data+figs_legend,
+        siclean.split("### Supporting Information references and source citations",1)[0],
+        numerical_tokens)
+    (out/"GEB_v05_CITATION_AUDIT.json").write_text(
+        json.dumps(citation_audit,indent=2,ensure_ascii=False)+"\n",encoding="utf8")
     (out/"GEB_v05_separate_SI.md").write_text(siclean,encoding="utf8")
     mdoc=docbase("GEB island-port-sea butterfly potential resource opportunities",main=True)
     imagesmain=markdown(mdoc,mainclean,root,out,with_images=False)
@@ -234,6 +258,9 @@ def build(root,out):
        "state":"DOCUMENT_STRUCTURE_VALID; JOURNAL_SUBMISSION_BLOCKED",
        "abstract_words":a_words,"main_body_words":bodywords,
        "references":len(reflist),"running_title":RUNNING,
+       "SI_references":citation_audit["SI_reference_count"],
+       "citation_alignment":citation_audit["status"],
+       "historical_references_preserved":len(historical_references),
        "alphabetical_keywords":list(KEYWORDS),
        "main_embedded_figures":len(imagesmain),"SI_appendices":8,
        "SI_embedded_figures":len(imagessi),
@@ -241,8 +268,7 @@ def build(root,out):
          "Independent original GBIF/historical and 1596-port acquisition contributor DOI",
          "Reviewer-accessible anonymized archived source data/code (GitHub alone not stable)",
          "Source rights/third-party photo approvals and WPI original conversion provenance",
-         "Coauthor-approved separate identifying title page and declarations",
-         "APA6 first in-text citation and complete author lists"
+         "Coauthor-approved separate identifying title page and declarations"
        ]
     }
     (out/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(

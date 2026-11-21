@@ -1,11 +1,12 @@
 # GEB v0.5 — data/code submission handoff, 20 November 2026
 
-**Status: COAUTHOR-REVIEWABLE; not journal-submission-ready.** Applies only to *Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities* (Draft PR #179, `paper/geb-single-island-port-endemics-20261118`), not the earlier *Butterfly specialization* v0.2 Research Article.
+**Status: STAGE A PREPARATION; not ready for coauthor review or journal submission.** Updated 21 November 2026. Applies only to *Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities* (Draft PR #179, `paper/geb-single-island-port-endemics-20261118`), not the earlier *Butterfly specialization* v0.2 Research Article. Complete non-coauthor source, permission and anonymous reviewer-access preparation before requesting coauthor review.
 
 ## Confirmed / current outputs
 
 - Single source current paper: `ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md`; Discussion 4.2 corrected at commit `a8a97e19`: EuDiS 22-trait-island morphology is not a native-flora marine-isolation model.
 - New **v0.5** journal-facing manuscript and separate SI: `scripts/build_GEB_v05_blinded_main_and_SI.py` creates four-figure anonymized main DOCX and S1–S8 independent SI DOCX with two embedded figures, and an honest source-gate preflight receipt. Verify the actual latest build artifact before sending.
+- **November 21 citation revision:** source-verified APA6 export has 4,979 main-body words, 292 abstract words, 24 cited main references and nine SI references. All 39 historical references and scientific source files remain unchanged. The curated export manifest is `GEB_REFERENCE_COPYEDIT_V01.json`; source/visual QA is recorded in `GEB_CITATION_COPYEDIT_QA_20261121.md`.
 - The source-backed main 239-butterfly resource result, 126 botanical islands, 104-island undirected marine result and independent 155/224 butterfly records are distinct cohorts. Do **not** pretend one archived GBIF DOI covers all of them.
 - Journal-scope editorial cover letter for coauthor feedback: `GEB_V05_COVER_LETTER_DRAFT_20261120.md`; its 191-word GEB relevance paragraph is drafted, author signature/assurances unverified.
 - **Critical legacy trap:** `.github/workflows/build-anonymous-review-bundle.yml`, `scripts/build_anonymous_review_bundle.py`, `scripts/submission_preflight.py` and `docs/GEB_INITIAL_SUBMISSION_PROCEDURE.md` explicitly target **v0.2 butterfly_specialization**, NOT the current island-port-sea paper. Green status from these jobs does **not** certify a complete present-v0.5 reviewer data/code archive.
@@ -16,7 +17,7 @@
 |---|---|---|
 | Larval-host plant links | NHM HOSTS DOI `10.5519/havt50xw`; frozen mirror commit `808e0b8` | Respect source terms / exact network transform |
 | Plant range & origin | WCVP v13, 21 May 2024 DOI `10.34885/0yex-xv26` (not misleading v10 DOI); pinned rWCVPdata commit `65bed76` | Include required attribution and licence notice |
-| Independent 224-species GBIF regional records | `10.15468/dl.umqmsf` and pinned annual-derivation source | Match citation to that exact original download |
+| Independent 224-species GBIF regional records | `10.15468/dl.umqmsf`; GBIF.org-recommended citation dated 29 October 2026; pinned annual-derivation source | Citation matched to the exact original 14,637,152-record download; package its permitted derived tables separately from the other GBIF source families |
 | Previous 31-butterfly / 53,434 occurrence validation | `10.15468/dl.pp5nc9`, records returned 53,144 (290 missing from the archived re-download) | **Out of scope** for the integrated 224 and 225/51 samples; never substitute this DOI |
 | 225 candidate butterflies × 51 landmasses (first-index source) | Query/shard and checksum receipts exist; the source record contributing datasetKeys/DOIs are not complete | Reconstruct source-specific publisher attribution and register a distinct derived dataset/download; record drift if reconstruction differs |
 | Historical butterfly–island–year source (83,573 rows) | Original unpublished Parquet noted in manuscript | Provide licensed reviewer-accessible original or explicitly justify restriction; aggregate only is not full replay |
@@ -31,7 +32,7 @@ The derived-dataset DOI may be created **only** from an actual source attributio
 2. Scan both source content **and file metadata** for names, repository accounts, URLs and identifying commit IDs. Verify on independent extraction that all current data source receipts, re-run commands and Figure 1–4 / SI output dependencies resolve. Do not claim full reproducibility if restricted raw data or scripts are absent.
 3. For initial GEB review, upload the anonymous source package as separate supplementary files **or** use a properly anonymous Dryad private-for-peer-review deposit; use only the link/actual uploaded package that exists. GEB permits supplementary access at review, but requires a stable public repository for eventual publication. Native GitHub is **not** itself a stable publication archive.
 4. Obtain exact separate GBIF citations for the historical butterfly and port plant sources; confirm third-party media/port-data rights. Make the final Data and Code Availability statement identify accurately which inputs are externally cited, what is shared for review, and what remains legitimately restricted.
-5. Collect the complete identifying title page from the approved authors (author order, full affiliations, one corresponding email/ORCID, funding, CRediT, conflicts, acknowledgments), coauthor approval, cover-letter signature and full reference copyedit. No placeholders may be uploaded as approved declarations.
+5. Collect the complete identifying title page from the approved authors (author order, full affiliations, one corresponding email/ORCID, funding, CRediT, conflicts, acknowledgments), coauthor approval and cover-letter signature. The November 21 journal-export reference copyedit is complete; exact attribution for the separate historical acquisition families remains step 4. No placeholders may be uploaded as approved declarations.
 
 ## Source and policy cross-check
 

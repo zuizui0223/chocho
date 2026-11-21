@@ -1,6 +1,6 @@
 # GEB — completed scientific and source coverage review, with remaining publisher gates
 
-**20 November 2026, coauthor-review memo; not approval to submit.** GEB Research Article is now structured around a single source-defined scientific outcome rather than proving transport or colonization.
+**Preparation memo, updated 21 November 2026; Stage A only, not ready for coauthor review or journal submission.** GEB Research Article is now structured around a single source-defined scientific outcome rather than proving transport or colonization.
 
 ## Scientific story and statements supported by original sources
 
@@ -28,21 +28,21 @@ Official guidance: https://onlinelibrary.wiley.com/page/journal/14668238/homepag
 | Requirement | Current report | State |
 |---|---|---|
 | Seven-heading Research Article structured abstract, ≤300 words | 292 words, all seven official headings | PASS |
-| Approximate 5,000 main text words | 4,983 body words (original source pre-export count) | PASS |
-| ~50 references, approx 6–8 display pieces suggested, not a minimum | 39 unique source references, four main scientific figures | In target; acceptable first-round free format |
+| Approximate 5,000 main text words | 4,979 words in the November 21 journal-export preflight | PASS |
+| ~50 references, approx 6–8 display pieces suggested, not a minimum | 24 actually cited main references, nine independently cited SI references, four main figures; all 39 historical source references preserved | In target; acceptable first-round free format |
 | Running title fewer than 40 characters | Island butterfly host resources | PASS |
 | 6–10 alphabetically ordered keywords | Seven alphabetically sorted terms | PASS in v0.5 reviewer export |
 | Double-anonymous Word main, separate identifying title page | Source-derived anonymous current Word and separate SI builder, cleaned properties and repository username references | PRE-FLIGHT; title page author input pending |
-| Continuous line numbering | Script writes OOXML section line numbering | Requires actual PDF line-number visual validation |
+| Continuous line numbering | OOXML section numbering visually verified throughout the 21-page main PDF | PASS for the reviewed November 21 export |
 | Main with figures; separate supporting information | Source new SI S1–S8, figures S3.1 and S5.1, separate actual Word/PDF export workflow | Source pass; final run status governs output |
-| Main references consistently alphabetized and APA6 | Current 39 unique records sorted, original duplicate Tonga references removed, Couto/Hatfield added | Partial: complete author names, first-use in-text citation style not fully audited |
+| Main references consistently alphabetized and APA6 | Source-guarded 24-main/nine-SI reference lists; author counts/first use, DOI versions, alphabetical citation groups, hanging indents and complete entry coverage verified | PASS for the reviewed export; distinct original data-attribution gaps remain below |
 | Real Data and Code Availability at review and permanent stable archive for accepted paper | WCVP v13, NHM HOSTS and 224 GBIF DOI source-verified; original historical index/port GBIF sources not completely provenance-matched | BLOCKED |
 | Nonidentifying source/archive links | Anonymized source export removes personal GitHub URL; access credential/link to actual anonymous archive not provided | BLOCKED until real reviewer link |
 | Third party media rights and ethics declarations | Source larva photos not reproduced in manuscript | Needs author/coauthor signoff |
 | Separate actual correspondence title page, one corresponding author, ORCID, funding, COI | Unknown intended coauthor details and author-approved disclosures | BLOCKED |
 | Cover letter as separate PDF, conceptual relevance paragraph under 250 words | Conceptual novelty documented; not uploaded or signed | PENDING |
 
-**Final decision:** scientific and editorial output can go to coauthors for detailed review; the submission is **not yet journal-authorized or compliant in data-access, permissions, declarations and complete APA6 copyediting**. Never label this source audit or successful GitHub Action equivalent to Wiley acceptance or editorial preapproval. PR #179 remains Draft and unmerged.
+**Final decision:** remain in **Stage A preparation; do not request coauthor review or submit** until the non-coauthor source, permission and reviewer-access work is complete. APA6 citation/reference copyediting is verified in the November 21 journal export; data access, permissions and author declarations remain incomplete. Never label this source audit or successful GitHub Action equivalent to Wiley acceptance or editorial preapproval. PR #179 remains Draft and unmerged.
 
 ## November 20 fixed-239 isolation-gradient integrated into current GEB manuscript
 
@@ -51,3 +51,7 @@ An independent source-pinned test of the same fixed 239 butterflies and 126 bota
 ## November 20 spatial follow-up for GEB Figure 2D
 
 Spatial Moran/MEM10 source code incorporated: successful original Actions #44674041763, 2,000-km 350-pair neighbour model and positive MEM10 native-host negative gradient (beta −0.133; HC3 p=0.0204) and introduced-only share positive gradient (beta +0.395; p=0.000786). Nine-Level1 slope-shift p=0.0677 remains uncertain. Reproduction: `scripts/audit_island_port_spatial_239_20261120.py`. Final journal bundle recheck required on actual paper head.
+
+## November 21 citation/source copyedit
+
+Use the current v0.5 export for the corrected journal bibliography. `GEB_REFERENCE_COPYEDIT_V01.json` records the primary metadata, reference placement and exact guarded replacements; it leaves the scientific article, original 39-reference bibliography, source SI, numerical receipts and figures unchanged. The export corrects EuDiS version 5 to 2023, adds the exact 29 October 2026 GBIF occurrence-download citation and the WGSRPD second-edition source, and separates official WPI publication metadata from the unresolved converted-GeoJSON edition. The actual OSCAR legacy NOAA input is distinguished from a metadata-only NASA v2 access check. See `GEB_CITATION_COPYEDIT_QA_20261121.md` for verification and remaining source-access gates.
