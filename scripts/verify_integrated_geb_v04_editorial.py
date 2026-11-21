@@ -159,9 +159,15 @@ def validate_enhanced_figures(receipt,source,repo_root,figurepaths):
     near(spatial["spatial_mem10"]["introduced_only_share_logodds"]["distance_beta"],0.3948940113274428)
     if not (repo_root/"scripts/audit_island_port_spatial_239_20261120.py").is_file():
         raise AssertionError("Spatial source validator script missing from journal branch")
-    for txt in ("Mainland isolation and candidate butterfly food","Original fixed 239-host panel",
-                "55%","66%","72%","Nine-Level1 p = 0.014","p = 0.068","Both islands unseen"):
+    for txt in ("Isolation and host opportunity","fixed 239 butterflies",
+                "55%","66%","72%","Nine-Level1 p = 0.014","p = 0.068","Both islands unseen",
+                "Count-slope contrast", "−0.017 to +0.391", "1,089 pairs in five folds"):
         if txt not in svg2: raise AssertionError("Fig2D source or uncertainty label lost: "+txt)
+    # Rebuild the display from source values and the pinned original count
+    # paths, so moving panels cannot silently alter axes, intervals or curves.
+    from render_GEB_v05_figure2_readable import build as readable_figure2
+    if svg2 != readable_figure2(repo_root):
+        raise AssertionError("Figure 2 differs from its source-driven readable renderer")
 
     fig3=receipt["figures"]["fig3"]
     f3=fig3["evidence_sources"]

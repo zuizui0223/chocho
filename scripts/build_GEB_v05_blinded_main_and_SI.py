@@ -32,7 +32,8 @@ def neutral(text):
     # Keep ![figure](../../figures/...) intact; only strip ordinary links.
     text=re.sub(r"(?<!!)\[([^\]]+)\]\((?:\.\./)[^)]*\)",r"\1",text)
     return re.sub(r"https?://github\.com/zuizui0223/chocho[^\s)]*",
-                  "archived source material",text)
+                  lambda m: "archived source material" +
+                  re.search(r"[.,;:!?]*$", m.group(0)).group(0), text)
 
 def journal_si(text):
     # Retain the scientific SI numbers/sections while excluding internal
@@ -44,6 +45,10 @@ def journal_si(text):
       "**Data-source limits.** HOSTS, WCVP v13, GSHHG and the original 224-butterfly GBIF download have fixed source identifiers. The separate historical first-index and port-buffer GBIF queries did not preserve original occurrence-level contributing publisher identifiers. Reproduction therefore depends on archived query receipts, permitted derived tables and source-specific access terms; these source limits are distinct from ecological evidence.",
       "These two figures must be embedded as actual media in any uploaded SI DOCX/PDF, not only linked. ":
       "",
+      "### S5.3. Crucial ORIGINAL eligible-region sensitivity (PR #183)":
+      "### S5.3. Original eligible-region sensitivity",
+      "The [complete R01–R37 and PR #181–#187 evidence coverage table](GEB_FULL_EVIDENCE_AUDIT_20261120.md) grades the 37 historically sourced findings by main-text, source-coupled SI and exploratory/archive tiers.":
+      "The source-evidence coverage table classifies 37 historically sourced findings into main-text, source-coupled Supporting Information and exploratory/archive tiers.",
     }
     for old,new in substitutions.items():
         if text.count(old)!=1:
@@ -117,6 +122,10 @@ def markdown(doc,txt,root,out,with_images=True,fig_prefix="main"):
                     cells[j].text=v.replace("**","").replace("`","")
                     for p in cells[j].paragraphs:
                         for run in p.runs:run.font.size=Pt(8)
+            # Keep each short scientific table row on one page. In particular,
+            # an S2 denominator label must stay beside its numerical values.
+            for row in table.rows:
+                row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
             continue
         if line.startswith("- "):
             pa=doc.add_paragraph(style="List Bullet")
@@ -176,6 +185,12 @@ def build(root,out):
                       "Some independent historical GBIF acquisition sources do not retain original occurrence-level publisher identities; original source access and material permissions are described in the accompanying source provenance and Supporting Information.")
     figs_legend=figcaps.split("## Figure source and rights record",1)[0]
     figs_legend=figs_legend[figs_legend.index("## Figure 1 |"):]
+    # The archived Figure 4 inset retains its historical S.G footer; give
+    # readers the actual location in the separate S1–S8 Supporting Information.
+    if figs_legend.count("Supplementary Figure S.G-D") != 1:
+        raise RuntimeError("Original full South America figure locator drift")
+    figs_legend=figs_legend.replace("Supplementary Figure S.G-D",
+        "Figure S5.1 (Appendix S5; called Supplement S.G in the inset)")
     mainclean=(main.splitlines()[0]+"\n\n**Running title:** "+RUNNING+
              "\n\n## Structured abstract"+abstract+"\n**Keywords:** "+
              ", ".join(KEYWORDS)+"\n\n"+mainbody+"\n## References\n"+
@@ -193,7 +208,7 @@ def build(root,out):
     siclean=journal_si(si)
     for forbidden in ("COAUTHOR PREFLIGHT","coauthor-review working version",
                       "This SI does not magically", "must be embedded as actual media",
-                      "reviewer-access link required"):
+                      "reviewer-access link required", "PR #"):
         if forbidden in siclean:
             raise RuntimeError("Internal editorial status leaked into SI export: "+forbidden)
     (out/"GEB_v05_separate_SI.md").write_text(siclean,encoding="utf8")
