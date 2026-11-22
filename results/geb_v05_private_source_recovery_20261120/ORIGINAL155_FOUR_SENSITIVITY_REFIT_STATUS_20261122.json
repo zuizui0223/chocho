@@ -32,16 +32,27 @@
       "artifact_id": 14739124358
     },
     "radius250": {
-      "state": "INCOMPLETE_INITIAL_RECOVERY",
+      "state": "PASS_ON_TARGETED_RERUN",
       "train_rows": 167192,
       "test_rows": 180654,
       "rarefaction_n": 10,
       "original_MSE_reduction_percent": 3.7626496823350153,
-      "refit_MSE_reduction_percent": null,
-      "groups_total": null,
-      "groups_failed": null,
+      "refit_MSE_reduction_percent": 3.7626496823350153,
+      "groups_total": 193,
+      "groups_failed": 0,
+      "model_prediction_rows_outside_tolerance": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
       "initial_artifact_id": 14739118863,
-      "diagnostic_status": "RUN_IN_PROGRESS_AT_2026_11_22_04_34_UTC"
+      "successful_targeted_rerun_id": 44985167678,
+      "success_artifact_id": 14739916146,
+      "initial_restore_failure_cause_established": false,
+      "source_panel_rows": 727932
     },
     "exclude_top_provider": {
       "state": "NUMERIC_MISMATCH",
@@ -94,5 +105,15 @@
   "underlying_models_and_raw_inputs_published": false,
   "newer_source_panel_from_observations_rebuilt": false,
   "species_fold3_numerical_failure_resolved": false,
-  "conclusion": "Directionally stable positive predictive gain in the three executed temporal sensitivities; only effort20 numerically reproduced. The two remaining numeric failures do not negate stored ecological results but prevent full independently reproduced claims. Radius250 no numeric conclusion from initial failure."
+  "conclusion": "All four original sensitivity model executions completed in at least one run, source inputs hash-verified. Effort20 and radius250 exactly reproduced original predictions and group metrics; exclude_top_provider and precision100 retained positive host-composition MSE gains but failed numerical reproduction. Historical differences are unresolved; raw-to-panel reconstruction was not attempted.",
+  "all_four_original_models_freshly_executed": true,
+  "numeric_reproduction_successful": [
+    "effort20",
+    "radius250"
+  ],
+  "numeric_reproduction_unresolved": [
+    "exclude_top_provider",
+    "precision100"
+  ],
+  "targeted_radius_recovery_run_status": "completed_success"
 }
