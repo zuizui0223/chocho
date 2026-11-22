@@ -1,0 +1,72 @@
+name: Controlled original155 species M0 runtime diagnosis
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/probe-GEB-v05-species-runtime-20261122.yml
+      - scripts/probe_GEB_v05_species_runtime_20261122.py
+      - tests/test_original155_species_runtime.py
+  workflow_dispatch:
+permissions:
+  # Viewing the draft release requires push access. Retrieval uses GET only.
+  contents: write
+jobs:
+  controlled-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.16'
+      - name: Check probe boundary and controls
+        run: |
+          python -m pip install numpy==2.3.5 pandas==2.2.3 pyarrow==23.0.1 scikit-learn==1.7.2
+          python audit/tests/test_original155_species_runtime.py
+          mkdir safe
+      - name: Recover the checked original panel and prediction oracle once
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python audit/scripts/diagnose_GEB_v05_original155_species_20261122.py \
+            --root "$RUNNER_TEMP/species-m0-runtime" \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output "$RUNNER_TEMP/species-m0-lineage.json"
+      - name: Compare four preflight arms and run the selected five-fold M0 fits
+        run: |
+          python audit/scripts/probe_GEB_v05_species_runtime_20261122.py run \
+            --root "$RUNNER_TEMP/species-m0-runtime" \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output safe/SPECIES_M0_CONTROLLED_RUNTIME_20261122.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-species-M0-controlled-runtime-NO-RECORDS
+          path: safe/SPECIES_M0_CONTROLLED_RUNTIME_20261122.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Remove ephemeral inputs, probe environments and working files
+        if: always()
+        run: |
+          python - <<'PY'
+          import os, shutil
+          from pathlib import Path
+          temp = Path(os.environ['RUNNER_TEMP'])
+          work = temp/'species-m0-runtime'
+          if work.is_dir():
+              shutil.rmtree(work)
+          (temp/'species-m0-lineage.json').unlink(missing_ok=True)
+          PY
