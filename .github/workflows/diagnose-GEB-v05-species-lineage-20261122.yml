@@ -1,0 +1,58 @@
+name: Diagnose archived original155 species prediction lineage
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/diagnose-GEB-v05-species-lineage-20261122.yml
+      - scripts/diagnose_GEB_v05_original155_species_20261122.py
+      - tests/test_original155_species_lineage.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lineage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare score replay
+        run: |
+          python -m pip install pandas==2.2.3 numpy==2.3.5 pyarrow==23.0.1
+          python audit/tests/test_original155_species_lineage.py
+          mkdir safe
+      - name: Verify original archived rows against the public species scores
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python audit/scripts/diagnose_GEB_v05_original155_species_20261122.py \
+            --root "$RUNNER_TEMP/species-lineage" \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output safe/SPECIES_ARCHIVED_LINEAGE_20261122.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-species-lineage-NO-RECORDS
+          path: safe/SPECIES_ARCHIVED_LINEAGE_20261122.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Remove ephemeral diagnostic inputs
+        if: always()
+        run: |
+          python - <<'PYTHON'
+          import os, shutil
+          from pathlib import Path
+          target = Path(os.environ['RUNNER_TEMP']) / 'species-lineage'
+          if target.is_dir():
+              shutil.rmtree(target)
+          PYTHON
