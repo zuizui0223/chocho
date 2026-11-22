@@ -1,0 +1,62 @@
+name: Refit four original155 source-locked temporal sensitivities
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/refit-GEB-v05-original155-sensitivities-20261122.yml
+      - scripts/refit_GEB_v05_original155_sensitivities_20261122.py
+      - tests/test_original155_sensitivities_refit_20261122.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sensitivity:
+    name: Original155 ${{ matrix.sensitivity }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        sensitivity: [effort20, radius250, exclude_top_provider, precision100]
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin packages and test guards
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy==2.3.5' 'pandas==2.2.3' 'pyarrow==23.0.1' 'scikit-learn==1.7.2' 'joblib==1.5.3' 'scipy==1.18.1'
+          python audit/tests/test_original155_sensitivities_refit_20261122.py
+          python source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+          mkdir -p safe
+      - name: Restore private source, refit, and validate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -u audit/scripts/refit_GEB_v05_original155_sensitivities_20261122.py \
+            --sensitivity ${{ matrix.sensitivity }} \
+            --root "$RUNNER_TEMP/original155-${{ matrix.sensitivity }}" \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --fit-script source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/analysis_source/fit_forecast.py \
+            --output "safe/ORIGINAL155_SENSITIVITY_${{ matrix.sensitivity }}_20261122.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original155-${{ matrix.sensitivity }}-aggregate-NO-RECORDS
+          path: safe/ORIGINAL155_SENSITIVITY_${{ matrix.sensitivity }}_20261122.json
+          if-no-files-found: warn
+          retention-days: 90
