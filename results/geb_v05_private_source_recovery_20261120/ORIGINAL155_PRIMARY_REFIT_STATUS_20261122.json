@@ -1,0 +1,320 @@
+{
+  "schema": "GEB_original155_primary_refit_status_20261122_v1",
+  "status": "TEMPORAL_SPATIAL_AND_BUFFER_VERIFIED_SPECIES_NUMERICAL_DISCREPANCY_UNRESOLVED",
+  "checked_date": "2026-11-22",
+  "workflow_run_id": 44970180129,
+  "workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/44970180129",
+  "workflow_code_head": "1483144a2b8d89b992635dfe6507a088a0ab7d42",
+  "original_source_head": "42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+  "panel_rows": 842964,
+  "panel_species": 155,
+  "training_rows": 193703,
+  "test_rows_per_mode": 208482,
+  "training_and_test_counts_scope": "complete evaluable transitions before mode-specific fold exclusion",
+  "source_runtime_hint_scope": "Static sklearn 1.7.2 metadata is from the archived temporal M0 model only; it does not bind the historical spatial/species training runtime or provide a complete environment lock.",
+  "original_source_archive_sha256": "9e39b0068c3617741f9b275a1edfddd574c93d620853e956bd706ad067a53f9f",
+  "panel_sha256": "5ae5b48b752fad05067537de5fb95d4ee74f17f3ba1114443d337bd7fd3695a1",
+  "missing_gate_path_count": 13,
+  "previously_sought_paths_present": 12,
+  "upstream_path_not_in_recovered_archive": "work/remote_sensing/host_region_counts.csv",
+  "recording_day_datasetKey_retained": true,
+  "relative_tolerance": 1e-06,
+  "absolute_tolerance": 1e-09,
+  "fresh_independent_model_executions_completed": [
+    "temporal",
+    "spatial",
+    "species"
+  ],
+  "numerical_reproduction_verified": [
+    "temporal",
+    "spatial"
+  ],
+  "numerical_reproduction_failed": [
+    "species"
+  ],
+  "discrepancy_cause_established": false,
+  "evaluation_from_same_spatial_predictions": [
+    "spatial_buffer100"
+  ],
+  "mode_results": {
+    "temporal": {
+      "status": "PASS",
+      "fresh_execution_completed": true,
+      "numerical_reproduction_verified": true,
+      "keyed_test_rows": 208482,
+      "test_species": 155,
+      "comparison_groups": 144,
+      "failed_comparison_groups": 0,
+      "outside_tolerance_across_overlapping_checks": 0,
+      "nonfinite": 0,
+      "model_row_comparisons_outside_tolerance": {
+        "row.M0_background": 0,
+        "row.M1_climate": 0,
+        "row.M2_landcover": 0,
+        "row.M3_both": 0,
+        "row.M4_host_resources": 0,
+        "row.M5_host_composition": 0
+      },
+      "maximum_RF_prediction_absolute_difference": 5.551115123125783e-16,
+      "direct_archived_species_csv_count": 0,
+      "species_reference": "metrics recomputed from checksum-verified original keyed predictions; fresh six RF species CSVs also checked",
+      "archived_temporal_M0_sklearn_version_hint": "1.7.2",
+      "replay_runtime_versions": {
+        "python": "3.12.16",
+        "pandas": "2.2.3",
+        "numpy": "2.3.5",
+        "scikit-learn": "1.7.2",
+        "pyarrow": "23.0.1",
+        "joblib": "1.5.3",
+        "scipy": "1.18.1"
+      },
+      "fresh_started_at": "2026-11-22T01:12:15.856425+00:00",
+      "fresh_completed_at": "2026-11-22T01:17:23.818560+00:00",
+      "original_M3_species_equal_mse": 0.032063882916911694,
+      "refit_M3_species_equal_mse": 0.032063882916911694,
+      "original_M5_species_equal_mse": 0.03074279463401328,
+      "refit_M5_species_equal_mse": 0.03074279463401328,
+      "original_M5_over_M3_relative_mse_reduction_percent": 4.120175607931823,
+      "refit_M5_over_M3_relative_mse_reduction_percent": 4.120175607931823
+    },
+    "spatial": {
+      "status": "PASS",
+      "fresh_execution_completed": true,
+      "numerical_reproduction_verified": true,
+      "keyed_test_rows": 208482,
+      "test_species": 155,
+      "comparison_groups": 174,
+      "failed_comparison_groups": 0,
+      "outside_tolerance_across_overlapping_checks": 0,
+      "nonfinite": 0,
+      "model_row_comparisons_outside_tolerance": {
+        "row.M0_background": 0,
+        "row.M1_climate": 0,
+        "row.M2_landcover": 0,
+        "row.M3_both": 0,
+        "row.M4_host_resources": 0,
+        "row.M5_host_composition": 0
+      },
+      "maximum_RF_prediction_absolute_difference": 4.440892098500626e-16,
+      "direct_archived_species_csv_count": 0,
+      "species_reference": "metrics recomputed from checksum-verified original keyed predictions; fresh six RF species CSVs also checked",
+      "archived_temporal_M0_sklearn_version_hint": "1.7.2",
+      "replay_runtime_versions": {
+        "python": "3.12.16",
+        "pandas": "2.2.3",
+        "numpy": "2.3.5",
+        "scikit-learn": "1.7.2",
+        "pyarrow": "23.0.1",
+        "joblib": "1.5.3",
+        "scipy": "1.18.1"
+      },
+      "fresh_started_at": "2026-11-22T01:12:07.857419+00:00",
+      "fresh_completed_at": "2026-11-22T01:40:11.314487+00:00",
+      "original_M3_species_equal_mse": 0.03232690509275507,
+      "refit_M3_species_equal_mse": 0.03232690509275507,
+      "original_M5_species_equal_mse": 0.031358647707416844,
+      "refit_M5_species_equal_mse": 0.031358647707416844,
+      "original_M5_over_M3_relative_mse_reduction_percent": 2.9952059516988134,
+      "refit_M5_over_M3_relative_mse_reduction_percent": 2.9952059516988134,
+      "buffer100": {
+        "same_spatial_fits_no_separate_model": true,
+        "rows": 102728,
+        "cells": 1788,
+        "species": 155,
+        "original_M3_species_equal_mse": 0.033467813878241506,
+        "refit_M3_species_equal_mse": 0.033467813878241506,
+        "original_M5_species_equal_mse": 0.03255224898024153,
+        "refit_M5_species_equal_mse": 0.03255224898024153,
+        "original_M5_over_M3_relative_mse_reduction_percent": 2.735657911003299,
+        "refit_M5_over_M3_relative_mse_reduction_percent": 2.735657911003299
+      }
+    },
+    "species": {
+      "status": "FAIL",
+      "fresh_execution_completed": true,
+      "numerical_reproduction_verified": false,
+      "keyed_test_rows": 208482,
+      "test_species": 155,
+      "comparison_groups": 144,
+      "failed_comparison_groups": 76,
+      "outside_tolerance_across_overlapping_checks": 137872,
+      "nonfinite": 0,
+      "model_row_comparisons_outside_tolerance": {
+        "row.M0_background": 28575,
+        "row.M1_climate": 25278,
+        "row.M2_landcover": 31544,
+        "row.M3_both": 26716,
+        "row.M4_host_resources": 24147,
+        "row.M5_host_composition": 1062
+      },
+      "maximum_RF_prediction_absolute_difference": 0.007789458622820877,
+      "direct_archived_species_csv_count": 0,
+      "species_reference": "metrics recomputed from checksum-verified original keyed predictions; fresh six RF species CSVs also checked",
+      "archived_temporal_M0_sklearn_version_hint": "1.7.2",
+      "replay_runtime_versions": {
+        "python": "3.12.16",
+        "pandas": "2.2.3",
+        "numpy": "2.3.5",
+        "scikit-learn": "1.7.2",
+        "pyarrow": "23.0.1",
+        "joblib": "1.5.3",
+        "scipy": "1.18.1"
+      },
+      "fresh_started_at": "2026-11-22T01:12:08.210604+00:00",
+      "fresh_completed_at": "2026-11-22T01:40:55.721303+00:00",
+      "original_M3_species_equal_mse": 0.03263301123097487,
+      "refit_M3_species_equal_mse": 0.03263300586457249,
+      "original_M5_species_equal_mse": 0.032701057636246256,
+      "refit_M5_species_equal_mse": 0.032701187083782966,
+      "original_M5_over_M3_relative_mse_reduction_percent": -0.20852015399301924,
+      "refit_M5_over_M3_relative_mse_reduction_percent": -0.20893330970928584
+    }
+  },
+  "raw_to_panel_reconstruction_completed": false,
+  "other_original_sensitivity_modes_refitted_in_this_run": false,
+  "other_archived_modes": [
+    "effort20",
+    "radius250",
+    "exclude_top_provider",
+    "precision100"
+  ],
+  "original_complete_runtime_lock_available": false,
+  "new_compressed_prediction_files_byte_identical_claimed": false,
+  "private_inputs_or_predictions_committed": false,
+  "source_release_published": false,
+  "full_SI_replay_complete": false,
+  "reviewer_rights_anonymity_and_stable_access_cleared": false,
+  "supersedes_current_missing_panel_and_no_primary_refit_claim_in": "ORIGINAL155_FORECAST_SOURCE_AND_PANEL_GATE_20261121.json",
+  "historical_gate_left_unchanged": true,
+  "receipts_sha256": {
+    "ORIGINAL155_PRIVATE_SOURCE_RESTORED_temporal_20261122.json": "ef4c339ab5024868b719f7bb671b39dc418be7423a3aaf87bece79c974e6a957",
+    "ORIGINAL155_FRESH_EXECUTION_temporal_20261122.json": "2d9fdba79adf2351dc1685a4952284377c40d7286fa4f6d0dfeed389e14ab555",
+    "ORIGINAL155_FULL_REFIT_temporal_20261122.json": "ea69a7f32eb115b20bf0dcf23b6b572e843029535f3e3b792033e8288b025426",
+    "ORIGINAL155_PRIVATE_SOURCE_RESTORED_spatial_20261122.json": "427b152a0db3e20c93cb7a3e4c13490b6dc263a414f20ffe8fc8a8b70cb34c34",
+    "ORIGINAL155_FRESH_EXECUTION_spatial_20261122.json": "895bbf16ef6a43e5faf88876cacd66e24639515a6daf66b3af070cb02af6a233",
+    "ORIGINAL155_FULL_REFIT_spatial_20261122.json": "8915252698f9610ed2b29a087e07f47ca66d5808140dd054792b98e28bbba233",
+    "ORIGINAL155_PRIVATE_SOURCE_RESTORED_species_20261122.json": "b22d25ad17746817504f3f09fe70c0da7d44ccae37de2ab1fa5f617b6a94dd23",
+    "ORIGINAL155_FRESH_EXECUTION_species_20261122.json": "0d3f79d83b94c0fe27dc9499c9de0f844b97d0fcfcb0761f859c79cbe75650ca",
+    "ORIGINAL155_FULL_REFIT_species_20261122.json": "2deda7e305ebbbaab907a4aba4cae995ae83210410d3396517da1aa424331237"
+  },
+  "species_archived_lineage_diagnostic": {
+    "workflow_run_id": 44973229972,
+    "workflow_code_head": "4e5f42e6e934bf73f074e00e8d46d751754b54f5",
+    "workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/44973229972",
+    "artifact_id": 14734109643,
+    "artifact_zip_bytes": 2414,
+    "artifact_zip_sha256": "9f6da386cf6e2735c177ef9c464b35afb11e0dcbef8edc0319056dec4dccff7b",
+    "artifact_expires_at": "2027-02-20T01:49:18Z",
+    "receipt": "SPECIES_ARCHIVED_LINEAGE_20261122.json",
+    "receipt_sha256": "0c31c1a7ea00460fc33b0278391b5cd8c66d8d1c3b6f40ca8935f0200bd3703c",
+    "fresh_fit_executed": false,
+    "frozen_score_comparisons": 49,
+    "frozen_score_comparisons_passed": 49,
+    "max_score_absolute_difference": 6.938893903907228e-18,
+    "ordered_test_key_target_and_baseline_alignment": {
+      "reconstructed_rows": 208482,
+      "archived_rows": 208482,
+      "same_key_set": true,
+      "same_key_order": true,
+      "target_exact": true,
+      "baseline_exact": true
+    },
+    "archived_parquet_writer_metadata": {
+      "panel": {
+        "pandas": "2.3.3",
+        "writer": "parquet-cpp-arrow version 24.0.0"
+      },
+      "species_predictions": {
+        "pandas": "2.3.3",
+        "writer": "parquet-cpp-arrow version 24.0.0"
+      }
+    },
+    "writer_metadata_is_not_a_complete_historical_training_environment": true,
+    "native_score_CRLF_normalization_matches_public": true,
+    "canonical_archived_script_found": false,
+    "allowlisted_runtime_file_found": false,
+    "zip_timestamps_establish_execution_order": false,
+    "species_refit_discrepancy_resolved": false
+  },
+  "species_controlled_M0_runtime_diagnostic": {
+    "workflow_run_id": 44974105799,
+    "workflow_code_head": "e85e41624857d031caf32cb376e02839c4af874c",
+    "workflow_url": "https://github.com/zuizui0223/chocho/actions/runs/44974105799",
+    "artifact_id": 14734179419,
+    "artifact_zip_bytes": 4851,
+    "artifact_zip_sha256": "d4717919819b660a7d8bc9df83061d4a51e05433425b075deb13d98e2f7154f6",
+    "artifact_expires_at": "2027-02-20T02:01:12Z",
+    "receipt": "SPECIES_M0_CONTROLLED_RUNTIME_20261122.json",
+    "receipt_sha256": "daa90f340ac98debf45ccfe228ab33b9379f7632e933741f7e6930a0e92d7fb2",
+    "status": "DIAGNOSTIC_COMPLETED",
+    "pandas_versions_tested": [
+      "2.2.3",
+      "2.3.3"
+    ],
+    "pyarrow_versions_tested": [
+      "23.0.1",
+      "24.0.0"
+    ],
+    "preflight_arms": [
+      "baseline",
+      "pandas_only",
+      "arrow_only",
+      "joint"
+    ],
+    "all_four_complete_preflight_fold_records_identical": true,
+    "ordered_archived_prediction_oracle_identical_in_all_arms": true,
+    "actual_fit_arms": [
+      "baseline"
+    ],
+    "skipped_fit_arms": [
+      "pandas_only",
+      "arrow_only",
+      "joint"
+    ],
+    "skipped_arms_scope": "actual estimator-input equality; these environments were not fitted",
+    "baseline_M0_fold_comparisons": {
+      "0": {
+        "compared": 50404,
+        "outside_tolerance": 0,
+        "nonfinite": 0,
+        "max_absolute_difference": 4.440892098500626e-16
+      },
+      "1": {
+        "compared": 54697,
+        "outside_tolerance": 0,
+        "nonfinite": 0,
+        "max_absolute_difference": 4.440892098500626e-16
+      },
+      "2": {
+        "compared": 41190,
+        "outside_tolerance": 0,
+        "nonfinite": 0,
+        "max_absolute_difference": 4.440892098500626e-16
+      },
+      "3": {
+        "compared": 33431,
+        "outside_tolerance": 28575,
+        "nonfinite": 0,
+        "max_absolute_difference": 0.007789458622820877
+      },
+      "4": {
+        "compared": 28760,
+        "outside_tolerance": 0,
+        "nonfinite": 0,
+        "max_absolute_difference": 3.3306690738754696e-16
+      }
+    },
+    "baseline_M0_overall_comparison": {
+      "compared": 208482,
+      "outside_tolerance": 28575,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.007789458622820877
+    },
+    "prior_replay_count_and_maximum_error_repeated": true,
+    "direct_rowwise_comparison_to_prior_fresh_vector_performed": false,
+    "prior_fresh_vector_available": false,
+    "interpretation": "The tested reader versions do not change the measured M0 estimator inputs. The observed M0 discrepancy is confined to species fold 3. This does not establish the historical fitting cause or validate the other five RF models.",
+    "historical_fit_revision_and_complete_runtime_bound": false,
+    "species_refit_discrepancy_resolved": false
+  }
+}

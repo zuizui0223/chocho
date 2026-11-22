@@ -1,0 +1,1106 @@
+{
+  "schema": "GEB_original155_refit_validation_v1",
+  "mode": "temporal",
+  "status": "PASS",
+  "original_commit": "42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+  "model_refit_completed": true,
+  "absolute_tolerance": 1e-09,
+  "relative_tolerance": 1e-06,
+  "workflow_run_id": "44970180129",
+  "sha256": {
+    "original_predictions": "851bec4a91680e115c90bef3b6676223df60e879840c047e9d3e68e104caf246",
+    "new_predictions": "bd7997d2ff9f34d8419f874418e27488358ae7f659fbb2805dd4656083d8271b",
+    "new_scores": "163d86c375346a8ab59d988d9a6427d17a7c7fbbef5e28f374f5a04b71cacf63",
+    "frozen_scores": "f5303e00c52a9d5dea82f990a8e86bff16fea041d2a1c827729cf102f9c83ac2",
+    "model_lock": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+    "fit_script": "a34ad4cd1e4f40460c4f6bf6ed0b22ba3885b17d20ac17f74bd6564d0618ce6d",
+    "panel": "5ae5b48b752fad05067537de5fb95d4ee74f17f3ba1114443d337bd7fd3695a1"
+  },
+  "support": {
+    "train_rows": 193703,
+    "train_species": 155,
+    "test_rows": 208482,
+    "test_species": 155
+  },
+  "settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "direct_archived_species_csv_count": 0,
+  "comparison_scope": "Fresh fit execution attested by calling workflow. Validator checks output files, including original keyed predictions and all frozen score groups. The 100-km subset reuses the spatial fit.",
+  "runtime_versions": {
+    "python": "3.12.16",
+    "pandas": "2.2.3",
+    "numpy": "2.3.5",
+    "scikit-learn": "1.7.2",
+    "pyarrow": "23.0.1",
+    "joblib": "1.5.3",
+    "scipy": "1.18.1"
+  },
+  "comparisons": {
+    "row.target": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "row.baseline_probability": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "row.persistence": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "row.M0_background": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 4.440892098500626e-16
+    },
+    "row.M1_climate": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 4.440892098500626e-16
+    },
+    "row.M2_landcover": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-16
+    },
+    "row.M3_both": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-16
+    },
+    "row.M4_host_resources": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 4.440892098500626e-16
+    },
+    "row.M5_host_composition": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-16
+    },
+    "baseline_persistence": {
+      "compared": 208482,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.persistence.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.04080376307529341,
+      "new_value": 0.04080376307529341
+    },
+    "fit_output.persistence.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.persistence.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.04820852548621707,
+      "new_value": 0.04820852548621706
+    },
+    "fit_output.persistence.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.persistence.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.persistence.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10385980497930151,
+      "new_value": 0.10385980497930151
+    },
+    "fit_output.persistence.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.04520469872475359,
+      "new_value": 0.04520469872475359
+    },
+    "fresh_rows.persistence.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.04080376307529341,
+      "new_value": 0.04080376307529341
+    },
+    "fresh_rows.persistence.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.persistence.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.04820852548621707,
+      "new_value": 0.04820852548621706
+    },
+    "fresh_rows.persistence.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.persistence.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.persistence.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10385980497930151,
+      "new_value": 0.10385980497930151
+    },
+    "fresh_rows.persistence.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.04520469872475359,
+      "new_value": 0.04520469872475359
+    },
+    "fit_output.M0_background.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024452251451996865,
+      "new_value": 0.024452251451996865
+    },
+    "fit_output.M0_background.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M0_background.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.03407274098813295,
+      "new_value": 0.03407274098813294
+    },
+    "fit_output.M0_background.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M0_background.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M0_background.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10795556913571679,
+      "new_value": 0.10795556913571679
+    },
+    "fit_output.M0_background.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03228400186734764,
+      "new_value": 0.03228400186734764
+    },
+    "fresh_rows.M0_background.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024452251451996865,
+      "new_value": 0.024452251451996865
+    },
+    "fresh_rows.M0_background.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M0_background.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.03407274098813295,
+      "new_value": 0.03407274098813294
+    },
+    "fresh_rows.M0_background.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M0_background.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M0_background.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10795556913571679,
+      "new_value": 0.10795556913571679
+    },
+    "fresh_rows.M0_background.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03228400186734764,
+      "new_value": 0.03228400186734764
+    },
+    "by_species.rows.M0_background.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.3877787807814457e-17
+    },
+    "by_species.rows.M0_background.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M0_background.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M0_background.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.0061396160665481e-16
+    },
+    "by_species.csv.M0_background.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.1102230246251565e-16
+    },
+    "by_species.csv.M0_background.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.M1_climate.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024119890649144396,
+      "new_value": 0.024119890649144396
+    },
+    "fit_output.M1_climate.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M1_climate.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.034510646098118124,
+      "new_value": 0.034510646098118124
+    },
+    "fit_output.M1_climate.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M1_climate.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M1_climate.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.11124252919658374,
+      "new_value": 0.11124252919658374
+    },
+    "fit_output.M1_climate.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032464813384572126,
+      "new_value": 0.032464813384572126
+    },
+    "fresh_rows.M1_climate.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024119890649144396,
+      "new_value": 0.024119890649144396
+    },
+    "fresh_rows.M1_climate.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M1_climate.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.034510646098118124,
+      "new_value": 0.034510646098118124
+    },
+    "fresh_rows.M1_climate.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M1_climate.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M1_climate.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.11124252919658374,
+      "new_value": 0.11124252919658374
+    },
+    "fresh_rows.M1_climate.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032464813384572126,
+      "new_value": 0.032464813384572126
+    },
+    "by_species.rows.M1_climate.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.3877787807814457e-17
+    },
+    "by_species.rows.M1_climate.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M1_climate.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M1_climate.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 9.71445146547012e-17
+    },
+    "by_species.csv.M1_climate.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.1102230246251565e-16
+    },
+    "by_species.csv.M1_climate.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.M2_landcover.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024068789094112208,
+      "new_value": 0.024068789094112208
+    },
+    "fit_output.M2_landcover.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M2_landcover.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.034060092541764425,
+      "new_value": 0.03406009254176443
+    },
+    "fit_output.M2_landcover.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M2_landcover.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M2_landcover.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10828121693765694,
+      "new_value": 0.10828121693765694
+    },
+    "fit_output.M2_landcover.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03194163625073919,
+      "new_value": 0.03194163625073919
+    },
+    "fresh_rows.M2_landcover.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.024068789094112208,
+      "new_value": 0.024068789094112208
+    },
+    "fresh_rows.M2_landcover.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M2_landcover.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 6.938893903907228e-18,
+      "frozen_value": 0.034060092541764425,
+      "new_value": 0.03406009254176443
+    },
+    "fresh_rows.M2_landcover.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M2_landcover.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M2_landcover.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10828121693765694,
+      "new_value": 0.10828121693765694
+    },
+    "fresh_rows.M2_landcover.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03194163625073919,
+      "new_value": 0.03194163625073919
+    },
+    "by_species.rows.M2_landcover.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.3877787807814457e-17
+    },
+    "by_species.rows.M2_landcover.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M2_landcover.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M2_landcover.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 9.8879238130678e-17
+    },
+    "by_species.csv.M2_landcover.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.1102230246251565e-16
+    },
+    "by_species.csv.M2_landcover.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.M3_both.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.023824519585202413,
+      "new_value": 0.023824519585202413
+    },
+    "fit_output.M3_both.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M3_both.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03430645586485255,
+      "new_value": 0.03430645586485255
+    },
+    "fit_output.M3_both.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M3_both.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M3_both.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.11072639524436227,
+      "new_value": 0.11072639524436227
+    },
+    "fit_output.M3_both.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032063882916911694,
+      "new_value": 0.032063882916911694
+    },
+    "fresh_rows.M3_both.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.023824519585202413,
+      "new_value": 0.023824519585202413
+    },
+    "fresh_rows.M3_both.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M3_both.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03430645586485255,
+      "new_value": 0.03430645586485255
+    },
+    "fresh_rows.M3_both.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M3_both.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M3_both.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.11072639524436227,
+      "new_value": 0.11072639524436227
+    },
+    "fresh_rows.M3_both.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032063882916911694,
+      "new_value": 0.032063882916911694
+    },
+    "by_species.rows.M3_both.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 2.7755575615628914e-17
+    },
+    "by_species.rows.M3_both.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M3_both.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M3_both.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.0408340855860843e-16
+    },
+    "by_species.csv.M3_both.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 9.020562075079397e-17
+    },
+    "by_species.csv.M3_both.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.M4_host_resources.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.023226074313481518,
+      "new_value": 0.023226074313481518
+    },
+    "fit_output.M4_host_resources.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M4_host_resources.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03339594330465689,
+      "new_value": 0.03339594330465689
+    },
+    "fit_output.M4_host_resources.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M4_host_resources.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M4_host_resources.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10851130938652152,
+      "new_value": 0.10851130938652152
+    },
+    "fit_output.M4_host_resources.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.031125572345572436,
+      "new_value": 0.031125572345572436
+    },
+    "fresh_rows.M4_host_resources.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.023226074313481518,
+      "new_value": 0.023226074313481518
+    },
+    "fresh_rows.M4_host_resources.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M4_host_resources.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03339594330465689,
+      "new_value": 0.03339594330465689
+    },
+    "fresh_rows.M4_host_resources.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M4_host_resources.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M4_host_resources.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10851130938652152,
+      "new_value": 0.10851130938652152
+    },
+    "fresh_rows.M4_host_resources.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.031125572345572436,
+      "new_value": 0.031125572345572436
+    },
+    "by_species.rows.M4_host_resources.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.3877787807814457e-17
+    },
+    "by_species.rows.M4_host_resources.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M4_host_resources.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M4_host_resources.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.0408340855860843e-16
+    },
+    "by_species.csv.M4_host_resources.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.1102230246251565e-16
+    },
+    "by_species.csv.M4_host_resources.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "fit_output.M5_host_composition.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 3.469446951953614e-18,
+      "frozen_value": 0.022578093562754663,
+      "new_value": 0.02257809356275466
+    },
+    "fit_output.M5_host_composition.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fit_output.M5_host_composition.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032759986685560065,
+      "new_value": 0.032759986685560065
+    },
+    "fit_output.M5_host_composition.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fit_output.M5_host_composition.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fit_output.M5_host_composition.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10785649257790925,
+      "new_value": 0.10785649257790925
+    },
+    "fit_output.M5_host_composition.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03074279463401328,
+      "new_value": 0.03074279463401328
+    },
+    "fresh_rows.M5_host_composition.initially_unrecorded_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 3.469446951953614e-18,
+      "frozen_value": 0.022578093562754663,
+      "new_value": 0.02257809356275466
+    },
+    "fresh_rows.M5_host_composition.initially_unrecorded_rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 133557.0,
+      "new_value": 133557.0
+    },
+    "fresh_rows.M5_host_composition.pooled_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.032759986685560065,
+      "new_value": 0.032759986685560065
+    },
+    "fresh_rows.M5_host_composition.rows": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 208482.0,
+      "new_value": 208482.0
+    },
+    "fresh_rows.M5_host_composition.species": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 155.0,
+      "new_value": 155.0
+    },
+    "fresh_rows.M5_host_composition.species_equal_mae": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.10785649257790925,
+      "new_value": 0.10785649257790925
+    },
+    "fresh_rows.M5_host_composition.species_equal_mse": {
+      "compared": 1,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0,
+      "frozen_value": 0.03074279463401328,
+      "new_value": 0.03074279463401328
+    },
+    "by_species.rows.M5_host_composition.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.3877787807814457e-17
+    },
+    "by_species.rows.M5_host_composition.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 5.551115123125783e-17
+    },
+    "by_species.rows.M5_host_composition.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    },
+    "by_species.csv.M5_host_composition.mse": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 9.80118763926896e-17
+    },
+    "by_species.csv.M5_host_composition.mae": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 1.1102230246251565e-16
+    },
+    "by_species.csv.M5_host_composition.rows": {
+      "compared": 155,
+      "outside_tolerance": 0,
+      "nonfinite": 0,
+      "max_absolute_difference": 0.0
+    }
+  }
+}

@@ -1,6 +1,12 @@
 # GEB — completed scientific and source coverage review, with remaining publisher gates
 
-**20 November 2026, coauthor-review memo; not approval to submit.** GEB Research Article is now structured around a single source-defined scientific outcome rather than proving transport or colonization.
+## Current preparation state — 22 November 2026
+
+Stage A remains active. The old missing-source inventory and 28-file archive below describe earlier checkpoints, not the current completion state. The original 842,964-row, 155-species forecasting panel was privately recovered and checksum-verified. Temporal and spatial-block refits passed, including the ≥100-km subset of the spatial predictions. The unseen-species fit completed but its numerical comparison failed (76 of 144 comparison groups outside tolerance); original and fresh MSE reductions were −0.20852% and −0.20893%. A separate no-fit lineage check reproduced all 49 original score fields and exact ordered test keys, targets and baselines; the fresh-fit discrepancy remains unresolved. The controlled [pandas/Arrow M0 probe](https://github.com/zuizui0223/chocho/actions/runs/44974105799) found identical measured estimator inputs in all four arms; only baseline M0 was fitted, and its 28,575 discrepant predictions were confined to species fold 3. The historical fitting cause remains unresolved. Actual mode-specific results are recorded in [CI #44970180129](https://github.com/zuizui0223/chocho/actions/runs/44970180129). Recovery found 12 of the 13 previously sought paths; `work/remote_sensing/host_region_counts.csv` remains absent at its recorded path. A raw-to-panel reconstruction and the four additional sensitivity fits have not been performed in this recovery run.
+
+The expanded **39-file four-component internal package** passed all extracted replays in [CI #44970859551](https://github.com/zuizui0223/chocho/actions/runs/44970859551), [artifact #14733606979](https://github.com/zuizui0223/chocho/actions/runs/44970859551/artifacts/14733606979). Its Fig2A–C derived-input replay is new; its Fig4 component still replays saved scores. Whole-SI coverage, third-party rights, indirect anonymity and stable reviewer access remain open. The 83,573-row historical source is separately recovered; its redistribution and the historical/port source-attribution gaps remain open. The final paper head `03e9450c832bb769c42ca983bffdc327ecc8ccea` retains APA6 alignment for 24 main/nine SI references, 4,987 main-body/292 abstract words and all 381 scientific numerical tokens. Its delivered 21-page main / 11-page SI PDFs passed all-page source/layout QA; [the final QA record](https://github.com/zuizui0223/chocho/blob/03e9450c832bb769c42ca983bffdc327ecc8ccea/manuscript/integrated_butterfly_resource_access_20261109/GEB_REPRODUCIBILITY_UPDATE_QA_20261122.json) binds the four saved documents. See the maintained [preparation-first gate](GEB_V05_PRECOAUTHOR_PREPARATION_GATE_20261121.md) for the current sequence and exact exit conditions.
+
+**Scientific review dated 20 November 2026; current Stage A sequencing is stated above. This is not authorization to contact coauthors or submit.** GEB Research Article is now structured around a single source-defined scientific outcome rather than proving transport or colonization.
 
 ## Scientific story and statements supported by original sources
 
@@ -28,21 +34,21 @@ Official guidance: https://onlinelibrary.wiley.com/page/journal/14668238/homepag
 | Requirement | Current report | State |
 |---|---|---|
 | Seven-heading Research Article structured abstract, ≤300 words | 292 words, all seven official headings | PASS |
-| Approximate 5,000 main text words | 4,983 body words (original source pre-export count) | PASS |
+| Approximate 5,000 main text words | 4,987 main-body words in the validated 21-Nov journal export | PASS |
 | ~50 references, approx 6–8 display pieces suggested, not a minimum | 39 unique source references, four main scientific figures | In target; acceptable first-round free format |
 | Running title fewer than 40 characters | Island butterfly host resources | PASS |
 | 6–10 alphabetically ordered keywords | Seven alphabetically sorted terms | PASS in v0.5 reviewer export |
 | Double-anonymous Word main, separate identifying title page | Source-derived anonymous current Word and separate SI builder, cleaned properties and repository username references | PRE-FLIGHT; title page author input pending |
-| Continuous line numbering | Script writes OOXML section line numbering | Requires actual PDF line-number visual validation |
+| Continuous line numbering | Continuous line numbering visually checked across all 21 baseline main PDF pages on 22 November | BASELINE PASS; updated export must be checked |
 | Main with figures; separate supporting information | Source new SI S1–S8, figures S3.1 and S5.1, separate actual Word/PDF export workflow | Source pass; final run status governs output |
-| Main references consistently alphabetized and APA6 | Current 39 unique records sorted, original duplicate Tonga references removed, Couto/Hatfield added | Partial: complete author names, first-use in-text citation style not fully audited |
+| Main references consistently alphabetized and APA6 | Source-guarded 24-main/nine-SI citation and APA6 reference alignment passed; 39 historical source references retained | PASS for the validated export; original acquisition attribution remains separate |
 | Real Data and Code Availability at review and permanent stable archive for accepted paper | WCVP v13, NHM HOSTS and 224 GBIF DOI source-verified; original historical index/port GBIF sources not completely provenance-matched | BLOCKED |
 | Nonidentifying source/archive links | Anonymized source export removes personal GitHub URL; access credential/link to actual anonymous archive not provided | BLOCKED until real reviewer link |
 | Third party media rights and ethics declarations | Source larva photos not reproduced in manuscript | Needs author/coauthor signoff |
 | Separate actual correspondence title page, one corresponding author, ORCID, funding, COI | Unknown intended coauthor details and author-approved disclosures | BLOCKED |
 | Cover letter as separate PDF, conceptual relevance paragraph under 250 words | Conceptual novelty documented; not uploaded or signed | PENDING |
 
-**Final decision:** scientific and editorial output can go to coauthors for detailed review; the submission is **not yet journal-authorized or compliant in data-access, permissions, declarations and complete APA6 copyediting**. Never label this source audit or successful GitHub Action equivalent to Wiley acceptance or editorial preapproval. PR #179 remains Draft and unmerged.
+**Final decision:** remain in **Stage A preparation**. Citation copyediting is verified. Source access, permissions and author declarations remain incomplete; do not request coauthor review or submit until the preparation-first gate is satisfied. Never label this source audit or successful GitHub Action equivalent to Wiley acceptance or editorial preapproval. PR #179 remains Draft and unmerged.
 
 ## November 20 fixed-239 isolation-gradient integrated into current GEB manuscript
 

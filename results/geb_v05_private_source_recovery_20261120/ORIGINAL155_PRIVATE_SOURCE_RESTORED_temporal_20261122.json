@@ -1,0 +1,116 @@
+{
+  "schema": "chocho_original155_verified_private_source_restore_v1",
+  "status": "ORIGINAL_PANEL_AND_LOCK_RESTORED_AND_COHORT_VERIFIED;FIT_PENDING",
+  "source_commit": "42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+  "release_id": 453667492,
+  "release_remains_draft": true,
+  "source_receipt_sha256": "b8eff912a43373424e5f31ee8714c89d672f6d44c4011bbd81514e8a9afc3aa2",
+  "archive_sha256": "9e39b0068c3617741f9b275a1edfddd574c93d620853e956bd706ad067a53f9f",
+  "archive_bytes": 5552304553,
+  "source_manifest_files": 3032,
+  "archive_files": 3033,
+  "archive_uncompressed_bytes": 6471503184,
+  "verified_archive_parts": 4,
+  "verified_source_files": {
+    "work/temporal/forecast/species_cell_period_panel.parquet": {
+      "sha256": "5ae5b48b752fad05067537de5fb95d4ee74f17f3ba1114443d337bd7fd3695a1",
+      "bytes": 34667601
+    },
+    "work/temporal/forecast/species_recording_days.parquet": {
+      "sha256": "f1c400a4c0e4b6c7208f2728f2129629c9358013f2a250a68b76943942303dea",
+      "bytes": 14051557
+    },
+    "work/temporal/forecast/target_group_recording_days.parquet": {
+      "sha256": "bc5b2eea22f2497e6b93b9304fc5886f1739202f40addd443a614587187556a7",
+      "bytes": 3772898
+    },
+    "work/temporal/forecast/candidate_cells.parquet": {
+      "sha256": "803913d0ae5c9e4844e4dc4d5488ee1db29dc1ddd3834b1509c2c59d5ac27700",
+      "bytes": 101183
+    },
+    "work/temporal/forecast/cell_environment_period.parquet": {
+      "sha256": "378f50352dfa743bf6c5821766e76dd90d07533f79f47e282e52f7ac4d3a2627",
+      "bytes": 1983909
+    },
+    "work/temporal/forecast/cell_climate_grid.parquet": {
+      "sha256": "47c9ee0eb30c5d1f86a22c6d6e61a9010baf49f2fbd65b3d7330a11c0cf2e10a",
+      "bytes": 52031
+    },
+    "work/temporal/forecast/predictions_temporal.parquet": {
+      "sha256": "851bec4a91680e115c90bef3b6676223df60e879840c047e9d3e68e104caf246",
+      "bytes": 10602253
+    },
+    "work/temporal/forecast/predictions_spatial.parquet": {
+      "sha256": "daf7b50e6c4ce544f33fad58147768ca8396c4f175da8c8fbd932ff6126b0dcf",
+      "bytes": 11038786
+    },
+    "work/temporal/species_year_cells_10km.parquet": {
+      "sha256": "aa3a5a527a6cf9e214a867d11eed0fec8a7a3428afd77e02cfb295299dbf0754",
+      "bytes": 7772416
+    },
+    "work/temporal/host_region_composition_metrics.parquet": {
+      "sha256": "67499c5cd6957e4248d4fb7e5757827a8fcb8a7fcc5b47234387427ec6d57832",
+      "bytes": 1356216
+    },
+    "work/temporal/host_region_family_composition.parquet": {
+      "sha256": "26d8abd764c6dd5efa9f3759e872a5931707a8df0c4c503fa4776a2a8f292394",
+      "bytes": 206480
+    },
+    "outputs/forecast_model_lock.json": {
+      "sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+      "bytes": 2806
+    },
+    "work/temporal/forecast/model_M0_background.joblib": {
+      "sha256": "1e70c37f830a0eb2bc0082c96e20d5e4220cff289f1bffb110198df9ff8df20f",
+      "bytes": 6789054
+    }
+  },
+  "original_missing_gate_paths_present_in_complete_archive": {
+    "work/temporal/forecast/species_cell_period_panel.parquet": true,
+    "work/temporal/forecast/species_recording_days.parquet": true,
+    "work/temporal/forecast/target_group_recording_days.parquet": true,
+    "work/temporal/forecast/candidate_cells.parquet": true,
+    "work/temporal/forecast/cell_environment_period.parquet": true,
+    "work/temporal/forecast/cell_climate_grid.parquet": true,
+    "work/temporal/forecast/predictions_temporal.parquet": true,
+    "work/temporal/forecast/predictions_spatial.parquet": true,
+    "work/temporal/species_year_cells_10km.parquet": true,
+    "work/temporal/host_region_composition_metrics.parquet": true,
+    "work/temporal/host_region_family_composition.parquet": true,
+    "work/temporal/occurrence_parts": true,
+    "work/remote_sensing/host_region_counts.csv": false
+  },
+  "panel_rows": 842964,
+  "panel_species": 155,
+  "transitions": {
+    "training": {
+      "rows": 193703,
+      "species": 155
+    },
+    "test": {
+      "rows": 208482,
+      "species": 155
+    }
+  },
+  "recording_days_datasetKey_retained": true,
+  "model_lock_sha256": "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e",
+  "source_fit_script_sha256": "a34ad4cd1e4f40460c4f6bf6ed0b22ba3885b17d20ac17f74bd6564d0618ce6d",
+  "model_settings": {
+    "n_estimators": 160,
+    "max_depth": 12,
+    "min_samples_leaf": 40,
+    "max_features": 0.7,
+    "random_state": 20261029,
+    "n_jobs": 4
+  },
+  "mode_to_refit": "temporal",
+  "original_prediction_sha256": "851bec4a91680e115c90bef3b6676223df60e879840c047e9d3e68e104caf246",
+  "original_direct_species_metric_csvs": 0,
+  "source_sklearn_version_from_static_pickle_string": "1.7.2",
+  "requested_replay_sklearn_version": "1.7.2",
+  "original_complete_runtime_lock_available": false,
+  "model_refit_completed": false,
+  "no_original_records_exported": true,
+  "reviewer_redistribution_and_anonymity_cleared": false,
+  "scope": "Complete original archive byte identity and selected input payload hashes; no claim of all-file re-execution or upstream raw-to-panel rebuild."
+}

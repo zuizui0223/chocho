@@ -1,0 +1,205 @@
+{
+  "schema": "GEB_v05_four_component_internal_replay_verified_v1",
+  "verified_date_utc": "2026-11-22",
+  "status": "INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED",
+  "audit_pull_request": 189,
+  "audit_commit": "81b869e37a9ca2ec711c99d775c6d1d34d9caf5e",
+  "verification": {
+    "workflow": ".github/workflows/build-geb-v05-internal-composite-reviewer-candidate-20261121.yml",
+    "actions_run_id": 44970859551,
+    "actions_job_id": 137050100625,
+    "conclusion": "success",
+    "extracted_all_four_components_replayed": true,
+    "extracted_runner": "RUN_LIMITED_COMPONENTS.sh",
+    "runner_pass_marker": "GEB_V05_LIMITED_FOUR_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER",
+    "independent_local_build_matched_CI_inner_zip_sha256": true,
+    "direct_source_identity_token_scan_passed": true
+  },
+  "actions_delivery_archive": {
+    "artifact_id": 14733606979,
+    "artifact_url": "https://github.com/zuizui0223/chocho/actions/runs/44970859551/artifacts/14733606979",
+    "bytes": 563382,
+    "sha256": "3a4beb33c72093aaf146ecca8da28650e2264fa221f7f9f8ab12bf8c9abbd09d",
+    "expires_at_utc": "2027-02-20T01:18:47Z",
+    "stable_reviewer_access": false
+  },
+  "inner_composite_archive": {
+    "filename": "GEB_V05_INTERNAL_COMPOSITE_REPRO_NOT_FOR_JOURNAL_REVIEW.zip",
+    "bytes": 560519,
+    "sha256": "40369ba5820f0e40ed56758f64165f951c82c6d3d64e5613175533d3c2055c95",
+    "file_count": 39,
+    "component_file_counts": {
+      "fig1_fig3bc": 7,
+      "fig2abc_derived": 11,
+      "fig2d_fixed239": 8,
+      "fig4_scores_only": 5
+    },
+    "source_receipt_count": 5,
+    "wrapper_count": 3,
+    "previous_actions_artifact_id": 14701104396,
+    "previous_composite_file_count": 28,
+    "unchanged_component_or_receipt_members": 25,
+    "added_fig2abc_members": 11,
+    "removed_members": 0,
+    "modified_wrappers": [
+      "MANIFEST_INTERNAL_LIMITED_SCOPE.json",
+      "README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md",
+      "RUN_LIMITED_COMPONENTS.sh"
+    ],
+    "verified_scope": [
+      "Fig1",
+      "Fig2A-C",
+      "Fig2D",
+      "Fig3B-C",
+      "Fig4_stored_scores"
+    ]
+  },
+  "fig2abc_component": {
+    "filename": "GEB_V05_FIG2ABC_DERIVED_ONLY_NOT_FULL_REVIEW.zip",
+    "bytes": 448525,
+    "sha256": "0d34e188fb6ee2184a00f54853b61d49dfa085008679e6c537bae2e9386357d3",
+    "file_count": 11,
+    "replay_entrypoint": "components/fig2abc_derived/replay_fig2abc.py",
+    "standalone_fig2abc_requires_network": false,
+    "pinned_original_actions_archive_count": 6,
+    "pinned_consumed_artifact_member_count": 9,
+    "pinned_original_script_count": 5,
+    "pinned_aggregate_input_count": 2,
+    "scalar_comparisons": {
+      "total": 1947,
+      "A_fresh_pinned_source_output": 240,
+      "B_source_count_derived_expectations": 7,
+      "C_archived_original_result": {
+        "total": 1700,
+        "one_held": 1308,
+        "strict": 392
+      },
+      "relative_numeric_tolerance": 1e-08,
+      "absolute_numeric_tolerance": 1e-11
+    },
+    "A_sensitivity_scopes": {
+      "matched_islands": 126,
+      "resource_active_islands": 123,
+      "port_positive_islands": 91,
+      "leave_one_Level1_out_reruns": 9
+    },
+    "A_all_island_HC3": {
+      "native": {
+        "n": 126,
+        "covariates": 11,
+        "beta": 0.09543135254145058,
+        "HC3_se": 0.08818026942851756,
+        "HC3_95": [
+          -0.07740197553844383,
+          0.268264680621345
+        ]
+      },
+      "introduced": {
+        "n": 126,
+        "covariates": 11,
+        "beta": 0.2854430614548559,
+        "HC3_se": 0.11389312948692087,
+        "HC3_95": [
+          0.06221252766049096,
+          0.5086735952492207
+        ]
+      },
+      "difference": {
+        "n": 126,
+        "covariates": 11,
+        "beta": 0.1900117089134027,
+        "HC3_se": 0.10648133128324075,
+        "HC3_95": [
+          -0.018691700401749167,
+          0.39871511822855454
+        ]
+      }
+    },
+    "B_count_Jaccard": {
+      "source_island_pairs": 7875,
+      "defined_pairs": {
+        "native": 7875,
+        "introduced": 7874
+      },
+      "undefined_introduced_pair": [
+        "BOU",
+        "SSA"
+      ],
+      "median_Jaccard": {
+        "native": 0.00448654037886341,
+        "introduced": 0.04603045511455446
+      }
+    },
+    "C_circuit_replay": {
+      "common_islands": 104,
+      "common_pairs": 5355,
+      "one_held_folds": 104,
+      "strict_pairs": 1089,
+      "strict_folds": 5,
+      "one_held_gain_percent": {
+        "native": -0.10961036875490504,
+        "introduced": 4.239013650845652
+      },
+      "one_held_intervals": {
+        "native": [
+          -0.3905877517331232,
+          0.16519461207949626
+        ],
+        "introduced": [
+          2.511430753668656,
+          6.029409136675171
+        ]
+      },
+      "strict_gain_percent": {
+        "native": -0.04430509181116742,
+        "introduced": 2.735040680490108
+      },
+      "strict_intervals": {
+        "native": [
+          -0.9844110652036249,
+          0.43080162389915583
+        ],
+        "introduced": [
+          -1.6487554068083963,
+          5.508243607085061
+        ]
+      },
+      "strict_paired_interval": [
+        -1.6932613640236287,
+        5.400035298923851
+      ]
+    },
+    "C_electrical_exposure": "undirected electrical resistance",
+    "C_strict_shortest_water_comparator_replayed": true,
+    "C_strict_intervals_are_descriptive_fold_resampling": true,
+    "appendix_scope_ledger_member": "components/fig2abc_derived/MANIFEST.json",
+    "appendix_scope_ledger_sections": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8"
+    ]
+  },
+  "separate_rebuild_evidence": {
+    "Fig3A_HOSTS_WCVP_original_source_rebuild_recorded": true,
+    "original_GBIF224_annual_aggregation_and_676_model_fold_refit_recorded": true,
+    "original_GBIF155_included_receipt_is_historical_pre_recovery": true,
+    "original_GBIF155_historical_receipt_member": "source_qa_receipts/GBIF155_original_source_and_missing_RF_panel_gate.json",
+    "original_GBIF155_recovery_and_refit_workflow": ".github/workflows/audit-GEB-v05-original155-recovered-archive-20261122.yml",
+    "original_GBIF155_RF_training_panel_included": false,
+    "original_GBIF155_RF_refit_performed_by_composite": false
+  },
+  "release_gates": {
+    "full_SI_replayed": false,
+    "source_licensing_and_redistribution_clearance": false,
+    "indirect_author_anonymity_certified": false,
+    "stable_reviewer_access_available": false,
+    "permanent_archive_DOI_exists": false,
+    "real_Dryad_reviewer_deposit": false,
+    "journal_review_release_ready": false
+  }
+}
