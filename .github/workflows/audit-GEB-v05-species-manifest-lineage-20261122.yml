@@ -1,0 +1,38 @@
+name: GEB155 original archive manifest-only script lineage audit
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB-v05-species-manifest-lineage-20261122.yml
+      - scripts/audit_GEB_v05_species_manifest_lineage_20261122.py
+      - tests/test_species_manifest_lineage_20261122.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  manifest-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate privacy and hash aggregation on synthetic entries
+        run: python tests/test_species_manifest_lineage_20261122.py
+      - name: Verify original draft manifest and find historical fit alternatives (NO ZIP)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p safe
+          python scripts/audit_GEB_v05_species_manifest_lineage_20261122.py \
+            --output safe/ORIGINAL155_MANIFEST_ONLY_LINEAGE_20261122.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original155-manifest-lineage-NO-PATHS
+          path: safe/ORIGINAL155_MANIFEST_ONLY_LINEAGE_20261122.json
+          if-no-files-found: warn
+          retention-days: 90
