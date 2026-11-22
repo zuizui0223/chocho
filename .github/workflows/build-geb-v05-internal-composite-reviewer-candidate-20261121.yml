@@ -4,6 +4,8 @@ on:
     branches: [analysis/geb-v05-review-data-source-audit-20261120]
     paths:
       - scripts/build_GEB_v05_internal_composite_reviewer_candidate_20261121.py
+      - scripts/build_GEB_v05_fig2ABC_derived_component_20261122.py
+      - scripts/replay_fig2abc.py
       - .github/workflows/build-geb-v05-internal-composite-reviewer-candidate-20261121.yml
   workflow_dispatch:
 permissions:
@@ -23,9 +25,16 @@ jobs:
           ref: 2571dc0624f8d4eb695712e34414ed0a41056300
           path: paper
           persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 8f9b37ac9ef9f18727fefcee7a1fc61360b4d503
+          path: original_fig2c_single_holdout
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install the pinned NumPy range for marine regression replay
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
       - uses: actions/download-artifact@v4
         with:
           name: GEB-v05-limited-Fig1-Fig3BC-aggregates-Fig3A-receipt-only-NOT-licensed-review-archive
@@ -58,6 +67,23 @@ jobs:
               assert z.testzip() is None
           print("WPI_EDITION_CLAIM_REMOVED_AND_FIG2D_COMPONENT_CRC_PASS")
           PY
+      - name: Build and replay the Fig. 2A-C component from pinned original artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p original_fig2abc_artifacts
+          # Keep the original ZIP bytes so the component builder can verify both
+          # each artifact digest and every consumed member digest.
+          for artifact in 14296292008 14296307100 14296891019 14298480144 14298086879 14419709321; do
+            gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${artifact}/zip" \
+              > "original_fig2abc_artifacts/${artifact}.zip"
+          done
+          python audit/scripts/build_GEB_v05_fig2ABC_derived_component_20261122.py \
+            --artifacts original_fig2abc_artifacts --audit-root audit \
+            --one-held-script original_fig2c_single_holdout/scripts/audit_WCVP126_original_uniform_circuit_crossed_prediction_20261117.py \
+            --out incoming/fig2abc
       - name: Build internal composite and independent ZIP file/header/identity checks
         shell: bash
         run: |
@@ -72,12 +98,15 @@ jobs:
           r=json.loads(p.read_text())
           assert r["status"]=="INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED"
           assert r["source_receipt_count"]==5
-          assert set(r["component_file_counts"])=={"fig1_fig3bc","fig2d_fixed239","fig4_scores_only"}
+          assert r["file_count"] == 39
+          assert r["component_file_counts"] == {
+              "fig1_fig3bc": 7, "fig2abc_derived": 11, "fig2d_fixed239": 8, "fig4_scores_only": 5
+          }
           assert r["no_source_identity_tokens_in_actual_ZIP"]
           assert not r["real_Dryad_reviewer_deposit"]
           print("COMPOSITE_SCOPE_AND_SOURCE_REUSE_STOP_LINE_CHECK_PASS")
           PY
-      - name: Execute all three source-limited numerical replay components AFTER extracting the combined ZIP
+      - name: Execute all four source-limited numerical replay components AFTER extracting the combined ZIP
         shell: bash
         run: |
           set -euo pipefail
@@ -86,7 +115,7 @@ jobs:
               tail -n 100 dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
               exit 1
             }
-          grep -q "GEB_V05_LIMITED_THREE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER" \
+          grep -q "GEB_V05_LIMITED_FOUR_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER" \
             dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
           grep -q "GEB_LIMITED_FIXED239_INDEPENDENT_REVIEW_SOURCE_REPLAY_PASS" \
             dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
@@ -94,7 +123,9 @@ jobs:
             dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
           grep -q "GEB_FIG4_224_169_HELD_REGION_H_AFTER_O_SCORE_SOURCE_RECALCULATED_PASS" \
             dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
-          echo "INTERNAL_CANDIDATE_EXTRACTED_THREE_SUBMODEL_REPLAYS_PASS"
+          grep -q "FIG2ABC_DERIVED_REPLAY_PASS_INTERNAL_ONLY" \
+            dist/internal_candidate/COMPOSITE_EXTRACT_REPLAY_LOG.txt
+          echo "INTERNAL_CANDIDATE_EXTRACTED_FOUR_SUBMODEL_REPLAYS_PASS"
       - name: Emit metadata and checksums only, omit expanded source files from redundant action upload
         shell: bash
         run: |
@@ -107,7 +138,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: GEB-v05-THREE-COMPONENT-INTERNAL-REVIEW-SOURCE-ONLY-NOT-A-Dryad-DEPOSIT
+          name: GEB-v05-FOUR-COMPONENT-INTERNAL-REVIEW-SOURCE-ONLY-NOT-A-Dryad-DEPOSIT
           path: dist/to_upload/
           if-no-files-found: warn
           retention-days: 90

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Assemble three verified, SOURCE-LIMITED GEB v0.5 replay components.
+"""Assemble four verified, SOURCE-LIMITED GEB v0.5 replay components.
 
 This builds an internal, screened and source-scoped **candidate**, not a legal
 release, complete reviewer data/code access, anonymous deposit, or DOI.
@@ -15,9 +15,22 @@ from pathlib import Path
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 COMPONENTS = {
-    "fig1_fig3bc": "GEB_V05_LIMITED_FIG1_FIG3BC_REPLAY_FIG3A_RECEIPT_ONLY_NOT_FULL_REVIEW.zip",
-    "fig2d_fixed239": "GEB_V05_SCREENED_LIMITED_FIXED239_NOT_FULL_REVIEW_ARCHIVE.zip",
-    "fig4_scores_only": "GEB_V05_FIG4_155_224_ORIGINAL_EVALUATION_SCORES_ONLY_NOT_MODEL_REPLAY.zip",
+    "fig1_fig3bc": (
+        "GEB_V05_LIMITED_FIG1_FIG3BC_REPLAY_FIG3A_RECEIPT_ONLY_NOT_FULL_REVIEW.zip",
+        "5f35415b81d26f87538381c53376f4ab8e4069a85069e7d510ddff70fdd9fcec", 7,
+    ),
+    "fig2abc_derived": (
+        "GEB_V05_FIG2ABC_DERIVED_ONLY_NOT_FULL_REVIEW.zip",
+        "0d34e188fb6ee2184a00f54853b61d49dfa085008679e6c537bae2e9386357d3", 11,
+    ),
+    "fig2d_fixed239": (
+        "GEB_V05_SCREENED_LIMITED_FIXED239_NOT_FULL_REVIEW_ARCHIVE.zip",
+        "2b4a598f9baf830f187baef194c3cbe2bd513e8a35052697bf5cad88cb186c43", 8,
+    ),
+    "fig4_scores_only": (
+        "GEB_V05_FIG4_155_224_ORIGINAL_EVALUATION_SCORES_ONLY_NOT_MODEL_REPLAY.zip",
+        "aa87dcf6b58f68d2533557e2940a1b294b372ddd3c096257dc6e0de26bf74d25", 5,
+    ),
 }
 ROOT_RECEIPTS=Path("results/geb_v05_private_source_recovery_20261120")
 SOURCE_RECEIPTS={
@@ -42,7 +55,7 @@ BAD={
 # but their raw bytes, occurrence IDs, or private longitude/latitude are not
 # permitted in the released technical candidate.
 ROW_ID_HEAD=(b"gbifid",b"occurrenceid",b"datasetkey")
-README="""# GEB v0.5 — internal three-component source replay candidate
+README="""# GEB v0.5 — internal four-component source replay candidate
 
 **IMPORTANT: INTERNAL PREPARATION ONLY. NOT A SUBMISSION-READY REVIEW ARCHIVE.**
 This source-candidate has no authorized anonymous reviewer URL, no actual
@@ -53,28 +66,36 @@ butterfly–island–year source.
 
 Goal: reproduce existing *source-qualified*, noncausal resource opportunity
 numbers without inventing source data, historical shipping, or butterfly
-colonization. The three components have different response definitions:
+colonization. The four components have different response definitions:
 
-1. \`fig1_fig3bc\`: exact 239-species aggregate resource opportunity baseline
+1. `fig1_fig3bc`: exact 239-species aggregate resource opportunity baseline
    for 126 insular and 237 mainland botanical regions, and source butterfly
    geography/rank/group statistics; Fig3A inside this component is only an
    old numerical source receipt, but the separate source receipt below records
    a later original-WCVP/HOSTS Fig3A independent re-computation.
-2. \`fig2d_fixed239\`: original fixed-239 potential-food and mainland-distance
+2. `fig2abc_derived`: matched port and whole-flora HC3 regressions, and
+   count-derived native/introduced Jaccard on 126 botanical islands. The
+   separate 104-island marine analysis refits the one-island and strict
+   both-islands-unseen electrical-resistance tests from derived inputs.
+   This component includes an eight-appendix coverage register.
+3. `fig2d_fixed239`: original fixed-239 potential-food and mainland-distance
    model in 126 botanical islands; MEM10 spatial adjustment for 123 relevant
    islands; exact-source coefficients on previously derived tables.
-3. \`fig4_scores_only\`: fixed model score summaries, comparing independent
-   155 and 224 butterfly GBIF-recorded response model outputs. This component
+4. `fig4_scores_only`: fixed model-score summaries for the separate 155-
+   and 224-butterfly response models using one documented GBIF acquisition. This component
    performs **NO raw GBIF refit**. A separate immutable provenance receipt
    records the successful original 224-ecology-model re-fit with 676 heldout
    model-fold checks and the successful 14,637,152 record original ZIP-to-annual
    source aggregation. That raw data and model prerequisites are not included
    here.
 
-**Cannot reproduce from this package:** the original 155-species random forest
-training (the 842,964-row source panel and supporting predictors are missing),
-the original point-record filtering, nonuploaded source-specific plant/host
-extraction, full main+SI source chain, and source-level third-party permissions.
+Original 155 recovered-input/model-refit verification is tracked separately.
+The included 155 source receipt is a historical pre-recovery audit. The present
+archive replays saved 155 evaluation scores and contains no recovered RF inputs.
+
+**Scope exclusions:** the original point-record filtering, upstream plant/host
+extraction, the original WPI conversion, full main and SI source replay, and
+third-party redistribution clearance.
 The original 225x51 and 1596-port GBIF facets remain attributable to saved
 speciesKey query receipts, not a fabricated GBIF download DOI or verified
 historical publisher list.
@@ -89,10 +110,11 @@ Underlying source citations (not synthetic DOIs):
   island facet queries or 1596 botanical-port facet queries.
 - World Port Index Publication 150, 2019; the exact edition of the converted
   original study GeoJSON is not yet source independently verified.
+- GSHHG coastline version 2.3.7, doi:10.5281/zenodo.7007502.
 - TDWG WGSRPD3 pinned original polygons per source replay component.
 
 To test the limited components after extraction with Python 3.12 and internet:
-\`bash RUN_LIMITED_COMPONENTS.sh\`.
+`bash RUN_LIMITED_COMPONENTS.sh`.
 Each subcomponent keeps its own terms and caveats. This is an internal
 reproducibility feasibility package, not a dryad deposit or double-anonymous
 source archive until all licence/anonymity/access gates explicitly pass.
@@ -103,7 +125,8 @@ cd "$(dirname "$0")"
 ( cd components/fig1_fig3bc && bash REPRODUCE.sh )
 ( cd components/fig4_scores_only && bash REPRODUCE.sh )
 ( cd components/fig2d_fixed239 && bash REPRODUCE.sh )
-echo GEB_V05_LIMITED_THREE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER
+( cd components/fig2abc_derived && python replay_fig2abc.py )
+echo GEB_V05_LIMITED_FOUR_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER
 """
 
 def checksum(data:bytes)->str:
@@ -124,18 +147,20 @@ def source_items(incoming:Path, audit:Path) -> tuple[dict[str,bytes],dict]:
     entries={"README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md":README.encode("utf-8"),
              "RUN_LIMITED_COMPONENTS.sh":RUN.encode("utf-8")}
     provenance={}
-    for key,archive_name in COMPONENTS.items():
+    for key, (archive_name, expected_sha, expected_count) in COMPONENTS.items():
         found=list(incoming.rglob(archive_name))
         if len(found)!=1:
             raise AssertionError(f"Expected exactly one {archive_name}; got {len(found)}")
         f=found[0]
+        archive_sha = checksum(f.read_bytes())
+        if archive_sha != expected_sha:
+            raise AssertionError(f"Unexpected source component SHA256 for {archive_name}: {archive_sha}")
         with ZipFile(f) as z:
             if z.testzip() is not None:raise AssertionError("CRC verification failed")
-            nested=z.infolist()
-            if len(nested)<5 or len(nested)>15:
-                raise AssertionError("Unexpected scoped source size in "+archive_name)
+            nested = [item for item in z.infolist() if not item.is_dir()]
+            if len(nested) != expected_count:
+                raise AssertionError("Unexpected scoped source size in " + archive_name)
             for item in nested:
-                if item.is_dir():continue
                 if not secure_name(item.filename):
                     raise AssertionError("Unsafe source name "+item.filename)
                 name=f"components/{key}/{item.filename}"
@@ -147,7 +172,7 @@ def source_items(incoming:Path, audit:Path) -> tuple[dict[str,bytes],dict]:
                         raise AssertionError("Original GBIF occurrence-level input included: "+name)
                 entries[name]=content
         provenance[key]={"source_artifact_component_filename":archive_name,
-                         "source_artifact_component_sha256":checksum(f.read_bytes()),
+                         "source_artifact_component_sha256":archive_sha,
                          "file_count":len(nested)}
     for key,relative in SOURCE_RECEIPTS.items():
         item=audit/relative
@@ -161,21 +186,23 @@ def source_items(incoming:Path, audit:Path) -> tuple[dict[str,bytes],dict]:
 def build(incoming:Path,audit:Path,out:Path)->dict:
     entries,provenance=source_items(incoming,audit)
     manifest={
-        "schema":"GEB_v05_internal_3component_extracted_replay_candidate_v1",
+        "schema":"GEB_v05_internal_4component_extracted_replay_candidate_v2",
         "status":"INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED",
         "component_source":provenance,
         "source_qa_receipts":list(SOURCE_RECEIPTS),
-        "known_main_figures_covered_by_limited_archives":["Fig1","Fig2D","Fig3B-C","Fig4_stored_scores"],
+        "known_main_figures_covered_by_limited_archives":["Fig1","Fig2A-C","Fig2D","Fig3B-C","Fig4_stored_scores"],
         "Fig3A_original_source_rebuilt_outside_composite":True,
         "original_GBIF224_full_model_rebuilt_outside_composite":True,
-        "original_GBIF155_RF_training_panel_available":False,
+        "original_GBIF155_recovered_input_model_refit_verification":"tracked separately",
+        "original_GBIF155_RF_training_panel_included":False,
+        "full_SI_replayed":False,
         "third_party_original_data_included":False,
         "source_licensing_and_redistribution_clearance":False,
         "indirect_author_anonymity_certified":False,
         "reviewer_access_URL_exists":False,
         "permanent_archive_DOI_exists":False,
         "scientific_manuscript_source_modified":False,
-        "limitations":"Cannot reproduce all original raw butterfly/plant source processing, standalone 155 RF training, Fig2A-C, or whole article SI."
+        "limitations":"Scoped derived-input and saved-score replay. Full upstream butterfly/plant source processing, original WPI conversion, and full SI replay remain outside this archive."
     }
     entries["MANIFEST_INTERNAL_LIMITED_SCOPE.json"]=(json.dumps(manifest,ensure_ascii=False,indent=2)+"\n").encode()
     for name,content in entries.items():
@@ -197,6 +224,8 @@ def build(incoming:Path,audit:Path,out:Path)->dict:
             if (item.external_attr>>16)&0o777!=0o644:
                 raise AssertionError("Unexpected ZIP mode")
             content=z.read(item)
+            if content != entries[item.filename]:
+                raise AssertionError("Archived member differs from verified source: " + item.filename)
             for label,pattern in BAD.items():
                 if pattern.search(item.filename.encode()) or pattern.search(content):
                     raise AssertionError(f"Post-archive source scan flagged {label}")
