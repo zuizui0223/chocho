@@ -8,7 +8,9 @@ on:
       - scripts/verify_GEB_v05_original155_refit_20261122.py
   workflow_dispatch:
 permissions:
-  contents: read
+  # GitHub exposes draft releases only to credentials with repository push access.
+  # This job still executes GET requests only; it has no checkout or publish step.
+  contents: write
 jobs:
   private-source-inventory:
     runs-on: ubuntu-latest
@@ -34,7 +36,9 @@ jobs:
             ['gh', 'api', 'repos/zuizui0223/chocho/releases/453667492'],
             capture_output=True, check=False)
           if metadata.returncode:
-              raise SystemExit('Draft release metadata could not be read.')
+              status = re.search(r'HTTP (\d{3})', metadata.stderr.decode(errors='replace'))
+              raise SystemExit('Draft release metadata could not be read; HTTP '
+                               + (status.group(1) if status else 'unknown') + '.')
           release = json.loads(metadata.stdout)
           if release.get('draft') is not True:
               raise SystemExit('Expected private draft release; status changed.')
