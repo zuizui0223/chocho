@@ -1,0 +1,98 @@
+{
+  "schema": "GEB_original155_four_sensitivity_source_refit_audit_v1",
+  "checked_date": "2026-11-22",
+  "original_source_commit": "42f8fcc3a388e96456c76180d7e56d75dd2ed48c",
+  "source_archive_sha256": "9e39b0068c3617741f9b275a1edfddd574c93d620853e956bd706ad067a53f9f",
+  "manifest_sha256": "b8eff912a43373424e5f31ee8714c89d672f6d44c4011bbd81514e8a9afc3aa2",
+  "manifest_paths_checked_run": 44985042656,
+  "manifest_exact_suffix_present_for_all_four_panels_and_predictions": true,
+  "initial_four_mode_workflow": 44984767232,
+  "targeted_radius250_diagnostic_run": 44985167678,
+  "relative_tolerance": 0.000001,
+  "absolute_tolerance": 1e-9,
+  "estimated_outcome_scope": "Scores of six RF models versus archived source, not raw GBIF data-to-panel replay; species/temporal held-out cohorts are distinct.",
+  "results": {
+    "effort20": {
+      "state": "PASS",
+      "train_rows": 122547,
+      "test_rows": 159084,
+      "rarefaction_n": 20,
+      "original_MSE_reduction_percent": 2.975749318968573,
+      "refit_MSE_reduction_percent": 2.975749318968573,
+      "groups_total": 193,
+      "groups_failed": 0,
+      "model_prediction_rows_outside_tolerance": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "artifact_id": 14739124358
+    },
+    "radius250": {
+      "state": "INCOMPLETE_INITIAL_RECOVERY",
+      "train_rows": 167192,
+      "test_rows": 180654,
+      "rarefaction_n": 10,
+      "original_MSE_reduction_percent": 3.7626496823350153,
+      "refit_MSE_reduction_percent": null,
+      "groups_total": null,
+      "groups_failed": null,
+      "initial_artifact_id": 14739118863,
+      "diagnostic_status": "RUN_IN_PROGRESS_AT_2026_11_22_04_34_UTC"
+    },
+    "exclude_top_provider": {
+      "state": "NUMERIC_MISMATCH",
+      "train_rows": 173414,
+      "test_rows": 191004,
+      "rarefaction_n": 10,
+      "original_MSE_reduction_percent": 5.545564256849527,
+      "refit_MSE_reduction_percent": 5.538676851235061,
+      "groups_total": 193,
+      "groups_failed": 78,
+      "model_prediction_rows_outside_tolerance": [
+        180170,
+        175309,
+        160023,
+        19879,
+        3286,
+        41299
+      ],
+      "artifact_id": 14739636304
+    },
+    "precision100": {
+      "state": "NUMERIC_MISMATCH",
+      "train_rows": 98838,
+      "test_rows": 135532,
+      "rarefaction_n": 10,
+      "original_MSE_reduction_percent": 5.344940058277037,
+      "refit_MSE_reduction_percent": 5.3546694982231555,
+      "groups_total": 193,
+      "groups_failed": 78,
+      "model_prediction_rows_outside_tolerance": [
+        115507,
+        115714,
+        128963,
+        115220,
+        77778,
+        3540
+      ],
+      "artifact_id": 14738699276
+    }
+  },
+  "model_order": [
+    "M0_background",
+    "M1_climate",
+    "M2_landcover",
+    "M3_both",
+    "M4_host_resources",
+    "M5_host_composition"
+  ],
+  "publication_reuse_gate": "STAGE_A_OPEN",
+  "underlying_models_and_raw_inputs_published": false,
+  "newer_source_panel_from_observations_rebuilt": false,
+  "species_fold3_numerical_failure_resolved": false,
+  "conclusion": "Directionally stable positive predictive gain in the three executed temporal sensitivities; only effort20 numerically reproduced. The two remaining numeric failures do not negate stored ecological results but prevent full independently reproduced claims. Radius250 no numeric conclusion from initial failure."
+}
