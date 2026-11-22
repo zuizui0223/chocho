@@ -1,0 +1,142 @@
+{
+  "schema": "chocho_original155_draft_recovery_inventory_v1",
+  "status": "RECOVERY_RECEIPT_BYTES_VERIFIED;PANEL_NOT_YET_MATERIALIZED;NOT_A_REFIT",
+  "release_id": 453667492,
+  "release_remains_draft": true,
+  "verified_assets": {
+    "receipt": {
+      "asset_id": 775476029,
+      "bytes": 569496,
+      "sha256": "b8eff912a43373424e5f31ee8714c89d672f6d44c4011bbd81514e8a9afc3aa2"
+    },
+    "sha256sums": {
+      "asset_id": 775476002,
+      "bytes": 598,
+      "sha256": "3cf15b18d68f27425e3b78630769b13e8a4e0c7232c6dd7016f7deaf857bd140"
+    }
+  },
+  "receipt_structure": {
+    "files": {
+      "type": "list",
+      "length": 3032,
+      "first_item_structure": {
+        "path": "str",
+        "bytes": "int",
+        "sha256": "str"
+      }
+    },
+    "dynamic_key_count": 7
+  },
+  "recognized_source_input_entries": [
+    {
+      "path": "work/temporal/forecast/candidate_cells.parquet",
+      "sha256_values": [
+        "803913d0ae5c9e4844e4dc4d5488ee1db29dc1ddd3834b1509c2c59d5ac27700"
+      ],
+      "bytes": 101183
+    },
+    {
+      "path": "work/temporal/forecast/cell_climate_grid.parquet",
+      "sha256_values": [
+        "47c9ee0eb30c5d1f86a22c6d6e61a9010baf49f2fbd65b3d7330a11c0cf2e10a"
+      ],
+      "bytes": 52031
+    },
+    {
+      "path": "work/temporal/forecast/cell_environment_period.parquet",
+      "sha256_values": [
+        "378f50352dfa743bf6c5821766e76dd90d07533f79f47e282e52f7ac4d3a2627"
+      ],
+      "bytes": 1983909
+    },
+    {
+      "path": "work/temporal/forecast/predictions_spatial.parquet",
+      "sha256_values": [
+        "daf7b50e6c4ce544f33fad58147768ca8396c4f175da8c8fbd932ff6126b0dcf"
+      ],
+      "bytes": 11038786
+    },
+    {
+      "path": "work/temporal/forecast/predictions_temporal.parquet",
+      "sha256_values": [
+        "851bec4a91680e115c90bef3b6676223df60e879840c047e9d3e68e104caf246"
+      ],
+      "bytes": 10602253
+    },
+    {
+      "path": "work/temporal/forecast/species_cell_period_panel.parquet",
+      "sha256_values": [
+        "5ae5b48b752fad05067537de5fb95d4ee74f17f3ba1114443d337bd7fd3695a1"
+      ],
+      "bytes": 34667601
+    },
+    {
+      "path": "work/temporal/forecast/species_recording_days.parquet",
+      "sha256_values": [
+        "f1c400a4c0e4b6c7208f2728f2129629c9358013f2a250a68b76943942303dea"
+      ],
+      "bytes": 14051557
+    },
+    {
+      "path": "work/temporal/forecast/target_group_recording_days.parquet",
+      "sha256_values": [
+        "bc5b2eea22f2497e6b93b9304fc5886f1739202f40addd443a614587187556a7"
+      ],
+      "bytes": 3772898
+    },
+    {
+      "path": "work/temporal/host_region_composition_metrics.parquet",
+      "sha256_values": [
+        "67499c5cd6957e4248d4fb7e5757827a8fcb8a7fcc5b47234387427ec6d57832"
+      ],
+      "bytes": 1356216
+    },
+    {
+      "path": "work/temporal/host_region_family_composition.parquet",
+      "sha256_values": [
+        "26d8abd764c6dd5efa9f3759e872a5931707a8df0c4c503fa4776a2a8f292394"
+      ],
+      "bytes": 206480
+    },
+    {
+      "path": "work/temporal/species_year_cells_10km.parquet",
+      "sha256_values": [
+        "aa3a5a527a6cf9e214a867d11eed0fec8a7a3428afd77e02cfb295299dbf0754"
+      ],
+      "bytes": 7772416
+    },
+    {
+      "path": "outputs/forecast_model_lock.json",
+      "sha256_values": [
+        "0c7fc34d7858d6f62fe31a914188aee63e56ab1d41872abe40c314f6c5ed8b1e"
+      ],
+      "bytes": 2806
+    }
+  ],
+  "recognized_occurrence_part_entries": 59,
+  "zero_matches_would_not_establish_absence": true,
+  "archive_checksums": [
+    {
+      "name": "chocho_temporal_original_analysis_20261121.zip.part01",
+      "sha256": "4fca3d7d1d20c431455cea62ffd40d7074008921a5500586a305aafa8e20812b"
+    },
+    {
+      "name": "chocho_temporal_original_analysis_20261121.zip.part02",
+      "sha256": "23ff9c59c23ffbb8f0fb34367c0871e4661489ca7bf5b4d55b581b41f4f047c3"
+    },
+    {
+      "name": "chocho_temporal_original_analysis_20261121.zip.part03",
+      "sha256": "b6f7c09f29c0dd0117a72ed49a931b85b0aff254235df90392b9f069e1446bbb"
+    },
+    {
+      "name": "chocho_temporal_original_analysis_20261121.zip.part04",
+      "sha256": "f0e0eccfbe24ac1e9d285b0331ea159c6fc3da7e7e0d0f5549b9e2874dce6ce7"
+    },
+    {
+      "name": "chocho_temporal_original_analysis_20261121.zip",
+      "sha256": "9e39b0068c3617741f9b275a1edfddd574c93d620853e956bd706ad067a53f9f"
+    }
+  ],
+  "model_refit_completed": false,
+  "no_original_records_exported": true
+}

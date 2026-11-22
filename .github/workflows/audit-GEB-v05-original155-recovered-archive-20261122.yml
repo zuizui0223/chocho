@@ -1,4 +1,4 @@
-name: Audit recovered original GEB155 private archive without exporting records
+name: Recover and independently refit original GEB155 private source models
 on:
   push:
     branches: [analysis/geb-v05-review-data-source-audit-20261120]
@@ -6,178 +6,103 @@ on:
       - .github/workflows/audit-GEB-v05-original155-recovered-archive-20261122.yml
       - scripts/recover_GEB_v05_original155_private_inputs_20261122.py
       - scripts/verify_GEB_v05_original155_refit_20261122.py
+      - tests/test_original155_private_recovery.py
+      - tests/test_verify_GEB_v05_original155_refit.py
   workflow_dispatch:
 permissions:
-  # GitHub exposes draft releases only to credentials with repository push access.
-  # This job still executes GET requests only; it has no checkout or publish step.
+  # Draft releases require push access, although every source API call is GET-only.
+  # No release mutation, raw-record upload or automatic branch push is performed.
   contents: write
 jobs:
-  private-source-inventory:
+  source-locked-original155-model:
+    name: Original155 fresh ${{ matrix.mode }} model
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        mode: [temporal, spatial, species]
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
     steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: source
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Read and verify the existing draft recovery receipt
+      - name: Verify original score snapshot and independent failure guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "pandas==2.2.3" "pyarrow>=19,<24" "joblib==1.5.3"
+          python source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+          python audit/tests/test_original155_private_recovery.py
+          python audit/tests/test_verify_GEB_v05_original155_refit.py
+          mkdir -p safe_receipts
+      - name: Restore original split archive and verify the exact primary panel
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
+          python -u audit/scripts/recover_GEB_v05_original155_private_inputs_20261122.py \
+            --stage restore --mode '${{ matrix.mode }}' \
+            --root "$RUNNER_TEMP/original155" \
+            --fit-script source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/analysis_source/fit_forecast.py \
+            --output 'safe_receipts/ORIGINAL155_PRIVATE_SOURCE_RESTORED_${{ matrix.mode }}_20261122.json'
+      - name: Install the selected replay scikit-learn version
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check -r "$RUNNER_TEMP/original155/model_requirement.txt"
+      - name: Execute the untouched original model on the recovered panel
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u audit/scripts/recover_GEB_v05_original155_private_inputs_20261122.py \
+            --stage fit --mode '${{ matrix.mode }}' \
+            --root "$RUNNER_TEMP/original155" \
+            --output 'safe_receipts/ORIGINAL155_FRESH_EXECUTION_${{ matrix.mode }}_20261122.json'
+      - name: Compare every keyed prediction, species score and frozen primary result
+        shell: bash
+        env:
+          REPLAY_MODE: ${{ matrix.mode }}
+        run: |
+          set -euo pipefail
           python - <<'PY'
-          from pathlib import Path, PurePosixPath
-          import hashlib, json, os, re, subprocess
-          root = Path(os.environ['RUNNER_TEMP']) / 'original155_private_recovery'
-          root.mkdir()
-          out = Path('safe_receipts')
-          out.mkdir()
-          metadata = subprocess.run(
-            ['gh', 'api', 'repos/zuizui0223/chocho/releases/453667492'],
-            capture_output=True, check=False)
-          if metadata.returncode:
-              status = re.search(r'HTTP (\d{3})', metadata.stderr.decode(errors='replace'))
-              raise SystemExit('Draft release metadata could not be read; HTTP '
-                               + (status.group(1) if status else 'unknown') + '.')
-          release = json.loads(metadata.stdout)
-          if release.get('draft') is not True:
-              raise SystemExit('Expected private draft release; status changed.')
-          assets = {
-            'receipt': (775476029, 'b8eff912a43373424e5f31ee8714c89d672f6d44c4011bbd81514e8a9afc3aa2'),
-            'sha256sums': (775476002, '3cf15b18d68f27425e3b78630769b13e8a4e0c7232c6dd7016f7deaf857bd140'),
-          }
-          release_assets = {a['id']: a for a in release['assets']}
-          verified = {}
-          for name, (asset_id, expected) in assets.items():
-              registered = release_assets.get(asset_id, {})
-              if registered.get('digest') != 'sha256:' + expected:
-                  raise SystemExit(f'Asset {asset_id} is not registered with the expected release digest.')
-              dest = root / name
-              with dest.open('wb') as stream:
-                  process = subprocess.run(
-                    ['gh', 'api', f'repos/zuizui0223/chocho/releases/assets/{asset_id}',
-                     '-H', 'Accept: application/octet-stream'],
-                    stdout=stream, stderr=subprocess.PIPE, check=False)
-              if process.returncode:
-                  raise SystemExit(f'Asset {asset_id} download failed; no private response printed.')
-              actual = hashlib.sha256(dest.read_bytes()).hexdigest()
-              if actual != expected:
-                  raise SystemExit(f'Asset {asset_id} SHA256 mismatch; source not accepted.')
-              verified[name] = {'asset_id': asset_id, 'bytes': dest.stat().st_size, 'sha256': actual}
-          receipt = json.loads((root / 'receipt').read_text())
-          safe_keys = {
-            'schema', 'status', 'created_at', 'date', 'files', 'entries', 'manifest',
-            'source', 'sources', 'archive', 'archives', 'parts', 'path', 'relative_path',
-            'relpath', 'relative', 'source_path', 'target_path', 'sha256', 'sha256sum',
-            'digest', 'source_sha256', 'destination_sha256', 'size', 'size_bytes', 'bytes',
-            'file_count', 'count', 'total_files', 'total_bytes', 'verified_files',
-            'panel', 'rows', 'columns', 'species', 'species_count', 'test_rows',
-            'training_rows', 'train_rows', 'forecast', 'inputs', 'outputs', 'validation',
-            'versions', 'python', 'numpy', 'pandas', 'scikit_learn', 'sklearn', 'pyarrow',
-            'joblib', 'model_lock', 'checks', 'checksums', 'verified', 'matches',
-          }
-          def shape(value, depth=0):
-              if depth > 5:
-                  return type(value).__name__
-              if isinstance(value, dict):
-                  result = {}
-                  dynamic_count = 0
-                  for k, v in value.items():
-                      if k in safe_keys:
-                          if len(result) < 35:
-                              result[str(k)] = shape(v, depth + 1)
-                      else:
-                          dynamic_count += 1
-                  if dynamic_count:
-                      result['dynamic_key_count'] = dynamic_count
-                  return result
-              if isinstance(value, list):
-                  return {'type': 'list', 'length': len(value),
-                          'first_item_structure': shape(value[0], depth + 1) if value else None}
-              return type(value).__name__
-          known_paths = {
-            'work/temporal/forecast/species_cell_period_panel.parquet',
-            'work/temporal/forecast/species_recording_days.parquet',
-            'work/temporal/forecast/target_group_recording_days.parquet',
-            'work/temporal/forecast/candidate_cells.parquet',
-            'work/temporal/forecast/cell_environment_period.parquet',
-            'work/temporal/forecast/cell_climate_grid.parquet',
-            'work/temporal/forecast/predictions_temporal.parquet',
-            'work/temporal/forecast/predictions_spatial.parquet',
-            'work/temporal/species_year_cells_10km.parquet',
-            'work/temporal/host_region_composition_metrics.parquet',
-            'work/temporal/host_region_family_composition.parquet',
-            'work/remote_sensing/host_region_counts.csv',
-            'outputs/forecast_model_lock.json',
-          }
-          found = []
-          occurrence_descendants = set()
-          sha_names = {'sha256', 'source_sha256', 'destination_sha256', 'sha256sum', 'digest'}
-          def named_hashes(value):
-              if isinstance(value, str):
-                  return [value] if re.fullmatch(r'(?:sha256:)?[0-9a-f]{64}', value) else []
-              if isinstance(value, dict):
-                  return [v for k, v in value.items() if k in sha_names and isinstance(v, str)
-                          and re.fullmatch(r'(?:sha256:)?[0-9a-f]{64}', v)]
-              return []
-          def visit(value):
-              if isinstance(value, dict):
-                  strings = [s.replace('\\', '/') for s in list(value.keys()) + list(value.values())
-                             if isinstance(s, str)]
-                  for s in strings:
-                      if 'work/temporal/occurrence_parts/' in s:
-                          occurrence_descendants.add(s)
-                  for path in known_paths:
-                      if any(s == path or s.endswith('/' + path) for s in strings):
-                          matching_keys = [k for k in value if isinstance(k, str)
-                                           and (k.replace('\\', '/') == path
-                                                or k.replace('\\', '/').endswith('/' + path))]
-                          hashes = ([h for k in matching_keys for h in named_hashes(value[k])]
-                                    if matching_keys else named_hashes(value))
-                          sizes = {k: v for k, v in value.items()
-                                   if k in ('size', 'size_bytes', 'bytes') and isinstance(v, int)}
-                          found.append({'path': path, 'sha256_values': hashes, **sizes})
-                  for v in value.values():
-                      visit(v)
-              elif isinstance(value, list):
-                  for v in value:
-                      visit(v)
-          visit(receipt)
-          allowed_sum_names = {'chocho_temporal_original_analysis_20261121.zip',
-                               'chocho_temporal_recovery_receipt_20261121.json',
-                               'README.md', 'restore_archive.py', 'SHA256SUMS.txt'}
-          allowed_sum_names.update('chocho_temporal_original_analysis_20261121.zip.part' + str(i).zfill(2)
-                                   for i in range(1, 5))
-          sums = []
-          for line in (root / 'sha256sums').read_text().splitlines():
-              parts = line.split(maxsplit=1)
-              if len(parts) != 2 or not re.fullmatch(r'[0-9a-f]{64}', parts[0]):
-                  raise SystemExit('Invalid checksum-file format.')
-              filename = PurePosixPath(parts[1].lstrip('*')).name
-              if filename not in allowed_sum_names:
-                  raise SystemExit('Unrecognized checksum filename; not exported.')
-              sums.append({'name': filename, 'sha256': parts[0]})
-          result = {
-            'schema': 'chocho_original155_draft_recovery_inventory_v1',
-            'status': 'RECOVERY_RECEIPT_BYTES_VERIFIED;PANEL_NOT_YET_MATERIALIZED;NOT_A_REFIT',
-            'release_id': 453667492,
-            'release_remains_draft': True,
-            'verified_assets': verified,
-            'receipt_structure': shape(receipt),
-            'recognized_source_input_entries': found,
-            'recognized_occurrence_part_entries': len(occurrence_descendants),
-            'zero_matches_would_not_establish_absence': True,
-            'archive_checksums': sums,
-            'model_refit_completed': False,
-            'no_original_records_exported': True,
-          }
-          (out / 'ORIGINAL155_RECOVERY_INVENTORY_20261122.json').write_text(json.dumps(result, indent=2) + '\n')
-          print(json.dumps(result, indent=2))
+          import json, os, subprocess, sys
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP']) / 'original155'
+          mode = os.environ['REPLAY_MODE']
+          restored = json.loads((root / 'restore_receipt.json').read_text())
+          command = [sys.executable, 'audit/scripts/verify_GEB_v05_original155_refit_20261122.py',
+                     '--mode', mode,
+                     '--snapshot-dir', 'source/provenance/reviewer_defenses/results/host_forecast_validation_20261029',
+                     '--fit-root', str(root / 'refit'),
+                     '--original-predictions', str(root / 'original/work/temporal/forecast' / ('predictions_' + mode + '.parquet')),
+                     '--original-predictions-sha256', restored['original_prediction_sha256'],
+                     '--original-species-csv-dir', str(root / 'original/outputs'),
+                     '--execution-receipt', 'safe_receipts/ORIGINAL155_FRESH_EXECUTION_' + mode + '_20261122.json',
+                     '--output', 'safe_receipts/ORIGINAL155_FULL_REFIT_' + mode + '_20261122.json']
+          subprocess.run(command, check=True)
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: GEB-v05-original155-recovered-source-inventory-NO-RECORDS
-          path: safe_receipts/ORIGINAL155_RECOVERY_INVENTORY_20261122.json
+          name: GEB-v05-original155-${{ matrix.mode }}-private-recovery-and-refit-audit-NO-RECORDS
+          path: |
+            safe_receipts/ORIGINAL155_PRIVATE_SOURCE_RESTORED_${{ matrix.mode }}_20261122.json
+            safe_receipts/ORIGINAL155_FRESH_EXECUTION_${{ matrix.mode }}_20261122.json
+            safe_receipts/ORIGINAL155_FULL_REFIT_${{ matrix.mode }}_20261122.json
           if-no-files-found: warn
           retention-days: 90
