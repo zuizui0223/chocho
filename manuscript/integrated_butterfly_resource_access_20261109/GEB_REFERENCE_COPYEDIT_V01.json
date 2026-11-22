@@ -2031,7 +2031,7 @@
       {
         "id": "shared_gbif_original_source",
         "before": "The independent 224-butterfly original GBIF occurrence download is **DOI 10.15468/dl.umqmsf** (14,637,152 original records); its original annual regional derived observations and effort counts are pinned at immutable source commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0 with matching SHA audits.",
-        "after": "The 155-species forecast and 224-species community analysis share the original GBIF occurrence download, **DOI 10.15468/dl.umqmsf** (14,637,152 original records), while evaluating different cohorts and outcomes. The 224-species annual regional observations and effort counts are pinned at source commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0 with matching SHA audits.",
+        "after": "The 155-species forecast and 224-species community analysis share the original GBIF occurrence download, **DOI 10.15468/dl.umqmsf** (14,637,152 original records), while evaluating different cohorts and outcomes. The 224-species annual regional observations and effort counts are pinned at source commit dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0 with matching SHA audits. The privately recovered 155-species forecast panel supported verified temporal and spatial-block refits and remains outside the public archive.",
         "expected_count": 1
       }
     ],
@@ -2089,6 +2089,12 @@
         "before": "these source limits are distinct from ecological evidence.",
         "after": "these source limits are distinct from ecological evidence. The official World Port Index citation describes the 2019 27th edition. The source GeoJSON matches a comparison mirror to six decimal places, but its original download, conversion and edition remain unverified.",
         "expected_count": 1
+      },
+      {
+        "id": "original155_verified_panel_refit_scope",
+        "before": "**Original 155-model source and reproducibility scope.** The original 2026-10-29 source snapshot includes **54 SHA-verified output and validation assets**, **11 model/panel construction scripts**, locked random-forest settings and original score receipts, so the +4.120/+2.995/+2.736% arithmetic can be checked against stored evaluated model outputs. However, the original **842,964-row** `species_cell_period_panel.parquet` and **12 other work/temporal/remote-sensing inputs** are absent from the archived repository checkout; an independent 155-species raw-to-panel-to-model refit has **not** been completed. The separate original 224-species recorded-community model, independently refitted and validated against all 676 geographic holdouts, must not be substituted for this distinct 155-species random-forest exercise. Thus, the 155-species predictive result is **an archived, source-consistency-verified evaluation**, not a newly independently retrained model. Full reviewer reproducibility requires recovery/source-exact rebuilding of the original 155 training panel, or a transparent source-specific justified access limitation.",
+        "after": "**Original 155-model source and reproducibility scope.** The original 842,964-row forecast panel was recovered privately and verified by checksum. Using the archived random-forest script and locked model settings, we independently refitted the temporal, spatial-block and unseen-species models (193,703 evaluable training rows and 208,482 test rows across 155 species before fold exclusion). For the temporal and spatial-block fits, all seven score groups, per-species errors and row-level predictions agreed with the archived outputs within prespecified tolerances (relative 1e−6, absolute 1e−9). The ≥100-km result used 102,728 predictions for 1,788 cells from the spatial fit. For unseen species the original and fresh relative MSE reductions were −0.20852% and −0.20893%, respectively. Both indicate higher error with host predictors. Numerical validation nevertheless failed for this holdout: 1,062 of 208,482 host-composition model predictions differed from their archived values beyond tolerance. These checks start from the original panel. Rebuilding it from occurrences and predictors and rerunning four additional sensitivity fits remain outstanding. The original panel remains outside the public archive. The separate 224-species community refit covered 169 regions and 676 region–model score comparisons.",
+        "expected_count": 1
       }
     ]
   },
@@ -2096,8 +2102,8 @@
   "remaining_source_limits": [
     "Distinct historical first-index and 1596-port GBIF acquisition contributor attribution/DOIs remain incomplete; the verified 224-species DOI cannot substitute for them.",
     "Anonymous current-version reviewer data/code access and a permanent publication archive remain outstanding.",
-    "Original 155-species training panel (842964 rows) and 12 other model inputs are unavailable; archived model-output checks are not an independent refit.",
-    "The historical 83573-row Parquet was privately recovered, checksum-verified and decoded; permitted anonymous reviewer redistribution remains uncleared. This is distinct from the missing 155-species model inputs.",
+    "The original 842,964-row panel for the 155-species forecast was recovered privately. The temporal and spatial-block refits passed, including the ≥100-km subset of the spatial predictions. The unseen-species fit completed and retained its adverse aggregate result, but predictions exceeded the prespecified tolerance. Twelve of 13 previously sought paths occur in the recovered archive. The upstream host_region_counts.csv was absent at its recorded path. Rebuilding the panel from source occurrences and predictors, rerunning four additional sensitivities and arranging reviewer access remain outstanding.",
+    "The historical 83,573-row butterfly–island–year Parquet was privately recovered, checksum-verified and decoded. It is distinct from the recovered 155-species forecast panel. Permission for anonymous reviewer redistribution remains outstanding.",
     "WPI official publication identity is known; the original converted-GeoJSON download/conversion/edition chain remains unverified.",
     "OSCAR accessed legacy NOAA mirror has its own version metadata; NASA v2 metadata-only access does not establish a v2 model input.",
     "AIS names distinct historical density/voyage products; this copyedit does not assign one DOI to all AIS sources.",
