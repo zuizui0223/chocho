@@ -86,6 +86,18 @@ def main():
         records=data.get("files")
         if len(records)!=3032: raise ScanError("source_manifest_count_changed")
         groups=summarize(records)
+        exact_suffix_presence = {}
+        for sensitivity in ('effort20','radius250','exclude_top_provider','precision100'):
+            for role, relative in (
+                ('panel',f'work/temporal/forecast/panel_{sensitivity}.parquet'),
+                ('predictions',f'work/temporal/forecast/predictions_temporal_{sensitivity}.parquet')):
+                try:
+                    source.find_manifest_record(records,relative)
+                    match = True
+                except source.RecoveryError:
+                    match = False
+                exact_suffix_presence[sensitivity+'_'+role] = match
+
     result={
         "schema":"geb_original155_manifest_only_code_lineage_v1",
         "release_is_draft":True,
@@ -94,6 +106,7 @@ def main():
         "source_record_count":3032,
         "original_zip_not_downloaded":True,
         "matching_source_groups":groups,
+        "expected_relative_path_suffixes":exact_suffix_presence,
         "no_private_paths_or_source_rows_exported":True,
         "limits":"Verified manifest paths and registered digests only; existence does not establish historical execution time or code version.",
     }
