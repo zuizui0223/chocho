@@ -7,6 +7,15 @@ import recover_GEB_v05_original155_private_inputs_20261122 as source
 SHA = re.compile(r"^[0-9a-f]{64}$")
 ALLOW = {
     "species_cell_period_panel.parquet": "panel",
+    "panel_effort20.parquet": "sensitivity_panel_effort20",
+    "panel_radius250.parquet": "sensitivity_panel_radius250",
+    "panel_exclude_top_provider.parquet": "sensitivity_panel_exclude_top_provider",
+    "panel_precision100.parquet": "sensitivity_panel_precision100",
+    "predictions_temporal_effort20.parquet": "sensitivity_prediction_effort20",
+    "predictions_temporal_radius250.parquet": "sensitivity_prediction_radius250",
+    "predictions_temporal_exclude_top_provider.parquet": "sensitivity_prediction_exclude_top_provider",
+    "predictions_temporal_precision100.parquet": "sensitivity_prediction_precision100",
+
     "predictions_species.parquet": "species_predictions",
     "predictions_temporal.parquet": "temporal_predictions",
     "predictions_spatial.parquet": "spatial_predictions",
