@@ -1,0 +1,64 @@
+name: Diagnose original155 radius250 source restore failure
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/diagnose-GEB-v05-original155-radius250-20261122.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  radius250:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: source
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin the proven source-locked runtime
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy==2.3.5' 'pandas==2.2.3' 'pyarrow==23.0.1' 'scikit-learn==1.7.2' 'joblib==1.5.3' 'scipy==1.18.1'
+          python audit/tests/test_original155_sensitivities_refit_20261122.py
+          mkdir -p safe
+      - name: Rerun only radius250 and retain the fixed recovery error label
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('audit/scripts/refit_GEB_v05_original155_sensitivities_20261122.py')
+          content=path.read_text()
+          old="except rec.RecoveryError:result['failure']='verified_private_source_error'"
+          new="except rec.RecoveryError as e:result['failure']='verified_private_source_error_'+str(e)"
+          assert content.count(old)==1
+          target=path.with_name('refit_original155_radius250_diagnostic_tmp.py')
+          target.write_text(content.replace(old,new))
+          PY
+          python -u audit/scripts/refit_original155_radius250_diagnostic_tmp.py \
+            --sensitivity radius250 \
+            --root "$RUNNER_TEMP/geb-radius250-diagnostic" \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --fit-script source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/analysis_source/fit_forecast.py \
+            --output safe/ORIGINAL155_RADIUS250_DIAGNOSTIC_20261122.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-radius250-diagnostic-aggregate-NO-RECORDS
+          path: safe/ORIGINAL155_RADIUS250_DIAGNOSTIC_20261122.json
+          if-no-files-found: warn
+          retention-days: 90
