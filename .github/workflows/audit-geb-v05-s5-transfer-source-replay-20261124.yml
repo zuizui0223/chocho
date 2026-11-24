@@ -1,0 +1,250 @@
+name: GEB v0.5 S5 three original transfer-model source replays
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s5-transfer-source-replay-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: original
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: beta
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover three signed original model outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir archives
+          for id in 14498146982 14500267175 14506426867; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "archives/$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          f1ba32e298592819199b338276ecee44787f6908a71fa9cef3c86f442ddfd537  archives/14498146982.zip
+          df095d8c4d97f8e4d1e938cb88114e519c00c4bd13390acf083f14af342891d0  archives/14500267175.zip
+          45575bd8aeaa84988109d02eb247ed3a70eec811f190065238620393ae69afc4  archives/14506426867.zip
+          SUMS
+      - name: Assemble minimal source closure from exact Git blobs and signed results
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile,textwrap
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          entries={}
+          source={}
+          def copy(root,path,dest,h):
+              b=(P(root)/path).read_bytes()
+              assert blob(b)==h,(root,path,blob(b),h)
+              assert dest not in entries
+              entries[dest]=b
+              source[dest]={'git_blob':h,'sha256':sha(b),'source_path':path,'source_role':root}
+          scripts={
+            'audit_gbif224_thinned_HO_transfer_20261119.py':'f964ea9a88ac8478ef5a86d559e3466653b0d1b7',
+            'audit_gbif224_thinned_world_transfer_20261119.py':'f945e60263f5613b37d9c8a24dd8c49a4209a0ff',
+            'audit_gbif224_south_america_domain_shift_20261119.py':'837b1fc8aa94ac0f07f72dbbbede6ce081d39ea9',
+            'audit_gbif224_annual_effort_thinning_20261119.py':'896dc8ebffc159f1a4021b4f3c0c2d8bdf2d4f53'}
+          for n,h in scripts.items(): copy('current','scripts/'+n,'current/scripts/'+n,h)
+          modules={
+            'analyze_gbif_global224_observed_beta.py':'6efdba5c5b47fbb2ef7f1b59876e414004cf76ff',
+            'analyze_colonial_legacy_resource_beta.py':'1bfdb98ed331c64cc72bcc84f2200b176d229b9e',
+            'analyze_documented_host_specificity.py':'f024f1a85ff95b2a0ba2c43fb5e2cac6ee075510',
+            'analyze_gbif_31_observed_host_beta.py':'f6dbb8407ca5c3bfdaf64339bf92a1ce68a9d71f',
+            'analyze_matched_glonaf_consumer_history.py':'95f274ecda2e7ae1e85259d0070ad9920fe9a61b',
+            'audit_gbif_31_butterfly_wgsrpd3_source.py':'7fea5b3849f67c8730cbd246bab67045cb7dff35',
+            'build_lenzner_tdwg_colonial_crosswalk.py':'f9ac05d73f4a1de8ca27fa14fe2e6d790b411c34'}
+          for n,h in modules.items(): copy('original','scripts/'+n,'frozen/scripts/'+n,h)
+          prefix='provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/'
+          files={
+            'colonial_resource_association_lock.json':'ae0251f4a2e7c08bf5f7b564093a22053a8edfff',
+            'gbif_global224_annual_v1.audit.json':'36bc72eae2f1373132806b6e096c4878ad63f9b2',
+            'gbif_global224_annual_v1.region_year_effort.csv':'ef21c7c8f207b54612bbef04319a8def34a031ca',
+            'gbif_global224_annual_v1.species_region_year.csv.gz':'c3a96206c5e318e0bcc163a3c4ed97e5a1f514fa',
+            'gbif_global224_observed_beta_lock_v1.json':'f247ef4a7b88c752aaba49965eedb065ece5884e',
+            'gbif_global224_observed_beta_region_holdout_v1.csv':'be2018b452e6c44eb3c60282e9d4af6414d9a70c',
+            'gbif_global224_observed_beta_v1.json':'a7cee922179288999b6d460be417afa6262a2872',
+            'lenzner_wgsrpd3_colonial_area_crosswalk.csv':'5963e26fff72c8f2bd3bd6379b3b79b6c8b4d126'}
+          for n,h in files.items(): copy('original',prefix+n,'frozen/'+prefix+n,h)
+          for n,h in {'data/frozen/figure_sources/anthropogenic_species_metrics.csv':'9f83d2d9ac8e46f1cfd4ded572c7a023273503dd','data/frozen/wgsrpd3_level1_lookup_v0.1.json':'1586f7a487831b316b801d6929c74160ed92dbe0'}.items():
+              copy('original',n,'frozen/'+n,h)
+          for n,h in {'beta_baseline_v1.json':'c68d3e1d48da24125d1e7ae7e0014f1aafd2cd8d','beta_baseline_v1.pairs.csv.gz':'ca560a31a2708565406563fcb270b3b407a092e2','beta_baseline_v1.region.csv':'a8feaf54dc0cd1be3229dc50c1fa208a2b80cf12'}.items():
+              copy('beta',prefix+n,'frozen/_external/butterfly_beta/'+prefix+n,h)
+          assert sha(entries['frozen/'+prefix+'gbif_global224_annual_v1.species_region_year.csv.gz'])=='f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525'
+          assert sha(entries['frozen/'+prefix+'gbif_global224_annual_v1.region_year_effort.csv'])=='310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82'
+          for aid,name,label in [
+            (14498146982,'GBIF224_thinned_host_given_other_transfer_20261119.json','host'),
+            (14500267175,'GBIF224_thinned_entire_world_transfer_20261119.json','world'),
+            (14506426867,'GBIF224_south_america_host_shift_and_error_diagnostics_20261119.json','south_america')]:
+              with zipfile.ZipFile(f'archives/{aid}.zip') as z:
+                  assert z.testzip() is None
+                  hits=[n for n in z.namelist() if P(n).name==name]
+                  assert len(hits)==1,(aid,hits,z.namelist())
+                  b=z.read(hits[0])
+                  d=json.loads(b)
+                  assert d['sample']=={'butterflies':224,'regions':169,'original_pairs':14196,'leave_one_region_out_folds':169}
+                  entries['expected/'+label+'.json']=b
+          def txt(n,s): entries[n]=textwrap.dedent(s).lstrip('\n').encode()
+          txt('RUN.sh','''
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+          case "$1" in
+            host) script=audit_gbif224_thinned_HO_transfer_20261119.py ;;
+            world) script=audit_gbif224_thinned_world_transfer_20261119.py ;;
+            south_america) script=audit_gbif224_south_america_domain_shift_20261119.py ;;
+            *) exit 2 ;;
+          esac
+          python -u "current/scripts/$script" --frozen-root frozen --current-scripts current/scripts --output "output/$1.json"
+          python verify.py "$1"
+          ''')
+          txt('verify.py','''
+          import hashlib,json,math,pathlib,sys
+          P=pathlib.Path
+          task=sys.argv[1]
+          a=json.loads(P('expected',task+'.json').read_text())
+          b=json.loads(P('output',task+'.json').read_text())
+          mismatches=[]
+          counts={'numeric':0,'other':0}
+          def compare(a,b,key=''):
+              if isinstance(a,dict):
+                  if not isinstance(b,dict) or a.keys()!=b.keys():
+                      mismatches.append({'path':key,'kind':'keys'});return
+                  for k in a: compare(a[k],b[k],key+'/'+k)
+              elif isinstance(a,list):
+                  if not isinstance(b,list) or len(a)!=len(b):
+                      mismatches.append({'path':key,'kind':'length'});return
+                  for i,(x,y) in enumerate(zip(a,b)): compare(x,y,key+'/'+str(i))
+              elif isinstance(a,float):
+                  counts['numeric']+=1
+                  if not isinstance(b,(float,int)) or not math.isclose(a,b,rel_tol=1e-7,abs_tol=1e-9):
+                      mismatches.append({'path':key,'expected':a,'fresh':b})
+              else:
+                  counts['other']+=1
+                  if type(a)!=type(b) or a!=b: mismatches.append({'path':key,'expected':a,'fresh':b})
+          compare(a,b)
+          assert b['sample']=={'butterflies':224,'regions':169,'original_pairs':14196,'leave_one_region_out_folds':169}
+          assert all(x['draw_count']==29 and len(x['per_draw'])==29 for x in b['results'].values())
+          receipt={'status':'S5_ORIGINAL_TRANSFER_EXTRACTED_REPLAY_PASS' if not mismatches else 'S5_ORIGINAL_TRANSFER_NUMERICAL_COMPARISON_FAIL','task':task,'comparisons':counts,'mismatch_count':len(mismatches),'first_mismatches':mismatches[:20],'rtol':1e-7,'atol':1e-9,'original_four_models_reproduced':b['source']['all_4_original_models_exactly_reproduced'],'source_gain_pct':b['source']['original_source_H_after_O_pct'],'proxy_gain':{k:v['H_after_O_held_region_MSE_reduction_pct'] for k,v in b['results'].items()}}
+          if task!='host':
+              receipt['world_equal_gain']={k:v['strict_entire_TDWG_Level1_world_holdout']['world_equal_mean_MSE_gain_pct'] for k,v in b['results'].items()}
+          if task=='south_america':
+              receipt['south_america_cross_gain']={k:v['South_America_within_vs_cross_dyad_calibration']['by_pair_class']['held_world_to_other']['H_after_O_MSE_improvement_pct'] for k,v in b['results'].items()}
+          P('output',task+'_receipt.json').write_text(json.dumps(receipt,indent=2)+"\n")
+          print(json.dumps(receipt))
+          assert not mismatches,receipt
+          ''')
+          txt('README.txt','''
+          INTERNAL ONLY; NOT CLEARED FOR REDISTRIBUTION OR REVIEWER ACCESS.
+          Original source closure for the three S5 GBIF224 transfer-model analyses; no raw occurrence points, no complete external source archives.
+          Python 3.12, numpy, pandas, shapely, pyproj, pyshp. Install the recorded dependencies. Acquire external inputs into frozen/:
+          _external/HOSTS: https://github.com/globalbioticinteractions/HOSTS commit 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          _external/wgsrpd: https://github.com/tdwg/wgsrpd commit 52da7828aba9d461dd133c27b3bd7a4407161f54
+          _temp_historical_sources/lenzner_6640264.zip: https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content ; MD5 16f5585d2500676951a4b664bbf0ffde
+          GBIF annual aggregates from original download doi:10.15468/dl.umqmsf; original annual/model code and beta-derived controls bound by Git blobs in SOURCE_LINEAGE.json.
+          Run bash RUN.sh host, bash RUN.sh world, bash RUN.sh south_america. Each executes the original program, not a saved-score-only reconstruction.
+          These are model predictions of indexed recorded communities with assumed observation-intensity thinning; no independent occupation, arrival or demographic detection estimate.
+          All three prior signed full result JSONs are included for explicit comparison. Archive rights, indirect anonymity and stable reviewer access remain separate unresolved requirements.
+          ''')
+          entries['SOURCE_LINEAGE.json']=(json.dumps({'source_commits':{'current':'3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250','original':'dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0','beta':'bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2'},'files':source},indent=2)+'\n').encode()
+          entries['MANIFEST.json']=(json.dumps({k:sha(v) for k,v in entries.items()},indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          zp=out/'GEB_V05_S5_TRANSFER_INTERNAL_SOURCE.zip'
+          with zipfile.ZipFile(zp,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(zp) as z: assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+          print(json.dumps({'status':'S5_TRANSFER_SOURCE_PACKAGE_BUILT_NOT_MODEL_REPLAY_PASS','files':len(entries),'sha256':sha(zp.read_bytes()),'bytes':zp.stat().st_size,'original_git_blobs_verified':len(source)}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-S5-TRANSFER-SOURCE-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
+  refit:
+    needs: package
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [host, world, south_america]
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'shapely>=2.1,<3' 'pyproj>=3.7,<4' 'pyshp>=2.3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: GEB-v05-S5-TRANSFER-SOURCE-INTERNAL-ONLY
+      - name: Extract and verify source package
+        run: |
+          set -euo pipefail
+          unzip -q GEB_V05_S5_TRANSFER_INTERNAL_SOURCE.zip -d extracted
+          cd extracted
+          python - <<'PY'
+          import pathlib,json,hashlib
+          for n,h in json.loads(pathlib.Path('MANIFEST.json').read_text()).items():
+              assert hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest()==h,n
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: extracted/frozen/_external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: tdwg/wgsrpd
+          ref: 52da7828aba9d461dd133c27b3bd7a4407161f54
+          path: extracted/frozen/_external/wgsrpd
+          persist-credentials: false
+      - name: Acquire exact published GloNAF source
+        run: |
+          set -euo pipefail
+          cd extracted/frozen
+          mkdir -p _temp_historical_sources
+          curl --fail --location --retry 3 --connect-timeout 30 --max-time 240 --silent --show-error 'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' -o _temp_historical_sources/lenzner_6640264.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  _temp_historical_sources/lenzner_6640264.zip' | md5sum -c -
+      - name: Execute original transfer model and compare every result field
+        env:
+          TASK: ${{ matrix.task }}
+        run: |
+          set -euo pipefail
+          cd extracted
+          mkdir -p output
+          python -m pip freeze > output/environment.txt
+          bash RUN.sh "$TASK" > "output/$TASK.log" 2>&1 || { tail -100 "output/$TASK.log"; exit 1; }
+          cat "output/$TASK"_receipt.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S5-TRANSFER-${{ matrix.task }}-RECEIPTS
+          path: extracted/output/
+          if-no-files-found: warn
+          retention-days: 90
