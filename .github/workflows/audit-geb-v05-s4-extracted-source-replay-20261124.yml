@@ -1,0 +1,264 @@
+name: GEB v0.5 S4 frozen-source internal replay
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s4-extracted-source-replay-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed input and original output archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir archives
+          for id in 14296307100 14296891019 14426384784 14493153837 14495580519; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "archives/$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4  archives/14296307100.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  archives/14296891019.zip
+          1c8731a411683e860a815c522909726e191a0c3b519d2e402aef6aace28cae96  archives/14426384784.zip
+          061d4afccd4fd57851c0ec12b724bdb273ca2f61a282d5b1af4adf8ff2fcee4e  archives/14493153837.zip
+          9dfca10346b9b19ae0693f49c0d9873f49860b47243444006a7d6a9517cc361e  archives/14495580519.zip
+          SUMS
+      - name: Build immutable S4 source package
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile,textwrap
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          entries={}
+          def add(n,b):
+              assert n not in entries
+              entries[n]=b
+          for name in [
+              'audit_island104_alien_flora_to_butterfly_resource_20261118.py',
+              'audit_island104_alien_flora_resource_margin_null_20261118.py',
+              'audit_island104_host_masked_alien_flora_20261119.py',
+              'audit_island104_host_family_degree_null_20261119.py',
+              'audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py',
+              'audit_WCVP126_native_alien_double_unseen_islands_20261117.py']:
+              add('scripts/'+name,(P('current/scripts')/name).read_bytes())
+          prefix='provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/'
+          for name in [
+              prefix+'beta_baseline_v3.matrix.csv.gz',prefix+'beta_baseline_v3.json',
+              'data/frozen/wgsrpd3_level1_lookup_v0.1.json',
+              'scripts/analyze_global_resource_gain_fixed_margins.py',
+              'scripts/build_wcvp_hosts_null_sidecars.R','scripts/build_wcvp_all_flora_region_baselines.R']:
+              add('original/'+name,(P('original')/name).read_bytes())
+          for path,name in [
+              ('results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv','area.csv'),
+              ('results/island-mainland-resource-q1/region_metrics.csv','regions.csv')]:
+              add('inputs/'+name,(P('current')/path).read_bytes())
+          assert sha(entries['original/'+prefix+'beta_baseline_v3.matrix.csv.gz'])=='ec6a5530d65ac0b04f230e0c51fd68bf543555641a17b94795996bf11ce257d0'
+          assert sha(entries['original/'+prefix+'beta_baseline_v3.json'])=='ccda0bc669fb5ffe7326175fcc0501dbb1447790925c06add92501d1d30f255b'
+          files=[
+              (14296307100,'WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv','inputs/plants.csv','6e8b0d11eb63490aae782e6b8bab381aa07c07fe39123abcc24e9d77d302a799'),
+              (14296891019,'WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv','inputs/geometry.csv','de38c3d55489787283c13b59862a7f86b5fcaad1340db51ed65434083d3d527d'),
+              (14426384784,'margin_null_225_source_scores.csv','expected/margin_draws.csv',None),
+              (14426384784,'margin_null_flora_resource_source_summary.json','expected/margin.json',None),
+              (14493153837,'island104_host_masked_alien_flora_bridge_source_scores.json','expected/mask.json','3d9531806d25c0d08022ec63b99b7c7224d89303383139abe964b31aa85ceb62'),
+              (14495580519,'family_occupancy_matched_host_label_null_20261119.json','expected/family.json','12eee7aad38472b098c327e8c09d7f569508ef1430c65dda2199037fd1215ec6')]
+          for aid,base,dest,h in files:
+              with zipfile.ZipFile(f'archives/{aid}.zip') as z:
+                  assert z.testzip() is None
+                  hits=[x for x in z.namelist() if P(x).name==base]
+                  assert len(hits)==1,(aid,base,z.namelist())
+                  b=z.read(hits[0])
+                  if h: assert sha(b)==h,(dest,sha(b))
+                  add(dest,b)
+          def txt(n,s):
+              add(n,textwrap.dedent(s).lstrip('\n').encode())
+          txt('RUN_MARGIN.sh', '''
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+          python scripts/audit_island104_alien_flora_resource_margin_null_20261118.py --archived-root original --plants inputs/plants.csv --geometry inputs/geometry.csv --island-area inputs/area.csv --region-class inputs/regions.csv --out-dir output/margin
+          python verify.py margin
+          ''')
+          txt('RUN_HOST_CONTROLS.sh', '''
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1
+          test "$(git -C "$1" rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          test "$(git -C "$2" rev-parse HEAD)" = 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          mkdir -p scratch/native scratch/contemporary scratch/allflora
+          Rscript original/scripts/build_wcvp_hosts_null_sidecars.R "$1" "$2" scratch/native scratch/contemporary
+          Rscript original/scripts/build_wcvp_all_flora_region_baselines.R "$1" scratch/allflora
+          Rscript family.R "$1"
+          python scripts/audit_island104_host_masked_alien_flora_20261119.py --archived-root original --plants inputs/plants.csv --geometry inputs/geometry.csv --island-area inputs/area.csv --allflora-native scratch/allflora/allflora_native_accepted_wgsrpd3.csv --allflora-current scratch/allflora/allflora_contemporary_accepted_wgsrpd3.csv --insect-hosts scratch/native/insect_host_accepted.csv --out-dir output/mask
+          python verify.py mask
+          python scripts/audit_island104_host_family_degree_null_20261119.py --archived-root original --plants inputs/plants.csv --geometry inputs/geometry.csv --island-area inputs/area.csv --allflora-native scratch/allflora/allflora_native_accepted_wgsrpd3.csv --allflora-current scratch/allflora/allflora_contemporary_accepted_wgsrpd3.csv --insect-hosts scratch/native/insect_host_accepted.csv --families scratch/allflora/accepted_WCVP_family.csv --out-dir output/family
+          python verify.py family
+          ''')
+          txt('family.R', '''
+          a <- commandArgs(trailingOnly=TRUE)
+          e <- new.env(parent=emptyenv())
+          load(file.path(a[[1]],"data","wcvp_names.rda"),envir=e)
+          n <- get("wcvp_names",envir=e)
+          stopifnot(all(c("plant_name_id","family","taxon_rank","taxon_status") %in% names(n)))
+          ok <- !is.na(n$plant_name_id) & tolower(trimws(as.character(n$taxon_rank)))=="species" & tolower(trimws(as.character(n$taxon_status)))=="accepted"
+          out <- unique(data.frame(accepted_plant_name_id=as.character(n$plant_name_id[ok]),family=as.character(n$family[ok]),stringsAsFactors=FALSE))
+          write.csv(out,"scratch/allflora/accepted_WCVP_family.csv",row.names=FALSE,na="")
+          ''')
+          txt('verify.py', '''
+          import csv,json,math,sys,pathlib
+          P=pathlib.Path
+          task=sys.argv[1]
+          names={"margin":"margin_null_flora_resource_source_summary.json","mask":"island104_host_masked_alien_flora_bridge_source_scores.json","family":"family_occupancy_matched_host_label_null_20261119.json"}
+          a=json.loads(P("expected",task+".json").read_text())
+          b=json.loads(P("output",task,names[task]).read_text())
+          def compare(a,b,key=""):
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and a.keys()==b.keys(),key
+                  return sum(compare(a[k],b[k],key+"/"+k) for k in a)
+              if isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),key
+                  return sum(compare(x,y,key+"/"+str(i)) for i,(x,y) in enumerate(zip(a,b)))
+              if isinstance(a,float):
+                  assert isinstance(b,(int,float)) and math.isclose(a,b,rel_tol=1e-7,abs_tol=1e-9),(key,a,b)
+              else:
+                  assert type(a)==type(b) and a==b,(key,a,b)
+              return 1
+          n=compare(a,b)
+          draws=0
+          if task=="margin":
+              old=list(csv.DictReader(P("expected/margin_draws.csv").open()))
+              new=list(csv.DictReader(P("output/margin/margin_null_225_source_scores.csv").open()))
+              assert len(old)==len(new)==225
+              for x,y in zip(old,new):
+                  assert x.keys()==y.keys()
+                  for k in x:
+                      assert math.isclose(float(x[k]),float(y[k]),rel_tol=1e-7,abs_tol=1e-9),(k,x[k],y[k])
+                      draws+=1
+          r={"status":"EXTRACTED_ORIGINAL_S4_REPLAY_PASS","task":task,"json_leaf_comparisons":n,"draw_csv_scalar_comparisons":draws,"rtol":1e-7,"atol":1e-9}
+          P("output",task+"_receipt.json").write_text(json.dumps(r,indent=2)+"\\n")
+          print(json.dumps(r))
+          ''')
+          txt('README.txt', '''
+          INTERNAL ONLY; NOT APPROVED FOR REVIEW OR REDISTRIBUTION.
+          Original S4 source matrix, derived pair tables, scripts and expected outputs.
+          Python 3.12, NumPy, and R for host controls. Run bash RUN_MARGIN.sh for the three original chains, 225 retained states.
+          Run bash RUN_HOST_CONTROLS.sh /absolute/pinned/WCVP /absolute/pinned/HOSTS for host masking and 199 family/occupancy label permutations.
+          WCVP v13 (doi:10.34885/0yex-xv26; CC BY 3.0) is acquired externally from https://github.com/matildabrown/rWCVPdata at 65bed76bae9d644ccb6ad200c05f9f5071d89e05.
+          HOSTS (doi:10.5519/havt50xw; CC0) is acquired externally from https://github.com/globalbioticinteractions/HOSTS at 808e0b869f9ec1adf8efff87cf6a395adda103e0.
+          No raw third-party source archives or private occurrence records included. No archive-wide rights or indirect anonymity certification.
+          All outcomes are source-defined potential resource geography, not observed butterfly occupancy or causal dispersal. S conditions on target-derived contemporary margins.
+          ''')
+          add('MANIFEST.json',(json.dumps({k:sha(v) for k,v in entries.items()},indent=2)+'\n').encode())
+          d=P('delivery');d.mkdir()
+          zpath=d/'GEB_V05_S4_ORIGINAL_SOURCE_INTERNAL_REPLAY.zip'
+          with zipfile.ZipFile(zpath,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(zpath) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+          print(json.dumps({"status":"S4_SOURCE_PACKAGE_BUILT_NOT_REPLAY_PASS","files":len(entries),"sha256":sha(zpath.read_bytes()),"bytes":zpath.stat().st_size}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-S4-SOURCE-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
+  margin:
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: GEB-v05-S4-SOURCE-INTERNAL-ONLY
+      - name: Extract, verify and replay 225 retained margin-null states
+        run: |
+          set -euo pipefail
+          unzip -q GEB_V05_S4_ORIGINAL_SOURCE_INTERNAL_REPLAY.zip -d extracted
+          cd extracted
+          python - <<'PY'
+          import hashlib,json,pathlib
+          for n,h in json.loads(pathlib.Path('MANIFEST.json').read_text()).items():
+              assert hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest()==h,n
+          PY
+          bash RUN_MARGIN.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S4-MARGIN-REPLAY-RECEIPTS
+          path: extracted/output/
+          if-no-files-found: warn
+          retention-days: 90
+  host-controls:
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - run: python -m pip install 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          name: GEB-v05-S4-SOURCE-INTERNAL-ONLY
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: external/WCVP
+          persist-credentials: false
+      - name: Extract original package and replay both host controls
+        run: |
+          set -euo pipefail
+          unzip -q GEB_V05_S4_ORIGINAL_SOURCE_INTERNAL_REPLAY.zip -d extracted
+          cd extracted
+          python - <<'PY'
+          import hashlib,json,pathlib
+          for n,h in json.loads(pathlib.Path('MANIFEST.json').read_text()).items():
+              assert hashlib.sha256(pathlib.Path(n).read_bytes()).hexdigest()==h,n
+          PY
+          bash RUN_HOST_CONTROLS.sh "$GITHUB_WORKSPACE/external/WCVP" "$GITHUB_WORKSPACE/external/HOSTS"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S4-HOST-CONTROLS-REPLAY-RECEIPTS
+          path: extracted/output/
+          if-no-files-found: warn
+          retention-days: 90
