@@ -1,0 +1,127 @@
+name: GEB v0.5 official LepTraits item replay and source decision update
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-leptraits-official-item-delivery-update-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact staging archive, file decisions and content audit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14915845889 14917866735 14917627164; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          45fc444f5e2e08c8f457881eb48054cbc2536cf580b11a34e9e8065eaf670c14  14915845889.zip
+          6fb156f9d43114a1a9f89cedb16ad1ad32d611656f845f449ee6ce34a151b9ac  14917866735.zip
+          16a2052e26ebf38cb0aae6f9f222688ff5ab9698ff79d247f2f6eeb786718587  14917627164.zip
+          SUMS
+      - name: Obtain officially licensed exact item and normalize CRLF to frozen LF bytes
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 3 --max-time 180 https://api.figshare.com/v2/file/download/35290045 -o leptraits.zip
+          echo '0e0e1610bbcd0275722daecf3c318c25d3921494dcd63f2ec0a5fc78e9c824f0  leptraits.zip' | sha256sum -c -
+          python - <<'PY'
+          import hashlib,io,json,pathlib,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          with zipfile.ZipFile('14915845889.zip') as z:
+              n=[n for n in z.namelist() if P(n).name=='GEB_V05_CONTENT_CHECKSUM_STAGING_NOT_FOR_RELEASE.zip']
+              assert len(n)==1
+              raw=z.read(n[0])
+          assert sha(raw)=='5679eeb5c3907bb5cadb1de461f7f97470b139b94db8a0c6b2e052295d0d4852'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in z.namelist())
+              z.extractall('extracted')
+          with zipfile.ZipFile('leptraits.zip') as z: b=z.read('LepTraits/consensus/consensus.csv')
+          assert len(b)==2699607 and sha(b)=='35d55536696538dd0ff74e86f75cda54ed1eb174ceca812a81cccfff381ba50b'
+          v=b.replace(b'\r\n',b'\n')
+          assert len(v)==2687158 and sha(v)=='6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b'
+          p=P('extracted/components/s6_endemic/data/external/leptraits_consensus_v1.0.csv')
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_bytes(v)
+          print('OFFICIAL_ITEM_NORMALIZED_TO_EXACT_ORIGINAL_BYTES')
+          PY
+      - name: Reproduce both S6 programs from official item, with no private author input
+        run: |
+          set -euo pipefail
+          cd extracted/components/s6_endemic
+          python scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir output
+          python scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output
+          python - <<'PY'
+          import csv,json,pathlib
+          P=pathlib.Path
+          checks={}
+          for n in P('expected').iterdir():
+              f=P('output')/n.name
+              if n.suffix=='.json': assert json.loads(n.read_text())==json.loads(f.read_text()),n
+              else: assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(f.read_text().splitlines())),n
+              checks[n.name]='exact'
+          assert len(checks)==5
+          P('official_item_checks.json').write_text(json.dumps(checks))
+          print('OFFICIAL_LEPTRAITS_ITEM_S6_FIVE_OUTPUTS_EXACT',json.dumps(checks))
+          PY
+      - name: Update source-specific decisions without modifying any candidate member
+        run: |
+          python - <<'PY'
+          import csv,hashlib,io,json,pathlib,zipfile,collections
+          P=pathlib.Path
+          def member(aid,name):
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  ns=[n for n in z.namelist() if P(n).name==name]
+                  assert len(ns)==1
+                  return z.read(ns[0])
+          reg=json.loads(member(14917866735,'SOURCE_REGISTRY.json'))
+          rows=list(csv.DictReader(io.StringIO(member(14917866735,'EXACT_192_FILE_SOURCE_DELIVERY_DECISIONS.csv').decode())))
+          old=json.loads(member(14917866735,'EXACT_FILE_DECISION_SUMMARY.json'))
+          src=json.loads(member(14917627164,'SOURCE_CONTENT_AND_NOTICE_AUDIT.json'))
+          assert src['leptraits']['exact_csv_data_match']
+          assert len(rows)==192 and len(reg)==25 and reg['LEP']['source_state']=='open'
+          checks=json.loads(P('extracted/components/s6_endemic/official_item_checks.json').read_text())
+          assert len(checks)==5 and set(checks.values())=={'exact'}
+          reg['LEP'].update({'source_terms':'Exact official item v1 CC0; collection v1 metadata CC BY 4.0; CSV cells identical and CRLF normalization restores frozen source bytes','source_state':'known','delivery_action':'Cite exact item, collection and paper; prefer official item ZIP file 35290045, normalize CRLF to LF and verify exact SHA256; retain source citations, no raw CSV shipped. This is a source-identity/licence finding, not blanket derived-file clearance.'})
+          reg['GLO']['delivery_action']+=' Exact original archive has only ReadMe.txt among inspected notice candidates; no explicit redistribution terms there. Seven actual analysis members identified and hashed; keep source gate open.'
+          changed=[];affected=0
+          for r in rows:
+              sids=r['source_ids'].split(';')
+              if 'LEP' in sids:affected+=1
+              states={reg[k]['source_state'] for k in sids}
+              r['source_rights_states']=';'.join(sorted(states))
+              r['source_terms']=' | '.join(k+': '+reg[k]['source_terms'] for k in sids)
+              previous=r['delivery_decision']
+              if r['role']=='table' and previous=='HOLD_UNRESOLVED_SOURCE_DEPENDENCY' and 'open' not in states and 'mixed' not in states and 'restricted' not in states:
+                  r['delivery_decision']='SOURCE_TERMS_IDENTIFIED_AUTHOR_AND_DERIVATIVE_APPROVAL_PENDING'
+                  r['proposed_route']='candidate with attribution after author approval and final derivative assessment'
+              if previous!=r['delivery_decision']:changed.append({'file':r['file'],'from':previous,'to':r['delivery_decision']})
+              assert r['authorized_for_distribution']=='False'
+              p=P('extracted')/r['file']
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==r['sha256']
+          out=P('delivery');out.mkdir()
+          with (out/'EXACT_192_FILE_SOURCE_DELIVERY_DECISIONS.csv').open('w',encoding='utf8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          (out/'SOURCE_REGISTRY.json').write_text(json.dumps(reg,indent=2,ensure_ascii=False)+chr(10))
+          receipt={'status':'EXACT_OFFICIAL_LEPTRAITS_ITEM_NORMALIZED_AND_S6_REPLAY_PASS','item_doi':'10.6084/m9.figshare.19874602.v1','collection_doi':'10.6084/m9.figshare.c.5899187.v1','item_licence':'CC0','collection_metadata_licence':'CC BY 4.0','item_file_id':35290045,'archive_sha256':'0e0e1610bbcd0275722daecf3c318c25d3921494dcd63f2ec0a5fc78e9c824f0','member':'LepTraits/consensus/consensus.csv','original_item_member_sha256':'35d55536696538dd0ff74e86f75cda54ed1eb174ceca812a81cccfff381ba50b','normalization':'CRLF to LF only','normalized_sha256':'6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b','original_rows':12448,'original_columns':43,'exact_outputs':checks,'raw_source_shipped':False,'author_approval_required':True}
+          (out/'OFFICIAL_LEPTRAITS_ITEM_REPLAY_RECEIPT.json').write_text(json.dumps(receipt,indent=2)+chr(10))
+          old.update({'status':'EXACT_FILE_DECISIONS_UPDATED_OFFICIAL_LEPTRAITS_ITEM_SOURCE_REPLAY_PASS_NOT_APPROVED','source_state_counts':dict(collections.Counter(v['source_state'] for v in reg.values())),'proposed_delivery_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows)),'table_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows if r['role']=='table')),'exact_leptraits_item_file_resolved':True,'leptraits_referenced_files_updated':affected,'delivery_decision_transitions':changed,'all_192_candidate_file_hashes_unchanged':True,'authorized_files':0})
+          (out/'EXACT_FILE_DECISION_SUMMARY.json').write_text(json.dumps(old,indent=2)+chr(10))
+          print('UPDATED_FILE_DECISION_PASS',json.dumps(old))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-official-LepTraits-replay-and-exact-delivery-register
+          path: delivery/
+          retention-days: 90
