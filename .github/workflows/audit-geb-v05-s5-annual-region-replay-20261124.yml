@@ -1,0 +1,140 @@
+name: GEB v0.5 S5 original annual and regional sensitivity replay
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s5-annual-region-replay-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: annual
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed S5 original result artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir archives
+          for id in 14496216879 14496313483 14498146982 14500267175 14506426867; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "archives/$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          3a06f28f9c7a4834c46aa51a957bd466aa935422889564468e7a122ad3249fcc  archives/14496216879.zip
+          82253d942b1b7ec4c50b2ce1ee63574b3b3c487db3e04dd94a5c80a22d54243d  archives/14496313483.zip
+          f1ba32e298592819199b338276ecee44787f6908a71fa9cef3c86f442ddfd537  archives/14498146982.zip
+          df095d8c4d97f8e4d1e938cb88114e519c00c4bd13390acf083f14af342891d0  archives/14500267175.zip
+          45575bd8aeaa84988109d02eb247ed3a70eec811f190065238620393ae69afc4  archives/14506426867.zip
+          SUMS
+      - name: Package original derived annual input and region scores without raw GBIF records
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile,textwrap
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          d='provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031'
+          entries={}
+          for n in ['audit_global224_gbif_region_uncertainty_20261119.py','audit_gbif224_annual_effort_thinning_20261119.py']:
+              entries['scripts/'+n]=(P('current/scripts')/n).read_bytes()
+          for n in ['gbif_global224_annual_v1.audit.json']+[f'gbif_global224_observed_beta{s}{t}_v1.{e}' for s in ('','_relaxed','_stringent') for t,e in (('_region_holdout','csv'),('','json'))]:
+              entries['inputs/'+n]=(P('current')/d/n).read_bytes()
+          for n,h in [('gbif_global224_annual_v1.species_region_year.csv.gz','f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525'),('gbif_global224_annual_v1.region_year_effort.csv','310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82')]:
+              b=(P('annual')/d/n).read_bytes()
+              assert sha(b)==h
+              entries['inputs/'+n]=b
+          spec=[
+            (14496216879,'GBIF224_region_paired_uncertainty_20261119.json','region',None),
+            (14496313483,'GBIF224_source_annual_effort_matched_thinning_20261119.json','annual','3b1d59a24d4a015aa743211fec694890f3ac456296efc303614b84adc6264ed8'),
+            (14498146982,'GBIF224_thinned_host_given_other_transfer_20261119.json','host_transfer',None),
+            (14500267175,'GBIF224_thinned_entire_world_transfer_20261119.json','world_transfer','1c0fc6394a784d94a597036eb966f92428fc943c44b24fcb0b6c94d72f102628'),
+            (14506426867,'GBIF224_south_america_host_shift_and_error_diagnostics_20261119.json','south_america',None)]
+          for aid,name,label,h in spec:
+              with zipfile.ZipFile(f'archives/{aid}.zip') as z:
+                  assert z.testzip() is None
+                  names=[n for n in z.namelist() if P(n).name==name]
+                  assert len(names)==1,(aid,names,z.namelist())
+                  b=z.read(names[0])
+                  if h: assert sha(b)==h
+                  entries['expected/'+label+'.json']=b
+          def txt(n,s): entries[n]=textwrap.dedent(s).lstrip('\n').encode()
+          txt('RUN.sh','''
+          #!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          python scripts/audit_global224_gbif_region_uncertainty_20261119.py --source-root inputs --out output/region.json
+          python scripts/audit_gbif224_annual_effort_thinning_20261119.py --cells inputs/gbif_global224_annual_v1.species_region_year.csv.gz --effort inputs/gbif_global224_annual_v1.region_year_effort.csv --audit inputs/gbif_global224_annual_v1.audit.json --region-scores inputs/gbif_global224_observed_beta_region_holdout_v1.csv --original-readout inputs/gbif_global224_observed_beta_v1.json --out output/annual.json
+          python verify.py
+          ''')
+          txt('verify.py','''
+          import json,pathlib,math
+          P=pathlib.Path
+          def compare(a,b,key=""):
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and a.keys()==b.keys(),key
+                  return sum(compare(a[k],b[k],key+"/"+k) for k in a)
+              if isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),key
+                  return sum(compare(x,y,key+"/"+str(i)) for i,(x,y) in enumerate(zip(a,b)))
+              if isinstance(a,float):
+                  assert isinstance(b,(int,float)) and math.isclose(a,b,rel_tol=1e-8,abs_tol=1e-10),(key,a,b)
+              else:
+                  assert type(a)==type(b) and a==b,(key,a,b)
+              return 1
+          result={}
+          for task in ['region','annual']:
+              a=json.loads(P('expected',task+'.json').read_text())
+              b=json.loads(P('output',task+'.json').read_text())
+              result[task]=compare(a,b)
+          region=json.loads(P('output/region.json').read_text())
+          annual=json.loads(P('output/annual.json').read_text())
+          assert annual['cohort']['species']==224 and annual['cohort']['regions']==169 and annual['cohort']['region_pairs']==14196
+          assert all(v['n_monte_carlo_draws']==499 for v in annual['tests'].values())
+          assert [region['cases'][k]['cohort']['n_regions'] for k in ('relaxed','primary','stringent')]==[194,169,133]
+          r={'status':'S5_ANNUAL_AND_STORED_REGION_SCORE_REPLAY_PASS_NOT_ALL_MODEL_REFITS','comparisons':result,'region_gain_pct':{k:v['effects']['H_given_other_percent'] for k,v in region['cases'].items()},'annual_raw_delta':annual['original_late_minus_prior_Jaccard'],'annual_proxy_median_delta':{k:v['conditional_monte_carlo_distributions']['late_minus_prior']['median'] for k,v in annual['tests'].items()},'original_three_model_transfer_outputs_included_not_refitted_here':True,'rtol':1e-8,'atol':1e-10}
+          P('output/REPLAY_RECEIPT.json').write_text(json.dumps(r,indent=2)+"\\n")
+          print(json.dumps(r))
+          ''')
+          txt('README.txt','''
+          INTERNAL ONLY. Source-derived annual GBIF 224-butterfly records (DOI 10.15468/dl.umqmsf) and original regional model scores. No raw point occurrences. Re-run with Python 3.12 standard library: bash RUN.sh.
+          Annual 499 x 2 proxy thinning and 194/169/133 region score bootstrap are executed here. The three archived model-transfer JSONs are original prior results only; their model refit is separate and is not represented as an executed step here. Raw GBIF-to-annual reconstruction was previously verified separately. These are recorded assemblages, not occupancy or establishment; no detected biological mechanism or independent sampling uncertainty.
+          Data-specific licence/attribution, indirect anonymity and stable reviewer access are not cleared.
+          ''')
+          entries['MANIFEST.json']=(json.dumps({k:sha(v) for k,v in entries.items()},indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          zpath=out/'GEB_V05_S5_ANNUAL_REGION_INTERNAL_REPLAY.zip'
+          with zipfile.ZipFile(zpath,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(zpath) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          print(json.dumps({'status':'S5_SOURCE_PACKAGE_BUILT','files':len(entries),'sha256':sha(zpath.read_bytes()),'bytes':zpath.stat().st_size}))
+          PY
+      - name: Recompute from extracted original annual and score files
+        run: |
+          set -euo pipefail
+          bash extracted/RUN.sh > delivery/REPLAY_LOG.txt 2>&1 || { tail -100 delivery/REPLAY_LOG.txt; exit 1; }
+          cp extracted/output/REPLAY_RECEIPT.json delivery/
+          cat delivery/REPLAY_RECEIPT.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S5-ANNUAL-REGION-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
