@@ -1,0 +1,144 @@
+name: GEB v0.5 integrate verified S5 annual and transfer source closures
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-integrated-s5-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover three signed internal source archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14907075339 14905314350 14910464092; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          f1e7bf97b154e9fa75376339352e12642bc1965cf69b773965af191f50ee8007  14907075339.zip
+          a4b3353eae679fc8c5eb31b64f6ba1dd2dea806806134638e74bdba943420752  14905314350.zip
+          eacf254c8c6109585431b8b41f01d2f350fa4ca0c30573082d6846922cd3af93  14910464092.zip
+          SUMS
+      - name: Integrate exact source files and successful comparison receipts
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import gzip,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,name):
+              hits=[n for n in z.namelist() if P(n).name==name]
+              assert len(hits)==1,(name,hits)
+              return z.read(hits[0])
+          def load(aid,name,digest):
+              with zipfile.ZipFile(f'{aid}.zip') as z: b=member(z,name)
+              assert sha(b)==digest
+              with zipfile.ZipFile(io.BytesIO(b)) as z:
+                  assert z.testzip() is None
+                  names=[i.filename for i in z.infolist() if not i.is_dir()]
+                  assert len(names)==len(set(names))
+                  assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+                  return {n:z.read(n) for n in names}
+          base=load(14907075339,'GEB_V05_INTERNAL_TEN_GROUPS_NOT_FOR_REVIEW.zip','cd771d2d44dad6d24020da3c8d4e4573e8e84a72fb874d853f41543095a0031a')
+          annual=load(14905314350,'GEB_V05_S5_ANNUAL_REGION_INTERNAL_REPLAY.zip','d7ffa63d9795f2ad53294ccca4c2c2763fbf85a785b7bb2c8ad6f01dfdabf3a9')
+          transfer=load(14910464092,'GEB_V05_S5_TRANSFER_INTERNAL_SOURCE_REPAIRED.zip','67175c136cd4c9f0703e3b9957c544497ef99ea01198e225b65d49628f12656d')
+          assert (len(base),len(annual),len(transfer))==(93,20,32)
+          for files in (annual,transfer):
+              m=json.loads(files['MANIFEST.json'])
+              assert set(m)==set(files)-{'MANIFEST.json'}
+              for n,h in m.items(): assert sha(files[n])==h,n
+          for a,t in [('host_transfer','host'),('world_transfer','world'),('south_america','south_america')]:
+              assert annual['expected/'+a+'.json']==transfer['expected/'+t+'.json'],a
+          compile(transfer['verify.py'],'verify.py','exec')
+          receipts={}
+          with zipfile.ZipFile('14905314350.zip') as z: receipts['S5_annual_region_receipt.json']=member(z,'REPLAY_RECEIPT.json')
+          ar=json.loads(receipts['S5_annual_region_receipt.json'])
+          assert ar['status']=='S5_ANNUAL_AND_STORED_REGION_SCORE_REPLAY_PASS_NOT_ALL_MODEL_REFITS'
+          assert ar['comparisons']=={'region':728,'annual':281}
+          with zipfile.ZipFile('14910464092.zip') as z:
+              receipts['S5_transfer_comparison_summary.json']=member(z,'COMPARISON_SUMMARY.json')
+              summary=json.loads(receipts['S5_transfer_comparison_summary.json'])
+              assert summary['status']=='PASS' and summary['source_zip_sha256']=='67175c136cd4c9f0703e3b9957c544497ef99ea01198e225b65d49628f12656d'
+              assert summary['original_model_and_input_bytes_unchanged'] and summary['changed_files']==['verify.py','MANIFEST.json']
+              for task,total in [('host',954),('world',5570),('south_america',19160)]:
+                  b=member(z,task+'_receipt.json')
+                  r=json.loads(b)
+                  assert summary['results'][task]['receipt']==r
+                  assert r['status']=='S5_ORIGINAL_TRANSFER_EXTRACTED_REPLAY_PASS'
+                  assert r['mismatch_count']==0 and sum(r['comparisons'].values())==total
+                  assert r['original_four_models_reproduced']
+                  receipts['S5_transfer_'+task+'_receipt.json']=b
+          entries=dict(base)
+          for label,files in [('s5_annual_region',annual),('s5_transfer',transfer)]:
+              for n,b in files.items(): entries['components/'+label+'/'+n]=b
+          for n,b in receipts.items(): entries['source_qa_receipts/'+n]=b
+          assert len(entries)==150
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(base[manifest])
+          m['schema']='GEB_v05_internal_9component_15group_candidate_v6'
+          m['component_source']['s5_annual_region']={'file_count':20,'source_artifact_component_filename':'GEB_V05_S5_ANNUAL_REGION_INTERNAL_REPLAY.zip','source_artifact_component_sha256':'d7ffa63d9795f2ad53294ccca4c2c2763fbf85a785b7bb2c8ad6f01dfdabf3a9'}
+          m['component_source']['s5_transfer']={'file_count':32,'source_artifact_component_filename':'GEB_V05_S5_TRANSFER_INTERNAL_SOURCE_REPAIRED.zip','source_artifact_component_sha256':'67175c136cd4c9f0703e3b9957c544497ef99ea01198e225b65d49628f12656d'}
+          m['source_qa_receipts']+=list(receipts)
+          m['S5_annual_and_regional_sensitivity_replayed']=True
+          m['S5_three_transfer_models_original_extracted_refit_and_repaired_comparison_pass']=True
+          m['full_SI_replayed']=False
+          m['limitations']+=' S5 original transfer models were fitted separately from byte-identical scientific source; only comparison wrapper and manifest repaired. This combined job reruns ten groups and verifies five prior independent refit receipts. Whole-SI, 155 residual numerical gaps, data rights and reviewer access remain open.'
+          entries[manifest]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          entries[readme]=(base[readme].decode().replace('seven-component','nine-component').replace('The seven components','The nine components')+'\n8. S5 annual and region sensitivity: run components/s5_annual_region/RUN.sh. Two groups: original annual 499 x 2 thinning and 194/169/133 stored-score resampling.\n9. S5 three model transfers: 32 source files, all 24 original Git blobs and three expected outputs. See component README for external version-pinned data acquisition. All three original refits completed in prior run; fixed verification wrapper subsequently compared every field successfully, 25,684 comparisons. Run components/s5_transfer/RUN.sh host, world or south_america after acquiring external data. No fresh external refit in this integration job. The three expected model-transfer outputs duplicated in annual and transfer packages are byte-identical.\n').encode()
+          runner='RUN_LIMITED_COMPONENTS.sh'
+          marker='echo GEB_V05_EIGHT_GROUPS_REPLAYED_TWO_HOST_CONTROLS_PREVERIFIED_NOT_FULL_SI'
+          assert base[runner].decode().count(marker)==1
+          entries[runner]=base[runner].decode().replace(marker,marker+'\n( cd components/s5_annual_region && bash RUN.sh )\necho GEB_V05_TEN_GROUPS_REPLAYED_FIVE_PREVERIFIED_NOT_FULL_SI').encode()
+          changed={n for n in base if entries[n]!=base[n]}
+          assert changed=={manifest,readme,runner}
+          patterns={'owner_account':rb'zuizui0223','author_name':rb'ZHANG[ _\.-]?(?:RUIQI|RACHEL)','email':rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}','local_path':rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/'}
+          flags=[]
+          for n,b in entries.items():
+              check=gzip.decompress(b) if n.endswith('.gz') else b
+              for label,p in patterns.items():
+                  if re.search(p,n.encode(),re.I) or re.search(p,check,re.I): flags.append({'file':n,'kind':label})
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_INTERNAL_FIFTEEN_GROUPS_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          report={'status':'INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED','files':150,'prior_members_unchanged':90,'new_annual_members':20,'new_transfer_members':32,'new_receipts':5,'wrappers_updated':sorted(changed),'expected_transfer_duplicate_bytes_match':True,'S5_comparisons':26693,'direct_identifier_flags':flags,'direct_identifier_scan_pass':not flags,'zip_sha256':sha(dest.read_bytes()),'zip_size':dest.stat().st_size,'full_SI_replayed':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False}
+          (out/'INTEGRATED_BUILD_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - name: Execute ten integrated replay groups and validate five preverified refit receipts
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/INTEGRATED_REPLAY_LOG.txt 2>&1 || { tail -100 delivery/INTEGRATED_REPLAY_LOG.txt; exit 1; }
+          grep -q 'GEB_V05_TEN_GROUPS_REPLAYED_FIVE_PREVERIFIED_NOT_FULL_SI' delivery/INTEGRATED_REPLAY_LOG.txt
+          python - <<'PY'
+          import hashlib,json,pathlib
+          root=pathlib.Path('extracted')
+          r=json.loads((root/'components/s5_annual_region/output/REPLAY_RECEIPT.json').read_text())
+          assert r==json.loads((root/'source_qa_receipts/S5_annual_region_receipt.json').read_text())
+          for label in ['s4_controls','s5_annual_region','s5_transfer']:
+              p=root/'components'/label
+              for n,h in json.loads((p/'MANIFEST.json').read_text()).items(): assert hashlib.sha256((p/n).read_bytes()).hexdigest()==h,n
+          print('INTEGRATED_TEN_REPLAYS_PASS_FIVE_ORIGINAL_REFITS_PREVERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-FIFTEEN-GROUPS-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
