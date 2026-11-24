@@ -1,0 +1,49 @@
+{
+  "schema": "GEB_original155_additional_three_input_recovery_verification_v1",
+  "verified_date": "2026-11-24",
+  "release_id": 453667492,
+  "release_draft": true,
+  "assets": {
+    "csv_bundle": {
+      "id": 785479033,
+      "size": 726857,
+      "sha256": "50e659381bcd5628cd2110361f2fe9a6ba895ffd8fb1a2a1dce1655235f8a6c6"
+    },
+    "receipt": {
+      "id": 785479036,
+      "size": 1302,
+      "sha256": "9c76155c4765458ef1e51d31e5593830e4dbea99455ef14720d69482fca5e36b"
+    }
+  },
+  "verified_by_run": 45317873271,
+  "result": "PASS_SOURCE_ZIP_CONTENT_THREE_INPUTS_WITH_RECEIPT_SHA_AND_SCHEMA",
+  "other_non_directory_archive_members": 1,
+  "recovered": {
+    "outputs/forecast_candidate_disposition.csv": {
+      "rows": 225,
+      "selected_species": 155,
+      "bytes": 19104,
+      "sha256": "f275181f49a7d8da99cae815717c2f2ce608eb14ca3be5609482d82f307a7003"
+    },
+    "outputs/temporal_host_family_support.csv": {
+      "rows": 109,
+      "selected_families": 18,
+      "bytes": 2515,
+      "sha256": "4644a2ed2f233052089b8880c25f22072158421f5f0396d668398899414cbb0e"
+    },
+    "work/remote_sensing/host_region_counts.csv": {
+      "rows": 87235,
+      "unique_pairs": 87235,
+      "introduced_share_nulls": 42418,
+      "bytes": 4624184,
+      "sha256": "5c074721f4ebb3e2e413d6e4926320b97f5cb1b78f7004b0138ceeecd33d2b8d"
+    }
+  },
+  "source_archive_initially_missing_exact_three_paths": true,
+  "full_panel_replay_ci": 45318106188,
+  "full_panel_replay_outcome": "IN_PROGRESS_AT_RECEIPT_WRITING",
+  "source_rows_or_private_paths_exported": false,
+  "new_release_assets_published": false,
+  "original_host_count_raw_source_provenance_independently_attested": false,
+  "disclaimer": "Numerical agreement to the saved panel would establish conditional reconstruction from now-recovered tables, not the original historic acquisition chain or full raw GBIF records rerun."
+}
