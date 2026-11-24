@@ -1,0 +1,238 @@
+name: GEB v0.5 exact file source attribution and delivery decision register
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-exact-file-source-decisions-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  decisions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify signed candidate, prior exact inventory and licence census
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14915845889 14916996018 14917750263; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          45fc444f5e2e08c8f457881eb48054cbc2536cf580b11a34e9e8065eaf670c14  14915845889.zip
+          194c73698308f7d077937dfc2db1019f1a279721c11e19445b91dd2fe1090a33  14916996018.zip
+          6fb0fe2fc479c2f5ffedc8c3239f8a843b7afcbd6b5c9ad7b0453e36c72e792b  14917750263.zip
+          SUMS
+      - name: Resolve source registry, inspect exact LepTraits v1 item and classify every candidate member
+        run: |
+          set -euo pipefail
+          python -u - <<'PY'
+          import csv,hashlib,io,json,pathlib,zipfile,collections,urllib.request,gzip,re
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def getmember(aid,name):
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  ns=[n for n in z.namelist() if P(n).name==name]
+                  assert len(ns)==1,(name,ns)
+                  return z.read(ns[0])
+          raw=getmember(14915845889,'GEB_V05_CONTENT_CHECKSUM_STAGING_NOT_FOR_RELEASE.zip')
+          assert sha(raw)=='5679eeb5c3907bb5cadb1de461f7f97470b139b94db8a0c6b2e052295d0d4852'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              e={n:z.read(n) for n in z.namelist() if not n.endswith('/')}
+          inv=json.loads(getmember(14916996018,'EXACT_CANDIDATE_FILE_INVENTORY.json'))
+          metadata=json.loads(getmember(14916996018,'PUBLIC_SOURCE_METADATA.json'))
+          license_census=json.loads(getmember(14917750263,'GBIF_ORIGINAL_LICENCE_AUDIT.json'))
+          assert len(inv)==len(e)==192 and len({r['file'] for r in inv})==192
+          for r in inv: assert sha(e[r['file']])==r['sha256'] and len(e[r['file']])==r['bytes']
+          assert license_census['records']==14637152 and license_census['providers']==1716
+          assert license_census['archived_licence_record_counts']=={'CC_BY_4_0':9851488,'CC_BY_NC_4_0':3354309,'CC0_1_0':1431355}
+          assert metadata['cirad']['license']['name']=='CC BY-NC-SA 4.0'
+          assert metadata['established_insects']['version']=='0.2.1' and metadata['established_insects']['license']['id']=='cc-by-4.0'
+          assert metadata['hydrowaste']['license']['name']=='CC BY 4.0'
+          assert metadata['worldcover']['license']['id']=='cc-by-4.0'
+          assert metadata['glonaf']['license']['id']=='other-open'
+          # The collection and item have distinct rights records. Match original
+          # file bytes inside the exact item archive if present; never infer from title.
+          targetsha='6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b'
+          targetmd5='5ebbf89c0b87a75b875e718677c6eeef'
+          lep={'collection_doi':'10.6084/m9.figshare.c.5899187.v1','collection_rights':metadata['leptraits_collection']['rightsList'],'item_doi':'10.6084/m9.figshare.19874602.v1','expected_consensus_sha256':targetsha,'exact_file_matches':[],'examined_files':[]}
+          def request(url,limit):
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Source-version metadata audit/1.0'}),timeout=40) as r:
+                  b=r.read(limit+1)
+                  assert len(b)<=limit,'download limit'
+                  return b
+          try:
+              b=request('https://api.figshare.com/v2/articles/19874602/versions/1',4000000)
+              j=json.loads(b);lep['item_version']=j.get('version');lep['item_license']=j.get('license');lep['item_metadata_sha256']=sha(b)
+              assert j.get('doi')=='10.6084/m9.figshare.19874602.v1'
+              for f in j.get('files',[]):
+                  rec={k:f.get(k) for k in ('id','name','size','computed_md5','supplied_md5','downloadUrl')}
+                  lep['examined_files'].append(rec)
+                  if f.get('size',0)>80000000 or not (f['name'].lower().endswith(('.zip','.csv','.gz'))):continue
+                  try:
+                      url=f.get('downloadUrl') or f'https://api.figshare.com/v2/file/download/{f["id"]}'
+                      data=request(url,80000000)
+                      assert len(data)==f['size']
+                      expected=f.get('computed_md5') or f.get('supplied_md5')
+                      if expected:assert hashlib.md5(data).hexdigest()==expected
+                      rec['download_sha256']=sha(data)
+                      if sha(data)==targetsha:lep['exact_file_matches'].append({'file_id':f['id'],'path':f['name'],'sha256':targetsha})
+                      if zipfile.is_zipfile(io.BytesIO(data)):
+                          with zipfile.ZipFile(io.BytesIO(data)) as z:
+                              candidates=[x for x in z.infolist() if not x.is_dir() and x.file_size==2687158 and x.filename.lower().endswith('.csv')]
+                              rec['same_size_csv_members']=[x.filename for x in candidates]
+                              for x in candidates:
+                                  v=z.read(x)
+                                  if sha(v)==targetsha and hashlib.md5(v).hexdigest()==targetmd5:lep['exact_file_matches'].append({'file_id':f['id'],'path':x.filename,'sha256':targetsha})
+                  except Exception as exc:rec['acquisition_error']=str(exc)
+          except Exception as exc:lep['metadata_error']=str(exc)
+          exact_lep=bool(lep['exact_file_matches']) and lep.get('item_version')==1 and lep.get('item_license',{}).get('name') in ('CC0','CC BY 4.0')
+          lep['exact_item_file_licence_resolved']=exact_lep
+          print('LEPTRAITS_ITEM_CHECK',json.dumps(lep,ensure_ascii=False))
+          # Registry distinguishes source terms, author approval, and final
+          # derived-file permissions. "known" only means source terms identified.
+          reg={}
+          def source(k,title,cite,terms,state,action):
+              reg[k]={'title':title,'citation_or_url':cite,'source_terms':terms,'source_state':state,'delivery_action':action}
+          source('HOSTS','NHM HOSTS larval host catalogue','https://doi.org/10.5519/havt50xw','CC0','known','Cite source; pinned external download and transformations.')
+          source('WCVP','Kew WCVP v13, 2024-05-21','https://doi.org/10.34885/0yex-xv26','CC BY 3.0','known','Attribution and transformation notice; no raw archive shipped.')
+          source('LEP','LepTraits 1.0 consensus CSV','https://doi.org/10.6084/m9.figshare.19874602.v1',('Exact item '+lep['item_license']['name']+'; collection CC BY 4.0' if exact_lep else 'Item CC0, collection CC BY 4.0; exact Figshare file linkage unresolved'),'known' if exact_lep else 'open','Use exact pinned public consensus.csv and cite item, collection and paper; raw CSV not bundled.')
+          source('TDWG','WGSRPD3 geometry and region definitions','https://github.com/tdwg/wgsrpd/tree/52da7828aba9d461dd133c27b3bd7a4407161f54','Exact converted polygon rights unresolved','open','External pinned geometry retrieval; no raw geometry included.')
+          source('WPI','NGA WPI / study port-count layers','https://gis.ngdc.noaa.gov/arcgis/rest/services/nccos/PIRO_DigitalAtlas/MapServer/30','Original conversion lineage/rights open','open','Cite original WPI publication and distinguish independently recovered coordinates.')
+          source('GSHHG','GSHHG 2.3.7 coastline','https://doi.org/10.5281/zenodo.7007502','LGPL v3 or later source notice','known','Preserve notices and evaluate derived geometry; external acquisition.')
+          source('AIS','Duvallet et al. 2024 AIS 2020 triplets v1','https://doi.org/10.5281/zenodo.10783698','CC BY 4.0 record; upstream AIS dependencies','known','Cite original record and actual use of endpoint/route coverage fields.')
+          source('EUDIS','EuDiS v5','https://doi.org/10.6084/m9.figshare.22251028.v5','CC BY 4.0','known','Attribution and transformations.')
+          source('GBIF','Original GBIF 155/224 common download','https://doi.org/10.15468/dl.umqmsf','Mixed CC BY 4.0 / CC BY-NC 4.0 / CC0 1.0; exact full archive census','mixed','Use correct DOI and 1716 contributor dataset keys; determine derivative-specific terms, not blanket licence.')
+          source('HIST','Separate original historical and port GBIF facets','https://www.gbif.org/citation-guidelines','Original datasetKey attribution not retained','open','Preserve original counts/query scope; seek editorial/GBIF guidance, no substituted DOI or providers.')
+          source('GLO','Lenzner et al. colonial source v1.0.0','https://doi.org/10.5281/zenodo.6640264','other-open; individual bundled inputs unresolved','open','Pinned external ZIP and checksum; review derived covariates.')
+          source('INBO','INBO butterfly checklist v1.1','https://doi.org/10.15468/ye7whj','CC0','known','Cite checklist and independent selection.')
+          source('BIOTA','Canary Islands BDBC origin classifications','https://www.biodiversidadcanarias.es/biota/acerca','Free public access; redistribution terms unverified','open','Cite exact taxon records and source dates; no blanket database licence assumed.')
+          source('FIELD','Published/cited larval host and plant-origin records','Per-event URLs in S6 evidence table','Individual source terms; no photos shipped','open','Retain citations, original taxon and evidentiary limits; assess use of source-derived text.')
+          source('FAO','FAO ICC Appendix 4 crop taxonomy','https://www.fao.org/4/a0135e/A0135E10.htm','Exact source reuse terms unverified','open','Cite classifications and extraction rule; no original publication copied.')
+          source('EST','Turner et al. 2024 establishment data v0.2.1','https://doi.org/10.5281/zenodo.11519262','CC BY 4.0','known','Cite exact positive-only dataset and crosswalk.')
+          source('JONES','Jones gridded wastewater production','https://doi.org/10.1594/PANGAEA.918731','CC BY 4.0','known','Cite source and estimate year.')
+          source('WC2021','ESA WorldCover 2021 v200','https://doi.org/10.5281/zenodo.7254221','CC BY 4.0','known','Cite ESA product and transformations.')
+          source('HYDRO','HydroWASTE v1','https://doi.org/10.6084/m9.figshare.14847786.v1','CC BY 4.0','known','Cite source; no facility data bundled.')
+          source('CIRAD','CIRAD 2022 modeled N/P, V1','https://doi.org/10.18167/DVN1/AWQNSR','CC BY-NC-SA 4.0','restricted','No raw grids/extracts shipped; check applicability to actual derived data, not blanket CC BY.')
+          source('OSCAR','Original legacy NOAA OSCAR historical current product','https://www.ncei.noaa.gov/','Exact original product/archive reuse and citation require source audit','open','Cite exact original archive from source ledger; no velocity grid shipped.')
+          source('LCCS','Niamir et al. ESA CCI annual land-cover fractions v3.0','https://doi.org/10.5281/zenodo.11407287','Record-specific terms not established by source page','open','Different from WorldCover 2021; cite exact version in forecast.')
+          source('POWER','NASA POWER monthly climate','https://power.larc.nasa.gov/docs/referencing/','Source requests service/version/date acknowledgment; exact archived version review','open','Cite service and original archived acquisition; no raw climate grid shipped.')
+          source('BCE','Original BCE host supplement used by 155 forecast','Original forecast source README and archived source manifest','Exact supplement rights/version to be reviewed','open','Do not claim complete raw forecast source or licence closure.')
+          source('AUTHOR','Original author-created analysis code, summaries and packaging','Author approval required','No repository-level declared licence; no grant inferred','author','Authors must approve release and code/data licence; content-based identification risk remains.')
+          R={'HOSTS','WCVP','TDWG'}
+          traits=R|{'LEP'}
+          geo={'WPI','TDWG','GSHHG'}
+          forecast=traits|{'GBIF','LCCS','POWER','BCE'}
+          comm=R|{'GBIF','GLO'}
+          port=R|{'WPI','HIST'}
+          endemic=traits|{'INBO','BIOTA','FIELD'}
+          local=R|{'FAO','WPI'}
+          nutrient=port|{'JONES','WC2021','HYDRO','CIRAD'}
+          ocean=geo|{'WCVP','AIS','OSCAR'}
+          whole=set(reg)-{'AUTHOR'}
+          default={
+              'fig1_fig3bc':traits,'fig2abc_derived':R|geo,'fig2d_fixed239':R|{'WPI'},
+              'fig4_scores_only':forecast|comm,'s34_s41':traits|{'WPI','HIST'},
+              's3_eudis':{'WCVP','EUDIS','TDWG'},'s4_controls':R|geo|{'AIS'},
+              's5_annual_region':comm,'s5_transfer':comm|{'LEP'},'s6_endemic':endemic,
+              's7_evidence':port|local|nutrient|ocean|{'EST'}}
+          def scope(n):
+              if n.startswith('validation/'):
+                  name=P(n).name
+                  if name.startswith(('EUDIS','S3_EUDIS')):return default['s3_eudis'],'receipt-specific'
+                  if name.startswith('Fig3A'):return R,'receipt-specific'
+                  if name.startswith('GBIF155'):return forecast,'receipt-specific'
+                  if name.startswith('GBIF224_original_raw'):return {'GBIF','TDWG'},'receipt-specific'
+                  if name.startswith('GBIF224'):return comm,'receipt-specific'
+                  if name.startswith('S34'):return default['s34_s41'],'receipt-specific'
+                  if name.startswith('S4_'):return default['s4_controls'],'receipt-specific'
+                  if name.startswith('S5_'):return comm,'receipt-specific'
+                  if name.startswith('S6_PUBLIC'):return {'LEP'},'receipt-specific'
+                  if name.startswith('S6_'):return endemic,'receipt-specific'
+                  if name.startswith('S7_'):return default['s7_evidence'],'receipt-specific'
+                  raise AssertionError(n)
+              if not n.startswith('components/'):return whole,'root package dependencies; not copied data'
+              c=n.split('/')[1];name=P(n).name
+              # Data paths and specific output scopes, not an assumption that all
+              # upstream database licences legally attach to the numerical result.
+              if name in ('fixed239_butterfly_resource_metrics.csv','anthropogenic_species_metrics.csv','metrics.csv','s1_resource_descriptors.csv','s1_species_manifest.json'):return traits,'table/selection dependency'
+              if name in ('region_metrics.csv','region_hosts.csv','regions.csv','island_mainland_by_butterfly.csv','islands.csv'):return R|{'LEP'},'fixed cohort and resource counts'
+              if name in ('area.csv','port_flora.csv','whole_flora_wpi_126_islands.csv','port_flora_regions.csv'):return R|{'WPI','LEP'},'port and flora aggregate'
+              if name=='flora_jaccard_counts.csv':return {'WCVP','TDWG'},'plant intersection/union counts'
+              if name in ('marine_fit_inputs.csv','geometry.csv'):return geo|({'WCVP'} if name=='marine_fit_inputs.csv' else set()),'derived geographic and flora features'
+              if name=='plants.csv':return {'WCVP','WPI','TDWG','AIS'},'plant dyads and actual AIS endpoint/route fields'
+              if name=='effort.csv':return R|{'HIST','WPI'},'historic botanical effort and regional covariates'
+              if name=='forecast155_original_model_scores.csv':return forecast,'stored 155 model scores'
+              if name.startswith('gbif_global224_annual_v1.'):return {'GBIF','TDWG','HOSTS','WCVP','LEP'},'annual source; selected butterfly roster distinct from record fields'
+              if name.startswith('gbif_global224_observed_beta') or name=='gbif224_original_region_holdout_scores.csv':return comm,'community model outcome and predictors'
+              if name.startswith('beta_baseline_v'):return R,'plant/resource matrix or derived dyads'
+              if name=='wgsrpd3_level1_lookup_v0.1.json':return {'TDWG'},'region lookup'
+              if name=='lenzner_wgsrpd3_colonial_area_crosswalk.csv':return {'GLO','TDWG'},'colonial, climate and socioeconomic source covariates'
+              if c=='s34_s41' and '/s41/' in n:return traits,'documentation proxy'
+              if c=='s34_s41' and '/s34/' in n:return R|{'WPI','HIST'},'historical botanical effort sensitivity'
+              if c=='s6_endemic':
+                  if name.startswith('canary_BIOTA_'):return {'INBO','BIOTA'},'checklist/origin taxon rows'
+                  if name=='independent_butterfly_host_plant_species_events_v1.csv':return {'FIELD','WCVP'},'source-linked named larval events, no photo'
+                  if name=='independent_42_species_vs_frozen239.csv':return endemic,'independent checklist and frozen selection'
+                  return endemic,'endemic component dependency'
+              if c=='s7_evidence':
+                  if name.startswith('port_alien_host_'):return port,'historical port counts and source audits'
+                  if name in ('history.csv','history.json'):return {'HIST','TDWG','GSHHG'},'original historical butterfly index cells'
+                  if name=='top10.json':return port,'top ten original contributors and historical port source'
+                  if name in ('local_reports.json','paired_reports.json'):return local,'localized HOSTS/WCVP reports and FAO filtering'
+                  if name=='nutrient.json':return nutrient,'stored model coefficients, not raster inputs'
+                  if name in ('current.json','current_controls.json'):return ocean,'stored physical-current and flora overlap diagnostics'
+                  if name=='established.json':return R|{'EST'},'positive-only recipient host opportunities'
+              if c=='s4_controls' and name=='margin_draws.csv':return R|geo,'same-source derived null draws'
+              if name.endswith('.csv') or name.endswith('.csv.gz'):
+                  if c=='s3_eudis':return default[c],'paired origin trait aggregates'
+                  raise AssertionError(('unclassified table',n))
+              return default[c],'component dependency envelope, not a claim of copied source contents'
+          rows=[]
+          for r in inv:
+              n=r['file'];b=e[n];sids,basis=scope(n);sids=set(sids)|{'AUTHOR'}
+              assert sids<=set(reg)
+              roles='code' if P(n).suffix.lower() in ('.py','.r','.sh') else 'table' if 'header' in r else 'validation' if n.startswith('validation/') else 'metadata_or_summary'
+              states={reg[k]['source_state'] for k in sids}
+              if roles=='code':
+                  gate='AUTHOR_CODE_APPROVAL_AND_CODE_PROVENANCE_REVIEW';route='candidate code after author approval; public-source links, no automatic third-party licence assignment'
+              elif roles in ('validation','metadata_or_summary'):
+                  gate='AUTHOR_APPROVAL_AND_SOURCE_SUMMARY_REVIEW';route='candidate summary with citations after source/content review; not independent certification'
+              elif 'HIST' in sids:
+                  gate='HOLD_HISTORICAL_ATTRIBUTION';route='retain internally; resolve original attribution or explicitly approved restricted route'
+              elif 'restricted' in states or 'mixed' in states:
+                  gate='HOLD_MIXED_OR_RESTRICTED_DERIVATIVE_REVIEW';route='check actual derivative rights, preserve original provider attribution, no blanket licence'
+              elif 'open' in states:
+                  gate='HOLD_UNRESOLVED_SOURCE_DEPENDENCY';route='retain internally pending source-specific review; do not remove replay-critical file silently'
+              else:
+                  gate='SOURCE_TERMS_IDENTIFIED_AUTHOR_AND_DERIVATIVE_APPROVAL_PENDING';route='candidate with attribution after author approval and final derivative assessment'
+              rows.append({'file':n,'sha256':sha(b),'bytes':len(b),'role':roles,'source_ids':';'.join(sorted(sids)),'mapping_basis':basis,'source_rights_states':';'.join(sorted(states)),'source_citations':' | '.join(reg[k]['citation_or_url'] for k in sorted(sids)),'source_terms':' | '.join(k+': '+reg[k]['source_terms'] for k in sorted(sids)),'delivery_decision':gate,'proposed_route':route,'author_approval_required':True,'authorized_for_distribution':False})
+          assert len(rows)==192 and len({r['file'] for r in rows})==192
+          assert sum(r['role']=='table' for r in rows)==49
+          groups=collections.defaultdict(list)
+          for r in rows:groups[r['sha256']].append(r['file'])
+          duplicate_groups=[v for v in groups.values() if len(v)>1]
+          out=P('delivery');out.mkdir()
+          with (out/'EXACT_192_FILE_SOURCE_DELIVERY_DECISIONS.csv').open('w',encoding='utf8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          (out/'SOURCE_REGISTRY.json').write_text(json.dumps(reg,ensure_ascii=False,indent=2)+chr(10))
+          (out/'LEPTRAITS_EXACT_ITEM_AUDIT.json').write_text(json.dumps(lep,ensure_ascii=False,indent=2)+chr(10))
+          (out/'DUPLICATE_CONTENT_GROUPS.json').write_text(json.dumps(duplicate_groups,indent=2)+chr(10))
+          summary={'status':'EXACT_FILE_SOURCE_DEPENDENCY_REGISTER_PASS_NOT_DISTRIBUTION_APPROVAL','source_candidate_sha256':sha(raw),'files':len(rows),'table_files':49,'source_families_including_author':len(reg),'source_state_counts':dict(collections.Counter(v['source_state'] for v in reg.values())),'file_roles':dict(collections.Counter(r['role'] for r in rows)),'proposed_delivery_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows)),'table_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows if r['role']=='table')),'duplicate_content_groups':len(duplicate_groups),'unique_content_hashes':len(groups),'exact_leptraits_item_file_resolved':exact_lep,'author_approval_required_for_all':True,'authorized_files':0,'candidate_bytes_modified':False,'original_data_redistributed':False,'all_source_lineage_fully_proven':False,'rights_legal_clearance':False,'reviewer_access_created':False}
+          (out/'EXACT_FILE_DECISION_SUMMARY.json').write_text(json.dumps(summary,indent=2)+chr(10))
+          print('EXACT_FILE_DECISION_PASS',json.dumps(summary))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-exact-source-delivery-register-internal-only
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
