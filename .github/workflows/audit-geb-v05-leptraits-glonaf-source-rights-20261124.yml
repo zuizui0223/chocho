@@ -1,0 +1,76 @@
+name: GEB v0.5 version-specific LepTraits and GloNAF metadata checks
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-leptraits-glonaf-source-rights-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: de1b32eb17c81a37f7fd0ecfed9abd0331c76d44
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit official exact-version public metadata and file checksums
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.error,json,hashlib,pathlib,re
+          P=pathlib.Path
+          out=P('delivery');out.mkdir()
+          frozen=(P('original/data/external/leptraits_consensus_v1.0.csv')).read_bytes()
+          assert hashlib.sha256(frozen).hexdigest()=='6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b'
+          orig={'bytes':len(frozen),'md5':hashlib.md5(frozen).hexdigest(),'sha256':hashlib.sha256(frozen).hexdigest()}
+          def get(url,binary=False):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Source reproducibility metadata audit/1.0','Accept':'application/json' if not binary else '*/*'}),timeout=40) as r:
+                      b=r.read(12000000 if binary else 4000000)
+                      return {'http':r.status,'url':r.geturl(),'data':b if binary else json.loads(b)}
+              except Exception as e:
+                  return {'http':getattr(e,'code',None),'error':str(e),'url':url}
+          coll=get('https://api.figshare.com/v2/collections/5899187/versions/1/articles')
+          lep={'official_collection_doi':'10.6084/m9.figshare.c.5899187.v1','frozen_input':orig,'version_specific_listing_http':coll['http'],'article_metadata':[],'exact_file_match':None}
+          if 'data' in coll and isinstance(coll['data'],list):
+              for item in coll['data']:
+                  aid=item['id']
+                  version=item.get('version')
+                  # Versioned article metadata if the collection roster specifies a version.
+                  url=f'https://api.figshare.com/v2/articles/{aid}'+(f'/versions/{version}' if version else '')
+                  r=get(url)
+                  if 'data' not in r:
+                      lep['article_metadata'].append({'id':aid,'listed_version':version,'http':r['http'],'error':r.get('error')});continue
+                  d=r['data']
+                  files=[{k:f.get(k) for k in ('id','name','size','computed_md5','supplied_md5','downloadUrl','download_url')} for f in d.get('files',[])]
+                  lep['article_metadata'].append({'id':aid,'listed_version':version,'retrieved_version':d.get('version'),'doi':d.get('doi'),'title':d.get('title'),'license':d.get('license'),'files':files})
+                  for f in files:
+                      if f['size']==orig['bytes'] and orig['md5'] in (f['computed_md5'],f['supplied_md5']):
+                          download=get(f.get('downloadUrl') or f.get('download_url') or f"https://api.figshare.com/v2/file/download/{f['id']}",True)
+                          if 'data' in download and hashlib.sha256(download['data']).hexdigest()==orig['sha256']:
+                              lep['exact_file_match']={'article':aid,'collection_listed_version':version,'retrieved_article_version':d.get('version'),'doi':d.get('doi'),'file':f['name'],'file_id':f['id'],'license':d.get('license'),'sha256':orig['sha256'],'bytes':orig['bytes'],'collection_membership_version_verified':version is not None and version==d.get('version')}
+          else:
+              lep['listing_error']=coll.get('error','unexpected schema')
+          zen=get('https://zenodo.org/api/records/6640264')
+          gl={'record':6640264,'expected_file':'lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip','expected_checksum':'md5:16f5585d2500676951a4b664bbf0ffde','http':zen['http'],'exact_file_metadata_match':False}
+          if 'data' in zen:
+              d=zen['data'];m=d.get('metadata',{})
+              gl.update({'doi':d.get('doi') or m.get('doi'),'title':m.get('title'),'license':m.get('license'),'rights':m.get('rights'),'files':[{k:f.get(k) for k in ('key','checksum','size')} for f in d.get('files',[])]})
+              gl['exact_file_metadata_match']=any(f['key']==gl['expected_file'] and f['checksum']==gl['expected_checksum'] for f in gl['files'])
+          else: gl['error']=zen.get('error')
+          report={'status':'SOURCE_METADATA_AUDIT_NOT_ARCHIVE_REUSE_PERMISSION','LepTraits':lep,'GloNAF':gl,'limits':['Article publication licence is not a substitute for dataset file licence.','A current Figshare item version is not assumed to equal a collection-v1 item when version is unspecified.','A Zenodo record licence does not resolve separately licensed bundled third-party layers.','No external source data are included in this output.']}
+          (out/'SOURCE_RIGHTS_METADATA.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+chr(10))
+          print(json.dumps(report,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-version-specific-source-rights-metadata
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
