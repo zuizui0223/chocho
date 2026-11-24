@@ -1,0 +1,101 @@
+name: GEB v0.5 original GBIF download record-level licence and publisher audit
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-original-gbif-licence-records-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-download-licences:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: aad7e8ffc5e70050c1471e8cc826925380308831
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch exact DOI archive, not a new occurrence search
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 4 --connect-timeout 30 --max-time 120 'https://api.gbif.org/v1/occurrence/download/0013264-261023074918325' -o "$RUNNER_TEMP/meta.json"
+          python - <<'PY'
+          import json,pathlib,os
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])
+          d=json.loads((p/'meta.json').read_text())
+          assert d['status']=='SUCCEEDED' and '10.15468/dl.umqmsf' in str(d['doi'])
+          assert int(d['totalRecords'])==14637152
+          u=d['downloadLink']
+          assert u.startswith('https://')
+          (p/'link.txt').write_text(u)
+          print('EXACT_DOI_METADATA_VERIFIED')
+          PY
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 30 --max-time 5400 "$(cat "$RUNNER_TEMP/link.txt")" -o "$RUNNER_TEMP/original.zip"
+          echo "a1769481e91cb3002c25f69c6d8aa8e6d8d73a012c9495e8394032af02a9df18  $RUNNER_TEMP/original.zip" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/original.zip")" -eq 1415705617
+      - name: Count archived datasetKey and licence only; no occurrence coordinates exported
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'pandas>=2.2,<3'
+          python -u - <<'PY'
+          import collections,csv,hashlib,io,json,os,pathlib,re,zipfile
+          import pandas as pd
+          P=pathlib.Path
+          original=P(os.environ['RUNNER_TEMP'])/'original.zip'
+          frozen=P('results/geb_v05_gbif_source_attribution_20261120/VERIFIED_GBIF_155_224_ORIGINAL_DOWNLOAD_PUBLISHER_COUNTS.json')
+          b=frozen.read_bytes()
+          assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()=='43221c8091f22daa9704544cfa811e8bd6106195'
+          expected={r['datasetKey']:int(r['recordCount']) for r in json.loads(b)['dataset_contributors']}
+          assert len(expected)==1716 and sum(expected.values())==14637152
+          out=P('delivery');out.mkdir()
+          with zipfile.ZipFile(original) as z:
+              candidates=[]
+              for f in z.infolist():
+                  if f.is_dir() or not f.filename.lower().endswith(('.csv','.tsv','.txt')) or f.file_size<100000000:continue
+                  with z.open(f) as s: header=s.readline().decode('utf-8-sig')
+                  delim='\t' if '\t' in header else ','
+                  cols=next(csv.reader([header],delimiter=delim))
+                  by={c.casefold().strip():c for c in cols}
+                  if 'datasetkey' in by: candidates.append((f.filename,delim,by))
+              assert len(candidates)==1,[(x[0],list(x[2])) for x in candidates]
+              name,delim,by=candidates[0]
+              licence=by.get('license') or by.get('licence')
+              ncol=by['datasetkey']
+              print('ORIGINAL_RECORD_TABLE_HEADER',json.dumps({'member':name,'columns':list(by),'licence_column_present':bool(licence)}))
+              counts=collections.Counter()
+              n=0
+              with z.open(name) as f:
+                  for q in pd.read_csv(f,sep=delim,dtype=str,keep_default_na=False,usecols=[ncol]+([licence] if licence else []),chunksize=200000):
+                      if licence:
+                          for (ds,l),num in q.groupby([ncol,licence],dropna=False).size().items(): counts[(str(ds),str(l))]+=int(num)
+                      else:
+                          for ds,num in q.groupby(ncol,dropna=False).size().items():counts[(str(ds),'ARCHIVE_HAS_NO_LICENCE_COLUMN')]+=int(num)
+                      n+=len(q)
+                      if n//200000%20==0: print('RECORDS_SCANNED',n)
+              notice_files=[]
+              for f in z.infolist():
+                  if P(f.filename).name.lower() in ('rights.txt','citations.txt','metadata.xml') and f.file_size<100000000:
+                      t=z.read(f)
+                      notice_files.append({'file':f.filename,'sha256':hashlib.sha256(t).hexdigest(),'bytes':len(t)})
+          aggregate=collections.Counter()
+          for (ds,l),num in counts.items(): aggregate[ds]+=num
+          assert n==14637152 and dict(aggregate)==expected
+          licenses=collections.Counter()
+          for (ds,l),num in counts.items():licenses[l]+=num
+          with (out/'GBIF_ORIGINAL_DATASET_LICENCE_COUNTS.csv').open('w',newline='',encoding='utf8') as f:
+              w=csv.writer(f);w.writerow(['datasetKey','original_archived_licence','recordCount'])
+              for (ds,l),n0 in sorted(counts.items()):w.writerow([ds,l,n0])
+          report={'status':'EXACT_ORIGINAL_ARCHIVE_PROVIDER_COUNTS_MATCH_LICENCE_SCOPE_AUDIT','original_doi':'10.15468/dl.umqmsf','source_zip_sha256':'a1769481e91cb3002c25f69c6d8aa8e6d8d73a012c9495e8394032af02a9df18','records':n,'providers':len(expected),'all_original_provider_counts_match':True,'record_level_licence_column_present':bool(licence),'archived_licence_record_counts':dict(licenses),'provider_licence_combinations':len(counts),'source_notice_files':notice_files,'raw_occurrences_exported':False,'new_gbif_query_or_download_created':False,'rights_scope':'Original full 155/224 common download only. No claim about license of each derived output or contributor subset; no coverage of separate 225x51 or port facets.'}
+          (out/'GBIF_ORIGINAL_LICENCE_AUDIT.json').write_text(json.dumps(report,indent=2)+chr(10))
+          print('ORIGINAL_LICENCE_AUDIT',json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-original-GBIF-provider-licence-counts-only
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
