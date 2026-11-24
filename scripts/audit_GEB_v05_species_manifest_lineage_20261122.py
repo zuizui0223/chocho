@@ -98,6 +98,46 @@ def main():
                     match = False
                 exact_suffix_presence[sensitivity+'_'+role] = match
 
+        # Original build_forecast_panel.py SHA-bound source requirements.
+        # Report only constant known project-relative path labels, not ZIP paths.
+        builder_required = [
+            'work/temporal/forecast/candidate_cells.parquet',
+            'work/temporal/forecast/cell_environment_period.parquet',
+            'work/temporal/forecast/cell_climate_grid.parquet',
+            'outputs/forecast_candidate_disposition.csv',
+            'work/temporal/forecast/species_recording_days.parquet',
+            'work/temporal/forecast/target_group_recording_days.parquet',
+            'work/temporal/species_year_cells_10km.parquet',
+            'work/temporal/host_region_composition_metrics.parquet',
+            'work/remote_sensing/host_region_counts.csv',
+            'work/temporal/host_region_family_composition.parquet',
+            'outputs/temporal_host_family_support.csv',
+            'outputs/forecast_model_lock.json',
+            'work/temporal/forecast/species_cell_period_panel.parquet',
+        ]
+        builder_inputs = {}
+        for relative in builder_required:
+            try:
+                entry = source.find_manifest_record(records, relative)
+                builder_inputs[relative] = {
+                    'present': True, 'sha256': entry['sha256'],
+                    'bytes': entry['bytes'],
+                }
+            except source.RecoveryError:
+                builder_inputs[relative] = {'present': False}
+        host_counts_basename_candidates = sum(
+            isinstance(entry.get('path'), str)
+            and re.fullmatch(r'host[_-]?region.*counts\\.csv',
+                PurePosixPath(entry['path'].replace('\\\\','/')).name.lower()) is not None
+            for entry in records if isinstance(entry, dict)
+        )
+        occurrence_parts_entries = sum(
+            isinstance(entry.get('path'), str)
+            and '/work/temporal/occurrence_parts/' in
+                ('/' + entry['path'].replace('\\\\', '/'))
+            for entry in records if isinstance(entry, dict)
+        )
+
     result={
         "schema":"geb_original155_manifest_only_code_lineage_v1",
         "release_is_draft":True,
@@ -107,12 +147,18 @@ def main():
         "original_zip_not_downloaded":True,
         "matching_source_groups":groups,
         "expected_relative_path_suffixes":exact_suffix_presence,
+        "original_builder_inputs":builder_inputs,
+        "original_builder_inputs_present":sum(x["present"] for x in builder_inputs.values()),
+        "original_builder_inputs_required":len(builder_inputs),
+        "host_region_counts_csv_basename_candidates":host_counts_basename_candidates,
+        "occurrence_parts_parquet_source_entries":occurrence_parts_entries,
         "no_private_paths_or_source_rows_exported":True,
         "limits":"Verified manifest paths and registered digests only; existence does not establish historical execution time or code version.",
     }
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
     print("MANIFEST_ONLY_CLASS_COUNTS",json.dumps({k:v["entries"] for k,v in groups.items()},sort_keys=True))
+    print("BUILDER_EXACT_INPUTS",len(builder_inputs),sum(x["present"] for x in builder_inputs.values()),"host_counts_candidates",host_counts_basename_candidates,"occurrence_parts",occurrence_parts_entries)
     print("MANIFEST_ONLY_SOURCE_SCRIPT_HASHES",groups.get("fit_forecast_script_candidates",{}).get("distinct_content_hashes",0))
 
 if __name__=="__main__":
