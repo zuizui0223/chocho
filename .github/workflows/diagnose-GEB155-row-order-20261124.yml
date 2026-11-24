@@ -1,0 +1,51 @@
+name: GEB155 diagnose rebuilt-panel row order effect on frozen temporal RF
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/diagnose-GEB155-row-order-20261124.yml
+      - scripts/diagnose_GEB155_rebuilt_row_order_to_temporal_RF_20261124.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-panel-to-temporal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin existing verified source-replay libraries
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy==2.3.5' 'pandas==2.2.3' 'pyarrow==23.0.1' 'scipy==1.18.1' 'scikit-learn==1.7.2' 'pyproj==3.7.2' 'joblib==1.5.3'
+          python source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+          mkdir -p safe
+      - name: Recover original sources, execute original builder then original temporal random forests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -u audit/scripts/diagnose_GEB155_rebuilt_row_order_to_temporal_RF_20261124.py \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output safe/GEB155_ROW_ORDER_ALIGNED_TEMPORAL_RF_20261124.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB155-aligned-row-order-temporal-RF-aggregate-receipt-only
+          path: safe/GEB155_ROW_ORDER_ALIGNED_TEMPORAL_RF_20261124.json
+          retention-days: 90
+          if-no-files-found: warn
