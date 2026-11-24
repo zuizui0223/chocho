@@ -1,0 +1,267 @@
+name: GEB v0.5 replace internal receipts and verify scoped blinded evidence
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-blinded-receipt-candidate-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 0aee89b6d98cf3a6f39bb49f894c595e078a0386
+          path: audit
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed staging and verified public-source evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14913717016/zip" > staging.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14913109043/zip" > public-s6.zip
+          echo '26b1c54fe366a19625ce6ccac9c7e5903cfb61606c58e523e988af63ca5704ba  staging.zip' | sha256sum -c -
+          echo '52988cf22b6180c4b45b7ae2fabf814713508352690e6cbb6ecaef64b7fb6bbd  public-s6.zip' | sha256sum -c -
+      - name: Create separate blinded-receipt candidate with exact scientific content
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast,collections,csv,gzip,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          def get(z,n):
+              h=[p for p in z.namelist() if P(p).name==n]
+              assert len(h)==1,(n,h)
+              return z.read(h[0])
+          with zipfile.ZipFile('staging.zip') as z: raw=get(z,'GEB_V05_DIRECT_REDACTION_STAGING_NOT_FOR_REVIEW.zip')
+          assert sha(raw)=='576a5f916d3659fef1c5cee311549a19aebae04f0c74bd73b0fb22d5735be8fb'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              names=[n for n in z.namelist() if not n.endswith('/')]
+              assert len(names)==len(set(names))==191
+              assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+              old={n:z.read(n) for n in names}
+          with zipfile.ZipFile('public-s6.zip') as z: public_s6=json.loads(get(z,'S6_PUBLIC_SOURCE_RECEIPT.json'))
+          assert public_s6['status']=='S6_PUBLIC_PINNED_LEPTRAITS_REPLAY_PASS_NOT_REUSE_PERMISSION'
+          public_pins={'808e0b869f9ec1adf8efff87cf6a395adda103e0','65bed76bae9d644ccb6ad200c05f9f5071d89e05','52da7828aba9d461dd133c27b3bd7a4407161f54','9702e22fc540ac7f25a174542a253cc81f83719c','06749c04bd5b7a754d6f7717a31c01c51357cae8','b2bc7bd87eca199b62f08ac539660aebc9fbaf79'}
+          author_commits={
+            'bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2':'frozen-resource-matrix-source',
+            'dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0':'frozen-observed-community-source',
+            '3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250':'frozen-analysis-source',
+            '42f8fcc3a388e96456c76180d7e56d75dd2ed48c':'frozen-forecast-source',
+            '4104c784ddcf97318c4a1bb8bd949b3147628494':'frozen-country-crosswalk-source',
+            '03e9450c832bb769c42ca983bffdc327ecc8ccea':'frozen-manuscript-source',
+            'de1b32eb17c81a37f7fd0ecfed9abd0331c76d44':'frozen-endemic-source'}
+          # Collect only execution IDs in explicit provenance fields/containers.
+          # Scientific sample counts, third-party database IDs and file checksums are not masked.
+          idkey=re.compile(r'(?i)(?:^|_)(?:ci|run|runs|artifact|artifacts|job|workflow)(?:_|$)|(?:_CI|_run|_artifact|_job)$')
+          idnums=set()
+          def walk_ids(x,context=False):
+              if isinstance(x,dict):
+                  for k,v in x.items():
+                      ctx=context or bool(idkey.search(k))
+                      if ctx and re.fullmatch(r'\d{10,12}',k): idnums.add(k)
+                      walk_ids(v,ctx)
+              elif isinstance(x,list):
+                  for v in x: walk_ids(v,context)
+              elif context and type(x)==int and 10000000000<=x<=99999999999:
+                  idnums.add(str(x))
+          for n,b in old.items():
+              if n.endswith('.json'): walk_ids(json.loads(b))
+          # All of these numbers are independently identified original author execution IDs.
+          idnums.update(['44013658955','44010307551','44010673580','44013825017','44011411479'])
+          # Inspect all remaining tokens and fail if a known execution ID collides with scientific data.
+          # Replacement in Python is restricted to AST literals; source algorithms are unchanged.
+          idmap={v:f'withheld-execution-{i+1:03d}' for i,v in enumerate(sorted(idnums))}
+          provenance_changes=[]
+          def clean_json(x):
+              if isinstance(x,dict):
+                  return {idmap.get(k,author_commits.get(k,k)):clean_json(v) for k,v in x.items()}
+              if isinstance(x,list): return [clean_json(v) for v in x]
+              if type(x)==int and str(x) in idmap: return idmap[str(x)]
+              if isinstance(x,str):
+                  for a,b in author_commits.items(): x=x.replace(a,b)
+                  for a,b in idmap.items(): x=re.sub(r'(?<!\d)'+a+r'(?!\d)',b,x)
+              return x
+          def clean_code(b,n):
+              s=b.decode('utf8');tree=ast.parse(s)
+              # Source-line positions are byte offsets; only ASCII literal replacements used here.
+              lines=s.splitlines(keepends=True);offset=[0]
+              for line in lines: offset.append(offset[-1]+len(line.encode('utf8')))
+              edits=[]
+              for node in ast.walk(tree):
+                  if isinstance(node,ast.Constant) and (type(node.value)==int or isinstance(node.value,str)):
+                      new=clean_json(node.value)
+                      if new!=node.value:
+                          start=offset[node.lineno-1]+node.col_offset;end=offset[node.end_lineno-1]+node.end_col_offset
+                          edits.append((start,end,repr(new).encode('utf8')))
+              for start,end,new in sorted(edits,reverse=True): b=b[:start]+new+b[end:]
+              compile(b,n,'exec')
+              class Normalized(ast.NodeTransformer):
+                  def visit_Constant(self,node):
+                      v=clean_json(node.value)
+                      return ast.copy_location(ast.Constant(value=v),node) if v!=node.value else node
+              assert ast.dump(Normalized().visit(tree),include_attributes=False)==ast.dump(ast.parse(b),include_attributes=False),n
+              return b
+          def dump(x): return (json.dumps(x,ensure_ascii=False,indent=2)+chr(10)).encode()
+          e=dict(old)
+          for n,b in old.items():
+              if n.startswith('source_qa_receipts/') or n in ('MANIFEST_INTERNAL_LIMITED_SCOPE.json','README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'): continue
+              if n.endswith('.json'):
+                  d=json.loads(b);c=clean_json(d)
+                  if d!=c: e[n]=dump(c)
+              elif n.endswith('.py'):
+                  e[n]=clean_code(b,n)
+              # No CSV/array/GZIP rewriting: preserve scientific input bytes.
+          # The source lineage tables are non-executable internal path/commit ledgers.
+          # Replace them with relative-path content hashes, not the author repository pointers.
+          for n in ('components/s5_transfer/SOURCE_LINEAGE.json','components/s7_evidence/SOURCE_LINEAGE.json'):
+              original=json.loads(old[n])
+              p=n.rsplit('/',1)[0]+'/'
+              rows=original.get('files',original)
+              e[n]=dump({'status':'packaged_source_file_checksums','files':{k:{'sha256':sha(e[p+k]),'bytes':len(e[p+k])} for k in rows if p+k in e},'external_source_pins_retained_in_component_readme':True,'source_provenance_retained_in_internal_archive':True})
+          # For nonfunctional original-artifact metadata in the derived figure component,
+          # remove identifying artifact map keys. Current packaged data/code get fresh hashes below.
+          n='components/fig2abc_derived/MANIFEST.json'
+          d=json.loads(e[n])
+          if 'source_artifacts' in d: d['source_artifacts']=clean_json(d['source_artifacts'])
+          e[n]=dump(d)
+          # Refresh existing local checksum manifests only where they are simple path->SHA maps.
+          # More complex component manifests are retained and independently checked by replay.
+          for n,b in list(e.items()):
+              if n.endswith('/MANIFEST.json'):
+                  d=json.loads(b);prefix=n.rsplit('/',1)[0]+'/'
+                  if isinstance(d,dict) and d and all(isinstance(v,str) and re.fullmatch(r'[0-9a-f]{64}',v) and prefix+k in e for k,v in d.items()):
+                      for k in d: assert sha(old[prefix+k])==json.loads(old[n])[k],(n,k)
+                      e[n]=dump({k:sha(e[prefix+k]) for k in d})
+          # Replace 18 internal execution receipts with separately derived blinded validation records.
+          # Preserve scientific results and limitations; remove transport IDs and archived ZIP fingerprints.
+          receipts={n:json.loads(b) for n,b in old.items() if n.startswith('source_qa_receipts/')}
+          assert len(receipts)==18
+          def blind_receipt(x):
+              if isinstance(x,dict):
+                  out={}
+                  for k,v in x.items():
+                      # All source data SHA and public DOI/metadata IDs are retained;
+                      # omit only original author execution/archive identifiers and code-repo pins.
+                      if k in {'source_zip_sha256','source_zip_bytes','zip_sha256','original_artifact_sha256','fresh_original_refit_output_sha256','fresh_refit_artifact','original_refit_run','source_commit','source_model_commit','original_paper_snapshot','original_source_module_commit','original_source_code_pins','git_blob_sha'}: continue
+                      if type(v)==int and str(v) in idmap: continue
+                      if isinstance(v,str) and v in author_commits: continue
+                      out[k]=blind_receipt(v)
+                  return out
+              if isinstance(x,list): return [blind_receipt(v) for v in x]
+              return clean_json(x)
+          # Current forecast state replaces the historical missing-panel-only receipt.
+          base=P('audit/results/geb_v05_private_source_recovery_20261120')
+          def exact_receipt(name,h):
+              b=(base/name).read_bytes()
+              assert blob(b)==h,(name,blob(b))
+              return json.loads(b)
+          primary=exact_receipt('ORIGINAL155_PRIMARY_REFIT_STATUS_20261122.json','3fcc59cb5d3b478c6377b2a2735206be5575a401')
+          sensitivity=exact_receipt('ORIGINAL155_FOUR_SENSITIVITY_REFIT_STATUS_20261122.json','131532bea7c6c8d5cc5a93fd0e6fa863cb4359fc')
+          distance=exact_receipt('ORIGINAL155_DISTANCE_ONLY_COUNTERFACTUAL_PASS_20261124.json','aee9d2da0a1e3d7f4886737e1cbf11fd5c2d1bb3')
+          rebuilt=exact_receipt('ORIGINAL155_ALL96_PANEL_BUILDER_REPRO_VERIFIED_20261124.json','24340b3caf36f6f20c95f3c8c067403ec5988106')
+          forecast={'status':'RECOVERED_PANEL_TEMPORAL_SPATIAL_PASS_OTHER_REFITS_UNRESOLVED','source_GBIF_DOI':'10.15468/dl.umqmsf','panel_rows':primary['panel_rows'],'panel_species':primary['panel_species'],'test_rows_per_mode':primary['test_rows_per_mode'],'numerical_tolerance':{'relative':primary['relative_tolerance'],'absolute':primary['absolute_tolerance']},'primary_results':{k:{f:v[f] for f in ['status','comparison_groups','failed_comparison_groups','original_M5_over_M3_relative_mse_reduction_percent','refit_M5_over_M3_relative_mse_reduction_percent'] if f in v} for k,v in primary['mode_results'].items()},'spatial_buffer100':primary['mode_results']['spatial']['buffer100'],'sensitivity_results':{k:{f:v[f] for f in ('state','original_MSE_reduction_percent','refit_MSE_reduction_percent','groups_total','groups_failed')} for k,v in sensitivity['results'].items()},'source_panel_regeneration':{'all_13_inputs_recovered':rebuilt['verified_13_inputs_across_two_private_draft_release_assets'],'rows':rebuilt['model_panel_keyed_rows'],'columns':rebuilt['model_panel_columns'],'parquet_byte_identity':False,'only_exact_numeric_mismatch_column':distance['original_versus_rebuilt_exact_numeric_mismatch_columns'],'one_column_counterfactual_comparisons':distance['counterfactual_comparison_groups'],'one_column_counterfactual_failures':distance['counterfactual_failed_comparison_groups']},'distance_only_surviving_windows_runtime':{'species_cell_keys':280988,'exact_distance_mismatches':0,'temporal_comparisons':175,'failures':0,'host_gain_percent':4.120175607931823,'scope':'freshly reconstructed distance column with 95 archived original columns; not full raw-to-model replay'},'raw_occurrence_to_day_table_replayed':False,'original_private_RF_panel_included':False,'full_reviewer_replay_available':False,'limitations':'Unseen-species and two sensitivity discrepancies remain. Same-source results and saved scores must not be represented as independent full model reproduction.'}
+          assert forecast['primary_results']['species']['failed_comparison_groups']==76
+          assert forecast['sensitivity_results']['exclude_top_provider']['groups_failed']==78
+          assert forecast['sensitivity_results']['precision100']['groups_failed']==78
+          changed_receipts=[]
+          for n,d in sorted(receipts.items()):
+              dest='validation/'+P(n).name
+              if P(n).name=='GBIF155_original_source_and_missing_RF_panel_gate.json':
+                  dest='validation/GBIF155_current_reproduction_status.json'
+                  result=forecast
+              else: result=blind_receipt(d)
+              e[dest]=dump({'scope':'Blinded summary of previously executed source verification; not independent third-party certification','verification':result})
+              del e[n];changed_receipts.append({'original':n,'replacement':dest,'original_sha256':sha(old[n]),'replacement_sha256':sha(e[dest])})
+          assert len(changed_receipts)==18 and not any(n.startswith('source_qa_receipts/') for n in e)
+          e['validation/S6_PUBLIC_SOURCE_RECEIPT.json']=dump(public_s6)
+          # Keep original public citations, not a claimed deposit or licence grant.
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          del e[manifest]
+          e['MANIFEST.json']=dump({'schema':'GEB_v05_blinded_evidence_staging_v1','status':'STAGING_NOT_AUTHORIZED_FOR_REVIEWER_DISTRIBUTION','components':sorted({n.split('/')[1] for n in e if n.startswith('components/')}),'validation_receipts':sorted(n for n in e if n.startswith('validation/')),'full_SI_replayed':False,'indirect_anonymity_certified':False,'source_rights_cleared':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False,'limits':['Original 155 private panel excluded; partial refit discrepancies preserved.','S6 selection replay requires pinned public LepTraits, not bundled.','S7 source aggregates and stored source results, not new causal tests.','Original historical GBIF provider attribution and rights remain open.','Original author provenance retained only in separate internal audit.']})
+          n='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          old_readme=e.pop(n).decode()
+          e['README.md']=(old_readme.split('DIRECT REDACTION STAGING ONLY.')[0]+'\nBlinded validation receipts are in validation/. Internal run IDs and author commit pins are replaced with non-identifying labels; public upstream versions and byte checksums needed for verification are retained. No raw external source or rights are newly granted. This remains a restricted staging copy, not a journal-ready archive.\nS6 public source: https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv ; SHA-256 6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b. Place at components/s6_endemic/data/external/leptraits_consensus_v1.0.csv and run original two S6 scripts as documented.\n').encode()
+          # Check scientific inputs untouched; check all current files independently.
+          data_files=[n for n in old if n.endswith(('.csv','.csv.gz','.tsv','.parquet','.npz'))]
+          assert all(old[n]==e[n] for n in data_files)
+          out=P('delivery');out.mkdir()
+          # Internal transformation register deliberately outside candidate.
+          changed=[n for n in old if n in e and old[n]!=e[n]]
+          direct=[];remaining=[];checksum_files=[]
+          directpat=re.compile(rb'zuizui0223|ZHANG[ _\.-]?(?:RUIQI|RACHEL)|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/',re.I)
+          for n,b in sorted(e.items()):
+              payload=gzip.decompress(b) if n.endswith('.gz') else b
+              if directpat.search(payload) or directpat.search(n.encode()): direct.append(n)
+              t=payload.decode('utf8',errors='replace')
+              old_ids=[v for v in idmap if re.search(r'(?<!\d)'+v+r'(?!\d)',t)]
+              old_commits=[v for v in author_commits if v in t]
+              hashes=sorted(set(re.findall(r'\b[0-9a-f]{40}\b',t,re.I))-public_pins)
+              if hashes: checksum_files.append({'file':n,'nonpublic_40hex_values':hashes})
+              if old_ids or old_commits: remaining.append({'file':n,'ids':old_ids,'commits':old_commits})
+          assert not direct,direct
+          assert not remaining,remaining
+          dest=out/'GEB_V05_BLINDED_EVIDENCE_STAGING_NOT_FOR_RELEASE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(e.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==e
+              z.extractall('extracted')
+          qa={'status':'BLINDED_RECEIPT_STAGING_BUILT_NOT_RELEASE_AUTHORIZED','files':len(e),'original_18_receipts_replaced':len(changed_receipts),'additional_public_S6_receipt':True,'unchanged_original_data_tables':len(data_files),'author_execution_ID_values_replaced':len(idmap),'author_commit_labels':len(author_commits),'known_original_execution_or_commit_values_remaining':0,'direct_identifier_flags':direct,'nonpublic_checksum_candidate_files':len(checksum_files),'indirect_anonymity_certified':False,'source_rights_cleared':False,'reviewer_release_authorized':False,'inner_sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size}
+          (out/'INTERNAL_TRANSFORMATION_QA.json').write_text(json.dumps({'summary':qa,'receipt_lineage':changed_receipts,'execution_ID_mapping':idmap,'author_commit_mapping':author_commits,'changed_original_paths':changed,'remaining_checksum_candidates':checksum_files},indent=2)+chr(10))
+          print('BLINDED_BUILD',json.dumps(qa))
+          PY
+      - name: Execute the ten limited replay groups and S7 from the transformed copy
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/REPLAY_LOG_INTERNAL.txt 2>&1 || { tail -100 delivery/REPLAY_LOG_INTERNAL.txt; exit 1; }
+          (cd extracted/components/s7_evidence && python replay.py) >> delivery/REPLAY_LOG_INTERNAL.txt
+          grep -q 'GEB_V05_TEN_GROUPS_REPLAYED_FIVE_PREVERIFIED_NOT_FULL_SI' delivery/REPLAY_LOG_INTERNAL.txt
+          python - <<'PY'
+          import json,pathlib
+          P=pathlib.Path
+          fresh=json.loads(P('extracted/components/s7_evidence/S7_RESULT.json').read_text())
+          expected=json.loads(P('extracted/validation/S7_REPLAY_RECEIPT.json').read_text())['verification']['source_result']
+          assert fresh==expected
+          print('BLINDED_STAGING_TEN_PLUS_S7_REPLAYS_PASS')
+          PY
+      - name: Re-execute S6 with public original LepTraits after blinding
+        run: |
+          set -euo pipefail
+          cd extracted/components/s6_endemic
+          mkdir -p data/external
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv -o data/external/leptraits_consensus_v1.0.csv
+          echo '6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  data/external/leptraits_consensus_v1.0.csv' | sha256sum -c -
+          python scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir output
+          python scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output
+          python - <<'PY'
+          import json,csv,pathlib
+          P=pathlib.Path
+          for n in P('expected').iterdir():
+              f=P('output')/n.name
+              if n.suffix=='.json': assert json.loads(n.read_text())==json.loads(f.read_text()),n
+              else: assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(f.read_text().splitlines())),n
+          print('BLINDED_S6_ALL_FIVE_OUTPUTS_EXACT')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-blinded-receipt-staging-internal-only
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
