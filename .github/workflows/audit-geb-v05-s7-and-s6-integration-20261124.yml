@@ -1,0 +1,272 @@
+name: GEB v0.5 S7 source evidence and S6 integrated replay archive
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s7-and-s6-integration-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: afbd44422e6ca442622a358e72bad4d4abbf4a65
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: de8fd4f264f39d2992f00544601d5e5f01d9fa68
+          path: paired
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed historical and independent establishment source summaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14110149052 12742025922; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          15ed9f1bb6d8256c68e408f6b756e42308752a6f64fbf8baaedbba114ea3151c  14110149052.zip
+          d523d03d04d5a9feaa8e0820fa05f3b1936e916351d0c7f06d33330a8f1522eb  12742025922.zip
+          SUMS
+      - name: Build S7 component and recompute derived-source counts and paired means
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,pathlib,zipfile,textwrap,subprocess,sys
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          root=P('source')
+          base='provenance/reviewer_defenses/results/'
+          entries={}
+          lineage={}
+          def add(name,path,expected=None,src=root):
+              b=(src/path).read_bytes()
+              if expected: assert blob(b)==expected,(path,blob(b))
+              entries[name]=b
+              lineage[name]={'source_path':path,'git_blob':blob(b),'sha256':sha(b)}
+          for folder,ns in [('port_host_corecording_partial_20261030',['port_alien_host_butterfly_all225_summary.csv','port_alien_host_butterfly_corecording.csv','port_alien_host_butterfly_corecording_audit.json','port_alien_host_butterfly_corecording_validation.json']),('port_alien_broad_inventory_20261030',['port_alien_host_broad_all_ports.csv','port_alien_host_broad_species.csv','port_alien_host_broad_validation.json'])]:
+              manifest=json.loads((root/base/folder/'snapshot_manifest.json').read_text())
+              for n in ns:
+                  add('inputs/'+n,base+folder+'/'+n)
+                  assert sha(entries['inputs/'+n])==manifest[n],n
+          add('inputs/top10.json',base+'geb_port_island_realization_20261031/GEB_top10_pre2011_port_plant_overlap.json','d25a6198d70861d014b156f4f214691b62297634')
+          add('inputs/local_reports.json','results/hosts_island_local_use_20261116/VERIFIED_SUMMARY_ALL24_20261116.json','f0567368f0540ea25cb23a267a54d663dd5360e8')
+          add('inputs/paired_reports.json','results/hosts_use_vs_flora_20261116/PAIRED_SAME_BUTTERFLY_FULL_SOURCE_20261117.json','0c11ebcf6bdfadfb435e6b5fb5c7e0922430df21',P('paired'))
+          add('inputs/nutrient.json',base+'global_hydrowaste_port_hosts_20261102/CIRAD2022_NEAR_RING_REPLAY_VERIFIED_20261117.json')
+          add('inputs/current.json','results/WCVP126_crossed_native_alien_20261117/VERIFIED_NOAA2005_GLOBAL_PARTICLE_TAXONOMIC_CROSSWALK_20261117.json','550042eca4cb77dc3894b8183fb6c328d57b5e86')
+          add('inputs/current_controls.json','results/WCVP126_crossed_native_alien_20261117/VERIFIED_NOAA2005_SOURCE_NATIVE_ALIEN_MATCHED_CONTROLS_20261117.json','befb04848a33c0dafa7a83f9045260b245086768')
+          for aid,n,dest in [(14110149052,'full_11475_same_source_pre2001_risk_cells.csv','history.csv'),(14110149052,'full_risk_source_summary.json','history.json'),(12742025922,'zenodo2024_35_aliens_WCVP_host_region_profiles_20261027.json','established.json')]:
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  hits=[p for p in z.namelist() if P(p).name==n]
+                  assert len(hits)==1,(aid,hits,z.namelist())
+                  b=z.read(hits[0])
+              entries['inputs/'+dest]=b
+              lineage['inputs/'+dest]={'source_artifact':aid,'original_member':n,'sha256':sha(b)}
+          assert sha(entries['inputs/established.json'])=='5ef806a12f8750572c5303bce40ea5ffa58ad56138ae8cdb75806ff7cbbb8efc'
+          def txt(n,s): entries[n]=textwrap.dedent(s).lstrip('\n').encode()
+          txt('replay.py','''
+          import csv,json,math,pathlib,statistics,collections
+          P=pathlib.Path
+          def rows(n): return list(csv.DictReader((P('inputs')/n).open(encoding='utf-8-sig',newline='')))
+          def data(n): return json.loads((P('inputs')/n).read_text())
+          def close(a,b): assert math.isclose(a,b,rel_tol=1e-10,abs_tol=1e-12),(a,b)
+          table=rows('port_alien_host_butterfly_corecording.csv')
+          summary=rows('port_alien_host_butterfly_all225_summary.csv')
+          audit=data('port_alien_host_butterfly_corecording_audit.json')
+          assert len(table)==3825 and len(summary)==225
+          assert len({(r['species'],r['port_id']) for r in table})==3825
+          assert len({r['port_id'] for r in table})==17
+          by=collections.defaultdict(list)
+          for r in table:
+              by[r['species']].append(r)
+              assert (r['both_recorded']=='True')==(int(r['butterfly_records'])>0 and int(r['recorded_alien_candidate_host_species'])>0)
+          assert set(by)=={r['species'] for r in summary}
+          for r in summary:
+              q=by[r['species']]
+              assert len(q)==17
+              assert sum(int(x['recorded_alien_candidate_host_species'])>0 for x in q)==int(r['ports_with_alien_candidate_hosts'])
+              assert sum(int(x['butterfly_records'])>0 for x in q)==int(r['ports_with_butterfly_records'])
+              assert sum(x['both_recorded']=='True' for x in q)==int(r['ports_with_both'])
+          core={'ports':17,'species_with_butterflies':sum(int(r['ports_with_butterfly_records'])>0 for r in summary),'species_with_both':sum(int(r['ports_with_both'])>0 for r in summary),'both_species_port_cells':sum(r['both_recorded']=='True' for r in table),'record_port_memberships':sum(int(r['butterfly_records']) for r in table),'source_unique_record_count_from_archived_audit':audit['butterfly_unique_records_in_queries']}
+          assert core=={'ports':17,'species_with_butterflies':31,'species_with_both':16,'both_species_port_cells':59,'record_port_memberships':8525,'source_unique_record_count_from_archived_audit':8525}
+          ports=rows('port_alien_host_broad_all_ports.csv')
+          plants=rows('port_alien_host_broad_species.csv')
+          complete=[r for r in ports if r['query_complete']=='True']
+          assert len(ports)==len({r['port_id'] for r in ports})==3630 and len(complete)==1596
+          broad={'registered':len(ports),'complete':len(complete),'positive':sum(float(r['contemporary_not_native_in_catalogue'])>0 for r in complete),'candidate_species':len(plants),'candidate_species_port_pairs':sum(int(r['ports']) for r in plants)}
+          assert broad=={'registered':3630,'complete':1596,'positive':1150,'candidate_species':687,'candidate_species_port_pairs':25742}
+          assert sum(int(float(r['contemporary_not_native_in_catalogue'])) for r in complete)==25742
+          top=data('top10.json')
+          q=top['source_contributor_plants']
+          assert len(q)==10 and top['study_port_proxies']==38 and sum(x['n_port_buffers_with_pre2011_record']>0 for x in q)==8
+          close(sum(x['GEB_fraction_of_added_species_region_opportunity_attributed_to_this_plant'] for x in q),top['GEB_top10_fraction_of_added_units'])
+          close(sum(x['GEB_fraction_of_added_species_region_opportunity_attributed_to_this_plant'] for x in q if x['n_port_buffers_with_pre2011_record']>0),top['GEB_top10_species_WITH_any_port_index_total_fraction_of_GLOBAL_added_units'])
+          hist=rows('history.csv'); hr=data('history.json')
+          assert len(hist)==len({(r['speciesKey'],r['landmass_id']) for r in hist})==11475
+          assert all(r['pre2001_source_complete']=='1' for r in hist)
+          assert sum(int(r['pre2001_any_index']) for r in hist)==894
+          counts={}
+          for period,orig,older,new,eligible in [('2011_2017',221,122,99,10437),('2018_2022',96,23,73,10338)]:
+              selected=[r for r in hist if r['original_'+period+'_first_index']=='1']
+              a=len(selected);b=sum(int(r['pre2001_any_index']) for r in selected);c=sum(int(r['indexed_first_'+period+'_longer_history']) for r in hist);d=sum(int(r['eligible_'+period+'_longer_history']) for r in hist)
+              assert (a,b,c,d)==(orig,older,new,eligible)
+              assert a-b==c
+              counts[period]={'original':a,'pre2001_indexed':b,'revised':c,'eligible':d}
+              assert hr['stats'][period]['historical_pre2001_index_among_original_events']==b
+          loc=data('local_reports.json')['scopes']
+          scopes={}
+          for label in ('all_hosts','exclude_FAO_exact'):
+              x=loc['HOSTS_Papilionoidea__strict_exact_or_composite__'+label]
+              scopes[label]={k:{'n':x[k]['localities'],'median':x[k]['median_share']} for k in ('island','mainland')}
+          assert [scopes['all_hosts'][k]['n'] for k in ('island','mainland')]==[13,15]
+          close(scopes['all_hosts']['island']['median'],0.42424242424242425);close(scopes['all_hosts']['mainland']['median'],0.09090909090909091)
+          close(scopes['exclude_FAO_exact']['island']['median'],0.20900537634408603);close(scopes['exclude_FAO_exact']['mainland']['median'],0.08116883116883117)
+          pa=data('paired_reports.json')['cohorts']['HOSTS_Papilionoidea__all_hosts']
+          species=pa['source_matched_species_complete'];assert len(species)==67 and len({r['species'] for r in species})==67
+          for r in species:
+              for field in ('raw','family_excess','family_expectation'):
+                  close(r['island'][field]-r['mainland'][field],r['difference_'+field])
+          means={f:statistics.mean(r[f] for r in species) for f in ('difference_raw','difference_family_excess','difference_family_expectation')}
+          for k,v in means.items(): close(v,pa['paired_comparison'][k]['mean_paired_difference'])
+          close(means['difference_family_excess'],-0.03871059649630908)
+          nutrient=data('nutrient.json')
+          assert nutrient['status']=='SOURCE_CSV_REPLAY_SUCCESS_NOT_CAUSAL' and nutrient['input_port_count']==1596
+          models={x['scope']+'_'+x['coef']:x for x in nutrient['models']}
+          close(models['0-10km_vs_10-25km_main_ratio_crop_delta']['b'],0.08616903243891005)
+          close(models['main_fractional_crop_delta']['b'],0.10144437752578472)
+          assert models['coverage50_fractional_crop_delta']['ci'][0]<0<models['coverage50_fractional_crop_delta']['ci'][1]
+          assert models['main_alien_richness_crop_delta']['ci'][0]<0<models['main_alien_richness_crop_delta']['ci'][1]
+          e=data('established.json')['geographic_source_guard95_and_sensitivity90']['0.95']
+          exact=[r for r in e['positive_original35_each_with_scope_and_host_counts'] if r['geographic_status']=='MAIN_COMPARABLE']
+          assert len(exact)==24 and all(r['introduced_only_wild_source_hosts']>0 for r in exact)
+          assert e['source_positive35_mapped_geography_counts']=={'MAIN_COMPARABLE':24,'SENSITIVITY_BOTANICAL_PROXY':3,'UNSCORABLE_ORIGINAL_SOURCE_GEOGRAPHY':8}
+          ocean=data('current.json')['original_real_2005_global_280_particle_source_model']
+          controls=data('current_controls.json')['source_results']
+          assert ocean['fixed_source_release_trajectories']==sum(ocean['trajectory_outcomes'].values())==280
+          assert ocean['source_pair_current_nearshore_positive']==controls['12_model_positive_pairs']==12
+          assert controls['number_with_three_or_more_source_distance_richness_controls']==2
+          result={'status':'S7_DERIVED_AGGREGATE_REPLAY_AND_SOURCE_RECEIPT_CHECK_PASS_NOT_FULL_RAW_RECONSTRUCTION','port_corecord':core,'port_broad':broad,'top10_early_recorded':8,'historical':counts,'historical_earlier_of_apparent_317':145,'local_report_scopes_from_source':scopes,'paired_67_recomputed_means':means,'paired_67_source_interval':pa['paired_comparison']['difference_family_excess']['bootstrap95_species_level_mean_descriptive'],'nutrient_verified_prior_model_receipt_only':list(models.values()),'strict_positive_established_with_introduced_hosts':len(exact),'current_trajectories':280,'nearshore_directions':12,'matched_directions':2,'scope_limits':['Recomputed saved aggregate counts and paired means, not new species/port facet requests, occurrence deduplication from raw records, or complete WCVP/HOSTS linkage.','Locality medians and nutrient model intervals are prior source receipts, not independently refitted here.','Establishment sample is positive-only; marine physical source result is not measured dispersal.','No use of the unrelated GBIF download DOI for original historical facets. Internal archive only.']}
+          P('S7_RESULT.json').write_text(json.dumps(result,indent=2)+chr(10))
+          print(json.dumps(result))
+          ''')
+          compile(entries['replay.py'],'replay.py','exec')
+          entries['README.txt']=b'INTERNAL ONLY. Run python replay.py after extraction. This verifies source-derived S7 aggregate arithmetic and paired means; stored local-report, nutrient, and marine receipts are source-consistency checks, not new model fits or observations. Historical GBIF provider attribution remains unresolved. No point occurrences or photographs bundled. Not cleared for redistribution or reviewer access.\n'
+          entries['SOURCE_LINEAGE.json']=(json.dumps(lineage,indent=2)+'\n').encode()
+          entries['MANIFEST.json']=(json.dumps({n:sha(b) for n,b in entries.items()},indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_S7_INTERNAL_SOURCE_EVIDENCE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          subprocess.run([sys.executable,'replay.py'],cwd='extracted',check=True)
+          result=json.loads(P('extracted/S7_RESULT.json').read_text())
+          receipt={'status':result['status'],'files':len(entries),'source_zip_sha256':sha(dest.read_bytes()),'source_zip_bytes':dest.stat().st_size,'source_result':result}
+          (out/'S7_REPLAY_RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps({'files':len(entries),'sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'status':result['status']}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S7-SOURCE-EVIDENCE-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
+  integrate-s6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover 150-file archive and verified S6 component
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14911800456 14911502132; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          echo '3bbc9d0669de113a648ba59e0e7928de949f65fc062b73e9a81b3aa70ec45a24  14911800456.zip' | sha256sum -c -
+          echo 'f94583bd7e7d3bb27f77c1083e0864dd0582361e2d54fb1f921a293798baf17a  14911502132.zip' | sha256sum -c -
+      - name: Integrate exact component and verify all source manifests
+        run: |
+          python - <<'PY'
+          import gzip,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,name):
+              hits=[n for n in z.namelist() if P(n).name==name]
+              assert len(hits)==1,(name,hits)
+              return z.read(hits[0])
+          def load(aid,name,digest):
+              with zipfile.ZipFile(f'{aid}.zip') as z: b=member(z,name)
+              assert sha(b)==digest
+              with zipfile.ZipFile(io.BytesIO(b)) as z:
+                  assert z.testzip() is None
+                  names=[i.filename for i in z.infolist() if not i.is_dir()]
+                  assert len(names)==len(set(names)) and all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+                  return {n:z.read(n) for n in names}
+          base=load(14911800456,'GEB_V05_INTERNAL_FIFTEEN_GROUPS_NOT_FOR_REVIEW.zip','035b4d95d8745b6fbe5faae797744133324eadf61909520e66f5e8e52466feef')
+          s6=load(14911502132,'GEB_V05_S6_INTERNAL_SOURCE_EVIDENCE.zip','a376f025e390794060b904f1ec50eee7093fac8037cddaaa40540c6e88d76e83')
+          assert len(base)==150 and len(s6)==19
+          m6=json.loads(s6['MANIFEST.json'])
+          assert set(m6)==set(s6)-{'MANIFEST.json'}
+          for n,h in m6.items(): assert sha(s6[n])==h,n
+          with zipfile.ZipFile('14911502132.zip') as z: receipt=member(z,'S6_REPLAY_RECEIPT.json')
+          r=json.loads(receipt)
+          assert r['status']=='S6_ORIGINAL_SELECTION_REPLAY_AND_FIELD_SOURCE_CONSISTENCY_PASS' and len(r['original_output_comparisons'])==5
+          assert r['source_zip_sha256']=='a376f025e390794060b904f1ec50eee7093fac8037cddaaa40540c6e88d76e83'
+          assert r['raw_LepTraits_not_in_ZIP'] and r['field_photographs_not_included']
+          entries=dict(base)
+          for n,b in s6.items(): entries['components/s6_endemic/'+n]=b
+          entries['source_qa_receipts/S6_REPLAY_RECEIPT.json']=receipt
+          assert len(entries)==170
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(base[manifest])
+          m['schema']='GEB_v05_internal_10component_17group_candidate_v7'
+          m['component_source']['s6_endemic']={'file_count':19,'source_artifact_component_filename':'GEB_V05_S6_INTERNAL_SOURCE_EVIDENCE.zip','source_artifact_component_sha256':'a376f025e390794060b904f1ec50eee7093fac8037cddaaa40540c6e88d76e83'}
+          m['source_qa_receipts'].append('S6_REPLAY_RECEIPT.json')
+          m['S6_two_original_selection_and_nonidentification_programs_preverified']=True
+          m['limitations']+=' S6 two programs verified separately on identical source with exact external LepTraits temporarily supplied; raw LepTraits and photos excluded. No fresh WCVP or photograph verification in S6 component.'
+          entries[manifest]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          entries[readme]=(base[readme].decode().replace('nine-component','ten-component')+'\n10. S6: 19 original source and expected output files plus replay receipt. Both original selection and nonidentification programs previously executed from this exact component plus pinned LepTraits, which is excluded until rights resolution. This integrated job checks component hashes and prior exact output comparisons. Field evidence source consistency only; no new field observations.\n').encode()
+          changed={n for n in base if entries[n]!=base[n]}
+          assert changed=={manifest,readme}
+          patterns={'owner_account':rb'zuizui0223','author_name':rb'ZHANG[ _\.-]?(?:RUIQI|RACHEL)','email':rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}','local_path':rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/'}
+          flags=[]
+          for n,b in entries.items():
+              check=gzip.decompress(b) if n.endswith('.gz') else b
+              for k,p in patterns.items():
+                  if re.search(p,n.encode(),re.I) or re.search(p,check,re.I): flags.append({'file':n,'kind':k})
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_INTERNAL_S1_S6_PARTIAL_17_GROUPS_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+          report={'status':'S6_INTEGRATED_BYTE_VERIFIED_INTERNAL_ONLY','files':170,'prior_members_unchanged':148,'new_component_files':19,'new_receipts':1,'previous_15_groups_already_verified':True,'S6_two_programs_preverified':True,'direct_identifier_flags':flags,'direct_identifier_scan_pass':not flags,'zip_sha256':sha(dest.read_bytes()),'zip_size':dest.stat().st_size,'full_SI_replayed':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False}
+          (out/'INTEGRATION_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-S6-INTEGRATED-170-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
