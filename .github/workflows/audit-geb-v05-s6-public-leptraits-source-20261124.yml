@@ -1,0 +1,74 @@
+name: GEB v0.5 S6 independent public LepTraits acquisition from direct-redaction candidate
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s6-public-leptraits-source-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed staging copy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14913717016/zip" > candidate.zip
+          echo '26b1c54fe366a19625ce6ccac9c7e5903cfb61606c58e523e988af63ca5704ba  candidate.zip' | sha256sum -c -
+          python - <<'PY'
+          import hashlib,io,pathlib,zipfile
+          with zipfile.ZipFile('candidate.zip') as z:
+              names=[n for n in z.namelist() if pathlib.Path(n).name=='GEB_V05_DIRECT_REDACTION_STAGING_NOT_FOR_REVIEW.zip']
+              assert len(names)==1
+              b=z.read(names[0])
+          assert hashlib.sha256(b).hexdigest()=='576a5f916d3659fef1c5cee311549a19aebae04f0c74bd73b0fb22d5735be8fb'
+          with zipfile.ZipFile(io.BytesIO(b)) as z:
+              assert z.testzip() is None
+              z.extractall('extracted')
+          PY
+      - name: Acquire exact public source without author-side original checkout
+        run: |
+          set -euo pipefail
+          cd extracted/components/s6_endemic
+          mkdir -p data/external
+          curl --fail --silent --show-error --location --retry 3 --connect-timeout 20 --max-time 120 https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv -o data/external/leptraits_consensus_v1.0.csv
+          echo '6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  data/external/leptraits_consensus_v1.0.csv' | sha256sum -c -
+          python scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir output
+          python scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output
+      - name: Verify all five redacted expected outputs and write source-only receipt
+        run: |
+          python - <<'PY'
+          import pathlib,csv,json,hashlib
+          P=pathlib.Path
+          root=P('extracted/components/s6_endemic')
+          lep=root/'data/external/leptraits_consensus_v1.0.csv'
+          b=lep.read_bytes()
+          assert len(b)==2687158
+          assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()=='b2bc7bd87eca199b62f08ac539660aebc9fbaf79'
+          for n,h in json.loads((root/'MANIFEST.json').read_text()).items(): assert hashlib.sha256((root/n).read_bytes()).hexdigest()==h,n
+          comparisons={}
+          for n in sorted((root/'expected').iterdir()):
+              fresh=root/'output'/n.name
+              if n.suffix=='.json':
+                  assert json.loads(n.read_text())==json.loads(fresh.read_text()),n
+              else:
+                  assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(fresh.read_text().splitlines())),n
+              comparisons[n.name]='exact'
+          assert len(comparisons)==5
+          lep.unlink()
+          out=P('delivery');out.mkdir()
+          r={'status':'S6_PUBLIC_PINNED_LEPTRAITS_REPLAY_PASS_NOT_REUSE_PERMISSION','source_url':'https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv','source_file_bytes':len(b),'source_file_sha256':hashlib.sha256(b).hexdigest(),'source_git_blob':'b2bc7bd87eca199b62f08ac539660aebc9fbaf79','official_collection_doi':'10.6084/m9.figshare.c.5899187.v1','same_original_frozen_source':True,'all_outputs':comparisons,'author_private_source_checkout_used':False,'raw_leptraits_in_artifact':False,'source_file_licence_verified':False,'reviewer_release_authorized':False}
+          (out/'S6_PUBLIC_SOURCE_RECEIPT.json').write_text(json.dumps(r,indent=2)+chr(10))
+          print(json.dumps(r))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-S6-public-source-replay-receipt-only
+          path: delivery/
+          retention-days: 90
