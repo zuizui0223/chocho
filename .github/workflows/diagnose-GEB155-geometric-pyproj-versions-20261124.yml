@@ -1,0 +1,53 @@
+name: GEB155 isolate pyproj versions in original geographic distance rebuilding
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/diagnose-GEB155-geometric-pyproj-versions-20261124.yml
+      - scripts/diagnose_GEB155_geometry_pyproj_versions_20261124.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  distance-version-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin original species domain and test environment
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+             'numpy==2.3.5' 'pandas==2.2.3' 'pyarrow==23.0.1' \
+             'scipy==1.18.1' 'scikit-learn==1.7.2' 'pyproj==3.7.2' 'joblib==1.5.3'
+          python source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+          mkdir -p safe
+      - name: Source-verified geography only, compare two PROJ-transform versions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -u audit/scripts/diagnose_GEB155_geometry_pyproj_versions_20261124.py run \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output safe/GEB155_ORIGINAL_DISTANCE_PYPROJ_VERSIONS_20261124.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB155-source-geometry-pyproj-versions-aggregate-only
+          path: safe/GEB155_ORIGINAL_DISTANCE_PYPROJ_VERSIONS_20261124.json
+          if-no-files-found: warn
+          retention-days: 90
