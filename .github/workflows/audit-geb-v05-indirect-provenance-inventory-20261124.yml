@@ -1,0 +1,74 @@
+name: GEB v0.5 inspect remaining author provenance and receipt schemas
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-indirect-provenance-inventory-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect signed staged archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14913717016/zip" > staging.zip
+          echo '26b1c54fe366a19625ce6ccac9c7e5903cfb61606c58e523e988af63ca5704ba  staging.zip' | sha256sum -c -
+          python - <<'PY'
+          import gzip,hashlib,io,json,pathlib,re,zipfile,collections
+          P=pathlib.Path
+          with zipfile.ZipFile('staging.zip') as z:
+              n=[n for n in z.namelist() if P(n).name=='GEB_V05_DIRECT_REDACTION_STAGING_NOT_FOR_REVIEW.zip']
+              assert len(n)==1
+              b=z.read(n[0])
+          assert hashlib.sha256(b).hexdigest()=='576a5f916d3659fef1c5cee311549a19aebae04f0c74bd73b0fb22d5735be8fb'
+          with zipfile.ZipFile(io.BytesIO(b)) as z:
+              e={n:z.read(n) for n in z.namelist() if not n.endswith('/')}
+          assert len(e)==191
+          print('ROOT_MANIFEST',e['MANIFEST_INTERNAL_LIMITED_SCOPE.json'].decode())
+          print('ROOT_RUNNER',e['RUN_LIMITED_COMPONENTS.sh'].decode())
+          print('ROOT_README',e['README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'].decode())
+          keypat=re.compile(r'(?i)(?:commit|git_blob|git_sha|source_run|run_id|action_run|artifact_id|source_artifact|original_refit_run|source_success_CI|verified_run|github_actions_run|workflow_run|workflow_job|head_sha|source_head|source_ci|source_job|repo_commit|branch|draft_pr|github_repo|original_ci|original_run)')
+          recs={}
+          refs={}
+          def walk(obj,path=''):
+              if isinstance(obj,dict):
+                  for k,v in obj.items():
+                      p=path+'/'+k
+                      if keypat.search(k) and isinstance(v,(str,int)):
+                          yield p,v
+                      yield from walk(v,p)
+              elif isinstance(obj,list):
+                  for i,v in enumerate(obj): yield from walk(v,path+'/'+str(i))
+          for n,v in sorted(e.items()):
+              t=(gzip.decompress(v) if n.endswith('.gz') else v).decode('utf8',errors='replace')
+              if n.startswith('source_qa_receipts/'):
+                  d=json.loads(t) if n.endswith('.json') else None
+                  recs[n]={'keys':list(d) if isinstance(d,dict) else [],'head':t[:950]}
+              if n.endswith('.json'):
+                  d=json.loads(t)
+                  vals=list(walk(d))
+                  if vals:
+                      refs[n]={'metadata_paths':vals[:100]}
+              elif n.endswith(('.py','.R','.sh','.md','.txt')):
+                  lines=[l.strip()[:250] for l in t.splitlines() if re.search(r'(?i)\b[0-9a-f]{40}\b|https?://github\.com/|(?:run_id|source_run|action_run|artifact_id|source_artifact|original_refit_run|source_success_CI|verified_run|github_actions_run)',l)]
+                  if lines: refs[n]={'lines':lines[:45]}
+          print('RECEIPT_SCHEMAS',json.dumps(recs,ensure_ascii=False))
+          for n,v in refs.items(): print('PROVENANCE_FILE',n,json.dumps(v,ensure_ascii=False))
+          out=P('delivery');out.mkdir()
+          (out/'INTERNAL_PROVENANCE_INVENTORY.json').write_text(json.dumps({'receipt_schemas':recs,'references':refs,'files':list(e),'receipt_count':len(recs)},ensure_ascii=False,indent=2)+chr(10))
+          print('INVENTORY_COUNTS',json.dumps({'receipts':len(recs),'reference_files':len(refs)}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-internal-provenance-inventory-not-for-review
+          path: delivery/
+          retention-days: 90
