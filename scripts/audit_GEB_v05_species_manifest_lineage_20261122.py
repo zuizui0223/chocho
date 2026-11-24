@@ -127,7 +127,7 @@ def main():
                 builder_inputs[relative] = {'present': False}
         host_counts_basename_candidates = sum(
             isinstance(entry.get('path'), str)
-            and re.fullmatch(r'host[_-]?region.*counts\\.csv',
+            and re.fullmatch(r'host[_-]?region.*counts\.csv',
                 PurePosixPath(entry['path'].replace('\\\\','/')).name.lower()) is not None
             for entry in records if isinstance(entry, dict)
         )
