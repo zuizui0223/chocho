@@ -1,0 +1,112 @@
+name: GEB v0.5 S3 EuDiS exact-source and extracted paired replay
+
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-geb-v05-s3-eudis-replay-20261124.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  eudis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 7345b05734c6b6b1e5b697ad3615ecdd8310efae
+          path: original
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed original EuDiS run artifact (no new source estimates)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/14237222110/zip" > original.zip
+          echo '2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  original.zip' | sha256sum -c -
+      - name: Build and independently rerun internal S3 paired-region component
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, json, math, pathlib, shutil, subprocess, sys, zipfile
+          p=pathlib.Path
+          stage=p('stage'); stage.mkdir()
+          names=['wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv','paired_source_trait_composition.json','eudis_v5_source_receipt.json']
+          with zipfile.ZipFile('original.zip') as z:
+              assert z.testzip() is None
+              for name in names:
+                  m=[x for x in z.namelist() if p(x).name==name]
+                  assert len(m)==1, (name,m)
+                  (stage/name).write_bytes(z.read(m[0]))
+          src=json.loads((stage/names[3]).read_text())
+          assert (src['article_id'],src['version'],src['file_id'],src['bytes'],src['sha256'])==(22251028,5,41269785,1403693,'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5')
+          original= p('original/scripts/audit_eudis_source_matched_region_20261116.py')
+          shutil.copyfile(original,stage/'replay.py')
+          rows=list(csv.DictReader((stage/names[0]).open()))
+          assert len(rows)==726 and len({(r['area_code_l3'],r['introduced']) for r in rows})==726
+          assert {r['introduced'] for r in rows}=={'0','1'}
+          assert sum(r['class']=='island' for r in rows)==252
+          for r in rows:
+              n,m,k=map(int,(r['WCVP_accepted_species'],r['EuDiS_matched_species'],r['thalasso_trait_1']))
+              assert 0<=k<=m<=n
+              assert r['eligible'].lower() in ('true','false')
+              assert (r['eligible'].lower()=='true')==(n>0 and m>=20 and m/n>=.05)
+              if m:
+                  assert math.isclose(float(r['thalasso_trait_fraction_among_EuDiS_matched']),k/m,rel_tol=1e-12,abs_tol=1e-12)
+          (stage/'README.txt').write_text('Internal S3 EuDiS paired-region replay from archived derived regional counts; not raw trait/flora reconstruction or transport evidence. Requires Python 3.12 standard library. Run: python replay.py --csv wcvp_region_origin_eudis_thalasso_coverage.csv --out-dir replay_output. EuDiS source DOI 10.6084/m9.figshare.22251028.v5; WCVP v13 DOI 10.34885/0yex-xv26. Source rights and indirect anonymity require separate clearance. No original species-level traits included.\n')
+          files=sorted(stage.iterdir())
+          (stage/'manifest.json').write_text(json.dumps({f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in files},indent=2)+'\n')
+          out=p('delivery'); out.mkdir()
+          with zipfile.ZipFile(out/'S3_EUDIS_INTERNAL_REPLAY.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for f in sorted(stage.iterdir()): z.write(f,f.name)
+          extracted=p('extracted'); extracted.mkdir()
+          with zipfile.ZipFile(out/'S3_EUDIS_INTERNAL_REPLAY.zip') as z:
+              assert z.testzip() is None
+              z.extractall(extracted)
+          for name,digest in json.loads((extracted/'manifest.json').read_text()).items():
+              assert hashlib.sha256((extracted/name).read_bytes()).hexdigest()==digest
+          subprocess.run([sys.executable,str(extracted/'replay.py'),'--csv',str(extracted/names[0]),'--out-dir','replayed'],check=True)
+          saved=json.loads((extracted/names[2]).read_text())
+          fresh=json.loads((p('replayed')/names[2]).read_text())
+          assert saved==fresh
+          assert list(csv.DictReader((extracted/names[1]).open()))==list(csv.DictReader((p('replayed')/names[1]).open()))
+          a=fresh['islands_all']; b=fresh['mainlands_all']
+          assert (a['same_regions'],a['positive_deltas'],a['negative_deltas'],a['ties'],b['same_regions'])==(22,17,4,1,115)
+          assert abs(a['median_native_minus_introduced_trait_pp']-2.9515)<.0001
+          assert abs(b['median_native_minus_introduced_trait_pp']-1.1777)<.0001
+          receipt={'status':'EXTRACTED_DERIVED_S3_PAIR_REPLAY_PASS_NOT_FULL_SI','rows':len(rows),'islands':a,'mainlands':b,'original_artifact_sha256':hashlib.sha256(p('original.zip').read_bytes()).hexdigest(),'zip_sha256':hashlib.sha256((out/'S3_EUDIS_INTERNAL_REPLAY.zip').read_bytes()).hexdigest(),'source_script_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'limits':'Archived regional counts only; no upstream WCVP/EuDiS join or physical mechanism refit; rights and reviewer access remain open.'}
+          (out/'S3_EUDIS_REPLAY_RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt))
+          PY
+      - name: Independently verify exact version metadata, licence and original CSV
+        run: |
+          set -euo pipefail
+          python original/scripts/fetch_eudis_v5_thalassochory_20261116.py --out-dir upstream
+          python - <<'PY'
+          import json, pathlib, urllib.request
+          p=pathlib.Path
+          f=json.loads(p('upstream/eudis_v5_source_receipt.json').read_text())
+          assert (f['article_id'],f['version'],f['file_id'],f['bytes'],f['sha256'])==(22251028,5,41269785,1403693,'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5')
+          url='https://api.figshare.com/v2/articles/22251028/versions/5'
+          req=urllib.request.Request(url,headers={'User-Agent':'academic-source-version-audit','Accept':'application/json'})
+          with urllib.request.urlopen(req,timeout=90) as response: m=json.load(response)
+          assert m['id']==22251028 and m['version']==5
+          license=m.get('license') or {}
+          receipt={'article_id':m['id'],'version':m['version'],'doi':m.get('doi'),'title':m.get('title'),'published_date':m.get('published_date'),'authors':[a.get('full_name') for a in m.get('authors',[])],'license':license,'verified_file':f,'metadata_url':url,'scope':'Exact v5 public source metadata and bytes; not a licence determination for the whole manuscript or reviewer archive.'}
+          p('delivery/EUDIS_V5_EXACT_SOURCE_RIGHTS_RECEIPT.json').write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+'\n')
+          print(json.dumps(receipt,ensure_ascii=False))
+          assert 'CC BY 4.0' in str(license) or 'creativecommons.org/licenses/by/4.0' in str(license), 'v5 licence not verified as CC BY 4.0; keep redistribution gate open'
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S3-EuDiS-INTERNAL-replay
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
