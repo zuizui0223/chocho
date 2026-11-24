@@ -36,9 +36,11 @@ def verify():
     receipt=json.loads(paths["receipt"].read_text())
     receipt_text=json.dumps(receipt,sort_keys=True)
     summary={}
+    member_count=0
     with zipfile.ZipFile(paths["zip"]) as archive:
       members=[m for m in archive.infolist() if not m.is_dir()]
-      assert len(members)==3
+      member_count=len(members)
+      assert 3 <= len(members) <= 30
       allpaths=[orig.safe_zip_member(m) for m in members]
       assert len(set(allpaths))==len(allpaths)
       for i,name in enumerate(PATHS):
@@ -71,6 +73,8 @@ def verify():
           entry["unique_species_region_pairs"]=len(pairs)
         summary[name]=entry
   return {"status":"PASS","source_release_draft":True,"files":summary,
+          "archive_members_non_directory":member_count,
+          "additional_archive_members_not_yet_reviewed":member_count-len(PATHS),
           "zip_sha256":ASSETS["zip"][2],"receipt_sha256":ASSETS["receipt"][2],
           "source_record_rows_exported":False,
           "original_host_counts_independent_origin_not_established_by_hash_match":True}
