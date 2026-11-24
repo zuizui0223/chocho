@@ -1,0 +1,124 @@
+name: GEB v0.5 integrated seven-replay internal archive
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-integrated-seven-replay-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  integrated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover and verify two signed source artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14901913291/zip" > previous.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14903815517/zip" > sensitivities.zip
+          echo 'fe0d8782ceea27396e13eeb201e5cb6a3c21a9aff675e1beb4cfecf544446b46  previous.zip' | sha256sum -c -
+          echo '11eb03aaf5985b948be89094771a2c82b0c1a8ed65da212cfe28a143eac9aaf4  sensitivities.zip' | sha256sum -c -
+      - name: Assemble new archive from immutable verified components
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, json, pathlib, re, zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,name):
+              xs=[n for n in z.namelist() if P(n).name==name]
+              assert len(xs)==1,(name,xs)
+              return z.read(xs[0])
+          def load(data,digest):
+              assert sha(data)==digest
+              with zipfile.ZipFile(io.BytesIO(data)) as z:
+                  assert z.testzip() is None
+                  names=[i.filename for i in z.infolist() if not i.is_dir()]
+                  assert len(names)==len(set(names))
+                  assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+                  return {n:z.read(n) for n in names}
+          with zipfile.ZipFile('previous.zip') as z:
+              previous=load(member(z,'GEB_V05_INTERNAL_FIVE_COMPONENT_REPLAY_NOT_FOR_REVIEW.zip'),'1f0bd3cbb439b2828c3b1c9415f2ab10c55f3aec1fefb336396a98a4b6472566')
+          with zipfile.ZipFile('sensitivities.zip') as z:
+              new=load(member(z,'GEB_V05_S34_S41_INTERNAL_REPLAY.zip'),'59fe0a09f0838f9f393eca95f977565309fceef099c8ac3994f0ad134062bf1c')
+              receipt=member(z,'REPLAY_RECEIPT.json')
+          assert len(previous)==48 and len(new)==15
+          rr=json.loads(receipt)
+          assert rr['status']=='S34_S41_EXTRACTED_ORIGINAL_DERIVED_INPUT_REPLAY_PASS_NOT_FULL_SI'
+          assert rr['s34_leaf_comparisons']==216 and rr['s41_exact_json_match']
+          assert rr['s34_cohorts']['matched_effort_island_regions']==98
+          assert rr['s41_partial_rho']==0.348264
+          entries=dict(previous)
+          for n,b in new.items(): entries['components/s34_s41/'+n]=b
+          entries['source_qa_receipts/S34_S41_EXTRACTED_REPLAY_RECEIPT.json']=receipt
+          assert len(entries)==64
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(previous[manifest])
+          m['schema']='GEB_v05_internal_6component_7replay_candidate_v4'
+          m['component_source']['s34_s41']={'source_artifact_component_filename':'GEB_V05_S34_S41_INTERNAL_REPLAY.zip','source_artifact_component_sha256':'59fe0a09f0838f9f393eca95f977565309fceef099c8ac3994f0ad134062bf1c','file_count':15}
+          m['source_qa_receipts'].append('S34_S41_EXTRACTED_REPLAY_RECEIPT.json')
+          m['S3_4_botanical_effort_98_derived_replay']=True
+          m['S4_1_HOSTS_documentation_239_derived_replay']=True
+          m['full_SI_replayed']=False
+          m['limitations']+=' S3.4 and S4.1 use frozen derived inputs and observation/documentation proxies, not causal effort correction.'
+          entries[manifest]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          s=previous[readme].decode().replace('five-component','six-component').replace('The five components','The six components')
+          s+='\n6. S3.4 / S4.1: two frozen original sensitivity replays. S3.4 uses 98 botanical-effort-covered regions, separate from full 126; S4.1 uses 239 butterflies and original 2000 resamples. The original input tables, scripts, expected summaries and environment receipt are packaged. TDWG geometry is downloaded at its pinned public revision and SHA verified. No raw occurrences or model panels added. Neither proxy is independent sampling effort.\n'
+          entries[readme]=s.encode()
+          runner='RUN_LIMITED_COMPONENTS.sh'
+          marker='echo GEB_V05_LIMITED_FIVE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER'
+          old=previous[runner].decode()
+          assert old.count(marker)==1
+          entries[runner]=old.replace(marker,'( cd components/s34_s41 && bash RUN.sh )\necho GEB_V05_LIMITED_SEVEN_REPLAY_GROUPS_PASS_NOT_FULL_PAPER').encode()
+          changed={n for n in previous if previous[n]!=entries[n]}
+          assert changed=={manifest,readme,runner}
+          patterns=[rb'zuizui0223',rb'ZHANG[ _\.-]?(?:RUIQI|RACHEL)',rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/']
+          for n,b in entries.items():
+              assert not any(re.search(p,n.encode(),re.I) or re.search(p,b,re.I) for p in patterns),n
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_INTERNAL_SEVEN_REPLAY_GROUPS_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          report={'status':'INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED','files':len(entries),'previous_48_members_unchanged':45,'wrappers_updated':sorted(changed),'new_component_members':15,'new_receipts':1,'component_counts':{k:v['file_count'] for k,v in m['component_source'].items()},'zip_sha256':sha(dest.read_bytes()),'zip_size':dest.stat().st_size,'direct_identifier_scan_pass':True,'full_SI_replayed':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False}
+          (out/'INTEGRATED_BUILD_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - name: Replay all seven analysis groups from extracted archive
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/INTEGRATED_REPLAY_LOG.txt 2>&1 || { tail -100 delivery/INTEGRATED_REPLAY_LOG.txt; exit 1; }
+          for marker in GEB_V05_LIMITED_SEVEN_REPLAY_GROUPS_PASS_NOT_FULL_PAPER GEB_LIMITED_FIXED239_INDEPENDENT_REVIEW_SOURCE_REPLAY_PASS FIG1_REGION_NATIVE_ALIEN_KNOWN_HOST_239_AGGREGATE_REPLAY_PASS GEB_FIG4_224_169_HELD_REGION_H_AFTER_O_SCORE_SOURCE_RECALCULATED_PASS FIG2ABC_DERIVED_REPLAY_PASS_INTERNAL_ONLY S34_S41_EXTRACTED_ORIGINAL_DERIVED_INPUT_REPLAY_PASS_NOT_FULL_SI; do
+            grep -q "$marker" delivery/INTEGRATED_REPLAY_LOG.txt
+          done
+          python - <<'PY'
+          import csv,json,pathlib
+          p=pathlib.Path('extracted/components/s3_eudis')
+          for n in ['paired_source_trait_composition.json','within_region_eudis_native_introduced_pairs.csv']:
+              if n.endswith('.json'):
+                  assert json.loads((p/n).read_text())==json.loads((p/'replay_output'/n).read_text())
+              else:
+                  assert list(csv.DictReader((p/n).open()))==list(csv.DictReader((p/'replay_output'/n).open()))
+          fresh=json.loads(pathlib.Path('extracted/components/s34_s41/output/REPLAY_RECEIPT.json').read_text())
+          assert fresh['s34_leaf_comparisons']==216 and fresh['s41_exact_json_match']
+          assert fresh['s41_partial_rho']==0.348264
+          print('ALL_SEVEN_EXTRACTED_REPLAY_GROUPS_PASS_NOT_FULL_SI')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-SEVEN-REPLAY-GROUPS-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
