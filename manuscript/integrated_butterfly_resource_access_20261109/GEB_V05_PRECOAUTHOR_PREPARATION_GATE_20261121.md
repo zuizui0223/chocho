@@ -1,8 +1,16 @@
 # GEB v0.5 — preparation-first submission gate
 
-**Current update: 22 November 2026. Stage A technical preparation continues; not ready for coauthor review; not submitted.**
+**Current update: 24 November 2026. Stage A technical preparation continues; not ready for coauthor review; not submitted.**
 
 The author-directed sequence is **complete preparation → coauthor review → author-approved journal submission**. The paper remains on Draft [PR #179](https://github.com/zuizui0223/chocho/pull/179); source, rights and reproduction work remains on Draft [PR #189](https://github.com/zuizui0223/chocho/pull/189). A completed numerical check does not authorize a coauthor message, a review request, a Ready state, merge, release publication or journal submission. Earlier records that described the paper as coauthor-reviewable are superseded by this preparation-first gate.
+
+## 24 November — incremental, source-bound Stage A verification
+
+- **Model-version lineage:** all 30 original SHA-verified temporal and sensitivity random-forest model objects (six each for primary temporal, effort20, radius250, largest-provider exclusion and precision100) record **scikit-learn 1.7.2** in static serialized metadata. This is the same library version used for the successful/unsuccessful recent sensitivity re-fits; differing saved scikit-learn version strings therefore do **not** explain their numerical discrepancies. No model pickle was unpickled, no recovered data row was exported, and the original unseen-species *fold-specific* models were not among these temporal objects. The exact historical executable and training runtime are still unbound. [Validated CI #45311652838](https://github.com/zuizui0223/chocho/actions/runs/45311652838); [source-lineage report](GEB_V05_ORIGINAL155_MODEL_VERSION_STATIC_QA_20261124.md).
+- **Third-party rights:** the version-specific original [GSHHG v2.3.7 record](https://zenodo.org/records/7007502) states GNU **Lesser** GPL; the earlier third-party GPL-3.0-or-later wording was corrected in the [reuse matrix](GEB_V05_SOURCE_RIGHTS_AND_REUSE_MATRIX_20261121.md). The original NGA WPI 2019 **27th edition** identity is distinguished from the unverified converted study GeoJSON. Exact licence-file compliance and conversion rights are **not** yet cleared.
+- **Limited internal 39-file ZIP:** an independent byte-identical read-only scan found zero matches for checked direct author-account/name/email/local-home patterns and no ZIP comments/extra metadata, but DOI references and external links could disclose identity indirectly. A historical pre-recovery `GBIF155...missing_RF_panel` receipt remains in the internal package with an explicit historical label; an eventual reviewer-facing package needs current source status. These findings do **not** clear independent redistribution, indirect anonymity or stable reviewer access. [Scoped QA](GEB_V05_INTERNAL_39FILE_ARCHIVE_ANONYMITY_METADATA_AUDIT_20261124.md).
+
+**Gate remains Stage A.** All scientific manuscript values, original adverse results and paper head `03e9450c832bb769c42ca983bffdc327ecc8ccea` remain untouched; do not mark any PR Ready, merge, publish, contact coauthors or submit.
 
 ## Stage A — current evidence and remaining work
 
