@@ -1,0 +1,84 @@
+name: GEB v0.5 LepTraits item content comparison and colonial archive notices
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-leptraits-item-content-and-colonial-notices-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Acquire exact source archives; inspect without republishing
+        run: |
+          set -euo pipefail
+          mkdir -p delivery
+          curl -fsSL --retry 3 --max-time 180 https://api.figshare.com/v2/file/download/35290045 -o leptraits.zip
+          echo '78cece3491bf692f825c3baaf6a8aad3  leptraits.zip' | md5sum -c -
+          curl -fsSL --retry 3 --max-time 120 https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv -o original.csv
+          echo '6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  original.csv' | sha256sum -c -
+          curl -fsSL --retry 3 --max-time 180 'https://zenodo.org/api/records/6640264/files/lenzner/Eur-Emp-Alien-Flora-v1.0.0.zip/content' -o colonial.zip
+          echo '16f5585d2500676951a4b664bbf0ffde  colonial.zip' | md5sum -c -
+          python - <<'PY'
+          import csv,collections,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          target=P('original.csv').read_bytes()
+          def parse(b):
+              return list(csv.reader(io.StringIO(b.decode('utf-8-sig'),newline='')))
+          a=parse(target)
+          result={'frozen_original_rows':len(a)-1,'frozen_original_columns':len(a[0]),'frozen_sha256':sha(target),'item_file_id':35290045,'item_archive_sha256':sha(P('leptraits.zip').read_bytes()),'item_doi':'10.6084/m9.figshare.19874602.v1','item_metadata_licence':'CC0','collection_metadata_licence':'CC BY 4.0','candidate_comparisons':[]}
+          with zipfile.ZipFile('leptraits.zip') as z:
+              assert z.testzip() is None
+              result['member_inventory']=[{'path':i.filename,'bytes':i.file_size} for i in z.infolist() if not i.is_dir()]
+              for i in z.infolist():
+                  if i.is_dir() or i.file_size>80000000:continue
+                  if not i.filename.lower().endswith('.csv'):continue
+                  b=z.read(i)
+                  try:
+                      rows=parse(b)
+                  except Exception as exc:
+                      result['candidate_comparisons'].append({'path':i.filename,'error':str(exc)});continue
+                  if not rows:continue
+                  q={'path':i.filename,'bytes':len(b),'sha256':sha(b),'rows':len(rows)-1,'columns':len(rows[0]),'header_exact':rows[0]==a[0],'byte_exact':b==target,'line_ending_normalized_exact':b.replace(b'\r\n',b'\n')==target.replace(b'\r\n',b'\n'),'ordered_csv_cells_exact':rows==a}
+                  if q['header_exact']:
+                      q['row_multiset_exact']=collections.Counter(map(tuple,rows[1:]))==collections.Counter(map(tuple,a[1:]))
+                      q['matched_row_multiset_count']=sum((collections.Counter(map(tuple,rows[1:]))&collections.Counter(map(tuple,a[1:]))).values())
+                  result['candidate_comparisons'].append(q)
+          result['exact_csv_data_match']=any(r.get('ordered_csv_cells_exact') or r.get('row_multiset_exact') for r in result['candidate_comparisons'])
+          result['limits']='An exact CSV-cell match establishes shared content, not an independent permission grant or a proof that every source-derived file is CC0-compatible. Different versions must not be substituted silently.'
+          colonial={'doi':'10.5281/zenodo.6640264','archive_sha256':sha(P('colonial.zip').read_bytes()),'metadata_license_id':'other-open','actual_analysis_members':[],'notice_candidates':[]}
+          with zipfile.ZipFile('colonial.zip') as z:
+              assert z.testzip() is None
+              for i in z.infolist():
+                  if i.is_dir():continue
+                  name=P(i.filename).name.lower()
+                  if name in ('regions.csv','predictors.csv','empires.csv') or name.endswith(('.shp','.shx','.dbf','.prj')):
+                      b=z.read(i)
+                      colonial['actual_analysis_members'].append({'path':i.filename,'bytes':len(b),'sha256':sha(b)})
+                  if re.search(r'(?i)licen[cs]e|copying|readme|copyright|terms.of.use',name):
+                      rec={'path':i.filename,'bytes':i.file_size}
+                      if i.file_size<=1000000:
+                          b=z.read(i);rec['sha256']=sha(b)
+                          if name.endswith(('.txt','.md','.rst')) or '.' not in name:
+                              t=b.decode('utf-8',errors='replace')
+                              rec['rights_related_lines']=[l.strip()[:220] for l in t.splitlines() if re.search(r'(?i)licen[cs]e|copyright|creative commons|redistrib|permission|reuse',l)][:20]
+                      colonial['notice_candidates'].append(rec)
+          assert sum(P(r['path']).name.lower() in ('regions.csv','predictors.csv','empires.csv') for r in colonial['actual_analysis_members'])==3
+          assert sum(r['path'].lower().endswith('.shp') for r in colonial['actual_analysis_members'])==1
+          colonial['limits']='An absent or ambiguous archive notice does not establish permission. Confirm actual reuse conditions of original input layers separately; no geometry or CSV content exported.'
+          out={'status':'SOURCE_CONTENT_AND_NOTICE_INSPECTION_COMPLETE_NOT_PERMISSION_GRANT','leptraits':result,'colonial':colonial}
+          P('delivery/SOURCE_CONTENT_AND_NOTICE_AUDIT.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+chr(10))
+          print('LEP_CONTENT_RESULT',json.dumps({k:v for k,v in result.items() if k!='member_inventory'}))
+          print('COLONIAL_NOTICE_RESULT',json.dumps(colonial))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-source-content-and-notice-audit-only
+          path: delivery/
+          retention-days: 90
