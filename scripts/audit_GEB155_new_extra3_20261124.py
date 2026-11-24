@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Hash-verify newly added 3-input recovery bundle; export aggregate metadata only."""
-import csv, hashlib, io, json, sys, tempfile, zipfile
+import csv, hashlib, io, json, sys, tempfile, zipfile, traceback
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import recover_GEB_v05_original155_private_inputs_20261122 as orig
@@ -79,7 +79,7 @@ if __name__=="__main__":
   out=Path(sys.argv[1]);out.parent.mkdir(parents=True,exist_ok=True)
   result={"status":"INCOMPLETE"}
   try:result=verify()
-  except Exception as e:result={"status":"FAIL","error":"verification_"+type(e).__name__}
+  except Exception as e:result={"status":"FAIL","error":"verification_"+type(e).__name__,"checkpoint_line":traceback.extract_tb(e.__traceback__)[-1].lineno}
   out.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
   print("EXTRA3_VERIFICATION_"+result["status"],{k:v["rows"] for k,v in result.get("files",{}).items()},flush=True)
   sys.exit(0 if result["status"]=="PASS" else 1)
