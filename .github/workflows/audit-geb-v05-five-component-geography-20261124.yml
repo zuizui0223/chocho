@@ -1,0 +1,202 @@
+name: GEB v0.5 five-component internal replay and geography provenance
+
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-geb-v05-five-component-geography-20261124.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  composite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed four-component and EuDiS artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/14733606979/zip" > base.zip
+          gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/14896281602/zip" > eudis.zip
+          echo '3a4beb33c72093aaf146ecca8da28650e2264fa221f7f9f8ab12bf8c9abbd09d  base.zip' | sha256sum -c -
+          echo '077c5f8c86349b9c802ca0eb23e8ec609285ae020694158ea4c5e4a42f9cb272  eudis.zip' | sha256sum -c -
+      - name: Integrate verified archives without changing original component bytes
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, json, pathlib, re, zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,name):
+              matches=[n for n in z.namelist() if P(n).name==name]
+              assert len(matches)==1,(name,matches)
+              return z.read(matches[0])
+          def load(data,digest):
+              assert sha(data)==digest
+              with zipfile.ZipFile(io.BytesIO(data)) as z:
+                  assert z.testzip() is None
+                  names=[i.filename for i in z.infolist() if not i.is_dir()]
+                  assert len(names)==len(set(names))
+                  assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+                  return {n:z.read(n) for n in names}
+          with zipfile.ZipFile('base.zip') as z:
+              base=load(member(z,'GEB_V05_INTERNAL_COMPOSITE_REPRO_NOT_FOR_JOURNAL_REVIEW.zip'),'40369ba5820f0e40ed56758f64165f951c82c6d3d64e5613175533d3c2055c95')
+          with zipfile.ZipFile('eudis.zip') as z:
+              eudis=load(member(z,'S3_EUDIS_INTERNAL_REPLAY.zip'),'22545b7a310fa10946f25e16b00ceb074a6b2dc65fa6d1eb540d2efb20c82d79')
+              receipts={n:member(z,n) for n in ['S3_EUDIS_REPLAY_RECEIPT.json','EUDIS_V5_EXACT_SOURCE_RIGHTS_RECEIPT.json']}
+          assert len(base)==39 and len(eudis)==7
+          qa=json.loads(receipts['S3_EUDIS_REPLAY_RECEIPT.json'])
+          assert qa['status']=='EXTRACTED_DERIVED_S3_PAIR_REPLAY_PASS_NOT_FULL_SI' and qa['rows']==738 and qa['islands']['same_regions']==22
+          rights=json.loads(receipts['EUDIS_V5_EXACT_SOURCE_RIGHTS_RECEIPT.json'])
+          assert rights['version']==5 and rights['license']['name']=='CC BY 4.0'
+          assert rights['verified_file']['sha256']=='ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5'
+          entries=dict(base)
+          for n,b in eudis.items(): entries['components/s3_eudis/'+n]=b
+          for n,b in receipts.items(): entries['source_qa_receipts/'+n]=b
+          manifest_name='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(base[manifest_name])
+          m['schema']='GEB_v05_internal_5component_extracted_replay_candidate_v3'
+          m['component_source']['s3_eudis']={'source_artifact_component_filename':'S3_EUDIS_INTERNAL_REPLAY.zip','source_artifact_component_sha256':'22545b7a310fa10946f25e16b00ceb074a6b2dc65fa6d1eb540d2efb20c82d79','file_count':7}
+          m['source_qa_receipts']+=list(receipts)
+          m['S3_EuDiS_paired_region_derived_replay']=True
+          m['S3_EuDiS_upstream_trait_flora_join_replayed_here']=False
+          m['full_SI_replayed']=False
+          m['historical_155_missing_panel_receipt_superseded']=True
+          m['original_GBIF155_recovered_input_model_refit_verification']='Temporal/spatial pass from recovered panel; unseen-species and two sensitivity numerical mismatches remain; see current source-status note.'
+          m['limitations']+=' S3 EuDiS is a derived regional-count replay only.'
+          entries[manifest_name]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          s=base[readme].decode().replace('four-component','five-component').replace('The four components','The five components')
+          s+='\n5. S3 EuDiS paired native/introduced trait geography: exact archived regional counts for 369 regions (738 origin rows), 22 island and 115 mainland eligible pairs. EuDiS v5 CC BY 4.0; Vargas, Heleno and Costa (2023), doi:10.6084/m9.figshare.22251028.v5. No species-level trait data bundled. Upstream join and whole SI not replayed here.\n\nThe old 155 missing-panel receipt is historical only. Original 842,964-row panel recovered; temporal and spatial refits passed; unseen-species and two sensitivity numerical comparisons remain unresolved. No private panel included.\n'
+          entries[readme]=s.encode()
+          runner='RUN_LIMITED_COMPONENTS.sh'
+          old=base[runner].decode()
+          marker='echo GEB_V05_LIMITED_FOUR_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER'
+          assert old.count(marker)==1
+          entries[runner]=old.replace(marker,'( cd components/s3_eudis && python replay.py --csv wcvp_region_origin_eudis_thalasso_coverage.csv --out-dir replay_output )\necho GEB_V05_LIMITED_FIVE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER').encode()
+          assert len(entries)==48
+          changed={n for n in base if entries[n]!=base[n]}
+          assert changed=={manifest_name,readme,runner}
+          direct=[rb'zuizui0223',rb'ZHANG[ _\\.-]?(?:RUIQI|RACHEL)',rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}',rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/']
+          for n,b in entries.items():
+              assert not any(re.search(p,n.encode(),re.I) or re.search(p,b,re.I) for p in direct),n
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_INTERNAL_FIVE_COMPONENT_REPLAY_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.external_attr=0o644<<16;i.compress_type=zipfile.ZIP_DEFLATED
+                  z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          receipt={'status':'INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED','file_count':len(entries),'original_39_members_unchanged':36,'original_wrappers_updated':sorted(changed),'eudis_component_members':7,'additional_source_receipts':2,'component_file_counts':{k:v['file_count'] for k,v in m['component_source'].items()},'zip_sha256':sha(dest.read_bytes()),'zip_size':dest.stat().st_size,'direct_identifier_scan_pass':True,'full_SI_replayed':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False}
+          (out/'FIVE_COMPONENT_BUILD_QA.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt))
+          PY
+      - name: Execute all five components after extracting the combined ZIP
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/FIVE_COMPONENT_REPLAY_LOG.txt 2>&1 || { tail -n 100 delivery/FIVE_COMPONENT_REPLAY_LOG.txt; exit 1; }
+          for marker in GEB_V05_LIMITED_FIVE_COMPONENT_REPLAY_PASS_NOT_FULL_PAPER GEB_LIMITED_FIXED239_INDEPENDENT_REVIEW_SOURCE_REPLAY_PASS FIG1_REGION_NATIVE_ALIEN_KNOWN_HOST_239_AGGREGATE_REPLAY_PASS GEB_FIG4_224_169_HELD_REGION_H_AFTER_O_SCORE_SOURCE_RECALCULATED_PASS FIG2ABC_DERIVED_REPLAY_PASS_INTERNAL_ONLY; do
+            grep -q "$marker" delivery/FIVE_COMPONENT_REPLAY_LOG.txt
+          done
+          python - <<'PY'
+          import csv,json,pathlib
+          p=pathlib.Path('extracted/components/s3_eudis')
+          for n in ['paired_source_trait_composition.json','within_region_eudis_native_introduced_pairs.csv']:
+              if n.endswith('.json'):
+                  assert json.loads((p/n).read_text())==json.loads((p/'replay_output'/n).read_text())
+              else:
+                  assert list(csv.DictReader((p/n).open()))==list(csv.DictReader((p/'replay_output'/n).open()))
+          print('FIVE_COMPONENT_EXTRACTED_REPLAY_PASS_NOT_FULL_SI')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-FIVE-COMPONENT-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
+
+  geography:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 8a51030b091d51fa1920a7e007f3f2eacf4cf57b
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit original source-bundle notice and compare NOAA recovered port positions with original study coordinate receipts
+        run: |
+          set -euo pipefail
+          mkdir -p geography_receipt
+          python - <<'PY'
+          import csv, hashlib, json, pathlib
+          P=pathlib.Path
+          root=P('data/exploratory/island51_observed_ocean_20261106')
+          m=json.loads((root/'source_bundle_manifest.json').read_text())
+          entries={x['path']:x for x in m['files']}
+          def check(name):
+              b=(root/name).read_bytes()
+              h=hashlib.sha256(b).hexdigest()
+              assert h==entries[name]['sha256'] and len(b)==entries[name]['bytes'],name
+              return b,h
+          notice,h=check('source_notices/GSHHG_LICENSE.TXT')
+          assert 'version 3 or later' in notice.decode()
+          lesser,lh=check('source_notices/GSHHG_COPYING.LESSERv3')
+          readme,rh=check('source_notices/GSHHG_README.TXT')
+          geom,gh=check('wpi/ports_2019_source.geojson')
+          receipt,_=check('wpi/noaa_WPI2019_source_receipt.json')
+          r=json.loads(receipt)
+          assert r['georeferenced_geojson_sha256']==gh and r['source_recovered_points']==3630
+          features=json.loads(geom)['features']
+          coords={int(f['properties']['OBJECTID']):f['geometry']['coordinates'] for f in features}
+          assert len(features)==len(coords)==3630 and set(coords)==set(range(1,3631))
+          p=P('provenance/reviewer_defenses/results/port_alien_broad_inventory_20261030/port_alien_host_broad_all_ports.csv')
+          raw=p.read_bytes()
+          assert hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()=='fdf73b11ddcb1644f46730123350ae52cc61cae6'
+          rows=list(csv.DictReader(raw.decode().splitlines()))
+          ids=sorted(int(x['port_id']) for x in rows if x['query_complete']=='True')
+          assert len(rows)==3630 and len(ids)==len(set(ids))==1596
+          for lon,lat in coords.values(): assert -180<=lon<=180 and -90<=lat<=90
+          def digest(dec,header):
+              return hashlib.sha256((header+''.join(f'{k},{coords[k][1]:.{dec}f},{coords[k][0]:.{dec}f}\n' for k in ids)).encode()).hexdigest()
+          d6=digest(6,'port_id,lat,lon\n')
+          d7=digest(7,'port_id,latitude_7dp,longitude_7dp\n')
+          a={'status':'SOURCE_BUNDLE_VERIFIED_NOT_ORIGINAL_WPI_CONVERSION_CERTIFIED','GSHHG_notice_sha256':h,'GSHHG_LGPL_text_sha256':lh,'GSHHG_README_sha256':rh,'GSHHG_license_notice':'LGPL version 3 or later; source notice archived with frozen marine source bundle, not blanket whole-archive permission','NOAA_recovered_geojson_sha256':gh,'private_original_geojson_sha256':'d580e8520dc5bd77c0ab464df3bdc9ea95653c47b00c42a510dc7c1519feaa78','original_file_byte_identical':gh=='d580e8520dc5bd77c0ab464df3bdc9ea95653c47b00c42a510dc7c1519feaa78','source_url':r['source_url'],'ports':3630,'studied_ports':1596,'NOAA_6dp_sha256':d6,'NOAA_7dp_sha256':d7,'private_6dp_sha256':'91a1dd2a2d38ceb7244b9158a38e1ae9862298c644892d26fdf9d5318de2e98b','private_7dp_sha256':'3c10fa14a18f1375ca2c90e0aecd91eb5c0973b598c1c9ec4e9333f5d8092004','same_study_coordinates_6dp':d6=='91a1dd2a2d38ceb7244b9158a38e1ae9862298c644892d26fdf9d5318de2e98b','same_study_coordinates_7dp':d7=='3c10fa14a18f1375ca2c90e0aecd91eb5c0973b598c1c9ec4e9333f5d8092004','original_conversion_and_rights_closed':False}
+          P('geography_receipt/WPI_GSHHG_SOURCE_BUNDLE_QA.json').write_text(json.dumps(a,indent=2)+'\n')
+          print(json.dumps(a))
+          PY
+      - name: Inspect current official NOAA-hosted WPI layer metadata (separate from historic acquisition)
+        run: |
+          python - <<'PY'
+          import json,pathlib,urllib.request,hashlib
+          url='https://gis.ngdc.noaa.gov/arcgis/rest/services/nccos/PIRO_DigitalAtlas/MapServer/30?f=pjson'
+          req=urllib.request.Request(url,headers={'User-Agent':'academic-source-audit'})
+          with urllib.request.urlopen(req,timeout=45) as res: b=res.read()
+          j=json.loads(b)
+          assert not j.get('error') and j.get('id')==30
+          fields=['name','description','copyrightText','type','geometryType','serviceItemId','attribution','documentInfo']
+          a={'status':'CURRENT_NOAA_METADATA_NOT_HISTORICAL_CONVERSION','url':url,'sha256':hashlib.sha256(b).hexdigest(),'metadata':{k:j.get(k) for k in fields}}
+          pathlib.Path('geography_receipt/NOAA_WPI_CURRENT_METADATA.json').write_text(json.dumps(a,indent=2)+'\n')
+          print(json.dumps(a))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-WPI-GSHHG-source-receipts-only
+          path: geography_receipt/
+          if-no-files-found: warn
+          retention-days: 90
