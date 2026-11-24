@@ -1,0 +1,52 @@
+{
+  "schema": "GEB_original155_distance_km_single_column_counterfactual_20261124_v1",
+  "checked_date": "2026-11-24",
+  "original_panel_builder_full96_run": 45318106188,
+  "first_regenerated_panel_to_RF_run": 45320236263,
+  "ordered_key_control_run": 45321468031,
+  "distance_only_counterfactual_run": 45322533520,
+  "counterfactual_conclusion": "success",
+  "counterfactual_artifact_id": 14888950249,
+  "counterfactual_artifact_digest": "sha256:34cdc7c262dbb27ebc15c11e13340f02389f4a6be8572361bf1713cb7bc2e1fa",
+  "original_panel_rows": 842964,
+  "original_panel_columns": 96,
+  "ordered_key_rows_matching": 842964,
+  "physical_row_position_mismatches": 0,
+  "original_versus_rebuilt_exact_numeric_mismatch_columns": [
+    "distance_km"
+  ],
+  "distance_km_exact_numeric_mismatch_rows": 60639,
+  "distance_km_float32_mismatch_rows": 16083,
+  "initial_fresh_M5_over_M3_MSE_improvement_percent": 3.935644190494867,
+  "original_M5_over_M3_MSE_improvement_percent": 4.120175607931824,
+  "initial_failed_comparison_groups": 66,
+  "original_test_rows": 208482,
+  "one_predictor_column_reused_from_original": [
+    "distance_km"
+  ],
+  "non_distance_columns_rebuilt_from_sources": 95,
+  "original_target_or_other_predictors_copied": false,
+  "counterfactual_failed_comparison_groups": 0,
+  "counterfactual_comparison_groups": 175,
+  "counterfactual_predictions_outside_tolerance": {
+    "M0_background": 0,
+    "M1_climate": 0,
+    "M2_landcover": 0,
+    "M3_both": 0,
+    "M4_host_resources": 0,
+    "M5_host_composition": 0,
+    "persistence": 0
+  },
+  "counterfactual_M5_over_M3_MSE_improvement_percent": 4.120175607931824,
+  "rtol": 0.000001,
+  "atol": 1e-9,
+  "causal_localization": "Replacing only numerically different distance_km removed all archived-prediction discrepancies under fixed original code, model settings and other regenerated values",
+  "independent_original_distance_reconstruction_proven": false,
+  "historical_geo_numeric_library_version_proven": false,
+  "full_source_to_model_independent_numerical_repro_claimed": false,
+  "raw_GBIF_to_day_table_reconstructed": false,
+  "known_species_holdout_fold3_problem_resolved": false,
+  "other_two_temporal_sensitivity_numeric_mismatches_resolved": false,
+  "scientific_paper_updated": false,
+  "data_archive_released": false
+}
