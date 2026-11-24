@@ -1,0 +1,131 @@
+name: GEB v0.5 S6 independent endemic selection and field evidence gate
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s6-source-selection-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: de1b32eb17c81a37f7fd0ecfed9abd0331c76d44
+          path: source
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 03e9450c832bb769c42ca983bffdc327ecc8ccea
+          path: paper
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover the original successful S6 selection artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14396656745/zip" > old.zip
+          echo 'ac6d48d93d265938d0a2d21261b0ac5c04098898a7060c42686abfc65a4425b1  old.zip' | sha256sum -c -
+      - name: Verify original blobs and reproduce exact 42/41/18 source-selection audit
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,pathlib,json,zipfile,csv,subprocess,sys
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          base='provenance/reviewer_defenses/results/independent_island_butterfly_host_coverage_20261117/'
+          here='provenance/reviewer_defenses/results/island_endemic_synonym_origin_20261118/'
+          sources={
+              base+'independent_42_species_vs_frozen239.csv':'3c56054fa21e667eed422a67010059c8e198b1bc',
+              here+'canary_BIOTA_remaining_13.csv':'9ba8b28c7c07ed90ce61a308e7fb402fc71f23c4',
+              here+'canary_BIOTA_source_status_20.csv':'31d0b38fb90b00dc5c99f57a6c034d8aeaf04660',
+              here+'VERIFIED_INDEPENDENT8_HOST_GEOGRAPHY_AND_FIELD_GATES_20261118.json':'421390fc9fd9be8f79fb6334fe36d140d89d8a9a',
+              here+'VERIFIED_EUCHLOE_NATIVE_HOST_AND_HIPPARCHIA_GATE_20261118.json':'df6a3ae4a3b0ccee0d3acfec164e7eb3e9ca5bf9',
+              here+'VERIFIED_FOCAL_ALIEN_LARVAL_HOST_PLANT_SPECIES_20261118.json':'a2c05bbfa988b4ea8b95a2631d016c0afb92f435',
+              here+'independent_butterfly_host_plant_species_events_v1.csv':'9edbbeb731124ab2e934f57c9895f55cf20c6c9a',
+              'scripts/audit_independent42_original339_LepTraits_selection_20261118.py':'ecca13ab20c7193f0838e66c703edd389b7914b0',
+              'scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py':'a9acc7cad50162a2b5b5999d6cb1c619da95dd44',
+              'data/frozen/s1_species_manifest.json':'428fdc3f444b484905c73c189ea340b9af745c58',
+              'data/frozen/figure_sources/s1_resource_descriptors.csv':'09541b5894529cc8629c7515ea9022ded9edead2',
+              'data/frozen/figure_sources/anthropogenic_species_metrics.csv':'9f83d2d9ac8e46f1cfd4ded572c7a023273503dd'}
+          entries={}
+          for n,h in sources.items():
+              b=(P('source')/n).read_bytes()
+              assert blob(b)==h,n
+              entries[n]=b
+          with zipfile.ZipFile('old.zip') as z:
+              assert z.testzip() is None
+              for n in ['independent42_339_239_leptraits_selection.csv','independent42_339_239_selection_summary.json','extant41_independent_origin_vs_original_GEB_selection.csv','independent18_source_plants_possibilities_not_imputed.csv','nonidentification_transportability_result.json']:
+                  hits=[p for p in z.namelist() if P(p).name==n]
+                  assert len(hits)==1,(n,hits)
+                  entries['expected/'+n]=z.read(hits[0])
+          entries['README.txt']=b'INTERNAL SOURCE EVIDENCE ONLY. Original S6 selection and nonidentification audit. Full original LepTraits input is deliberately excluded pending source rights; supply the exact version from frozen source with SHA-256 6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b at data/external/leptraits_consensus_v1.0.csv. Run the original selection script with --out-dir output then the original transportability script with --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output. Field evidence is source-linked text/CSV, no photographs included. No new field observation or independent WCVP upstream reconstruction; no claim of all-endemic resource expansion or demographic benefit. Not cleared for reviewer delivery.\n'
+          entries['MANIFEST.json']=(json.dumps({n:sha(b) for n,b in entries.items()},indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_S6_INTERNAL_SOURCE_EVIDENCE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          root=P('extracted')
+          lep='data/external/leptraits_consensus_v1.0.csv'
+          b=(P('source')/lep).read_bytes()
+          assert blob(b)=='b2bc7bd87eca199b62f08ac539660aebc9fbaf79'
+          assert sha(b)=='6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b'
+          (root/lep).parent.mkdir(parents=True,exist_ok=True)
+          (root/lep).write_bytes(b)
+          try:
+              subprocess.run([sys.executable,'scripts/audit_independent42_original339_LepTraits_selection_20261118.py','--out-dir','output'],cwd=root,check=True)
+              subprocess.run([sys.executable,'scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py','--selection-source-csv','output/independent42_339_239_leptraits_selection.csv','--out-dir','output'],cwd=root,check=True)
+          finally:
+              (root/lep).unlink()
+          expected=[n for n in entries if n.startswith('expected/')]
+          comparisons={}
+          for n in expected:
+              original=(root/n).read_bytes()
+              fresh=(root/'output'/P(n).name).read_bytes()
+              if n.endswith('.json'):
+                  assert json.loads(original)==json.loads(fresh),n
+                  comparisons[P(n).name]='JSON exact'
+              else:
+                  assert list(csv.DictReader(original.decode('utf-8-sig').splitlines()))==list(csv.DictReader(fresh.decode('utf-8-sig').splitlines())),n
+                  comparisons[P(n).name]='CSV rows exact'
+          d=json.loads((root/'output/nonidentification_transportability_result.json').read_text())
+          assert (d['target_extant'],d['target_extant_endemic'],d['target_extant_nonendemic'])==(41,18,23)
+          assert d['selection']['original_GEB239']=={'endemic':0,'nonendemic':13}
+          e=json.loads(entries[here+'VERIFIED_INDEPENDENT8_HOST_GEOGRAPHY_AND_FIELD_GATES_20261118.json'])
+          rows=e['source_endemic_resource']['source_butterfly_rows']
+          assert len(rows)==8 and sum(x['potential_global_added_region_units']>0 for x in rows)==4
+          assert all(x['original_WCVP_native_plus_introduced_global_region_units']-x['original_WCVP_native_global_region_units']==x['potential_global_added_region_units'] for x in rows)
+          assert e['origin_archipelago_not_individual_island']['newly_host_present_origin_archipelago_region_units_created']==0
+          field=json.loads(entries[here+'VERIFIED_FOCAL_ALIEN_LARVAL_HOST_PLANT_SPECIES_20261118.json'])
+          events=list(csv.DictReader(entries[here+'independent_butterfly_host_plant_species_events_v1.csv'].decode().splitlines()))
+          focal=[r for r in events if r['butterfly_name']=='Pieris cheiranthi' and r['reported_host_binomial']=='Tropaeolum majus' and r['source_evidence_type'] in ('wild_larva_photo','garden_larva_photo')]
+          assert len(focal)==2 and {r['named_island'] for r in focal}=={'Tenerife','La Palma'}
+          assert all(r['reported_plant_origin']=='introduced' for r in focal)
+          assert len(events)==13
+          assert not field['site_resident_versus_breeding']['survival_and_recruitment_measured_in_current_audit']
+          si=(P('paper/manuscript/integrated_butterfly_resource_access_20261109/GEB_SUPPORTING_INFORMATION_V05.md')).read_text()
+          section=si.split('## Appendix S6.',1)[1].split('## Appendix S7.',1)[0]
+          for term in ['41','18 endemics','0/18','13/23','eight','four','Pieris cheiranthi','Tropaeolum majus','Tenerife','La Palma','Euchloe grancanariensis','Hirschfeldia incana']:
+              assert term in section,term
+          receipt={'status':'S6_ORIGINAL_SELECTION_REPLAY_AND_FIELD_SOURCE_CONSISTENCY_PASS','files':len(entries),'source_zip_sha256':sha(dest.read_bytes()),'source_zip_bytes':dest.stat().st_size,'original_git_blobs_verified':len(sources),'original_output_comparisons':comparisons,'living':41,'endemic':18,'frozen239_endemic':0,'frozen239_nonendemic':13,'source_known_exact_host_species':8,'source_positive':4,'source_zero':4,'unknown':10,'home_archipelago_added_units':0,'focal_direct_field_events':2,'raw_LepTraits_not_in_ZIP':True,'field_photographs_not_included':True,'whole_WCVP_and_field_source_reconstruction_here':False,'reviewer_access_cleared':False}
+          (out/'S6_REPLAY_RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps(receipt))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S6-INTERNAL-EVIDENCE-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
