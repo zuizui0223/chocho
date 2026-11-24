@@ -1,0 +1,60 @@
+# GEB v0.5 — source-specific delivery decisions (24 November 2026)
+
+**Internal Stage A, not a permission grant or a reviewer package.** Binds the currently replayed 192-file staging candidate (inner SHA-256 `5679eeb5c3907bb5cadb1de461f7f97470b139b94db8a0c6b2e052295d0d4852`) and [its file-level gate register](https://github.com/zuizui0223/chocho/actions/runs/45384125010/artifacts/14915845889). Source rights are separate from data availability, reproducibility, anonymity and author approval. No raw source copied or external access created. No changes to paper #179.
+
+## 1. Source-specific decisions (including sources previously omitted from the rights matrix)
+
+| Source family | Exact version / citation | Evidence for licence or limitation | Delivery treatment |
+|---|---|---|---|
+| HOSTS | NHM 10.5519/havt50xw; exact mirror commit 808e0b8 | CC0 on cited NHM source; preserve exact original name/origin filtering | Cite upstream; use source download/transform scripts; candidate derived tables remain subject to other source and author rights |
+| WCVP | Kew v13, 21 May 2024, 10.34885/0yex-xv26; rWCVPdata commit 65bed76 | CC BY 3.0 for original Kew data; wrapper-specific rights separate | Cite version and licence, mark transformations; do not bundle raw archive |
+| INBO | 10.15468/ye7whj, Maes et al. v1.1 | CC0 | Cite checklist; independent BIOTA classifications and observations are separate sources |
+| EuDiS | Vargas, Heleno & Costa, exact v5, 10.6084/m9.figshare.22251028.v5 | CC BY 4.0 verified at file/version metadata | Provide regional derived counts with attribution and transformation description after author and combined-source rights checks |
+| LepTraits | Shirey et al. 2022, 10.1038/s41597-022-01473-5; official collection 10.6084/m9.figshare.c.5899187.v1; byte-identical public consensus CSV at RiesLabGU/LepTraits 9702e22f | Article CC BY 4.0 is not dataset-specific permission. Exact public file recovery PASS; exact item licence still open at previous checkpoint | Link pinned public CSV, SHA-256 and code; no raw trait CSV shipped; derived descriptors/traits require item-specific review |
+| WPI | NGA Publication 150 (2019), NOAA PIRO ports layer, original 1596 normalized coordinates verified | Original conversion and layer rights not fully resolved | Cite official source, prefer external recovery; no original private GeoJSON distributed |
+| TDWG | WGSRPD3, public pinned 52da7828 | General TDWG terms do not settle exact converted GIS layer rights | Fetch externally at version/hash; no raw polygons bundled |
+| GSHHG | v2.3.7, 10.5281/zenodo.7007502 | Archived distributor LGPL-3.0-or-later notice confirmed | Preserve applicable notices and source access; do not assume all derived layers inherit one licence |
+| GloNAF / colonial | Lenzner et al. 2022, 10.5281/zenodo.6640264 | Exact 25,429,350-byte ZIP MD5 verified; Zenodo other-open, no explicit archive-wide rights grant | External acquisition and checksum; review derived colonial covariates separately |
+| Original GBIF 155/224 | 10.15468/dl.umqmsf; original 14,637,152 records / 1,716 contributors | Exact source counts recovered; provider-specific licensing governs reuse | Cite original DOI and contributor attribution; no raw occurrences shipped; record-level archived licence audit separately executing |
+| Historical GBIF and port facets | Original 225×51 reindex, 83,573-row historic table, port botanical queries and early port subsets | Original datasetKey attribution incomplete; newer 1596-port provider query not equivalent | Preserve saved counts internally, describe source and query dates, disclose gap; do not attach unrelated DOI or retroactive provider list. Seek journal/GBIF guidance on archived aggregate delivery |
+| Jones wastewater | Jones et al. 2020, gridded 2015 estimates, 10.1594/PANGAEA.918731 | [Official PANGAEA dataset](https://doi.pangaea.de/10.1594/PANGAEA.918731) lists CC BY 4.0; record change history includes 2022 netCDF replacement | Cite exact source, year, version and transformations. No raw grids shipped |
+| WorldCover | ESA 2021 v200, 10.5281/zenodo.7254221 | [Official ESA product terms](https://esa-worldcover.org/en/data-access) list CC BY 4.0 and required source acknowledgment | Cite Zanaga et al. and 2021 product; applicable map attribution; no raw raster shipped |
+| HydroWASTE | Ehalt Macedo et al., version 1, 10.6084/m9.figshare.14847786.v1 | [Official HydroSHEDS product page](https://www.hydrosheds.org/products/hydrowaste) lists CC BY 4.0 | Cite data source and paper 10.5194/essd-14-559-2022; no facility data shipped |
+| CIRAD N/P | Wassenaar 2026, 2022 modeled grids, V1, 10.18167/DVN1/AWQNSR | [Official exact V1 record](https://dataverse.cirad.fr/dataset.xhtml?persistentId=doi%3A10.18167%2FDVN1%2FAWQNSR&version=1.0) lists CC BY-NC-SA 4.0 | No raw grids or source N-raster port extracts in staging. Preserve coefficient summaries and caveats; review whether proposed derivative data distribution triggers NC/SA; do not assume that model coefficients necessarily constitute an adaptation or apply a blanket CC BY licence |
+| Established-positive insects | Turner, Blake, Mally & Liebhold 2024, version 0.2.1, 10.5281/zenodo.11519262 | Original positive roster and source identity verified, specific licence metadata requested; compiled from multiple sources | Cite exact version; no raw source archive; retain positive-only and geographical-selection limits |
+| BIOTA, individual host reports, FAO, NOAA OSCAR | Source-specific citations in original S6/S7 records and scripts | Do not infer one licence from another source or from publicly visible records; source-specific confirmation pending | Link source and cite, no photographs or full source archives; verify actual reuse terms for shipped derivatives |
+
+The source-specific metadata of the modeled N analysis are preserved in original S7 source receipts. The CIRAD v1 licence is a new material constraint on contemplated distribution of N-derived tables; it does not negate the numerical association or establish a new restriction on all unrelated analyses.
+
+## 2. Component delivery dependencies (not a blanket file-by-file legal clearance)
+
+| Component | Underlying source families / output grain | Candidate delivery decision |
+|---|---|---|
+| fig1_fig3bc | HOSTS + WCVP + selected LepTraits source cohort; species and region aggregates, contributor receipt only for Fig3A | retain candidate aggregates and replay code after attribution/author/trait-source review |
+| fig2abc_derived | WCVP + WPI + GSHHG + geographic region layers, derived port counts, pair intersections/unions and circuit predictors | no raw GIS/ports; review derived geographic source terms; preserve distinct 126/104 cohorts |
+| fig2d_fixed239 | HOSTS/WCVP resource and WPI/TDWG geography, fixed 239-species regional input | pinned public TDWG acquisition; original port conversion gap stays visible |
+| fig4_scores_only | original shared GBIF DOI 155/224, saved evaluation scores (not refit); other original predictors separately documented | source attribution and author approval for score tables; not a claim all original RF inputs available |
+| s3_eudis | EuDiS v5 and WCVP derived regional origin counts | source licences known for both datasets; attribution/transformation notice required |
+| s34_s41 | S3.4 historical all-plant GBIF recording-effort table (98 regions) + WPI/TDWG/host resource; S4.1 fixed 239 documentation proxy | distinguish unresolved historical GBIF effort attribution from HOSTS documentation summary |
+| s4_controls | original HOSTS/WCVP derived sidecars, matched margin and family/occupancy null, source geography | exact public HOSTS/WCVP acquisition, no raw source redistribution; geographic and matrix derivatives require appropriate source rights |
+| s5_annual_region | original GBIF DOI annual aggregates, effort table, held-region scores and expected transfer outputs | original record-level/provider audit in progress; preserve exact derived-source and mixed-source rights |
+| s5_transfer | original GBIF annual/score tables plus WCVP/HOSTS, GloNAF/colonial controls, TDWG source geography | source retrieval rather than bundled public external archives; GloNAF/geometry rights and derived controls pending |
+| s6_endemic | independent INBO roster, BIOTA, LepTraits/selected traits, HOSTS/WCVP resource links and cited field sources | full LepTraits acquired externally; no photographs included; author/source rights to derived summaries remain |
+| s7_evidence | historical port and island indexed counts, localized HOSTS/FAO/WCVP, prior N and current model summaries, Turner positive-only establishment | separate historical GBIF attribution gap, CIRAD NC-SA condition, independent source metadata; preserve only permitted summaries and source links, no original point records or grids |
+| validation/ and root documentation | blinded author-created validation summaries, third-party source citations and instructions | author approval, exact scope/limitations and actual access review; do not represent as independent third-party certification |
+
+## 3. Reviewer and publication access decisions
+
+- Separate original-source availability from derivative redistribution. The current package is an internal reproducibility candidate, not a public deposit. Its 192-file gate register remains held until decisions on actual files and their source dependencies are signed off.
+- The repository is public with no declared repository-level licence. Do not assign an author code licence without authorization. Do not delete or make the repository private to promise complete anonymity.
+- For source datasets that are open and reproducible via pinned public downloads, provide versioned citation, checksum, acquisition commands and transformation code rather than unnecessary copies. For restricted/mixed-source derivatives use a permitted route or explicit restriction; do not assume that a private reviewer link itself resolves licensing.
+- Preserve GBIF provider attribution: [Data user agreement](https://www.gbif.org/terms/data-user) and [citation guidelines](https://www.gbif.org/citation-guidelines) require source recognition and source-specific terms. A derived dataset DOI requires actual source dataset identifiers and a persistent accessible dataset URL ([GBIF derived datasets](https://www.gbif.org/derived-dataset/about)). No fictitious or retroactive DOI.
+- Only authors can approve their own code/data release, author statements, and submission. Prepare a decision sheet before seeking approval; do not send anything automatically.
+
+## 4. Running source checks and next gate
+
+- [Original GBIF archive provider/licence scan #45385945590](https://github.com/zuizui0223/chocho/actions/runs/45385945590): exact original DOI/ZIP checksum verified before record-level scan; no fresh acquisition query and no raw occurrence export. Completion must be checked separately.
+- [Version-specific source metadata and exact 192-file member inventory #45386091750](https://github.com/zuizui0223/chocho/actions/runs/45386091750): public source metadata, exact package member names, hashes and table headers. Results pending when this note was created.
+- Use the actual inventory and these source families to replace the generic file gates with file-specific source IDs, attribution text, availability and unresolved permission reason. Keep all unverified source rights explicit; no further indiscriminate anonymization.
+
+Scientific results unchanged. Paper #179 and audit #189 remain Draft; no submission, release or DOI created.
