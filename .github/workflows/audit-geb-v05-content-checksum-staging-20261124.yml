@@ -198,7 +198,7 @@ jobs:
           assert len(tables)==49 and all(original[n]==e[n] for n in tables)
           public={'808e0b869f9ec1adf8efff87cf6a395adda103e0','65bed76bae9d644ccb6ad200c05f9f5071d89e05','52da7828aba9d461dd133c27b3bd7a4407161f54','9702e22fc540ac7f25a174542a253cc81f83719c','06749c04bd5b7a754d6f7717a31c01c51357cae8','b2bc7bd87eca199b62f08ac539660aebc9fbaf79'}
           directpat=re.compile(rb'zuizui0223|ZHANG[ _\.-]?(?:RUIQI|RACHEL)|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/',re.I)
-          direct=[];nonpublic=[];other=[]
+          direct=[];nonpublic=[];other=[];tabular_pattern_false_positives=[]
           for n,b in sorted(e.items()):
               payload=gzip.decompress(b) if n.endswith('.gz') else b
               t=payload.decode('utf8',errors='replace')
@@ -207,7 +207,16 @@ jobs:
               if vals:nonpublic.append({'file':n,'values':vals})
               for i,l in enumerate(t.splitlines()):
                   if re.search(r'(?i)\b(?:[1-9]\d{10,11})\b',l) and re.search(r'(?i)(?:CI|run|artifact|commit|github|workflow)',l):
-                      other.append({'file':n,'line':i+1,'text':l.strip()[:200]})
+                      item={'file':n,'line':i+1,'text':l.strip()[:200]}
+                      if n in tables:
+                          # SCI/RUN are valid WGSRPD3 codes; decimal digits and
+                          # published bibliography IDs are not execution metadata.
+                          # Preserve every original table byte and keep full-file
+                          # exact-ID, direct-identifier and 40-hex checks.
+                          assert original[n]==e[n]
+                          tabular_pattern_false_positives.append(item)
+                      else:
+                          other.append(item)
               assert not any(v in t for v in allrep),n
           assert not direct and not nonpublic and not other,(direct,nonpublic,other)
           # File-by-file decision register is internal. It is not a licence grant.
@@ -248,8 +257,8 @@ jobs:
               z.extractall('extracted')
           with (out/'INTERNAL_FILE_DELIVERY_GATE_REGISTER.csv').open('w',encoding='utf8',newline='') as f:
               w=csv.DictWriter(f,fieldnames=list(delivery[0]));w.writeheader();w.writerows(delivery)
-          summary={'status':'CONTENT_CHECKSUM_TRANSFORMATION_PASS_NOT_RELEASE_CLEARANCE','files':len(e),'classified_13_unique_identifiers':counts,'candidate_files_before':13,'nonpublic_40hex_candidate_files_after':0,'extra_internal_CI_references_removed':2,'direct_identifier_flags':0,'remaining_pattern_flagged_execution_lines':0,'local_manifests_verified_and_updated':len(manifests),'original_tabular_files_unchanged':49,'hash_guard_scripts_changed':len(hash_scripts),'changed_files':[n for n in original if original[n]!=e[n]],'inner_sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'repository_public':True,'content_based_reidentification_risk_remains':True,'repository_declared_licence':None,'reviewer_release_authorized':False,'rights_gate_counts':dict(collections.Counter(x['delivery_gate'] for x in delivery))}
-          (out/'INTERNAL_CHECKSUM_TRANSFORMATION_QA.json').write_text(json.dumps({'summary':summary,'classification':classified},indent=2)+chr(10))
+          summary={'status':'CONTENT_CHECKSUM_TRANSFORMATION_PASS_NOT_RELEASE_CLEARANCE','files':len(e),'classified_13_unique_identifiers':counts,'candidate_files_before':13,'nonpublic_40hex_candidate_files_after':0,'extra_internal_CI_references_removed':2,'direct_identifier_flags':0,'remaining_pattern_flagged_execution_lines':0,'unchanged_tabular_pattern_false_positive_lines':len(tabular_pattern_false_positives),'local_manifests_verified_and_updated':len(manifests),'original_tabular_files_unchanged':49,'hash_guard_scripts_changed':len(hash_scripts),'changed_files':[n for n in original if original[n]!=e[n]],'inner_sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'repository_public':True,'content_based_reidentification_risk_remains':True,'repository_declared_licence':None,'reviewer_release_authorized':False,'rights_gate_counts':dict(collections.Counter(x['delivery_gate'] for x in delivery))}
+          (out/'INTERNAL_CHECKSUM_TRANSFORMATION_QA.json').write_text(json.dumps({'summary':summary,'classification':classified,'unchanged_tabular_pattern_false_positives':tabular_pattern_false_positives},indent=2)+chr(10))
           print('CONTENT_CHECKSUM_BUILD',json.dumps(summary))
           PY
       - name: Replay all previously executable limited groups plus S7
