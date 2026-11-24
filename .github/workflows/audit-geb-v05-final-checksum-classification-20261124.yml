@@ -1,0 +1,71 @@
+name: GEB v0.5 classify remaining checksum references and delivery dependencies
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-final-checksum-classification-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact repaired candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14914212989/zip" > staging.zip
+          echo '700d228dd1caefad654a03275578e4a0dffc3a95e24d3c5e2706483c5c7ca69f  staging.zip' | sha256sum -c -
+          python - <<'PY'
+          import hashlib,gzip,re,json,io,zipfile,pathlib,collections
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          with zipfile.ZipFile('staging.zip') as z:
+              hits=[n for n in z.namelist() if P(n).name=='GEB_V05_BLINDED_EVIDENCE_STAGING_REPAIRED_NOT_FOR_RELEASE.zip']
+              assert len(hits)==1
+              raw=z.read(hits[0])
+          assert sha(raw)=='5597cbb82dccfee6c34dadad1826a1b214985e5bdc72c8fd4fc04be06ad78919'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              e={n:z.read(n) for n in z.namelist() if not n.endswith('/')}
+          assert len(e)==192
+          pub={'808e0b869f9ec1adf8efff87cf6a395adda103e0','65bed76bae9d644ccb6ad200c05f9f5071d89e05','52da7828aba9d461dd133c27b3bd7a4407161f54','9702e22fc540ac7f25a174542a253cc81f83719c','06749c04bd5b7a754d6f7717a31c01c51357cae8','b2bc7bd87eca199b62f08ac539660aebc9fbaf79'}
+          by=collections.defaultdict(list)
+          for n,b in e.items(): by[blob(b)].append(n)
+          refs=[]
+          for n,b in sorted(e.items()):
+              s=(gzip.decompress(b) if n.endswith('.gz') else b).decode('utf8',errors='replace')
+              vals=sorted(set(re.findall(r'\b[0-9a-f]{40}\b',s,re.I))-pub)
+              if not vals: continue
+              for v in vals:
+                  context=[{'line':i+1,'text':l.strip()[:350]} for i,l in enumerate(s.splitlines()) if v in l][:8]
+                  refs.append({'file':n,'value':v,'matching_packaged_git_blob_files':by[v],'contexts':context})
+          assert len({r['file'] for r in refs})==13
+          # Numeric execution metadata may use other field names than the previous scan.
+          # Inventory candidates, not a blanket identifier finding.
+          other=[]
+          for n,b in sorted(e.items()):
+              if not n.endswith(('.json','.md','.txt','.py','.sh','.R')):continue
+              s=b.decode('utf8',errors='replace')
+              for i,l in enumerate(s.splitlines()):
+                  if re.search(r'(?i)\b(?:[1-9]\d{10,11})\b',l) and re.search(r'(?i)(?:CI|run|artifact|commit|github|workflow)',l):
+                      other.append({'file':n,'line':i+1,'text':l.strip()[:300]})
+          out=P('delivery');out.mkdir()
+          report={'status':'INTERNAL_CHECKSUM_CLASSIFICATION_INPUT_NOT_RELEASE_CLEARANCE','archive_files':len(e),'candidate_files':len({r['file'] for r in refs}),'distinct_nonpublic_40hex':len({r['value'] for r in refs}),'references':refs,'other_numeric_metadata_candidates':other}
+          (out/'INTERNAL_CHECKSUM_CLASSIFICATION_INPUT.json').write_text(json.dumps(report,indent=2)+chr(10))
+          print('COUNTS',json.dumps({k:v for k,v in report.items() if k not in ('references','other_numeric_metadata_candidates')}))
+          for r in refs:print('CHECKSUM_REF',json.dumps(r))
+          for r in other:print('OTHER_PROVENANCE',json.dumps(r))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-final-checksum-inventory-internal-only
+          path: delivery/
+          retention-days: 90
