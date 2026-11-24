@@ -49,7 +49,12 @@ jobs:
           original= p('original/scripts/audit_eudis_source_matched_region_20261116.py')
           shutil.copyfile(original,stage/'replay.py')
           rows=list(csv.DictReader((stage/names[0]).open()))
-          assert len(rows)==726 and len({(r['area_code_l3'],r['introduced']) for r in rows})==726
+          from collections import Counter
+          geo=list(csv.DictReader(p('original/results/island-mainland-resource-q1/region_metrics.csv').open()))
+          roster={r['area_code_l3']:(r['class'],r['level1']) for r in geo}
+          assert len(roster)==369 and Counter(x[0] for x in roster.values())=={'island':126,'mainland':237,'mixed':6}
+          assert len(rows)==738 and {(r['area_code_l3'],r['introduced']) for r in rows}=={(k,o) for k in roster for o in ('0','1')}, (len(rows),len(roster))
+          assert all((r['class'],r['level1'])==roster[r['area_code_l3']] for r in rows)
           assert {r['introduced'] for r in rows}=={'0','1'}
           assert sum(r['class']=='island' for r in rows)==252
           for r in rows:
@@ -85,8 +90,10 @@ jobs:
           print(json.dumps(receipt))
           PY
       - name: Independently verify exact version metadata, licence and original CSV
+        if: always()
         run: |
           set -euo pipefail
+          mkdir -p delivery
           python original/scripts/fetch_eudis_v5_thalassochory_20261116.py --out-dir upstream
           python - <<'PY'
           import json, pathlib, urllib.request
