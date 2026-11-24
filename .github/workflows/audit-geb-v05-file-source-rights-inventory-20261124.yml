@@ -1,0 +1,119 @@
+name: GEB v0.5 source-specific rights metadata and delivery inventory
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-file-source-rights-inventory-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed 192-file candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14915845889/zip" > stage.zip
+          echo '45fc444f5e2e08c8f457881eb48054cbc2536cf580b11a34e9e8065eaf670c14  stage.zip' | sha256sum -c -
+      - name: Inventory exact source-dependency fields and public rights metadata
+        run: |
+          python -u - <<'PY'
+          import urllib.request,urllib.error,concurrent.futures,hashlib,io,json,pathlib,zipfile,csv,gzip,re
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def get(url,payload=None):
+              try:
+                  req=urllib.request.Request(url,data=json.dumps(payload).encode() if payload is not None else None,headers={'User-Agent':'Scientific source metadata audit/1.0','Accept':'application/json','Content-Type':'application/json'})
+                  with urllib.request.urlopen(req,timeout=35) as r:
+                      b=r.read(8000000)
+                      return {'http':r.status,'url':r.geturl(),'sha256':sha(b),'json':json.loads(b)}
+              except Exception as e:return {'http':getattr(e,'code',None),'url':url,'error':str(e)}
+          sources={
+              'leptraits_collection':'https://api.datacite.org/dois/10.6084/m9.figshare.c.5899187.v1',
+              'leptraits_figshare_search':'https://api.figshare.com/v2/articles/search',
+              'leptraits_collection_articles':'https://api.figshare.com/v2/collections/5899187/articles',
+              'hydrowaste':'https://api.figshare.com/v2/articles/14847786',
+              'established_insects':'https://zenodo.org/api/records/11519262',
+              'glonaf':'https://zenodo.org/api/records/6640264',
+              'cirad':'https://dataverse.cirad.fr/api/datasets/:persistentId/versions/1.0?persistentId=doi:10.18167/DVN1/AWQNSR',
+              'worldcover':'https://zenodo.org/api/records/7254221',
+              'jones':'https://api.datacite.org/dois/10.1594/PANGAEA.918731'}
+          def probe(k):
+              return k,get(sources[k],{'search_for':'LepTraits','limit':50} if k=='leptraits_figshare_search' else None)
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool: fetched=dict(pool.map(probe,sources))
+          compact={}
+          for k,r in fetched.items():
+              d=r.get('json')
+              q={a:v for a,v in r.items() if a!='json'}
+              if k in ('leptraits_collection','jones') and d:
+                  a=d['data']['attributes']
+                  q.update({'doi':a.get('doi'),'titles':a.get('titles'),'rightsList':a.get('rightsList'),'relatedIdentifiers':a.get('relatedIdentifiers')})
+              elif k in ('leptraits_figshare_search','leptraits_collection_articles') and isinstance(d,list):
+                  q['articles']=[{a:x.get(a) for a in ('id','title','doi','version','url_public_api')} for x in d]
+              elif k=='hydrowaste' and isinstance(d,dict):
+                  q.update({a:d.get(a) for a in ('id','title','doi','version','license','files')})
+              elif k=='cirad' and isinstance(d,dict):
+                  a=d.get('data',{})
+                  q.update({v:a.get(v) for v in ('versionNumber','versionMinorNumber','versionState','license','termsOfUse')})
+                  q['files']=[{'label':f.get('label'),'dataFile':{x:f.get('dataFile',{}).get(x) for x in ('id','filename','checksum','filesize')},'restricted':f.get('restricted')} for f in a.get('files',[])]
+              elif isinstance(d,dict):
+                  m=d.get('metadata',{})
+                  q.update({'doi':d.get('doi') or m.get('doi'),'title':m.get('title'),'version':m.get('version'),'license':m.get('license'),'rights':m.get('rights'),'files':[{v:f.get(v) for v in ('key','checksum','size')} for f in d.get('files',[])]})
+              compact[k]=q
+          # Find the official Figshare item(s) that actually contain the original consensus CSV.
+          articles={}
+          for k in ('leptraits_collection_articles','leptraits_figshare_search'):
+              for a in compact[k].get('articles',[]):
+                  if a.get('id'):articles[a['id']]=a
+          for a in compact['leptraits_collection'].get('relatedIdentifiers') or []:
+              if a.get('relationType')=='HasPart':
+                  m=re.search(r'figshare\.(\d+)(?:\.v(\d+))?$',a.get('relatedIdentifier',''),re.I)
+                  if m:articles.setdefault(int(m[1]),{'id':int(m[1]),'version':int(m[2]) if m[2] else None,'title':'collection related part'})
+          def item(a):
+              aid=a['id'];v=a.get('version')
+              url=f'https://api.figshare.com/v2/articles/{aid}'+(f'/versions/{v}' if v else '')
+              r=get(url);d=r.get('json') or {}
+              files=[{k:f.get(k) for k in ('id','name','size','computed_md5','supplied_md5','downloadUrl')} for f in d.get('files',[])]
+              return {'id':aid,'http':r['http'],'title':d.get('title',a.get('title')),'doi':d.get('doi'),'version':d.get('version'),'license':d.get('license'),'files':files,'exact_consensus_metadata_matches':[f for f in files if f['size']==2687158 and '5ebbf89c0b87a75b875e718677c6eeef' in (f['computed_md5'],f['supplied_md5'])]}
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool: items=list(pool.map(item,list(articles.values())[:50]))
+          compact['leptraits_items']=items
+          out=P('delivery');out.mkdir()
+          (out/'PUBLIC_SOURCE_METADATA.json').write_text(json.dumps(compact,indent=2,ensure_ascii=False)+chr(10))
+          for k,v in compact.items():
+              if k=='leptraits_items':print('SOURCE_METADATA',k,json.dumps([{'id':a['id'],'title':a['title'],'doi':a['doi'],'license':a['license'],'exact_consensus_metadata_matches':a['exact_consensus_metadata_matches']} for a in v],ensure_ascii=False))
+              else:print('SOURCE_METADATA',k,json.dumps({a:b for a,b in v.items() if a!='files'},ensure_ascii=False))
+          with zipfile.ZipFile('stage.zip') as z:
+              h=[n for n in z.namelist() if P(n).name=='GEB_V05_CONTENT_CHECKSUM_STAGING_NOT_FOR_RELEASE.zip']
+              assert len(h)==1
+              raw=z.read(h[0])
+          assert sha(raw)=='5679eeb5c3907bb5cadb1de461f7f97470b139b94db8a0c6b2e052295d0d4852'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              e={n:z.read(n) for n in z.namelist() if not n.endswith('/')}
+          assert len(e)==192
+          listing=[]
+          for n,b in sorted(e.items()):
+              rec={'file':n,'sha256':sha(b),'bytes':len(b)}
+              if n.endswith(('.csv','.csv.gz','.tsv')):
+                  t=(gzip.decompress(b) if n.endswith('.gz') else b).decode('utf-8-sig')
+                  rec['header']=t.splitlines()[0][:1400]
+                  rec['rows_excluding_header']=len(t.splitlines())-1
+              elif n.endswith('.json'):
+                  j=json.loads(b)
+                  rec['top_keys']=list(j)[:24] if isinstance(j,dict) else []
+              listing.append(rec)
+          (out/'EXACT_CANDIDATE_FILE_INVENTORY.json').write_text(json.dumps(listing,indent=2)+chr(10))
+          for rec in listing:print('FILE_INVENTORY',json.dumps({k:v for k,v in rec.items() if k!='sha256'}))
+          print('INVENTORY_PASS',json.dumps({'files':len(listing),'table_members':sum('header' in x for x in listing),'no_data_redistributed':True}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEB-v05-source-metadata-and-exact-file-inventory-internal-only
+          path: delivery/
+          retention-days: 90
