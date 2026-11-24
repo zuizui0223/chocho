@@ -20,6 +20,12 @@ The exact-row audit excluded row-order mismatch (**842,964/842,964 ordered row k
 
 **Classification:** original archived-panel RF refits and derived-source panel all-column numerical reconstruction remain valid individually. The exact joined derived-source-to-RF prediction reproduction is **conditional on substituting the archived distance predictor**, and must NOT be described as fully independent original geographic-feature reproduction. The historical 3-CSV acquisition chain, raw occurrence→recording-day steps, unseen-species fold-3 and two original sensitivity numerical failures, and rights/anonymous reviewer access remain separate open gates. The paper's scientific values are not altered. [Full interpretation and immutable artifact](GEB_ORIGINAL155_DISTANCE_ONLY_CAUSAL_DIAGNOSIS_20261124.md).
 
+## 24 November — two pyproj versions do not reproduce original distance bits
+
+The independent geography-only, original-source verification [CI #45323737296](https://github.com/zuizui0223/chocho/actions/runs/45323737296) compared exact output from pyproj **3.7.1** and **3.7.2** (both bundled PROJ **9.5.1**) using **280,988** source-selected species×cell pairs. Each rebuilt distance vector retained **20,213** exact-float64 differences against the archived original distance, **5,361** differences after float32 casting, and **5,361** differences in the `np.log1p(distance_km)` float32 predictor actually passed to the original RF. Maximum absolute original-distance discrepancy in both arms was **1.4495071809506044e−12 km**. Physical domain row order was the same in both arms. The two examined pyproj versions produced indistinguishable aggregate mismatch counts; they do **not** account for the original–rebuilt discrepancy. This says nothing conclusive about older/newer PROJ versions, CPU math or historical runtime state.
+
+**Gate outcome:** a distance-only counterfactual restores the archived temporal RF results exactly, but an original-source-independent way to regenerate the precise historic distance values remains **OPEN**. Its importance is numerical reproducibility, not a new ecology effect. Original paper numbers, unseen-species fold 3, two temporal sensitivity discrepancies, third-party rights and reviewer-source access remain unchanged.
+
 ## Stage A — current evidence and remaining work
 
 | Gate | Verified current evidence | Remaining condition |
