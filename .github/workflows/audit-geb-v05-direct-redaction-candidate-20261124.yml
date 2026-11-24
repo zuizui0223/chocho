@@ -1,0 +1,181 @@
+name: GEB v0.5 separate direct-redaction candidate and file-level delivery gates
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-direct-redaction-candidate-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: de1b32eb17c81a37f7fd0ecfed9abd0331c76d44
+          path: original_s6
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact signed 191-file internal evidence archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14911588338/zip" > original.zip
+          echo '4fbe77fe17e22ed10ea1dd26d508c96e7e29c131a159e9f366346b4a00ace368  original.zip' | sha256sum -c -
+      - name: Transform only author provenance, replay S6 and record file-specific delivery gates
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast,csv,gzip,hashlib,io,json,pathlib,re,subprocess,sys,zipfile,collections
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          with zipfile.ZipFile('original.zip') as outer:
+              names=[n for n in outer.namelist() if P(n).name=='GEB_V05_INTERNAL_PARTIAL_S1_S7_NOT_FOR_REVIEW.zip']
+              assert len(names)==1
+              raw=outer.read(names[0])
+          assert sha(raw)=='ac29a264d9a47a1f7fcc5a703d675e9e34d66f8cb69d01ee4d165a49ae398e35'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              ns=[i.filename for i in z.infolist() if not i.is_dir()]
+              assert len(ns)==len(set(ns))==191
+              assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in ns)
+              original={n:z.read(n) for n in ns}
+          entries=dict(original)
+          owner=b'zuizui0223'
+          own_url=rb'https?://github\.com/zuizui0223/chocho(?:/(?:actions/runs|pull)/[0-9]+)?'
+          own_repo=rb'zuizui0223/chocho'
+          replacement=b'[author repository reference withheld for anonymous review]'
+          direct={n for n,b in original.items() if owner in (gzip.decompress(b) if n.endswith('.gz') else b)}
+          assert len(direct)==5 and all(n.startswith('components/s6_endemic/') for n in direct)
+          transformation=[]
+          def sanitize(b):
+              x,n=re.subn(own_url,replacement,b)
+              x,m=re.subn(own_repo,replacement,x)
+              assert owner not in x
+              return x,n+m
+          def scientific_leaves(x,path=''):
+              if isinstance(x,dict):
+                  return [(p,v) for k,val in sorted(x.items()) for p,v in scientific_leaves(val,path+'/'+k)]
+              if isinstance(x,list):
+                  return [(p,v) for i,val in enumerate(x) for p,v in scientific_leaves(val,path+'/'+str(i))]
+              return [(path,x)] if type(x) in (int,float,bool) or x is None else []
+          for n in sorted(direct):
+              b=entries[n];x,k=sanitize(b)
+              assert k>0
+              if n.endswith('.json'):
+                  assert scientific_leaves(json.loads(b))==scientific_leaves(json.loads(x)),n
+                  assert json.loads(x)==json.loads(sanitize(b)[0])
+              elif n.endswith('.py'):
+                  def normalize_strings(tree):
+                      for node in ast.walk(tree):
+                          if isinstance(node,ast.Constant) and isinstance(node.value,str):
+                              node.value=sanitize(node.value.encode())[0].decode()
+                      return ast.dump(tree,include_attributes=False)
+                  assert normalize_strings(ast.parse(b))==normalize_strings(ast.parse(x)),n
+                  compile(x,n,'exec')
+              else: raise AssertionError(n)
+              entries[n]=x
+              transformation.append({'file':n,'replacements':k,'original_sha256':sha(b),'candidate_sha256':sha(x),'scientific_numeric_leaves_or_python_AST_preserved':True})
+          m6='components/s6_endemic/MANIFEST.json'
+          prefix='components/s6_endemic/'
+          original_m6=json.loads(original[m6])
+          for n,h in original_m6.items(): assert sha(original[prefix+n])==h,n
+          entries[m6]=(json.dumps({n:sha(entries[prefix+n]) for n in original_m6},indent=2)+'\n').encode()
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(entries[manifest])
+          m['schema']='GEB_v05_direct_redaction_staging_NOT_APPROVED_FOR_REVIEW'
+          m['direct_author_repository_references_redacted']=True
+          m['S6_metadata_only_transformations']=True
+          m['limitations']+=' Direct redaction staging copy only. Original source receipts describe pre-redaction inputs. Source manifest for S6 updated; original provenance withheld from reviewer-facing copy. Indirect identifiers and file-level rights are not yet cleared. Do not distribute.'
+          entries[manifest]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          entries[readme]=(entries[readme].decode()+'\nDIRECT REDACTION STAGING ONLY. Five S6 author repository references were replaced in source metadata and one reporting string; no scientific values changed. S6 source manifest reflects this transformation. This is NOT approved for reviewer delivery. Internal Git commits, source hashes, run/artifact identifiers and rights require separate review.\n').encode()
+          changed={n for n in original if original[n]!=entries[n]}
+          assert changed==direct|{m6,manifest,readme}
+          # Preserve every unchanged original file and all external bibliographic links.
+          patterns={'owner_account':rb'zuizui0223','author_name':rb'ZHANG[ _\.-]?(?:RUIQI|RACHEL)','email':rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}','local_path':rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/'}
+          flags=[]
+          indirect=[]
+          inventory=[]
+          for n,b in sorted(entries.items()):
+              payload=gzip.decompress(b) if n.endswith('.gz') else b
+              for k,p in patterns.items():
+                  if re.search(p,n.encode(),re.I) or re.search(p,payload,re.I): flags.append({'file':n,'kind':k})
+              # Flag indirect provenance rather than suppress all hashes: external source pins
+              # and scientific input checksums are needed for reproducibility.
+              hits=[]
+              if re.search(rb'\b[0-9a-f]{40}\b',payload,re.I): hits.append('git_sha_or_40_hex_review_needed')
+              if re.search(rb'(?i)(?:run_id|source_run|action_run|artifact_id|source_artifact|original_refit_run|source_success_CI|verified_run|github_actions_run)',payload): hits.append('run_or_artifact_metadata_review_needed')
+              if re.search(rb'https?://github\.com/',payload,re.I): hits.append('external_or_internal_GitHub_link_review_needed')
+              if hits: indirect.append({'file':n,'flags':hits})
+              part=n.split('/')[1] if n.startswith('components/') else 'root_or_receipts'
+              suffix=P(n).suffix.lower()
+              if n.startswith('source_qa_receipts/'):
+                  role='prior_internal_execution_receipt'
+                  gate='WITHHOLD_INTERNAL_PROVENANCE_UNTIL_REPLACED_BY_BLINDED_RECEIPT'
+              elif suffix in ('.py','.r','.sh'):
+                  role='analysis_or_runner_code'
+                  gate='HOLD_AUTHOR_CODE_LICENSE_AND_THIRD_PARTY_CODE_REVIEW'
+              elif suffix in ('.csv','.gz','.tsv','.parquet','.npz'):
+                  role='derived_data_table'
+                  if 's7_evidence' in n and ('port_' in n or 'history.csv' in n):
+                      gate='HOLD_ORIGINAL_HISTORICAL_GBIF_PROVIDER_ATTRIBUTION'
+                  elif 's5_' in n or 'fig4' in n.lower():
+                      gate='HOLD_GBIF_DERIVED_DATA_ATTRIBUTION_AND_SOURCE_SCOPE'
+                  else:
+                      gate='HOLD_DERIVED_DATA_RIGHTS_AND_SOURCE_SPECIFIC_ATTRIBUTION'
+              elif suffix in ('.json','.md','.txt'):
+                  role='source_metadata_or_summary'
+                  gate='HOLD_METADATA_SOURCE_RIGHTS_AND_INDIRECT_ANONYMITY_REVIEW'
+              else:
+                  role='other'
+                  gate='HOLD_MANUAL_REVIEW'
+              inventory.append({'file':n,'component':part,'role':role,'candidate_sha256':sha(b),'bytes':len(b),'changed_from_original':int(n in changed),'delivery_gate':gate,'indirect_flags':';'.join(hits)})
+          assert not flags,flags
+          assert len(inventory)==191
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_DIRECT_REDACTION_STAGING_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          root=P('extracted/components/s6_endemic')
+          for n,h in json.loads((root/'MANIFEST.json').read_text()).items(): assert sha((root/n).read_bytes())==h,n
+          lep='data/external/leptraits_consensus_v1.0.csv'
+          b=(P('original_s6')/lep).read_bytes()
+          assert sha(b)=='6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b'
+          (root/lep).parent.mkdir(parents=True,exist_ok=True)
+          (root/lep).write_bytes(b)
+          try:
+              subprocess.run([sys.executable,'scripts/audit_independent42_original339_LepTraits_selection_20261118.py','--out-dir','output'],cwd=root,check=True)
+              subprocess.run([sys.executable,'scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py','--selection-source-csv','output/independent42_339_239_leptraits_selection.csv','--out-dir','output'],cwd=root,check=True)
+          finally: (root/lep).unlink()
+          checks={}
+          for n in sorted((root/'expected').iterdir()):
+              b=(root/'output'/n.name).read_bytes()
+              if n.suffix=='.json':
+                  assert json.loads(n.read_bytes())==json.loads(b),n
+              else:
+                  assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(b.decode().splitlines())),n
+              checks[n.name]='exact'
+          assert len(checks)==5
+          with (out/'INTERNAL_FILE_DELIVERY_GATE_REGISTER.csv').open('w',newline='',encoding='utf8') as f:
+              w=csv.DictWriter(f,fieldnames=list(inventory[0]));w.writeheader();w.writerows(inventory)
+          report={'status':'DIRECT_REDACTION_STAGING_PASS_NOT_ANONYMOUS_OR_RIGHTS_CLEARED','files':len(entries),'original_files_preserved_separately':True,'unchanged_files':191-len(changed),'changed_files':sorted(changed),'direct_redactions':transformation,'redaction_replacements':sum(r['replacements'] for r in transformation),'direct_identifier_scan_pass':True,'indirect_candidate_files':len(indirect),'indirect_inventory':indirect,'S6_post_redaction_output_checks':checks,'delivery_gates':dict(collections.Counter(r['delivery_gate'] for r in inventory)),'reviewer_release_authorized':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False,'candidate_sha256':sha(dest.read_bytes()),'candidate_bytes':dest.stat().st_size}
+          (out/'INTERNAL_REDACTION_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps({k:v for k,v in report.items() if k not in ('indirect_inventory','direct_redactions')}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-DIRECT-REDACTION-STAGING-AND-INTERNAL-GATES
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
