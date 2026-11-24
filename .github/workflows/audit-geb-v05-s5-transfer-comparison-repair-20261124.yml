@@ -1,0 +1,95 @@
+name: GEB v0.5 S5 repair verifier and compare three completed refits
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s5-transfer-comparison-repair-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact source ZIP and all three fresh output artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14907012275 14906738497 14907202080 14906339832; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          f74347f9c2fba2ee1ad7a1a2b4391764a5281e911d93a5c0d842ac5e19369b6c  14907012275.zip
+          102c49ee2e061a8f270b97cfc55a08803c31f8c97a0a7572b7429b273d61b6ce  14906738497.zip
+          dde8f7a527523c4c7ee7971ca93c154e3784f6adf914b63720d12e9d9cbedfcf  14907202080.zip
+          99a290e98c148ebd420464f2a81ed87d16b6f4a7874d04089f8126a331ad2108  14906339832.zip
+          SUMS
+      - name: Repair only generated verification syntax, rebuild and check all results
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,io,json,pathlib,zipfile,subprocess,sys
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,n):
+              hits=[x for x in z.namelist() if P(x).name==n]
+              assert len(hits)==1,(n,hits,z.namelist())
+              return z.read(hits[0])
+          with zipfile.ZipFile('14907012275.zip') as outer: old=member(outer,'GEB_V05_S5_TRANSFER_INTERNAL_SOURCE.zip')
+          assert sha(old)=='20d09e4930424a5cc9e021671ca40eac9e7ba4b8d11cef43d5c4cf52e3e99b46'
+          with zipfile.ZipFile(io.BytesIO(old)) as z:
+              assert z.testzip() is None
+              entries={n:z.read(n) for n in z.namelist() if not n.endswith('/')}
+          assert len(entries)==32
+          oldmanifest=json.loads(entries['MANIFEST.json'])
+          assert set(oldmanifest)==set(entries)-{'MANIFEST.json'}
+          for n,h in oldmanifest.items(): assert sha(entries[n])==h,n
+          bad=entries['verify.py']
+          oldline=b'write_text(json.dumps(receipt,indent=2)+"'+bytes([10])+b'")'
+          newline=b'write_text(json.dumps(receipt,indent=2)+chr(10))'
+          assert bad.count(oldline)==1
+          fixed=bad.replace(oldline,newline)
+          compile(fixed,'verify.py','exec')
+          entries['verify.py']=fixed
+          entries['MANIFEST.json']=(json.dumps({n:sha(b) for n,b in entries.items() if n!='MANIFEST.json'},indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_S5_TRANSFER_INTERNAL_SOURCE_REPAIRED.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          extracted=P('extracted')
+          (extracted/'output').mkdir()
+          results={}
+          for task,aid in [('host',14906738497),('world',14907202080),('south_america',14906339832)]:
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  fresh=member(z,task+'.json')
+                  log=member(z,task+'.log')
+                  assert b'SOURCE_REPLAY_PASS' in log and b'SyntaxError: unterminated string literal' in log
+              (extracted/'output'/f'{task}.json').write_bytes(fresh)
+              proc=subprocess.run([sys.executable,'verify.py',task],cwd=extracted)
+              receipt=json.loads((extracted/'output'/f'{task}_receipt.json').read_text())
+              receipt['fresh_original_refit_output_sha256']=sha(fresh)
+              receipt['fresh_refit_artifact']=aid
+              (out/f'{task}_receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+              results[task]={'exit_code':proc.returncode,'receipt':receipt}
+          summary={'status':'PASS' if all(x['exit_code']==0 for x in results.values()) else 'FAIL','source_zip_sha256':sha(dest.read_bytes()),'source_zip_bytes':dest.stat().st_size,'files':32,'changed_files':['verify.py','MANIFEST.json'],'original_model_and_input_bytes_unchanged':True,'original_refit_run':45366984994,'reason_for_original_failure':'Generated comparison wrapper syntax error after successful original model execution','results':results}
+          (out/'COMPARISON_SUMMARY.json').write_text(json.dumps(summary,indent=2)+'\n')
+          print(json.dumps(summary))
+          assert summary['status']=='PASS',summary
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S5-TRANSFER-REPAIRED-COMPARISON-INTERNAL
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
