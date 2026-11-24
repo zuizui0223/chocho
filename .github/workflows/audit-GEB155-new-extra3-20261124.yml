@@ -1,0 +1,34 @@
+name: GEB155 verify recovered 2026-11-24 source inputs
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB155-new-extra3-20261124.yml
+      - scripts/audit_GEB155_new_extra3_20261124.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  check-three-csv:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Stream checksum-locked draft assets and inspect CSVs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p safe
+          python -u scripts/audit_GEB155_new_extra3_20261124.py safe/EXTRA3_VERIFIED_20261124.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB155-three-recovered-CSV-hashes-NO-ROWS
+          path: safe/EXTRA3_VERIFIED_20261124.json
+          if-no-files-found: warn
+          retention-days: 90
