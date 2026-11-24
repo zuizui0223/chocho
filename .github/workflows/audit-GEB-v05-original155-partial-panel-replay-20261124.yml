@@ -1,0 +1,56 @@
+name: Rebuild original155 forecast panel from recovered upstream intermediates (partial)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths:
+      - .github/workflows/audit-GEB-v05-original155-partial-panel-replay-20261124.yml
+      - scripts/replay_GEB_v05_original155_partial_panel_20261124.py
+      - tests/test_GEB_v05_original155_partial_panel_20261124.py
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  source-verified-intermediate-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    env:
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: audit
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 42f8fcc3a388e96456c76180d7e56d75dd2ed48c
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pin source-compatible versions and run pure synthetic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "pandas==2.2.3" "scipy==1.18.1" "pyarrow==23.0.1" "scikit-learn==1.7.2" "pyproj==3.7.2" "joblib==1.5.3"
+          python audit/tests/test_GEB_v05_original155_partial_panel_20261124.py
+          python source/provenance/reviewer_defenses/results/host_forecast_validation_20261029/verify_snapshot.py
+          mkdir -p safe
+      - name: Restore checksum-bound intermediates and independently recompute source columns
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -u audit/scripts/replay_GEB_v05_original155_partial_panel_20261124.py \
+            --snapshot source/provenance/reviewer_defenses/results/host_forecast_validation_20261029 \
+            --output safe/ORIGINAL155_PARTIAL_UPSTREAM_PANEL_REPLAY_20261124.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-original155-partial-panel-source-QA-NO-ROWS
+          path: safe/ORIGINAL155_PARTIAL_UPSTREAM_PANEL_REPLAY_20261124.json
+          if-no-files-found: warn
+          retention-days: 90
