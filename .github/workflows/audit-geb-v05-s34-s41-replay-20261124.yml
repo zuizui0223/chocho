@@ -1,0 +1,120 @@
+name: GEB v0.5 S3.4 and S4.1 extracted sensitivity replay
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-s34-s41-replay-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 39980a2e8c4ad9c2eaef24de69d2c1d7f079b40b
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies and acquire immutable geometry
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          mkdir -p geometry
+          curl --fail --location --retry 4 --retry-delay 3 --silent --show-error https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson -o geometry/level3.geojson
+          echo 'c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840  geometry/level3.geojson' | sha256sum -c -
+          python -m pip freeze > geometry/environment.txt
+      - name: Assemble internal source-limited component
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,hashlib,zipfile,json,re
+          P=pathlib.Path
+          items={
+          's34/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py':'scripts/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py',
+          's34/audit_island_port_isolation_239_20261120.py':'scripts/audit_island_port_isolation_239_20261120.py',
+          's34/port_flora.csv':'results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv',
+          's34/region_hosts.csv':'results/island-mainland-resource-q1/region_metrics.csv',
+          's34/effort.csv':'results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv',
+          's34/expected.json':'results/geb_v05_fig2d_effort_sensitivity_20261121/FIG2D_PLANT_INDEX_EFFORT_SENSITIVITY_20261121.json',
+          's41/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py':'scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py',
+          's41/metrics.csv':'data/frozen/figure_sources/anthropogenic_species_metrics.csv',
+          's41/islands.csv':'results/island_resource_gap_filling/by_species.csv',
+          's41/expected.json':'results/geb_v05_fig3b_documentation_proxy_20261121/FIG3B_DOCUMENTATION_PROXY_SENSITIVITY_20261121.json',
+          'environment.txt':'geometry/environment.txt'}
+          blobs={n:P(p).read_bytes() for n,p in items.items()}
+          blobs['README.txt']=b'INTERNAL ONLY. Original derived-input sensitivity replays for SI S3.4 and S4.1. Not raw occurrence or HOSTS/WCVP source reconstruction. Fetch TDWG geography using the pinned public source in RUN.sh; no geometry or raw occurrences bundled. Source rights, indirect anonymity, reviewer access and permanent deposit remain open.\n'
+          blobs['RUN.sh']=b'''#!/usr/bin/env bash
+          set -euo pipefail
+          cd "$(dirname "$0")"
+          mkdir -p geometry
+          if [ ! -s geometry/level3.geojson ]; then
+            curl --fail --location --retry 4 --silent --show-error https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson -o geometry/level3.geojson
+          fi
+          echo 'c172bcf6aba20e19477adc60aebf0023068f0175dca8480f0760b090dcf64840  geometry/level3.geojson' | sha256sum -c -
+          python s34/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py --port-flora s34/port_flora.csv --region-hosts s34/region_hosts.csv --effort-table s34/effort.csv --tdwg-geojson geometry/level3.geojson --out-dir output/s34
+          python s41/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py --metrics s41/metrics.csv --islands s41/islands.csv --resamples 2000 --out-dir output/s41
+          python verify.py
+          '''
+          blobs['verify.py']=b'''import pathlib,json,math
+          P=pathlib.Path
+          def compare(a,b,path=''):
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and a.keys()==b.keys(),path
+                  return sum(compare(a[k],b[k],path+'/'+k) for k in a)
+              if isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),path
+                  return sum(compare(v,w,path+'/'+str(i)) for i,(v,w) in enumerate(zip(a,b)))
+              if isinstance(a,bool) or isinstance(a,str) or a is None or isinstance(a,int):
+                  assert type(a)==type(b) and a==b,(path,a,b)
+              else:
+                  assert isinstance(b,(int,float)) and math.isclose(a,b,rel_tol=1e-6,abs_tol=1e-9),(path,a,b)
+              return 1
+          a=json.loads(P('s34/expected.json').read_text())
+          b=json.loads(P('output/s34/FIG2D_PLANT_INDEX_EFFORT_SENSITIVITY_20261121.json').read_text())
+          n=compare(a,b)
+          c=json.loads(P('s41/expected.json').read_text())
+          d=json.loads(P('output/s41/FIG3B_DOCUMENTATION_PROXY_SENSITIVITY_20261121.json').read_text())
+          assert c==d
+          assert a['cohorts']['matched_effort_island_regions']==98 and a['cohorts']['missing_botanical_effort_islands']==28
+          assert c['n_species']==239 and c['provenance']['resamples']==2000
+          r={'status':'S34_S41_EXTRACTED_ORIGINAL_DERIVED_INPUT_REPLAY_PASS_NOT_FULL_SI','s34_leaf_comparisons':n,'s34_cohorts':b['cohorts'],'s34_distance_effects':{k:{m:v['distance'] for m,v in vals.items() if isinstance(v,dict)} for k,vals in b['models'].items()},'s41_exact_json_match':True,'s41_partial_rho':d['partial_spearman_controlling_documented_host_species_and_families'],'s41_bootstrap_95':d['species_bootstrap_percentile95_exploratory'],'s41_permutation_p':d['within_host_documentation_tier_permutation_two_sided_p_exploratory'],'scope':'Derived-input replay; neither effort proxy identifies observation processes, and no raw occurrences are included.'}
+          P('output/REPLAY_RECEIPT.json').write_text(json.dumps(r,indent=2)+'\\n')
+          print(json.dumps(r))
+          '''
+          # Triple quoted source strings above are aligned by YAML's block indentation.
+          for n in ['RUN.sh','verify.py']:
+              import textwrap
+              lines=blobs[n].decode().splitlines()
+              if len(lines)>1:
+                  blobs[n]=(lines[0]+'\n'+textwrap.dedent('\n'.join(lines[1:]))+'\n').encode()
+          for n,b in blobs.items():
+              assert not re.search(rb'zuizui0223|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}',b,re.I),n
+          manifest={n:hashlib.sha256(b).hexdigest() for n,b in blobs.items()}
+          blobs['MANIFEST.json']=(json.dumps(manifest,indent=2)+'\n').encode()
+          out=P('delivery');out.mkdir()
+          with zipfile.ZipFile(out/'GEB_V05_S34_S41_INTERNAL_REPLAY.zip','w') as z:
+              for n,b in sorted(blobs.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(out/'GEB_V05_S34_S41_INTERNAL_REPLAY.zip') as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==blobs
+              z.extractall('extracted')
+          print('INTERNAL_COMPONENT_FILES',len(blobs),'SHA256',hashlib.sha256((out/'GEB_V05_S34_S41_INTERNAL_REPLAY.zip').read_bytes()).hexdigest())
+          PY
+      - name: Re-run from extracted package
+        run: |
+          set -euo pipefail
+          mkdir -p extracted/geometry
+          cp geometry/level3.geojson extracted/geometry/
+          bash extracted/RUN.sh > delivery/REPLAY_LOG.txt 2>&1 || { tail -80 delivery/REPLAY_LOG.txt; exit 1; }
+          cp extracted/output/REPLAY_RECEIPT.json delivery/
+          cat delivery/REPLAY_RECEIPT.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-S34-S41-INTERNAL-ONLY
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
