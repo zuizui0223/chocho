@@ -138,6 +138,37 @@ def main():
             for entry in records if isinstance(entry, dict)
         )
 
+        # 24-Nov later historical-runtime search. Aggregate only, never source paths.
+        historical_runtime_categories = {
+            'environment_lock_candidate': 0,
+            'pip_or_conda_version_snapshot_candidate': 0,
+            'original_forecast_execution_log_candidate': 0,
+            'distance_intermediate_candidate': 0,
+            'geo_library_metadata_candidate': 0,
+        }
+        for item in records:
+            if not isinstance(item, dict) or not isinstance(item.get('path'), str):
+                continue
+            original_name = item['path'].replace('\\', '/').lower()
+            name = PurePosixPath(original_name).name
+            if (name in ('requirements.txt', 'environment.yml', 'environment.yaml',
+                         'conda-lock.yml', 'conda-lock.yaml', 'pipfile.lock',
+                         'poetry.lock', 'uv.lock', '.python-version',
+                         'pyproject.toml', 'pixi.lock')
+                    or re.fullmatch(r'requirements[-_a-z0-9.]*\.(txt|in)', name)):
+                historical_runtime_categories['environment_lock_candidate'] += 1
+            if ('pip' in name or 'conda' in name or 'package' in name
+                    or 'python_version' in name) and name.endswith(('.json', '.txt', '.log', '.csv')):
+                historical_runtime_categories['pip_or_conda_version_snapshot_candidate'] += 1
+            if any(t in name for t in ('forecast', 'panel', 'distance')) and name.endswith('.log'):
+                historical_runtime_categories['original_forecast_execution_log_candidate'] += 1
+            if ('distance' in name or 'nearest' in name) and name.endswith(
+                    ('.parquet', '.csv', '.npy', '.npz', '.pkl', '.feather')):
+                historical_runtime_categories['distance_intermediate_candidate'] += 1
+            if any(t in name for t in ('pyproj', 'proj_version', 'sklearn_version',
+                                       'environment_versions', 'runtime_versions')):
+                historical_runtime_categories['geo_library_metadata_candidate'] += 1
+
     result={
         "schema":"geb_original155_manifest_only_code_lineage_v1",
         "release_is_draft":True,
@@ -148,6 +179,7 @@ def main():
         "matching_source_groups":groups,
         "expected_relative_path_suffixes":exact_suffix_presence,
         "original_builder_inputs":builder_inputs,
+        "historical_runtime_and_distance_candidates":historical_runtime_categories,
         "original_builder_inputs_present":sum(x["present"] for x in builder_inputs.values()),
         "original_builder_inputs_required":len(builder_inputs),
         "host_region_counts_csv_basename_candidates":host_counts_basename_candidates,
@@ -158,6 +190,7 @@ def main():
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
     print("MANIFEST_ONLY_CLASS_COUNTS",json.dumps({k:v["entries"] for k,v in groups.items()},sort_keys=True))
+    print("HISTORICAL_RUNTIME_SOURCE_CANDIDATES",json.dumps(historical_runtime_categories,sort_keys=True))
     print("BUILDER_EXACT_INPUTS",len(builder_inputs),sum(x["present"] for x in builder_inputs.values()),"host_counts_candidates",host_counts_basename_candidates,"occurrence_parts",occurrence_parts_entries)
     print("MANIFEST_ONLY_SOURCE_SCRIPT_HASHES",groups.get("fit_forecast_script_candidates",{}).get("distinct_content_hashes",0))
 
