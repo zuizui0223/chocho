@@ -1,0 +1,294 @@
+name: GEB v0.5 replace repository-specific blob references with exact file checksums
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-content-checksum-staging-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 959617a77018077f32d85686b310fc9b3803fa22
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover repaired archive and checksum inventory
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14914212989/zip" > stage.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14915541251/zip" > inventory.zip
+          echo '700d228dd1caefad654a03275578e4a0dffc3a95e24d3c5e2706483c5c7ca69f  stage.zip' | sha256sum -c -
+          echo '191fb87b969907b03219c5bd8a111bcc93c5f2adb0c2c59aca4f77071edb0eda  inventory.zip' | sha256sum -c -
+      - name: Resolve exact blob identities, replace checksums without altering data or model algorithms
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import ast,collections,csv,gzip,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          blob=lambda b:hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
+          def get(z,n):
+              h=[p for p in z.namelist() if P(p).name==n]
+              assert len(h)==1,(n,h)
+              return z.read(h[0])
+          with zipfile.ZipFile('stage.zip') as z: raw=get(z,'GEB_V05_BLINDED_EVIDENCE_STAGING_REPAIRED_NOT_FOR_RELEASE.zip')
+          assert sha(raw)=='5597cbb82dccfee6c34dadad1826a1b214985e5bdc72c8fd4fc04be06ad78919'
+          with zipfile.ZipFile(io.BytesIO(raw)) as z:
+              assert z.testzip() is None
+              ns=[n for n in z.namelist() if not n.endswith('/')]
+              assert len(ns)==len(set(ns))==192
+              assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in ns)
+              original={n:z.read(n) for n in ns}
+          with zipfile.ZipFile('inventory.zip') as z: inv=json.loads(get(z,'INTERNAL_CHECKSUM_CLASSIFICATION_INPUT.json'))
+          assert inv['candidate_files']==13 and inv['distinct_nonpublic_40hex']==13
+          refs=inv['references']
+          by=collections.defaultdict(list)
+          for n,b in original.items(): by[blob(b)].append(n)
+          unpublished={
+            'cfe82bd8223ea453c015c47cd9659a935d5ba3ab':'results/three-gate-port-introduced-host-taxa/distinct_introduced_host_taxa_and_port_by_island.csv',
+            'd4abc2edd762ef1003fff7c84c096c38883f0c20':'provenance/reviewer_defenses/results/host_forecast_validation_20261029/forecast_all_225_disposition.csv',
+            '201a762de94b9ecf42a766c8cb5d8d1739a2ca3c':'provenance/reviewer_defenses/results/butterfly_host_contribution_concentration_v0.1.json'}
+          commits={
+            '8f9b37ac9ef9f18727fefcee7a1fc61360b4d503':'frozen-one-held-island-source',
+            '9a718997bce21f5b99329a91844bd31c375c6d16':'frozen-strict-marine-source',
+            'be3bf40a59023b2336da3876d50fd2c9e8ca76ae':'frozen-port-aggregate-source'}
+          values={r['value'] for r in refs}
+          replacements={}
+          classified=[]
+          for v in sorted(values):
+              if by[v]:
+                  assert v not in unpublished and v not in commits
+                  matched=by[v]
+                  bs=[original[n] for n in matched]
+                  assert all(b==bs[0] for b in bs)
+                  replacements[v]=sha(bs[0])
+                  classified.append({'original':v,'kind':'PACKAGED_INPUT_CONTENT_DIGEST','replacement':replacements[v],'matched_files':matched})
+              elif v in unpublished:
+                  p=P('original')/unpublished[v]
+                  b=p.read_bytes()
+                  assert blob(b)==v,(v,p)
+                  replacements[v]=sha(b)
+                  classified.append({'original':v,'kind':'VERIFIED_NONPACKAGED_SOURCE_CONTENT_DIGEST','replacement':replacements[v],'source_path':unpublished[v]})
+              else:
+                  assert v in commits,v
+                  classified.append({'original':v,'kind':'AUTHOR_REPOSITORY_COMMIT','replacement':commits[v]})
+          counts=dict(collections.Counter(r['kind'] for r in classified))
+          assert counts=={'PACKAGED_INPUT_CONTENT_DIGEST':7,'VERIFIED_NONPACKAGED_SOURCE_CONTENT_DIGEST':3,'AUTHOR_REPOSITORY_COMMIT':3},counts
+          replacements.update(commits)
+          ids={'44011154673':'withheld-parent-execution'}
+          allrep=replacements|ids
+          e=dict(original)
+          # Only convert exact, known Git-blob hash expressions into SHA256 of
+          # the same raw bytes. Preserve the logical equality checks.
+          hash_scripts={
+              'components/fig1_fig3bc/scripts/REPLAY_AGGREGATES.py',
+              'components/fig4_scores_only/scripts/REPLAY_PUBLISHED_SCORES.py',
+              'components/fig2abc_derived/verify_island_port_native_alien_matched_20261118.py',
+              'components/fig2d_fixed239/scripts/audit_island_port_isolation_239_20261120.py',
+              'components/s34_s41/s34/audit_GEB_v05_fig2D_botanical_record_effort_20261121.py',
+              'components/s34_s41/s34/audit_island_port_isolation_239_20261120.py',
+              'components/s34_s41/s41/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py'}
+          keyrep={
+              'source_git_blob_lock':'source_file_sha256_lock',
+              'source_git_blob_sha':'source_file_sha256',
+              'GBIF_all_Plant_records_98_git_blob':'GBIF_all_Plant_records_98_file_sha256',
+              'wcvp_port_flora_git_blob':'wcvp_port_flora_file_sha256',
+              'host_resource_git_blob':'host_resource_file_sha256',
+              'flora_git_blob':'flora_file_sha256',
+              'hosts_region_git_blob':'hosts_region_file_sha256',
+              'frozen_225_candidate_csv_git_blob_sha':'frozen_225_candidate_csv_sha256',
+              'source_GEB_contributor_git_blob':'source_GEB_contributor_file_sha256',
+              'source_git_snapshots':'source_snapshot_labels'}
+          def dump(d): return (json.dumps(d,ensure_ascii=False,indent=2)+chr(10)).encode()
+          def replace_text(s):
+              for a,b in allrep.items(): s=s.replace(a,b)
+              for a,b in keyrep.items(): s=s.replace(a,b)
+              return s
+          def change_code(b,n):
+              s=b.decode('utf8')
+              tree=ast.parse(s)
+              lines=s.splitlines(keepends=True);offset=[0]
+              for l in lines:offset.append(offset[-1]+len(l.encode('utf8')))
+              edits=[]
+              hashcount=0
+              for node in ast.walk(tree):
+                  if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and isinstance(node.func.value,ast.Name) and node.func.value.id=='hashlib' and node.func.attr=='sha1' and n in hash_scripts:
+                      assert len(node.args)==1
+                      arg=node.args[0]
+                      # These original functions hash git header + raw data.
+                      # The final concatenand is always the exact byte buffer.
+                      assert isinstance(arg,ast.BinOp) and isinstance(arg.op,ast.Add) and isinstance(arg.right,ast.Name),(n,ast.dump(arg))
+                      argname=arg.right.id
+                      assert argname in {'b','raw','data'}
+                      start=offset[node.lineno-1]+node.col_offset;end=offset[node.end_lineno-1]+node.end_col_offset
+                      edits.append((start,end,f'hashlib.sha256({argname})'.encode()))
+                      hashcount+=1
+                  elif isinstance(node,ast.Constant):
+                      v=node.value
+                      if isinstance(v,str):w=replace_text(v)
+                      elif type(v)==int and str(v) in ids:w=ids[str(v)]
+                      else:continue
+                      if w!=v:
+                          start=offset[node.lineno-1]+node.col_offset;end=offset[node.end_lineno-1]+node.end_col_offset
+                          edits.append((start,end,repr(w).encode('utf8')))
+              assert hashcount==int(n in hash_scripts),(n,hashcount)
+              for a,z,x in sorted(edits,reverse=True): b=b[:a]+x+b[z:]
+              compile(b,n,'exec')
+              # Ensure AST equivalence except expressly changed checksum operation and metadata.
+              class T(ast.NodeTransformer):
+                  def visit_Call(self,node):
+                      if n in hash_scripts and isinstance(node.func,ast.Attribute) and isinstance(node.func.value,ast.Name) and node.func.value.id=='hashlib' and node.func.attr=='sha1':
+                          arg=node.args[0]
+                          return ast.copy_location(ast.Call(func=ast.Attribute(value=ast.Name(id='hashlib',ctx=ast.Load()),attr='sha256',ctx=ast.Load()),args=[arg.right],keywords=[]),node)
+                      return self.generic_visit(node)
+                  def visit_Constant(self,node):
+                      v=node.value
+                      if isinstance(v,str):w=replace_text(v)
+                      elif type(v)==int and str(v) in ids:w=ids[str(v)]
+                      else:return node
+                      return ast.copy_location(ast.Constant(value=w),node) if w!=v else node
+              assert ast.dump(T().visit(tree),include_attributes=False)==ast.dump(ast.parse(b),include_attributes=False),n
+              return b
+          def change_json(x):
+              if isinstance(x,dict):return {replace_text(k):change_json(v) for k,v in x.items()}
+              if isinstance(x,list):return [change_json(v) for v in x]
+              if isinstance(x,str):return replace_text(x)
+              if type(x)==int and str(x) in ids:return ids[str(x)]
+              return x
+          for n,b in original.items():
+              if n.endswith('.py'):
+                  if n in hash_scripts or any(v.encode() in b for v in allrep) or any(v.encode() in b for v in keyrep): e[n]=change_code(b,n)
+              elif n.endswith('.json'):
+                  d=json.loads(b);c=change_json(d)
+                  if d!=c:e[n]=dump(c)
+              # tabular and raw source bytes remain intact
+          # Verify previous local manifests before refreshing transformed members.
+          manifests=[]
+          for n,b in list(e.items()):
+              if not n.endswith('/MANIFEST.json'):continue
+              p=n.rsplit('/',1)[0]+'/'
+              d=json.loads(b);o=json.loads(original[n])
+              mapping=d.get('archive_file_sha256',d)
+              oldmap=o.get('archive_file_sha256',o)
+              if mapping and all(isinstance(v,str) and re.fullmatch('[0-9a-f]{64}',v) and p+k in e for k,v in mapping.items()):
+                  assert set(mapping)==set(oldmap)
+                  for k,v in oldmap.items():assert sha(original[p+k])==v,(n,k)
+                  for k in mapping:mapping[k]=sha(e[p+k])
+                  e[n]=dump(d)
+                  manifests.append(n)
+          assert len(manifests)==7
+          # S7 uses exact source receipts, including original nutrient results.
+          # Keep original-source caveats and update only nonfunctional README.
+          e['README.md']=(e['README.md'].decode().replace('The nine components','The eleven components')+'\nRemaining author-repository Git commit references were replaced with neutral labels. Ten original file fingerprints have been verified and expressed as SHA-256 of the exact original source bytes; seven source digests are for packaged files and three are for original sources not shipped here. These hashes validate content, not authorship. Original author provenance is retained in the internal audit only. Public-source pins remain. This staging archive is not authorized for redistribution or reviewer delivery. The study repository is publicly visible, so content matching can still identify authors even when direct identifiers are absent.\n').encode()
+          tables=[n for n in original if n.endswith(('.csv','.csv.gz','.tsv','.parquet','.npz'))]
+          assert len(tables)==49 and all(original[n]==e[n] for n in tables)
+          public={'808e0b869f9ec1adf8efff87cf6a395adda103e0','65bed76bae9d644ccb6ad200c05f9f5071d89e05','52da7828aba9d461dd133c27b3bd7a4407161f54','9702e22fc540ac7f25a174542a253cc81f83719c','06749c04bd5b7a754d6f7717a31c01c51357cae8','b2bc7bd87eca199b62f08ac539660aebc9fbaf79'}
+          directpat=re.compile(rb'zuizui0223|ZHANG[ _\.-]?(?:RUIQI|RACHEL)|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/',re.I)
+          direct=[];nonpublic=[];other=[]
+          for n,b in sorted(e.items()):
+              payload=gzip.decompress(b) if n.endswith('.gz') else b
+              t=payload.decode('utf8',errors='replace')
+              if directpat.search(payload) or directpat.search(n.encode()):direct.append(n)
+              vals=sorted(set(re.findall(r'\b[0-9a-f]{40}\b',t,re.I))-public)
+              if vals:nonpublic.append({'file':n,'values':vals})
+              for i,l in enumerate(t.splitlines()):
+                  if re.search(r'(?i)\b(?:[1-9]\d{10,11})\b',l) and re.search(r'(?i)(?:CI|run|artifact|commit|github|workflow)',l):
+                      other.append({'file':n,'line':i+1,'text':l.strip()[:200]})
+              assert not any(v in t for v in allrep),n
+          assert not direct and not nonpublic and not other,(direct,nonpublic,other)
+          # File-by-file decision register is internal. It is not a licence grant.
+          delivery=[]
+          for n,b in sorted(e.items()):
+              component=n.split('/')[1] if n.startswith('components/') else 'root_or_validation'
+              suff=P(n).suffix.lower()
+              if n.startswith('validation/'):
+                  gate='AUTHOR_APPROVAL_AND_CONTENT_ANONYMITY'
+                  source='Author-derived validation summary; external source citations retained'
+              elif suff in ('.py','.r','.sh'):
+                  gate='AUTHOR_CODE_RIGHTS_APPROVAL_AND_THIRD_PARTY_CODE_REVIEW'
+                  source='Source-pinned analysis code; repository has no declared licence'
+              elif suff in ('.csv','.gz','.tsv','.parquet','.npz'):
+                  if component=='s7_evidence' and ('port_' in n or n.endswith('/history.csv')):
+                      gate='HISTORICAL_GBIF_ATTRIBUTION_UNRESOLVED'
+                      source='Original historical or port speciesKey facets; no retroactive DOI'
+                  elif component in ('s5_annual_region','s5_transfer','fig4_scores_only'):
+                      gate='MIXED_GBIF_PROVIDER_AND_OTHER_DERIVED_DATA_REVIEW'
+                      source='Original GBIF DOI for annual/score data; mixed botanical and geographic controls may also apply'
+                  else:
+                      gate='DERIVED_SOURCE_RIGHTS_REVIEW'
+                      source='Derived resource/plant/geometry/checklist data; upstream public licences alone do not clear this file'
+              elif suff in ('.json','.md','.txt'):
+                  gate='METADATA_AND_SUMMARY_RIGHTS_REVIEW'
+                  source='Source metadata/expected results; possible mixed-source terms'
+              else:
+                  gate='MANUAL_REVIEW'
+                  source='Unclassified source'
+              delivery.append({'file':n,'component':component,'sha256':sha(b),'bytes':len(b),'delivery_gate':gate,'source_scope':source,'cleared_for_distribution':False})
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_CONTENT_CHECKSUM_STAGING_NOT_FOR_RELEASE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(e.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==e
+              z.extractall('extracted')
+          with (out/'INTERNAL_FILE_DELIVERY_GATE_REGISTER.csv').open('w',encoding='utf8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(delivery[0]));w.writeheader();w.writerows(delivery)
+          summary={'status':'CONTENT_CHECKSUM_TRANSFORMATION_PASS_NOT_RELEASE_CLEARANCE','files':len(e),'classified_13_unique_identifiers':counts,'candidate_files_before':13,'nonpublic_40hex_candidate_files_after':0,'extra_internal_CI_references_removed':2,'direct_identifier_flags':0,'remaining_pattern_flagged_execution_lines':0,'local_manifests_verified_and_updated':len(manifests),'original_tabular_files_unchanged':49,'hash_guard_scripts_changed':len(hash_scripts),'changed_files':[n for n in original if original[n]!=e[n]],'inner_sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'repository_public':True,'content_based_reidentification_risk_remains':True,'repository_declared_licence':None,'reviewer_release_authorized':False,'rights_gate_counts':dict(collections.Counter(x['delivery_gate'] for x in delivery))}
+          (out/'INTERNAL_CHECKSUM_TRANSFORMATION_QA.json').write_text(json.dumps({'summary':summary,'classification':classified},indent=2)+chr(10))
+          print('CONTENT_CHECKSUM_BUILD',json.dumps(summary))
+          PY
+      - name: Replay all previously executable limited groups plus S7
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/REPLAY_LOG_INTERNAL.txt 2>&1 || { tail -80 delivery/REPLAY_LOG_INTERNAL.txt; exit 1; }
+          (cd extracted/components/s7_evidence && python replay.py) >> delivery/REPLAY_LOG_INTERNAL.txt
+          grep -q 'GEB_V05_TEN_GROUPS_REPLAYED_FIVE_PREVERIFIED_NOT_FULL_SI' delivery/REPLAY_LOG_INTERNAL.txt
+          python - <<'PY'
+          import json,pathlib
+          P=pathlib.Path
+          a=json.loads(P('extracted/components/s7_evidence/S7_RESULT.json').read_text())
+          b=json.loads(P('extracted/validation/S7_REPLAY_RECEIPT.json').read_text())['verification']['source_result']
+          assert a==b
+          print('CONTENT_CHECKSUM_TEN_PLUS_S7_REPLAYS_PASS')
+          PY
+      - name: Recheck exact source S6 with independently fetched public LepTraits
+        run: |
+          set -euo pipefail
+          cd extracted/components/s6_endemic
+          mkdir -p data/external
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv -o data/external/leptraits_consensus_v1.0.csv
+          echo '6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  data/external/leptraits_consensus_v1.0.csv' | sha256sum -c -
+          python scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir output
+          python scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output
+          python - <<'PY'
+          import json,csv,pathlib
+          P=pathlib.Path
+          for n in P('expected').iterdir():
+              f=P('output')/n.name
+              if n.suffix=='.json': assert json.loads(n.read_text())==json.loads(f.read_text()),n
+              else: assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(f.read_text().splitlines())),n
+          print('CONTENT_CHECKSUM_S6_ALL_FIVE_OUTPUTS_EXACT')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-content-checksum-staging-internal-only
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
