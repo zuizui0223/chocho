@@ -1,0 +1,122 @@
+name: GEB v0.5 integrate verified S4 source and three control receipts
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-integrated-s4-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover four signed artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14903058674 14906105270 14905552036 14905264746; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          87fc861ce32b32d75fbb2c50b36f63560df5839cf9c9b09e0c8d8a1ca07a552a  14903058674.zip
+          dcecc37d4fc0f547959a62cbf394c0c4dda80b93f5ea339390f3bbc95b290ccf  14906105270.zip
+          6d9720615a1a34340dbe7a1b8ea62658ef1a9a4f5509dddf4bacc7ebcc659bc9  14905552036.zip
+          61c4362cb6d67ebc321ddc284e80be7bdbdcc472dbd6316683ce14fed2b24f45  14905264746.zip
+          SUMS
+      - name: Assemble exact component bytes and verify successful receipt scope
+        run: |
+          python - <<'PY'
+          import hashlib,io,json,pathlib,re,zipfile,gzip
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,name):
+              hits=[n for n in z.namelist() if P(n).name==name]
+              assert len(hits)==1,(name,hits)
+              return z.read(hits[0])
+          def load(outer,name,digest):
+              with zipfile.ZipFile(outer) as z: b=member(z,name)
+              assert sha(b)==digest
+              with zipfile.ZipFile(io.BytesIO(b)) as z:
+                  assert z.testzip() is None
+                  names=[i.filename for i in z.infolist() if not i.is_dir()]
+                  assert len(names)==len(set(names))
+                  assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in names)
+                  return {n:z.read(n) for n in names}
+          base=load('14903058674.zip','GEB_V05_INTERNAL_SEVEN_REPLAY_GROUPS_NOT_FOR_REVIEW.zip','a8e808abcd1a791cb34db62433977ddb0470dcd7c037c90063a634808abc8e46')
+          s4=load('14906105270.zip','GEB_V05_S4_ORIGINAL_SOURCE_INTERNAL_REPLAY.zip','d2b7c4ed6c56ce309ec8ee4690678fcd08147c3de2ac483679ba9af5f67fbeb4')
+          assert len(base)==64 and len(s4)==26
+          for n,h in json.loads(s4['MANIFEST.json']).items(): assert sha(s4[n])==h,n
+          receipts={}
+          for task,outer,count,draws in [('margin','14905552036.zip',97,1575),('mask','14905264746.zip',236,0),('family','14905264746.zip',239,0)]:
+              with zipfile.ZipFile(outer) as z: b=member(z,task+'_receipt.json')
+              r=json.loads(b)
+              assert r['status']=='EXTRACTED_ORIGINAL_S4_REPLAY_PASS' and r['task']==task
+              assert r['json_leaf_comparisons']==count and r['draw_csv_scalar_comparisons']==draws
+              assert r['rtol']==1e-7 and r['atol']==1e-9
+              receipts['S4_'+task+'_receipt.json']=b
+          entries=dict(base)
+          for n,b in s4.items(): entries['components/s4_controls/'+n]=b
+          for n,b in receipts.items(): entries['source_qa_receipts/'+n]=b
+          assert len(entries)==93
+          manifest='MANIFEST_INTERNAL_LIMITED_SCOPE.json'
+          m=json.loads(base[manifest])
+          m['schema']='GEB_v05_internal_7component_10group_candidate_v5'
+          m['component_source']['s4_controls']={'file_count':26,'source_artifact_component_sha256':'d2b7c4ed6c56ce309ec8ee4690678fcd08147c3de2ac483679ba9af5f67fbeb4','source_artifact_component_filename':'GEB_V05_S4_ORIGINAL_SOURCE_INTERNAL_REPLAY.zip'}
+          m['source_qa_receipts']+=list(receipts)
+          m['S4_three_original_controls_replayed_from_same_component_before_integration']=True
+          m['full_SI_replayed']=False
+          m['limitations']+=' S4 host controls require externally retrieved pinned HOSTS/WCVP; their complete prior extracted execution is verified by immutable source and receipts, not a fresh host refit within this integration job.'
+          entries[manifest]=(json.dumps(m,indent=2,ensure_ascii=False)+'\n').encode()
+          readme='README_INTERNAL_NOT_FOR_JOURNAL_REVIEW.md'
+          entries[readme]=(base[readme].decode().replace('six-component','seven-component').replace('The six components','The seven components')+'\n7. S4 three original controls: 26 source files plus three verified execution receipts. Run bash RUN_LIMITED_COMPONENTS.sh for the previous seven groups and margin replay. For the two original host controls run bash components/s4_controls/RUN_HOST_CONTROLS.sh /absolute/pinned/WCVP /absolute/pinned/HOSTS (see component README). Both host controls already passed from byte-identical S4 input in the separate extracted job. All three are same-source potential-resource diagnostics. Internal only, not an approved reviewer archive.\n').encode()
+          runner='RUN_LIMITED_COMPONENTS.sh'
+          marker='echo GEB_V05_LIMITED_SEVEN_REPLAY_GROUPS_PASS_NOT_FULL_PAPER'
+          assert base[runner].decode().count(marker)==1
+          entries[runner]=base[runner].decode().replace(marker,marker+'\n( cd components/s4_controls && bash RUN_MARGIN.sh )\necho GEB_V05_EIGHT_GROUPS_REPLAYED_TWO_HOST_CONTROLS_PREVERIFIED_NOT_FULL_SI').encode()
+          changed={n for n in base if entries[n]!=base[n]}
+          assert changed=={manifest,readme,runner}
+          patterns={'owner_account':rb'zuizui0223','author_name':rb'ZHANG[ _\.-]?(?:RUIQI|RACHEL)','email':rb'[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}','local_path':rb'/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/'}
+          flags=[]
+          for n,b in entries.items():
+              check=gzip.decompress(b) if n.endswith('.gz') else b
+              for label,p in patterns.items():
+                  if re.search(p,n.encode(),re.I) or re.search(p,check,re.I): flags.append({'file':n,'kind':label})
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_INTERNAL_TEN_GROUPS_NOT_FOR_REVIEW.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(entries.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==entries
+              z.extractall('extracted')
+          report={'status':'INTERNAL_ONLY_NOT_ANONYMITY_OR_LICENCE_APPROVED','files':93,'prior_members_unchanged':61,'new_s4_members':26,'new_s4_receipts':3,'wrappers_updated':sorted(changed),'s4_preverified_comparisons':2147,'direct_identifier_flags':flags,'direct_identifier_scan_pass':not flags,'zip_sha256':sha(dest.read_bytes()),'zip_size':dest.stat().st_size,'full_SI_replayed':False,'reviewer_access_URL_exists':False,'permanent_archive_DOI_exists':False}
+          (out/'INTEGRATED_BUILD_QA.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - name: Replay integrated archive (seven prior groups plus original margin null)
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/INTEGRATED_REPLAY_LOG.txt 2>&1 || { tail -100 delivery/INTEGRATED_REPLAY_LOG.txt; exit 1; }
+          grep -q 'GEB_V05_EIGHT_GROUPS_REPLAYED_TWO_HOST_CONTROLS_PREVERIFIED_NOT_FULL_SI' delivery/INTEGRATED_REPLAY_LOG.txt
+          python - <<'PY'
+          import csv,json,pathlib,hashlib
+          p=pathlib.Path('extracted/components/s4_controls')
+          r=json.loads((p/'output/margin_receipt.json').read_text())
+          assert r==json.loads(pathlib.Path('extracted/source_qa_receipts/S4_margin_receipt.json').read_text())
+          for n,h in json.loads((p/'MANIFEST.json').read_text()).items(): assert hashlib.sha256((p/n).read_bytes()).hexdigest()==h
+          print('INTEGRATED_EIGHT_REPLAYS_PASS_TWO_HOST_CONTROLS_BYTE_IDENTICAL_PREVERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-TEN-GROUPS-INTERNAL-ONLY
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
