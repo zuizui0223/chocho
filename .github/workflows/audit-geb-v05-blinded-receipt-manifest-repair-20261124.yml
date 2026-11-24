@@ -1,0 +1,133 @@
+name: GEB v0.5 verify transformed local checksum manifest and rerun blinded candidate
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/audit-geb-v05-blinded-receipt-manifest-repair-20261124.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover signed original and first blinded candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14913717016/zip" > staging.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14915510339/zip" > blinded.zip
+          echo '26b1c54fe366a19625ce6ccac9c7e5903cfb61606c58e523e988af63ca5704ba  staging.zip' | sha256sum -c -
+          echo 'cd274adddcc52f4db6679b1717768c988185ff256fedcdc12f2a99b2a5f8f261  blinded.zip' | sha256sum -c -
+      - name: Verify original checksums, update only local transformed-file checksums
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,io,json,pathlib,zipfile,gzip,re
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(z,n):
+              hits=[p for p in z.namelist() if P(p).name==n]
+              assert len(hits)==1,(n,hits)
+              return z.read(hits[0])
+          def load(outer,name,h):
+              with zipfile.ZipFile(outer) as z: b=member(z,name)
+              assert sha(b)==h
+              with zipfile.ZipFile(io.BytesIO(b)) as z:
+                  assert z.testzip() is None
+                  ns=[n for n in z.namelist() if not n.endswith('/')]
+                  assert len(ns)==len(set(ns)) and all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in ns)
+                  return {n:z.read(n) for n in ns}
+          orig=load('staging.zip','GEB_V05_DIRECT_REDACTION_STAGING_NOT_FOR_REVIEW.zip','576a5f916d3659fef1c5cee311549a19aebae04f0c74bd73b0fb22d5735be8fb')
+          e=load('blinded.zip','GEB_V05_BLINDED_EVIDENCE_STAGING_NOT_FOR_RELEASE.zip','a383599cbe09eea7402d49f1012ffb8aef64990e582bdb740de674cfbbb798ee')
+          assert (len(orig),len(e))==(191,192)
+          with zipfile.ZipFile('blinded.zip') as z: qa=json.loads(member(z,'INTERNAL_TRANSFORMATION_QA.json'))
+          assert qa['summary']['original_18_receipts_replaced']==18
+          prior=dict(e)
+          prefix='components/fig2abc_derived/'
+          key=prefix+'MANIFEST.json'
+          old=json.loads(orig[key]);new=json.loads(e[key])
+          assert set(old['archive_file_sha256'])==set(new['archive_file_sha256'])
+          assert old['archive_file_sha256']==new['archive_file_sha256']
+          changes=[]
+          for n,h in old['archive_file_sha256'].items():
+              full=prefix+n
+              assert sha(orig[full])==h,(n,h)
+              fresh=sha(e[full])
+              if h!=fresh: changes.append({'file':full,'original_sha256':h,'transformed_sha256':fresh})
+              new['archive_file_sha256'][n]=fresh
+          assert changes and any(x['file'].endswith('audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py') for x in changes)
+          e[key]=(json.dumps(new,ensure_ascii=False,indent=2)+chr(10)).encode()
+          assert {n for n in e if e[n]!=prior[n]}=={key}
+          for n,b in orig.items():
+              if n.endswith(('.csv','.csv.gz','.tsv','.parquet','.npz')): assert e[n]==b,n
+          # Check all nested simple manifests and the repaired complex manifest.
+          manifest_count=0
+          for n,b in e.items():
+              if not n.endswith('/MANIFEST.json'): continue
+              d=json.loads(b);p=n.rsplit('/',1)[0]+'/'
+              mapping=d.get('archive_file_sha256') if isinstance(d,dict) and 'archive_file_sha256' in d else d
+              if isinstance(mapping,dict) and mapping and all(isinstance(v,str) and re.fullmatch('[0-9a-f]{64}',v) and p+k in e for k,v in mapping.items()):
+                  for k,v in mapping.items(): assert sha(e[p+k])==v,(n,k)
+                  manifest_count+=1
+          out=P('delivery');out.mkdir()
+          zpath=out/'GEB_V05_BLINDED_EVIDENCE_STAGING_REPAIRED_NOT_FOR_RELEASE.zip'
+          with zipfile.ZipFile(zpath,'w') as z:
+              for n,b in sorted(e.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,24,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(zpath) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==e
+              z.extractall('extracted')
+          report={'status':'LOCAL_TRANSFORMED_CHECKSUM_MANIFEST_REPAIRED_NOT_RELEASE_AUTHORIZED','candidate_files':192,'only_changed_from_first_blinded_candidate':key,'changed_checksum_entries':changes,'local_manifests_checked':manifest_count,'original_receipts_replaced':18,'original_data_tables_unchanged':qa['summary']['unchanged_original_data_tables'],'original_author_commit_labels':qa['summary']['author_commit_labels'],'original_execution_ids_replaced':qa['summary']['author_execution_ID_values_replaced'],'remaining_nonpublic_checksum_candidate_files':qa['summary']['nonpublic_checksum_candidate_files'],'inner_sha256':sha(zpath.read_bytes()),'bytes':zpath.stat().st_size,'scientific_code_or_data_changed_in_repair':False,'reviewer_release_authorized':False}
+          (out/'INTERNAL_MANIFEST_REPAIR_QA.json').write_text(json.dumps(report,indent=2)+chr(10))
+          print('BLINDED_REPAIR',json.dumps(report))
+          PY
+      - name: Rerun limited groups and S7 from repaired staging copy
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4'
+          bash extracted/RUN_LIMITED_COMPONENTS.sh > delivery/REPLAY_LOG_INTERNAL.txt 2>&1 || { tail -80 delivery/REPLAY_LOG_INTERNAL.txt; exit 1; }
+          (cd extracted/components/s7_evidence && python replay.py) >> delivery/REPLAY_LOG_INTERNAL.txt
+          grep -q 'GEB_V05_TEN_GROUPS_REPLAYED_FIVE_PREVERIFIED_NOT_FULL_SI' delivery/REPLAY_LOG_INTERNAL.txt
+          python - <<'PY'
+          import json,pathlib
+          P=pathlib.Path
+          a=json.loads(P('extracted/components/s7_evidence/S7_RESULT.json').read_text())
+          b=json.loads(P('extracted/validation/S7_REPLAY_RECEIPT.json').read_text())['verification']['source_result']
+          assert a==b
+          print('BLINDED_STAGING_TEN_PLUS_S7_REPLAYS_PASS')
+          PY
+      - name: Re-execute S6 from exact public original source
+        run: |
+          set -euo pipefail
+          cd extracted/components/s6_endemic
+          mkdir -p data/external
+          curl -fsSL --retry 3 https://raw.githubusercontent.com/RiesLabGU/LepTraits/9702e22fc540ac7f25a174542a253cc81f83719c/consensus/consensus.csv -o data/external/leptraits_consensus_v1.0.csv
+          echo '6ec35b8a31e96c971aeaa228a48aae9f107c40c33695f0d470aa4382ca6d635b  data/external/leptraits_consensus_v1.0.csv' | sha256sum -c -
+          python scripts/audit_independent42_original339_LepTraits_selection_20261118.py --out-dir output
+          python scripts/audit_endemic18_transportability_missing_host_nonmonotonic_20261118.py --selection-source-csv output/independent42_339_239_leptraits_selection.csv --out-dir output
+          python - <<'PY'
+          import json,csv,pathlib
+          P=pathlib.Path
+          for n in P('expected').iterdir():
+              f=P('output')/n.name
+              if n.suffix=='.json': assert json.loads(n.read_text())==json.loads(f.read_text()),n
+              else: assert list(csv.DictReader(n.read_text().splitlines()))==list(csv.DictReader(f.read_text().splitlines())),n
+          print('BLINDED_S6_ALL_FIVE_OUTPUTS_EXACT')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v05-blinded-receipt-staging-repaired-internal-only
+          path: delivery/
+          if-no-files-found: warn
+          retention-days: 90
