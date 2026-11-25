@@ -1,0 +1,57 @@
+name: Audit independent recorded butterflies on island host resources
+on:
+  push:
+    branches: [analysis/gbif224-island-observed-host-isolation-20261125]
+    paths:
+      - scripts/audit_gbif224_island_observed_host_isolation_20261125.py
+      - .github/workflows/audit-gbif224-island-observed-host-isolation.yml
+  pull_request:
+    branches: [analysis/fixed239-host-taxonomic-resolution-20261125]
+    paths:
+      - scripts/audit_gbif224_island_observed_host_isolation_20261125.py
+      - .github/workflows/audit-gbif224-island-observed-host-isolation.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0
+          path: original_annual
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: original_resource
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Rebuild exact source join and isolation sensitivities
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4' 'matplotlib>=3.9,<4'
+          mkdir -p _scratch current/_result
+          curl --fail --location --silent --show-error --retry 4 https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson -o _scratch/level3.geojson
+          python -m py_compile current/scripts/audit_gbif224_island_observed_host_isolation_20261125.py
+          python -u current/scripts/audit_gbif224_island_observed_host_isolation_20261125.py \
+            --annual-root original_annual --resource-root original_resource --current-root current \
+            --tdwg-geojson _scratch/level3.geojson --out-dir current/_result
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GBIF224-island-recorded-known-host-opportunity-audit
+          path: current/_result/
+          retention-days: 90
+          if-no-files-found: warn
+      - name: Remove copied annual and resource inputs
+        if: always()
+        run: rm -rf original_annual original_resource _scratch
