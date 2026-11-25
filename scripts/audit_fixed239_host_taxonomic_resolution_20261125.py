@@ -24,11 +24,11 @@ def require(ok, why):
         raise RuntimeError(why)
 def ranks(ids, tax):
     return {k:{tax[p][k] for p in ids} for k in ("genus","family")}
-def aggregate(hosts, ids, tax):
+def aggregate(hosts, ids, tax, exact_host_ids):
     local = ranks(ids,tax)
     result = {}
     for rank in ("species","genus","family"):
-        target = ids if rank=="species" else local[rank]
+        target = exact_host_ids if rank=="species" else local[rank]
         known = [h[rank] for h in hosts.values()]
         result[rank] = sum(bool(target & h) for h in known)
         result[rank+"_fraction"] = float(np.mean([len(target & h)/len(h) for h in known]))
@@ -92,7 +92,44 @@ def main():
     e=edges[["insect_species","accepted_plant_name_id"]].drop_duplicates()
     require(len(e)==2596 and e.accepted_plant_name_id.nunique()==1706 and set(e.insect_species)==panel,
             "Frozen accepted interaction edges changed")
-    require(set(e.accepted_plant_name_id)<=set(tax),"Host is outside accepted species taxonomy")
+    # Q1 reconstructs opportunities using the dedicated HOSTS distribution sidecars,
+    # not the all-flora accepted species table. Some resolved target IDs are outside
+    # that strict species-rank background. Preserve their exact source identity and
+    # accepted-name/family metadata from the pinned original interaction builder.
+    missing=set(e.accepted_plant_name_id)-set(tax)
+    extras=[]
+    for pid in sorted(missing):
+        rows=edges.loc[edges.accepted_plant_name_id==pid,["accepted_name","family"]].drop_duplicates()
+        require(len(rows)==1,"Conflicting original source taxonomy for "+pid)
+        name,family=rows.iloc[0]
+        require(bool(name.strip()) and bool(family.strip()),"Incomplete original host taxonomy "+pid)
+        genus=name.split()[0]
+        tax[pid]={"genus":genus,"family":family}
+        extras.append({"resolved_host_id":pid,"accepted_name":name,"family":family,"genus":genus})
+    pd.DataFrame(extras,columns=["resolved_host_id","accepted_name","family","genus"]).to_csv(a.out_dir/"host_ids_outside_accepted_species_background.csv",index=False)
+    hn_path=a.edges.parent/"native_extant_nondoubtful_wgsrpd3.csv"
+    hc_path=a.edges.parent.parent/"contemporary"/"extant_nondoubtful_wgsrpd3.csv"
+    require(digest(hn_path)=="c731906315f7452f83ce302c1d36c75ad94afc24ce7e24d461360312244ac558","Original native host distribution SHA mismatch")
+    hn,hc=read(hn_path),read(hc_path)
+    require(len(hn)==148254 and len(hc)==222384,"Original dedicated distribution row counts changed")
+    for v in (hn,hc):
+        require(not v.duplicated(["accepted_plant_name_id","area_code_l3"]).any(),"Duplicate dedicated host distribution")
+    focal_ids=set(e.accepted_plant_name_id)
+    dhn=hn[hn.accepted_plant_name_id.isin(focal_ids)]
+    dhc=hc[hc.accepted_plant_name_id.isin(focal_ids)]
+    hn_by= dhn.groupby("area_code_l3").accepted_plant_name_id.agg(set).to_dict()
+    hc_by= dhc.groupby("area_code_l3").accepted_plant_name_id.agg(set).to_dict()
+    hn_regions=dhn.groupby("accepted_plant_name_id").area_code_l3.agg(set).to_dict()
+    hc_regions=dhc.groupby("accepted_plant_name_id").area_code_l3.agg(set).to_dict()
+    # Verify every butterfly's global native and current opportunities, as Q1 did,
+    # before constructing the island taxonomic comparison.
+    metrics_by=metrics.set_index("species")
+    for b,g in e.groupby("insect_species"):
+        ids=set(g.accepted_plant_name_id)
+        rn=set().union(*(hn_regions.get(k,set()) for k in ids))
+        rc=set().union(*(hc_regions.get(k,set()) for k in ids))
+        require(rn<=rc and len(rn)==int(metrics_by.loc[b,"native_resource_units"]) and len(rc)==int(metrics_by.loc[b,"contemporary_resource_units"]),
+                "Global original Q1 species count mismatch: "+b)
     hosts={}
     for b,g in e.groupby("insect_species"):
         ids=set(g.accepted_plant_name_id)
@@ -114,6 +151,8 @@ def main():
     for row in f.itertuples(index=False):
         ns,cs=by_n[row.code],by_c[row.code]
         require(ns<=cs,"Native not nested in contemporary")
+        hn_i=hn_by.get(row.code,set()); hc_i=hc_by.get(row.code,set())
+        require(hn_i<=hc_i,"Dedicated host distributions not nested")
         rec={"code":row.code,"single_native_region_share":len(ns&single)/len(ns),
              "allflora_native_n":len(ns),"allflora_current_n":len(cs),
              "native_all_family_n":len({tax[p]["family"] for p in ns}),
@@ -122,8 +161,11 @@ def main():
              "native_documented_host_species_n":len(ns&host_species),
              "native_mean_log_range":float(np.mean([np.log(ranges[p]) for p in ns]))}
         for prefix,cohort in (("",hosts),("no_big_",no_big)):
-            for origin,ids in (("native",ns),("current",cs)):
-                vals=aggregate(cohort,ids,tax)
+            for origin,ids,exact in (("native",ns,hn_i),("current",cs,hc_i)):
+                # Rank presence uses the accepted-species background plus any exact
+                # host IDs recorded locally by the original dedicated sidecar.
+                # The union guarantees nested endpoints without deleting source hosts.
+                vals=aggregate(cohort,ids|exact,tax,exact)
                 rec.update({prefix+origin+"_"+k:v for k,v in vals.items()})
         records.append(rec)
     f=f.merge(pd.DataFrame(records),on="code",validate="one_to_one",sort=False)
@@ -135,6 +177,9 @@ def main():
     receipt={"status":"SOURCE_CHECK_ONLY","n_islands":len(f),"n_butterflies":len(hosts),
              "n_excluding_any_Fabaceae_or_Poaceae":len(no_big),"n_species_count_mismatches":len(mismatch),
              "native_correlation":float(f.native_species.corr(f.native_host_239)),
+             "host_ids_outside_accepted_species_background":len(extras),
+             "host_distribution_sha256":{"native":digest(hn_path),"current":digest(hc_path)},
+             "global_per_butterfly_source_count_gate":239,
              "current_correlation":float(f.current_species.corr(f.current_host_239)),
              "native_species_total":[int(f.native_species.sum()),int(f.native_host_239.sum())],
              "current_species_total":[int(f.current_species.sum()),int(f.current_host_239.sum())],
@@ -208,6 +253,7 @@ def main():
             "scratch_comparable_accepted_source":comparable,
             "effort_common98_models":effort_models,"effort_source_sha256":digest(effort_path),
             "limits":["Taxonomic co-occurrence is not actual host suitability.",
+                      "Exact host identity uses original dedicated HOSTS/WCVP distributions; the broader rank sets use the strict accepted-species background union original local resolved host IDs. Some resolved IDs may not be accepted species rank; audit table preserves them.",
                       "Single recorded native WGSRPD3 region is a range-size proxy, not verified island endemism.",
                       "Nested family/genus coverage can saturate; fractional coverage and paired contrasts included.",
                       "All 239 butterflies fixed globally, not an observed island assemblage.",
