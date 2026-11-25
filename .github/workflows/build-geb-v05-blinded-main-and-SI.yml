@@ -34,6 +34,11 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check "python-docx>=1.1,<2" "cairosvg>=2.7,<3" "pymupdf>=1.24,<2"
           python -m py_compile scripts/build_GEB_v05_blinded_main_and_SI.py scripts/geb_reference_copyedit.py
+      - name: Verify deterministic expanded figure rendering
+        run: |
+          if grep -q "Fig4_recorded_butterfly_isolation_monarch_v07.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+          fi
       - name: Source-bound separate 4-figure blinded article and 2-figure S1-S8 supporting info
         run: |
           set -euo pipefail
@@ -68,7 +73,11 @@ jobs:
           si_text=(root/"GEB_v05_separate_SI.md").read_text()
           if "Port-associated introduced floras reveal a weaker oceanic isolation gradient" in main_text:
               abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
-              assert "β = 0.44" in abstract and "193" in abstract
+              if "Fig4_recorded_butterfly_isolation_monarch_v07.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "12/32 far regions" in abstract and "193" in main_text
+              else:
+                  assert "β = 0.44" in abstract and "193" in abstract
               assert "1,150" not in abstract and "1,596" not in abstract
               assert "rank correlation 0.65" not in main_text and "partial 0.55 after adjustment" not in main_text
               assert "+0.65243" in si_text and "+0.54958" in si_text
