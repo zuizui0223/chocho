@@ -79,13 +79,14 @@ jobs:
               total_image_blocks=sum(len([block for block in page.get_text("dict")["blocks"] if block["type"]==1]) for page in pdf)
               assert total_image_blocks>=n, (stem,total_image_blocks,n,pages_with_images)
               text="\n".join(q.get_text() for q in pdf)
+              normalized_text=" ".join(text.split())
               assert "zuizui0223" not in text.lower()
               if n==4:
-                  for phrase in ["Pieris cheiranthi","54.3%","38 (5.7%)","0.58","0.36"]:
-                      assert phrase in text, (stem,phrase)
+                  for phrase in ["Pieris cheiranthi","54.3%","38 of the 670","0.58","0.36"]:
+                      assert phrase in normalized_text, (stem,phrase)
               else:
                   for phrase in ["Appendix S1","Appendix S5","Appendix S8","133","194","6,672","0.357","0.912"]:
-                      assert phrase in text, (stem,phrase)
+                      assert phrase in normalized_text, (stem,phrase)
               # Integration-specific checks apply only to the new appendix.
               if "### S3.5. Exploratory directional-current evidence and limits" in (root/"GEB_v05_separate_SI.md").read_text():
                   # PDF line-wrap may split the explicit hyphenated term. Do not change manuscript wording.

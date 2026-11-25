@@ -65,7 +65,7 @@ jobs:
           assert pdf.exists() and pdf.stat().st_size>20000, "Current v0.4 PDF not created"
           doc=fitz.open(pdf)
           assert 9 <= len(doc) <= 65, "Unexpected paper length"
-          all_text="\n".join(p.get_text() for p in doc)
+          all_text=" ".join(" ".join(p.get_text() for p in doc).split())
           for phrase in ["A weaker island isolation gradient", "82 of 97", "54.3%", "40%", "11%",
                          "Pieris cheiranthi", "Tropaeolum majus"]:
               assert phrase in all_text, f"Required source positive absent from PDF: {phrase}"
