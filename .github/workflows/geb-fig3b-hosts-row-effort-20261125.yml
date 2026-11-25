@@ -1,0 +1,141 @@
+name: GEB Fig3B actual HOSTS row documentation audit (fixed239)
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/geb-fig3b-hosts-row-effort-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  fig3b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 21177b67697af6ea2df2f4b62516cc7477ec8053
+          path: original
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: hosts
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: wcvp
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Verify original inputs and regenerate accepted host-name mapping
+        run: |
+          set -euo pipefail
+          test "$(git -C hosts rev-parse HEAD)" = 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          test "$(git -C wcvp rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          test "$(git hash-object hosts/resource.csv)" = 06749c04bd5b7a754d6f7717a31c01c51357cae8
+          test "$(git hash-object original/scripts/build_wcvp_hosts_sidecar.R)" = e5d5540a41b27509ab1a432868422f01bcf489f1
+          test "$(git hash-object original/scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py)" = ee8cc26eb1977ff01815e64460527d97c439decd
+          test "$(git hash-object original/data/frozen/figure_sources/anthropogenic_species_metrics.csv)" = 9f83d2d9ac8e46f1cfd4ded572c7a023273503dd
+          test "$(git hash-object original/results/island_resource_gap_filling/by_species.csv)" = a230f6d214c96f874a3ab184ee9823cc9023c1bb
+          Rscript original/scripts/build_wcvp_hosts_sidecar.R wcvp hosts sidecar
+      - name: Audit actual catalogue row depth with the frozen 239 butterflies
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import collections,csv,hashlib,importlib.util,json,math,pathlib,random
+          P=pathlib.Path
+          spec=importlib.util.spec_from_file_location('old',P('original/scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py'))
+          old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
+          def read(p):
+              with P(p).open(newline='',encoding='utf-8-sig') as f:return list(csv.DictReader(f))
+          metrics=read('original/data/frozen/figure_sources/anthropogenic_species_metrics.csv')
+          islands={x['species']:x for x in read('original/results/island_resource_gap_filling/by_species.csv') if x['group']=='island'}
+          names={x['species'] for x in metrics};assert len(metrics)==len(names)==len(islands)==239 and names==set(islands)
+          mapping={x['input_host_name']:x['accepted_plant_name_id'] for x in read('sidecar/host_name_resolution.csv') if x['match_status']=='matched'}
+          accepted=collections.defaultdict(set)
+          for x in read('sidecar/insect_host_accepted.csv'):
+              if x['insect_species'] in names:accepted[x['insect_species']].add(x['accepted_plant_name_id'])
+          def norm(v):return (v or '').strip()
+          groups=collections.defaultdict(list)
+          raw_n=0
+          with P('hosts/resource.csv').open(newline='',encoding='utf-8-sig') as f:
+              reader=csv.DictReader(f);header=reader.fieldnames
+              assert {'_id','HOSTS ID','Insect Genus','Insect Species','Hostplant Genus','Hostplant Species','Location','Lab Rearing'}<=set(header)
+              for x in reader:
+                  raw_n+=1
+                  sp=' '.join([norm(x['Insect Genus']),norm(x['Insect Species'])])
+                  if sp in names:groups[sp].append(x)
+          assert raw_n==140485
+          rows=[]
+          for m in metrics:
+              sp=m['species'];rs=groups[sp];n=int(m['resolved_host_species']);i=islands[sp]
+              assert int(i['cells'])==126
+              resolved=[];complete=[]
+              for x in rs:
+                  genus=norm(x['Hostplant Genus']);epi=norm(x['Hostplant Species'])
+                  if genus and epi:
+                      complete.append(x)
+                      plant=mapping.get(genus+' '+epi)
+                      if plant:resolved.append((x,plant))
+              plants={p for _,p in resolved}
+              assert plants==accepted[sp],sp
+              ids={norm(x['_id']) for x in rs if norm(x['_id'])}
+              hostsids={norm(x['HOSTS ID']) for x in rs if norm(x['HOSTS ID'])}
+              # Dedup only identical non-ID field tuples. No interpretation as a study.
+              fields=[k for k in header if k not in ('_id','HOSTS ID')]
+              uniq=lambda records:len({tuple(norm(x[k]) for k in fields) for x in records})
+              loc={norm(x['Location']) for x in rs if norm(x['Location'])}
+              rows.append({'species':sp,'native_global':int(m['native_resource_units']),'added':int(i['added']),'native_island':int(i['native']),'host_count':n,'family_count':float(m['host_family_count']),'adequate':m['host_taxonomy_lower_bound_adequate']=='True','raw_rows':len(rs),'unique_record_ids':len(ids),'distinct_hosts_id_strings':len(hostsids),'complete_host_binomial_rows':len(complete),'resolved_rows':len(resolved),'resolved_distinct_accepted_hosts':len(plants),'unique_non_id_rows':uniq(rs),'unique_resolved_non_id_rows':uniq([x for x,_ in resolved]),'distinct_nonempty_locations':len(loc),'location_nonempty_rows':sum(bool(norm(x['Location'])) for x in rs)})
+          out=P('delivery');out.mkdir()
+          report={'status':'SOURCE_COVERAGE_GATE_ONLY','n_species':239,'raw_source_rows':raw_n,'raw_source_header':header,'has_explicit_publication_or_reference_field':any(any(k in c.lower() for k in ('reference','citation','publication','doi','bibliograph')) for c in header),'source_pins':{'HOSTS':'808e0b869f9ec1adf8efff87cf6a395adda103e0','WCVP':'65bed76bae9d644ccb6ad200c05f9f5071d89e05'},'source_hashes':{'HOSTS_csv_sha256':hashlib.sha256(P('hosts/resource.csv').read_bytes()).hexdigest()},'species_with_rows':sum(r['raw_rows']>0 for r in rows),'frozen_host_count_exact_matches':sum(r['host_count']==r['resolved_distinct_accepted_hosts'] for r in rows),'count_mismatches':[{'species':r['species'],'frozen':r['host_count'],'reconstructed':r['resolved_distinct_accepted_hosts']} for r in rows if r['host_count']!=r['resolved_distinct_accepted_hosts']],'aggregate_row_counts':{k:sum(r[k] for r in rows) for k in ('raw_rows','unique_record_ids','distinct_hosts_id_strings','complete_host_binomial_rows','resolved_rows','unique_non_id_rows','unique_resolved_non_id_rows','location_nonempty_rows')},'limits':['Exact original binomials; no post hoc butterfly synonym expansion.','HOSTS ID and _id are identifier strings, not identified independent publications.','Catalogue row counts, duplicate-content counts and locations are documentation proxies, not independent sampling effort; both axes still share HOSTS/WCVP.','No new butterfly establishment or biological host-quality inference.']}
+          assert sum(r['added'] for r in rows)==5741
+          raw=old.spearman([r['native_global'] for r in rows],[r['added'] for r in rows]);assert abs(raw-0.5788964068803357)<1e-10
+          base=old.partial_rank(rows);assert abs(base-0.348264)<1e-6
+          report['original_rho']=raw;report['host_count_and_family_adjusted_rho']=base
+          # Do not fit on a changed source cohort, silently omit missing species, or interpret an unresolved name mismatch as absence.
+          if report['species_with_rows']==239 and report['frozen_host_count_exact_matches']==239:
+              report['status']='FIXED239_CATALOGUE_ROW_DEPTH_AUDIT_COMPLETE'
+              controls=('host_count','family_count')
+              variants=[('primary_raw_rows',controls+('raw_rows',)),('non_id_deduplicated_rows',controls+('unique_non_id_rows',)),('resolved_rows',controls+('resolved_rows',)),('resolved_non_id_deduplicated',controls+('unique_resolved_non_id_rows',))]
+              # Predefined primary; sensitivities all reported. No outcome-driven proxy selection.
+              for r in rows:r['row_depth_per_host']=r['resolved_rows']/r['host_count']
+              variants.append(('resolved_row_depth_per_host',controls+('row_depth_per_host',)))
+              report['row_proxy_correlations']={k:{'rho_vs_native':old.spearman([r[k] for r in rows],[r['native_global'] for r in rows]),'rho_vs_added':old.spearman([r[k] for r in rows],[r['added'] for r in rows]),'rho_vs_host_count':old.spearman([r[k] for r in rows],[r['host_count'] for r in rows])} for k in ('raw_rows','unique_non_id_rows','resolved_rows','unique_resolved_non_id_rows','row_depth_per_host')}
+              rng=random.Random(20261125)
+              samples=[[rng.randrange(239) for _ in rows] for _ in range(2000)]
+              result={}
+              for label,c in variants:
+                  beta=old.partial_rank(rows,c)
+                  bs=[old.partial_rank([rows[i] for i in ix],c) for ix in samples]
+                  loo=[old.partial_rank(rows[:i]+rows[i+1:],c) for i in range(239)]
+                  result[label]={'controls':list(c),'partial_rho':beta,'descriptive_species_bootstrap95':old.percentiles(bs),'finite_bootstraps':sum(math.isfinite(v) for v in bs),'leave_one_species_out_range':[min(v for v in loo if math.isfinite(v)),max(v for v in loo if math.isfinite(v))]}
+              report['variants']=result
+              # Adequate-taxonomy and one-host-family cohorts are fixed prior diagnostics.
+              c=controls+('raw_rows',)
+              report['adequate_taxonomy_primary']={'n':sum(r['adequate'] for r in rows),'partial_rho':old.partial_rank([r for r in rows if r['adequate']],c)}
+              single=[r for r in rows if r['family_count']==1]
+              report['one_host_family_primary']={'n':len(single),'partial_rho':old.partial_rank(single,('host_count','raw_rows'))}
+              report['limits'].append('Species bootstrap and leave-one-out are descriptive and not phylogenetically adjusted; no claim of effort-independent causal effect.')
+          else:report['status']='SOURCE_MAPPING_MISMATCH_NO_ROW_ADJUSTED_FIT'
+          (out/'FIG3B_HOSTS_ROW_DEPTH_AUDIT.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n')
+          # Only derived species-level counts, not original catalogue rows/IDs, are retained internally.
+          with (out/'FIG3B_239_ROW_DEPTH_COUNTS_INTERNAL.csv').open('w',newline='',encoding='utf8') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          print('FIG3B_ROW_DEPTH_RESULT',json.dumps(report,allow_nan=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-fig3b-fixed239-actual-hosts-row-depth-internal
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
