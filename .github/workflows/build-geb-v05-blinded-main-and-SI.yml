@@ -1,7 +1,7 @@
 name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
 on:
   push:
-    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125]
+    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125, paper/geb-v05-port-sea-two-layer-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -12,7 +12,7 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/GEB_REFERENCE_COPYEDIT_V01.json
       - figures/integrated_island_port_butterfly_v03/**
   pull_request:
-    branches: [main, paper/geb-single-island-port-endemics-20261118]
+    branches: [main, paper/geb-single-island-port-endemics-20261118, analysis/fixed239-host-taxonomic-resolution-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -106,6 +106,14 @@ jobs:
                   else:
                       for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640","0.0396","0.2239"]:
                           assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
+              # Port-and-sea framing promotes existing verified source results.
+              if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_separate_main.md").read_text():
+                  if n==4:
+                      for phrase in ["1,150","1,596","25,742","687","20.7%","0.55","0.011","0.093"]:
+                          assert phrase in normalized_text,(stem,"missing promoted port result",phrase)
+                  else:
+                      for phrase in ["0.24448","0.16391","0.04153","0.54958","20.7014%","25,742"]:
+                          assert phrase in normalized_text,(stem,"missing port source details",phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
           (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
