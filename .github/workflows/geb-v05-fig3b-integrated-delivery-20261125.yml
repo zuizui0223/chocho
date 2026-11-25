@@ -1,0 +1,182 @@
+name: GEB v0.5 integrate fixed239 Fig3B row-depth evidence into internal delivery
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/geb-v05-fig3b-integrated-delivery-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 244d6c5ed3b0234433049fd450f3039c2394c220
+          path: original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact successful internal staging and Fig3B source outputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14991040661 14990294609; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          9106e2395a37c8870fbaffbdf98c06e09539aaa214304af69e5ac6985a21cd2d  14991040661.zip
+          b65982da1e8c1051462f36f15347fb4e8acef5a14fb2996500836bb86a108e50  14990294609.zip
+          SUMS
+          test "$(git hash-object original/scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py)" = ee8cc26eb1977ff01815e64460527d97c439decd
+          test "$(git hash-object original/.github/workflows/geb-fig3b-hosts-row-effort-20261125.yml)" = c13a73d96fef1b6b586804f824249e8173bbe470
+          test "$(git hash-object original/data/frozen/figure_sources/anthropogenic_species_metrics.csv)" = 9f83d2d9ac8e46f1cfd4ded572c7a023273503dd
+          test "$(git hash-object original/results/island_resource_gap_filling/by_species.csv)" = a230f6d214c96f874a3ab184ee9823cc9023c1bb
+      - name: Preserve 217 members, construct exact-source S4.1 component and extend delivery register
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import collections,csv,hashlib,io,json,pathlib,textwrap,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(aid,name):
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  ns=[n for n in z.namelist() if P(n).name==name];assert len(ns)==1,(aid,name,ns)
+                  return z.read(ns[0])
+          oldraw=member(14991040661,'GEB_V05_217_INTERNAL_STAGING_NOT_FOR_RELEASE.zip')
+          assert sha(oldraw)=='aa1a7c16946f5492508c8fc3612f8a9ffc5f078bde99598b8fe92c68837b021c'
+          with zipfile.ZipFile(io.BytesIO(oldraw)) as z:
+              assert z.testzip() is None
+              ns=[n for n in z.namelist() if not n.endswith('/')]
+              assert len(ns)==len(set(ns))==217
+              assert all(not P(n).is_absolute() and '..' not in P(n).parts and '\\' not in n for n in ns)
+              old={n:z.read(n) for n in ns}
+          rows=list(csv.DictReader(io.StringIO(member(14991040661,'EXACT_217_FILE_SOURCE_DELIVERY_DECISIONS.csv').decode())))
+          reg=json.loads(member(14991040661,'SOURCE_REGISTRY.json'))
+          prior=json.loads(member(14991040661,'INTEGRATED_DELIVERY_SUMMARY.json'))
+          s35=json.loads(member(14991040661,'INTEGRATED_S35_REPLAY_RECEIPT.json'))
+          flags=json.loads(member(14991040661,'S35_INTERNAL_PROVENANCE_PATTERN_INVENTORY.json'))
+          assert prior['files']==217 and prior['authorized_files']==0
+          assert s35['leaf_comparisons']==1817 and s35['status']=='PASS_S35_REPLAY_AFTER_INTEGRATED_EXTRACTION'
+          assert len(rows)==217 and len(reg)==26 and set(old)=={r['file'] for r in rows}
+          for r in rows:
+              assert sha(old[r['file']])==r['sha256'] and len(old[r['file']])==int(r['bytes']) and r['authorized_for_distribution']=='False'
+          counts=member(14990294609,'FIG3B_239_ROW_DEPTH_COUNTS_INTERNAL.csv')
+          expected=member(14990294609,'FIG3B_HOSTS_ROW_DEPTH_AUDIT.json')
+          exp=json.loads(expected)
+          assert exp['status']=='FIXED239_CATALOGUE_ROW_DEPTH_AUDIT_COMPLETE' and exp['frozen_host_count_exact_matches']==239 and not exp['count_mismatches']
+          assert exp['raw_source_rows']==140485 and exp['aggregate_row_counts']['raw_rows']==6672 and not exp['has_explicit_publication_or_reference_field']
+          panel=list(csv.DictReader(io.StringIO(counts.decode())))
+          metrics=list(csv.DictReader(P('original/data/frozen/figure_sources/anthropogenic_species_metrics.csv').open(newline='',encoding='utf8')))
+          islands={r['species']:r for r in csv.DictReader(P('original/results/island_resource_gap_filling/by_species.csv').open(newline='',encoding='utf8')) if r['group']=='island'}
+          assert len(panel)==len(metrics)==len(islands)==239
+          assert [r['species'] for r in panel]==[m['species'] for m in metrics]
+          assert len({r['species'] for r in panel})==239
+          for r,m in zip(panel,metrics):
+              i=islands[r['species']]
+              assert int(i['cells'])==126
+              assert int(r['native_global'])==int(m['native_resource_units'])
+              assert int(r['added'])==int(i['added'])
+              assert int(r['native_island'])==int(i['native'])
+              assert int(r['host_count'])==int(m['resolved_host_species'])==int(r['resolved_distinct_accepted_hosts'])
+              assert float(r['family_count'])==float(m['host_family_count'])
+              assert r['adequate']==m['host_taxonomy_lower_bound_adequate']
+          source=P('original/.github/workflows/geb-fig3b-hosts-row-effort-20261125.yml').read_bytes()
+          helper=P('original/scripts/audit_GEB_v05_fig3B_HOSTS_documentation_proxy_20261121.py').read_bytes()
+          # Extract the exact original statistical instructions rather than
+          # reimplementing the fitted models. The new loader supplies the frozen
+          # derived species table; no re-acquisition of raw HOSTS/WCVP.
+          src=source.decode().splitlines()
+          start=[i for i,l in enumerate(src) if l.strip()=="assert sum(r['added'] for r in rows)==5741"]
+          end=[i for i,l in enumerate(src) if l.strip()=="(out/'FIG3B_HOSTS_ROW_DEPTH_AUDIT.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\\n')"]
+          assert len(start)==len(end)==1 and start[0]<end[0]
+          block=textwrap.dedent('\n'.join(src[start[0]:end[0]])).rstrip()+'\n'
+          pre=textwrap.dedent('''
+          import csv,importlib.util,json,math,pathlib,random
+          P=pathlib.Path
+          root=P(__file__).resolve().parent
+          spec=importlib.util.spec_from_file_location('old',root/'original_rank_helpers.py')
+          old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
+          expected=json.loads((root/'FIG3B_HOSTS_ROW_DEPTH_AUDIT.json').read_text())
+          with (root/'FIG3B_239_ROW_DEPTH_COUNTS_INTERNAL.csv').open(newline='',encoding='utf8') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==len({r['species'] for r in rows})==239
+          for r in rows:
+              for k in r:
+                  if k=='species':continue
+                  if k=='adequate':
+                      assert r[k] in ('True','False');r[k]=r[k]=='True'
+                  elif k in ('family_count','row_depth_per_host'):r[k]=float(r[k])
+                  else:r[k]=int(r[k])
+          assert all(r['host_count']>0 and r['raw_rows']>0 and r['host_count']==r['resolved_distinct_accepted_hosts'] for r in rows)
+          report={'species_with_rows':sum(r['raw_rows']>0 for r in rows),'frozen_host_count_exact_matches':sum(r['host_count']==r['resolved_distinct_accepted_hosts'] for r in rows),'limits':[]}
+          for k in expected['aggregate_row_counts']:
+              assert sum(r[k] for r in rows)==expected['aggregate_row_counts'][k],k
+          ''').lstrip()
+          post=textwrap.dedent('''
+          checks=0
+          def compare(a,b,path=''):
+              global checks
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and set(a)==set(b),path
+                  for k in a:compare(a[k],b[k],path+'/'+k)
+              elif isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),path
+                  for i,(x,y) in enumerate(zip(a,b)):compare(x,y,path+'/'+str(i))
+              elif isinstance(a,(int,float)) and not isinstance(a,bool):
+                  assert isinstance(b,(int,float)) and not isinstance(b,bool) and math.isclose(a,b,rel_tol=1e-10,abs_tol=1e-10),(path,a,b)
+                  checks+=1
+              else:
+                  assert a==b,(path,a,b);checks+=1
+          for k in ('status','original_rho','host_count_and_family_adjusted_rho','row_proxy_correlations','variants','adequate_taxonomy_primary','one_host_family_primary'):
+              compare(expected[k],report[k],k)
+          print('FIG3B_EXTRACTED_REPLAY_PASS',json.dumps({'leaf_comparisons':checks,'species':239,'variants':5,'bootstrap_per_variant':2000,'scope':'stored derived row depth; no raw-to-model rebuild','rtol':1e-10,'atol':1e-10}))
+          ''').lstrip()
+          replay=(pre+'\n'+block+'\n'+post).encode()
+          compile(replay,'replay.py','exec')
+          prefix='components/s41_fig3b_row_depth/'
+          readme=("Internal S4.1 component, all files HOLD. Original successful HOSTS/WCVP source acquisition and matching are documented in source_workflow.yml. Run python replay.py here to reproduce the five fixed variants from the archived 239-species derived panel. Original statistical block is extracted verbatim after de-indenting. The builder also checks all species and relevant frozen metric values against source-pinned original tables. Independent publications and true research effort are not identified; no new hypothesis or raw redistribution. This is not a reviewer-ready package. Original 217 member bytes unchanged. Current paper is the updated fixed239 version. No new HYCOM exploration or replay in this integration.\n").encode()
+          new={prefix+'FIG3B_239_ROW_DEPTH_COUNTS_INTERNAL.csv':counts,prefix+'FIG3B_HOSTS_ROW_DEPTH_AUDIT.json':expected,prefix+'original_rank_helpers.py':helper,prefix+'source_workflow.yml':source,prefix+'replay.py':replay,prefix+'README.md':readme}
+          assert not set(new)&set(old)
+          allfiles=old|new
+          sids={'AUTHOR','HOSTS','WCVP','TDWG','LEP'}
+          assert sids<=set(reg)
+          for n,b in sorted(new.items()):
+              role='code' if n.endswith(('.py','.yml')) else 'table' if n.endswith('.csv') else 'metadata_or_summary'
+              rows.append({'file':n,'sha256':sha(b),'bytes':len(b),'role':role,'source_ids':';'.join(sorted(sids)),'mapping_basis':'conservative fixed239 HOSTS/WCVP resource and selection dependency; derived counts only','source_rights_states':';'.join(sorted({reg[k]['source_state'] for k in sids})),'source_citations':' | '.join(reg[k]['citation_or_url'] for k in sorted(sids)),'source_terms':' | '.join(k+': '+reg[k]['source_terms'] for k in sorted(sids)),'delivery_decision':'HOLD_S41_AUTHOR_SOURCE_AND_ANONYMITY_REVIEW','proposed_route':'Internal only, preserve provenance; assess derivative rights and prepare blinded reviewer copy separately','author_approval_required':True,'authorized_for_distribution':False})
+          assert len(rows)==len(allfiles)==223 and len({r['file'] for r in rows})==223 and all(str(r['authorized_for_distribution'])=='False' for r in rows)
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_223_INTERNAL_STAGING_NOT_FOR_RELEASE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(allfiles.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,25,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==allfiles
+              z.extractall('extracted')
+          for r in rows:
+              b=(P('extracted')/r['file']).read_bytes();assert sha(b)==r['sha256'] and len(b)==int(r['bytes'])
+          with (out/'EXACT_223_FILE_SOURCE_DELIVERY_DECISIONS.csv').open('w',encoding='utf8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          for name in ('SOURCE_REGISTRY.json','S35_INTERNAL_PROVENANCE_PATTERN_INVENTORY.json','S35_ORIGINAL_REPLAY_RECEIPT.json','INTEGRATED_S35_REPLAY_RECEIPT.json'):
+              (out/name).write_bytes(member(14991040661,name))
+          summary={'status':'INTERNAL_223_INTEGRATION_BYTE_CHECK_PASS_NOT_REVIEWER_RELEASE','files':223,'previous_members_byte_identical':217,'new_members':6,'source_families':26,'file_roles':dict(collections.Counter(r['role'] for r in rows)),'delivery_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows)),'prior_S35_provenance_flags_retained':len(flags),'new_S41_original_code_has_internal_provenance':True,'authorized_files':0,'reviewer_access_created':False,'sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'frozen_panel_species_and_metrics_match':239}
+          (out/'INTEGRATED_DELIVERY_SUMMARY.json').write_text(json.dumps(summary,indent=2)+'\n')
+          (out/'INTERNAL_README.md').write_text('223 members, not for reviewer release. Prior 217 bytes unchanged. The old wrapper does not execute new components. S3.5 remains frozen, previously verified; S4.1 uses its own replay.py from the extracted component. Adjacent file-specific register and source registry govern all members. No authorization or stable reviewer link. Original raw inputs are not supplied.\n')
+          print('INTEGRATED_223',json.dumps(summary))
+          PY
+      - name: Replay fixed Fig3B row-depth statistics from integrated extracted bytes
+        run: |
+          set -euo pipefail
+          python -B extracted/components/s41_fig3b_row_depth/replay.py | tee delivery/FIG3B_EXTRACTED_REPLAY_LOG.txt
+          grep -q '^FIG3B_EXTRACTED_REPLAY_PASS ' delivery/FIG3B_EXTRACTED_REPLAY_LOG.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-v05-integrated-223-internal-delivery
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
