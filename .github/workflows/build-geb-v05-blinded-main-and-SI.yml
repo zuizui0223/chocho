@@ -107,7 +107,7 @@ jobs:
                       for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640","0.0396","0.2239"]:
                           assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
               # Port-and-sea framing promotes existing verified source results.
-              if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_separate_main.md").read_text():
+              if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_blinded_main.md").read_text():
                   if n==4:
                       for phrase in ["1,150","1,596","25,742","687","20.7%","0.55","0.011","0.093"]:
                           assert phrase in normalized_text,(stem,"missing promoted port result",phrase)
