@@ -59,7 +59,7 @@ jobs:
           assert receipt["state"].startswith("DOCUMENT_STRUCTURE_VALID; JOURNAL_SUBMISSION_BLOCKED")
           citation=json.loads((root/"GEB_v05_CITATION_AUDIT.json").read_text())
           assert citation["status"].startswith("PASS:"), citation
-          assert citation["main_reference_count"]==receipt["references"]==24
+          assert citation["main_reference_count"]==receipt["references"]==27
           assert citation["SI_reference_count"]==receipt["SI_references"]==9
           assert citation["historical_references_preserved"]==39
           for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
@@ -101,10 +101,10 @@ jobs:
               # manuscript; do not weaken existing figure/citation/anonymity checks.
               if "### S3.6. Taxonomic resolution of the native-host isolation gradient" in (root/"GEB_v05_separate_SI.md").read_text():
                   if n==4:
-                      for phrase in ["host-family presence","0.059","42.4%","9.1%"]:
+                      for phrase in ["0.059","42.4%","9.1%","1,171","193","16.5%","0.040"]:
                           assert phrase in normalized_text,(stem,"missing hierarchy or locality result",phrase)
                   else:
-                      for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640"]:
+                      for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640","0.0396","0.2239"]:
                           assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
