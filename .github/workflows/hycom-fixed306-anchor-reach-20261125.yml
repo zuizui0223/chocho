@@ -1,0 +1,57 @@
+name: HYCOM fixed306 physical anchor reach diagnostic
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/hycom-fixed306-anchor-reach-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  anchor-reach:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact signed physical, launch, coastline and robustness receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14987522963 14987268671 14296891019 14988222019; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          ab8eac0bc85fa70a1b1e8721a73604f9e1eea90ac4d85a61c91004df9ecbb3f4  14987522963.zip
+          088f7553c8d5c5037047377a655ec119fb9d6e1063d4a2899b37ecb230fc97ab  14987268671.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          ed2af08f224af988115b638d5e124ac7814d012a484fb1ee1bfc361fd431bd2a  14988222019.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14987522963:['PHYSICAL_RESULT.json','ALL306_TRACKS.json'],14987268671:['HYCOM_ALL17_PREFLIGHT.json'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json'],14988222019:['HYCOM_ROBUSTNESS_RESULT.json']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      h=[p for p in z.namelist() if P(p).name==n];assert len(h)==1,(n,h)
+                      P(n).write_bytes(z.read(h[0]))
+          PY
+      - name: Test computed trajectory lengths against actual fixed recipient anchors
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pyproj>=3.6,<4'
+          python -u scripts/audit_hycom_fixed306_anchor_reach_20261125.py --physical _src/PHYSICAL_RESULT.json --tracks _src/ALL306_TRACKS.json --anchors _src/GSHHG126_sea_geometry_source_coverage_audit.json --preflight _src/HYCOM_ALL17_PREFLIGHT.json --robustness _src/HYCOM_ROBUSTNESS_RESULT.json --out delivery
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hycom-fixed306-anchor-reach-summary-only
+          path: delivery/
+          retention-days: 90
