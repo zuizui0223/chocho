@@ -1,0 +1,89 @@
+{
+  "run": 45576646881,
+  "source_head": "024fce2ccd47111bf5fd70ee43397f1c985dc1bb",
+  "artifact_id": 15005445436,
+  "artifact_sha256": "35f46246f352f65df846a38f30403907604fa64e7b3bc6c7483634a31753b92c",
+  "report": {
+    "schema": "chocho_WCVP126_port_origin_logratio_direct_v1",
+    "status": "SOURCE_REPRODUCED_DIRECT_ORIGIN_RATIO_AND_CLUSTER_SENSITIVITY",
+    "archive_id": 15003375426,
+    "outer_sha256": "3a9bce3a344068da68e293d66676aa94f038c38c0efad0935c5bc4568368a92c",
+    "inner_sha256": "d9af86284a8cec0b82257c096094ad21c91724c8b2ae0abeeffef0d004a8a577",
+    "derived_input_sha256": {
+      "126_region_panel": "89d7d6e7498b47ea343cd6b0b093a82e3938d21b6cdd16d26eaa0cc8544514f6",
+      "98_effort_panel": "264f6430fae32bb5b41185c3a1e5beca66c480196579bd0e9b2ff0a50ed0985c"
+    },
+    "response": "log(1+introduced species count)-log(1+native species count)",
+    "port_predictor": "log2(1+WPI ports), unstandardized",
+    "all_models_controls": "log area and nine Level1 effects; plus log1p distance, absolute latitude and log1p all-plant indexed record volume where indicated",
+    "original98_permutation_p_source_reported": 0.0036,
+    "original98_permutation_p_recomputed": false,
+    "models": {
+      "original98_effort": {
+        "n": 98,
+        "beta": 0.24291347717458342,
+        "HC3_p": 0.10643978575476977,
+        "cluster_df": 8,
+        "cluster_t_p": 0.10390885828608853,
+        "cluster_t_95": [
+          -0.06242423332814642,
+          0.5482511876773133
+        ],
+        "multiplicative_ratio_per_log2_port_unit": 1.274958306351072
+      },
+      "all126_basic": {
+        "n": 126,
+        "beta": 0.1900117089134103,
+        "HC3_p": 0.0743488994263703,
+        "cluster_df": 8,
+        "cluster_t_p": 0.13715619924335093,
+        "cluster_t_95": [
+          -0.07523743643098757,
+          0.45526085425780816
+        ],
+        "multiplicative_ratio_per_log2_port_unit": 1.2092637567389755
+      },
+      "all126_plus_geography": {
+        "n": 126,
+        "beta": 0.19345447156813142,
+        "HC3_p": 0.06509384310986278,
+        "cluster_df": 8,
+        "cluster_t_p": 0.1402305663241732,
+        "cluster_t_95": [
+          -0.07903201217405428,
+          0.4659409553103171
+        ],
+        "multiplicative_ratio_per_log2_port_unit": 1.2134341395403054
+      },
+      "common98_geography_without_effort": {
+        "n": 98,
+        "beta": 0.25996837224433844,
+        "HC3_p": 0.0385870832137624,
+        "cluster_df": 8,
+        "cluster_t_p": 0.090363092014936,
+        "cluster_t_95": [
+          -0.05139322582847666,
+          0.5713299703171535
+        ],
+        "multiplicative_ratio_per_log2_port_unit": 1.296889068326543
+      },
+      "common98_geography_plus_effort": {
+        "n": 98,
+        "beta": 0.2533140312978025,
+        "HC3_p": 0.0674358951937299,
+        "cluster_df": 8,
+        "cluster_t_p": 0.08977034480487173,
+        "cluster_t_95": [
+          -0.04940710686704819,
+          0.5560351694626532
+        ],
+        "multiplicative_ratio_per_log2_port_unit": 1.2882877760008478
+      }
+    },
+    "limits": [
+      "New sensitivity reuses frozen derived panels, not new botanical records.",
+      "Original permutation p is retained as a source result; clustered t8 and HC3 address different uncertainty assumptions and do not reproduce that permutation null.",
+      "No positive direct port-origin contrast claimed under conservative cluster inference; no causal ship or mediation conclusion."
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
 on:
   push:
-    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125]
+    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125, paper/geb-v05-port-sea-two-layer-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -12,7 +12,7 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/GEB_REFERENCE_COPYEDIT_V01.json
       - figures/integrated_island_port_butterfly_v03/**
   pull_request:
-    branches: [main, paper/geb-single-island-port-endemics-20261118]
+    branches: [main, paper/geb-single-island-port-endemics-20261118, analysis/fixed239-host-taxonomic-resolution-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -34,6 +34,14 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check "python-docx>=1.1,<2" "cairosvg>=2.7,<3" "pymupdf>=1.24,<2"
           python -m py_compile scripts/build_GEB_v05_blinded_main_and_SI.py scripts/geb_reference_copyedit.py
+      - name: Verify deterministic expanded figure rendering
+        run: |
+          if grep -q "Fig4_recorded_butterfly_isolation_monarch_v07.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+          elif grep -q "Fig4_recorded_butterfly_isolation_monarch_v08.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+            node scripts/render_GEB_v08_final_figures.cjs . --check
+          fi
       - name: Source-bound separate 4-figure blinded article and 2-figure S1-S8 supporting info
         run: |
           set -euo pipefail
@@ -62,8 +70,30 @@ jobs:
           assert citation["main_reference_count"]==receipt["references"]==27
           assert citation["SI_reference_count"]==receipt["SI_references"]==9
           assert citation["historical_references_preserved"]==39
+          # The frozen final editorial version retains the port inventory in
+          # Results and the shared-source rank association in SI, not in the abstract.
+          main_text=(root/"GEB_v05_blinded_main.md").read_text()
+          si_text=(root/"GEB_v05_separate_SI.md").read_text()
+          if "Port-associated introduced floras reveal a weaker oceanic isolation gradient" in main_text:
+              abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
+              if "Fig4_recorded_butterfly_isolation_monarch_v08.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "sparse remote-region records" in abstract and "12 of 32 far regions" in main_text
+                  assert "Figure S5.2A" in main_text and "Figure S5.2B" in main_text and "Figure S5.2C" in main_text
+                  assert "FigS5_2_butterfly_community_prediction_transfer_v08.svg" in si_text
+                  assert "−4.036%" in si_text and "−2.697%" in si_text
+                  assert receipt["SI_embedded_figures"]==3
+              elif "Fig4_recorded_butterfly_isolation_monarch_v07.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "12/32 far regions" in abstract and "193" in main_text
+              else:
+                  assert "β = 0.44" in abstract and "193" in abstract
+              assert "1,150" not in abstract and "1,596" not in abstract
+              assert "rank correlation 0.65" not in main_text and "partial 0.55 after adjustment" not in main_text
+              assert "+0.65243" in si_text and "+0.54958" in si_text
+              assert receipt["abstract_words"]<=280 and receipt["main_body_words"]<5000
           for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
-                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",2)]:
+                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",receipt["SI_embedded_figures"])]:
               p=root/(stem+".pdf")
               assert p.exists() and p.stat().st_size>30000, p
               pdf=fitz.open(p)
@@ -106,6 +136,22 @@ jobs:
                   else:
                       for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640","0.0396","0.2239"]:
                           assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
+              # Port-and-sea framing promotes existing verified source results.
+              if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_blinded_main.md").read_text():
+                  if n==4:
+                      for phrase in ["1,150","1,596","25,742","687","20.7%","0.011","0.093"]:
+                          assert phrase in normalized_text,(stem,"missing promoted port result",phrase)
+                  else:
+                      for phrase in ["0.24448","0.16391","0.04153","0.54958","20.7014%","25,742"]:
+                          assert phrase in normalized_text,(stem,"missing port source details",phrase)
+              # Reciprocal comparator framing must preserve positive and adverse crossed results.
+              if "reciprocal comparators" in (root/"GEB_v05_blinded_main.md").read_text():
+                  if n==4:
+                      for phrase in ["5,355","2.23%","1.89%","0.08%","0.16%","no direction-specific support"]:
+                          assert phrase in normalized_text.replace("direction- specific","direction-specific"),(stem,"missing crossed comparator evidence",phrase)
+                  else:
+                      for phrase in ["1.8556","1.9511","0.2683","0.0521","0.186","0.00181"]:
+                          assert phrase in normalized_text,(stem,"missing strict or directional falsification detail",phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
           (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")

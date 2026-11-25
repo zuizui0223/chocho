@@ -1,0 +1,39 @@
+name: Verify direct WCVP port-origin richness-ratio contrast
+on:
+  push:
+    branches: [paper/geb-v05-port-sea-two-layer-20261125]
+    paths:
+      - scripts/audit_WCVP126_port_origin_logratio_direct_20261125.py
+      - .github/workflows/audit-WCVP126-port-origin-logratio-20261125.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  direct-origin-ratio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical packages
+        run: python -m pip install 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+      - name: Recover exact previous source-bound internal archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15003375426/zip" > internal.zip
+      - name: Reproduce original ratio and conservative same-cohort sensitivities
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_port_origin_logratio_direct_20261125.py
+          python scripts/audit_WCVP126_port_origin_logratio_direct_20261125.py --archive internal.zip --out _result/DIRECT_PORT_ORIGIN_RATIO.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WCVP126-port-origin-direct-ratio
+          path: _result/
+          if-no-files-found: error
+          retention-days: 90
