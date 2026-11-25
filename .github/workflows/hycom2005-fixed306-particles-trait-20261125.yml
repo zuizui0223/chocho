@@ -1,0 +1,193 @@
+name: HYCOM fixed 306 trajectories and conditional native flora trait test
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/hycom2005-fixed306-particles-trait-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  tracks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        date: ['2005-05-28','2005-06-27','2005-07-27','2005-08-27','2005-09-26','2005-10-27']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: fa0659159859bb4f3d7b3314a0f33307c41bf391
+          path: _original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2' 'pyproj>=3.6,<4'
+      - name: Recover exact fixed launch roster
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987268671/zip" > preflight.zip
+          echo '088f7553c8d5c5037047377a655ec119fb9d6e1063d4a2899b37ecb230fc97ab  preflight.zip' | sha256sum -c -
+          python - <<'PY'
+          import zipfile,pathlib
+          with zipfile.ZipFile('preflight.zip') as z:
+              ns=[n for n in z.namelist() if pathlib.Path(n).name=='HYCOM_ALL17_PREFLIGHT.json']
+              assert len(ns)==1
+              pathlib.Path('preflight.json').write_bytes(z.read(ns[0]))
+          PY
+      - name: Integrate every fixed start at 6-hour midpoint steps
+        env:
+          RELEASE_DATE: ${{ matrix.date }}
+        run: |
+          set -euo pipefail
+          python -u scripts/run_hycom_fixed30_tiles_20261125.py --date "$RELEASE_DATE" --preflight preflight.json --graph _original/data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz --out delivery
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hycom-fixed30-${{ matrix.date }}
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: error
+  physical-gate:
+    needs: tracks
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      fit_gate: ${{ steps.gate.outputs.fit_gate }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: hycom-fixed30-*
+          path: _tracks
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconcile all 306 starts, date shards and technical censoring
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987268671/zip" > preflight.zip
+          echo '088f7553c8d5c5037047377a655ec119fb9d6e1063d4a2899b37ecb230fc97ab  preflight.zip' | sha256sum -c -
+          python - <<'PY'
+          import collections,hashlib,json,math,os,pathlib,zipfile
+          P=pathlib.Path
+          with zipfile.ZipFile('preflight.zip') as z:
+              n=[n for n in z.namelist() if P(n).name=='HYCOM_ALL17_PREFLIGHT.json'];assert len(n)==1
+              pre=json.loads(z.read(n[0]))
+          expected={(s['source'],d['date'],i+1):v for s in pre['region_launches'] for d in s['dates'] for i,v in enumerate(d['starts'])}
+          assert len(expected)==306
+          files=sorted(P('_tracks').rglob('TRACKS.json'));assert len(files)==6
+          rows=[];shards=[];failures=[]
+          for f in files:
+              b=f.read_bytes();d=json.loads(b)
+              assert d['status']=='HYCOM_FIXED30_PHYSICAL_TRACKS_NOT_BIOLOGICAL_ARRIVAL' and len(d['tracks'])==51 and d['step_hours']==6 and d['horizon_days']==30 and d['depth_m']==15
+              assert d['date'] in pre['fixed_dates']
+              assert all(r['date']==d['date'] for r in d['tracks'])
+              rows.extend(d['tracks'])
+              failures.extend(d['failed_tiles'])
+              shards.append({'date':d['date'],'result_sha256':hashlib.sha256(b).hexdigest(),'day30_valid':d['valid_day30'],'source_regions_valid_day30':d['source_regions_valid_day30'],'successful_source_tile_requests':len(d['velocity_tile_receipts']),'failed_tiles':len(d['failed_tiles']),'termination_counts':d['termination_counts']})
+          assert sorted(s['date'] for s in shards)==sorted(pre['fixed_dates'])
+          actual={(r['source'],r['date'],r['start_index']):r['start'] for r in rows}
+          assert len(rows)==len(actual)==306 and actual==expected
+          for r in rows:
+              assert r['day30_valid']==(r['elapsed_hours']==720)==(r['status']=='COMPLETED_30_DAYS')
+              assert 0<=r['elapsed_hours']<=720 and r['elapsed_hours']%6==0
+              assert all(math.isfinite(r[k]) for k in ('end_lat','end_lon','path_length_km','net_displacement_km'))
+          good=[r for r in rows if r['day30_valid']]
+          counts=collections.Counter(r['source'] for r in good)
+          dates={s:sorted({r['date'] for r in good if r['source']==s}) for s in sorted(counts)}
+          tech=sum(any(k in r['status'] for k in ('SOURCE_TILE_UNAVAILABLE','OUTSIDE_RETRIEVED_TILE_GRID','OUTSIDE_MODEL_LATITUDE')) for r in rows)
+          report={'status':'HYCOM_FIXED306_PHYSICAL_SUPPORT_COMPLETE','launches':len(rows),'day30_valid':len(good),'source_regions_valid30':len(counts),'source_regions_valid30_ge2_dates':sum(len(v)>=2 for v in dates.values()),'source_regions_total':17,'minimum_source_regions':10,'source_valid_track_counts':dict(counts),'source_valid_dates':dates,'termination_counts':dict(collections.Counter(r['status'] for r in rows)),'technical_censored_tracks':tech,'failed_tiles':len(failures),'technical_gate_pass':tech==0 and not failures,'physical_gate_pass':len(counts)>=10,'date_shards':shards,'raw_velocities_exported':False,'no_observed_seed_arrival':True}
+          report['fit_gate_pass']=report['technical_gate_pass'] and report['physical_gate_pass']
+          out=P('delivery');out.mkdir()
+          (out/'PHYSICAL_RESULT.json').write_text(json.dumps(report,indent=2)+'\n')
+          (out/'ALL306_TRACKS.json').write_text(json.dumps(rows,indent=2)+'\n')
+          print('HYCOM_PHYSICAL_FINAL',json.dumps(report))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('fit_gate='+str(report['fit_gate_pass']).lower()+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hycom-306-physical-support-internal
+          path: delivery/
+          retention-days: 90
+  trait-test:
+    needs: physical-gate
+    if: ${{ needs.physical-gate.outputs.fit_gate == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - uses: actions/download-artifact@v4
+        with:
+          name: hycom-306-physical-support-internal
+          path: _physical
+      - name: Reconstruct exact original family trait contrast and recipient geography
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14237222110 14296307100 14296891019; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4  14296307100.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14237222110:['wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv'],14296307100:['WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      h=[p for p in z.namelist() if P(p).name==n];assert len(h)==1
+                      P(n).write_bytes(z.read(h[0]))
+          PY
+          curl -fsSL --retry 3 --max-time 120 https://api.figshare.com/v2/file/download/41269785 -o EuDiS.csv
+          echo 'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5  EuDiS.csv' | sha256sum -c -
+          test "$(git -C WCVP rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          cd ..
+          flora=results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
+          test "$(git hash-object "$flora")" = 53b618fa51a1a418ccc6e4363f4c866c389c90cc
+          Rscript scripts/audit_global126_eudis_directional_source_family_20261125.R _src/WCVP _src/EuDiS.csv "$flora" _src/wcvp_region_origin_eudis_thalasso_coverage.csv _src/trait
+      - name: Fit fixed geographic model to family-matched native and introduced contrasts
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'pyproj>=3.6,<4' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+          python -u scripts/audit_hycom_fixed30_trait_progress_20261125.py --physical _physical/PHYSICAL_RESULT.json --tracks _physical/ALL306_TRACKS.json --anchors _src/GSHHG126_sea_geometry_source_coverage_audit.json --geography _src/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv --coverage _src/trait/trait_source_coverage.csv --paired _src/within_region_eudis_native_introduced_pairs.csv --traits _src/trait/family_matched_directional_trait_contrasts.csv --out delivery
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hycom-fixed30-trait-association-summary-only
+          path: delivery/
+          retention-days: 90
