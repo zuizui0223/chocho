@@ -1,0 +1,102 @@
+name: Fixed-horizon directed OSCAR progress and native-source EuDiS trait geography
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/directional-current-trait-filter-20261125.yml, scripts/audit_global126_eudis_directional_source_family_20261125.R, scripts/audit_global126_current_trait_progress_20261125.py]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  source-matched:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Recover original signed track, preflight, flora geography and EuDiS receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src delivery
+          cd _src
+          for id in 14297201578 14296792703 14296307100 14237222110; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          343627006c6097d88b99d8b766b034dbfbb5ff7875b01b7f680dec17ebd4f827  14297201578.zip
+          a45ead64724ad2827730e1c4974bbbc51eab8a15973811717d84b87f573c2852  14296792703.zip
+          c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4  14296307100.zip
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          SUMS
+          python - <<'PY'
+          import hashlib,pathlib,zipfile,json
+          P=pathlib.Path
+          files={
+            14297201578:['original126_NOAA2005_first90day_fixed_particle_tracks.json','original126_NOAA2005_directed_source_nearshore_matrix.csv'],
+            14296792703:['NOAA2005_global126_coastal_current_source_eligibility.json'],
+            14296307100:['WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv'],
+            14237222110:['wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv']}
+          receipts={}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      h=[x for x in z.namelist() if P(x).name==n]
+                      assert len(h)==1,(n,z.namelist())
+                      b=z.read(h[0]);P(n).write_bytes(b)
+                      receipts[n]={'artifact':aid,'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+          P('../delivery/SOURCE_RECEIPTS.json').write_text(json.dumps(receipts,indent=2)+chr(10))
+          PY
+          curl -fsSL --retry 3 --max-time 120 https://api.figshare.com/v2/file/download/41269785 -o EuDiS.csv
+          echo 'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5  EuDiS.csv' | sha256sum -c -
+          test "$(git -C WCVP rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+      - name: Rebuild exact original botanical trait coverage and derive family-standardized destination contrast
+        run: |
+          set -euo pipefail
+          flora=results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
+          test "$(git hash-object "$flora")" = 53b618fa51a1a418ccc6e4363f4c866c389c90cc
+          Rscript scripts/audit_global126_eudis_directional_source_family_20261125.R \
+            _src/WCVP _src/EuDiS.csv "$flora" \
+            _src/wcvp_region_origin_eudis_thalasso_coverage.csv _src/trait
+          cp _src/trait/trait_source_coverage.csv delivery/
+      - name: Fit fixed-horizon continuous directional progress and source-family-matched trait contrast
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'pyproj>=3.6,<4' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+          python -u scripts/audit_global126_current_trait_progress_20261125.py \
+            --tracks _src/original126_NOAA2005_first90day_fixed_particle_tracks.json \
+            --matrix _src/original126_NOAA2005_directed_source_nearshore_matrix.csv \
+            --preflight _src/NOAA2005_global126_coastal_current_source_eligibility.json \
+            --geography _src/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --coverage _src/trait/trait_source_coverage.csv \
+            --paired _src/within_region_eudis_native_introduced_pairs.csv \
+            --traits _src/trait/family_matched_directional_trait_contrasts.csv \
+            --out _src/fitted
+          cp _src/fitted/RESULT.json delivery/
+          # Raw trait/species records and detailed geography/trajectory files not exported.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: directional-current-trait-filter-summary-only
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
