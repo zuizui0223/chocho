@@ -66,7 +66,7 @@ jobs:
           doc=fitz.open(pdf)
           assert 9 <= len(doc) <= 65, "Unexpected paper length"
           all_text=" ".join(" ".join(p.get_text() for p in doc).split())
-          for phrase in ["A weaker island isolation gradient", "82 of 97", "54.3%", "40%", "11%",
+          for phrase in ["Including introduced plants weakens", "82 of 97", "54.3%", "40%", "11%",
                          "Pieris cheiranthi", "Tropaeolum majus"]:
               assert phrase in all_text, f"Required source positive absent from PDF: {phrase}"
           figs=[]
