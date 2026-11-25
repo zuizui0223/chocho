@@ -405,10 +405,14 @@ def main():
     for title in required_abstract_headers:
         if f"**{title}.**" not in abstract_text:
             raise AssertionError("GEB abstract missing official required section: "+title)
-    for key in ("82/97","39.6%","11.2%","10.3-fold","4.24%",
-                "−0.11%","+2.95","+54.9%","+118.9%","+40.9%"):
+    for key in ("−0.17","0.02","paired slope difference was uncertain","54%","38 of 670","4.1%","Pieris cheiranthi","Tropaeolum majus"):
         if key not in abstract_text:
-            raise AssertionError("Restored positive source numeric missing from abstract: "+key)
+            raise AssertionError("Discovery-led abstract missing result or uncertainty: "+key)
+    journal_si=(root/REL/"GEB_SUPPORTING_INFORMATION_V05.md").read_text(encoding="utf8")
+    precise=first+"\n"+journal_si+"\n"+captions
+    for key in ("82/97","39.56%","11.22%","10.26","4.239%","−0.110%","2.9515","+54.9%","+118.9%","+40.9%"):
+        if key not in precise:
+            raise AssertionError("Original precise result missing from manuscript/SI/legend: "+key)
     body_text=first.split("## 1. Introduction",1)[1].split("## Data and code availability",1)[0]
     stripped_main=re.sub(r"!\[[^]]*\]\([^)]*\)","",body_text)
     stripped_main=re.sub(r"[#*\x60]+","",stripped_main)
@@ -416,10 +420,10 @@ def main():
     if main_body_words>5000:
         raise AssertionError(f"GEB regular 5000-word research-body target exceeded: {main_body_words}")
     five_headings=(
-        "### 4.1. Islands show larger relative resource gains",
-        "### 4.2. Ports and the sea reveal two spatial layers",
+        "### 4.1. A small native resource base amplifies",
+        "### 4.2. Introduced plants weaken the apparent isolation gradient",
         "### 4.3. Plants and butterflies receive unequal shares",
-        "### 4.4. Independent butterfly records reveal a biological filter",
+        "### 4.4. Host resources are informative",
         "### 4.5. Conservation: manage introduced host plants with consumer interactions"
     )
     for title in five_headings:
@@ -427,20 +431,21 @@ def main():
             raise AssertionError("Five ecologically positive Discussion sections missing or repeated: "+title)
     if len(re.findall(r"^### 4.[0-9]+.",first,re.M))!=5:
         raise AssertionError("Discussion does not contain the intended five implications")
-    if not all(w in first for w in ("54.3%","38 (5.7%)","Gini coefficient was 0.777",
-                                   "39.6%","11.2%","McKinney & Lockwood, 1999",
-                                   "Hobbs et al., 2006","Sax & Gaines, 2008")):
-        raise AssertionError("New ecological discussion and cited island/nonrandom resource literature incomplete")
+    if not all(w in first for w in ("54.3%","38 of the 670","McKinney & Lockwood, 1999",
+                                   "Hobbs et al., 2006","Sax & Gaines, 2008","partial ρ = 0.36","nearly flat gradient")):
+        raise AssertionError("Discovery-led main results and ecological discussion incomplete")
+    if not all(w in precise for w in ("38 (5.7%)","0.7774","39.56%","11.22%")):
+        raise AssertionError("Exact concentration results not retained")
     if "22 islands" not in first or "seawater-dispersal morphology" not in first:
         raise AssertionError("Original EuDiS 22-island positive trait estimate missing")
     if "54.3%" not in first:
         raise AssertionError("Source island contemporary resource share missing")
-    if not main.startswith("# Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities"):
-        raise AssertionError("GEB island-port-sea title not installed")
+    if not main.startswith("# A weaker island isolation gradient in butterfly host resources when introduced plants are included"):
+        raise AssertionError("Isolation-led GEB title not installed")
     expected=[
-        "### 3.1. Island resource gains were amplified",
-        "### 3.2. Ports and introduced floras formed",
-        "### 3.3. A small set of redistributed plant identities",
+        "### 3.1. Introduced plants supply more than half",
+        "### 3.2. Isolation is less evident",
+        "### 3.3. New host opportunities are concentrated",
         "### 3.4. Host geography improves prediction of independently recorded butterflies",
     ]
     for line in expected:
@@ -504,13 +509,15 @@ def main():
     for literal in [
         "14,553", "+54.9%", "+118.9%", "+40.9%", "22.7%", "24.5%",
         "+0.2854", "−0.0187", "+0.0913%", "+0.215%",
-        "+0.438%", "+0.695%", "+0.779%", "−4.036%", "−2.697%",
-        "18 living endemic", "not a causal", "29", "source",
+        "+0.438%", "+0.695%", "+0.779%", "−4.036%", "−2.697%", "0.357",
     ]:
+        if literal not in precise:
+            raise AssertionError(f"Missing exact result in main/SI/legends: {literal}")
+    for literal in ("none of those 18","direct difference between these slopes was uncertain","no direction-specific support","not proof of exact absence","South America"):
         if literal not in first:
-            raise AssertionError(f"Missing result or interpretation guardrail: {literal}")
-    if not re.search(r"(?<!\d)\+?4\.12%(?!\d)",first):
-        raise AssertionError("Original 155-butterfly host forecast +4.12% improvement is absent")
+            raise AssertionError("Main interpretive safeguard lost: "+literal)
+    if not re.search(r"(?<!\d)\+?4\.12%(?!\d)",precise):
+        raise AssertionError("Original 155-butterfly host forecast +4.12% improvement is absent from retained evidence")
     for forbidden in ["../../results/pr179_source_evidence_20261119/README.md",
                       "../../results/gbif224_thinned_world_transfer_20261119/README_JA.md"]:
         if forbidden in first:

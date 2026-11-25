@@ -69,9 +69,13 @@ def main():
     split_key="## References (DOI identities checked; final source and style audit outstanding)"
     check(doc.count(split_key)==1, "Original reference and source supplement boundary preserved")
     main_text, appendix=doc.split(split_key,1)
-    for phrase in ("21.4", "17.7", "39.6%", "2.95", "+4.24%", "−0.11%",
-                   "Pieris cheiranthi", "Tropaeolum majus"):
-        check(phrase in main_text, "Positive resource/port/marine or endemic use missing from main: "+phrase)
+    journal_si=MAN.with_name("GEB_SUPPORTING_INFORMATION_V05.md").read_text(encoding="utf8")
+    captions=MAN.with_name("FIGURE_CAPTIONS_V03.md").read_text(encoding="utf8")
+    precise=main_text+"\n"+journal_si+"\n"+captions
+    for phrase in ("21.4", "17.7", "39.56%", "2.95", "4.239%", "−0.110%"):
+        check(phrase in precise, "Exact resource/port/marine result missing from retained evidence: "+phrase)
+    for phrase in ("Pieris cheiranthi", "Tropaeolum majus", "nearly flat gradient", "no direction-specific support"):
+        check(phrase in main_text, "Main ecological result or qualification missing: "+phrase)
     for phrase in ("### S.F.", "McRae, B. H.", "ESR (2009)", "Vargas, P."):
         check(phrase in appendix, "Original references/sea methodological audit removed: "+phrase)
     check("no new butterfly colonization" not in doc.lower(),
@@ -79,7 +83,7 @@ def main():
     abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
     check("Pieris cheiranthi" in abstract and "Tropaeolum majus" in abstract,
           "Direct independent endemic larvae and introduced host must be named in the revised abstract")
-    check("18 endemic" in main_text and "none of those 18" in main_text,
+    check("18 are endemic" in main_text and "none of those 18" in main_text,
           "Main text must report the 0/18 independently source-defined endemic ascertainment gap")
     results=main_text.split("## 3. Results",1)[1].split("## 4. Discussion",1)[0]
     headings=[list(re.finditer(r"^### 3\."+str(n)+r"\.",results,re.M)) for n in range(1,5)]
@@ -96,7 +100,7 @@ def main():
                  "Euchloe grancanariensis","Hirschfeldia incana","Gonepteryx cleobule"):
         check(name in doc and name in si,"Original named source observation or island missing: "+name)
     for exact in ("+118.9%","+40.9%","4.12%"):
-        check(exact in main_text,"Verified butterfly source positive missing from current main: "+exact)
+        check(exact in precise,"Verified butterfly source positive missing from main/SI/legends: "+exact)
     for exact in ("5.08%","−3.87 points","−15.85 to +8.13"):
         check(exact in appendix,"Archived source sensitivity or adverse check missing: "+exact)
     check("newly host-present region" in doc and "home archipelago" in doc,

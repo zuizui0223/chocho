@@ -82,7 +82,7 @@ def build(args):
     main=text.split(SPLIT,1)[0]
     if main.count("## Structured abstract")!=1 or main.count("## 1. Introduction")!=1:
         raise RuntimeError("Source article structure invalid")
-    if not main.startswith("# Ports, the sea and two layers"):
+    if not main.startswith("# A weaker island isolation gradient"):
         raise RuntimeError("Not the integrated island-port-sea v0.4 manuscript")
     figs=list(re.finditer(FIGRE,main))
     if len(figs)!=4 or [m.group(1) for m in figs]!=list("1234"):
@@ -114,7 +114,7 @@ def build(args):
     footer.add_run("Source v0.4 · 19 Nov 2026 · page ")
     fld=OxmlElement("w:fldSimple");fld.set(qn("w:instr"),"PAGE");footer._p.append(fld)
     set_line_numbering(doc)
-    doc.core_properties.title="Ports, the sea and two layers of island floras reshape butterfly larval-host opportunities"
+    doc.core_properties.title=main.splitlines()[0].removeprefix("# ")
     doc.core_properties.subject="Unsubmitted GEB coauthor review draft (v0.4)"
     doc.core_properties.author=""
     doc.core_properties.last_modified_by=""
@@ -159,7 +159,7 @@ def build(args):
         embedded=[name for name in names if name.startswith("word/media/")]
         if len(embedded)!=4:
             raise RuntimeError("DOCX does not physically embed four figure images")
-        for phrase in ("82/97","54.3%","39.6%","11.2%","0.285","Pieris cheiranthi"):
+        for phrase in ("82 of 97","54.3%","40%","11%","0.29","Pieris cheiranthi","0.36"):
             if phrase not in text_xml:
                 raise RuntimeError("Review DOCX missing source-verified positive: "+phrase)
     receipt={

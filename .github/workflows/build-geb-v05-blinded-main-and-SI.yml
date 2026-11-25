@@ -81,7 +81,7 @@ jobs:
               text="\n".join(q.get_text() for q in pdf)
               assert "zuizui0223" not in text.lower()
               if n==4:
-                  for phrase in ["Pieris cheiranthi","54.3%","38 (5.7%)","0.579","0.357"]:
+                  for phrase in ["Pieris cheiranthi","54.3%","38 (5.7%)","0.58","0.36"]:
                       assert phrase in text, (stem,phrase)
               else:
                   for phrase in ["Appendix S1","Appendix S5","Appendix S8","133","194","6,672","0.357","0.912"]:
