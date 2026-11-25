@@ -53,6 +53,10 @@ def journal_si(text):
       "The [complete R01–R37 and PR #181–#187 evidence coverage table](GEB_FULL_EVIDENCE_AUDIT_20261120.md) grades the 37 historically sourced findings by main-text, source-coupled SI and exploratory/archive tiers.":
       "The source-evidence coverage table classifies 37 historically sourced findings into main-text, source-coupled Supporting Information and exploratory/archive tiers.",
     }
+    if "figures S3.1, S5.1 and S5.2." in text:
+        old = next(k for k in substitutions if "Eight consecutively numbered appendices; figures S3.1 and S5.1." in k)
+        value = substitutions.pop(old)
+        substitutions[old.replace("figures S3.1 and S5.1.", "figures S3.1, S5.1 and S5.2.")] = value.replace("Figures S3.1 and S5.1.", "Figures S3.1, S5.1 and S5.2.")
     for old,new in substitutions.items():
         if text.count(old)!=1:
             raise RuntimeError("SI editorial export source text drift")
@@ -206,10 +210,15 @@ def build(root,out):
     figs_legend=figs_legend[figs_legend.index("## Figure 1 |"):]
     # The archived Figure 4 inset retains its historical S.G footer; give
     # readers the actual location in the separate S1–S8 Supporting Information.
-    if figs_legend.count("Supplementary Figure S.G-D") != 1:
-        raise RuntimeError("Original full South America figure locator drift")
-    figs_legend=figs_legend.replace("Supplementary Figure S.G-D",
-        "Figure S5.1 (Appendix S5; called Supplement S.G in the inset)")
+    final_visual = "Fig4_recorded_butterfly_isolation_monarch_v08.svg" in mainbody
+    if final_visual:
+        if "FigS5_2_butterfly_community_prediction_transfer_v08.svg" not in si or "Fig4_independent_butterfly_record_predictability_full_south_america_v04.svg" not in si:
+            raise RuntimeError("Moved original community/transfer figures missing from SI")
+    else:
+        if figs_legend.count("Supplementary Figure S.G-D") != 1:
+            raise RuntimeError("Original full South America figure locator drift")
+        figs_legend=figs_legend.replace("Supplementary Figure S.G-D",
+            "Figure S5.1 (Appendix S5; called Supplement S.G in the inset)")
     mainclean=(main.splitlines()[0]+"\n\n**Running title:** "+RUNNING+
              "\n\n## Structured abstract"+abstract+"\n**Keywords:** "+
              ", ".join(KEYWORDS)+"\n\n"+mainbody+"\n## References\n"+
@@ -245,10 +254,11 @@ def build(root,out):
     mdoc.save(sf)
     sdoc=docbase("GEB S1–S8 separate Supporting Information",main=False)
     imagessi=markdown(sdoc,siclean,root,out,with_images=True,fig_prefix="SI")
-    if len(imagessi)!=2:raise RuntimeError("GEB SI S3.1/S5.1 must be embedded")
+    expected_si = 3 if final_visual else 2
+    if len(imagessi)!=expected_si:raise RuntimeError("GEB SI figures missing")
     si_file=out/"GEB_v05_SUPPORTING_INFORMATION_S1-S8.docx"
     sdoc.save(si_file)
-    for p,n in [(sf,4),(si_file,2)]:
+    for p,n in [(sf,4),(si_file,expected_si)]:
         with ZipFile(p) as z:
             actual=sum(v.startswith("word/media/") for v in z.namelist())
             if actual!=n:raise RuntimeError("Missing embedded figure in "+p.name)

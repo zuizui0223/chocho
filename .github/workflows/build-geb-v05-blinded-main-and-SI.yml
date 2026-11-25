@@ -38,6 +38,9 @@ jobs:
         run: |
           if grep -q "Fig4_recorded_butterfly_isolation_monarch_v07.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
             node scripts/render_GEB_v07_discovery_figures.cjs . --check
+          elif grep -q "Fig4_recorded_butterfly_isolation_monarch_v08.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+            node scripts/render_GEB_v08_final_figures.cjs . --check
           fi
       - name: Source-bound separate 4-figure blinded article and 2-figure S1-S8 supporting info
         run: |
@@ -73,7 +76,14 @@ jobs:
           si_text=(root/"GEB_v05_separate_SI.md").read_text()
           if "Port-associated introduced floras reveal a weaker oceanic isolation gradient" in main_text:
               abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
-              if "Fig4_recorded_butterfly_isolation_monarch_v07.svg" in main_text:
+              if "Fig4_recorded_butterfly_isolation_monarch_v08.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "sparse remote-region records" in abstract and "12 of 32 far regions" in main_text
+                  assert "Figure S5.2A" in main_text and "Figure S5.2B" in main_text and "Figure S5.2C" in main_text
+                  assert "FigS5_2_butterfly_community_prediction_transfer_v08.svg" in si_text
+                  assert "−4.036%" in si_text and "−2.697%" in si_text
+                  assert receipt["SI_embedded_figures"]==3
+              elif "Fig4_recorded_butterfly_isolation_monarch_v07.svg" in main_text:
                   assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
                   assert "12/32 far regions" in abstract and "193" in main_text
               else:
@@ -83,7 +93,7 @@ jobs:
               assert "+0.65243" in si_text and "+0.54958" in si_text
               assert receipt["abstract_words"]<=280 and receipt["main_body_words"]<5000
           for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
-                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",2)]:
+                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",receipt["SI_embedded_figures"])]:
               p=root/(stem+".pdf")
               assert p.exists() and p.stat().st_size>30000, p
               pdf=fitz.open(p)

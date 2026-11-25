@@ -1,8 +1,8 @@
 # Supporting Information — GEB Research Article
 
-**A weaker island isolation gradient in butterfly host resources when introduced plants are included**
+**Port-associated introduced floras reveal a weaker oceanic isolation gradient in mapped butterfly host resources**
 
-**20 November 2026; journal-facing coauthor-review working version, unsubmitted.** Eight consecutively numbered appendices; figures S3.1 and S5.1. The underlying complete old v0.3 source archives remain versioned and separate; this is a source-qualified summary, not a replacement for downloadable data and code.
+**20 November 2026; journal-facing coauthor-review working version, unsubmitted.** Eight consecutively numbered appendices; figures S3.1, S5.1 and S5.2. The underlying complete old v0.3 source archives remain versioned and separate; this is a source-qualified summary, not a replacement for downloadable data and code.
 
 ## Appendix S1. Source populations, taxonomic identities and geographic grain
 
@@ -199,6 +199,16 @@ Eight entire Level1 divisions removed from source fitting: original world-equal 
 **Figure S5.1. Full original South America within/cross test, including signed adverse source responses.**
 
 ![Figure S5.1. Full source South America 190 within / 2980 cross world dyad model MSE and proxy-thinning ranges.](../../figures/integrated_island_port_butterfly_v03/Fig4_independent_butterfly_record_predictability_full_south_america_v04.svg)
+
+**Figure S5.2. Additional recorded-community prediction and geographic-transfer checks.** The former main Figure 4D–F is retained here as panels A–C without changing any data, predictions or interval types. This figure includes the weaker gains and adverse transfer checks that qualify Figure 4C and the main Results.
+
+![Figure S5.2. Recorded community prediction, entirely unseen divisions and adverse South American cross-world transfer.](../../figures/integrated_island_port_butterfly_v03/FigS5_2_butterfly_community_prediction_transfer_v08.svg)
+
+**A. Separate independently recorded community composition, 224 butterflies / 169 WGSRPD3 regions / 14,196 region pairs.** Relative MSE reduction when M3 adds known-HOSTS larval-host alien flora Jaccard **H** to M2, which already contains unlisted introduced alien plant composition **O** plus broad source geography, flora, climate, past butterfly similarity and recorded observation-effort covariates. Source-original regional-heldout increment **+0.0913%**. After within-region period-wide **datasetKey×calendar-day** or **indexed-record-count** observation-intensity proxy thinning of **both previous and later** GBIF recorded communities, the median 29-draw increment is **+0.215%** and **+0.438%**. These small positive results do not measure abundance, larval use, true occupancy or established immigration.
+
+**B. Entirely unseen broad biogeographic divisions.** With each full TDWG Level1 held out from source training (eight world divisions), the *world-equal mean-MSE* H-after-O source increment is **+0.097%** unthinned and median **+0.695% / +0.779%** after the two proxy-thinning designs. The horizontal whiskers for the thinned source medians depict **2.5–97.5% conditional Monte Carlo quantiles across 29 simulations**, **not ecological population confidence intervals**. Only **5–7 of eight** divisions improve within a simulated source draw, so the average does **not** show universal transfer.
+
+**C. South America: compact cross-biogeographic transfer counterexample.** Panel C shows only the **2,980 South-America-to-other-world dyads** from a 20-region entirely unseen South American world (original complete test 3,170 dyads). Median H-after-O MSE gains in the original 29-draw effort proxy runs are **−4.036%** (datasetKey×calendar-day, descriptive conditional Monte Carlo 95% −7.268 to −1.473%) and **−2.697%** (record-count proxy, −8.043 to −0.137%). A textual panel note retains within-South-America (190 dyads) medians **−0.496%** and **−0.126%**; the full original four-subgroup figure, including all uncertainty bars and all four scores, is **preserved as Figure S5.1**. The negative cross-world result indicates a specific documented prediction-calibration failure, not a general inability of South American butterflies to feed on introduced plants. Whiskers depict the original conditional Monte Carlo quantiles, including negative prediction outcomes.
 
 ### S5.5. Recorded island butterflies and mapped introduced-only host opportunities
 
