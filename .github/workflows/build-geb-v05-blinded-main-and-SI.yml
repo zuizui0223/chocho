@@ -88,7 +88,8 @@ jobs:
                       assert phrase in text, (stem,phrase)
               # Integration-specific checks apply only to the new appendix.
               if "### S3.5. Exploratory directional-current evidence and limits" in (root/"GEB_v05_separate_SI.md").read_text():
-                  normalized=" ".join(text.split())
+                  # PDF line-wrap may split the explicit hyphenated term. Do not change manuscript wording.
+                  normalized=" ".join(text.split()).replace("direction- specific", "direction-specific").replace("direction-\u00ad specific", "direction-specific").replace("direction\u00ad specific", "direction-specific")
                   assert "HYCOM" in normalized and "no direction-specific support" in normalized, (stem,"directional limitation absent")
                   if n==4:
                       assert "+0.397" not in normalized, (stem,"exploratory coefficient belongs in SI")
