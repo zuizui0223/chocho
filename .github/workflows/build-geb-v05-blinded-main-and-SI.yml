@@ -1,7 +1,7 @@
 name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
 on:
   push:
-    branches: [paper/geb-single-island-port-endemics-20261118]
+    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -86,6 +86,12 @@ jobs:
               else:
                   for phrase in ["Appendix S1","Appendix S5","Appendix S8","133","194"]:
                       assert phrase in text, (stem,phrase)
+              # Integration-specific checks apply only to the new appendix.
+              if "### S3.5. Exploratory directional-current evidence and limits" in (root/"GEB_v05_separate_SI.md").read_text():
+                  assert "+0.397" in text and "HYCOM" in text, (stem,"directional evidence absent")
+                  if n==2:
+                      for phrase in ["77.9%","1,236","22.9 km","4,096"]:
+                          assert phrase in text,(stem,phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
           (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
