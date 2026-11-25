@@ -114,6 +114,14 @@ jobs:
                   else:
                       for phrase in ["0.24448","0.16391","0.04153","0.54958","20.7014%","25,742"]:
                           assert phrase in normalized_text,(stem,"missing port source details",phrase)
+              # Reciprocal comparator framing must preserve positive and adverse crossed results.
+              if "reciprocal comparators" in (root/"GEB_v05_blinded_main.md").read_text():
+                  if n==4:
+                      for phrase in ["5,355","2.23%","1.89%","0.08%","0.16%","no direction-specific support"]:
+                          assert phrase in normalized_text.replace("direction- specific","direction-specific"),(stem,"missing crossed comparator evidence",phrase)
+                  else:
+                      for phrase in ["1.8556","1.9511","0.2683","0.0521","0.186","0.00181"]:
+                          assert phrase in normalized_text,(stem,"missing strict or directional falsification detail",phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
           (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
