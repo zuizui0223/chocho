@@ -1,0 +1,142 @@
+name: Native 1/3-degree OSCAR 30-day source support expansion
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/native-oscar30-source-support-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+jobs:
+  native-launch-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    outputs:
+      launch_gate: ${{ steps.gate.outputs.launch_gate }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: fa0659159859bb4f3d7b3314a0f33307c41bf391
+          path: _original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-grid dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'netCDF4>=1.7,<2' 'pyproj>=3.6,<4'
+      - name: Recover signed original source support and coast anchors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14985859311 14297201578 14296792703 14296891019 14237222110; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          9a932aa4e07b4a1a7a9fa3e6881ef5dd0edb3259e0a8d9aaf520ab7c2106c291  14985859311.zip
+          343627006c6097d88b99d8b766b034dbfbb5ff7875b01b7f680dec17ebd4f827  14297201578.zip
+          a45ead64724ad2827730e1c4974bbbc51eab8a15973811717d84b87f573c2852  14296792703.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14985859311:['trait_source_coverage.csv'],14297201578:['original126_NOAA2005_first90day_fixed_particle_tracks.json'],14296792703:['NOAA2005_global126_coastal_current_source_eligibility.json'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json'],14237222110:['within_region_eudis_native_introduced_pairs.csv']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      hits=[x for x in z.namelist() if P(x).name==n]
+                      assert len(hits)==1,(n,hits)
+                      P(n).write_bytes(z.read(hits[0]))
+          PY
+      - name: Native-grid launch availability without lowering source gate
+        id: gate
+        run: |
+          set -euo pipefail
+          python -u scripts/audit_global126_native_oscar_30day_support_20261125.py --stage preflight --traits _src/trait_source_coverage.csv --paired _src/within_region_eudis_native_introduced_pairs.csv --tracks _src/original126_NOAA2005_first90day_fixed_particle_tracks.json --preflight _src/NOAA2005_global126_coastal_current_source_eligibility.json --anchors _src/GSHHG126_sea_geometry_source_coverage_audit.json --graph _original/data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz --out delivery
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          r=json.loads(Path('delivery/NATIVE_PREFLIGHT.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('launch_gate='+str(r['launch_gate_pass']).lower()+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-oscar-launch-preflight-internal
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
+  native-fixed30-particles:
+    needs: native-launch-preflight
+    if: ${{ needs.native-launch-preflight.outputs.launch_gate == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: fa0659159859bb4f3d7b3314a0f33307c41bf391
+          path: _original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source-grid dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'netCDF4>=1.7,<2' 'pyproj>=3.6,<4'
+      - name: Recover signed original source support and coast anchors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14985859311 14297201578 14296792703 14296891019 14237222110; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          9a932aa4e07b4a1a7a9fa3e6881ef5dd0edb3259e0a8d9aaf520ab7c2106c291  14985859311.zip
+          343627006c6097d88b99d8b766b034dbfbb5ff7875b01b7f680dec17ebd4f827  14297201578.zip
+          a45ead64724ad2827730e1c4974bbbc51eab8a15973811717d84b87f573c2852  14296792703.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14985859311:['trait_source_coverage.csv'],14297201578:['original126_NOAA2005_first90day_fixed_particle_tracks.json'],14296792703:['NOAA2005_global126_coastal_current_source_eligibility.json'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json'],14237222110:['within_region_eudis_native_introduced_pairs.csv']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      hits=[x for x in z.namelist() if P(x).name==n]
+                      assert len(hits)==1,(n,hits)
+                      P(n).write_bytes(z.read(hits[0]))
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-oscar-launch-preflight-internal
+          path: _native
+      - name: Reacquire native-resolution currents and integrate fixed 30-day releases
+        run: |
+          set -euo pipefail
+          python -u scripts/audit_global126_native_oscar_30day_support_20261125.py --stage integrate --traits _src/trait_source_coverage.csv --paired _src/within_region_eudis_native_introduced_pairs.csv --tracks _src/original126_NOAA2005_first90day_fixed_particle_tracks.json --preflight _src/NOAA2005_global126_coastal_current_source_eligibility.json --anchors _src/GSHHG126_sea_geometry_source_coverage_audit.json --graph _original/data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz --original-helper-dir _original/scripts --native-preflight _native/NATIVE_PREFLIGHT.json --out delivery
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-oscar30-physical-support-internal
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
