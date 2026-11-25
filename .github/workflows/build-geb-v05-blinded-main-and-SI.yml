@@ -1,7 +1,7 @@
 name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
 on:
   push:
-    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125]
+    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -12,7 +12,7 @@ on:
       - manuscript/integrated_butterfly_resource_access_20261109/GEB_REFERENCE_COPYEDIT_V01.json
       - figures/integrated_island_port_butterfly_v03/**
   pull_request:
-    branches: [main]
+    branches: [main, paper/geb-single-island-port-endemics-20261118]
     paths:
       - scripts/build_GEB_v05_blinded_main_and_SI.py
       - scripts/geb_reference_copyedit.py
@@ -97,6 +97,15 @@ jobs:
                   else:
                       for phrase in ["+0.397","77.9%","1,236","22.9 km","4,096","33.8%"]:
                           assert phrase in normalized,(stem,phrase)
+              # Hierarchy audit is source-reproduced and must be present in the new
+              # manuscript; do not weaken existing figure/citation/anonymity checks.
+              if "### S3.6. Taxonomic resolution of the native-host isolation gradient" in (root/"GEB_v05_separate_SI.md").read_text():
+                  if n==4:
+                      for phrase in ["host-family presence","0.059","42.4%","9.1%"]:
+                          assert phrase in normalized_text,(stem,"missing hierarchy or locality result",phrase)
+                  else:
+                      for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640"]:
+                          assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
               receipt[stem+"_pages"]=len(pdf)
               receipt[stem+"_pages_with_images"]=pages_with_images
           (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
