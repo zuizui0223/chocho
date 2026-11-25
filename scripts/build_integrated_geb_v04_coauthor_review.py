@@ -82,7 +82,7 @@ def build(args):
     main=text.split(SPLIT,1)[0]
     if main.count("## Structured abstract")!=1 or main.count("## 1. Introduction")!=1:
         raise RuntimeError("Source article structure invalid")
-    if not main.startswith("# A weaker island isolation gradient"):
+    if not main.startswith("# Including introduced plants weakens the island isolation gradient"):
         raise RuntimeError("Not the integrated island-port-sea v0.4 manuscript")
     figs=list(re.finditer(FIGRE,main))
     if len(figs)!=4 or [m.group(1) for m in figs]!=list("1234"):
