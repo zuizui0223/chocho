@@ -101,7 +101,10 @@ def main():
     require(len(no_big)>0,"No non-Fabaceae/Poaceae butterflies")
     by_n=n.groupby("area_code_l3").accepted_plant_name_id.agg(set).to_dict()
     by_c=c.groupby("area_code_l3").accepted_plant_name_id.agg(set).to_dict()
-    single=set(n.groupby("accepted_plant_name_id").area_code_l3.nunique().loc[lambda s:s==1].index)
+    ranges=n.groupby("accepted_plant_name_id").area_code_l3.nunique().to_dict()
+    single={p for p,v in ranges.items() if v==1}
+    host_species=set().union(*(h["species"] for h in hosts.values()))
+    host_families=set().union(*(h["family"] for h in hosts.values()))
     f=make_frame(a.port_flora,a.region_hosts,a.tdwg_geojson).reset_index(drop=True)
     require(len(f)==126 and f.code.is_unique and f.level1.nunique()==9,"Wrong PR188 cohort")
     require(set(f.code)<=set(by_n) and set(f.code)<=set(by_c),"Missing botanical region")
@@ -112,7 +115,12 @@ def main():
         ns,cs=by_n[row.code],by_c[row.code]
         require(ns<=cs,"Native not nested in contemporary")
         rec={"code":row.code,"single_native_region_share":len(ns&single)/len(ns),
-             "allflora_native_n":len(ns),"allflora_current_n":len(cs)}
+             "allflora_native_n":len(ns),"allflora_current_n":len(cs),
+             "native_all_family_n":len({tax[p]["family"] for p in ns}),
+             "native_species_in_host_families":sum(tax[p]["family"] in host_families for p in ns),
+             "native_host_family_n":len({tax[p]["family"] for p in ns}&host_families),
+             "native_documented_host_species_n":len(ns&host_species),
+             "native_mean_log_range":float(np.mean([np.log(ranges[p]) for p in ns]))}
         for prefix,cohort in (("",hosts),("no_big_",no_big)):
             for origin,ids in (("native",ns),("current",cs)):
                 vals=aggregate(cohort,ids,tax)
@@ -138,6 +146,49 @@ def main():
     mem,_=preselected_mem(w)
     X=design(f); Xm=pd.concat([X,pd.DataFrame(mem,index=f.index,columns=[f"MEM{i+1}" for i in range(mem.shape[1])])],axis=1)
     full,ys=suite(f,"",X,Xm); reduced,_=suite(f,"no_big_",X,Xm)
+    # Match the uploaded scratch analysis response definitions on accepted-source data.
+    # Its log(count ratio) is not the same as our conditional log odds.
+    def z(s):
+        s=s.astype(float)
+        return (s-s.mean())/s.std(ddof=1)
+    def legacy_endpoints(d):
+        out={}
+        for a,b in (("genus","family"),("species","genus"),("species","family")):
+            out["log_ratio_"+a+"_over_"+b]=np.log((d["native_"+a]+.5)/(d["native_"+b]+.5))
+        for k in ("allflora_native_n","native_all_family_n"):
+            out[k]=z(np.log1p(d[k]))
+        for key,k,den in (
+            ("native_host_family_species_share","native_species_in_host_families","allflora_native_n"),
+            ("native_host_family_share","native_host_family_n","native_all_family_n"),
+            ("native_known_host_species_share","native_documented_host_species_n","allflora_native_n")):
+            out[key]=np.log((d[k]+.5)/(d[den]-d[k]+.5))
+        out["native_family_fraction_z"]=z(d.native_family_fraction)
+        out["single_region_share_logit_z"]=z(np.log((d.single_native_region_share+.005)/(1-d.single_native_region_share+.005)))
+        out["mean_log_native_range_z"]=z(d.native_mean_log_range)
+        return out
+    legacy=legacy_endpoints(f)
+    comparable={k:{"base":term(y,X,f.level1),"MEM10":term(y,Xm,f.level1)} for k,y in legacy.items()}
+    for rank in ("family","genus","species"):
+        comparable["native_species_adjusted_for_"+rank]=(
+            term(ys["native_species"],X.assign(extra=ys["native_"+rank]),f.level1)
+            if rank!="species" else None)
+    for k in ("allflora_native_n","native_all_family_n"):
+        comparable["native_species_adjusted_for_"+k]=term(ys["native_species"],X.assign(extra=legacy[k]),f.level1)
+    comparable["range_adjustments"]={}
+    for k,y in {**{k:ys[k] for k in ("native_species","native_family")},
+                **{k:legacy[k] for k in ("log_ratio_species_over_family","log_ratio_species_over_genus")}}.items():
+        comparable["range_adjustments"][k]={q:term(y,X.assign(extra=legacy[q]),f.level1)
+              for q in ("single_region_share_logit_z","mean_log_native_range_z")}
+    effort_path=Path(__file__).resolve().parents[1]/"results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv"
+    effort=read(effort_path)[["code","gbif_all_plant_indexed_records"]]
+    require(effort.code.is_unique,"Duplicate effort codes")
+    effort["gbif_all_plant_indexed_records"]=pd.to_numeric(effort.gbif_all_plant_indexed_records,errors="coerce")
+    ef=f.merge(effort,on="code",how="inner",validate="one_to_one").dropna(subset=["gbif_all_plant_indexed_records"]).reset_index(drop=True)
+    require(len(ef)==98 and ef.level1.nunique()==9,"Unexpected S3.4 effort cohort")
+    Xe=design(ef); Xee=Xe.assign(effort=z(np.log1p(ef.gbif_all_plant_indexed_records)))
+    ey={k:y_standardized(ef,k) for k in ("native_family","native_genus","native_species")}
+    ey.update({k:y for k,y in legacy_endpoints(ef).items() if k in ("log_ratio_species_over_family","native_host_family_share","native_host_family_species_share")})
+    effort_models={k:{"common98_base":term(y,Xe,ef.level1),"common98_plus_effort":term(y,Xee,ef.level1)} for k,y in ey.items()}
     # A geographic range-size proxy, not endemic status or mediation.
     endog=f.single_native_region_share
     Xend=X.assign(single_native_region_share=endog)
@@ -146,13 +197,16 @@ def main():
         key="native_species_given_"+rank+"_logodds"
         end[key+"_adjusted_for_single_region_share"]=term(ys[key],Xend,f.level1)
     nearfar=f.sort_values(["continent_distance_km","code"])
-    k=len(f)//4
+    q=f.continent_distance_km.quantile([.25,.75])
     med={}
-    for name,g in (("nearest_31",nearfar.head(k)),("farthest_31",nearfar.tail(k))):
-        med[name]={k:float(g[k].median()) for k in ("continent_distance_km","native_species","native_genus","native_family","single_native_region_share")}
+    for name,g in (("nearest_quartile",nearfar[nearfar.continent_distance_km<=q.iloc[0]]),("farthest_quartile",nearfar[nearfar.continent_distance_km>=q.iloc[1]])):
+        med[name]={k:float(g[k].median()) for k in ("continent_distance_km","native_species","native_genus","native_family","single_native_region_share","native_family_fraction","no_big_native_family","no_big_native_species")}
+        med[name]["n"]=len(g)
     report={**receipt,"status":"EXACT_SPECIES_COUNT_GATE_PASSED_EXPLORATORY_TAXONOMIC_AUDIT",
             "graph":graph,"full":full,"no_Fabaceae_or_Poaceae_butterflies":reduced,
             "single_native_region_proxy":end,"distance_quartile_medians":med,
+            "scratch_comparable_accepted_source":comparable,
+            "effort_common98_models":effort_models,"effort_source_sha256":digest(effort_path),
             "limits":["Taxonomic co-occurrence is not actual host suitability.",
                       "Single recorded native WGSRPD3 region is a range-size proxy, not verified island endemism.",
                       "Nested family/genus coverage can saturate; fractional coverage and paired contrasts included.",
@@ -161,6 +215,11 @@ def main():
                       "HC3, nine-cluster t8 and MEM10 are separate descriptive sensitivity checks; exploratory multiple endpoints."]}
     (a.out_dir/"taxonomic_resolution_report.json").write_text(json.dumps(report,indent=2,allow_nan=False)+"\n")
     print(json.dumps({"status":report["status"],"quartile_medians":med,
-                      "full_native_counts":{k:full["native_"+k] for k in ("species","genus","family")}},indent=2))
+                      "full_native_counts":{k:full["native_"+k] for k in ("species","genus","family")},
+                      "paired_species_minus_family":full["native_species_minus_family_z"],
+                      "paired_species_minus_genus":full["native_species_minus_genus_z"],
+                      "legacy":comparable,"effort_common98":effort_models,
+                      "no_big_native_family":reduced["native_family"],
+                      "no_big_native_species":reduced["native_species"]},indent=2))
 if __name__=="__main__":
     main()
