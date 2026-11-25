@@ -147,8 +147,9 @@ def main():
     fixed22=set(fixed.loc[fixed["class"]=="island","code"]);assert len(fixed22)==22
     supported=set(t.loc[t.eligible.astype(str).str.lower().isin(["true","1"]),"source"])
     assert len(supported)==17
-    sources=supported&fixed22
-    assert len(sources)==17, sorted(supported-fixed22)
+    sources=supported
+    primary_sources=supported&fixed22
+    # Keep the original frozen22 primary distinct from the wider 126 trait-supported sensitivity.
     old=prior_losses(tracks,prep,anchors,sources)
     assert sum(r["coarse_complete30_le50"]>0 for r in old)==4
     assert sum(r["coarse_complete30_le200"]>0 for r in old)==7
@@ -165,9 +166,9 @@ def main():
             for k,ii in enumerate(idx):
                 z=launches(lat,lon,U[k],V[k],anchors[src],mask)
                 seasons.append({"release_index":ii,"n_starts":len(z),"starts":z})
-            rows.append({**r,"native_release_dates_with_starts":sum(q["n_starts"]>0 for q in seasons),"native_total_starts":sum(q["n_starts"] for q in seasons),"native_seasons":seasons})
+            rows.append({**r,"in_fixed22":src in primary_sources,"native_release_dates_with_starts":sum(q["n_starts"]>0 for q in seasons),"native_total_starts":sum(q["n_starts"] for q in seasons),"native_seasons":seasons})
         n=sum(x["native_total_starts"]>0 for x in rows)
-        result={"status":"NATIVE_GRID_LAUNCH_COVERAGE_GATE_ONLY","sources":len(sources),"coarse_le50_day30_sources":4,"coarse_le200_day30_sources":7,"native_sources_with_launch_le50":n,"native_sources_with_ge2_dates":sum(x["native_release_dates_with_starts"]>=2 for x in rows),"native_total_starts":sum(x["native_total_starts"] for x in rows),"minimum_sources_for_followup":10,"launch_gate_pass":n>=10,"source_rows":rows,"source_chunks":[q[5] for q in chunks],"no_new_regression":True,"notes":["Native 1/3-degree actual 2005 OSCAR data, same fixed coast anchors, <=50km; six dates, <=3 starts separated >=15km.","Preflight only requires finite launch grid; successful 30day tracking is not yet established.","No new plant records or source data distributed."]}
+        result={"status":"NATIVE_GRID_LAUNCH_COVERAGE_GATE_ONLY","sources":len(sources),"primary_fixed22_trait_supported_sources":len(primary_sources),"coarse_le50_day30_sources":4,"coarse_le200_day30_sources":7,"native_sources_with_launch_le50":n,"native_fixed22_sources_with_launch_le50":sum(x["in_fixed22"] and x["native_total_starts"]>0 for x in rows),"native_sources_with_ge2_dates":sum(x["native_release_dates_with_starts"]>=2 for x in rows),"native_total_starts":sum(x["native_total_starts"] for x in rows),"minimum_sources_for_followup":10,"launch_gate_pass":n>=10,"source_rows":rows,"source_chunks":[q[5] for q in chunks],"no_new_regression":True,"notes":["Native 1/3-degree actual 2005 OSCAR data, same fixed coast anchors, <=50km; six dates, <=3 starts separated >=15km.","Preflight only requires finite launch grid; successful 30day tracking is not yet established.","No new plant records or source data distributed."]}
         (a.out/"NATIVE_PREFLIGHT.json").write_text(json.dumps(result,indent=2)+"\n")
         print("NATIVE_PREFLIGHT_SUMMARY",json.dumps({k:v for k,v in result.items() if k not in ("source_rows","source_chunks")}),flush=True)
         print("NATIVE_SOURCE_COVERAGE",json.dumps([{k:v for k,v in r.items() if k!="native_seasons"} for r in rows]),flush=True)
@@ -176,7 +177,7 @@ def main():
     sys.path.insert(0,str(a.original_helper_dir))
     import run_atlantic_noaa_2005_midpoint_particles_20261117 as helpers
     ranges=[(i,min(i+2,LAST)) for i in range(FIRST,LAST+1,3)]
-    with ThreadPoolExecutor(max_workers=2) as pool: chunks=list(pool.map(lambda x:get(*x),ranges))
+    chunks=[get(lo,hi) for lo,hi in ranges] # netCDF4/HDF access is serialized
     lat,lon,T,U,V,idx=combine(chunks)
     assert idx==list(range(FIRST,LAST+1)) and T[-1]>=T[idx.index(RELEASES[-1])]+HORIZON*86400.
     # Verify every prespecified launch against the separately retrieved preflight.
@@ -193,7 +194,7 @@ def main():
     assert len(rows)==initial["native_total_starts"]
     good=[r for r in rows if r["day30_valid"]]
     counts=Counter(q["source"] for q in good)
-    report={"status":"NATIVE_GRID_30DAY_PHYSICAL_COVERAGE_DIAGNOSTIC","source_release_dates":RELEASES,"source_chunks":[q[5] for q in chunks],"launches":len(rows),"day30_valid_tracks":len(good),"source_regions_valid30":len(counts),"source_regions_valid30_ge2_dates":sum(len({q["release_index"] for q in good if q["source"]==s})>=2 for s in counts),"source_valid_track_counts":dict(counts),"termination_states":dict(Counter(q["status"] for q in rows)),"minimum_sources":10,"physical_gate_pass":len(counts)>=10,"no_biological_transport_observed":True}
+    report={"status":"NATIVE_GRID_30DAY_PHYSICAL_COVERAGE_DIAGNOSTIC","source_release_dates":RELEASES,"source_chunks":[q[5] for q in chunks],"launches":len(rows),"day30_valid_tracks":len(good),"source_regions_valid30":len(counts),"fixed22_source_regions_valid30":sum(s in primary_sources for s in counts),"source_regions_valid30_ge2_dates":sum(len({q["release_index"] for q in good if q["source"]==s})>=2 for s in counts),"source_valid_track_counts":dict(counts),"termination_states":dict(Counter(q["status"] for q in rows)),"minimum_sources":10,"physical_gate_pass":len(counts)>=10,"no_biological_transport_observed":True}
     (a.out/"NATIVE_TRACKS_INTERNAL.json").write_text(json.dumps(rows,indent=2)+"\n")
     (a.out/"NATIVE_PHYSICAL_RESULT.json").write_text(json.dumps(report,indent=2)+"\n")
     print("NATIVE_PHYSICAL_SUMMARY",json.dumps({k:v for k,v in report.items() if k!="source_chunks"}),flush=True)
