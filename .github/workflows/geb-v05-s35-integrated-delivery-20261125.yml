@@ -1,0 +1,166 @@
+name: GEB v0.5 integrate verified S3.5 into internal source delivery archive
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/geb-v05-s35-integrated-delivery-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover exact old candidate, current decisions and verified S3.5 component
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for id in 14915845889 14916104659 14989682780; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          45fc444f5e2e08c8f457881eb48054cbc2536cf580b11a34e9e8065eaf670c14  14915845889.zip
+          6466dfbbbdeb02e6efe06b5158453da257e70edf56fbb353908d5397e820f440  14916104659.zip
+          0b96176a8198ff333e6c8d4e10645b150c4aa9f8303b93b770e78549fbf6feca  14989682780.zip
+          SUMS
+      - name: Integrate exact bytes and extend file-specific source delivery register
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import collections,csv,gzip,hashlib,io,json,pathlib,re,zipfile
+          P=pathlib.Path
+          sha=lambda b:hashlib.sha256(b).hexdigest()
+          def member(aid,name):
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  ns=[n for n in z.namelist() if P(n).name==name]
+                  assert len(ns)==1,(aid,name,ns)
+                  return z.read(ns[0])
+          def files(raw,n):
+              with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                  assert z.testzip() is None
+                  names=[v for v in z.namelist() if not v.endswith('/')]
+                  assert len(names)==len(set(names))==n
+                  assert all(not P(v).is_absolute() and '..' not in P(v).parts and '\\' not in v for v in names)
+                  return {v:z.read(v) for v in names}
+          oldraw=member(14915845889,'GEB_V05_CONTENT_CHECKSUM_STAGING_NOT_FOR_RELEASE.zip')
+          newraw=member(14989682780,'s35_internal.zip')
+          assert sha(oldraw)=='5679eeb5c3907bb5cadb1de461f7f97470b139b94db8a0c6b2e052295d0d4852'
+          assert sha(newraw)=='da20ee7e924b8d5272857b38f73ffee179522355b54a18bcb13ceb6c7851667a'
+          old=files(oldraw,192);new=files(newraw,25)
+          prior=json.loads(member(14916104659,'EXACT_FILE_DECISION_SUMMARY.json'))
+          reg=json.loads(member(14916104659,'SOURCE_REGISTRY.json'))
+          rows=list(csv.DictReader(io.StringIO(member(14916104659,'EXACT_192_FILE_SOURCE_DELIVERY_DECISIONS.csv').decode())))
+          assert len(reg)==25 and len(rows)==192 and set(old)=={r['file'] for r in rows}
+          assert prior['all_192_candidate_file_hashes_unchanged'] and prior['authorized_files']==0
+          assert all(sha(old[r['file']])==r['sha256'] and len(old[r['file']])==int(r['bytes']) and r['authorized_for_distribution']=='False' for r in rows)
+          receipt=json.loads(member(14989682780,'REPLAY_RECEIPT.json'))
+          assert receipt['status']=='PASS_INTERNAL_DERIVED_ENDPOINT_REPLAY_ONLY' and receipt['members']==25 and receipt['leaf_comparisons']==1817 and receipt['zip_sha256']==sha(newraw)
+          sourcefile=json.loads(new['FILE_REGISTER.json'])
+          assert len(sourcefile)==24 and set(new)-{'FILE_REGISTER.json'}=={r['path'] for r in sourcefile}
+          assert all(sha(new[r['path']])==r['sha256'] and len(new[r['path']])==r['bytes'] and r['delivery_status']=='HOLD_INTERNAL' for r in sourcefile)
+          assert 'HYCOM' not in reg
+          reg['HYCOM']={'title':'HYCOM+NCODA GOFS 3.0 GLBu0.08/expt_19.1 daily 2005, 15m','citation_or_url':'https://www.hycom.org/data/glbu0pt08/expt-19pt1','source_terms':'Provider public-release/unlimited-distribution notice; freely available catalog, no blanket CC0 assignment','source_state':'known','delivery_action':'Cite exact product and https://ncss.hycom.org/thredds/catalogs/GLBu0.08/expt_19.1.html ; preserve acquisition parameters and https://www.hycom.org/publications/acknowledgements/ocean-reanalysis-data acknowledgement. No raw velocity grids included; assess mixed derived material and code separately.'}
+          prefix='components/s35_hycom/'
+          added={prefix+n:b for n,b in new.items()}
+          assert not set(added)&set(old)
+          allfiles=old|added
+          for n,b in sorted(new.items()):
+              name=P(n).name
+              geo={'GSHHG','TDWG','WPI'}
+              trait={'WCVP','EUDIS','TDWG'}
+              if n.startswith('code/'):
+                  role='code';sids={'AUTHOR','HYCOM'}|geo|trait;basis='conservative workflow dependency envelope, not copied sources';decision='AUTHOR_CODE_APPROVAL_AND_CODE_PROVENANCE_REVIEW'
+              elif name in ('wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv','trait_source_coverage.csv','family_matched_directional_trait_contrasts.csv'):
+                  role='table';sids={'AUTHOR'}|trait;basis='family/origin plant trait derived tables';decision='HOLD_UNRESOLVED_SOURCE_DEPENDENCY'
+              elif name=='WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv':
+                  role='table';sids={'AUTHOR','WCVP'}|geo;basis='derived geographic flora pairs';decision='HOLD_UNRESOLVED_SOURCE_DEPENDENCY'
+              elif n.startswith('inputs/shards/') or name in ('ALL306_TRACKS.json','HYCOM_ALL17_PREFLIGHT.json','PHYSICAL_RESULT.json'):
+                  role='metadata_or_summary';sids={'AUTHOR','HYCOM','GSHHG','TDWG'};basis='modeled tracks and launch/physical provenance, not raw velocities';decision='HOLD_S35_INTERNAL_METADATA_AND_DERIVATIVE_REVIEW'
+              elif name=='GSHHG126_sea_geometry_source_coverage_audit.json':
+                  role='metadata_or_summary';sids={'AUTHOR'}|geo;basis='coastal anchors and derived geography';decision='HOLD_S35_INTERNAL_METADATA_AND_DERIVATIVE_REVIEW'
+              else:
+                  role='metadata_or_summary';sids={'AUTHOR','HYCOM'}|geo|trait;basis='result or component provenance';decision='HOLD_S35_INTERNAL_METADATA_AND_DERIVATIVE_REVIEW'
+              states={reg[k]['source_state'] for k in sids}
+              rows.append({'file':prefix+n,'sha256':sha(b),'bytes':len(b),'role':role,'source_ids':';'.join(sorted(sids)),'mapping_basis':basis,'source_rights_states':';'.join(sorted(states)),'source_citations':' | '.join(reg[k]['citation_or_url'] for k in sorted(sids)),'source_terms':' | '.join(k+': '+reg[k]['source_terms'] for k in sorted(sids)),'delivery_decision':decision,'proposed_route':'Internal HOLD: source/author approval and indirect anonymity review; preserve source notices and scientific numbers','author_approval_required':True,'authorized_for_distribution':False})
+          assert len(rows)==len(allfiles)==217 and len(reg)==26
+          assert all(str(r['authorized_for_distribution'])=='False' for r in rows)
+          assert len({r['file'] for r in rows})==217
+          # Inventory rather than remove identifiers. The original S3.5 is NOT a blinded release.
+          public={'808e0b869f9ec1adf8efff87cf6a395adda103e0','65bed76bae9d644ccb6ad200c05f9f5071d89e05','52da7828aba9d461dd133c27b3bd7a4407161f54','9702e22fc540ac7f25a174542a253cc81f83719c','06749c04bd5b7a754d6f7717a31c01c51357cae8','b2bc7bd87eca199b62f08ac539660aebc9fbaf79'}
+          directpat=re.compile(rb'zuizui0223|ZHANG[ _\.-]?(?:RUIQI|RACHEL)|[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|/(?:home|Users|workspace|mnt/data)/[A-Z0-9_.-]+/',re.I)
+          flags=[]
+          for n,b in sorted(added.items()):
+              payload=gzip.decompress(b) if n.endswith('.gz') else b
+              t=payload.decode('utf8',errors='replace')
+              direct=bool(directpat.search(payload) or directpat.search(n.encode()))
+              h=sorted(set(re.findall(r'\b[0-9a-f]{40}\b',t,re.I))-public)
+              execution=[i+1 for i,l in enumerate(t.splitlines()) if re.search(r'(?i)\b(?:[1-9]\d{10,11})\b',l) and re.search(r'(?i)(?:CI|run|artifact|commit|github|workflow)',l)]
+              if direct or h or execution:flags.append({'file':n,'direct_identifier_pattern':direct,'unclassified_40hex':h,'execution_pattern_line_numbers':execution})
+          out=P('delivery');out.mkdir()
+          dest=out/'GEB_V05_217_INTERNAL_STAGING_NOT_FOR_RELEASE.zip'
+          with zipfile.ZipFile(dest,'w') as z:
+              for n,b in sorted(allfiles.items()):
+                  i=zipfile.ZipInfo(n,(2026,11,25,0,0,0));i.compress_type=zipfile.ZIP_DEFLATED;i.external_attr=0o644<<16;z.writestr(i,b)
+          with zipfile.ZipFile(dest) as z:
+              assert z.testzip() is None and {n:z.read(n) for n in z.namelist()}==allfiles
+              z.extractall('extracted')
+          for r in rows:
+              b=(P('extracted')/r['file']).read_bytes();assert sha(b)==r['sha256'] and len(b)==int(r['bytes'])
+          with (out/'EXACT_217_FILE_SOURCE_DELIVERY_DECISIONS.csv').open('w',encoding='utf8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          (out/'SOURCE_REGISTRY.json').write_text(json.dumps(reg,indent=2,ensure_ascii=False)+'\n')
+          (out/'S35_INTERNAL_PROVENANCE_PATTERN_INVENTORY.json').write_text(json.dumps(flags,indent=2)+'\n')
+          (out/'S35_ORIGINAL_REPLAY_RECEIPT.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          summary={'status':'INTERNAL_INTEGRATION_BYTES_VERIFIED_NOT_REVIEWER_RELEASE','files':217,'old_members_byte_identical':192,'new_members_byte_identical':25,'source_families':26,'source_state_counts':dict(collections.Counter(v['source_state'] for v in reg.values())),'file_roles':dict(collections.Counter(r['role'] for r in rows)),'delivery_decisions':dict(collections.Counter(r['delivery_decision'] for r in rows)),'new_files_with_provenance_pattern_flags':len(flags),'authorized_files':0,'raw_velocity_reintegration':False,'reviewer_access_created':False,'sha256':sha(dest.read_bytes()),'bytes':dest.stat().st_size,'original_s35_leaf_comparisons':1817}
+          (out/'INTEGRATED_DELIVERY_SUMMARY.json').write_text(json.dumps(summary,indent=2)+'\n')
+          (out/'INTERNAL_README.md').write_text('Internal 217-member staging only; not a reviewer delivery. The 192 original members including README and original run wrapper are byte-identical, and their old scope is unchanged. New S3.5 component uses its own replay commands in the integration workflow; the old wrapper does not run it. Source and rights decisions are in the adjacent 217-row register, not embedded in the archive. All files on HOLD. No full raw-to-model reconstruction, rights clearance or anonymity certification.\n')
+          print('INTEGRATED_217',json.dumps(summary))
+          PY
+      - name: Verify S3.5 coefficients and fixed-anchor output after integrated extraction
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'pyproj>=3.6,<4' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+          cd extracted/components/s35_hycom
+          python -u code/audit_hycom_fixed30_robustness_20261125.py --physical inputs/PHYSICAL_RESULT.json --tracks inputs/ALL306_TRACKS.json --anchors inputs/GSHHG126_sea_geometry_source_coverage_audit.json --geography inputs/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv --coverage inputs/trait_source_coverage.csv --paired inputs/within_region_eudis_native_introduced_pairs.csv --traits inputs/family_matched_directional_trait_contrasts.csv --expected inputs/HYCOM_TRAIT_RESULT.json --out fresh
+          python -u code/audit_hycom_fixed306_anchor_reach_20261125.py --physical inputs/PHYSICAL_RESULT.json --tracks inputs/ALL306_TRACKS.json --anchors inputs/GSHHG126_sea_geometry_source_coverage_audit.json --preflight inputs/HYCOM_ALL17_PREFLIGHT.json --robustness expected/HYCOM_ROBUSTNESS_RESULT.json --out fresh
+          python - <<'PY'
+          import json,math,pathlib
+          P=pathlib.Path
+          checks=0
+          def compare(a,b,path=''):
+              global checks
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and set(a)==set(b),path
+                  for k in a:compare(a[k],b[k],path+'/'+k)
+              elif isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),path
+                  for i,(x,y) in enumerate(zip(a,b)):compare(x,y,path+'/'+str(i))
+              elif isinstance(a,(int,float)) and not isinstance(a,bool):
+                  assert isinstance(b,(int,float)) and not isinstance(b,bool) and math.isclose(a,b,rel_tol=1e-7,abs_tol=1e-9),(path,a,b)
+                  checks+=1
+              else:
+                  assert a==b,(path,a,b)
+                  checks+=1
+          for n in ['HYCOM_ROBUSTNESS_RESULT.json','FIXED_ANCHOR_REACH_RESULT.json']:
+              compare(json.loads((P('expected')/n).read_text()),json.loads((P('fresh')/n).read_text()),n)
+          assert checks==1817
+          result={'status':'PASS_S35_REPLAY_AFTER_INTEGRATED_EXTRACTION','leaf_comparisons':checks,'rtol':1e-7,'atol':1e-9,'old_192_members_byte_identical_previously_replayed_not_freshly_refit_here':True,'reviewer_delivery':'HOLD'}
+          P('../../../delivery/INTEGRATED_S35_REPLAY_RECEIPT.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(result)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-v05-integrated-217-internal-delivery
+          path: delivery/
+          if-no-files-found: error
+          retention-days: 90
