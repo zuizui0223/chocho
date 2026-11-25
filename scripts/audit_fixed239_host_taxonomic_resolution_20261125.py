@@ -36,15 +36,21 @@ def aggregate(hosts, ids, tax, exact_host_ids):
             "Taxonomic nesting failed")
     return result
 def term(y, X, groups):
-    require(np.isfinite(y).all(), "Nonfinite response")
-    require(np.linalg.matrix_rank(X)==X.shape[1], "Rank deficient design")
+    # A zero-flora island has no defined floristic proportions or native range
+    # statistics. Preserve it in all count models, never impute a proportion.
+    y=pd.Series(y,index=X.index,dtype=float)
+    groups=pd.Series(groups,index=X.index)
+    good=np.isfinite(y)&np.isfinite(X).all(axis=1)
+    dropped=list(X.index[~good])
+    y=y.loc[good]; X=X.loc[good]; groups=groups.loc[good]
+    require(len(y)>X.shape[1] and np.linalg.matrix_rank(X)==X.shape[1], "Rank deficient design after explicit undefined-response exclusion")
     m=sm.OLS(y,X).fit(cov_type="HC3")
     cl=sm.OLS(y,X).fit(cov_type="cluster",cov_kwds={"groups":groups})
     beta=float(m.params["distance"])
     se=float(cl.bse["distance"])
     df=len(set(groups))-1
     lo,hi=m.conf_int().loc["distance"]
-    return {"beta":beta,"HC3_p":float(m.pvalues["distance"]),
+    return {"n":int(m.nobs),"undefined_rows_excluded":len(dropped),"beta":beta,"HC3_p":float(m.pvalues["distance"]),
             "HC3_95":[float(lo),float(hi)],
             "cluster_t_df":df,"cluster_t_p":float(2*t.sf(abs(beta/se),df)) if se>0 else None,
             "cluster_t_95":[beta-t.ppf(.975,df)*se,beta+t.ppf(.975,df)*se]}
@@ -144,22 +150,26 @@ def main():
     host_families=set().union(*(h["family"] for h in hosts.values()))
     f=make_frame(a.port_flora,a.region_hosts,a.tdwg_geojson).reset_index(drop=True)
     require(len(f)==126 and f.code.is_unique and f.level1.nunique()==9,"Wrong PR188 cohort")
-    require(set(f.code)<=set(by_n) and set(f.code)<=set(by_c),"Missing botanical region")
-    used=set().union(*[by_c[k] for k in f.code],*list(h["species"] for h in hosts.values()))
+    absent_n=set(f.code)-set(by_n); absent_c=set(f.code)-set(by_c)
+    expected_n=set(f.loc[f.native_plant==0,"code"])
+    expected_c=set(f.loc[f.native_plant+f.introduced_plant==0,"code"])
+    require(absent_n==expected_n and absent_c==expected_c,
+            "Whole-flora absent regions differ from frozen zero-flora regions")
+    used=set().union(*[by_c.get(k,set()) for k in f.code],*list(h["species"] for h in hosts.values()))
     require(all(tax[k]["family"] and tax[k]["genus"] for k in used),"Missing family/genus in used taxa")
     records=[]
     for row in f.itertuples(index=False):
-        ns,cs=by_n[row.code],by_c[row.code]
+        ns,cs=by_n.get(row.code,set()),by_c.get(row.code,set())
         require(ns<=cs,"Native not nested in contemporary")
         hn_i=hn_by.get(row.code,set()); hc_i=hc_by.get(row.code,set())
         require(hn_i<=hc_i,"Dedicated host distributions not nested")
-        rec={"code":row.code,"single_native_region_share":len(ns&single)/len(ns),
+        rec={"code":row.code,"single_native_region_share":len(ns&single)/len(ns) if ns else np.nan,
              "allflora_native_n":len(ns),"allflora_current_n":len(cs),
              "native_all_family_n":len({tax[p]["family"] for p in ns}),
              "native_species_in_host_families":sum(tax[p]["family"] in host_families for p in ns),
              "native_host_family_n":len({tax[p]["family"] for p in ns}&host_families),
              "native_documented_host_species_n":len(ns&host_species),
-             "native_mean_log_range":float(np.mean([np.log(ranges[p]) for p in ns]))}
+             "native_mean_log_range":float(np.mean([np.log(ranges[p]) for p in ns])) if ns else np.nan}
         for prefix,cohort in (("",hosts),("no_big_",no_big)):
             for origin,ids,exact in (("native",ns,hn_i),("current",cs,hc_i)):
                 # Rank presence uses the accepted-species background plus any exact
@@ -180,6 +190,7 @@ def main():
              "host_ids_outside_accepted_species_background":len(extras),
              "host_distribution_sha256":{"native":digest(hn_path),"current":digest(hc_path)},
              "global_per_butterfly_source_count_gate":239,
+             "zero_native_flora_regions":sorted(absent_n),"zero_current_flora_regions":sorted(absent_c),
              "current_correlation":float(f.current_species.corr(f.current_host_239)),
              "native_species_total":[int(f.native_species.sum()),int(f.native_host_239.sum())],
              "current_species_total":[int(f.current_species.sum()),int(f.current_host_239.sum())],
@@ -206,7 +217,7 @@ def main():
             ("native_host_family_species_share","native_species_in_host_families","allflora_native_n"),
             ("native_host_family_share","native_host_family_n","native_all_family_n"),
             ("native_known_host_species_share","native_documented_host_species_n","allflora_native_n")):
-            out[key]=np.log((d[k]+.5)/(d[den]-d[k]+.5))
+            out[key]=np.log((d[k]+.5)/(d[den]-d[k]+.5)).where(d[den]>0)
         out["native_family_fraction_z"]=z(d.native_family_fraction)
         out["single_region_share_logit_z"]=z(np.log((d.single_native_region_share+.005)/(1-d.single_native_region_share+.005)))
         out["mean_log_native_range_z"]=z(d.native_mean_log_range)
@@ -222,8 +233,11 @@ def main():
     comparable["range_adjustments"]={}
     for k,y in {**{k:ys[k] for k in ("native_species","native_family")},
                 **{k:legacy[k] for k in ("log_ratio_species_over_family","log_ratio_species_over_genus")}}.items():
-        comparable["range_adjustments"][k]={q:term(y,X.assign(extra=legacy[q]),f.level1)
-              for q in ("single_region_share_logit_z","mean_log_native_range_z")}
+        comparable["range_adjustments"][k]={}
+        for q in ("single_region_share_logit_z","mean_log_native_range_z"):
+            ok=legacy[q].notna()
+            comparable["range_adjustments"][k][q]={"same_rows_base":term(y.where(ok),X,f.level1),
+                "plus_range":term(y,X.assign(extra=legacy[q]),f.level1)}
     effort_path=Path(__file__).resolve().parents[1]/"results/three-gate-port-botanical-effort/botanical_effort_flora_island_inputs.csv"
     effort=read(effort_path)[["code","gbif_all_plant_indexed_records"]]
     require(effort.code.is_unique,"Duplicate effort codes")
@@ -240,6 +254,7 @@ def main():
     end={"single_region_share_distance":term(endog,X,f.level1)}
     for rank in ("family","genus"):
         key="native_species_given_"+rank+"_logodds"
+        end[key+"_same_rows_base"]=term(ys[key].where(endog.notna()),X,f.level1)
         end[key+"_adjusted_for_single_region_share"]=term(ys[key],Xend,f.level1)
     nearfar=f.sort_values(["continent_distance_km","code"])
     q=f.continent_distance_km.quantile([.25,.75])
@@ -256,6 +271,7 @@ def main():
                       "Exact host identity uses original dedicated HOSTS/WCVP distributions; the broader rank sets use the strict accepted-species background union original local resolved host IDs. Some resolved IDs may not be accepted species rank; audit table preserves them.",
                       "Single recorded native WGSRPD3 region is a range-size proxy, not verified island endemism.",
                       "Nested family/genus coverage can saturate; fractional coverage and paired contrasts included.",
+                      "Frozen zero-flora regions remain in count models; undefined floristic proportions and native range summaries are excluded, with model n reported. Continuity-corrected count ratios retain the scratch definition even when both counts are zero.",
                       "All 239 butterflies fixed globally, not an observed island assemblage.",
                       "Unknown host links, ecological incompatibility and documentation coverage cannot be separated.",
                       "HC3, nine-cluster t8 and MEM10 are separate descriptive sensitivity checks; exploratory multiple endpoints."]}
