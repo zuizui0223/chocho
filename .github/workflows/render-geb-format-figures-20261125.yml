@@ -1,0 +1,43 @@
+name: Render pinned GEB figures at publication-quality resolution
+on:
+  push:
+    branches: [paper/geb-format-render-20261125]
+    paths:
+      - .github/workflows/render-geb-format-figures-20261125.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fd9751c91076daccf2dc53b6cb0bf4a32337ca5d
+          persist-credentials: false
+      - name: Install renderer
+        run: python -m pip install --disable-pip-version-check cairosvg pillow
+      - name: Render exact source artwork at 3000 pixels width
+        run: |
+          python - <<'PY'
+          import cairosvg,hashlib,json
+          from pathlib import Path
+          from PIL import Image
+          d=Path("figures/integrated_island_port_butterfly_v03")
+          p=Path("geb-format-figures");p.mkdir()
+          files={"main_1":"Fig1_resource_geography_scales_v07.svg","main_2":"Fig2_ports_native_alien_floras_readable_v08.svg","main_3":"Fig3_global_host_contributors_at_ports_v07.svg","main_4":"Fig4_recorded_butterfly_isolation_monarch_v08.svg","supp_1":"Fig2_global_contributors_at_ports.svg","supp_2":"Fig4_independent_butterfly_record_predictability_full_south_america_v04.svg","supp_3":"FigS5_2_butterfly_community_prediction_transfer_v08.svg"}
+          result={}
+          for k,n in files.items():
+              src=d/n
+              out=p/(k+".png")
+              cairosvg.svg2png(url=str(src),write_to=str(out),output_width=3000,background_color="white")
+              result[k]={"source":n,"source_sha256":hashlib.sha256(src.read_bytes()).hexdigest(),"output_sha256":hashlib.sha256(out.read_bytes()).hexdigest(),"pixels":list(Image.open(out).size)}
+          (p/"source-receipt.json").write_text(json.dumps(result,indent=2)+"\n")
+          print(json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-pinned-seven-figures-3000px
+          path: geb-format-figures/
+          if-no-files-found: error
+          retention-days: 90
