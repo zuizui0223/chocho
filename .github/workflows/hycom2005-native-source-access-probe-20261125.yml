@@ -1,0 +1,128 @@
+name: HYCOM 2005 historical coastal source access probe
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/hycom2005-native-source-access-probe-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-access:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: fa0659159859bb4f3d7b3314a0f33307c41bf391
+          path: _original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2' 'pyproj>=3.6,<4'
+      - name: Recover original frozen coastline anchor receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14296891019/zip" > anchors.zip
+          echo '36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  anchors.zip' | sha256sum -c -
+          python - <<'PY'
+          import zipfile,pathlib
+          with zipfile.ZipFile('anchors.zip') as z:
+              ns=[n for n in z.namelist() if pathlib.Path(n).name=='GSHHG126_sea_geometry_source_coverage_audit.json']
+              assert len(ns)==1
+              pathlib.Path('anchors.json').write_bytes(z.read(ns[0]))
+          PY
+      - name: Test official HYCOM NCSS data at first original anchor of eight missing regions and one control
+        run: |
+          python -u - <<'PY'
+          import hashlib,json,math,urllib.request,urllib.parse,urllib.error,pathlib,concurrent.futures
+          import numpy as np,netCDF4
+          from pyproj import Geod
+          P=pathlib.Path
+          receipt=json.loads(P('results/directional_current_trait_filter_20261125/VERIFIED_NATIVE_GRID_LAUNCH_GATE_20261125.json').read_text())
+          missing=sorted(r['source'] for r in receipt['source_rows'] if r['native_total_starts']==0)
+          assert missing==['BAL','COR','CYP','EAI','GRB','KRI','SAR','SIC']
+          anchors=json.loads(P('anchors.json').read_text())['coastal_anchors_by_TDWG_region']
+          graph=P('_original/data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz')
+          assert hashlib.sha256(graph.read_bytes()).hexdigest()=='79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906'
+          with np.load(graph) as g:mask=g['fine_cell_to_node']
+          assert mask.shape==(2720,5760)
+          G=Geod(ellps='WGS84')
+          endpoint='https://ncss.hycom.org/thredds/ncss/grid/GLBu0.08/expt_19.1/2005'
+          date='2005-05-28T00:00:00Z'
+          def request(url,max_bytes):
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'scientific historical current access test/1.0'})
+                  with urllib.request.urlopen(req,timeout=45) as r:
+                      b=r.read(max_bytes+1)
+                      if len(b)>max_bytes:raise ValueError('response exceeds fixed byte limit')
+                      return {'status':r.status,'url':r.geturl(),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()},b
+              except Exception as exc:
+                  return {'status':getattr(exc,'code',None),'url':url,'error':str(exc)[:400]},None
+          meta,_=request(endpoint+'/dataset.xml',4000000)
+          print('HYCOM_METADATA_ACCESS',json.dumps(meta),flush=True)
+          def fetch(code):
+              a=anchors[code][0]
+              lat=float(a['snapped_wet_latitude']);lon=float(a['snapped_wet_longitude'])
+              x=.65/max(.2,math.cos(math.radians(lat)))+.2
+              params=[('var','water_u'),('var','water_v'),('north',str(lat+.7)),('south',str(lat-.7)),('west',str(lon-x)),('east',str(lon+x)),('time',date),('vertCoord','15'),('accept','netcdf4'),('addLatLon','true')]
+              url=endpoint+'?'+urllib.parse.urlencode(params)
+              rr,b=request(url,4000000)
+              return code,lat,lon,rr,b
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+              downloaded=list(pool.map(fetch,missing+['AZO']))
+          rows=[]
+          for code,alat,alon,r,b in downloaded:
+              out={'source':code,'first_original_anchor_only':True,'old_oscar_native_launch_supported':code=='AZO','response':r,'verified_netcdf':False,'valid_start_cells_le50km':None}
+              if b is not None:
+                  try:
+                      assert b.startswith(b'CDF') or b.startswith(b'\x89HDF\r\n\x1a\n')
+                      with netCDF4.Dataset('probe.nc',memory=b) as d:
+                          def arr(v):
+                              a=d[v][:];return np.asarray(a.filled(np.nan) if np.ma.isMaskedArray(a) else a,dtype=float)
+                          latname=next(k for k in ('lat','latitude','Latitude') if k in d.variables)
+                          lonname=next(k for k in ('lon','longitude','Longitude') if k in d.variables)
+                          depthname=next(k for k in ('depth','Depth','Depth1','depth1') if k in d.variables)
+                          timename=next(k for k in ('time','MT','Time') if k in d.variables)
+                          lat=arr(latname);lon=arr(lonname)
+                          assert lat.ndim==lon.ndim==1
+                          depth=arr(depthname).reshape(-1);assert len(depth)==1 and abs(depth[0]-15)<.01
+                          ts=netCDF4.num2date(d[timename][:],d[timename].units,calendar=getattr(d[timename],'calendar','standard'))
+                          assert len(ts)==1 and str(ts[0])[:19]=='2005-05-28 00:00:00'
+                          u=arr('water_u').squeeze();v=arr('water_v').squeeze()
+                          assert u.shape==v.shape==(len(lat),len(lon)),(u.shape,lat.shape,lon.shape)
+                      iy=np.argsort(-lat);lat=lat[iy]
+                      lon=alon+(lon-alon+180)%360-180;ix=np.argsort(lon);lon=lon[ix]
+                      u=u[iy][:,ix];v=v[iy][:,ix]
+                      assert len(lat)>2 and len(lon)>2
+                      assert np.allclose(abs(np.diff(lat)),.08,atol=.002) and np.allclose(np.diff(lon),.08,atol=.002)
+                      candidates=0
+                      for i in range(len(lat)-1):
+                          for j in range(len(lon)-1):
+                              la=float(lat[i]);lo=float(lon[j])
+                              _,_,dm=G.inv(alon,alat,lo,la)
+                              if abs(dm)>50000:continue
+                              row=int(round((85-la)/.0625-.5));col=int(round((lo+180)%360/.0625-.5))%mask.shape[1]
+                              if not (0<=row<mask.shape[0] and mask[row,col]>=0):continue
+                              if np.isfinite(u[i:i+2,j:j+2]).all() and np.isfinite(v[i:i+2,j:j+2]).all():candidates+=1
+                      out.update({'verified_netcdf':True,'valid_start_cells_le50km':candidates,'grid_shape':[len(lat),len(lon)],'finite_uv_cells':int((np.isfinite(u)&np.isfinite(v)).sum()),'depth_m':float(depth[0]),'date':date})
+                  except Exception as exc:out['decode_or_identity_error']=str(exc)[:400]
+              rows.append(out);print('HYCOM_ANCHOR_PROBE',json.dumps(out),flush=True)
+          result={'status':'ALTERNATIVE_CURRENT_SOURCE_ACCESS_DIAGNOSTIC_ONLY','source':'HYCOM+NCODA GLBu0.08/expt_19.1, 2005 daily 00Z aggregation','source_documentation':'https://www.hycom.org/data/glbu0pt08/expt-19pt1','official_ncss':endpoint,'fixed_date':date,'requested_depth_m':15,'original_missing_sources':missing,'control':'AZO','first_anchor_only':True,'sources_tested':len(rows),'verified_netcdf_sources':sum(r['verified_netcdf'] for r in rows),'sources_with_at_least_one_valid_start':sum((r['valid_start_cells_le50km'] or 0)>0 for r in rows),'old_oscar_missing_sources_with_new_probe_start':sum(r['source'] in missing and (r['valid_start_cells_le50km'] or 0)>0 for r in rows),'metadata_access':meta,'rows':rows,'all17_six_date_gate_tested':False,'day30_tracks_computed':False,'no_biological_inference':True}
+          P('delivery').mkdir(exist_ok=True)
+          P('delivery/HYCOM2005_ACCESS_PROBE.json').write_text(json.dumps(result,indent=2)+chr(10))
+          print('HYCOM_ACCESS_SUMMARY',json.dumps({k:v for k,v in result.items() if k!='rows'}),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: HYCOM2005-source-access-probe-receipt-only
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
