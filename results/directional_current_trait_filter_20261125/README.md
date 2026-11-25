@@ -15,4 +15,8 @@ The analysis is exploratory because earlier data and adverse pilot results were 
 
 Workflow: .github/workflows/directional-current-trait-filter-20261125.yml. Scripts: audit_global126_eudis_directional_source_family_20261125.R, audit_global126_current_trait_progress_20261125.py. [Initial CI](https://github.com/zuizui0223/chocho/actions/runs/45535335344).
 
-Status: initial execution pending at plan registration.
+## Completed original coarse-grid result — 25 November
+
+[Initial CI #45535335344](https://github.com/zuizui0223/chocho/actions/runs/45535335344) all steps PASS. [Aggregate result and source coverage artifact #14985859311](https://github.com/zuizui0223/chocho/actions/runs/45535335344/artifacts/14985859311), outer SHA-256 `9a932aa4e07b4a1a7a9fa3e6881ef5dd0edb3259e0a8d9aaf520ab7c2106c291`. Rebuilt all 126 original WCVP/EuDiS origin counts exactly. 17 source regions supported the fixed within-family trait threshold; 2,125 directed trait-contrast rows. 155/280 original paths reached exact day 30. Primary <=50 km yielded 412 dyads from four sources / 104 recipients; requiring two releases did not change the cohort. <=200 km yielded 721 dyads from seven sources /104 recipients. Expanding from the frozen 22 to all 126 trait-supported sources did not add sources. All five variants explicitly `INSUFFICIENT_COVERAGE_NO_FIT` under unchanged ten-source gate. No regression coefficient or p-value estimated. This is a failure of physical/trait joint support, not evidence that the current-trait association is absent.
+
+Next: diagnose exact source-level losses and test native 1/3-degree velocity coverage and additional prespecified releases, retaining 30-day and <=50-km criteria. This is a new post-pilot physical design, not an independent confirmation or threshold relaxation. Keep prior failures and manuscript unchanged.
