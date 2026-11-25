@@ -1,0 +1,215 @@
+name: GEB v0.5 S3.5 source-pinned internal replay package
+on:
+  push:
+    branches: [analysis/geb-v05-review-data-source-audit-20261120]
+    paths: [.github/workflows/geb-v05-s35-hycom-replay-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  robust-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d8ee0228acdf0d66612a760ef76947bde5649730
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Recover signed original physical and ecological results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987522963/zip" > physical.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987717675/zip" > trait.zip
+          cat <<'SUMS' | sha256sum -c -
+          ab8eac0bc85fa70a1b1e8721a73604f9e1eea90ac4d85a61c91004df9ecbb3f4  physical.zip
+          7a99faeb066133c3f501f629c11cbc33ab17a757928b85e4756a17b5d555ba26  trait.zip
+          SUMS
+          python - <<'PY'
+          import pathlib,zipfile
+          P=pathlib.Path
+          for file,names in [('physical.zip',['PHYSICAL_RESULT.json','ALL306_TRACKS.json']),('trait.zip',['HYCOM_TRAIT_RESULT.json'])]:
+              with zipfile.ZipFile(file) as z:
+                  assert z.testzip() is None
+                  for n in names:
+                      ns=[x for x in z.namelist() if P(x).name==n];assert len(ns)==1
+                      p=P('_physical')/n;p.parent.mkdir(exist_ok=True);p.write_bytes(z.read(ns[0]))
+          PY
+      - name: Reconstruct exact original family trait contrast and recipient geography
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14237222110 14296307100 14296891019; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4  14296307100.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14237222110:['wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv'],14296307100:['WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      h=[p for p in z.namelist() if P(p).name==n];assert len(h)==1
+                      P(n).write_bytes(z.read(h[0]))
+          PY
+          curl -fsSL --retry 3 --max-time 120 https://api.figshare.com/v2/file/download/41269785 -o EuDiS.csv
+          echo 'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5  EuDiS.csv' | sha256sum -c -
+          test "$(git -C WCVP rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          cd ..
+          flora=results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
+          test "$(git hash-object "$flora")" = 53b618fa51a1a418ccc6e4363f4c866c389c90cc
+          Rscript scripts/audit_global126_eudis_directional_source_family_20261125.R _src/WCVP _src/EuDiS.csv "$flora" _src/wcvp_region_origin_eudis_thalasso_coverage.csv _src/trait
+      - name: Recover exact launch, robustness, anchor and six date-shard receipts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _receipts
+          cd _receipts
+          cat > outer.sha256 <<'SUMS'
+          088f7553c8d5c5037047377a655ec119fb9d6e1063d4a2899b37ecb230fc97ab  14987268671.zip
+          ed2af08f224af988115b638d5e124ac7814d012a484fb1ee1bfc361fd431bd2a  14988222019.zip
+          4aa5f4b7ce9dae1189d542fc59c041baad3dfac5a08c0aac9423bece84a8ff71  14988751467.zip
+          6d9104898899a6e19efa59481100c505407539f7d80f6bb4f22c5e06e0269798  14988315816.zip
+          32e3c71282bd7ea397c8b0e33cd585b2011e26712ec5e397d4df0c3dd4c9246f  14987826058.zip
+          c3a19ff85ce02bc9b8b912dc478acd7efa64d399b6aa0df2293029c397eaccc1  14987338946.zip
+          52344df5148ef4dfc37996dc9c4ce1046a7e389b48ac55b89163f5f6b56b355a  14987911574.zip
+          3d1a64e2b898e18ec9a707d826ee61833bdd14d459c23a253da1c2e09549bf27  14987404582.zip
+          beda4cc109fc1b8182ff3495feca0c9f75c3a5fa58f1cab9f9b89d96fb7f4a7d  14988446191.zip
+          SUMS
+          for f in $(awk '{print $2}' outer.sha256); do
+            id=${f%.zip}
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$f"
+          done
+          sha256sum -c outer.sha256
+      - name: Stage source-bound component, no raw ocean or third-party archives
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'pyproj>=3.6,<4' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+          python - <<'PY'
+          import hashlib,json,pathlib,shutil,zipfile
+          P=pathlib.Path
+          root=P('stage/S3_5_HYCOM');root.mkdir(parents=True)
+          def put(src,name):
+              p=root/name;p.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,p)
+          def extract(a,n,target):
+              with zipfile.ZipFile(P('_receipts')/f'{a}.zip') as z:
+                  assert z.testzip() is None
+                  m=[x for x in z.namelist() if P(x).name==n];assert len(m)==1,(a,n,m)
+                  p=root/target;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(z.read(m[0]))
+          for n in ['PHYSICAL_RESULT.json','ALL306_TRACKS.json','HYCOM_TRAIT_RESULT.json']:
+              put(P('_physical')/n,'inputs/'+n)
+          extract(14987268671,'HYCOM_ALL17_PREFLIGHT.json','inputs/HYCOM_ALL17_PREFLIGHT.json')
+          extract(14988222019,'HYCOM_ROBUSTNESS_RESULT.json','expected/HYCOM_ROBUSTNESS_RESULT.json')
+          extract(14988751467,'FIXED_ANCHOR_REACH_RESULT.json','expected/FIXED_ANCHOR_REACH_RESULT.json')
+          shards=[(14988315816,'2005-05-28'),(14987826058,'2005-06-27'),(14987338946,'2005-07-27'),(14987911574,'2005-08-27'),(14987404582,'2005-09-26'),(14988446191,'2005-10-27')]
+          rows=[]
+          for aid,date in shards:
+              target=f'inputs/shards/{date}.json'
+              extract(aid,'TRACKS.json',target)
+              x=json.loads((root/target).read_text());assert x['date']==date and len(x['tracks'])==51
+              rows+=x['tracks']
+          pre=json.loads((root/'inputs/HYCOM_ALL17_PREFLIGHT.json').read_text())
+          tracks=json.loads((root/'inputs/ALL306_TRACKS.json').read_text())
+          roster={(s['source'],d['date'],i+1):v for s in pre['region_launches'] for d in s['dates'] for i,v in enumerate(d['starts'])}
+          key=lambda r:(r['source'],r['date'],r['start_index'])
+          assert len(rows)==len(tracks)==len(roster)==306
+          assert {key(r):r for r in rows}=={key(r):r for r in tracks}
+          assert {key(r):r['start'] for r in rows}==roster
+          assert sum(r['day30_valid'] for r in rows)==52
+          for n in ['GSHHG126_sea_geometry_source_coverage_audit.json','WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv','within_region_eudis_native_introduced_pairs.csv','wcvp_region_origin_eudis_thalasso_coverage.csv']:
+              put(P('_src')/n,'inputs/'+n)
+          for n in ['trait_source_coverage.csv','family_matched_directional_trait_contrasts.csv']:
+              put(P('_src/trait')/n,'inputs/'+n)
+          for n in ['audit_hycom_fixed30_robustness_20261125.py','audit_hycom_fixed306_anchor_reach_20261125.py','audit_hycom_fixed30_trait_progress_20261125.py','audit_global126_eudis_directional_source_family_20261125.R','run_hycom_fixed30_tiles_20261125.py']:
+              put(P('scripts')/n,'code/'+n)
+          (root/'SOURCE_SCOPE.md').write_text("""# S3.5 HYCOM internal replay component
+          Internal staging only. No reviewer redistribution permission, anonymity certification, permanent deposit, or journal submission.
+          Replays trait regression/robustness and fixed-anchor diagnostics from archived modeled endpoints and exact source-derived tables; does not independently reintegrate ocean velocity or reconstruct every upstream geography input.
+          HYCOM+NCODA GOFS 3.0 GLBu0.08/expt_19.1, NRL, 2005 daily 00Z, 15 m, water_u/water_v. Official product https://www.hycom.org/data/glbu0pt08/expt-19pt1 ; catalog https://ncss.hycom.org/thredds/catalogs/GLBu0.08/expt_19.1.html ; recommended acknowledgment https://www.hycom.org/publications/acknowledgements/ocean-reanalysis-data . Official public-release/unlimited-distribution notice is not a blanket CC0 grant for mixed inputs. Include provider funding and compute acknowledgement in approved manuscript/export.
+          WCVP v13 upstream pinned 65bed76bae9d644ccb6ad200c05f9f5071d89e05; EuDiS exact Figshare file 41269785 SHA-256 ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5. Source-derived traits and geographic pairs require file-specific rights review (WCVP, EuDiS, TDWG, WPI, GSHHG); raw third-party files are not bundled.
+          306 starts, 52 complete, 12 sources; conditional exploratory association; preserve Japan omission, distance restrictions, geometric orientation and no completed new fixed-anchor proximity. No observed seed transport, landfall or establishment.
+          Original code and inputs are retained internally; archive-wide author permission, licensing, indirect identification review, historical GBIF attribution and stable reviewer route remain open.
+          """)
+          files=[]
+          for f in sorted(root.rglob('*')):
+              if f.is_file():
+                  rel=f.relative_to(root).as_posix()
+                  dep='author_code_permission_pending' if rel.startswith('code/') else ('HYCOM_and_mixed_geographic_trait_sources_review_required' if rel.startswith(('inputs/','expected/')) else 'internal_metadata')
+                  files.append({'path':rel,'bytes':f.stat().st_size,'sha256':hashlib.sha256(f.read_bytes()).hexdigest(),'source_dependency':dep,'delivery_status':'HOLD_INTERNAL'})
+          (root/'FILE_REGISTER.json').write_text(json.dumps(files,indent=2)+'\n')
+          with zipfile.ZipFile('s35_internal.zip','w',compression=zipfile.ZIP_DEFLATED) as z:
+              for f in sorted(root.rglob('*')):
+                  if f.is_file():z.write(f,f.relative_to(root))
+          with zipfile.ZipFile('s35_internal.zip') as z:
+              assert z.testzip() is None;z.extractall('replay')
+          for r in files:
+              f=P('replay')/r['path'];assert f.stat().st_size==r['bytes'] and hashlib.sha256(f.read_bytes()).hexdigest()==r['sha256']
+          print('STAGED',len(files)+1,hashlib.sha256(P('s35_internal.zip').read_bytes()).hexdigest())
+          PY
+      - name: Execute original robustness and anchor programs from extracted component
+        run: |
+          set -euo pipefail
+          cd replay
+          python -u code/audit_hycom_fixed30_robustness_20261125.py --physical inputs/PHYSICAL_RESULT.json --tracks inputs/ALL306_TRACKS.json --anchors inputs/GSHHG126_sea_geometry_source_coverage_audit.json --geography inputs/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv --coverage inputs/trait_source_coverage.csv --paired inputs/within_region_eudis_native_introduced_pairs.csv --traits inputs/family_matched_directional_trait_contrasts.csv --expected inputs/HYCOM_TRAIT_RESULT.json --out fresh
+          python -u code/audit_hycom_fixed306_anchor_reach_20261125.py --physical inputs/PHYSICAL_RESULT.json --tracks inputs/ALL306_TRACKS.json --anchors inputs/GSHHG126_sea_geometry_source_coverage_audit.json --preflight inputs/HYCOM_ALL17_PREFLIGHT.json --robustness expected/HYCOM_ROBUSTNESS_RESULT.json --out fresh
+          python - <<'PY'
+          import hashlib,json,math,pathlib
+          P=pathlib.Path
+          checks=0
+          def compare(a,b,path=''):
+              global checks
+              if isinstance(a,dict):
+                  assert isinstance(b,dict) and set(a)==set(b),path
+                  for k in a:compare(a[k],b[k],path+'/'+k)
+              elif isinstance(a,list):
+                  assert isinstance(b,list) and len(a)==len(b),path
+                  for i,(x,y) in enumerate(zip(a,b)):compare(x,y,path+'/'+str(i))
+              elif isinstance(a,(int,float)) and not isinstance(a,bool):
+                  assert isinstance(b,(int,float)) and not isinstance(b,bool) and math.isclose(a,b,rel_tol=1e-7,abs_tol=1e-9),(path,a,b)
+                  checks+=1
+              else:
+                  assert a==b,(path,a,b)
+                  checks+=1
+          for n in ['HYCOM_ROBUSTNESS_RESULT.json','FIXED_ANCHOR_REACH_RESULT.json']:
+              a=json.loads((P('expected')/n).read_text());b=json.loads((P('fresh')/n).read_text());compare(a,b,n)
+          assert json.loads(P('fresh/HYCOM_ROBUSTNESS_RESULT.json').read_text())['original_model_coefficients_reproduced']
+          report={'status':'PASS_INTERNAL_DERIVED_ENDPOINT_REPLAY_ONLY','leaf_comparisons':checks,'rtol':1e-7,'atol':1e-9,'members':len(json.loads(P('FILE_REGISTER.json').read_text()))+1,'zip_sha256':hashlib.sha256(P('../s35_internal.zip').read_bytes()).hexdigest(),'reviewer_delivery':'HOLD','raw_velocity_reintegration':False}
+          P('../REPLAY_RECEIPT.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(report)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geb-v05-s35-hycom-internal-component
+          path: |
+            s35_internal.zip
+            REPLAY_RECEIPT.json
+          if-no-files-found: error
+          retention-days: 90
