@@ -10,7 +10,7 @@ Internal Stage A, **not a reviewer-ready package**. The 24-Nov 192-file staging 
 
 ## Exact additional source/replay gate
 
-Workflow commit [59912c6](https://github.com/zuizui0223/chocho/commit/59912c62b8a09c27e21cdcb1429f98444f074c3a), [CI #45542370685](https://github.com/zuizui0223/chocho/actions/runs/45542370685): **in progress at checkpoint, not PASS**.
+Workflow commit [59912c6](https://github.com/zuizui0223/chocho/commit/59912c62b8a09c27e21cdcb1429f98444f074c3a), [CI #45542370685](https://github.com/zuizui0223/chocho/actions/runs/45542370685): **PASS**, all steps succeeded. 25 members, 1,817 exact/non-numeric or tolerance-bound numeric comparisons passed at rtol 1e-7/atol 1e-9. [Internal component artifact #14989682780](https://github.com/zuizui0223/chocho/actions/runs/45542370685/artifacts/14989682780), outer SHA-256 `0b96176a8198ff333e6c8d4e10645b150c4aa9f8303b93b770e78549fbf6feca`, inner SHA-256 `da20ee7e924b8d5272857b38f73ffee179522355b54a18bcb13ceb6c7851667a`.
 
 1. Recover hash-verified original launch roster, six date-shard receipts, 306 physical endpoints, original trait, robustness and anchor results; reconcile 306 unique starts and all archived track objects.
 2. Rebuild exact family trait inputs from pinned WCVP/EuDiS and archived geography/coverage inputs. Stage original scripts and derived inputs, exact file SHA-256/byte register, with all delivery statuses held internally.
@@ -18,3 +18,7 @@ Workflow commit [59912c6](https://github.com/zuizui0223/chocho/commit/59912c62b8
 4. Only after successful execution and verification, reconcile component file hashes and source families against 192-file staging package. Neutralize identifying internal provenance in a distinct reviewer candidate, preserve numerical evidence, and decide permission/attribution per file. Do not silently overwrite existing register or declare 192-file candidate covers S3.5.
 
 Current delivery still HOLD: author-controlled code permissions, mixed-source derivative rights and historic GBIF attribution, GEB/Dryad-compatible archive route, verified anonymous reviewer link, and exact final manuscript/appendix QA remain open. No external contact, deposit, licence grant, PR merge, ready-for-review action or submission.
+
+## 25 November — combined staging workflow
+
+[Integration commit d1fddc6](https://github.com/zuizui0223/chocho/commit/d1fddc691e2ed8ea9ae6d404916061ef7645ed59) combines the exact old 192 members and the verified 25 S3.5 members (target 217), extends the 25-family register with HYCOM (target 26), preserves every original member byte, inventories possible identifying metadata rather than silently deleting it, and reruns S3.5 after extracting the combined archive. Prior original archive and decision register remain immutable. The new combined file-specific rights register is internal, all entries held pending author/source approval; no whole-SI or raw velocity replay, no anonymous release. **Integrated CI result must be checked separately; source component success does not certify combined staging.**
