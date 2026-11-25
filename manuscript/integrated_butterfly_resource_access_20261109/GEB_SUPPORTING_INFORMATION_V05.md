@@ -172,6 +172,30 @@ Eight entire Level1 divisions removed from source fitting: original world-equal 
 
 ![Figure S5.1. Full source South America 190 within / 2980 cross world dyad model MSE and proxy-thinning ranges.](../../figures/integrated_island_port_butterfly_v03/Fig4_independent_butterfly_record_predictability_full_south_america_v04.svg)
 
+### S5.5. Recorded island butterflies and mapped introduced-only host opportunities
+
+The original independent GBIF annual source (DOI 10.15468/dl.umqmsf; 91,882 positive species–region–year cells and 5,390 region–year effort cells, 13,587,452 mapped records) was joined by exact butterfly species and WGSRPD3 identity to the frozen 239 × 369 host-opportunity matrix. All 224 indexed species belonged to the fixed panel. All 126 island-region native/current counts matched the original 239-species matrix; the common 224-species island subset contained 4,695 native-host and 5,617 introduced-only opportunity units. For each species–island combination, recording was defined as at least one indexed year within the stated interval. The mutually exclusive mapped resource categories were native-host present (including possible additional introduced hosts), introduced-only host present, and no documented mapped host. No recording was not treated as absence. No mapped host does not exclude an unknown native host or a transient adult.
+
+Across the 126 regions, the 2001–2024 recorded species–region combinations comprised 916 native-host, 193 introduced-only and 62 no-mapped-host units. The introduced-only units occurred in 69 regions; 143 were recorded in at least two distinct years, across 57 regions. The introduced-only fraction among recorded combinations with mapped hosts was 17.4% (193/1,109), versus 54.5% among all 10,312 mapped opportunities for these butterflies. The corresponding fractions indexed were 3.44% of introduced-only opportunity units and 19.5% of native-host units, which must not be interpreted as detection-corrected occupancy or establishment probabilities. In the nearest and farthest distance quartiles, recorded introduced-only shares among host-mapped units were 11.4% (70/612) and 61.4% (27/44), respectively; all 32 near regions but only 12 of 32 far regions contributed to these fractions. In the original 169-region recording-eligibility cohort, only 24 island regions remained, with only one far-quartile island; thus we did not fit the multivariable isolation model to that cohort.
+
+We fitted equal-region OLS models to the log((introduced-only recorded + 0.5)/(native-host recorded + 0.5)) among regions with recorded host-mapped butterflies. Covariates were standardized log mainland separation, log area, log2(port count + 1), absolute centroid latitude, TDWG Level1 effects and standardized log(datasetKey-calendar-day activity + 1) for the recording period. Minimum support was 40 contributing regions and five Level1 divisions. We report HC3 and Level1-clustered t inference (eight divisions in the supported models). Results are exploratory source-conditional associations, not independent replicated populations.
+
+| Period and recording support | Regions | Isolation β | Eight-division clustered p |
+| --- | ---: | ---: | ---: |
+| 2001–2024, all active | 84 | +0.439 | 0.0396 |
+| 2001–2024, at least two recorded years per species–region | 74 | +0.499 | 0.0446 |
+| 2018–2024, all active | 82 | +0.556 | 0.0270 |
+| 2018–2024, at least two recorded years | 73 | +0.487 | 0.0589 |
+| 2001–2024, regions with ≥20 activity days in 2001–2024 | 54 | +0.270 | 0.1093 |
+| 2018–2024, same 54-region effort threshold | 54 | +0.337 | 0.0347 |
+| 2018–2024, regions with ≥20 activity days specifically in 2018–2024 | 52 | +0.231 | 0.2239 |
+| 2001–2024, excluding monarch | 83 | +0.412 | 0.0576 |
+| 2018–2024, excluding monarch | 81 | +0.531 | 0.0363 |
+
+For the 84-region model, the clustered 95% interval was +0.028 to +0.851; conditioning on potential resource share reduced the estimate to +0.285 (clustered p = 0.152). The observed-minus-potential log-odds gradient was uncertain (β +0.182, p = 0.324). These comparisons are consistent with resource geography but cannot establish a further independent isolation effect or a causal resource-mediated mechanism. The full receipt retains all periods, effort cohorts, monarch exclusions, potential-share and observed-minus-potential diagnostics; restricting to the most intensively recorded islands weakened inference. Neither repeated records nor historical resource maps establish breeding.
+
+The monarch had 22 island regions with native-host opportunity and 42 introduced-only additional regions. Of the latter, 20 contained indexed records and 18 contained records in at least two distinct years. This is an exact match to the original matrix and annual observation sources, not 20 newly colonized islands. The historical literature provides separate context for the Pacific expansion. The archived script and aggregate receipt are in the independent GBIF224 island-host-isolation analysis (25 November 2026); the original current plant geography is not a date-resolved reconstruction of historical milkweed arrivals. Raw GBIF data and their licence/attribution and reviewer access remain subject to source-specific checks.
+
 ## Appendix S6. Independent island-endemic coverage and named larval feeding
 
 An independent Macaronesian checklist identified **41 living butterflies including 18 endemics** (13 Canary, three Madeira, two Azores). The fixed global 239 source selected **0/18** endemics (13/23 nonendemics). Among eight *nonrepresentative* endemic butterflies with accepted named foodplant species, four had added **global** potential host regions and four did not; none gained a newly host-present original *home archipelago* botanical region. Source-incomplete native hosts can change either side of the reconstructed envelope and make 4/8 nonrepresentative of all 18.
