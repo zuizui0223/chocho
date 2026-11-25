@@ -62,6 +62,17 @@ jobs:
           assert citation["main_reference_count"]==receipt["references"]==27
           assert citation["SI_reference_count"]==receipt["SI_references"]==9
           assert citation["historical_references_preserved"]==39
+          # The frozen final editorial version retains the port inventory in
+          # Results and the shared-source rank association in SI, not in the abstract.
+          main_text=(root/"GEB_v05_blinded_main.md").read_text()
+          si_text=(root/"GEB_v05_separate_SI.md").read_text()
+          if "Port-associated introduced floras reveal a weaker oceanic isolation gradient" in main_text:
+              abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
+              assert "β = 0.44" in abstract and "193" in abstract
+              assert "1,150" not in abstract and "1,596" not in abstract
+              assert "rank correlation 0.65" not in main_text and "partial 0.55 after adjustment" not in main_text
+              assert "+0.65243" in si_text and "+0.54958" in si_text
+              assert receipt["abstract_words"]<=280 and receipt["main_body_words"]<5000
           for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
                          ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",2)]:
               p=root/(stem+".pdf")
@@ -109,7 +120,7 @@ jobs:
               # Port-and-sea framing promotes existing verified source results.
               if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_blinded_main.md").read_text():
                   if n==4:
-                      for phrase in ["1,150","1,596","25,742","687","20.7%","0.55","0.011","0.093"]:
+                      for phrase in ["1,150","1,596","25,742","687","20.7%","0.011","0.093"]:
                           assert phrase in normalized_text,(stem,"missing promoted port result",phrase)
                   else:
                       for phrase in ["0.24448","0.16391","0.04153","0.54958","20.7014%","25,742"]:
