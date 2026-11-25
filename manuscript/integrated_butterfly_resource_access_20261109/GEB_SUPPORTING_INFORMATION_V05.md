@@ -37,6 +37,17 @@ For a geography class with native coverage B and initially empty fraction filled
 
 Among **670** source-accepted introduced host contributors, **38 (5.7%)** provided half of all 14,553 added butterfly×region opportunities using equal split of credits within each newly covered combination (plant Gini 0.7774, top-ten cumulative contribution 25.1%). The original 239 butterfly source native-host geographical breadth predicted absolute island additions (tied-rank Spearman ρ=+0.578896); broadest 59 species gained 2,271/5,741 combinations (39.56%), narrowest 60 gained 644/5,741 (11.22%). **82/97** one-host-family butterflies gained new global potential regions; excluding FAO crop hosts still left +46–47% global resource increase. These are mapped opportunities, not larval abundance, food quality or individual fitness.
 
+**Cross-level asymmetry in resource gain.** Using the exact same frozen 239-species resource tables, we descriptively divided butterflies by global native-resource extent (the number of WGSRPD3 regions with at least one mapped native host), retaining the previous 60/60/60/59 group sizes. Within each group, the gap-filling fraction is pooled added island combinations divided by initially empty island combinations; relative gain instead divides added combinations by native-covered combinations. The source panel covers 126 island regions for every species. Groups were sorted by global native-resource count, with alphabetic species-name order resolving the single tie across the upper boundary.
+
+| Global native-resource extent group | Butterflies | Native island units | Initially empty island units | Added units | Gaps filled | Relative gain |
+|---|---:|---:|---:|---:|---:|---:|
+| Narrowest | 60 | 339 | 7,221 | 644 | 8.9% | +190.0% |
+| Second | 60 | 710 | 6,850 | 1,077 | 15.7% | +151.7% |
+| Third | 60 | 1,238 | 6,322 | 1,749 | 27.7% | +141.3% |
+| Broadest | 59 | 2,542 | 4,892 | 2,271 | 46.4% | +89.3% |
+
+The broadest-group gap-filling estimate remains 46.0–46.9% when both species tied at 169 global native regions are assigned to the upper or lower group, respectively. The difference in mean island opportunities between the broadest and narrowest groups grows in absolute units (37.4 native to 65.2 contemporary regions per butterfly); the Gini coefficient of island opportunities across all 239 butterflies nevertheless declines from 0.462 to 0.427. We therefore distinguish unequal absolute gains from an increase in overall relative inequality, which is not observed here. The low native baseline explains proportionally greater island than mainland gains despite similar gap filling, whereas broadly supplied butterflies fill a larger fraction of their island gaps but the narrowest group has a greater proportional gain. These are post-result descriptive accounting comparisons, not independent tests of causal selection by ports, dispersal ability, dietary specialization, population growth or colonization. Reproduction: `scripts/audit_fixed239_cross_level_gap_filling_20261125.py`.
+
 Source-constructed butterfly-resource island-pair Jaccard increased +0.23667, compared with mainland +0.15044, but the Level1×island-class × fixed species/region gain-margin null left island-specific excess only **+0.00119**. This is not observed butterfly community homogenization.
 
 ## Appendix S3. Port-associated plant supply and sea-related geography
