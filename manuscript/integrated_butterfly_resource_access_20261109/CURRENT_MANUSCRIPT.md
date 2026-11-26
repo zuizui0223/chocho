@@ -1,7 +1,13 @@
-# Current manuscript correspondence — 26 November 2026
+# Current manuscript — five-main-figure candidate (26 November 2026)
 
-**Scientific main integration:** PRs #179, #190 and #193 are merged. The prior four-main-figure research-article Markdown, Supporting Information and its v0.5 exporter remain available as the historical source version. The author-local submission candidate is the later five-main/three-SI layout.
+The scientific results, figure code and full editable text are synchronized in main. Use the following documents as the current editing source:
 
-For the current layout use [submission_five_figures/README.md](submission_five_figures/README.md), [the eight figure captions](submission_five_figures/FIGURE_CAPTIONS.md), [the input manifest](submission_five_figures/source_manifest.json), and [the author-local Word/image hash manifest](submission_five_figures/word_candidate_manifest.json). The manuscript is 22 pages, SI 27 pages (9 tables); Word binaries and the complete updated body/SI text are not uploaded in this integration. The old four-figure exporter is not the current submission document.
+- [Manuscript.md — complete main text, five figures](submission_five_figures/Manuscript.md)
+- [Supporting_Information.md — complete SI, three figures, nine tables](submission_five_figures/Supporting_Information.md)
+- [Build instructions](submission_five_figures/README.md)
+- [Figure captions](submission_five_figures/FIGURE_CAPTIONS.md) and [source manifest](submission_five_figures/source_manifest.json)
+- [Reference Word/Markdown/figure hashes](submission_five_figures/word_candidate_manifest.json)
 
-**Remaining gates:** synchronize the full editable five-figure text and SI table layout if their publication is authorized; resolve the three RF numerical comparisons and historical port attribution as documented; secure data-specific rights and stable reviewer access. Do not interpret main integration as journal submission, author approval, or release of the internal 240-member archive.
+Original text, all table cells and all eight embedded image hashes were compared to the author-local candidate; the regenerated previews rendered in 22 main and 27 SI pages locally. The original Word file binaries remain local and pagination/style equivalence across environments is not claimed. The old four-main-figure Markdown and v0.5 exporter are retained as historical versions. Do not use them as the current submission text.
+
+**Remaining gates:** exact numerical discrepancies in three RF conditions, historical port attribution, source-specific distribution rights, stable reviewer access and author approvals. Repository synchronization does not constitute journal submission or authorize publication of the held 240-file archive.

@@ -32,12 +32,31 @@ jobs:
           python rebuild_plot_data.py --git-repo "$GITHUB_WORKSPACE"
           python plot_figures.py
           python verify_render.py
+          python build_current_word.py --outdir build
+      - name: Check frozen editable-source identity and caption consistency
+        working-directory: manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures
+        run: |
+          python - <<'PY'
+          import hashlib,json,re
+          from pathlib import Path
+          m=json.loads(Path('word_candidate_manifest.json').read_text())['editable_source']
+          captions=[]
+          for k in ('manuscript','supporting_information'):
+              spec=m[k];b=Path(spec['path']).read_bytes()
+              assert hashlib.sha256(b).hexdigest()==spec['sha256'], k
+              captions += [x for x in b.decode().split('\n\n') if re.match(r'^Figure (?:[1-5]|S3\.1|S3\.2|S5\.1)\.',x)]
+          assert len(captions)==8
+          assert Path('FIGURE_CAPTIONS.md').read_text()=='# Figure captions — synchronized editable source\n\n'+'\n\n'.join(captions).strip()+'\n'
+          print('PASS: exact editable source identities and 8 captions')
+          PY
       - uses: actions/upload-artifact@v4
         with:
-          name: five-main-three-SI-source-pinned-figures
+          name: current-five-main-three-SI-figures-and-editable-word
           path: |
             manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures/*.png
             manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures/*.pdf
             manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures/render_receipt.json
+            manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures/build/*.docx
+            manuscript/integrated_butterfly_resource_access_20261109/submission_five_figures/build/word_export_receipt.json
           retention-days: 30
           if-no-files-found: error

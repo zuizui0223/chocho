@@ -25,12 +25,19 @@ From this directory, with Python 3.13 and the pinned packages:
 python -m pip install -r requirements.txt
 python rebuild_plot_data.py --download
 python plot_figures.py
+python verify_render.py
+python build_current_word.py --outdir build
 ```
 
 Alternatively use `--git-repo /path/to/full/chocho/checkout` to extract the seven pinned Git blobs. All seven SHA-1 Git blob IDs and all 17 canonical numeric fingerprints are checked before rendering. PNG/PDF output filenames use the renderer stems in word_candidate_manifest.json; map figS33 to Figure S3.1. The original local environment was Python 3.13.5, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.10.8. Raster bytes can vary with renderer environment; the stored embedded PNG digests are exact reference hashes, not a promise of cross-platform bit identity.
 
-## Scope and remaining synchronization
+## Current editable source and export
 
-The Word files themselves and internal reviewer-delivery archives remain private. The manifest records the exact author-local document hashes and all eight embedded image hashes. This directory synchronizes the figure inputs, renderer, figure numbering and evidence map; the full Word-derived text and table layout have not been uploaded or reconstructed as a new repository manuscript exporter. Do not label the old four-figure Markdown export as the current five-figure candidate.
+- [Manuscript.md](Manuscript.md): all 116 original text paragraphs and five figure positions.
+- [Supporting_Information.md](Supporting_Information.md): all 155 original text paragraphs, nine tables (314 cells), and three figure positions.
+- [FIGURE_CAPTIONS.md](FIGURE_CAPTIONS.md): eight captions extracted from these canonical documents, not independent edited text.
+- [word_candidate_manifest.json](word_candidate_manifest.json): original Word/image digests, editable-source digests, and the bounded comparison.
+
+The initial Markdown is byte-identical to independently extracting the author-local candidate. The exporter preserves paragraph and table order, text, emphasis and embedded figure bytes; locally regenerated Word files were compared against the originals (22 and 27 rendered pages). The exact page layout of new exports may differ. The original submission candidate and internal archive remain private; do not publish them or treat CI previews as a submitted manuscript. For future intentional text/figure changes, update the source version and appropriate frozen count/digest checks in a reviewed commit.
 
 No new raw ecological model is fitted here. No data licence is assigned and no stable reviewer access or author approval is asserted. PR #189 remains a separate internal source-audit branch. The three RF numerical mismatches and historical port-source attribution remain open.
