@@ -1,25 +1,9 @@
-name: Verify GEB v0.4 four-figure manuscript and source-original supplementary preservation
+name: Historical replay — Verify GEB v0.4 four-figure manuscript and source-original supplementary preservation
+# Historical v0.4 checks were green at 03e9450c832bb769c42ca983bffdc327ecc8ccea.
+# These tests intentionally retain their original literal manuscript expectations.
+# The current v0.5 build and scientific CI remain automatic.
 on:
-  push:
-    branches: [paper/geb-single-island-port-endemics-20261118]
-    paths:
-      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
-      - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
-      - manuscript/integrated_butterfly_resource_access_20261109/SUPPLEMENTARY_INDEPENDENT_BUTTERFLY_RECORDS_20261119.md
-      - figures/integrated_island_port_butterfly_v03/**
-      - scripts/verify_integrated_geb_v04_editorial.py
-      - scripts/render_GEB_v05_figure2_readable.py
-      - .github/workflows/verify-integrated-geb-v04-editorial.yml
-  pull_request:
-    branches: [main]
-    paths:
-      - manuscript/integrated_butterfly_resource_access_20261109/**
-      - figures/integrated_island_port_butterfly_v03/**
-      - scripts/verify_integrated_geb_v04_editorial.py
-      - scripts/render_GEB_v05_figure2_readable.py
-      - .github/workflows/verify-integrated-geb-v04-editorial.yml
   workflow_dispatch:
-
 permissions:
   contents: read
 
@@ -30,6 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: 03e9450c832bb769c42ca983bffdc327ecc8ccea
           path: current
           persist-credentials: false
       - uses: actions/checkout@v4

@@ -1,0 +1,77 @@
+name: Replay archived WCVP104 circuit and similarity-floor on main
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/audit_WCVP104_circuit_similarity_floor_20261118.py
+      - results/WCVP126_circuit_floor_diagnostic_20261118/PROTOCOL.md
+      - .github/workflows/WCVP104-circuit-similarity-floor-main.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  source-locked-floor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed original numerical library
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010307551
+          github-token: ${{ github.token }}
+          name: chocho-WCVP126-pair-geography-and-strict-2020-AIS-source-coverage-20261117
+          path: _src/flora
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44010673580
+          github-token: ${{ github.token }}
+          name: chocho-original126-WCVP-GSHHG-sea-geometry-baseline
+          path: _src/geometry
+      - uses: actions/download-artifact@v4
+        with:
+          run-id: 44013658955
+          github-token: ${{ github.token }}
+          name: chocho-original104-WCVP-GSHHG-finite-volume-uniform-circuit-null
+          path: _src/circuit
+      - name: Run source-identical five-fold floristic support diagnostics and alternative response models
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py scripts/audit_WCVP104_circuit_similarity_floor_20261118.py
+          python scripts/audit_WCVP104_circuit_similarity_floor_20261118.py \
+            --plants _src/flora/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv \
+            --geometry _src/geometry/WCVP126_GSHHG_source_coastal_anchors_and_sea_geometry_pairs.csv \
+            --uniform-circuit _src/circuit/WCVP126_original104_uniform_finvol_electrical_resistance.csv \
+            --circuit-receipt _src/circuit/uniform104_WCVP_GSHHG_source_circuit_numerical_audit.json \
+            --island-area results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --out-dir _result
+      - name: Confirm no Simpson zero imputation, frozen native/alien denominators and full adverse results
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          q=json.loads(Path("_result/source_audited_zero_floor_and_origin_predictability.json").read_text())
+          assert q["source_original_104_islands"]==104
+          assert q["source_both_origin_Jaccard_pairs"]==5355
+          assert q["strict_both_endpoints_unseen_test_pairs"]==1089
+          assert q["Simpson_common_defined_pair_n"]==5151
+          assert q["Simpson_undefined_on_original_common_sample_n"]==204
+          assert q["source_original_alpha"]==20
+          for outcome in ("native","alien"):
+              assert q["binary_any_taxon_shared_Brier"][outcome]["n_test_pairs"]==1089
+              assert q["Sorensen_alternative_same_pair_source"][outcome]["n_test_pairs"]==1089
+              assert len(q["binary_any_taxon_shared_Brier"][outcome]["folds"])==5
+          print("SOURCE VERIFIED: WCVP native/alien floor and 5fold no-leakage audits")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: WCVP104-authentic-circuit-similarity-floor-and-hurdle
+          path: _result/
+          retention-days: 90
+          if-no-files-found: warn

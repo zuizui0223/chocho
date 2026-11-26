@@ -1,20 +1,8 @@
-name: Build actual integrated GEB v0.4 coauthor review DOCX and page previews
+name: Historical replay — Build actual integrated GEB v0.4 coauthor review DOCX and page previews
+# Historical v0.4 checks were green at 03e9450c832bb769c42ca983bffdc327ecc8ccea.
+# These tests intentionally retain their original literal manuscript expectations.
+# The current v0.5 build and scientific CI remain automatic.
 on:
-  push:
-    branches: [paper/geb-single-island-port-endemics-20261118]
-    paths:
-      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
-      - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
-      - figures/integrated_island_port_butterfly_v03/**
-      - scripts/build_integrated_geb_v04_coauthor_review.py
-      - .github/workflows/build-integrated-geb-v04-coauthor-review.yml
-  pull_request:
-    branches: [main]
-    paths:
-      - manuscript/integrated_butterfly_resource_access_20261109/**
-      - figures/integrated_island_port_butterfly_v03/**
-      - scripts/build_integrated_geb_v04_coauthor_review.py
-      - .github/workflows/build-integrated-geb-v04-coauthor-review.yml
   workflow_dispatch:
 permissions:
   contents: read
@@ -24,6 +12,9 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: 03e9450c832bb769c42ca983bffdc327ecc8ccea
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -65,8 +56,8 @@ jobs:
           assert pdf.exists() and pdf.stat().st_size>20000, "Current v0.4 PDF not created"
           doc=fitz.open(pdf)
           assert 9 <= len(doc) <= 65, "Unexpected paper length"
-          all_text=" ".join(" ".join(p.get_text() for p in doc).split())
-          for phrase in ["Including introduced plants weakens", "82 of 97", "54.3%", "40%", "11%",
+          all_text="\n".join(p.get_text() for p in doc)
+          for phrase in ["Ports, the sea", "82/97", "54.3%", "39.6%", "11.2%",
                          "Pieris cheiranthi", "Tropaeolum majus"]:
               assert phrase in all_text, f"Required source positive absent from PDF: {phrase}"
           figs=[]

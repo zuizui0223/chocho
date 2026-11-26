@@ -1,0 +1,100 @@
+{
+  "schema": "chocho_224_GBIF_annual_source_effort_thinning_20261119_verified_summary",
+  "status": "original_224x169x14196_source_exact_and_499_draw_effort_proxy_sensitivity_success_not_detection_correction",
+  "workflow_run_id": 44453480218,
+  "workflow_artifact_id": 14496313483,
+  "full_result_json_sha256": "3b1d59a24d4a015aa743211fec694890f3ac456296efc303614b84adc6264ed8",
+  "source": {
+    "GBIF_DOI": "10.15468/dl.umqmsf",
+    "annual_source_pinned_commit": "dfd49cfcf9fb01a3db47cc611aae8cdd9c53cda0",
+    "positive_species_region_year_rows": 91882,
+    "region_year_effort_rows": 5390,
+    "original_source_occurrence_rows": 14637152,
+    "source_records_mapped_to_regions": 13587452,
+    "annual_species_region_year_sha256": "f1bd777e2faffdeb0d689b93dca193e8612385fa264dd3bbdb6e104c075f6525",
+    "region_year_effort_sha256": "310f8f58ff1b4bedc9bf3f9b39b85c4fb11248916f2b13793795af7ec8925e82"
+  },
+  "cohort": {
+    "species": 224,
+    "regions": 169,
+    "pairs": 14196,
+    "within_world_pairs": 3047,
+    "between_world_pairs": 11149,
+    "prior": "2001-2010",
+    "later": "2018-2024"
+  },
+  "original": {
+    "prior_mean_jaccard": 0.11421295035628304,
+    "later_mean_jaccard": 0.16788018941796878,
+    "later_minus_prior": 0.053667239061685745,
+    "prior_mean_indexed_species_per_region": 27.63905325443787,
+    "later_mean_indexed_species_per_region": 39.781065088757394,
+    "within_world_late_minus_prior": 0.14285559087766325,
+    "between_world_late_minus_prior": 0.029292236103278663
+  },
+  "method": "At fixed region, proxy sampling budget = minimum of prior and late totals. Retain each indexed record independently with probability q=target/source period effort, equivalent to species-presence probability 1-(1-q)^C for period species count C; 499 deterministic Monte Carlo draws; all 169 regions/pairs unchanged.",
+  "dataset_day": {
+    "prior_total": 67360,
+    "later_total": 269132,
+    "prior_downscaled_regions": 1,
+    "later_downscaled_regions": 168,
+    "later_median_retention_q": 0.0703448275862069,
+    "median_prior_jaccard": 0.11421295035628304,
+    "median_later_jaccard": 0.1292765168164146,
+    "median_later_minus_prior": 0.015063566460131572,
+    "monte_carlo_central_95_late_minus_prior": [
+      0.013041395489806434,
+      0.01729106176705429
+    ],
+    "apparent_gap_shrink_fraction": 0.7193154199190808,
+    "within_world_median_late_minus_prior": 0.03966488970535986,
+    "between_world_median_late_minus_prior": 0.008288730803703404,
+    "fraction_positive_draws": 1,
+    "median_empty_regions_each_period": {
+      "prior": 0,
+      "later": 0
+    },
+    "median_both_empty_pairs_each_period": {
+      "prior": 0,
+      "later": 0
+    },
+    "draws": 499,
+    "seed": 20261119
+  },
+  "record_count": {
+    "prior_total": 2753623,
+    "later_total": 6989570,
+    "prior_downscaled_regions": 1,
+    "later_downscaled_regions": 168,
+    "later_median_retention_q": 0.02772083073357697,
+    "median_prior_jaccard": 0.11415096432181689,
+    "median_later_jaccard": 0.11704082697059828,
+    "median_later_minus_prior": 0.0029139162577512395,
+    "monte_carlo_central_95_late_minus_prior": [
+      0.0002165595504095501,
+      0.005503365191377191
+    ],
+    "apparent_gap_shrink_fraction": 0.9457040028759082,
+    "within_world_median_late_minus_prior": 0.0015222870173414726,
+    "between_world_median_late_minus_prior": 0.003344664940767357,
+    "fraction_positive_draws": 0.9819639278557114,
+    "median_empty_regions_each_period": {
+      "prior": 0,
+      "later": 0
+    },
+    "median_both_empty_pairs_each_period": {
+      "prior": 0,
+      "later": 0
+    },
+    "draws": 499,
+    "seed": 20261120
+  },
+  "interpretation_limits": [
+    "Source GBIF is indexed human observations without independent standardized monitoring visits; datasetKey-day and record totals are response-dependent effort proxies",
+    "Thinning is independent-record Bernoulli simulation on positive source counts, not a detection-corrected biological occupancy model or independent test of homogenisation",
+    "Prior and later periods differ in calendar duration (10 vs 7 years); equalized total effort does not remove all season/year/detection biases",
+    "Monte Carlo percentile ranges reflect conditional simulation variability only, not population confidence intervals",
+    "Modern HOSTS/GloNAF/WCVP source and historical ship movements were not fitted in this temporal sensitivity",
+    "These findings do not negate the separately verified +54.9% potential host-resource opportunity increase for 239 butterflies or port-alien-flora associations"
+  ]
+}

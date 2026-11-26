@@ -1,0 +1,50 @@
+name: Verify source-locked island port native/alien flora contrast
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/audit_port_native_alien_floras_20261118.py
+      - results/port_native_alien_cross_20261118/**
+      - results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
+      - .github/workflows/verify-port-native-alien-20261118.yml
+  workflow_dispatch:
+
+jobs:
+  source-locked-cross-contrast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install numerical dependency
+        run: python -m pip install "numpy>=1.25,<3"
+      - name: Replay original WCVP/WPI regression and compare saved HC3 statistics
+        shell: bash
+        run: |
+          cp results/port_native_alien_cross_20261118/port_native_alien_cross_source_verified.json /tmp/cross_saved.json
+          python scripts/audit_port_native_alien_floras_20261118.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          saved=json.loads(Path("/tmp/cross_saved.json").read_text())
+          rerun=json.loads(Path("results/port_native_alien_cross_20261118/port_native_alien_cross_source_verified.json").read_text())
+          assert saved["source_git_blob_sha"]==rerun["source_git_blob_sha"]
+          assert len(saved["results"])==len(rerun["results"])==10
+          a={(x["cohort"],x["response"],tuple(x["additional_flora_covariates"])):x for x in saved["results"]}
+          b={(x["cohort"],x["response"],tuple(x["additional_flora_covariates"])):x for x in rerun["results"]}
+          assert a.keys()==b.keys()
+          for k in a:
+              for stat in ["port_beta_per_log2_1plus_WPI_port","HC3_standard_error"]:
+                  assert abs(a[k][stat]-b[k][stat])<1e-8,(k,stat,a[k][stat],b[k][stat])
+              for s,t in zip(a[k]["HC3_95pct_descriptive_interval"],b[k]["HC3_95pct_descriptive_interval"]):
+                  assert abs(s-t)<1e-8,(k,s,t)
+          n=a[("WCVP126","native",())]
+          alien=a[("WCVP126","introduced",())]
+          ratio=a[("WCVP126","alien_minus_native_log_ratio",())]
+          assert n["HC3_95pct_descriptive_interval"][0]<0<n["HC3_95pct_descriptive_interval"][1]
+          assert alien["HC3_95pct_descriptive_interval"][0]>0
+          assert ratio["HC3_95pct_descriptive_interval"][0]<0<ratio["HC3_95pct_descriptive_interval"][1]
+          print("PASSED: WCVP 126 and HOSTS 123 source locked; native/alien controls and direct ratio remain noncausal")
+          PY

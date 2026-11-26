@@ -1,0 +1,68 @@
+name: Audit independent GBIF224 observed community paired regional uncertainty
+on:
+  push:
+    branches: [analysis/gbif224-region-uncertainty-20261119]
+    paths:
+      - scripts/audit_global224_gbif_region_uncertainty_20261119.py
+      - results/gbif224_region_uncertainty_20261119/PROTOCOL.md
+      - .github/workflows/verify-gbif224-observed-region-uncertainty-20261119.yml
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/audit_global224_gbif_region_uncertainty_20261119.py
+      - results/gbif224_region_uncertainty_20261119/PROTOCOL.md
+      - .github/workflows/verify-gbif224-observed-region-uncertainty-20261119.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  gbif224-region-source-uncertainty:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Reconstruct fixed region-fold scoring and stratified source-only uncertainty
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_global224_gbif_region_uncertainty_20261119.py
+          python scripts/audit_global224_gbif_region_uncertainty_20261119.py \
+            --out _results/GBIF224_region_paired_uncertainty_20261119.json
+      - name: Require original source exact, keep null and adverse signs
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,math
+          from pathlib import Path
+          d=json.loads(Path('_results/GBIF224_region_paired_uncertainty_20261119.json').read_text())
+          assert d['status']=='SOURCE_CHECKED_POST_HOC_DESCRIPTIVE_REANALYSIS_NOT_DETECTION_CORRECTION'
+          assert set(d['cases'])=={'primary','relaxed','stringent'}
+          for tag,n in [('primary',169),('relaxed',194),('stringent',133)]:
+            c=d['cases'][tag]
+            assert c['cohort']['n_regions']==n
+            assert c['cohort']['n_unique_region_pairs']==n*(n-1)//2
+            assert len(c['cohort']['world_division_counts'])>=7
+            assert c['regional_resampling']['draw_count']==4999
+            assert c['effects']['regions_H_given_other_improve']+c['effects']['regions_H_given_other_worse']==n
+            assert math.isfinite(c['effects']['H_given_other_percent'])
+            for key in ['region_resample_unstratified_descriptive_95','within_world_stratified_descriptive_95','equal_world_weight_descriptive_95']:
+              bounds=c['regional_resampling'][key]
+              assert len(bounds)==2 and bounds[0]<=bounds[1]
+          # The source raw source-only CSV must match all existing reported effects, including adverse.
+          assert abs(d['cases']['primary']['effects']['H_given_other_percent']-.09129078138747806)<1e-8
+          assert abs(d['cases']['relaxed']['effects']['H_given_other_percent']-.3324962898435039)<1e-8
+          assert abs(d['cases']['stringent']['effects']['H_given_other_percent']+.07638369209652607)<1e-8
+          print('PASS all three saved independent GBIF 224-species regional heldout cohorts; positive and negative source scores reproduced')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-global224-source-locked-regional-uncertainty-v1
+          path: _results/
+          retention-days: 90
+          if-no-files-found: warn

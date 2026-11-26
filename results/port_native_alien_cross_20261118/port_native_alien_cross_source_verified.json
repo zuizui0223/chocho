@@ -1,0 +1,149 @@
+{
+  "schema": "source_locked_crossed_port_native_alien_WCVP126_20261118_v1",
+  "source": "results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv",
+  "source_git_blob_sha": "53b618fa51a1a418ccc6e4363f4c866c389c90cc",
+  "estimator": "OLS with TDWG Level1 fixed effects, log area, log2(1+ports); normal-approximation HC3",
+  "source_reproduced": true,
+  "verification_scope": "Independent source-locked double-precision calculation via connected GitHub source; repository Python reproduction script committed, not yet CI-run",
+  "n_islands": 126,
+  "n_HOSTS_subpanel": 123,
+  "results": [
+    {
+      "n_island_botanical_regions": 126,
+      "response": "native",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.09543135254143587,
+      "HC3_standard_error": 0.08818026942851626,
+      "HC3_95pct_descriptive_interval": [
+        -0.07740197553845599,
+        0.2682646806213277
+      ],
+      "cohort": "WCVP126"
+    },
+    {
+      "n_island_botanical_regions": 126,
+      "response": "introduced",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.2854430614548416,
+      "HC3_standard_error": 0.11389312948691922,
+      "HC3_95pct_descriptive_interval": [
+        0.06221252766047994,
+        0.5086735952492033
+      ],
+      "cohort": "WCVP126"
+    },
+    {
+      "n_island_botanical_regions": 126,
+      "response": "alien_minus_native_log_ratio",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.19001170891339747,
+      "HC3_standard_error": 0.10648133128323833,
+      "HC3_95pct_descriptive_interval": [
+        -0.018691700401749667,
+        0.3987151182285446
+      ],
+      "cohort": "WCVP126"
+    },
+    {
+      "n_island_botanical_regions": 126,
+      "response": "native",
+      "additional_flora_covariates": [
+        "introduced"
+      ],
+      "port_beta_per_log2_1plus_WPI_port": -0.032640905893735805,
+      "HC3_standard_error": 0.07983208038911824,
+      "HC3_95pct_descriptive_interval": [
+        -0.18911178345640756,
+        0.12382997166893595
+      ],
+      "cohort": "WCVP126"
+    },
+    {
+      "n_island_botanical_regions": 126,
+      "response": "introduced",
+      "additional_flora_covariates": [
+        "native"
+      ],
+      "port_beta_per_log2_1plus_WPI_port": 0.22140536684114842,
+      "HC3_standard_error": 0.10227827866073055,
+      "HC3_95pct_descriptive_interval": [
+        0.02093994066611654,
+        0.4218707930161803
+      ],
+      "cohort": "WCVP126"
+    },
+    {
+      "n_island_botanical_regions": 123,
+      "response": "native",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.10311884762420176,
+      "HC3_standard_error": 0.08732979324847381,
+      "HC3_95pct_descriptive_interval": [
+        -0.06804754714280692,
+        0.27428524239121044
+      ],
+      "cohort": "HOSTS123"
+    },
+    {
+      "n_island_botanical_regions": 123,
+      "response": "introduced",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.28769073905728143,
+      "HC3_standard_error": 0.10889442652060961,
+      "HC3_95pct_descriptive_interval": [
+        0.07425766307688658,
+        0.5011238150376762
+      ],
+      "cohort": "HOSTS123"
+    },
+    {
+      "n_island_botanical_regions": 123,
+      "response": "alien_minus_native_log_ratio",
+      "additional_flora_covariates": [],
+      "port_beta_per_log2_1plus_WPI_port": 0.18457189143307506,
+      "HC3_standard_error": 0.10546418811603482,
+      "HC3_95pct_descriptive_interval": [
+        -0.022137917274353186,
+        0.39128170014050334
+      ],
+      "cohort": "HOSTS123"
+    },
+    {
+      "n_island_botanical_regions": 123,
+      "response": "native",
+      "additional_flora_covariates": [
+        "introduced"
+      ],
+      "port_beta_per_log2_1plus_WPI_port": -0.009613850979480532,
+      "HC3_standard_error": 0.07903777068930026,
+      "HC3_95pct_descriptive_interval": [
+        -0.16452788153050904,
+        0.14530017957154798
+      ],
+      "cohort": "HOSTS123"
+    },
+    {
+      "n_island_botanical_regions": 123,
+      "response": "introduced",
+      "additional_flora_covariates": [
+        "native"
+      ],
+      "port_beta_per_log2_1plus_WPI_port": 0.23347121981391972,
+      "HC3_standard_error": 0.09940139683161166,
+      "HC3_95pct_descriptive_interval": [
+        0.03864448202396087,
+        0.42829795760387857
+      ],
+      "cohort": "HOSTS123"
+    }
+  ],
+  "interpretation": "Positive port association with introduced flora; no clearly distinct native response in this specification. Direct alien-minus-native slope interval includes zero, so selective effect not established.",
+  "limits": [
+    "Null native association is not equivalence or proof ports are irrelevant.",
+    "Native-flora adjustment versus alien-flora adjustment uses different conditional estimands.",
+    "Plant richness is region-level contemporary WCVP inventory and ports are current WPI proxy.",
+    "HC3 does not correct spatial dependence or nonrandom botanical ascertainment.",
+    "Electrical ocean resistance, shortest-water routes and directional physical currents are distinct predictors.",
+    "This model does not measure delivery of seeds, larvae, or butterfly establishment."
+  ]
+}

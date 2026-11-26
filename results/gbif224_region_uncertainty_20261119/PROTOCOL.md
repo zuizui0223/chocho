@@ -1,0 +1,18 @@
+# Independent GBIF 224-butterfly community: original region-held-out model score uncertainty
+
+**Exploratory, 2026-11-19.** Original 169/194/133-region results (+0.091/+0.332/−0.076% H-after-O) were already known before this diagnostic. This is **not a newly preregistered test** and not a model refit or true detection correction.
+
+## Source and gates
+Reuse only the original three source-locked GEB `gbif_global224_observed_beta_{primary,relaxed,stringent}_region_holdout_v1.csv` and matching original JSON receipts under `provenance/reviewer_defenses/results/global_colonial_resource_beta_20261031/`. The original GBIF DOI is 10.15468/dl.umqmsf (14,637,152 records, 224 mapped butterfly species); the grouped year-level source tables are **not checked into the repository**.
+
+Fail closed if original region counts are not 169, 194, 133, if model×region cells are duplicated/missing, if geographic leave-one-region-out train/test pair sizes differ, or if mean heldout regional MSE and the H-given-O contrast do not reproduce the original receipt within 1e−8. Each source already accounts for regional prior/later butterfly index, contemporaneous whole alien flora, geography, climate, colonial legacy and observation effort/recording proxies. NO new raw GBIF or GloNAF records are obtained in this experiment.
+
+## Score and descriptive uncertainty
+For the exact same eligible regions, compare the saved regional MSEs of M2 (other alien flora added) vs M3 (M2 + known host flora). **H-given-O relative MSE gain (%) = 100×(mean(MSE_M2)−mean(MSE_M3))/mean(MSE_M2)**. For every cohort independently, report positive/negative heldout regions, the raw region-equal point statistic, pair-weighted only where defined, equal-weighted TDWG Level1 composition, and the effects of dropping each TDWG Level1 **from the existing regional heldout error table**. The latter is *not a geographically refitted model*.
+
+Resample **4,999** times with fixed seeds, once over the exact source regions uniformly and once within TDWG Level1 while preserving its regional counts. Use the **same sampled region indices for M2 and M3**. Report percentile 2.5–97.5 intervals. Also report world-equal point and same world-stratified draws with equal Level1 weights (not identical to region-equal). Regional cross-validation scores share training pairs; the bootstrap intervals are **descriptive diagnostics, not valid iid predictive confidence intervals**. Multiple leave-one-region-out test sets also overlap in dyads, so do not treat the n regions or n(n−1)/2 pairs as independent populations.
+
+## Interpretation and next data gate
+The primary 169 cohort is the originally fixed 5 observed butterfly species / 10 prior dataset-days / 20 later dataset-days threshold. The relaxed 194 and stringent 133 cohorts alter **which geographic regions are eligible as well as their effort proxies**, so their differences **cannot be explained causally by observation effort**. A real effort-standardized and within-region temporal detection check requires reconstituting the source (species×region×year counts, provider-day effort) from the exact original GBIF download; a timestamped historical botanical introduction table would also be needed to claim prospective host arrival.
+
+Preserve the earlier 239-species potential-resource +54.9%, 104-island H/O positive structural results and the source-original 155-species independent later-index forecast. Do not infer butterfly colonization, demographic growth, host quality or direct historical vessel dispersal from this source-only GBIF prediction comparison.

@@ -6,15 +6,15 @@
 1. [Single-story positive findings and evidence boundaries](POSITIVE_EVIDENCE_AND_ONE_STORY_20261118.md) — 22 source-qualified claims with explicit original sample and outcome units, followed by an evidence-linked five-figure paper design.
 2. [11–18 November positive findings and later falsification](LAST_WEEK_POSITIVE_EVIDENCE_20261118.md) — 21 recently updated PRs, especially direct larval host use by an endemic butterfly, independently classified endemics, marine and port context.
 3. [Selective source-asset import](SELECTIVE_RESULT_MERGE_20261118.md) and [811-byte-identical Git-blob manifest](POSITIVE_RESULT_FILE_MANIFEST_20261118.tsv) — trace each archived source input back to its PR and pinned head.
-4. [Current four open PRs and remaining source/author gates](FOUR_OPEN_SOURCE_GATES_20261118.md); [all PR scan](ALL_PR_AUDIT_20261118.md); [closure source ledger](D46_CLOSURE_DECISION_20261118.md). Exact current count: 176 PRs = 46 merged, 126 closed-unmerged, 4 open.
+4. [**Single remaining active clean GEB PR #179 and final source/author gates**](FINAL_SINGLE_GEB_PR_STATUS_20261118.md); [earlier four-PR source snapshot](FOUR_OPEN_SOURCE_GATES_20261118.md), [original 176-PR history audit](ALL_PR_AUDIT_20261118.md) and [closure provenance ledger](D46_CLOSURE_DECISION_20261118.md) remain immutable historical references. Live count verified 2026-11-18: 178 PRs = 47 merged, 130 closed-unmerged, **1 open**.
 
-5. [Preserved 32 analysis scripts](CORE_SOURCE_CODE_BRIDGE_20261118.md), [18-result-source consistency CI](INTEGRATED_EVIDENCE_VERIFICATION.md) and [12 original source-PR closure audit](CORE12_SOURCE_RECONCILIATION_20261118.md); archived raw source/model replay still depends on external inputs.
+5. [Preserved 32 primary analysis scripts](CORE_SOURCE_CODE_BRIDGE_20261118.md), [18-receipt arithmetic/source audit](INTEGRATED_EVIDENCE_VERIFICATION.md), [reproduced original 51-island ocean/host source models](MARINE_RAW_REPLAY_SOURCE_20261118.md) and [12 original source-PR closure audit](CORE12_SOURCE_RECONCILIATION_20261118.md). PR #179 adds a successful independent endemic/field source-claim QA; nonmarine raw original inputs still require source rights and external access.
 
 ## Paper-state boundary
 - **Frozen, original GEB v0.2:** current `manuscript/butterfly_specialization_ecology_v0.2.md` and existing submission/CI workflows preserved.
 - **Island–port GEB v0.3:** [candidate single-paper draft](../../manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md) archived alongside source results. It is unsubmitted and must not be represented as approved.
 - **Main archive:** source-confirmed *numerical positive results AND their nonpositive/null/effort/selection counterchecks* retained without importing an unreviewed stacked history of 200+ CI workflows or raw restricted data.
-- **Open PRs:** core connected source branches remain open for complete manuscript, code and scientific reproducibility review. Closing a PR neither erases a branch nor invalidates a pilot result. Do not merge untested chains of stacked changes.
+- **Open PR:** [#179](https://github.com/zuizui0223/chocho/pull/179) is the only active coauthor-review Draft. Its clean source branch preserves the original v0.2 manuscript while correcting endemic ascertainment and adding source-typed wild/garden caterpillar evidence. Closing historical PRs did not delete source branches.
 
 ## Direct source population distinction
 | Evidence layer | Dataset / support | What can be claimed |
