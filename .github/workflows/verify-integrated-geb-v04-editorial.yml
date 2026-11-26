@@ -1,0 +1,59 @@
+name: Historical replay — Verify GEB v0.4 four-figure manuscript and source-original supplementary preservation
+# Historical v0.4 checks were green at 03e9450c832bb769c42ca983bffdc327ecc8ccea.
+# These tests intentionally retain their original literal manuscript expectations.
+# The current v0.5 build and scientific CI remain automatic.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+jobs:
+  verify-four-figure-editorial-and-source-receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 03e9450c832bb769c42ca983bffdc327ecc8ccea
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3dbf038dab64e8bbc9ba6c0f5b0e19ce1cb2b250
+          path: source_main
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 07ea8f9886d52bc944fe47c8fb32dd89a80358b9
+          path: frozen_v03
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install SVG renderer, preserve source but do not fit new biological models
+        run: |
+          python -m pip install --disable-pip-version-check "cairosvg>=2.7,<3"
+      - name: Exact source audit, original Supplement survival, four SVG parse and raster preview
+        run: |
+          set -euo pipefail
+          mkdir -p _qa_previews
+          python current/scripts/verify_integrated_geb_v04_editorial.py \
+            --repo-root current \
+            --source-root source_main \
+            --frozen-v03 frozen_v03/manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md \
+            --preview-dir _qa_previews
+      - name: Ensure all 4 SVGs have a nonempty rendered visual
+        run: |
+          set -euo pipefail
+          test "$(find _qa_previews -maxdepth 1 -name 'geb_v04_Fig*.png' | wc -l)" -eq 4
+          for f in _qa_previews/geb_v04_Fig*.png; do
+            test "$(stat --printf='%s' "$f")" -gt 15000
+            file "$f"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: GEB-v04-original-source-four-main-figures-visual-review
+          path: _qa_previews/
+          if-no-files-found: warn
+          retention-days: 90

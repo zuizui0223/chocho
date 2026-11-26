@@ -1,0 +1,182 @@
+{
+  "run": 45576414156,
+  "source_head": "214f38781ed3dd9a72aa0f542ca32b92f6f46a9a",
+  "artifact_id": 15004497588,
+  "artifact_sha256": "81b7f40e329a4f446833cf84db9fd67a3970a7c5c1788119746d53850546311b",
+  "report": {
+    "schema": "chocho_WCVP104_reciprocal_origin_refit_and_paired_contrasts_v1",
+    "status": "EXACT_SOURCE_REFIT_AND_PAIRED_DESCRIPTIVE_CONTRASTS",
+    "source_artifact_sha256": {
+      "14296307100": "c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4",
+      "14296891019": "36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff",
+      "14296766522": "6dcd3987d79f117a782ea919c6961f2ede8fac7d93af9228ffa62fb9a072186b",
+      "14296567644": "3380b9ecca7f2b399e9a5da2856d8d4ec9753b476ab8aec40d858ed13f353780"
+    },
+    "original_code_and_area_git_blobs": {
+      "scripts/audit_WCVP126_crossed_native_alien_geometry_port_predictions_20261117.py": "0c06c1f013d58624b83c1b03da8e433f77e3e409",
+      "scripts/audit_WCVP126_native_alien_double_unseen_islands_20261117.py": "afd22b2cad2243da45a56be21ccf59467461a1d1",
+      "results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv": "53b618fa51a1a418ccc6e4363f4c866c389c90cc"
+    },
+    "matched_islands": 104,
+    "matched_dyads": 5355,
+    "strict_double_unseen_test_dyads": 1089,
+    "source_report_reproduction": {
+      "single_held_island": {
+        "leaves": 1340,
+        "numeric_leaves": 1105,
+        "max_abs_numeric_difference": 0
+      },
+      "double_unseen": {
+        "leaves": 386,
+        "numeric_leaves": 154,
+        "max_abs_numeric_difference": 7.283063041541027e-14
+      }
+    },
+    "paired_predictive_origin_contrasts": {
+      "single_held_island": {
+        "paired_units": 104,
+        "unit": "104 held-out islands",
+        "resamples": 9999,
+        "method": "9999 same-island draws; RNG seed 20261125",
+        "native_gains_pct": {
+          "G_vs_B_pct": 2.2343211230277,
+          "P_vs_B_pct": -0.07709548570991291,
+          "G_added_after_P_pct": 2.22981065174981,
+          "P_added_after_G_pct": -0.08171259541495572
+        },
+        "introduced_gains_pct": {
+          "G_vs_B_pct": 1.775098699745221,
+          "P_vs_B_pct": 0.042869826450445896,
+          "G_added_after_P_pct": 1.894141814637486,
+          "P_added_after_G_pct": 0.1640123063515184
+        },
+        "direct_contrasts": {
+          "native_minus_introduced_G_vs_B": {
+            "estimate_percentage_points": 0.4592224232824791,
+            "descriptive_q025_q975": [
+              -0.8901361726406262,
+              1.7942040605877125
+            ],
+            "fraction_resamples_positive": 0.7542754275427542,
+            "leave_one_unit_out_range": [
+              0.2644079172162408,
+              0.7010642849302999
+            ]
+          },
+          "introduced_minus_native_P_vs_B": {
+            "estimate_percentage_points": 0.1199653121603588,
+            "descriptive_q025_q975": [
+              -0.3533242251103692,
+              0.5793583902123263
+            ],
+            "fraction_resamples_positive": 0.695969596959696,
+            "leave_one_unit_out_range": [
+              0.06561795770263765,
+              0.20655193633414135
+            ]
+          },
+          "native_minus_introduced_G_after_P": {
+            "estimate_percentage_points": 0.3356688371123242,
+            "descriptive_q025_q975": [
+              -1.0314246862275682,
+              1.6455722374717079
+            ],
+            "fraction_resamples_positive": 0.6915691569156915,
+            "leave_one_unit_out_range": [
+              0.1436704874133823,
+              0.5764662115283421
+            ]
+          },
+          "introduced_minus_native_P_after_G": {
+            "estimate_percentage_points": 0.2457249017664741,
+            "descriptive_q025_q975": [
+              -0.28003111110364953,
+              0.7706335380795671
+            ],
+            "fraction_resamples_positive": 0.8254825482548255,
+            "leave_one_unit_out_range": [
+              0.16465927997263188,
+              0.31952909335467805
+            ]
+          }
+        },
+        "scope": "Descriptive paired prediction-loss resampling; dyads share endpoints and training folds overlap. Not independent causal inference or a calibrated hypothesis-test p-value."
+      },
+      "double_unseen": {
+        "paired_units": 5,
+        "unit": "five held-out fold groups",
+        "resamples": 3125,
+        "method": "all 5^5 ordered fold resamples",
+        "native_gains_pct": {
+          "G_vs_B_pct": 1.7351072291651428,
+          "P_vs_B_pct": -0.3914034293616128,
+          "G_added_after_P_pct": 1.8556232094708287,
+          "P_added_after_G_pct": -0.26827941164382174
+        },
+        "introduced_gains_pct": {
+          "G_vs_B_pct": 1.8576534605954191,
+          "P_vs_B_pct": -0.14740565724066107,
+          "G_added_after_P_pct": 1.9510801872892094,
+          "P_added_after_G_pct": -0.052070212069961846
+        },
+        "direct_contrasts": {
+          "native_minus_introduced_G_vs_B": {
+            "estimate_percentage_points": -0.12254623143027632,
+            "descriptive_q025_q975": [
+              -4.689138470375121,
+              2.6913136408827825
+            ],
+            "fraction_resamples_positive": 0.45376,
+            "leave_one_unit_out_range": [
+              -1.3156283404009508,
+              1.1834209993311906
+            ]
+          },
+          "introduced_minus_native_P_vs_B": {
+            "estimate_percentage_points": 0.24399777212095175,
+            "descriptive_q025_q975": [
+              -0.8226408251869239,
+              1.5422811766611852
+            ],
+            "fraction_resamples_positive": 0.70528,
+            "leave_one_unit_out_range": [
+              -0.1603272260842602,
+              0.6236124345636215
+            ]
+          },
+          "native_minus_introduced_G_after_P": {
+            "estimate_percentage_points": -0.0954569778183807,
+            "descriptive_q025_q975": [
+              -4.383814522756362,
+              2.896232830996154
+            ],
+            "fraction_resamples_positive": 0.45696,
+            "leave_one_unit_out_range": [
+              -1.1689692722572265,
+              1.2272938323594274
+            ]
+          },
+          "introduced_minus_native_P_after_G": {
+            "estimate_percentage_points": 0.2162091995738599,
+            "descriptive_q025_q975": [
+              -0.794663459599318,
+              1.0606625288735227
+            ],
+            "fraction_resamples_positive": 0.69568,
+            "leave_one_unit_out_range": [
+              -0.0544676520142022,
+              0.5922496353757442
+            ]
+          }
+        },
+        "scope": "Descriptive paired prediction-loss resampling; dyads share endpoints and training folds overlap. Not independent causal inference or a calibrated hypothesis-test p-value."
+      }
+    },
+    "limits": [
+      "Same-origin relative MSE percent, then contrast in percentage points; distinct target richness margins and error scales.",
+      "No causal double dissociation established by separate significance or prediction performance.",
+      "Water predictor is undirected GSHHG shortest-path detour, not current direction; WPI is port-count product, not cargo or ship routes.",
+      "Post-result diagnostic; no new source or outcomes selected. No raw WCVP or underlying coastline-graph re-acquisition."
+    ]
+  }
+}

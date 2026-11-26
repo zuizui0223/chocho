@@ -1,0 +1,111 @@
+name: Historical replay — Build actual integrated GEB v0.4 coauthor review DOCX and page previews
+# Historical v0.4 checks were green at 03e9450c832bb769c42ca983bffdc327ecc8ccea.
+# These tests intentionally retain their original literal manuscript expectations.
+# The current v0.5 build and scientific CI remain automatic.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  current-v04-review-document-not-v02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 03e9450c832bb769c42ca983bffdc327ecc8ccea
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install current paper document/visual audit environment
+        run: |
+          python -m pip install --disable-pip-version-check "python-docx>=1.1,<2" "cairosvg>=2.7,<3" "pymupdf>=1.24,<2"
+          python -m py_compile scripts/build_integrated_geb_v04_coauthor_review.py
+      - name: Build current source-text DOCX with four actual verified SVG figures
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/geb_v04_review
+          python -u scripts/build_integrated_geb_v04_coauthor_review.py \
+            --repo-root . \
+            --output-docx dist/geb_v04_review/chocho_GEB_v04_current_island_port_sea_coauthor_review.docx
+      - name: Prepare headless PDF rasterization
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq libreoffice-writer
+          fi
+          command -v libreoffice
+      - name: PDF render current DOCX and inspect every page geometry
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/geb_v04_review/page_qa
+          libreoffice -env:UserInstallation=file:///tmp/geb-v04-lo-$GITHUB_RUN_ID \
+            --headless --convert-to pdf --outdir dist/geb_v04_review \
+            dist/geb_v04_review/chocho_GEB_v04_current_island_port_sea_coauthor_review.docx
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz
+          root=Path("dist/geb_v04_review")
+          pdf=root/"chocho_GEB_v04_current_island_port_sea_coauthor_review.pdf"
+          assert pdf.exists() and pdf.stat().st_size>20000, "Current v0.4 PDF not created"
+          doc=fitz.open(pdf)
+          assert 9 <= len(doc) <= 65, "Unexpected paper length"
+          all_text="\n".join(p.get_text() for p in doc)
+          for phrase in ["Ports, the sea", "82/97", "54.3%", "39.6%", "11.2%",
+                         "Pieris cheiranthi", "Tropaeolum majus"]:
+              assert phrase in all_text, f"Required source positive absent from PDF: {phrase}"
+          figs=[]
+          for i,p in enumerate(doc):
+              img_blocks=[b for b in p.get_text("dict")["blocks"] if b["type"]==1]
+              for b in img_blocks:
+                  x0,y0,x1,y1=b["bbox"]
+                  assert x0>=-0.5 and y0>=-0.5 and x1<=p.rect.width+0.5 and y1<=p.rect.height+0.5, \
+                      f"Figure image clipped outside PDF page {i+1}: {b['bbox']}"
+              if img_blocks:
+                  figs.append(i+1)
+              pix=p.get_pixmap(matrix=fitz.Matrix(1.1,1.1),alpha=False)
+              pix.save(root/"page_qa"/f"page_{i+1:02d}.png")
+          assert len(figs)>=4, f"Four source figures not visible across PDF pages: {figs}"
+          receipt=json.loads((root/"review_build_receipt.json").read_text())
+          receipt.update({
+             "pdf_pages":len(doc),"pages_with_one_or_more_figures":figs,
+             "all_pages_rasterized":True,"pdf_size_bytes":pdf.stat().st_size,
+             "pdf_positive_text_verified":True,"no_figure_outside_page_bounds":True
+          })
+          (root/"review_build_receipt.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
+          print("CURRENT_V04_DOCX_AND_PDF_PAGE_QA_PASS",json.dumps(receipt,ensure_ascii=False),flush=True)
+          PY
+      - name: Check anonymity-related author metadata and bundle size
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from lxml import etree
+          f=Path("dist/geb_v04_review/chocho_GEB_v04_current_island_port_sea_coauthor_review.docx")
+          with ZipFile(f) as z:
+              core=z.read("docProps/core.xml")
+              names=z.namelist()
+              assert len([x for x in names if x.startswith("word/media/")])==4
+              root=etree.fromstring(core)
+              ns={"dc":"http://purl.org/dc/elements/1.1/",
+                  "cp":"http://schemas.openxmlformats.org/package/2006/metadata/core-properties"}
+              assert not any((x or "").strip() for x in root.xpath("//dc:creator/text()",namespaces=ns))
+              assert not any((x or "").strip() for x in root.xpath("//cp:lastModifiedBy/text()",namespaces=ns))
+          print("PASS: 4 embedded current v0.4 figures, no author metadata")
+          PY
+          sha256sum dist/geb_v04_review/*.docx dist/geb_v04_review/*.pdf > dist/geb_v04_review/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-GEB-v04-actual-integrated-manuscript-review-DOCX-PDF-pages
+          path: dist/geb_v04_review/
+          if-no-files-found: warn
+          retention-days: 90

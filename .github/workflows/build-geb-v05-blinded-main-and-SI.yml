@@ -1,0 +1,167 @@
+name: Build GEB v0.5 blinded main and independent S1-S8 Supporting Information
+on:
+  push:
+    branches: [paper/geb-single-island-port-endemics-20261118, paper/geb-v05-directional-current-integration-20261125, analysis/fixed239-host-taxonomic-resolution-20261125, paper/geb-v05-port-sea-two-layer-20261125]
+    paths:
+      - scripts/build_GEB_v05_blinded_main_and_SI.py
+      - scripts/geb_reference_copyedit.py
+      - .github/workflows/build-geb-v05-blinded-main-and-SI.yml
+      - manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md
+      - manuscript/integrated_butterfly_resource_access_20261109/GEB_SUPPORTING_INFORMATION_V05.md
+      - manuscript/integrated_butterfly_resource_access_20261109/FIGURE_CAPTIONS_V03.md
+      - manuscript/integrated_butterfly_resource_access_20261109/GEB_REFERENCE_COPYEDIT_V01.json
+      - figures/integrated_island_port_butterfly_v03/**
+  pull_request:
+    branches: [main, paper/geb-single-island-port-endemics-20261118, analysis/fixed239-host-taxonomic-resolution-20261125]
+    paths:
+      - scripts/build_GEB_v05_blinded_main_and_SI.py
+      - scripts/geb_reference_copyedit.py
+      - manuscript/integrated_butterfly_resource_access_20261109/**
+      - figures/integrated_island_port_butterfly_v03/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  blinded-main-and-separate-supporting-information:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Word/figure/page QA tools
+        run: |
+          python -m pip install --disable-pip-version-check "python-docx>=1.1,<2" "cairosvg>=2.7,<3" "pymupdf>=1.24,<2"
+          python -m py_compile scripts/build_GEB_v05_blinded_main_and_SI.py scripts/geb_reference_copyedit.py
+      - name: Verify deterministic expanded figure rendering
+        run: |
+          if grep -q "Fig4_recorded_butterfly_isolation_monarch_v07.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+          elif grep -q "Fig4_recorded_butterfly_isolation_monarch_v08.svg" manuscript/integrated_butterfly_resource_access_20261109/ISLAND_PORT_BUTTERFLY_RESEARCH_ARTICLE_V03.md; then
+            node scripts/render_GEB_v07_discovery_figures.cjs . --check
+            node scripts/render_GEB_v08_final_figures.cjs . --check
+          fi
+      - name: Source-bound separate 4-figure blinded article and 2-figure S1-S8 supporting info
+        run: |
+          set -euo pipefail
+          python -u scripts/build_GEB_v05_blinded_main_and_SI.py --repo-root . --outdir dist/geb_v05
+      - name: Convert separate blinded article and SI to PDF
+        run: |
+          set -euo pipefail
+          if ! command -v libreoffice >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq libreoffice-writer
+          fi
+          libreoffice -env:UserInstallation=file:///tmp/gebv05-$GITHUB_RUN_ID --headless --convert-to pdf \
+            --outdir dist/geb_v05 dist/geb_v05/GEB_v05_BLINDED_MAIN_4figures.docx \
+            dist/geb_v05/GEB_v05_SUPPORTING_INFORMATION_S1-S8.docx
+      - name: Audit PDF pages and actual figure images, no author leak
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import fitz
+          root=Path("dist/geb_v05")
+          receipt=json.loads((root/"GEB_v05_REVIEW_PREFLIGHT.json").read_text())
+          assert receipt["state"].startswith("DOCUMENT_STRUCTURE_VALID; JOURNAL_SUBMISSION_BLOCKED")
+          citation=json.loads((root/"GEB_v05_CITATION_AUDIT.json").read_text())
+          assert citation["status"].startswith("PASS:"), citation
+          assert citation["main_reference_count"]==receipt["references"]==27
+          assert citation["SI_reference_count"]==receipt["SI_references"]==9
+          assert citation["historical_references_preserved"]==39
+          # The frozen final editorial version retains the port inventory in
+          # Results and the shared-source rank association in SI, not in the abstract.
+          main_text=(root/"GEB_v05_blinded_main.md").read_text()
+          si_text=(root/"GEB_v05_separate_SI.md").read_text()
+          if "Port-associated introduced floras reveal a weaker oceanic isolation gradient" in main_text:
+              abstract=main_text.split("## Structured abstract",1)[1].split("## 1. Introduction",1)[0]
+              if "Fig4_recorded_butterfly_isolation_monarch_v08.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "sparse remote-region records" in abstract and "12 of 32 far regions" in main_text
+                  assert "Figure S5.2A" in main_text and "Figure S5.2B" in main_text and "Figure S5.2C" in main_text
+                  assert "FigS5_2_butterfly_community_prediction_transfer_v08.svg" in si_text
+                  assert "−4.036%" in si_text and "−2.697%" in si_text
+                  assert receipt["SI_embedded_figures"]==3
+              elif "Fig4_recorded_butterfly_isolation_monarch_v07.svg" in main_text:
+                  assert "β = 0.44" in abstract and "11%/61%" in abstract and "20 of 42" in abstract
+                  assert "12/32 far regions" in abstract and "193" in main_text
+              else:
+                  assert "β = 0.44" in abstract and "193" in abstract
+              assert "1,150" not in abstract and "1,596" not in abstract
+              assert "rank correlation 0.65" not in main_text and "partial 0.55 after adjustment" not in main_text
+              assert "+0.65243" in si_text and "+0.54958" in si_text
+              assert receipt["abstract_words"]<=280 and receipt["main_body_words"]<5000
+          for stem,n in [("GEB_v05_BLINDED_MAIN_4figures",4),
+                         ("GEB_v05_SUPPORTING_INFORMATION_S1-S8",receipt["SI_embedded_figures"])]:
+              p=root/(stem+".pdf")
+              assert p.exists() and p.stat().st_size>30000, p
+              pdf=fitz.open(p)
+              assert 4<=len(pdf)<=70, len(pdf)
+              pages_with_images=[]
+              for pageid,page in enumerate(pdf):
+                  blocks=page.get_text("dict")["blocks"]
+                  imgs=[q for q in blocks if q["type"]==1]
+                  for img in imgs:
+                      x0,y0,x1,y1=img["bbox"]
+                      assert 0<=x0<x1<=page.rect.width+1 and 0<=y0<y1<=page.rect.height+1, (stem,pageid,img["bbox"])
+                  if imgs:pages_with_images.append(pageid+1)
+              total_image_blocks=sum(len([block for block in page.get_text("dict")["blocks"] if block["type"]==1]) for page in pdf)
+              assert total_image_blocks>=n, (stem,total_image_blocks,n,pages_with_images)
+              text="\n".join(q.get_text() for q in pdf)
+              normalized_text=" ".join(text.split())
+              assert "zuizui0223" not in text.lower()
+              if n==4:
+                  for phrase in ["Pieris cheiranthi","54.3%","38 of the 670","0.58","0.36"]:
+                      assert phrase in normalized_text, (stem,phrase)
+              else:
+                  for phrase in ["Appendix S1","Appendix S5","Appendix S8","133","194","6,672","0.357","0.912"]:
+                      assert phrase in normalized_text, (stem,phrase)
+              # Integration-specific checks apply only to the new appendix.
+              if "### S3.5. Exploratory directional-current evidence and limits" in (root/"GEB_v05_separate_SI.md").read_text():
+                  # PDF line-wrap may split the explicit hyphenated term. Do not change manuscript wording.
+                  normalized=" ".join(text.split()).replace("direction- specific", "direction-specific").replace("direction-\u00ad specific", "direction-specific").replace("direction\u00ad specific", "direction-specific")
+                  assert "HYCOM" in normalized and "no direction-specific support" in normalized, (stem,"directional limitation absent")
+                  if n==4:
+                      assert "+0.397" not in normalized, (stem,"exploratory coefficient belongs in SI")
+                  else:
+                      for phrase in ["+0.397","77.9%","1,236","22.9 km","4,096","33.8%"]:
+                          assert phrase in normalized,(stem,phrase)
+              # Hierarchy audit is source-reproduced and must be present in the new
+              # manuscript; do not weaken existing figure/citation/anonymity checks.
+              if "### S3.6. Taxonomic resolution of the native-host isolation gradient" in (root/"GEB_v05_separate_SI.md").read_text():
+                  if n==4:
+                      for phrase in ["0.059","42.4%","9.1%","1,171","193","16.5%","0.040"]:
+                          assert phrase in normalized_text,(stem,"missing hierarchy or locality result",phrase)
+                  else:
+                      for phrase in ["S3.6.","4,829","10,570","0.0587","0.0281","0.0493","0.00640","0.0396","0.2239"]:
+                          assert phrase in normalized_text,(stem,"missing hierarchy source check",phrase)
+              # Port-and-sea framing promotes existing verified source results.
+              if "A port-associated introduced layer accompanies the geographically filtered native flora" in (root/"GEB_v05_blinded_main.md").read_text():
+                  if n==4:
+                      for phrase in ["1,150","1,596","25,742","687","20.7%","0.011","0.093"]:
+                          assert phrase in normalized_text,(stem,"missing promoted port result",phrase)
+                  else:
+                      for phrase in ["0.24448","0.16391","0.04153","0.54958","20.7014%","25,742"]:
+                          assert phrase in normalized_text,(stem,"missing port source details",phrase)
+              # Reciprocal comparator framing must preserve positive and adverse crossed results.
+              if "reciprocal comparators" in (root/"GEB_v05_blinded_main.md").read_text():
+                  if n==4:
+                      for phrase in ["5,355","2.23%","1.89%","0.08%","0.16%","no direction-specific support"]:
+                          assert phrase in normalized_text.replace("direction- specific","direction-specific"),(stem,"missing crossed comparator evidence",phrase)
+                  else:
+                      for phrase in ["1.8556","1.9511","0.2683","0.0521","0.186","0.00181"]:
+                          assert phrase in normalized_text,(stem,"missing strict or directional falsification detail",phrase)
+              receipt[stem+"_pages"]=len(pdf)
+              receipt[stem+"_pages_with_images"]=pages_with_images
+          (root/"GEB_v05_REVIEW_PREFLIGHT.json").write_text(json.dumps(receipt,indent=2,ensure_ascii=False)+"\n")
+          print("GEB_V05_SOURCE_MAIN_SEPARATE_SI_2PDF_QA_PASS",json.dumps(receipt,ensure_ascii=False))
+          PY
+          sha256sum dist/geb_v05/*.docx dist/geb_v05/*.pdf > dist/geb_v05/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: chocho-GEB-v05-DOUBLE-ANONYMOUS-4fig-main-and-separate-2fig-SI-review-DOCX-PDF
+          path: dist/geb_v05/
+          retention-days: 90
+          if-no-files-found: warn

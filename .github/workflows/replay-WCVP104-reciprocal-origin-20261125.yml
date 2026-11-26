@@ -1,0 +1,49 @@
+name: Refit WCVP104 reciprocal native-introduced marine and port comparisons
+on:
+  push:
+    branches: [paper/geb-v05-port-sea-two-layer-20261125]
+    paths:
+      - scripts/replay_WCVP104_reciprocal_origin_geometry_port_20261125.py
+      - .github/workflows/replay-WCVP104-reciprocal-origin-20261125.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  refit-and-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install numerical dependency
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3'
+      - name: Recover exact original source and loss artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p downloads
+          for id in 14296307100 14296891019 14296766522 14296567644; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "downloads/$id.zip"
+          done
+      - name: Refit both original CVs, verify full archived results, pair the origin contrasts
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/replay_WCVP104_reciprocal_origin_geometry_port_20261125.py
+          python scripts/replay_WCVP104_reciprocal_origin_geometry_port_20261125.py --downloads downloads --repo . --out _result
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: WCVP104-reciprocal-origin-source-refit-paired-diagnostics
+          path: _result/
+          if-no-files-found: error
+          retention-days: 90

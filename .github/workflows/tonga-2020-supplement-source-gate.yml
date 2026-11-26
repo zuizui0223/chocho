@@ -1,0 +1,29 @@
+name: Pilot Tonga 2020 source ZIP accession (non-blocking)
+on:
+  push:
+    branches:
+      - paper/geb-single-island-port-endemics-20261118
+    paths:
+      - scripts/acquire_tonga_2020_publisher_source_20261118.py
+      - .github/workflows/tonga-2020-supplement-source-gate.yml
+  workflow_dispatch:
+jobs:
+  source-access-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Attempt exact publisher ZIP, validate source bytes and member listings
+        run: python scripts/acquire_tonga_2020_publisher_source_20261118.py
+      - name: Publish attempted-source audit without pretending the ZIP exists
+        uses: actions/upload-artifact@v4
+        with:
+          name: tonga2020-publisher-source-access-status
+          path: tonga2020_source_gate/
+          retention-days: 30
+          if-no-files-found: error

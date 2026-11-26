@@ -1,0 +1,94 @@
+name: Audit fixed239 host taxonomic resolution on 126 islands
+on:
+  push:
+    branches: [analysis/fixed239-host-taxonomic-resolution-20261125]
+    paths:
+      - scripts/audit_fixed239_host_taxonomic_resolution_20261125.py
+      - .github/workflows/audit-fixed239-host-taxonomic-resolution.yml
+  pull_request:
+    branches: [paper/geb-single-island-port-endemics-20261118]
+    paths:
+      - scripts/audit_fixed239_host_taxonomic_resolution_20261125.py
+      - .github/workflows/audit-fixed239-host-taxonomic-resolution.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-gated-hierarchy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: current
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: bb4d8f00fbdb97fa2d90f606a8c9e7e0620646f2
+          path: frozen-pr118-source
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: globalbioticinteractions/HOSTS
+          ref: 808e0b869f9ec1adf8efff87cf6a395adda103e0
+          path: _external/HOSTS
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _external/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - name: Prepare exact source sidecars and accepted taxonomy
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'statsmodels>=0.14,<1' 'scipy>=1.13,<2' 'shapely>=2,<3' 'pyproj>=3.6,<4' 'matplotlib>=3.9,<4'
+          mkdir -p _scratch/native _scratch/contemporary _scratch/allflora current/_result
+          Rscript frozen-pr118-source/scripts/build_wcvp_hosts_null_sidecars.R _external/WCVP _external/HOSTS _scratch/native _scratch/contemporary
+          Rscript frozen-pr118-source/scripts/build_wcvp_all_flora_region_baselines.R _external/WCVP _scratch/allflora
+          Rscript - <<'RS'
+          load("_external/WCVP/data/wcvp_names.rda")
+          d <- wcvp_names
+          keep <- !is.na(d$taxon_rank) & !is.na(d$taxon_status) &
+            tolower(trimws(as.character(d$taxon_rank)))=="species" &
+            tolower(trimws(as.character(d$taxon_status)))=="accepted"
+          d <- d[keep,]
+          genus <- if ("genus" %in% names(d)) as.character(d$genus) else sub(" .*","",as.character(d$taxon_name))
+          z <- data.frame(accepted_plant_name_id=as.character(d$plant_name_id),genus=trimws(genus),family=trimws(as.character(d$family)))
+          stopifnot(!anyDuplicated(z$accepted_plant_name_id))
+          write.csv(z,"_scratch/taxonomy.csv",row.names=FALSE,na="")
+          RS
+          curl --fail --location --silent --show-error --retry 4 https://raw.githubusercontent.com/tdwg/wgsrpd/52da7828aba9d461dd133c27b3bd7a4407161f54/geojson/level3.geojson -o _scratch/level3.geojson
+          test "$(git -C current hash-object data/frozen/figure_sources/anthropogenic_species_metrics.csv)" = 9f83d2d9ac8e46f1cfd4ded572c7a023273503dd
+      - name: Exact species coverage gate followed by paired taxonomic models
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile current/scripts/audit_fixed239_host_taxonomic_resolution_20261125.py
+          python current/scripts/audit_fixed239_host_taxonomic_resolution_20261125.py \
+            --edges _scratch/native/insect_host_accepted.csv \
+            --native _scratch/allflora/allflora_native_accepted_wgsrpd3.csv \
+            --current _scratch/allflora/allflora_contemporary_accepted_wgsrpd3.csv \
+            --taxonomy _scratch/taxonomy.csv \
+            --metrics current/data/frozen/figure_sources/anthropogenic_species_metrics.csv \
+            --port-flora current/results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv \
+            --region-hosts current/results/island-mainland-resource-q1/region_metrics.csv \
+            --tdwg-geojson _scratch/level3.geojson \
+            --out-dir current/_result
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fixed239-host-taxonomic-resolution-derived-audit
+          path: current/_result/
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Remove third-party inputs
+        if: always()
+        run: rm -rf _scratch _external

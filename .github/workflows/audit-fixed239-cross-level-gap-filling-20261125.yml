@@ -1,0 +1,32 @@
+name: Verify cross-level island and butterfly resource gap-filling arithmetic
+on:
+  push:
+    branches: [paper/geb-v05-port-sea-two-layer-20261125]
+    paths:
+      - scripts/audit_fixed239_cross_level_gap_filling_20261125.py
+      - .github/workflows/audit-fixed239-cross-level-gap-filling-20261125.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify frozen source hashes and pooled gap-filling denominators
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/audit_fixed239_cross_level_gap_filling_20261125.py
+          python scripts/audit_fixed239_cross_level_gap_filling_20261125.py --out _result/CROSS_LEVEL_GAP_ACCOUNTING.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fixed239-cross-level-gap-accounting
+          path: _result/
+          if-no-files-found: error
+          retention-days: 90

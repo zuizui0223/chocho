@@ -1,0 +1,180 @@
+{
+  "receipt_scope": "Exact completed job log JSON; not a fresh model execution in this commit.",
+  "source_run": 45544732456,
+  "source_job": 138971489399,
+  "source_artifact": 14990294609,
+  "artifact_sha256": "b65982da1e8c1051462f36f15347fb4e8acef5a14fb2996500836bb86a108e50",
+  "result": {
+    "status": "FIXED239_CATALOGUE_ROW_DEPTH_AUDIT_COMPLETE",
+    "n_species": 239,
+    "raw_source_rows": 140485,
+    "raw_source_header": [
+      "_id",
+      "Damage",
+      "Hostplant Family",
+      "Hostplant Genus",
+      "Hostplant Species",
+      "Hostplant Subspecies/var",
+      "HOSTS ID",
+      "Insect Author",
+      "Insect Family",
+      "Insect Genus",
+      "Insect Species",
+      "Insect Subspecies",
+      "Lab Rearing",
+      "Location"
+    ],
+    "has_explicit_publication_or_reference_field": false,
+    "source_pins": {
+      "HOSTS": "808e0b869f9ec1adf8efff87cf6a395adda103e0",
+      "WCVP": "65bed76bae9d644ccb6ad200c05f9f5071d89e05"
+    },
+    "source_hashes": {
+      "HOSTS_csv_sha256": "465496fb581eefe0d257bc59b6c37c77b5dbfe53c28551fbf6fd69cad32bf65a"
+    },
+    "species_with_rows": 239,
+    "frozen_host_count_exact_matches": 239,
+    "count_mismatches": [],
+    "aggregate_row_counts": {
+      "raw_rows": 6672,
+      "unique_record_ids": 6672,
+      "distinct_hosts_id_strings": 6672,
+      "complete_host_binomial_rows": 4695,
+      "resolved_rows": 3898,
+      "unique_non_id_rows": 6649,
+      "unique_resolved_non_id_rows": 3890,
+      "location_nonempty_rows": 6672
+    },
+    "limits": [
+      "Exact original binomials; no post hoc butterfly synonym expansion.",
+      "HOSTS ID and _id are identifier strings, not identified independent publications.",
+      "Catalogue row counts, duplicate-content counts and locations are documentation proxies, not independent sampling effort; both axes still share HOSTS/WCVP.",
+      "No new butterfly establishment or biological host-quality inference.",
+      "Species bootstrap and leave-one-out are descriptive and not phylogenetically adjusted; no claim of effort-independent causal effect."
+    ],
+    "original_rho": 0.5788964068803357,
+    "host_count_and_family_adjusted_rho": 0.3482642661343195,
+    "row_proxy_correlations": {
+      "raw_rows": {
+        "rho_vs_native": 0.5624646505952852,
+        "rho_vs_added": 0.5537586363165281,
+        "rho_vs_host_count": 0.9117000395917427
+      },
+      "unique_non_id_rows": {
+        "rho_vs_native": 0.5628385246604083,
+        "rho_vs_added": 0.5531451370087301,
+        "rho_vs_host_count": 0.9122541591675547
+      },
+      "resolved_rows": {
+        "rho_vs_native": 0.6128137800034978,
+        "rho_vs_added": 0.5624544301438457,
+        "rho_vs_host_count": 0.9777760910669375
+      },
+      "unique_resolved_non_id_rows": {
+        "rho_vs_native": 0.6129778518068055,
+        "rho_vs_added": 0.5618073329913603,
+        "rho_vs_host_count": 0.9776054315419475
+      },
+      "row_depth_per_host": {
+        "rho_vs_native": 0.3117809236155417,
+        "rho_vs_added": 0.27955105152966503,
+        "rho_vs_host_count": 0.46336798632629206
+      }
+    },
+    "variants": {
+      "primary_raw_rows": {
+        "controls": [
+          "host_count",
+          "family_count",
+          "raw_rows"
+        ],
+        "partial_rho": 0.3572520933485447,
+        "descriptive_species_bootstrap95": [
+          0.238345,
+          0.474346
+        ],
+        "finite_bootstraps": 2000,
+        "leave_one_species_out_range": [
+          0.3429367457273012,
+          0.3750700250062332
+        ]
+      },
+      "non_id_deduplicated_rows": {
+        "controls": [
+          "host_count",
+          "family_count",
+          "unique_non_id_rows"
+        ],
+        "partial_rho": 0.35696431129975487,
+        "descriptive_species_bootstrap95": [
+          0.237602,
+          0.474448
+        ],
+        "finite_bootstraps": 2000,
+        "leave_one_species_out_range": [
+          0.34265295195967266,
+          0.3747666370458356
+        ]
+      },
+      "resolved_rows": {
+        "controls": [
+          "host_count",
+          "family_count",
+          "resolved_rows"
+        ],
+        "partial_rho": 0.3484218969582684,
+        "descriptive_species_bootstrap95": [
+          0.222742,
+          0.468866
+        ],
+        "finite_bootstraps": 2000,
+        "leave_one_species_out_range": [
+          0.3340351031495722,
+          0.3690406944053798
+        ]
+      },
+      "resolved_non_id_deduplicated": {
+        "controls": [
+          "host_count",
+          "family_count",
+          "unique_resolved_non_id_rows"
+        ],
+        "partial_rho": 0.3483572075662386,
+        "descriptive_species_bootstrap95": [
+          0.222482,
+          0.468883
+        ],
+        "finite_bootstraps": 2000,
+        "leave_one_species_out_range": [
+          0.33397448298440774,
+          0.36918242358628317
+        ]
+      },
+      "resolved_row_depth_per_host": {
+        "controls": [
+          "host_count",
+          "family_count",
+          "row_depth_per_host"
+        ],
+        "partial_rho": 0.3477927656167105,
+        "descriptive_species_bootstrap95": [
+          0.22222,
+          0.468868
+        ],
+        "finite_bootstraps": 2000,
+        "leave_one_species_out_range": [
+          0.33321899597465393,
+          0.3689826919513372
+        ]
+      }
+    },
+    "adequate_taxonomy_primary": {
+      "n": 215,
+      "partial_rho": 0.37962033114296045
+    },
+    "one_host_family_primary": {
+      "n": 97,
+      "partial_rho": 0.464200725546792
+    }
+  }
+}

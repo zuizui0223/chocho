@@ -1,0 +1,20 @@
+name: Verify GEB island-endemic manuscript integration
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "manuscript/integrated_butterfly_resource_access_20261109/**"
+      - "scripts/verify_integrated_geb_endemic_manuscript_20261118.py"
+      - ".github/workflows/verify-integrated-geb-endemic-manuscript.yml"
+permissions:
+  contents: read
+jobs:
+  source-claim-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen 239 versus independent endemic cohort and larval evidence
+        run: python scripts/verify_integrated_geb_endemic_manuscript_20261118.py
