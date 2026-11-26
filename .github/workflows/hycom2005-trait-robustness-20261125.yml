@@ -1,0 +1,97 @@
+name: HYCOM fixed306 post-result robustness audit
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/hycom2005-trait-robustness-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  OPENBLAS_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+jobs:
+  robust-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: matildabrown/rWCVPdata
+          ref: 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          path: _src/WCVP
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+      - name: Recover signed original physical and ecological results
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987522963/zip" > physical.zip
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14987717675/zip" > trait.zip
+          cat <<'SUMS' | sha256sum -c -
+          ab8eac0bc85fa70a1b1e8721a73604f9e1eea90ac4d85a61c91004df9ecbb3f4  physical.zip
+          7a99faeb066133c3f501f629c11cbc33ab17a757928b85e4756a17b5d555ba26  trait.zip
+          SUMS
+          python - <<'PY'
+          import pathlib,zipfile
+          P=pathlib.Path
+          for file,names in [('physical.zip',['PHYSICAL_RESULT.json','ALL306_TRACKS.json']),('trait.zip',['HYCOM_TRAIT_RESULT.json'])]:
+              with zipfile.ZipFile(file) as z:
+                  assert z.testzip() is None
+                  for n in names:
+                      ns=[x for x in z.namelist() if P(x).name==n];assert len(ns)==1
+                      p=P('_physical')/n;p.parent.mkdir(exist_ok=True);p.write_bytes(z.read(ns[0]))
+          PY
+      - name: Reconstruct exact original family trait contrast and recipient geography
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p _src
+          cd _src
+          for id in 14237222110 14296307100 14296891019; do
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$id/zip" > "$id.zip"
+          done
+          cat <<'SUMS' | sha256sum -c -
+          2c20ca5078ce5a592d5834c68fdf9bc9e606982593d9e536198cfc86da89408e  14237222110.zip
+          c00508ea0384efe73841a82a7ad5e73d3df8a13eed36ecea23b4546238d0d2b4  14296307100.zip
+          36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  14296891019.zip
+          SUMS
+          python - <<'PY'
+          import zipfile,pathlib
+          P=pathlib.Path
+          files={14237222110:['wcvp_region_origin_eudis_thalasso_coverage.csv','within_region_eudis_native_introduced_pairs.csv'],14296307100:['WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv'],14296891019:['GSHHG126_sea_geometry_source_coverage_audit.json']}
+          for aid,ns in files.items():
+              with zipfile.ZipFile(f'{aid}.zip') as z:
+                  assert z.testzip() is None
+                  for n in ns:
+                      h=[p for p in z.namelist() if P(p).name==n];assert len(h)==1
+                      P(n).write_bytes(z.read(h[0]))
+          PY
+          curl -fsSL --retry 3 --max-time 120 https://api.figshare.com/v2/file/download/41269785 -o EuDiS.csv
+          echo 'ec2772b02a9e0048da5d7a750fc803d08b80972003d332c1ae6600eb63fd31b5  EuDiS.csv' | sha256sum -c -
+          test "$(git -C WCVP rev-parse HEAD)" = 65bed76bae9d644ccb6ad200c05f9f5071d89e05
+          cd ..
+          flora=results/three-gate-port-all-flora/all_flora_intro_native_wpi_islands.csv
+          test "$(git hash-object "$flora")" = 53b618fa51a1a418ccc6e4363f4c866c389c90cc
+          Rscript scripts/audit_global126_eudis_directional_source_family_20261125.R _src/WCVP _src/EuDiS.csv "$flora" _src/wcvp_region_origin_eudis_thalasso_coverage.csv _src/trait
+      - name: Reproduce original coefficients and run post-result source and direction diagnostics
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'pandas>=2.2,<3' 'pyproj>=3.6,<4' 'scipy>=1.13,<2' 'statsmodels>=0.14,<1'
+          python -u scripts/audit_hycom_fixed30_robustness_20261125.py --physical _physical/PHYSICAL_RESULT.json --tracks _physical/ALL306_TRACKS.json --anchors _src/GSHHG126_sea_geometry_source_coverage_audit.json --geography _src/WCVP126_flora_similarity_strict_WPI2020_geographic_pairs.csv --coverage _src/trait/trait_source_coverage.csv --paired _src/within_region_eudis_native_introduced_pairs.csv --traits _src/trait/family_matched_directional_trait_contrasts.csv --expected _physical/HYCOM_TRAIT_RESULT.json --out delivery
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hycom-fixed30-post-result-robustness-summary-only
+          path: delivery/
+          retention-days: 90

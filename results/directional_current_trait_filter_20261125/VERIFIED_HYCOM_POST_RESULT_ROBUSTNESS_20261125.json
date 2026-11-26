@@ -1,0 +1,768 @@
+{
+  "status": "VERIFIED_POST_RESULT_ROBUSTNESS_LOG_EXTRACT_NOT_CAUSAL_SUPPORT",
+  "original_coefficients_reproduced": true,
+  "diagnostics": {
+    "primary_fixed22_50km_hycom": {
+      "all_pairs": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 1236,
+        "source_regions": 12,
+        "dest_regions": 104,
+        "weighted_controls_rank": 120,
+        "residual_df": 1115,
+        "results": {
+          "native_excess_pp": {
+            "beta": 0.2965084859914341,
+            "full_WLS_two_way_cluster_95": [
+              0.11235206989198393,
+              0.48066490209088425
+            ],
+            "shared_endpoint_95": [
+              0.12389605166082387,
+              0.46912092032204433
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": 0.1590426981273346,
+              "positive_tail_fraction": 0.453857421875,
+              "two_sided_tail_fraction": 0.65185546875,
+              "all_reverse_partial_correlation": -0.1366125028034549
+            },
+            "leave_one_source": {
+              "AZO": 0.2984799893149033,
+              "BAL": 0.3003227538153332,
+              "CNY": 0.32076173084347354,
+              "COR": 0.2974514116939215,
+              "ICE": 0.32625342892742565,
+              "IRE": 0.2966869057014255,
+              "JAP": -0.21456437230400308,
+              "KRI": 0.29411242840426066,
+              "MDR": 0.2991463448122895,
+              "SAK": 0.27652570109444435,
+              "SAR": 0.2985494063218535,
+              "SIC": 0.31266529165008267
+            }
+          },
+          "alien_excess_pp": {
+            "beta": -0.10061027743559355,
+            "full_WLS_two_way_cluster_95": [
+              -0.22303339138330125,
+              0.02181283651211416
+            ],
+            "shared_endpoint_95": [
+              -0.2124817931395018,
+              0.01126123826831471
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.0663547195856058,
+              "positive_tail_fraction": 0.874267578125,
+              "two_sided_tail_fraction": 0.2216796875,
+              "all_reverse_partial_correlation": 0.06153015553885912
+            },
+            "leave_one_source": {
+              "AZO": -0.11034416694007343,
+              "BAL": -0.10135074824875893,
+              "CNY": -0.09108223025677384,
+              "COR": -0.10132317432593843,
+              "ICE": -0.07139751443348116,
+              "IRE": -0.08727966948273728,
+              "JAP": -0.22022567074776087,
+              "KRI": -0.09833746724964425,
+              "MDR": -0.12196196585412752,
+              "SAK": -0.08988561863693355,
+              "SAR": -0.10739458611038903,
+              "SIC": -0.10732506312424538
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": 0.3971187634270271,
+            "full_WLS_two_way_cluster_95": [
+              0.22248633021188566,
+              0.5717511966421686
+            ],
+            "shared_endpoint_95": [
+              0.23164959028141033,
+              0.5625879365726439
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": 0.15035931526505636,
+              "positive_tail_fraction": 0.33837890625,
+              "two_sided_tail_fraction": 0.349853515625,
+              "all_reverse_partial_correlation": -0.1317564627491884
+            },
+            "leave_one_source": {
+              "AZO": 0.4088241562549764,
+              "BAL": 0.4016735020640915,
+              "CNY": 0.41184396110024685,
+              "COR": 0.39877458601985954,
+              "ICE": 0.3976509433609063,
+              "IRE": 0.38396657518416233,
+              "JAP": 0.005661298443756439,
+              "KRI": 0.3924498956539045,
+              "MDR": 0.42110831066641646,
+              "SAK": 0.3664113197313776,
+              "SAR": 0.40594399243224216,
+              "SIC": 0.4199903547743275
+            }
+          }
+        }
+      },
+      "initial_distance_le_5000km": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 220,
+        "source_regions": 12,
+        "dest_regions": 51,
+        "weighted_controls_rank": 66,
+        "residual_df": 153,
+        "results": {
+          "native_excess_pp": {
+            "beta": -0.17535591603433673,
+            "full_WLS_two_way_cluster_95": [
+              -0.9169815881060186,
+              0.5662697560373451
+            ],
+            "shared_endpoint_95": [
+              -0.922035932143247,
+              0.5713241000745735
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.0538599473380828,
+              "positive_tail_fraction": 0.71728515625,
+              "two_sided_tail_fraction": 0.545654296875,
+              "all_reverse_partial_correlation": 0.04349405254670361
+            },
+            "leave_one_source": {
+              "AZO": -0.15449359257623746,
+              "BAL": -0.1496558381276021,
+              "CNY": -0.12369166171000667,
+              "COR": -0.11656983439449907,
+              "ICE": -0.051759685147813914,
+              "IRE": -0.18119478742693662,
+              "JAP": -1.3114293273615525,
+              "KRI": -0.1537355720756949,
+              "MDR": -0.16082319187078498,
+              "SAK": -1.3114293273615445,
+              "SAR": -0.20909381463792595,
+              "SIC": -0.14096400034576947
+            }
+          },
+          "alien_excess_pp": {
+            "beta": -0.11620140155223067,
+            "full_WLS_two_way_cluster_95": [
+              -0.47804967810963983,
+              0.24564687500517846
+            ],
+            "shared_endpoint_95": [
+              -0.4541699144743664,
+              0.221767111369905
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.05543077853516651,
+              "positive_tail_fraction": 0.655029296875,
+              "two_sided_tail_fraction": 0.59716796875,
+              "all_reverse_partial_correlation": 0.037774711365574094
+            },
+            "leave_one_source": {
+              "AZO": -0.07915133686689257,
+              "BAL": -0.12137852896433608,
+              "CNY": -0.08265621496549345,
+              "COR": -0.11624758591423291,
+              "ICE": -0.12687807945470833,
+              "IRE": -0.22873504745340495,
+              "JAP": -0.03191344469079678,
+              "KRI": -0.06722761930205154,
+              "MDR": -0.13272998671546185,
+              "SAK": -0.03191344469091739,
+              "SAR": -0.1394340548063159,
+              "SIC": -0.13909595355985568
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": -0.059154514482108345,
+            "full_WLS_two_way_cluster_95": [
+              -0.8832732167175557,
+              0.7649641877533389
+            ],
+            "shared_endpoint_95": [
+              -0.8882516926908071,
+              0.7699426637265905
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.013920739910657186,
+              "positive_tail_fraction": 0.57666015625,
+              "two_sided_tail_fraction": 0.863037109375,
+              "all_reverse_partial_correlation": 0.014688846368579204
+            },
+            "leave_one_source": {
+              "AZO": -0.07534225570934708,
+              "BAL": -0.028277309163267664,
+              "CNY": -0.041035446744515466,
+              "COR": -0.00032224848026813117,
+              "ICE": 0.075118394306892,
+              "IRE": 0.047540260026466295,
+              "JAP": -1.2795158826707596,
+              "KRI": -0.08650795277364626,
+              "MDR": -0.0280932051553256,
+              "SAK": -1.2795158826706305,
+              "SAR": -0.06965975983161214,
+              "SIC": -0.0018680467859147091
+            }
+          }
+        }
+      },
+      "initial_distance_le_3000km": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 105,
+        "source_regions": 12,
+        "dest_regions": 26,
+        "weighted_controls_rank": 41,
+        "residual_df": 63,
+        "results": {
+          "native_excess_pp": {
+            "beta": -0.7628546359555403,
+            "full_WLS_two_way_cluster_95": [
+              -2.6686686097424963,
+              1.1429593378314156
+            ],
+            "shared_endpoint_95": [
+              -2.6691037841182177,
+              1.1433945122071374
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.13955937545017663,
+              "positive_tail_fraction": 0.7763671875,
+              "two_sided_tail_fraction": 0.509033203125,
+              "all_reverse_partial_correlation": 0.21164897160701154
+            },
+            "leave_one_source": {
+              "AZO": -0.776293631854747,
+              "BAL": -0.8285458430399604,
+              "CNY": -0.6266794494671115,
+              "COR": -0.6060640780102083,
+              "ICE": -0.13613646748330763,
+              "IRE": -0.7731514297629463,
+              "JAP": -1.8328264536177594,
+              "KRI": -0.5039566388145197,
+              "MDR": -0.592673035202654,
+              "SAK": -1.8328264536177117,
+              "SAR": -0.910759569457568,
+              "SIC": -0.8754815139978473
+            }
+          },
+          "alien_excess_pp": {
+            "beta": -0.3886534330826435,
+            "full_WLS_two_way_cluster_95": [
+              -1.3862056072461906,
+              0.6088987410809035
+            ],
+            "shared_endpoint_95": [
+              -1.324133304676986,
+              0.546826438511699
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.13235076334571994,
+              "positive_tail_fraction": 0.64697265625,
+              "two_sided_tail_fraction": 0.53369140625,
+              "all_reverse_partial_correlation": 0.010226554700971112
+            },
+            "leave_one_source": {
+              "AZO": -0.14529245594342355,
+              "BAL": -0.4233992961245563,
+              "CNY": -0.45693840539143754,
+              "COR": -0.427227021683597,
+              "ICE": -0.3252362806366512,
+              "IRE": -0.514148969209558,
+              "JAP": 0.2451374363202408,
+              "KRI": -0.38176997815091457,
+              "MDR": -0.5065209009844232,
+              "SAK": 0.24513743632023596,
+              "SAR": -0.45386623788964087,
+              "SIC": -0.6582713364628587
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": -0.3742012028729019,
+            "full_WLS_two_way_cluster_95": [
+              -2.9159059634573423,
+              2.1675035577115387
+            ],
+            "shared_endpoint_95": [
+              -2.827957300933856,
+              2.0795548951880525
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.0528016963432518,
+              "positive_tail_fraction": 0.681640625,
+              "two_sided_tail_fraction": 0.79541015625,
+              "all_reverse_partial_correlation": 0.15900817087517755
+            },
+            "leave_one_source": {
+              "AZO": -0.6310011759113268,
+              "BAL": -0.4051465469154089,
+              "CNY": -0.1697410440756791,
+              "COR": -0.1788370563266155,
+              "ICE": 0.18909981315333882,
+              "IRE": -0.25900246055339393,
+              "JAP": -2.0779638899380077,
+              "KRI": -0.12218666066361118,
+              "MDR": -0.08615213421823763,
+              "SAK": -2.077963889937956,
+              "SAR": -0.45689333156793194,
+              "SIC": -0.21721017753499192
+            }
+          }
+        }
+      },
+      "initial_distance_le_1500km": {
+        "status": "INSUFFICIENT_COVERAGE_NO_FIT",
+        "n_pairs": 34,
+        "source_regions": 12,
+        "dest_regions": 18
+      },
+      "same_TDWG_Level1": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 121,
+        "source_regions": 12,
+        "dest_regions": 34,
+        "weighted_controls_rank": 47,
+        "residual_df": 73,
+        "results": {
+          "native_excess_pp": {
+            "beta": -0.5345045515360939,
+            "full_WLS_two_way_cluster_95": [
+              -1.4868145767776944,
+              0.4178054737055066
+            ],
+            "shared_endpoint_95": [
+              -1.3052259540278803,
+              0.23621685095569245
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.14680956312316568,
+              "positive_tail_fraction": 0.970947265625,
+              "two_sided_tail_fraction": 0.05224609375,
+              "all_reverse_partial_correlation": 0.14024651002151403
+            },
+            "leave_one_source": {
+              "AZO": -0.48994081256648475,
+              "BAL": -0.7850001759288671,
+              "CNY": -0.46277517286023917,
+              "COR": -0.458958051399407,
+              "ICE": -0.589893934075251,
+              "IRE": -0.500941289519757,
+              "JAP": -2.0600030982337443,
+              "KRI": -0.5994190766222722,
+              "MDR": -0.43180759075464614,
+              "SAK": -2.060003098233721,
+              "SAR": -0.4651344277312477,
+              "SIC": -0.5703542937646733
+            }
+          },
+          "alien_excess_pp": {
+            "beta": 0.21789795063124348,
+            "full_WLS_two_way_cluster_95": [
+              -0.5898408955490692,
+              1.025636796811556
+            ],
+            "shared_endpoint_95": [
+              -0.5944904294468631,
+              1.0302863307093502
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": 0.08901031174210802,
+              "positive_tail_fraction": 0.2158203125,
+              "two_sided_tail_fraction": 0.4990234375,
+              "all_reverse_partial_correlation": -0.08892016820804209
+            },
+            "leave_one_source": {
+              "AZO": 0.18975570861820995,
+              "BAL": 0.2834673272756153,
+              "CNY": 0.1676666519305833,
+              "COR": 0.24175550331248685,
+              "ICE": 0.014472278991561094,
+              "IRE": 0.053332751070813374,
+              "JAP": 1.9981472150679171,
+              "KRI": 0.2129588789959303,
+              "MDR": 0.18381855504026,
+              "SAK": 1.9981472150679185,
+              "SAR": 0.24131732864331035,
+              "SIC": 0.23148125053256563
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": -0.7524025021673382,
+            "full_WLS_two_way_cluster_95": [
+              -2.0499309199252496,
+              0.5451259155905732
+            ],
+            "shared_endpoint_95": [
+              -1.8436058723049078,
+              0.33880086797023146
+            ],
+            "orientation_placebo": {
+              "configurations": 4096,
+              "actual_partial_correlation": -0.14931577171866836,
+              "positive_tail_fraction": 0.982177734375,
+              "two_sided_tail_fraction": 0.0595703125,
+              "all_reverse_partial_correlation": 0.14453001294894122
+            },
+            "leave_one_source": {
+              "AZO": -0.6796965211846959,
+              "BAL": -1.068467503204483,
+              "CNY": -0.6304418247908234,
+              "COR": -0.7007135547118952,
+              "ICE": -0.6043662130668127,
+              "IRE": -0.5542740405905706,
+              "JAP": -4.058150313301661,
+              "KRI": -0.8123779556182041,
+              "MDR": -0.6156261457949074,
+              "SAK": -4.05815031330164,
+              "SAR": -0.706451756374559,
+              "SIC": -0.8018355442972395
+            }
+          }
+        }
+      }
+    },
+    "two_distinct_valid_release_dates": {
+      "all_pairs": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 1133,
+        "source_regions": 11,
+        "dest_regions": 104,
+        "weighted_controls_rank": 119,
+        "residual_df": 1013,
+        "results": {
+          "native_excess_pp": {
+            "beta": 0.2985494063218536,
+            "full_WLS_two_way_cluster_95": [
+              0.11367667130751472,
+              0.48342214133619255
+            ],
+            "shared_endpoint_95": [
+              0.12560809155438002,
+              0.4714907210893272
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": 0.15935675495673304,
+              "positive_tail_fraction": 0.46044921875,
+              "two_sided_tail_fraction": 0.67529296875,
+              "all_reverse_partial_correlation": -0.1366838458057334
+            },
+            "leave_one_source": {
+              "AZO": 0.2997932673434481,
+              "BAL": 0.30510595498979626,
+              "CNY": 0.321041934075304,
+              "COR": 0.29892812674142544,
+              "ICE": 0.3306151768204376,
+              "IRE": 0.29857128647920517,
+              "JAP": -0.30189041161038727,
+              "KRI": 0.2966130276550303,
+              "MDR": 0.29989073788386544,
+              "SAK": 0.27801518513910356,
+              "SIC": 0.3142176285819229
+            }
+          },
+          "alien_excess_pp": {
+            "beta": -0.10739458611038902,
+            "full_WLS_two_way_cluster_95": [
+              -0.23577550128613653,
+              0.020986329065358494
+            ],
+            "shared_endpoint_95": [
+              -0.22423204428570137,
+              0.00944287206492335
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.07078579915369651,
+              "positive_tail_fraction": 0.8798828125,
+              "two_sided_tail_fraction": 0.21435546875,
+              "all_reverse_partial_correlation": 0.06606139157408032
+            },
+            "leave_one_source": {
+              "AZO": -0.11580034838081156,
+              "BAL": -0.10873783834634788,
+              "CNY": -0.09593065075255036,
+              "COR": -0.10935599893959491,
+              "ICE": -0.07873240549143982,
+              "IRE": -0.09355146069496559,
+              "JAP": -0.26853036710067346,
+              "KRI": -0.10619620451013648,
+              "MDR": -0.12944540795863338,
+              "SAK": -0.09756573716275489,
+              "SIC": -0.11562434697846673
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": 0.40594399243224233,
+            "full_WLS_two_way_cluster_95": [
+              0.23560111544901388,
+              0.5762868694154708
+            ],
+            "shared_endpoint_95": [
+              0.24604762986337952,
+              0.5658403550011051
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": 0.15310122232119208,
+              "positive_tail_fraction": 0.3466796875,
+              "two_sided_tail_fraction": 0.36376953125,
+              "all_reverse_partial_correlation": -0.13437779945726566
+            },
+            "leave_one_source": {
+              "AZO": 0.41559361572425924,
+              "BAL": 0.4138437933361437,
+              "CNY": 0.416972584827854,
+              "COR": 0.4082841256810199,
+              "ICE": 0.40934758231187707,
+              "IRE": 0.3921227471741703,
+              "JAP": -0.03336004450971472,
+              "KRI": 0.40280923216516623,
+              "MDR": 0.4293361458424984,
+              "SAK": 0.37558092230185797,
+              "SIC": 0.4298419755603891
+            }
+          }
+        }
+      },
+      "initial_distance_le_5000km": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 203,
+        "source_regions": 11,
+        "dest_regions": 51,
+        "weighted_controls_rank": 65,
+        "residual_df": 137,
+        "results": {
+          "native_excess_pp": {
+            "beta": -0.2090938146379134,
+            "full_WLS_two_way_cluster_95": [
+              -1.0402976285828882,
+              0.6221099993070613
+            ],
+            "shared_endpoint_95": [
+              -1.0408716880587614,
+              0.6226840587829345
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.06347508378156355,
+              "positive_tail_fraction": 0.74755859375,
+              "two_sided_tail_fraction": 0.4912109375,
+              "all_reverse_partial_correlation": 0.05204196991716921
+            },
+            "leave_one_source": {
+              "AZO": -0.1823337365432698,
+              "BAL": -0.1572199192033245,
+              "CNY": -0.15153655207945738,
+              "COR": -0.1652826911621911,
+              "ICE": -0.1071025279060178,
+              "IRE": -0.20321980767369305,
+              "JAP": -1.783228902004336,
+              "KRI": -0.17663663041373986,
+              "MDR": -0.18827842539618117,
+              "SAK": -1.7832289020034247,
+              "SIC": -0.16844992755341467
+            }
+          },
+          "alien_excess_pp": {
+            "beta": -0.13943405480632032,
+            "full_WLS_two_way_cluster_95": [
+              -0.5051591588236717,
+              0.22629104921103105
+            ],
+            "shared_endpoint_95": [
+              -0.4848408455787926,
+              0.20597273596615195
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.0662016809566418,
+              "positive_tail_fraction": 0.7099609375,
+              "two_sided_tail_fraction": 0.49267578125,
+              "all_reverse_partial_correlation": 0.047417118431041565
+            },
+            "leave_one_source": {
+              "AZO": -0.10270998806929271,
+              "BAL": -0.15131407100175712,
+              "CNY": -0.10379297679846708,
+              "COR": -0.14724729961590827,
+              "ICE": -0.15109526928027017,
+              "IRE": -0.24925541930972783,
+              "JAP": -0.1401742792183693,
+              "KRI": -0.07402483669114146,
+              "MDR": -0.15739583760056858,
+              "SAK": -0.14017427921808198,
+              "SIC": -0.16686811753763647
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": -0.06965975983159521,
+            "full_WLS_two_way_cluster_95": [
+              -0.9547111643628792,
+              0.8153916446996887
+            ],
+            "shared_endpoint_95": [
+              -0.9550472222736636,
+              0.8157277026104731
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.016205815197286824,
+              "positive_tail_fraction": 0.58203125,
+              "two_sided_tail_fraction": 0.849609375,
+              "all_reverse_partial_correlation": 0.016648335709695046
+            },
+            "leave_one_source": {
+              "AZO": -0.0796237484739789,
+              "BAL": -0.005905848201569428,
+              "CNY": -0.047743575280992157,
+              "COR": -0.018035391546284443,
+              "ICE": 0.043992741374249925,
+              "IRE": 0.046035611636032855,
+              "JAP": -1.643054622785972,
+              "KRI": -0.10261179372260086,
+              "MDR": -0.030882587795614615,
+              "SAK": -1.6430546227853469,
+              "SIC": -0.0015818100157793658
+            }
+          }
+        }
+      },
+      "initial_distance_le_3000km": {
+        "status": "INSUFFICIENT_COVERAGE_NO_FIT",
+        "n_pairs": 93,
+        "source_regions": 11,
+        "dest_regions": 26
+      },
+      "initial_distance_le_1500km": {
+        "status": "INSUFFICIENT_COVERAGE_NO_FIT",
+        "n_pairs": 31,
+        "source_regions": 11,
+        "dest_regions": 18
+      },
+      "same_TDWG_Level1": {
+        "status": "POST_RESULT_ROBUSTNESS_COMPLETE",
+        "n_pairs": 112,
+        "source_regions": 11,
+        "dest_regions": 34,
+        "weighted_controls_rank": 46,
+        "residual_df": 65,
+        "results": {
+          "native_excess_pp": {
+            "beta": -0.46513442773012365,
+            "full_WLS_two_way_cluster_95": [
+              -1.4237426911052546,
+              0.4934738356450074
+            ],
+            "shared_endpoint_95": [
+              -1.3089972915526553,
+              0.37872843609240797
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.12909539191554897,
+              "positive_tail_fraction": 0.96337890625,
+              "two_sided_tail_fraction": 0.0771484375,
+              "all_reverse_partial_correlation": 0.13021483105401202
+            },
+            "leave_one_source": {
+              "AZO": -0.4190215297882445,
+              "BAL": -0.7217811274855742,
+              "CNY": -0.3784316937638913,
+              "COR": -0.43918687569539816,
+              "ICE": -0.5444425599946826,
+              "IRE": -0.3747828457576275,
+              "JAP": -2.0738362174932092,
+              "KRI": -0.5247918018980001,
+              "MDR": -0.3634028776104067,
+              "SAK": -2.0738362174932194,
+              "SIC": -0.4620900516179988
+            }
+          },
+          "alien_excess_pp": {
+            "beta": 0.24131732864245917,
+            "full_WLS_two_way_cluster_95": [
+              -0.5743832197535322,
+              1.0570178770384506
+            ],
+            "shared_endpoint_95": [
+              -0.5769687939690862,
+              1.0596034512540045
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": 0.10211774196134027,
+              "positive_tail_fraction": 0.14208984375,
+              "two_sided_tail_fraction": 0.40478515625,
+              "all_reverse_partial_correlation": -0.09707994282388956
+            },
+            "leave_one_source": {
+              "AZO": 0.21737880957690067,
+              "BAL": 0.29970242930407925,
+              "CNY": 0.19479210548354325,
+              "COR": 0.29419887273930356,
+              "ICE": 0.029103296859203903,
+              "IRE": 0.04759097357121332,
+              "JAP": 2.1456057591392,
+              "KRI": 0.24386367298799352,
+              "MDR": 0.21049228491910252,
+              "SAK": 2.1456057591391855,
+              "SIC": 0.2520564049091356
+            }
+          },
+          "native_minus_alien_excess_pp": {
+            "beta": -0.7064517563725834,
+            "full_WLS_two_way_cluster_95": [
+              -1.9963945943384966,
+              0.5834910815933299
+            ],
+            "shared_endpoint_95": [
+              -1.8537543420950031,
+              0.4408508293498363
+            ],
+            "orientation_placebo": {
+              "configurations": 2048,
+              "actual_partial_correlation": -0.14240651339804913,
+              "positive_tail_fraction": 0.98095703125,
+              "two_sided_tail_fraction": 0.06689453125,
+              "all_reverse_partial_correlation": 0.14081975777621342
+            },
+            "leave_one_source": {
+              "AZO": -0.6364003393651454,
+              "BAL": -1.021483556789655,
+              "CNY": -0.5732237992474352,
+              "COR": -0.7333857484347032,
+              "ICE": -0.5735458568538876,
+              "IRE": -0.42237381932884144,
+              "JAP": -4.21944197663241,
+              "KRI": -0.7686554748859944,
+              "MDR": -0.5738951625295099,
+              "SAK": -4.219441976632404,
+              "SIC": -0.7141464565271343
+            }
+          }
+        }
+      }
+    }
+  },
+  "execution": {
+    "run_id": 45538840094,
+    "job_id": 138952063462,
+    "artifact_id": 14988222019,
+    "artifact_sha256": "ed2af08f224af988115b638d5e124ac7814d012a484fb1ee1bfc361fd431bd2a"
+  },
+  "decision": "Retain positive global association and all adverse sensitivities; do not promote to paper mechanism. JAP omission nearly eliminates paired estimate, flips native slope, local restrictions unsupported, orientation placebo not exceptional. Exact full diagnostics in artifact; this is a log-derived extract."
+}

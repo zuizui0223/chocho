@@ -1,0 +1,162 @@
+name: HYCOM 2005 frozen 17-region six-date launch support
+on:
+  push:
+    branches: [analysis/directional-current-trait-filter-20261125]
+    paths: [.github/workflows/hycom2005-all17-sixdate-launch-preflight-20261125.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  fixed-launch-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: fa0659159859bb4f3d7b3314a0f33307c41bf391
+          path: _original
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'netCDF4>=1.7,<2' 'pyproj>=3.6,<4'
+      - name: Recover exact frozen coastline anchors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/14296891019/zip" > anchors.zip
+          echo '36dbee9c52bebf2c8110fd894bd915f11b748c45057c3576dbd67df65bb8a8ff  anchors.zip' | sha256sum -c -
+          python - <<'PY'
+          import zipfile,pathlib
+          with zipfile.ZipFile('anchors.zip') as z:
+              ns=[n for n in z.namelist() if pathlib.Path(n).name=='GSHHG126_sea_geometry_source_coverage_audit.json']
+              assert len(ns)==1
+              pathlib.Path('anchors.json').write_bytes(z.read(ns[0]))
+          PY
+      - name: Acquire actual daily HYCOM coastal grids and compare all six fixed dates
+        run: |
+          python -u - <<'PY'
+          import hashlib,json,math,urllib.request,urllib.parse,urllib.error,pathlib,concurrent.futures,datetime,time
+          import numpy as np,netCDF4
+          from pyproj import Geod
+          P=pathlib.Path
+          out=P('delivery');out.mkdir(exist_ok=True)
+          receipt=json.loads(P('results/directional_current_trait_filter_20261125/VERIFIED_NATIVE_GRID_LAUNCH_GATE_20261125.json').read_text())
+          probe=json.loads(P('results/directional_current_trait_filter_20261125/VERIFIED_HYCOM2005_ACCESS_PROBE_20261125.json').read_text())
+          assert probe['old_oscar_missing_sources_with_new_probe_start']==8 and probe['verified_netcdf_sources']==9
+          sources=sorted(r['source'] for r in receipt['source_rows'])
+          assert len(sources)==17 and len(set(sources))==17
+          dates=['2005-05-28','2005-06-27','2005-07-27','2005-08-27','2005-09-26','2005-10-27']
+          anchors=json.loads(P('anchors.json').read_text())['coastal_anchors_by_TDWG_region']
+          assert all(len(anchors[s])==3 for s in sources)
+          graph=P('_original/data/exploratory/island51_observed_ocean_20261106/coast_0p0625/island51_coastal_ocean_graph.npz')
+          assert hashlib.sha256(graph.read_bytes()).hexdigest()=='79a25cb1491c30bc5542333bd4020535bc88772c98f8aa8fa1fe9c12f7b8e906'
+          with np.load(graph) as g:mask=g['fine_cell_to_node']
+          assert mask.shape==(2720,5760)
+          G=Geod(ellps='WGS84')
+          endpoint='https://ncss.hycom.org/thredds/ncss/grid/GLBu0.08/expt_19.1/2005'
+          tasks=[(s,k,anchors[s][k]) for s in sources for k in range(3)]
+          def request(task):
+              code,k,a=task
+              la=float(a['snapped_wet_latitude']);lo=float(a['snapped_wet_longitude'])
+              x=.65/max(.2,math.cos(math.radians(la)))+.2
+              args=[('var','water_u'),('var','water_v'),('north',str(la+.7)),('south',str(la-.7)),('west',str(lo-x)),('east',str(lo+x)),('time_start',dates[0]+'T00:00:00Z'),('time_end',dates[-1]+'T00:00:00Z'),('vertCoord','15'),('accept','netcdf4'),('addLatLon','true')]
+              url=endpoint+'?'+urllib.parse.urlencode(args)
+              row={'source':code,'anchor_index':k,'anchor_lat':la,'anchor_lon':lo,'url':url}
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'scientific HYCOM coastal fixed-grid support/1.0'})
+                  with urllib.request.urlopen(req,timeout=85) as r:
+                      b=r.read(16000001)
+                      assert len(b)<=16000000,'fixed response byte cap'
+                      row.update({'http':r.status,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()})
+                  return row,b
+              except Exception as exc:
+                  row.update({'http':getattr(exc,'code',None),'error':str(exc)[:400]})
+                  return row,None
+          def distance(a,b):
+              return abs(G.inv(a[1],a[0],b[1],b[0])[2])/1000
+          by={(s,d):{} for s in sources for d in dates}
+          records=[]
+          # Network I/O only is threaded; all NetCDF decoding is serialized.
+          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+              for row,b in pool.map(request,tasks):
+                  code=row['source'];la=row['anchor_lat'];lo=row['anchor_lon']
+                  row['verified_dates']=[];row['candidate_counts']={}
+                  if b is not None:
+                      try:
+                          assert b.startswith(b'CDF') or b.startswith(b'\x89HDF\r\n\x1a\n')
+                          with netCDF4.Dataset('grid.nc',memory=b) as ds:
+                              def name(opts):return next(k for k in opts if k in ds.variables)
+                              def arr(k):
+                                  a=ds[k][:];return np.asarray(a.filled(np.nan) if np.ma.isMaskedArray(a) else a,dtype=float)
+                              tn=name(('time','MT','Time'));dn=name(('depth','Depth','Depth1','depth1'));yn=name(('lat','latitude','Latitude'));xn=name(('lon','longitude','Longitude'))
+                              depth=arr(dn).reshape(-1);assert len(depth)==1 and abs(depth[0]-15)<.01
+                              ts=netCDF4.num2date(ds[tn][:],ds[tn].units,calendar=getattr(ds[tn],'calendar','standard'))
+                              days=[str(t)[:10] for t in ts]
+                              assert len(days)==len(set(days)) and all(str(t)[11:19]=='00:00:00' for t in ts)
+                              assert set(days)<=set((datetime.date.fromisoformat(dates[0])+datetime.timedelta(days=i)).isoformat() for i in range((datetime.date.fromisoformat(dates[-1])-datetime.date.fromisoformat(dates[0])).days+1))
+                              lat=arr(yn);lon=arr(xn)
+                              assert lat.ndim==lon.ndim==1 and min(len(lat),len(lon))>=3
+                              dims=[ds[k].dimensions[0] for k in (tn,dn,yn,xn)]
+                              def velocity(k):
+                                  v=ds[k];assert set(v.dimensions)==set(dims) and len(v.dimensions)==4
+                                  return np.transpose(arr(k),[v.dimensions.index(x) for x in dims])[:,0]
+                              U,V=velocity('water_u'),velocity('water_v')
+                          assert U.shape==V.shape==(len(days),len(lat),len(lon))
+                          iy=np.argsort(-lat);lat=lat[iy]
+                          lon=lo+(lon-lo+180)%360-180;ix=np.argsort(lon);lon=lon[ix]
+                          U=U[:,iy][:,:,ix];V=V[:,iy][:,:,ix]
+                          assert np.allclose(abs(np.diff(lat)),.08,atol=.002) and np.allclose(np.diff(lon),.08,atol=.002)
+                          cells=[]
+                          for i in range(len(lat)-1):
+                              for j in range(len(lon)-1):
+                                  y=float(lat[i]);x=float((lon[j]+180)%360-180)
+                                  off=distance((la,lo),(y,x))
+                                  if off>50:continue
+                                  r=int(round((85-y)/.0625-.5));c=int(round((x+180)%360/.0625-.5))%mask.shape[1]
+                                  if 0<=r<mask.shape[0] and mask[r,c]>=0:cells.append((i,j,y,x,off))
+                          for day in dates:
+                              if day not in days:continue
+                              ti=days.index(day);row['verified_dates'].append(day);n=0
+                              for i,j,y,x,off in cells:
+                                  if not (np.isfinite(U[ti,i:i+2,j:j+2]).all() and np.isfinite(V[ti,i:i+2,j:j+2]).all()):continue
+                                  n+=1;key=(round(y,5),round(x,5))
+                                  start={'lat':y,'lon':x,'offset_km':off,'anchor_index':row['anchor_index']}
+                                  old=by[(code,day)].get(key)
+                                  if old is None or (off,row['anchor_index'])<(old['offset_km'],old['anchor_index']):by[(code,day)][key]=start
+                              row['candidate_counts'][day]=n
+                          row.update({'verified_netcdf':True,'grid_shape':[len(days),len(lat),len(lon)],'depth_m':15,'time_samples':len(days)})
+                      except Exception as exc:row['decode_or_identity_error']=str(exc)[:400]
+                  records.append(row)
+                  print('HYCOM_BOX',json.dumps(row),flush=True)
+          groups=[]
+          for s in sources:
+              rr=[]
+              for d in dates:
+                  cand=sorted(by[(s,d)].values(),key=lambda x:(x['offset_km'],x['lat'],x['lon'],x['anchor_index']))
+                  chosen=[]
+                  for q in cand:
+                      if all(distance((q['lat'],q['lon']),(v['lat'],v['lon']))>=15 for v in chosen):chosen.append(q)
+                      if len(chosen)==3:break
+                  verified=sum(r['source']==s and d in r['verified_dates'] for r in records)
+                  rr.append({'date':d,'verified_anchors':verified,'unique_valid_cells':len(cand),'starts':chosen})
+              groups.append({'source':s,'dates':rr,'dates_with_start':sum(bool(r['starts']) for r in rr),'total_starts':sum(len(r['starts']) for r in rr)})
+          result={'status':'HYCOM_ALL17_FIXED_SIX_DATE_LAUNCH_PREFLIGHT_ONLY','source':'HYCOM GLBu0.08/expt_19.1/2005 00Z, 15m','fixed_dates':dates,'source_regions':len(groups),'requested_anchor_boxes':len(tasks),'verified_anchor_boxes':sum(r.get('verified_netcdf',False) for r in records),'verified_anchor_date_cells':sum(len(r['verified_dates']) for r in records),'required_anchor_date_cells':17*3*6,'regions_with_launch':sum(g['total_starts']>0 for g in groups),'regions_all_six_dates':sum(g['dates_with_start']==6 for g in groups),'region_dates_with_launch':sum(g['dates_with_start'] for g in groups),'total_starts':sum(g['total_starts'] for g in groups),'old_oscar_missing_regions_recovered':sum(g['source'] in probe['original_missing_sources'] and g['total_starts']>0 for g in groups),'minimum_independent_source_regions':10,'day30_tracks_computed':False,'regression_fitted':False,'no_biological_transport_observed':True}
+          result['launch_gate_pass']=result['regions_with_launch']>=10
+          result['all_306_anchor_date_queries_verified']=result['verified_anchor_date_cells']==306
+          (out/'HYCOM_ALL17_PREFLIGHT.json').write_text(json.dumps({**result,'region_launches':groups,'source_receipts':records},indent=2)+chr(10))
+          print('HYCOM_FULL_LAUNCH_SUMMARY',json.dumps(result),flush=True)
+          print('HYCOM_REGION_SUMMARY',json.dumps([{k:v for k,v in g.items() if k!='dates'} for g in groups]),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: HYCOM2005-all17-sixdate-launch-preflight-receipts
+          path: delivery/
+          retention-days: 90
+          if-no-files-found: warn
