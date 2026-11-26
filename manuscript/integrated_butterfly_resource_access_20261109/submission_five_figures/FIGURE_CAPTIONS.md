@@ -1,6 +1,4 @@
-# Figure captions — five-main-figure candidate
-
-These captions are transcribed from the author-local submission candidate whose document hashes are recorded in word_candidate_manifest.json.
+# Figure captions — synchronized editable source
 
 Figure 1. Native-host scarcity amplifies proportional island resource gains. The fixed panel comprises 239 butterflies across 126 insular and 237 mainland WGSRPD3 botanical regions. (a) Native coverage: native-host-covered butterfly–region combinations divided by all evaluated combinations. (b) Gap filling: newly introduced-host-covered combinations divided by initially empty combinations. (c) Relative gain: the same additions divided by native-host-covered combinations. Introduced-only hosts supply 54.3% (5,741/10,570) of currently covered island combinations and 29.0% (8,686/29,901) of mainland combinations. After matching area and broad geography, 24.1% of island gaps and 22.9% of mainland gaps were filled. These are mapped opportunities, not observed butterfly distributions (Appendix S2).
 
@@ -12,7 +10,6 @@ Figure 4. Resource gains are concentrated among host plants and uneven among but
 
 Figure 5. Recorded butterflies and mapped resource geography. Orange circles show introduced-only shares among recorded butterfly–region combinations with mapped hosts (224 shared butterflies, 84 active island regions, 2001–2024); symbol area increases with the number of recorded combinations. Solid and dashed curves are back-transformed adjusted log-odds fits for recorded and mapped-potential shares, respectively, on these same 84 regions, holding the other standardized covariates and division composition at their means. Distance coefficients are +0.439 (eight-division clustered p = 0.040) and +0.257 (p = 0.037). The pooled near/far quartile shares are 70/612 (11.4%) and 27/44 (61.4%), representing 32/32 and 12/32 regions. Stricter recording-effort analyses are uncertain (Appendix S5, Table S8). The curves do not establish occupancy, feeding, colonization or demographic effects.
 
-## Supporting figures
 
 Figure S3.1. Sensitivity of the direct port–origin contrast. The response is log(1 + introduced plant richness) − log(1 + native plant richness), with unstandardized log₂(1 + port count) as predictor. All models include log area and TDWG Level1. Geographic adjustment adds mainland distance and absolute latitude; effort adjustment adds indexed plant-record volume. Points and whiskers are estimates and nine-Level1 clustered 95% t intervals. Blue indicates 126 regions; orange indicates the common 98-region effort cohort. The five estimates are not independent replications; all intervals include zero.
 

@@ -55,5 +55,30 @@
       "embedded_png_sha256": "bfe7c237a5d7b8b7abb1c432ac2388b853126f9ed8736260e10bb1f4606604f3"
     }
   ],
-  "scope": "Word binaries and internal archive deliberately not published. This manifest binds the five-main/three-SI figure layout and the author-local reference images; it is not an archive licence or reviewer-access claim."
+  "scope": "The original author-local Word hashes and image digests remain immutable reference values. The current full editable manuscript and SI are synchronized below; regenerated Word outputs are previews. Internal archives are deliberately not published.",
+  "editable_source": {
+    "status": "WORD_CONTENT_SYNC_VERIFIED",
+    "source": "Author-local Submission_files_candidate_INTERNAL.zip (submission candidate; not submitted)",
+    "manuscript": {
+      "path": "Manuscript.md",
+      "git_blob": "880bdb1d801cb4bc490777f1e4a332b77b6bb404",
+      "sha256": "7e41f3beb7f33bda3683a17af1a5445e447ffd80af2f91159dd5fee5dee0553d",
+      "paragraphs": 116,
+      "figures": 5,
+      "tables": 0
+    },
+    "supporting_information": {
+      "path": "Supporting_Information.md",
+      "git_blob": "db924479b49b0fe9ce98350895a002e43ef6dff2",
+      "sha256": "7d71b27f0c10e90781fa07740767363d8d5ba03fa331921c3656187dc84b9581",
+      "paragraphs": 155,
+      "figures": 3,
+      "tables": 9,
+      "table_cells": 314
+    },
+    "exporter": "build_current_word.py",
+    "exporter_git_blob": "e123ea81d178e4fd7420981712785177d8420777",
+    "verification": "Both Markdown files match independent Word extraction at exact Git blob SHA. Word regenerated locally, all 288 ordered body blocks (paragraphs, figures and tables) match the author-local originals; all 314 cells and eight embedded image SHA-256 hashes match. Rendered previews have 22 and 27 pages; page-by-page layout is not asserted identical.",
+    "release_scope": "No private Word binary or raw source data included; CI-generated Word is an editable preview; reviewer access and publication rights remain pending."
+  }
 }
